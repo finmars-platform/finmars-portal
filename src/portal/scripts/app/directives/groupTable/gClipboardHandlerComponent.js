@@ -36,7 +36,7 @@
                         console.time('Copying to buffer');
 
                         var items = scope.evDataService.getProjection().filter(function (item) {
-                            return item.___is_selected;
+                            return item.___is_activated;
                         });
 
                         var columns = scope.evDataService.getColumns();

@@ -18,6 +18,8 @@
         'ROW_SELECTION_GROUP_SVG': 'ROW_SELECTION_GROUP_SVG',
         'ROW_OBJECT': 'ROW_OBJECT',
         'ROW_CELL': 'ROW_CELL',
+        'ROW_CELL_CONTENT': 'ROW_CELL_CONTENT',
+        'ROW_CELL_CONTENT_WRAP': 'ROW_CELL_CONTENT_WRAP',
         'ROW_GROUP': 'ROW_GROUP'
     };
 
@@ -98,6 +100,14 @@
             result = clickTargets.ROW_CELL;
         }
 
+        if (event.target.classList.contains('g-cell-content')) {
+            result = clickTargets.ROW_CELL_CONTENT;
+        }
+
+        if (event.target.classList.contains('g-cell-content-wrap')) {
+            result = clickTargets.ROW_CELL_CONTENT_WRAP;
+        }
+
         if (event.target.classList.contains('g-row-selection') && event.target.parentElement.classList.contains('g-row')) {
             result = clickTargets.ROW_SELECTION_OBJECT_BUTTON;
         }
@@ -123,6 +133,9 @@
 
         var clickTarget = getClickTarget(event);
 
+        clickData.target = clickTarget;
+        clickData.isShiftPressed = event.shiftKey;
+
         switch (clickTarget) {
 
             case clickTargets.FOLD_BUTTON:
@@ -140,14 +153,28 @@
                 clickData.___id = event.target.offsetParent.dataset.objectId;
                 clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
                 break;
+            case clickTargets.ROW_CELL_CONTENT:
+                clickData.___type = event.target.offsetParent.dataset.type;
+                clickData.___id = event.target.offsetParent.dataset.objectId;
+                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_CELL_CONTENT_WRAP:
+                clickData.___type = event.target.offsetParent.dataset.type;
+                clickData.___id = event.target.offsetParent.dataset.objectId;
+                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+                break;
             case clickTargets.ROW_OBJECT:
                 clickData.___type = event.target.dataset.type;
                 clickData.___id = event.target.dataset.objectId;
                 clickData.___parentId = event.target.dataset.parentGroupHashId;
                 break;
+            case clickTargets.ROW_SELECTION_OBJECT_SVG:
+                clickData.___type = event.target.parentElement.parentElement.dataset.type;
+                clickData.___id = event.target.parentElement.parentElement.dataset.objectId;
+                clickData.___parentId = event.target.parentElement.parentElement.dataset.parentGroupHashId;
+                break;
         }
 
-        clickData.target = clickTarget;
 
         return clickData;
 
@@ -231,28 +258,48 @@
     var handleObjectActive = function (clickData, evDataService, evEventService) {
 
         var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
+        var count = evDataService.getActiveObjectsCount();
 
-        var activeObject = evDataService.getActiveObject();
+        if (clickData.isShiftPressed) {
 
-        if (activeObject) {
-            activeObject.___is_activated = false;
-            evDataService.setObject(activeObject);
-        }
-
-        if (!activeObject || activeObject && activeObject.___id !== obj.___id) {
             obj.___is_activated = true;
-        }
 
+            count = count + 1;
 
-        console.log('handleObjectActive.obj', obj);
+            evDataService.setActiveObjectsCount(count);
 
-        evDataService.setObject(obj);
-
-        if (obj.___is_activated) {
             evDataService.setActiveObject(obj);
             evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
         } else {
-            evDataService.setActiveObject(null);
+
+            var objects = evDataService.getObjects();
+            var activeObject = evDataService.getActiveObject();
+
+            objects.forEach(function (item) {
+                item.___is_activated = false;
+                evDataService.setObject(item);
+            });
+
+            if (!activeObject || activeObject && activeObject.___id !== obj.___id || count > 1) {
+                obj.___is_activated = true;
+            }
+
+
+            // console.log('handleObjectActive.obj', obj);
+
+            evDataService.setObject(obj);
+
+            if (obj.___is_activated) {
+                evDataService.setActiveObject(obj);
+                evDataService.setActiveObjectsCount(1);
+                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+            } else {
+
+                evDataService.setActiveObjectsCount(0);
+                evDataService.setActiveObject(null);
+            }
+
         }
 
     };
@@ -379,6 +426,20 @@
 
     };
 
+    var clearActivated = function (evDataService) {
+
+        var objects = evDataService.getObjects();
+
+        objects.forEach(function (item) {
+
+            item.___is_activated = false;
+
+            evDataService.setObject(item);
+
+        });
+
+    };
+
     var initContextMenuEventDelegation = function (elem, evDataService, evEventService) {
 
         elem.addEventListener('contextmenu', function (ev) {
@@ -415,7 +476,16 @@
 
                 var popup = document.createElement('div');
 
+                clearActivated(evDataService);
+
                 var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                obj.___is_activated = true;
+
+                evDataService.setObject(obj);
+
+                console.log('obj', obj);
+
 
                 popup.id = 'dropdown-' + objectId;
                 popup.classList.add('ev-dropdown');
@@ -466,6 +536,8 @@
                 popup.style.top = event.pageY + 'px';
 
                 document.body.appendChild(popup);
+
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 return false;
 

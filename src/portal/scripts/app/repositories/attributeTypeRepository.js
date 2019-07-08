@@ -29,6 +29,24 @@
             case 'complex-transaction':
                 return 'transactions/' + entity + '-attribute-type/';
                 break;
+            case 'transaction-type':
+                return 'transactions/' + entity + '-attribute-type/';
+                break;
+            case 'instrument-type':
+                return 'instruments/' + entity + '-attribute-type/';
+                break;
+            case 'account-type':
+                return 'accounts/' + entity + '-attribute-type/';
+                break;
+            case 'strategy-1':
+                return 'strategies/1/strategy-attribute-type/';
+                break;
+            case 'strategy-2':
+                return 'strategies/2/strategy-attribute-type/';
+                break;
+            case 'strategy-3':
+                return 'strategies/3/strategy-attribute-type/';
+                break;
             default:
                 return entity + 's/' + entity + '-attribute-type/';
         }

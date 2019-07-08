@@ -126,11 +126,17 @@
         switch (entityType) {
             case "portfolio":
             case "account":
+            case "strategy-1":
+            case "strategy-2":
+            case "strategy-3":
+            case "account-type":
             case "counterparty":
             case "responsible":
             case "currency":
             case "instrument":
+            case "instrument-type":
             case "transaction":
+            case "transaction-type":
             case "complex-transaction":
             case "strategies":
                 return true;

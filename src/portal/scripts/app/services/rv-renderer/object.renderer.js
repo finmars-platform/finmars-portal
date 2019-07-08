@@ -343,7 +343,7 @@
 
         var rowSelection;
 
-        if (obj.___is_selected) {
+        if (obj.___is_activated) {
             classList.push('selected');
             rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
         } else {

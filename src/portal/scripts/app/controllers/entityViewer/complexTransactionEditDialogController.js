@@ -170,8 +170,8 @@
             console.log('copy entity', entity);
 
             $mdDialog.show({
-                controller: 'EntityViewerAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+                controller: 'ComplexTransactionAddDialogController as vm',
+                templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {

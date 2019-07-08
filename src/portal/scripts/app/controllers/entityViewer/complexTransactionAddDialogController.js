@@ -41,32 +41,6 @@
 
         vm.contextData = null; // data source when we book from report
 
-        if (Object.keys(entity).length) { // if copy
-
-            if (!entity.hasOwnProperty('contextData')) {
-
-                vm.entity = entity;
-
-                var copy = JSON.parse(JSON.stringify(vm.entity));
-
-                vm.transactionTypeId = vm.entity.transaction_type;
-
-                vm.getFormLayout().then(function (value) {
-
-                    Object.keys(copy).forEach(function (key) {
-                        vm.entity[key] = copy[key];
-                    });
-
-                    delete vm.entity.id;
-
-                    $scope.$apply();
-                });
-
-            } else {
-                vm.contextData = Object.assign({}, entity.contextData);
-                delete entity.contextData;
-            }
-        }
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -149,10 +123,16 @@
                     vm.userInputs.forEach(function (input) {
 
                         if (vm.contextData.hasOwnProperty(input.name)) {
-                            vm.entity[input.name] = vm.contextData[input.name];
-                            if (vm.contextData[input.name + '_object']) {
-                                vm.entity[input.name + '_object'] = vm.contextData[input.name + '_object']
+
+                            if (input.is_fill_from_context) {
+
+                                vm.entity[input.name] = vm.contextData[input.name];
+                                if (vm.contextData[input.name + '_object']) {
+                                    vm.entity[input.name + '_object'] = vm.contextData[input.name + '_object']
+                                }
+
                             }
+
                         }
 
                     })
@@ -887,6 +867,33 @@
         };
 
         vm.init = function () {
+
+            if (Object.keys(entity).length) { // if copy
+
+                if (!entity.hasOwnProperty('contextData')) {
+
+                    vm.entity = entity;
+
+                    var copy = JSON.parse(JSON.stringify(vm.entity));
+
+                    vm.transactionTypeId = vm.entity.transaction_type;
+
+                    vm.getFormLayout().then(function (value) {
+
+                        Object.keys(copy).forEach(function (key) {
+                            vm.entity[key] = copy[key];
+                        });
+
+                        delete vm.entity.id;
+
+                        $scope.$apply();
+                    });
+
+                } else {
+                    vm.contextData = Object.assign({}, entity.contextData);
+                    delete entity.contextData;
+                }
+            }
 
             vm.getPortfolios();
             vm.getInstrumentTypes();

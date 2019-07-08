@@ -179,7 +179,7 @@
 
             var r, c;
             var field = {};
-            for(r = 0; r < rowsToAdd; r = r + 1) {
+            for (r = 0; r < rowsToAdd; r = r + 1) {
 
                 tab.layout.rows = tab.layout.rows + 1;
 
@@ -860,17 +860,37 @@
 
                 vm.items = vm.items.filter(function (item) {
 
-                    if(['accrued_currency', 'payment_size_detail',
+                    if (['accrued_currency', 'payment_size_detail',
                         'accrued_multiplier', 'default_accrued',
                         'pricing_currency', 'price_multiplier',
                         'default_price', 'daily_pricing_model',
-                        'price_download_scheme', 'reference_for_pricing'].indexOf(item.key) === -1){
+                        'price_download_scheme', 'reference_for_pricing'].indexOf(item.key) === -1) {
                         return true
                     }
 
                     return false;
 
                 });
+
+            }
+
+            if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
+
+                vm.items = vm.items.filter(function (item) {
+
+                    if (['user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5',
+                        'user_text_6', 'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10',
+                        'user_number_1', 'user_number_2', 'user_number_3', 'user_number_4', 'user_number_5',
+                        'user_number_6', 'user_number_7', 'user_number_8', 'user_number_9', 'user_number_10',
+                        'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'
+                    ].indexOf(item.key) === -1) {
+                        return true
+                    }
+
+                    return false;
+
+                });
+
 
             }
 

@@ -180,7 +180,6 @@ app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$tra
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
-app.controller('ReportWizardController', ['$scope', require('./app/controllers/entityViewer/onBeforeLoadActions/reportWizardController')]);
 
 // Transaction type form
 
@@ -203,6 +202,11 @@ app.controller('AccrualCalculationSchedulesTabController', ['$scope', require('.
 app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/eventSchedulesController')]);
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
+
+// Currency form - tabs
+
+app.controller('PricingTabController', ['$scope', require('./app/controllers/tabs/currency/pricingTabController')]);
+
 
 app.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
 app.controller('GenerateEventScheduleDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/generateEventScheduleDialogController')]);
@@ -399,7 +403,6 @@ app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);
 app.directive('complexZhDatePicker', ['$mdDialog', require('./app/directives/complexZhDatePickerDirective')]);
 app.directive('dateTreeInput', ['$mdDialog', require('./app/directives/dateTreeInputDirective')]);
-app.directive('customScroll', [require('./app/directives/customScrollDirective')]);
 app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);
 app.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);

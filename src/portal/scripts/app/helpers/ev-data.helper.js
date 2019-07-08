@@ -158,6 +158,7 @@
 
     };
 
+
     var getGroupTypeId = function (groupType) {
 
         var pattern;
@@ -381,7 +382,7 @@
         parentGroup.results.forEach(function (item) {
 
             if (item.___id === groupId) {
-                selected = item.___is_selected;
+                selected = item.___is_activated;
             }
 
         });

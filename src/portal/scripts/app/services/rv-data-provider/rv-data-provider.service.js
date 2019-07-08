@@ -243,7 +243,7 @@
                         obj.___group_identifier = event.groupId ? event.groupId : '-';
 
                         obj.___is_open = true;
-                        obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
+                        obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
                         obj.___parentId = event.parentGroupId;
                         obj.___type = 'group';
@@ -260,7 +260,7 @@
                     item.___group_name = item.___group_name ? item.___group_name : '-';
                     item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
-                    item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
+                    item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
                     item.___parentId = obj.___id;
                     item.___type = 'object';
@@ -370,7 +370,7 @@
                             obj.___group_name = event.groupName ? event.groupName : '-';
                             obj.___group_identifier = event.groupId ? event.groupId : '-';
                             obj.___is_open = true;
-                            obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
+                            obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
                             obj.___parentId = event.parentGroupId;
                             obj.___type = 'group';
@@ -396,7 +396,7 @@
                         item.___group_name = item.___group_name ? item.___group_name : '-';
                         item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
-                        item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
+                        item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
 
                         item.___level = obj.___level + 1;

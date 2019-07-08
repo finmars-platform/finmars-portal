@@ -126,7 +126,9 @@
             activeLayoutConfiguration: {},
             unfilteredFlatList: [],
             flatList: [],
-            projection: []
+            projection: [],
+            activeObject: null,
+            activeObjectsCount: 0
         };
 
         data.interfaceLayout = getDefaultInterfaceLayout();
@@ -392,6 +394,25 @@
             }
         }
 
+        function getObjects() {
+
+            var groups = getDataAsList();
+
+            var result = [];
+
+            groups.forEach(function (group) {
+
+                group.results.forEach(function (item) {
+
+                    result.push(item)
+
+                });
+
+            });
+
+            return result
+        }
+
         function getData(hashId) {
 
             if (hashId) {
@@ -545,6 +566,15 @@
         function setActiveRequestParametersId(id) {
             data.activeRequestParametersId = id;
         }
+
+        function setActiveObjectsCount(count) {
+            data.activeObjectsCount = count
+        }
+
+        function getActiveObjectsCount() {
+            return data.activeObjectsCount
+        }
+
 
         function setActiveObject(obj) {
             data.activeObject = obj
@@ -923,6 +953,7 @@
 
             setObject: setObject,
             getObject: getObject,
+            getObjects: getObjects,
 
             getRootGroupData: getRootGroupData,
 
@@ -997,6 +1028,9 @@
 
             setSplitPanelStatus: setSplitPanelStatus,
             isSplitPanelActive: isSplitPanelActive,
+
+            setActiveObjectsCount: setActiveObjectsCount,
+            getActiveObjectsCount: getActiveObjectsCount
 
         }
     }
