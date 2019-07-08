@@ -150,6 +150,13 @@
 
     var getEntityTabs = function (entityType) {
         switch (entityType) {
+            case 'currency':
+                return [
+                    {
+                        label: 'Pricing',
+                        templateUrl: 'views/tabs/currency/pricing-view.html'
+                    }
+                ];
             case 'instrument':
                 return [
                     {
@@ -169,7 +176,6 @@
                         templateUrl: 'views/tabs/instrument/factor-schedule-view.html'
                     }
                 ];
-                break;
             case 'complex-transaction':
                 return [
                     {
@@ -182,8 +188,6 @@
                         templateUrl: 'views/tabs/complex-transaction/book-transaction-transactions-tab-view.html'
                     }
                 ];
-
-                break;
             case 'transaction-type':
                 return [
                     {
@@ -199,7 +203,6 @@
                         templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
                     }
                 ];
-                break;
         }
     };
 
