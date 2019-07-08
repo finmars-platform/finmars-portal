@@ -452,6 +452,18 @@
 
                         };
 
+                        reportOptions.cost_method = 1;
+                        reportOptions.portfolio_mode = 1;
+                        reportOptions.strategy1_mode = 0;
+                        reportOptions.strategy2_mode = 0;
+                        reportOptions.strategy3_mode = 0;
+                        reportOptions.accounts_cash = [];
+                        reportOptions.accounts_cash[0] = 1;
+                        reportOptions.accounts_position = [];
+                        reportOptions.accounts_position[0] = 1;
+                        reportOptions.approach_multiplier = 0.5;
+                        reportOptions.calculationGroup = 'portfolio';
+
                         if (scope.entityType !== 'transaction-report') {
 
                             if (scope.entityType === 'pl-report') {

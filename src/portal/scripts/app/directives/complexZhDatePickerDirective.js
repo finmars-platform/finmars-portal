@@ -37,14 +37,33 @@
                 // defaultDate: show default date in datepicker empty
                 // labelName: name to show in label of input
 
-                var position = 'right';
-                if (scope.displayOptions.position) {
-                    position = scope.displayOptions.position;
-                }
+                scope.availableModes = { // determine whether to hide some of datepicker modes
+                    inception: true
+                };
 
+                var position = 'right';
                 var defaultDate = false;
-                if (scope.displayOptions.defaultDate) {
-                    defaultDate = scope.displayOptions.defaultDate;
+
+                if (scope.displayOptions) {
+
+                    if (scope.displayOptions.position) {
+                        position = scope.displayOptions.position;
+                    }
+
+                    if (scope.displayOptions.defaultDate) {
+                        defaultDate = scope.displayOptions.defaultDate;
+                    }
+
+                    if (scope.displayOptions.modes) {
+                        var modesAvailability = scope.displayOptions.modes;
+
+                        var modesAvailabilityKeys = Object.keys(modesAvailability);
+
+                        modesAvailabilityKeys.forEach(function (mode) {
+                            scope.availableModes[mode] = modesAvailability[mode];
+                        })
+                    }
+
                 }
 
                 scope.datepickerActiveModeTitle = '';

@@ -35,8 +35,8 @@
             return vm.providerFields.map(function (input) {
 
                 return {
-                    "name": "Imported: " + input.name,
-                    "description": "Imported: " + input.name + " -> " + input.name_expr,
+                    "name": "Downloaded: " + input.name,
+                    "description": "Downloaded: " + input.name + " -> " + input.name_expr,
                     "groups": "input",
                     "func": input.name
                 }

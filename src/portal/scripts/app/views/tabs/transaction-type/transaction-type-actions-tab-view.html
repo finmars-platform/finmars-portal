@@ -4,18 +4,26 @@
 
             <v-pane data-ng-repeat="item in vm.entity.actions track by $index" expanded="item.isPaneExpanded">
                 <v-pane-header inactive class="transaction-type-action-pane">
-                    <div layout="row" layout-align="space-between center">
-                        <div layout="row" class="ttype-action-info-container" layout-align="start center">
+                    <div layout="row"
+                         layout-align="space-between center"
+                         ng-click="vm.toggleItem($pane, item, $event)">
+                        <div layout="row"
+                             class="ttype-action-info-container"
+                             layout-align="start center">
                             <span ng-bind="vm.getActionTypeName(item)" style="width: 270px"></span>
                             <span># {{$index + 1}}</span>
-                            <span data-ng-if="item.isPaneExpanded">
+                            <span ng-if="item.isPaneExpanded">
                                 <md-input-container class="no-error-spacer" style="min-height: 35px">
                                     <label></label>
-                                    <input ng-keydown="vm.preventSpace($event)" type="text"
-                                           data-ng-model="item.action_notes" placeholder="Action notes">
+                                    <input ng-keydown="vm.preventSpace($event)"
+                                           type="text"
+                                           ng-model="item.action_notes"
+                                           class="ttype-action-notes-input"
+                                           placeholder="Action notes">
                                 </md-input-container>
                             </span>
-                            <span data-ng-if="!item.isPaneExpanded" data-ng-bind="item.action_notes"></span>
+                            <span ng-if="!item.isPaneExpanded"
+                                  ng-bind="item.action_notes"></span>
                         </div>
                         <div layout="row">
                             <md-button class="md-raised"
@@ -23,15 +31,15 @@
                                        data-ng-click="vm.deletePane(item, $index, $event)">Delete
                             </md-button>
                             <md-button class="md-raised"
-                                       data-ng-click="vm.makeCopyOfAction(item, $index)">Make copy
+                                       data-ng-click="vm.makeCopyOfAction(item, $index, $event)">Make copy
                             </md-button>
                             <md-button class="md-raised" ng-disabled="$index == 0"
-                                       data-ng-click="vm.moveUp(item, $index)">Move up
+                                       data-ng-click="vm.moveUp(item, $index, $event)">Move up
                             </md-button>
                             <md-button class="md-raised" ng-disabled="$index == vm.entity.actions.length - 1"
-                                       data-ng-click="vm.moveDown(item, $index )">Move Down
+                                       data-ng-click="vm.moveDown(item, $index, $event)">Move Down
                             </md-button>
-                            <md-button class="md-raised" data-ng-click="vm.toggleItem($pane, item)">
+                            <md-button class="md-raised" data-ng-click="vm.toggleItem($pane, item, $event)">
                                 <span data-ng-if="item.isPaneExpanded">Collapse</span>
                                 <span data-ng-if="!item.isPaneExpanded">Expand</span>
                             </md-button>

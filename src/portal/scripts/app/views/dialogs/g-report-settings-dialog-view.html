@@ -309,10 +309,11 @@
 
                     <div layout="row" style="margin-bottom:20px">
 
-                        <two-fields-multiselect data-get-data-method="vm.getPortfolios(vm.optionsForMultiselect)"
-                                                data-title="Portfolios"
-                                                data-selected-items="vm.reportOptions.portfolios"
-                                                data-name-property="name"></two-fields-multiselect>
+                        <two-fields-multiselect get-data-method="vm.getPortfolios(vm.optionsForMultiselect)"
+                                                title="Portfolios"
+                                                selected-items="vm.reportOptions.portfolios"
+                                                nothing-selected-text="Off"
+                                                name-property="name"></two-fields-multiselect>
 
                         <!--<md-input-container>
 
@@ -338,6 +339,7 @@
                         <two-fields-multiselect get-data-method="vm.getAccounts(vm.optionsForMultiselect)"
                                                 data-title="Accounts"
                                                 data-selected-items="vm.reportOptions.account"
+                                                nothing-selected-text="Off"
                                                 data-name-property="name"></two-fields-multiselect>
 
                     </div>
@@ -368,6 +370,7 @@
                         <two-fields-multiselect get-data-method="vm.getStrategies1(vm.optionsForMultiselect)"
                                                 data-title="Strategies 1"
                                                 data-selected-items="vm.reportOptions.strategies1"
+                                                nothing-selected-text="Off"
                                                 data-name-property="name"></two-fields-multiselect>
 
                         <!--<md-input-container>
@@ -394,6 +397,7 @@
                         <two-fields-multiselect get-data-method="vm.getStrategies2(vm.optionsForMultiselect)"
                                                 data-title="Strategies 2"
                                                 data-selected-items="vm.reportOptions.strategies2"
+                                                nothing-selected-text="Off"
                                                 data-name-property="name"></two-fields-multiselect>
 
                         <!--<md-input-container>
@@ -420,6 +424,7 @@
                         <two-fields-multiselect get-data-method="vm.getStrategies3(vm.optionsForMultiselect)"
                                                 data-title="Strategies 3"
                                                 data-selected-items="vm.reportOptions.strategies3"
+                                                nothing-selected-text="Off"
                                                 data-name-property="name"></two-fields-multiselect>
 
                     </div>

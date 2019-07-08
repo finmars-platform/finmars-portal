@@ -7,7 +7,7 @@
 
     var metaService = require('../services/metaService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, $transition) {
 
         var vm = this;
         vm.sections = [];
@@ -79,7 +79,7 @@
         };
 
         var sideMenuSettingsMenuOpened = false;
-        vm.showSettingsSideMenu = function () {
+        vm.toggleSettingsSideMenu = function () {
 
             if (!sideMenuSettingsMenuOpened) {
 
@@ -142,6 +142,14 @@
                 skipHide: true
             })
         }
+
+        $transition.onExit({}, function () {
+
+            if (sideMenuSettingsMenuOpened) {
+                vm.toggleSettingsSideMenu();
+            }
+
+        });
     }
 
 }());

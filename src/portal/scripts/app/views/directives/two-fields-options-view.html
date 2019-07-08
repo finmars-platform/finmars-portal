@@ -1,4 +1,5 @@
 <div layout="row" class="two-fields-options-content" layout-align="center center">
+
 	<div class="two-fields-field-container"
 		 layout="column"
 		 style="width: 450px">
@@ -8,13 +9,15 @@
 			   data-ng-model="availableSearchTerm"
 			   class="two-fields-filter-input">
 		<div class="all-options-field two-fields-options">
-			<p data-ng-repeat="option in allOptions | filter: {name: availableSearchTerm}"
-			   data-ng-bind="option['{{nameProperty}}']"
+			<p ng-repeat="option in allOptions | orderBy: nameProperty | filter: {name: availableSearchTerm} as results track by option.id"
+			   ng-bind="option['{{nameProperty}}']"
 			   class="two-fields-available-option"
-			   data-member-group-id="{{option.id}}"
-			   data-ng-click="highlightOption($event)"></p>
+			   member-group-id="{{option.id}}"
+			   ng-click="highlightOption($event)"
+			   ng-dblclick="switchOptionOnDoubleClick('select', option.id)"></p>
 		</div>
 	</div>
+
 	<div class="two-fields-buttons" layout="column" layout-align="center center">
 		<md-button class="two-fields-select-btn two-fields-btn md-raised"
 				   data-ng-click="switchOptions('select')">
@@ -47,20 +50,22 @@
 						size="30"
 						style="left: 15px;"></ng-md-icon>
 	</div>
+
 	<div class="two-fields-field-container"
 		 layout="column"
 		 style="width: 450px">
 			<p>Selected</p>
 			<input type="search"
 				   placeholder="Search for a ..."
-				   data-ng-model="selectedSearchTerm"
+				   ng-model="selectedSearchTerm"
 				   class="two-fields-filter-input">
 			<div class="selected-options-field two-fields-options">
-				<p data-ng-repeat="sOption in selectedOptions | filter: {name: selectedSearchTerm}"
-				   data-ng-bind="sOption['{{nameProperty}}']"
+				<p ng-repeat="sOption in selectedOptions | orderBy: nameProperty | filter: {name: selectedSearchTerm} as results track by sOption.id"
+				   ng-bind="sOption['{{nameProperty}}']"
 				   class="two-fields-selected-option"
-				   data-member-group-id="{{sOption.id}}"
-				   data-ng-click="highlightOption($event)"></p>
+				   member-group-id="{{sOption.id}}"
+				   ng-click="highlightOption($event)"
+				   ng-dblclick="switchOptionOnDoubleClick('deselect', sOption.id)"></p>
 			</div>
 	</div>
 </div>

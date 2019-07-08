@@ -58,7 +58,8 @@
                                    class="md-text md-select-search-pattern simple-search-filter-input"
                                    ng-keydown="$event.stopPropagation()">
                         </md-input-container>
-                            <md-button ng-repeat="rowContent in columnRowsContent | filter: searchTerm as results track by $index"  ng-bind="rowContent.name"
+                            <md-button ng-repeat="rowContent in columnRowsContent | orderBy: 'name' | filter: searchTerm as results track by $index"
+                                       ng-bind="rowContent.name"
                                        ng-click="selectFilterOption(rowContent.name)">
                             </md-button>
 
@@ -90,10 +91,11 @@
              flex="70">
             <two-fields-multiselect ng-model="filter.options.filter_values"
                                     ng-change="filterSettingsChange()"
-                                    data-title="{{getMultiselectorName()}}"
-                                    data-items="columnRowsContent"
-                                    data-model="filter.options.filter_values"
-                                    data-name-property="name"
+                                    title="{{getMultiselectorName()}}"
+                                    items="columnRowsContent"
+                                    model="filter.options.filter_values"
+                                    nothing-selected-text="Off"
+                                    name-property="name"
                                     class="table-filter-input-container"></two-fields-multiselect>
         </div>
 

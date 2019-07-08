@@ -39,7 +39,7 @@
             <md-menu-item>
                 <md-button data-ng-click="toggleMode('datepicker')">Datepicker</md-button>
             </md-menu-item>
-            <md-menu-item>
+            <md-menu-item ng-if="availableModes.inception">
                 <md-button data-ng-click="toggleMode('inception')">Inception Date</md-button>
             </md-menu-item>
             <md-menu-item ng-hide="isRootEntityViewer">

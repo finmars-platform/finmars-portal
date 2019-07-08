@@ -57,7 +57,7 @@
 							var hOption = $(this);
 							var hOptionId = hOption.data('member-group-id');
 
-							removeFrom.map(function(option, optionIndex) {
+							removeFrom.forEach(function(option, optionIndex) {
 
 								if (option.id == hOptionId) {
 									removeFrom.splice(optionIndex, 1); //remove options from available
@@ -69,6 +69,34 @@
 					}
 				};
 
+				scope.switchOptionOnDoubleClick = function (mode, optionToSwitchId) {
+
+					var removeFrom = [];
+					var addTo = [];
+
+					switch (mode) {
+						case "select":
+							removeFrom = scope.allOptions;
+							addTo = scope.selectedOptions;
+							break;
+						case "deselect":
+							removeFrom = scope.selectedOptions;
+							addTo = scope.allOptions;
+							break;
+						default:
+							return false;
+					}
+
+					var i;
+					for (i = 0; i < removeFrom.length; i++) {
+						var option = removeFrom[i];
+						if (optionToSwitchId === option.id) {
+							removeFrom.splice(i, 1);
+							addTo.push(option);
+						}
+					}
+
+				};
 
 				scope.selectAll = function () {
 					var mergedArray = [];
