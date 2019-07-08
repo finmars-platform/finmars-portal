@@ -53,8 +53,6 @@
                 var isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
-                var evFirstCalculateScroll = false;
-
                 function renderReportViewer() {
 
                     // console.log('renderReportViewer');
@@ -105,11 +103,7 @@
 
                     scope.evDataService.setProjection(projection);
 
-                    if (evFirstCalculateScroll === false) {
-                        evFirstCalculateScroll = true;
-                        evDomManager.calculateScroll(elements, scope.evDataService); // should trigger only once
-                    }
-                    // console.log('projection', projection);
+                    evDomManager.calculateScroll(elements, scope.evDataService);
 
                     evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 

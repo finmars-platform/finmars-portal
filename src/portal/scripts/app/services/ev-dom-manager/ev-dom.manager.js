@@ -19,7 +19,9 @@
         'ROW_OBJECT': 'ROW_OBJECT',
         'ROW_CELL': 'ROW_CELL',
         'ROW_CELL_CONTENT': 'ROW_CELL_CONTENT',
-        'ROW_GROUP': 'ROW_GROUP'
+        'ROW_GROUP': 'ROW_GROUP',
+        'LOAD_MORE_BUTTON': 'LOAD_MORE_BUTTON',
+        'LOAD_ALL_BUTTON': 'LOAD_ALL_BUTTON'
     };
 
     var evScrollManager = new EvScrollManager();
@@ -285,6 +287,31 @@
 
     };
 
+    var handleControlClick = function (clickData, evDataService, evEventService) {
+
+        var groupHashId = clickData.___parentId;
+
+        var requestParameters = evDataService.getRequestParameters(groupHashId);
+
+        console.log('requestParameters.body.page', requestParameters);
+
+        if (!requestParameters.body.page) {
+            requestParameters.body.page = 1
+        }
+
+        if (clickData.target === clickTargets.LOAD_MORE_BUTTON) {
+
+            requestParameters.body.page = requestParameters.body.page + 1;
+
+            evDataService.setRequestParameters(requestParameters);
+            evDataService.setActiveRequestParametersId(requestParameters.id);
+
+        }
+
+        evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+    };
+
     var getClickTarget = function (event) {
 
         var result = '';
@@ -325,6 +352,14 @@
 
         if (event.target.tagName === 'svg' && event.target.parentElement.parentElement.classList.contains('g-group-holder')) {
             result = clickTargets.ROW_SELECTION_GROUP_SVG;
+        }
+
+        if (event.target.classList.contains('control-button') && event.target.classList.contains('load-more')) {
+            result = clickTargets.LOAD_MORE_BUTTON;
+        }
+
+        if (event.target.classList.contains('control-button') && event.target.classList.contains('load-all')) {
+            result = clickTargets.LOAD_ALL_BUTTON;
         }
 
         return result;
@@ -401,6 +436,16 @@
                 clickData.___id = event.target.parentElement.parentElement.dataset.groupHashId;
                 clickData.___parentId = event.target.parentElement.parentElement.dataset.parentGroupHashId;
                 break;
+            case clickTargets.LOAD_ALL_BUTTON:
+                clickData.___type = event.target.offsetParent.dataset.type;
+                clickData.___id = event.target.offsetParent.dataset.objectId;
+                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+                break;
+            case clickTargets.LOAD_MORE_BUTTON:
+                clickData.___type = event.target.offsetParent.dataset.type;
+                clickData.___id = event.target.offsetParent.dataset.objectId;
+                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+                break;
         }
 
         return clickData;
@@ -423,6 +468,10 @@
 
                 handleObjectClick(clickData, evDataService, evEventService);
 
+            }
+
+            if (clickData.___type === 'object') {
+                handleControlClick(clickData, evDataService, evEventService);
             }
 
         })
@@ -593,9 +642,7 @@
         var count = 0;
 
         unfoldedGroups.forEach(function (group) {
-
-            count = count + group.count;
-
+            count = count + group.results.length + 1; // 1 for control row
         });
 
         var rowHeight = evDataService.getRowHeight();
@@ -704,7 +751,7 @@
             evDataService.setVirtualScrollDirection(direction);
             evDataService.setVirtualScrollPreviousOffsetPx(lastScrollTop);
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
-            evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
             calculateScroll(elements, evDataService);
 

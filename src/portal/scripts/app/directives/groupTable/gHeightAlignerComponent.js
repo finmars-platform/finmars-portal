@@ -126,6 +126,7 @@
                     setSplitHeights()
                 });
 
+
                 /*var redrawTableCallbackIndex = scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
                     setSplitHeights()
