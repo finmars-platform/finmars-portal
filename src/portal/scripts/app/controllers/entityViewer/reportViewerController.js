@@ -76,7 +76,11 @@
                                 entityId: activeObject['instrument.id']
                             }
                         }).then(function (res) {
+
+                            vm.entityViewerDataService.setActiveObjectAction(null);
+
                             if (res && res.res === 'agree') {
+
                                 vm.entityViewerDataService.resetData();
                                 vm.entityViewerDataService.resetRequestParameters();
 
@@ -92,6 +96,8 @@
 
                     if (action === 'edit_account' && activeObject.id) {
 
+
+
                         $mdDialog.show({
                             controller: 'EntityViewerEditDialogController as vm',
                             templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
@@ -102,7 +108,11 @@
                                 entityId: activeObject['account.id']
                             }
                         }).then(function (res) {
+
+                            vm.entityViewerDataService.setActiveObjectAction(null);
+
                             if (res && res.res === 'agree') {
+
                                 vm.entityViewerDataService.resetData();
                                 vm.entityViewerDataService.resetRequestParameters();
 
@@ -128,7 +138,11 @@
                                 entityId: activeObject['portfolio.id']
                             }
                         }).then(function (res) {
+
+                            vm.entityViewerDataService.setActiveObjectAction(null);
+
                             if (res && res.res === 'agree') {
+
                                 vm.entityViewerDataService.resetData();
                                 vm.entityViewerDataService.resetRequestParameters();
 
@@ -154,7 +168,11 @@
                                 entityId: activeObject['instrument.id']
                             }
                         }).then(function (res) {
+
+                            vm.entityViewerDataService.setActiveObjectAction(null);
+
                             if (res && res.res === 'agree') {
+
                                 vm.entityViewerDataService.resetData();
                                 vm.entityViewerDataService.resetRequestParameters();
 
@@ -221,7 +239,11 @@
                                 entity: entity
                             }
                         }).then(function (res) {
+
+                            vm.entityViewerDataService.setActiveObjectAction(null);
+
                             if (res && res.res === 'agree') {
+
                                 vm.entityViewerDataService.resetData();
                                 vm.entityViewerDataService.resetRequestParameters();
 
