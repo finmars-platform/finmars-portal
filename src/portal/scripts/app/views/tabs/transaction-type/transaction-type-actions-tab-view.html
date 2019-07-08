@@ -1,4 +1,4 @@
-<div >
+<div>
     <div class="transaction-type-actions-tab-view">
         <v-accordion class="vAccordion--default" multiple control="vm.accordion">
 
@@ -10,6 +10,14 @@
                         <div layout="row"
                              class="ttype-action-info-container"
                              layout-align="start center">
+                            <span class="m-t-16">
+                                <expression-editor-button
+                                        data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
+                                        data-item="item.condition_expr"></expression-editor-button>
+                                <md-tooltip class="tooltip_2"
+                                            md-direction="bottom">Condition to execute the Action</md-tooltip>
+                            </span>
+
                             <span ng-bind="vm.getActionTypeName(item)" style="width: 270px"></span>
                             <span># {{$index + 1}}</span>
                             <span ng-if="item.isPaneExpanded">

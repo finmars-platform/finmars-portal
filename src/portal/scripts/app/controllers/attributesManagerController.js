@@ -25,8 +25,10 @@
         vm.fromEntityType = $stateParams.from;
         vm.isInstanceId = $stateParams.instanceId;
         console.log('cancel button instanceId', vm.isInstanceId, $stateParams);
+        console.log('vm.entityType', vm.entityType);
 
         vm.getList = function () {
+
             attributeTypeService.getList(vm.entityType).then(function (data) {
 
                 vm.attrs = data.results;

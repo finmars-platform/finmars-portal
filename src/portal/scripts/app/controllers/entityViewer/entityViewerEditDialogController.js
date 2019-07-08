@@ -501,7 +501,7 @@
                     vm.readyStatus.layout = false;
 
                     vm.getItem();
-                    vm.getAttrs();
+                    vm.getAttributeTypes();
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
                     vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);

@@ -68,7 +68,13 @@
                                 entityType: vm.entityViewerDataService.getEntityType()
                             }
                         }).then(function (res) {
+
+                            vm.entityViewerDataService.setActiveObjectAction(null);
+
                             if (res.status === 'agree') {
+
+
+
                                 vm.entityViewerDataService.resetData();
                                 vm.entityViewerDataService.resetRequestParameters();
 
@@ -98,6 +104,9 @@
                                     entityId: activeObject.id
                                 }
                             }).then(function (res) {
+
+                                vm.entityViewerDataService.setActiveObjectAction(null);
+
                                 if (res && res.res === 'agree') {
                                     vm.entityViewerDataService.resetData();
                                     vm.entityViewerDataService.resetRequestParameters();
@@ -125,6 +134,9 @@
                                         entityId: activeObject.id
                                     }
                                 }).then(function (res) {
+
+                                    vm.entityViewerDataService.setActiveObjectAction(null);
+
                                     if (res && res.res === 'agree') {
                                         vm.entityViewerDataService.resetData();
                                         vm.entityViewerDataService.resetRequestParameters();
@@ -150,6 +162,9 @@
                                         entityId: activeObject.id
                                     }
                                 }).then(function (res) {
+
+                                    vm.entityViewerDataService.setActiveObjectAction(null);
+
                                     if (res && res.res === 'agree') {
                                         vm.entityViewerDataService.resetData();
                                         vm.entityViewerDataService.resetRequestParameters();
