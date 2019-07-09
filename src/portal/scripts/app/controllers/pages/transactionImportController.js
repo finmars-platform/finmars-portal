@@ -356,8 +356,10 @@
 
         };
 
-        vm.validate = function (resolve) {
+        vm.validate = function (resolve, $event, loaderDialog) {
             vm.readyStatus.processing = true;
+
+            loaderDialog = loaderDialog || false;
 
             var formData = new FormData();
 
@@ -372,6 +374,39 @@
                 formData.append('missing_data_handler', vm.config.missing_data_handler);
 
                 vm.fileLocal = vm.config.file;
+            }
+
+            if (loaderDialog === false) {
+
+                $mdDialog.show({
+                    controller: 'LoaderDialogController as vm',
+                    templateUrl: 'views/dialogs/loader-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        data: {
+                            isCancelable: false,
+                            current: vm.validateConfig.processed_rows,
+                            total: vm.validateConfig.total_rows,
+                            text: 'Validation Progress:',
+                            status: vm.validateConfig.task_status,
+                            callback: function () {
+                                return {
+                                    current: vm.validateConfig.processed_rows,
+                                    total: vm.validateConfig.total_rows,
+                                    status: vm.validateConfig.task_status
+                                }
+                            }
+                        }
+                    }
+
+                });
+
+                loaderDialog = true;
+
             }
 
             importTransactionService.validateImport(formData).then(function (data) {
@@ -391,7 +426,7 @@
                 } else {
 
                     setTimeout(function () {
-                        vm.validate(resolve);
+                        vm.validate(resolve, $event, loaderDialog);
                     }, 1000)
 
                 }
@@ -401,9 +436,10 @@
 
         };
 
-        vm.load = function ($event) {
+        vm.load = function ($event, loaderDialog) {
             vm.readyStatus.processing = true;
-            //vm.config.task = 81;
+
+            loaderDialog = loaderDialog || false;
 
             var formData = new FormData();
 
@@ -430,6 +466,39 @@
                 }
 
             });
+
+            if (loaderDialog === false) {
+
+                $mdDialog.show({
+                    controller: 'LoaderDialogController as vm',
+                    templateUrl: 'views/dialogs/loader-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        data: {
+                            isCancelable: false,
+                            current: vm.config.processed_rows,
+                            total: vm.config.total_rows,
+                            text: 'Import Progress:',
+                            status: vm.config.task_status,
+                            callback: function () {
+                                return {
+                                    current: vm.config.processed_rows,
+                                    total: vm.config.total_rows,
+                                    status: vm.config.task_status
+                                }
+                            }
+                        }
+                    }
+
+                });
+
+                loaderDialog = true;
+
+            }
 
 
             importTransactionService.startImport(formData).then(function (data) {
@@ -499,7 +568,7 @@
                 } else {
 
                     setTimeout(function () {
-                        vm.load();
+                        vm.load($event, loaderDialog);
                     }, 1000)
 
                 }

@@ -121,13 +121,43 @@
 
             });
 
+            vm.status = 'PROGRESS';
             vm.state = 'validate';
             vm.counter = 0;
             vm.activeItemTotal = schemeObject.actions.length;
 
+            $mdDialog.show({
+                controller: 'LoaderDialogController as vm',
+                templateUrl: 'views/dialogs/loader-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        isCancelable: false,
+                        current: vm.counter,
+                        total: vm.activeItemTotal,
+                        text: 'Validation Progress:',
+                        status: vm.status,
+                        callback: function () {
+                            return {
+                                current: vm.counter,
+                                total: vm.activeItemTotal,
+                                status: vm.status
+                            }
+                        }
+                    }
+                }
+
+            });
+
             complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
                 console.log('data', data);
+
+                vm.status = 'SUCCESS';
 
                 vm.readyStatus.processing = false;
 
@@ -197,9 +227,37 @@
 
             });
 
+            vm.status = 'PROGRESS';
             vm.state = 'validate';
             vm.counter = 0;
             vm.activeItemTotal = schemeObject.actions.length;
+
+            $mdDialog.show({
+                controller: 'LoaderDialogController as vm',
+                templateUrl: 'views/dialogs/loader-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        isCancelable: false,
+                        current: vm.counter,
+                        total: vm.activeItemTotal,
+                        text: 'Import Progress:',
+                        status: vm.status,
+                        callback: function () {
+                            return {
+                                current: vm.counter,
+                                total: vm.activeItemTotal,
+                                status: vm.status
+                            }
+                        }
+                    }
+                }
+
+            });
 
             complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
@@ -221,6 +279,7 @@
 
                         console.log('data', data);
 
+                        vm.status = 'SUCCESS';
                         vm.readyStatus.processing = false;
 
                         errorsCount = 0;
