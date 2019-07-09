@@ -1,11 +1,17 @@
-.configuration-import-dialog-view {
+.configuration-import-export-mixin() {
+  .cie-first-level-group-h1 {
+    margin: 30px 0 40px;
+  }
 
-  width: 70%;
+  .cie-entities-group-h2 {
+    margin-left: 20px;
+  }
 
   .cie-entity-holder {
     position: relative;
     margin-bottom: 6px;
     margin-top: 6px;
+    margin-left: 20px;
   }
 
   .cie-dependency {
@@ -17,6 +23,18 @@
     left: 4px;
   }
 
+  .cie-entity-items-holder {
+    margin-left: 40px;
+  }
+}
+
+.configuration-import-dialog-view {
+  width: 70%;
+  .configuration-import-export-mixin();
+}
+
+.configuration-export-page {
+  .configuration-import-export-mixin();
 }
 
 .toolbar-progression-indication {

@@ -65,7 +65,11 @@
 
                                                 if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
 
-                                                    parent.first__ = groups[g].name;
+                                                    if (groups[g].hasOwnProperty('firstLevelGroup')) {
+                                                        parent.first_level_header__ = groups[g].firstLevelGroup;
+                                                    }
+
+                                                    parent.first_item__ = groups[g].name;
                                                     groups[g].firstElementExist = true;
 
                                                 }
@@ -73,7 +77,8 @@
                                                 parent.order__ = g; // Set a group order position
 
                                                 // Divide children into subgroups
-                                                if (parent.entity === "ui.listlayout" || parent.entity === "ui.reportlayout") {
+                                                if (parent.entity === "ui.listlayout" ||
+                                                    parent.entity === "ui.reportlayout") {
                                                     var subGroupsList = groups[g].subGroups[parent.entity];
 
                                                     var children = parent.content;
@@ -85,7 +90,7 @@
                                                             if (child.content_type === subGroupsList[s].content_type) {
 
                                                                 if (!subGroupsList[s].firstElementExist) {
-                                                                    child.first__ = subGroupsList[s].name;
+                                                                    child.first_item__ = subGroupsList[s].name;
                                                                     subGroupsList[s].firstElementExist = true;
                                                                 }
 
@@ -122,7 +127,7 @@
             });
         };
 
-        var groupByProperty = function (elements, propertyToGroupBy) {
+        var groupByProperty = function (elements, propertyToGroupBy) { // add headers to groups of layouts
 
             var hasFirstElement = [];
 
@@ -136,7 +141,7 @@
                     }
 
                     if (hasFirstElement.indexOf(valueToGroupBy) === -1) {
-                        element.first__ = valueToGroupBy;
+                        element.first_item__ = valueToGroupBy;
                         hasFirstElement.push(valueToGroupBy);
                     }
 
@@ -211,8 +216,7 @@
                             case "accounts.account":
                                 daContentType = "Account";
                                 break;
-                        }
-                        ;
+                        };
 
                         var daName = attr.name;
                         var usagesCount = 0;
@@ -287,7 +291,7 @@
                                 if (attributeIsUsed) {
                                     entityItem.attributeIsUsed__ = true;
                                     usagesCount = usagesCount + 1;
-                                    attr.countOfUsages__ = usagesCount;
+                                    attr.countOfUsages__ = usagesCount - 1;
                                 }
 
 
@@ -897,12 +901,13 @@
                 // removing properties created for data rendering
                 items.forEach(function (entity) {
                     delete entity.order__;
-                    delete entity.first__;
+                    delete entity.first_item__;
                     delete entity.attributeIsUsed__;
+                    delete entity.first_level_header__;
 
                     entity.content.forEach(function (item) {
                         delete item.order__;
-                        delete item.first__;
+                        delete item.first_item__;
                         delete item.countOfUsages__;
                     });
 

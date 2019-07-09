@@ -29,6 +29,8 @@
 
         vm.items = [];
 
+        vm.fieldsTrees = {};
+
         vm.entityType = data.entityType;
 
         vm.instanceId = undefined;
@@ -60,6 +62,7 @@
             return new Promise(function (resolve) {
 
                 if (vm.instanceId) {
+
                     uiService.getEditLayoutByInstanceId(vm.entityType, vm.instanceId).then(function (data) {
 
                         if (data) {
@@ -81,6 +84,7 @@
                         resolve(vm.tabs);
 
                     });
+
                 } else {
                     uiService.getEditLayout(vm.entityType).then(function (data) {
 
@@ -121,7 +125,7 @@
 
             //console.log('VM TAB', tab);
 
-            var i, c;
+            /*var i, c;
 
             var rowMap = [];
             var startColumn;
@@ -154,6 +158,21 @@
                         }
                     }
                 }
+            }
+
+            return true;*/
+
+            var fieldsTree = vm.fieldsTrees[tab.id];
+            var fieldRow = fieldsTree[row];
+            var colspanSizeToHide = 2;
+
+            for (var i = column - 1; i > 0; i--) { // check if previous columns have enough colspan to cover current one
+
+                if (fieldRow[i] && parseInt(fieldRow[i].colspan) >= parseInt(colspanSizeToHide)) {
+                    return false;
+                }
+
+                colspanSizeToHide = colspanSizeToHide + 1;
             }
 
             return true;
@@ -278,66 +297,95 @@
         };
 
         vm.saveLayout = function () {
-            var i;
-            for (i = 0; i < vm.tabs.length; i = i + 1) {
-                removeLastRow(vm.tabs[i]);
-            }
-            vm.ui.data = vm.tabs;
 
-            if (vm.uiIsDefault) {
-                if (vm.instanceId) {
-                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
-                        console.log('layout saved1');
-                        /*var route;
-                        if (vm.entityType === 'complex-transaction') {
-                            route = routeResolver.findExistingState('app.data.', 'transaction-type');
-                        } else {
-                            route = routeResolver.findExistingState('app.data.', vm.entityType);
-                        }
-                        $state.go(route.state, route.options);*/
-                        $scope.$apply();
-
-                        $mdDialog.hide({status: 'agree'});
-                    });
-                } else {
-                    uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
-                        console.log('layout saved2');
-
-                        /*var route = routeResolver.findExistingState('app.data.', vm.entityType);
-                        $state.go(route.state, route.options);*/
-                        $scope.$apply();
-
-                        $mdDialog.hide({status: 'agree'});
-                    });
+            var notSavedTabExist = false;
+            for (var i = 0; i < vm.tabs.length; i = i + 1) {
+                if (vm.tabs[i].hasOwnProperty('editState') && vm.tabs[i].editState) {
+                    notSavedTabExist = true;
+                    break;
                 }
+            }
+
+            if (!notSavedTabExist) {
+
+                for (var i = 0; i < vm.tabs.length; i = i + 1) {
+                    removeLastRow(vm.tabs[i]);
+                }
+                vm.ui.data = vm.tabs;
+
+                if (vm.uiIsDefault) {
+                    if (vm.instanceId) {
+                        uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
+                            console.log('layout saved1');
+                            /*var route;
+                            if (vm.entityType === 'complex-transaction') {
+                                route = routeResolver.findExistingState('app.data.', 'transaction-type');
+                            } else {
+                                route = routeResolver.findExistingState('app.data.', vm.entityType);
+                            }
+                            $state.go(route.state, route.options);*/
+                            $scope.$apply();
+
+                            $mdDialog.hide({status: 'agree'});
+                        });
+                    } else {
+                        uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
+                            console.log('layout saved2');
+
+                            /*var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                            $state.go(route.state, route.options);*/
+                            $scope.$apply();
+
+                            $mdDialog.hide({status: 'agree'});
+                        });
+                    }
+                } else {
+                    if (vm.instanceId) {
+                        uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
+                            console.log('layout saved3');
+
+                            /*var route;
+                            if (vm.entityType === 'complex-transaction') {
+                                route = routeResolver.findExistingState('app.data.', 'transaction-type');
+                            } else {
+                                route = routeResolver.findExistingState('app.data.', vm.entityType);
+                            }
+                             $state.go(route.state, route.options);*/
+                            $scope.$apply();
+
+                            $mdDialog.hide({status: 'agree'});
+                        });
+                    } else {
+                        uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
+                            console.log('layout saved4');
+
+                            /*var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                            $state.go(route.state, route.options);*/
+                            $scope.$apply();
+
+                            $mdDialog.hide({status: 'agree'});
+                        });
+                    }
+                }
+
             } else {
-                if (vm.instanceId) {
-                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
-                        console.log('layout saved3');
 
-                        /*var route;
-                        if (vm.entityType === 'complex-transaction') {
-                            route = routeResolver.findExistingState('app.data.', 'transaction-type');
-                        } else {
-                            route = routeResolver.findExistingState('app.data.', vm.entityType);
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false,
+                    multiple: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: 'There is tab that is not saved. Please, save or delete it before saving input form configuration.'
                         }
-                         $state.go(route.state, route.options);*/
-                        $scope.$apply();
+                    }
+                });
 
-                        $mdDialog.hide({status: 'agree'});
-                    });
-                } else {
-                    uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
-                        console.log('layout saved4');
-
-                        /*var route = routeResolver.findExistingState('app.data.', vm.entityType);
-                        $state.go(route.state, route.options);*/
-                        $scope.$apply();
-
-                        $mdDialog.hide({status: 'agree'});
-                    });
-                }
             }
+
         };
 
         vm.bindFlex = function (tab, row, column) {
@@ -379,7 +427,6 @@
             }
 
             if (vm.tabs.length > 0) {
-                console.log('target vm.tabs', vm.tabs);
 
                 var notSavedTabExist = false;
 
@@ -414,6 +461,7 @@
                         templateUrl: 'views/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         clickOutsideToClose: false,
+                        multiple: true,
                         locals: {
                             warning: {
                                 title: 'Warning',
@@ -462,7 +510,7 @@
         };
 
         vm.saveEditedTab = function (tab) {
-            console.log(tab);
+
             var tabIsReadyToSave = true;
 
             if (tab.captionName && tab.captionName !== '') {
@@ -629,6 +677,36 @@
 
         };
 
+        vm.createFieldsTrees = function () {
+
+            vm.fieldsTrees = {};
+
+            vm.tabs.forEach(function (tab) {
+
+                vm.fieldsTrees[tab.id] = {};
+                var f;
+                for (f = 0; f < tab.layout.fields.length; f++) {
+
+                    var treeTab = vm.fieldsTrees[tab.id];
+
+                    var field = tab.layout.fields[f];
+                    var fRow = field.row;
+                    var fCol = field.column;
+
+                    if (!treeTab[fRow]) {
+                        treeTab[fRow] = {};
+                    }
+
+                    if (!treeTab[fRow][fCol]) {
+                        treeTab[fRow][fCol] = {};
+                    }
+
+                    treeTab[fRow][fCol] = field;
+                }
+            });
+
+        };
+
         vm.getDrakeContainers = function () {
 
             var items = [];
@@ -759,6 +837,7 @@
 
                             });
 
+                            vm.createFieldsTrees();
                             vm.syncItems();
 
                             $scope.$apply();
@@ -925,6 +1004,7 @@
             vm.getLayout().then(function () {
 
                 vm.getItems();
+                vm.createFieldsTrees();
 
             });
 

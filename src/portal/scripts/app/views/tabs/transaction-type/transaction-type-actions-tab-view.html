@@ -10,7 +10,7 @@
                         <div layout="row"
                              class="ttype-action-info-container"
                              layout-align="start center">
-                            <span class="m-t-16">
+                            <span class="m-t-16" ng-click="$event.stopPropagation()">
                                 <expression-editor-button
                                         data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                                         data-item="item.condition_expr"></expression-editor-button>

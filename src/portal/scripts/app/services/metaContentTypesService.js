@@ -72,19 +72,24 @@
         return metaContentTypesRepository.getListForSimpleEntityImport();
     }
 
-    var getContentTypeUIByState = function (state) {
+    var getContentTypeUIByState = function (stateName, stateParams) {
 
         var result = '';
 
-        console.log('state', state);
+        console.log('stateName', stateName, stateParams);
 
-        if (state.indexOf('app.data') !== -1 || state.indexOf('app.reports') !== -1) {
+        if (stateName.indexOf('app.data') !== -1 || stateName.indexOf('app.reports') !== -1) {
 
-            result = state.split('.')[2];
+            if (stateName === 'app.data.strategy') {
+                result = 'strategy-' + stateParams;
+            } else {
+                result = stateName.split('.')[2];
+            }
+
         }
 
-        if (state == 'app.dashboard') {
-            result = state.split('.')[1];
+        if (stateName == 'app.dashboard') {
+            result = stateName.split('.')[1];
         }
 
         return result;
