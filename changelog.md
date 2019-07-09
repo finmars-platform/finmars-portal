@@ -1,5 +1,8 @@
 # Changelog
 
+## 08.07.2019
+- New Entity Viewer Logic
+
 ## 23.05.2019
 - Custom Fields
 

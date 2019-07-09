@@ -64,6 +64,10 @@
             pattern = [item.___parentId, stringHelper.toHash(item.___type + '_' + item.___blankline_type)].join('');
         }
 
+        if (item.___type === 'control') {
+            pattern = [item.___parentId, stringHelper.toHash(item.___type)].join('');
+        }
+
         return stringHelper.toHash(pattern)
 
     };

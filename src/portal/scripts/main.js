@@ -114,6 +114,7 @@ app.controller('ClassifierExportDialogController', ['$scope', '$mdDialog', 'data
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/warningDialogController')]);
 app.controller('SuccessDialogController', ['$scope', '$mdDialog', 'success', require('./app/controllers/dialogs/successDialogController')]);
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
+app.controller('LoaderDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/loaderDialogController')]);
 
 // Actions
 
