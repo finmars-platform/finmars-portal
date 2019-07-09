@@ -1,6 +1,6 @@
 <div style="padding: 20px 20px 0">
 
-    <div data-ng-if="vm.readyStatus.content">
+    <div data-ng-if="vm.readyStatus.content" class="configuration-export-page">
 
         <h2 class="m-b-35">Configuration Export Manager</h2>
 
@@ -68,6 +68,7 @@
 
             <md-checkbox data-ng-checked="vm.selectAllState"
                          data-ng-click="vm.toggleSelectAll()"
+                         class="m-b-0"
                          aria-label="checkbox">
             </md-checkbox>
 
@@ -77,7 +78,13 @@
 
         <div data-ng-repeat="item in vm.items | orderBy: 'order__'">
 
-            <h2 data-ng-if="item.first__" data-ng-bind="item.first__"></h2>
+            <h1 ng-if="item.first_level_header__"
+                ng-bind="item.first_level_header__"
+                class="cie-first-level-group-h1"></h1>
+            <h2 ng-if="item.first_item__"
+                ng-bind="item.first_item__"
+                class="cie-entities-group-h2"></h2>
+
             <div class="cie-entity-holder">
                 <md-checkbox data-ng-checked="item.active"
                              data-ng-click="vm.toggleActiveForChilds(item)"
@@ -90,16 +97,17 @@
                     data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
                 <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"
-                           aria-label="checkboxes show hide button"><span
-                        data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
+                           aria-label="checkboxes show hide button">
+                    <span data-ng-if="!item.displayItems">Show</span>
+                    <span data-ng-if="item.displayItems">Hide</span>
                 </md-button>
             </div>
 
 
-            <div data-ng-show="item.displayItems" style="padding-left: 20px">
+            <div data-ng-show="item.displayItems" class="cie-entity-items-holder">
 
                 <div data-ng-repeat="child in item.content | orderBy: 'order__'">
-                    <h4 data-ng-if="child.first__" data-ng-bind="child.first__"></h4>
+                    <h4 data-ng-if="child.first_item__" data-ng-bind="child.first_item__"></h4>
                     <md-checkbox data-ng-checked="child.active"
                                  data-ng-click="vm.updateActiveForParent(child, item)"
                                  aria-label="checkbox">

@@ -7,6 +7,7 @@
       "ui.reportlayout",
       "ui.bookmark"
     ],
+    "firstLevelGroup": "User Interface",
     "firstElementExist": false,
     "subGroups": {
 
@@ -166,11 +167,21 @@
     }
   },
   {
+    "name": "Custom Column for Layouts",
+    "entities": [
+      "reports.balancereportcustomfield",
+      "reports.plreportcustomfield",
+      "reports.transactionreportcustomfield"
+    ],
+    "firstElementExist": false
+  },
+  {
     "name": "Transaction Types",
     "entities": [
       "transactions.transactiontype",
       "transactions.transactiontypegroup"
     ],
+    "firstLevelGroup": "Database Configuration",
     "firstElementExist": false
   },
   {

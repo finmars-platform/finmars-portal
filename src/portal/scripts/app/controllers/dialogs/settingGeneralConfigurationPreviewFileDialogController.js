@@ -55,7 +55,11 @@
 
                                         if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
 
-                                            parent.first__ = groups[g].name;
+                                            if (groups[g].hasOwnProperty('firstLevelGroup')) {
+                                                parent.first_level_header__ = groups[g].firstLevelGroup;
+                                            }
+
+                                            parent.first_item__ = groups[g].name;
                                             groups[g].firstElementExist = true;
 
                                         }
@@ -75,7 +79,7 @@
                                                     if (child.content_type === subGroupsList[s].content_type) {
 
                                                         if (!subGroupsList[s].firstElementExist) {
-                                                            child.first__ = subGroupsList[s].name;
+                                                            child.first_item__ = subGroupsList[s].name;
                                                             subGroupsList[s].firstElementExist = true;
                                                         }
 
@@ -468,13 +472,14 @@
             vm.items.forEach(function (entity) {
 
                 delete entity.order__;
-                delete entity.first__;
+                delete entity.first_item__;
                 delete entity.attributeIsUsed__;
+                delete entity.first_level_header__;
 
                 entity.content.forEach(function (item) {
 
                     delete item.order__;
-                    delete item.first__;
+                    delete item.first_item__;
                     delete item.countOfUsages__;
 
                     if (item.active) {

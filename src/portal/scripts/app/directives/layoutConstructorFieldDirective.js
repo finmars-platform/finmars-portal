@@ -15,7 +15,8 @@
             scope: {
                 tab: '=',
                 row: '=',
-                column: '='
+                column: '=',
+                fieldsTree: '='
             },
             link: function (scope, elem, attr) {
 
@@ -64,7 +65,7 @@
                 });
 
                 var tabs = scope.$parent.vm.tabs;
-                console.log("data constructor tabs", tabs);
+
                 function addRow() {
                     var c;
                     scope.tab.layout.rows = scope.tab.layout.rows + 1;
@@ -81,17 +82,16 @@
 
                 scope.cancel = function () {
 
+                    var backupItem = JSON.parse(JSON.stringify(scope.backupItem));
                     if (scope.item.name || scope.item.id) {
-                        scope.item = scope.backupItem;
-                        scope.item.colspan = scope.backupItem.colspan;
+                        scope.item = backupItem;
+                        scope.item.colspan = backupItem.colspan;
                     } else {
                         scope.item.attr = null;
                         scope.item.colspan = 1;
                     }
 
                     scope.item.editMode = false;
-
-                    console.log("data constructor tabs", tabs);
 
                 };
 
@@ -144,6 +144,7 @@
 
                     scope.item.editMode = false;
 
+                    scope.$parent.vm.createFieldsTrees();
                     scope.$parent.vm.syncItems();
 
 
@@ -207,14 +208,24 @@
 
                 scope.getCols = function () {
 
-                    var i, c = 1;
                     var colsLeft = [1];
-                    for (i = scope.column; i < scope.tab.layout.columns; i = i + 1) {
-                        c = c + 1;
-                        colsLeft.push(c);
+                    var row = scope.fieldsTree[scope.row];
+                    var columnsInTotal = scope.tab.layout.columns;
+
+                    var i;
+                    var c = 1;
+                    for (i = scope.column + 1; i <= columnsInTotal; i++) {
+
+                        if (row[i].type !== 'empty') {
+                            break;
+                        } else {
+                            c = c + 1;
+                            colsLeft.push(c);
+                        }
                     }
 
                     return colsLeft;
+
                 };
 
                 scope.changeModel = function (item) {
@@ -222,6 +233,7 @@
                 };
 
                 scope.deleteField = function () {
+
                     var i;
                     scope.item.id = null;
                     scope.item.key = null;
@@ -230,6 +242,7 @@
                     scope.item.disabled = false;
                     scope.item.options = null;
                     scope.item.colspan = 1;
+
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                         if (scope.tab.layout.fields[i].row === scope.item.row) {
                             if (scope.tab.layout.fields[i].column === scope.item.column) {
@@ -246,6 +259,7 @@
                         }
                     }
 
+                    scope.$parent.vm.createFieldsTrees();
                     scope.$parent.vm.syncItems();
                 };
 

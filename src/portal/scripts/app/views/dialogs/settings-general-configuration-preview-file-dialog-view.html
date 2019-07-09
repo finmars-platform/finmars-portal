@@ -20,7 +20,9 @@
 
         <div>
 
-            <md-checkbox ng-checked="vm.selectAllState" data-ng-click="vm.toggleSelectAll()"
+            <md-checkbox ng-checked="vm.selectAllState"
+                         data-ng-click="vm.toggleSelectAll()"
+                         class="m-b-0"
                          aria-label="checkbox">
             </md-checkbox>
 
@@ -30,7 +32,13 @@
 
         <div data-ng-repeat="item in vm.items | orderBy: 'order__'">
 
-            <h2 data-ng-if="item.first__" data-ng-bind="item.first__"></h2>
+            <h1 ng-if="item.first_level_header__"
+                ng-bind="item.first_level_header__"
+                class="cie-first-level-group-h1"></h1>
+            <h2 data-ng-if="item.first_item__"
+                data-ng-bind="item.first_item__"
+                class="cie-entities-group-h2"></h2>
+
             <div class="cie-entity-holder" data-ng-class="{
                       'text-warning-red': item.is_duplicate && vm.settings.mode == 'overwrite',
                       'text-warning-blue': item.is_duplicate && vm.settings.mode == 'skip'}">
@@ -62,10 +70,10 @@
             </div>
 
 
-            <div data-ng-show="item.displayItems" style="padding-left: 20px">
+            <div data-ng-show="item.displayItems" class="cie-entity-items-holder">
 
                 <div data-ng-repeat="child in item.content">
-                    <h4 data-ng-if="child.first__" data-ng-bind="child.first__"></h4>
+                    <h4 data-ng-if="child.first_item__" data-ng-bind="child.first_item__"></h4>
                     <md-checkbox data-ng-checked="child.active"
                                  data-ng-click="vm.updateActiveForParent(child, item)"
                                  aria-label="checkbox">

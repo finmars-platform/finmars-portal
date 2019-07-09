@@ -25,7 +25,7 @@
         'LOGOUT': 'LOGOUT'
     };
 
-    module.exports = function ($scope, $state, $rootScope, $mdDialog, $transitions) {
+    module.exports = function ($scope, $state, $stateParams, $rootScope, $mdDialog, $transitions) {
 
         var vm = this;
 
@@ -35,6 +35,9 @@
         vm.currentMasterUser = '';
 
         vm.broadcastManager = null;
+
+        var pageStateName = $state.current.name;
+        var pageStateParams = $stateParams.strategyNumber;
 
         vm.logout = function () {
             console.log('Logged out');
@@ -160,18 +163,36 @@
 
         // Get name of active layout in the toolbar
 
-        var previousState = '';
-        var currentState = '';
 
         var showLayoutName = false;
 
+        $transitions.onFinish({}, function (transition) {
+            console.log("transition", transition, transition.to(), transition.params());
+            pageStateName = transition.to().name;
+            pageStateParams = transition.params().strategyNumber;
+
+            // var layoutSwitched = middlewareService.getData('entityActiveLayoutSwitched');
+
+            if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
+                showLayoutName = true;
+                vm.getActiveLayoutName();
+                /*if (layoutSwitched) {
+                    vm.getActiveLayoutName(layoutSwitched);
+                    middlewareService.deleteData('entityActiveLayoutSwitched');
+                }*/
+
+            } else {
+                showLayoutName = false;
+            }
+
+
+        });
+
         vm.isStateOfEntity = function () {
 
-            currentState = $state.current.name;
             var layoutSwitched = middlewareService.getData('entityActiveLayoutSwitched');
-
             // Change layout information on state change
-            if (currentState !== previousState) {
+            /*if (currentState !== previousState) {
                 previousState = currentState;
 
                 if (currentState.indexOf('app.data.') !== -1 || vm.isReport()) {
@@ -180,7 +201,7 @@
                 } else {
                     showLayoutName = false;
                 }
-            }
+            }*/
 
             // Check if layout has been switched on the same state
             if (layoutSwitched) {
@@ -199,14 +220,24 @@
                 vm.activeLayoutName = newLayoutName;
 
             } else {
+                console.log("new layout name state", pageStateName, $stateParams);
+                var stateParams = null;
+                if (pageStateName === 'app.data.strategy') {
 
-                var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
+                    console.log("new layout name stateParams", pageStateParams);
+                }
 
+                var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams);
+                console.log("new layout name entityType", entityType);
                 uiService.getDefaultListLayout(entityType).then(function (data) {
-
+                    console.log("new layout name strategy", data);
                     var activeLayoutRes = data.results;
                     if (activeLayoutRes && activeLayoutRes.length) {
+
                         vm.activeLayoutName = activeLayoutRes[0].name;
+
+                    } else {
+                        vm.activeLayoutName = '';
                     }
 
                     $scope.$apply();
@@ -295,7 +326,6 @@
                 }
             }).then(function (res) {
                 if (res.status == 'agree') {
-                    // $state.reload($state.current.name);
                     $state.reload();
                 }
 
@@ -327,7 +357,6 @@
                 vm.getMasterUsersList();
             }
 
-
         });
 
         vm.logOutMethod = function () {
@@ -350,6 +379,11 @@
             });
 
             vm.initCrossTabBroadcast();
+
+            if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
+                showLayoutName = true;
+                vm.getActiveLayoutName();
+            }
 
         };
 
