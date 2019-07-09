@@ -6,6 +6,18 @@
                 <b>{{vm.data.text}}</b> {{vm.data.current}} / {{vm.data.total}}
             </div>
 
+            <div data-ng-if="vm.data.additional.length">
+
+                <div data-ng-repeat="item in vm.data.additional">
+
+                    <div data-ng-if="item.text" class="text-center">
+                        <b>{{item.text}}</b> {{item.current}} / {{item.total}}
+                    </div>
+
+                </div>
+
+            </div>
+
             <div layout="row" layout-sm="column" layout-align="space-around" class="loader-spinner">
                 <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
             </div>
