@@ -1,0 +1,20 @@
+<md-dialog aria-label="" ng-cloak class="loader-dialog">
+    <md-dialog-content>
+        <div class="loader-body">
+
+            <div data-ng-if="vm.data.total" class="loader-description">
+                <b>{{vm.data.text}}</b> {{vm.data.current}} / {{vm.data.total}}
+            </div>
+
+            <div layout="row" layout-sm="column" layout-align="space-around" class="loader-spinner">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
+
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" data-ng-if="data.isCancelable">
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            Cancel
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

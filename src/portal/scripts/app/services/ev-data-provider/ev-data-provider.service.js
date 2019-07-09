@@ -7,48 +7,6 @@
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
-    var detectLevelChange = function (entityViewerDataService, entityViewerEventService) {
-
-        var requestParameters = JSON.parse(JSON.stringify(entityViewerDataService.getActiveRequestParameters()));
-
-        // console.log('detectLevelChange.options.page', requestParameters.body.page);
-
-        if (!requestParameters.body.page) {
-            requestParameters.body.page = 1;
-        }
-
-        var groupData;
-
-        if (!requestParameters.event.___id) {
-            groupData = entityViewerDataService.getRootGroupData();
-        } else {
-            groupData = entityViewerDataService.getData(requestParameters.event.___id);
-        }
-
-        // console.log('detectLevelChange.groupData', groupData);
-        // console.log('detectLevelChange.groupData', groupData && groupData.___parentId !== null && !groupData.next && groupData.results.lengt);
-
-        if (groupData && groupData.___parentId !== null && !groupData.next && groupData.results && groupData.results.length) {
-
-            var parent = entityViewerDataService.getData(groupData.___parentId);
-
-            // console.log('parent', parent);
-
-            requestParameters.body.page = Math.ceil(parent.results / 40); // TODO 40 - items per page, make configurable
-            requestParameters.event.___id = parent.___id;
-            requestParameters.event.groupName = parent.___group_name;
-            requestParameters.event.groupIdentifier = parent.___group_identifier;
-            requestParameters.event.groupId = parent.___id;
-            requestParameters.event.parentGroupId = parent.___parentId;
-            requestParameters.requestType = 'groups';
-
-        }
-
-        entityViewerDataService.setRequestParameters(requestParameters);
-        entityViewerDataService.setActiveRequestParametersId(requestParameters.id);
-
-    };
-
     var injectRegularFilters = function (entityViewerDataService, entityViewerEventService) {
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
@@ -83,68 +41,6 @@
 
     };
 
-    var fromMemoryDecorator = function (callback, entityViewerDataService, entityViewerEventService) {
-
-        var requestParameters = JSON.parse(JSON.stringify(entityViewerDataService.getActiveRequestParameters()));
-
-        var options = requestParameters.body;
-        var event = requestParameters.event;
-
-        if (!requestParameters.requestedPages) {
-            requestParameters.requestedPages = [];
-        }
-
-        var currentPage = evDataHelper.calculatePageFromOffset(requestParameters, entityViewerDataService);
-
-        console.log('requestParameters', JSON.parse(JSON.stringify(requestParameters)));
-        console.log('currentPage', currentPage);
-
-        if (evDataHelper.ifFirstRequestForRootGroup(event, entityViewerDataService) || evDataHelper.isFirstRequestForObjects(event, entityViewerDataService)) {
-
-            requestParameters.body = options;
-
-            requestParameters.requestedPages = [1];
-            requestParameters.processedPages = [];
-
-            entityViewerDataService.setRequestParameters(requestParameters);
-
-            callback(entityViewerDataService, entityViewerEventService);
-
-        } else {
-
-            if (requestParameters.requestedPages.indexOf(currentPage) === -1) {
-
-                options.page = currentPage;
-
-                requestParameters.requestedPages.push(currentPage);
-
-                requestParameters.body = options;
-
-                entityViewerDataService.setRequestParameters(requestParameters);
-
-                callback(entityViewerDataService, entityViewerEventService);
-
-            } else {
-
-                // console.log('requestParameters.processedPages', requestParameters.processedPages);
-                // console.log('requestParameters.currentPage', currentPage);
-
-                if (requestParameters.processedPages.indexOf(currentPage) !== -1) {
-
-                    console.log('fromMemoryDecorator: From memory');
-
-                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-
-                }
-
-
-            }
-
-        }
-
-
-    };
-
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
         entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
@@ -160,7 +56,7 @@
             var event = _requestParameters.event;
 
             // var page = new Number(options.page) - 1;
-            var page = options.page;
+            var page = options.page || 1;
 
             console.log('getObjects.page', page);
 
@@ -182,8 +78,10 @@
 
             objectsService.getList(entityType, options).then(function (data) {
 
-                // console.log('getObjects.page', page);
+                pagination.page = page;
+                pagination.count = data.count;
 
+                entityViewerDataService.setPagination(pagination);
 
                 var pageAsIndex = parseInt(page, 10) - 1;
                 var obj;
@@ -217,7 +115,6 @@
 
                         obj = Object.assign({}, groupData);
 
-
                         obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                         obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
                         obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
@@ -249,10 +146,13 @@
                     }
 
 
-
                 }
 
-                evDataHelper.setDefaultObjects(obj);
+                obj.results = obj.results.filter(function (item) {
+                    return item.___type !== 'control'
+                });
+
+                // evDataHelper.setDefaultObjects(obj);
 
                 obj.results = obj.results.map(function (item) {
 
@@ -273,9 +173,20 @@
                     return item
                 });
 
+                var controlObj = {
+                    ___parentId: obj.___id,
+                    ___type: 'control',
+                    ___level: obj.___level + 1
+                };
+
+                controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+                obj.results.push(controlObj);
+
+                requestParameters.pagination = pagination;
+
                 entityViewerDataService.setData(obj);
 
-                requestParameters.processedPages.push(page);
                 entityViewerDataService.setRequestParameters(requestParameters);
 
                 resolve(obj);
@@ -301,7 +212,7 @@
             var options = JSON.parse(JSON.stringify(requestParameters.body));
             var event = requestParameters.event;
 
-            var page = options.page;
+            var page = options.page || 1;
             var pagination = entityViewerDataService.getPagination();
             var step = pagination.items_per_page;
             var i;
@@ -321,6 +232,11 @@
             groupsService.getList(entityType, options).then(function (data) {
 
                 if (data.status !== 404) {
+
+                    pagination.count = data.count;
+                    pagination.page = page;
+
+                    entityViewerDataService.setPagination(pagination);
 
                     var pageAsIndex = parseInt(page, 10) - 1;
 
@@ -406,7 +322,7 @@
 
                     parents.push(obj);
 
-                    evDataHelper.setDefaultGroups(obj);
+                    // evDataHelper.setDefaultGroups(obj);
 
                     obj.results = obj.results.map(function (item) {
 
@@ -435,11 +351,21 @@
                         return item
                     });
 
+                    var controlObj = {
+                        ___parentId: obj.___id,
+                        ___type: 'control',
+                        ___level: obj.___level + 1
+                    };
+
+                    controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+                    obj.results.push(controlObj);
+
+                    requestParameters.pagination = pagination;
+
                     entityViewerDataService.setData(obj);
 
                     requestParameters.status = 'loaded';
-                    requestParameters.processedPages.push(page);
-
                     entityViewerDataService.setRequestParameters(requestParameters);
 
                     resolve(obj);
@@ -479,22 +405,29 @@
 
         console.time('Updating data structure');
 
-        detectLevelChange(entityViewerDataService, entityViewerEventService);
+        // detectLevelChange(entityViewerDataService, entityViewerEventService);
         injectRegularFilters(entityViewerDataService, entityViewerEventService);
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
         if (requestParameters.requestType === 'objects') {
 
-            fromMemoryDecorator(
-                getObjectsByRequestParameters, entityViewerDataService, entityViewerEventService)
+            // fromMemoryDecorator(
+            //     getObjectsByRequestParameters, entityViewerDataService, entityViewerEventService)
+
+
+            getObjectsByRequestParameters(entityViewerDataService, entityViewerEventService)
+
 
         }
 
         if (requestParameters.requestType === 'groups') {
 
-            fromMemoryDecorator(
-                getGroupsByRequestParameters, entityViewerDataService, entityViewerEventService);
+            // fromMemoryDecorator(
+            //     getGroupsByRequestParameters, entityViewerDataService, entityViewerEventService);
+
+            getGroupsByRequestParameters(entityViewerDataService, entityViewerEventService);
+
         }
 
         console.timeEnd('Updating data structure');

@@ -469,7 +469,7 @@
 
                         actionItemKeys = actionItemKeys.filter(function (key) {
 
-                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1
+                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1 && key !== 'action_notes'
 
                         });
 
@@ -482,15 +482,9 @@
 
                                 var valueIsEmpty = false;
 
-                                console.log('actionItemKey', actionItemKey);
-                                console.log('inputValue', inputValue);
-                                console.log('relationValue', relationValue);
-
                                 if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
 
                                     var phantomValue = actionItem[actionItemKey + '_phantom'];
-
-                                    console.log('phantomValue', phantomValue);
 
                                     if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
                                         valueIsEmpty = true;
@@ -537,6 +531,14 @@
 
                 })
 
+
+                if(!action.action_notes) {
+                    result.push({
+                        action_notes: action.action_notes,
+                        key: 'action_notes',
+                        value: ''
+                    })
+                }
 
             });
 
