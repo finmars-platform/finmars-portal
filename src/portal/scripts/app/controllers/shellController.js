@@ -167,7 +167,7 @@
         var showLayoutName = false;
 
         $transitions.onFinish({}, function (transition) {
-            console.log("transition", transition, transition.to(), transition.params());
+
             pageStateName = transition.to().name;
             pageStateParams = transition.params().strategyNumber;
 
@@ -219,7 +219,6 @@
         };
 
         vm.getActiveLayoutName = function (newLayoutName) {
-            console.log("sp save as entityLayoutName", newLayoutName);
 
             if (typeof newLayoutName === "string") {
 

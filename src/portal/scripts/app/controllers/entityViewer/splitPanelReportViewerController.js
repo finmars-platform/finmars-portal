@@ -231,7 +231,6 @@
 
                 var splitPanelActiveLayoutId = parentEntityViewerDataService.getSplitPanelActiveLayout();
                 var additions = parentEntityViewerDataService.getAdditions();
-                console.log("sp save as splitPanelActiveLayoutId", splitPanelActiveLayoutId, additions);
 
                 var defaultLayoutId = null;
 
@@ -240,7 +239,6 @@
                 } else {
                     defaultLayoutId = additions.layoutId;
                 }
-                console.log("sp save as defaultLayoutId", defaultLayoutId);
 
                 vm.entityViewerDataService.setAttributesFromAbove(columns);
 
