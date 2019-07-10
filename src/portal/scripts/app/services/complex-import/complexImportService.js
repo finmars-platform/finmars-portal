@@ -14,7 +14,7 @@
             file: file,
             scheme: action.csv_import_scheme,
             error_handler: action.error_handler,
-            missing_data_handler:  action.missing_data_handler,
+            missing_data_handler: action.missing_data_handler,
             classifier_handler: action.classifier_handler,
             delimiter: delimiter,
             mode: action.mode
@@ -42,7 +42,7 @@
 
     };
 
-    var importComplexTransactions = function (resolve, config) {
+    var importComplexTransactions = function (resolve, config, index, updateCounter) {
 
         var formData = new FormData();
 
@@ -61,14 +61,17 @@
 
             config = data;
 
+            updateCounter(index, config);
+
             if (config.task_status === 'SUCCESS') {
                 resolve({
                     config: config,
                     data: data
                 });
             } else {
+
                 setTimeout(function () {
-                    importComplexTransactions(resolve, config);
+                    importComplexTransactions(resolve, config,  index, updateCounter);
                 }, 1000)
 
             }
@@ -78,7 +81,7 @@
 
     };
 
-    var handleComplexTransactionImportAction = function (action, file, delimiter) {
+    var handleComplexTransactionImportAction = function (action, file, delimiter, index, updateCounter) {
 
         return new Promise(function (resolve, reject) {
 
@@ -92,13 +95,13 @@
 
             console.log('handleComplexTransactionImportAction.config', config);
 
-            importComplexTransactions(resolve, config);
+            importComplexTransactions(resolve, config, index, updateCounter);
 
         })
 
     };
 
-    var processAction = function (action, file, delimiter) {
+    var processAction = function (action, file, delimiter, index, updateCounter) {
 
         return new Promise(function (resolve, reject) {
 
@@ -107,7 +110,7 @@
             }
 
             if (action.complex_transaction_import_scheme) {
-                resolve(handleComplexTransactionImportAction(action.complex_transaction_import_scheme, file, delimiter))
+                resolve(handleComplexTransactionImportAction(action.complex_transaction_import_scheme, file, delimiter, index, updateCounter))
             }
 
         })
@@ -115,9 +118,9 @@
 
     var processActionOneByOne = function (resolve, result, actions, file, delimiter, index, updateCounter) {
 
-        processAction(actions[index], file, delimiter).then(function (res) {
+        processAction(actions[index], file, delimiter, index, updateCounter).then(function (res) {
 
-            console.log('processAction.res', res);
+            // console.log('processAction.res', res);
 
             result.configs[index] = res.config;
             result.errors[index] = [];
@@ -153,7 +156,7 @@
 
             index = index + 1;
 
-            updateCounter();
+            updateCounter(index, res.config);
 
             if (index < actions.length) {
 

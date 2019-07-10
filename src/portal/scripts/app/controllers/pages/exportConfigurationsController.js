@@ -233,29 +233,33 @@
                                 if (layout.content_type.indexOf("report") !== -1) {
 
                                     var rg;
-                                    for (rg = 0; rg < groupsInLayout.length; rg++) {
+                                    if (groupsInLayout) {
+                                        for (rg = 0; rg < groupsInLayout.length; rg++) {
 
-                                        var columnName = groupsInLayout[rg].name.split(". ");
-
-                                        if (columnName[0].indexOf(daContentType) !== -1 && columnName[1] === daName) {
-                                            attributeIsUsed = true;
-                                            break;
-                                        }
-
-                                    }
-
-                                    if (!attributeIsUsed) {
-
-                                        var rс;
-                                        for (rс = 0; rс < columnsInLayout.length; rс++) {
-
-                                            var columnName = columnsInLayout[rс].name.split(". ");
+                                            var columnName = groupsInLayout[rg].name.split(". ");
 
                                             if (columnName[0].indexOf(daContentType) !== -1 && columnName[1] === daName) {
                                                 attributeIsUsed = true;
                                                 break;
                                             }
 
+                                        }
+                                    }
+
+                                    if (!attributeIsUsed) {
+
+                                        var rс;
+                                        if (columnsInLayout) {
+                                            for (rс = 0; rс < columnsInLayout.length; rс++) {
+
+                                                var columnName = columnsInLayout[rс].name.split(". ");
+
+                                                if (columnName[0].indexOf(daContentType) !== -1 && columnName[1] === daName) {
+                                                    attributeIsUsed = true;
+                                                    break;
+                                                }
+
+                                            }
                                         }
 
                                     }
@@ -424,7 +428,7 @@
 
                                 });
 
-                                if(active) {
+                                if (active) {
                                     childItem.active = true;
                                     entityItem.someChildsActive = true;
                                 }
@@ -489,7 +493,7 @@
                 targetEvent: $event,
                 locals: {
                     data: {
-                        layout: vm.activeLayout,
+                        layout: vm.activeLayout
                     }
                 },
                 multiple: true,
@@ -887,7 +891,7 @@
             document.body.appendChild(a); // For Mozilla Firefox
             a.click();
 
-            setTimeout(function(){
+            setTimeout(function () {
                 document.body.removeChild(a);
             }, 100);
         }
