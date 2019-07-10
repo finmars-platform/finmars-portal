@@ -24,6 +24,10 @@
             vm.data.current = callbackData.current || 0;
             vm.data.total = callbackData.total;
             vm.data.status = callbackData.status;
+            vm.data.additional = callbackData.additional;
+
+            // console.log('vm.data', vm.data);
+            // console.log('vm.additional', vm.data.additional[0]);
 
             if (vm.data.status === 'SUCCESS') {
 

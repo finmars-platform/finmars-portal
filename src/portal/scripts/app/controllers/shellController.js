@@ -383,7 +383,9 @@
 
             });
 
-            vm.initCrossTabBroadcast();
+            if (window.BroadcastChannel) {
+                vm.initCrossTabBroadcast();
+            }
 
             if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
                 showLayoutName = true;
