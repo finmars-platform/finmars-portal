@@ -251,7 +251,6 @@
 
         function setAdditions(additions) {
             data.additions = additions;
-            console.log("sp save as setAdditions", additions, data.additions);
         }
 
         function getAdditions() {
@@ -828,8 +827,6 @@
 
             } else {
 
-                console.log('default triggered');
-
                 var defaultList = uiService.getListLayoutTemplate();
 
                 listLayout = {};
@@ -889,7 +886,6 @@
 
         function setSplitPanelDefaultLayout(layoutId) {
             data.splitPanelDefaultLayoutId = layoutId;
-            console.log("sp save as setSplitPanelDefaultLayout", layoutId, data.splitPanelDefaultLayoutId);
         }
 
         function getSplitPanelDefaultLayout() {

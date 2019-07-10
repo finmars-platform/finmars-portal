@@ -681,7 +681,7 @@
                                 uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
 
                                     listLayout.id = data.id;
-                                    console.log("sp save as listLayout", listLayout);
+
                                     if (scope.isRootEntityViewer) {
                                         middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
                                     } else {

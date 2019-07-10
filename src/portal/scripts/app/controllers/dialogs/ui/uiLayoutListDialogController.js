@@ -28,7 +28,7 @@
         if (!isRootEntityViewer) {
             splitPanelLayoutId = entityViewerDataService.getSplitPanelDefaultLayout();
         }
-console.log("sp save as splitPanelLayoutId", splitPanelLayoutId);
+
         //var contentType = metaContentTypesService.getContentTypeUIByEntity(options.entityType);
 
         //console.log('contentType', contentType);
