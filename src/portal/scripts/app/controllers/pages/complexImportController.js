@@ -98,25 +98,25 @@
 
             vm.counterData[index] = config;
 
-            vm.counter = 0;
+            vm.counter = Object.keys(vm.counterData).length
 
-            var keys = Object.keys(vm.counterData);
+            // var keys = Object.keys(vm.counterData);
 
-            keys.forEach(function (key) {
-
-                if (vm.counterData[key]) {
-                    if (vm.counterData[key].hasOwnProperty('task_status')) {
-
-                        if (vm.counterData[key].task_status === 'SUCCESS') {
-                            vm.counter = vm.counter + 1;
-                        }
-
-                    } else {
-                        vm.counter = vm.counter + 1;
-                    }
-                }
-
-            });
+            // keys.forEach(function (key) {
+            //
+            //     if (vm.counterData[key]) {
+            //         if (vm.counterData[key].hasOwnProperty('task_status')) {
+            //
+            //             if (vm.counterData[key].task_status === 'SUCCESS') {
+            //                 vm.counter = vm.counter + 1;
+            //             }
+            //
+            //         } else {
+            //             vm.counter = vm.counter + 1;
+            //         }
+            //     }
+            //
+            // });
 
             $scope.$apply()
         }
