@@ -7,9 +7,16 @@
 
     var resolve = function () {
 
-        var host = '__API_HOST__';
+        if ('__PROJECT_ENV__' === 'development') {
 
-        return host + '/api/v1/';
+            var host = '__API_HOST__';
+
+            return host + '/api/v1/';
+
+        } else {
+            return '/api/v1/'
+        }
+
     };
 
     module.exports = {
