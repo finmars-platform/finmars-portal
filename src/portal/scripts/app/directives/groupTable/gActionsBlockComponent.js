@@ -14,7 +14,7 @@
 
     var uiService = require('../../services/uiService');
 
-    var convertReportHelper = require('../../helpers/converters/convertReportHelper')
+    var convertReportHelper = require('../../helpers/converters/convertReportHelper');
     var reportCopyHelper = require('../../helpers/reportCopyHelper');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
 
@@ -34,8 +34,17 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
+
+                var checkLayoutExistence = function () {
+                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+                    if (!listLayout.hasOwnProperty('id')) {
+                        scope.isNewLayout = true;
+                    }
+                };
 
                 scope.openViewConstructor = function (ev) {
 
@@ -276,10 +285,11 @@
 
                 function clearAdditions() {
 
-                    var additions = {
-                        isOpen: false,
-                        type: ''
-                    };
+                    var additions = scope.evDataService.getAdditions();
+
+                    additions.isOpen = false;
+                    additions.type = '';
+                    delete additions.layoutId;
 
                     scope.evDataService.setSplitPanelStatus(false);
                     scope.evDataService.setAdditions(additions);
@@ -297,14 +307,15 @@
 
                     if (scope.currentAdditions.type === type) {
 
-                        clearAdditions()
+                        clearAdditions();
+                        middlewareService.deleteData('splitPanelActiveLayoutSwitched');
 
                     } else {
+                        var additions = scope.evDataService.getAdditions();
 
-                        var additions = {
-                            isOpen: true,
-                            type: type
-                        };
+                        additions.isOpen = true;
+                        additions.type = type;
+                        delete additions.layoutId;
 
                         scope.evDataService.setSplitPanelStatus(true);
                         scope.evDataService.setAdditions(additions);
@@ -352,14 +363,16 @@
 
                 scope.openLayoutList = function ($event) {
 
-
                     $mdDialog.show({
                         controller: 'UiLayoutListDialogController as vm',
                         templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
+                        preserveScope: false,
                         locals: {
                             options: {
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService,
                                 entityType: scope.entityType
                             }
                         }
@@ -368,7 +381,12 @@
                         if (res.status === 'agree') {
 
                             scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-                            middlewareService.setData('entityActiveLayoutSwitched', res.data.layoutName); // Give signal to update active layout name in the toolbar
+                            if (scope.isRootEntityViewer) {
+                                middlewareService.setData('entityActiveLayoutSwitched', res.data.layoutName); // Give signal to update active layout name in the toolbar
+                            } else {
+                                middlewareService.setData('splitPanelActiveLayoutSwitched', res.data.layoutName); // Give signal to update active layout name in the toolbar
+                            }
+
                         }
 
                     })
@@ -578,7 +596,7 @@
                             controller: 'LayoutChangesLossWarningDialogController as vm',
                             templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
                             parent: angular.element(document.body),
-                            preserveScope: true,
+                            preserveScope: false,
                             autoWrap: true,
                             multiple: true,
                             locals: {
@@ -621,11 +639,11 @@
                         uiService.updateListLayout(listLayout.id, listLayout).then(function () {
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
                         });
-                    } else {
+                    }; /*else {
                         uiService.createListLayout(scope.entityType, listLayout).then(function () {
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
                         });
-                    }
+                    }*/
 
                     $mdDialog.show({
                         controller: 'SaveLayoutDialogController as vm',
@@ -658,53 +676,7 @@
 
                         if (res.status === 'agree') {
 
-                            if (listLayout.id) {
-
-                                uiService.getDefaultListLayout(scope.entityType).then(function (data) {
-                                    /*var layouts = data.results;
-                                    var activeListLayout;
-
-                                    var i;
-                                    for (i = 0; i < layouts.length; i = i + 1) {
-                                        if (layouts[i].id === listLayout.id) {
-                                            layouts[i].is_default = false;
-                                            activeListLayout = layouts[i];
-                                            break;
-                                        }
-                                    }*/
-
-                                    var activeLayout = data.results[0];
-                                    activeLayout.is_default = false;
-
-                                    uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
-
-                                        listLayout.name = res.data.name;
-                                        listLayout.is_default = true;
-                                        delete listLayout.id;
-
-                                        uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
-
-                                            listLayout.id = data.id;
-
-                                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-
-                                            scope.evDataService.setListLayout(listLayout);
-                                            scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-
-                                            middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
-
-                                            scope.isNewLayout = false;
-
-                                        });
-
-                                    });
-
-                                });
-
-                            } else {
-
-                                listLayout.name = res.data.name;
-                                listLayout.is_default = true;
+                            var saveAsLayout = function () {
 
                                 uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
 
@@ -715,11 +687,60 @@
                                     scope.evDataService.setListLayout(listLayout);
                                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
-                                    middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
+                                    if (scope.isRootEntityViewer) {
+                                        middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
+                                    } else {
+                                        scope.evDataService.setSplitPanelDefaultLayout(listLayout.id);
+                                        scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+                                        middlewareService.setData('splitPanelActiveLayoutSwitched', listLayout.name); // Give signal to update active split panel layout name in the toolbar
+                                    }
 
                                     scope.isNewLayout = false;
 
                                 });
+
+                            };
+
+                            if (listLayout.id) { // if layout based on another existing layout
+
+                                listLayout.name = res.data.name;
+
+                                if (scope.isRootEntityViewer) {
+
+                                    uiService.getDefaultListLayout(scope.entityType).then(function (openedLayoutData) {
+
+                                        var currentlyOpenLayout = openedLayoutData.results[0];
+                                        currentlyOpenLayout.is_default = false;
+
+                                        uiService.updateListLayout(currentlyOpenLayout.id, currentlyOpenLayout).then(function () {
+
+                                            listLayout.is_default = true;
+                                            delete listLayout.id;
+
+                                            saveAsLayout();
+
+                                        });
+
+                                    });
+
+                                } else {
+
+                                    delete listLayout.id;
+                                    listLayout.is_default = false;
+                                    saveAsLayout();
+
+                                }
+
+                            } else { // if layout was not based on another layout
+
+                                if (scope.isRootEntityViewer) {
+                                    listLayout.is_default = true;
+                                } else {
+                                    scope.evDataService.setSplitPanelDefaultLayout(listLayout.id);
+                                    scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+                                }
+
+                                saveAsLayout();
                             }
                         }
 
@@ -773,6 +794,8 @@
                     })
 
                 };
+
+                checkLayoutExistence();
 
             }
         }
