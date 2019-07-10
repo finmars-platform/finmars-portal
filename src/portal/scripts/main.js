@@ -38,6 +38,9 @@ var metaService = require('./app/services/metaService');
 
 app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transitions, $state) {
 
+    console.log('Project environment: ' + '__PROJECT_ENV__');
+    console.log('Project build date: ' + '__BUILD_DATE__');
+
     document.title = metaService.getCurrentLocation($state);
 
     window.addEventListener('error', function (e) {
