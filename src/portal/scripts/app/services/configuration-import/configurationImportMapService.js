@@ -117,7 +117,7 @@
                 'code': 'system_code'
             }
         }
-        if (model === 'notifitionclass') {
+        if (model === 'notificationclass') {
             return {
                 'prop': 'notification_class',
                 'code': 'system_code'
