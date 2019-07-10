@@ -144,15 +144,6 @@
 
                 scope.removeGroup = function (group) {
 
-                    if (group.id) {
-                        scope.grouping = scope.grouping.filter(function (item) {
-                            if (item.id === group.id) {
-                                return false;
-                            }
-                            return true
-                        })
-                    }
-
                     if (group.key) {
                         scope.grouping = scope.grouping.filter(function (item) {
                             if (item.key === group.key) {
@@ -464,6 +455,7 @@
                         scope.updateGroupTypeIds();
 
                         scope.grouping = scope.evDataService.getGroups();
+
                         setDefaultGroupType(scope.evDataService);
 
                         scope.evDataService.resetData();
