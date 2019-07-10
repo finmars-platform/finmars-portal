@@ -100,7 +100,8 @@
             allRowsSelected: false,
             rootEntityViewer: false,
             isSplitPanelActive: false,
-            splitPanelLayoutName: false,
+            splitPanelDefaultLayoutId: false,
+            splitPanelActiveLayoutId: false,
             additions: {},
             report: {},
             export: {},
@@ -250,6 +251,7 @@
 
         function setAdditions(additions) {
             data.additions = additions;
+            console.log("sp save as setAdditions", additions, data.additions);
         }
 
         function getAdditions() {
@@ -886,11 +888,22 @@
         }
 
         function setSplitPanelDefaultLayout(layoutId) {
-            data.splitPanelLayoutName = layoutId;
+            data.splitPanelDefaultLayoutId = layoutId;
+            console.log("sp save as setSplitPanelDefaultLayout", layoutId, data.splitPanelDefaultLayoutId);
         }
 
         function getSplitPanelDefaultLayout() {
-            return data.splitPanelLayoutName;
+            return data.splitPanelDefaultLayoutId;
+        }
+
+        function setSplitPanelActiveLayout(layoutId) {
+            data.splitPanelActiveLayoutId = layoutId;
+        }
+
+        function getSplitPanelActiveLayout() {
+            var splitPanelActiveLayoutId = data.splitPanelActiveLayoutId;
+            data.splitPanelActiveLayoutId = false;
+            return splitPanelActiveLayoutId;
         }
 
         return {
@@ -1038,6 +1051,8 @@
             isSplitPanelActive: isSplitPanelActive,
             setSplitPanelDefaultLayout: setSplitPanelDefaultLayout,
             getSplitPanelDefaultLayout: getSplitPanelDefaultLayout,
+            setSplitPanelActiveLayout: setSplitPanelActiveLayout,
+            getSplitPanelActiveLayout: getSplitPanelActiveLayout,
 
             setActiveObjectsCount: setActiveObjectsCount,
             getActiveObjectsCount: getActiveObjectsCount
