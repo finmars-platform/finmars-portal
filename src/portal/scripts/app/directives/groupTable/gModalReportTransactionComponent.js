@@ -345,18 +345,8 @@
 
                     if (attrs[i].entity === item.entity) {
 
-                        if (item.hasOwnProperty('key')) {
-
-                            if (attrs[i].key === item.key) {
-                                attrs[i].columns = true;
-                            }
-                        }
-
-                        if (item.hasOwnProperty('id')) {
-
-                            if (attrs[i].id === item.id) {
-                                attrs[i].columns = true;
-                            }
+                        if (attrs[i].key === item.key) {
+                            attrs[i].columns = true;
                         }
 
                     }
@@ -367,18 +357,8 @@
 
                     if (attrs[i].entity === item.entity) {
 
-                        if (item.hasOwnProperty('key')) {
-
-                            if (attrs[i].key === item.key) {
-                                attrs[i].filters = true;
-                            }
-                        }
-
-                        if (item.hasOwnProperty('id')) {
-
-                            if (attrs[i].id === item.id) {
-                                attrs[i].filters = true;
-                            }
+                        if (attrs[i].key === item.key) {
+                            attrs[i].filters = true;
                         }
 
                     }
@@ -389,17 +369,8 @@
 
                     if (attrs[i].entity === item.entity) {
 
-                        if (item.hasOwnProperty('key')) {
-                            if (attrs[i].key === item.key) {
-                                attrs[i].groups = true;
-                            }
-                        }
-
-                        if (item.hasOwnProperty('id')) {
-
-                            if (attrs[i].id === item.id) {
-                                attrs[i].groups = true;
-                            }
+                        if (attrs[i].key === item.key) {
+                            attrs[i].groups = true;
                         }
 
                     }
@@ -422,26 +393,12 @@
 
                     if (attr.entity === columns[c].entity) {
 
-                        if (attr.hasOwnProperty('key')) {
-                            if (attr.key === columns[c].key) {
-                                columnExist = true;
-                                if (attr.columns === false) {
-                                    columns.splice(c, 1);
-                                    c = c - 1;
-                                }
+                        if (attr.key === columns[c].key) {
+                            columnExist = true;
+                            if (attr.columns === false) {
+                                columns.splice(c, 1);
+                                c = c - 1;
                             }
-                        }
-
-                        if (attr.hasOwnProperty('id')) {
-
-                            if (attr.id === columns[c].id) {
-                                columnExist = true;
-                                if (attr.columns === false) {
-                                    columns.splice(c, 1);
-                                    c = c - 1;
-                                }
-                            }
-
                         }
 
                     }
@@ -455,26 +412,12 @@
 
                     if (attr.entity === grouping[g].entity) {
 
-                        if (attr.hasOwnProperty('key')) {
-                            if (attr.key === grouping[g].key) {
-                                groupExist = true;
-                                if (attr.groups === false) {
-                                    grouping.splice(g, 1);
-                                    g = g - 1;
-                                }
+                        if (attr.key === grouping[g].key) {
+                            groupExist = true;
+                            if (attr.groups === false) {
+                                grouping.splice(g, 1);
+                                g = g - 1;
                             }
-                        }
-
-                        if (attr.hasOwnProperty('id')) {
-
-                            if (attr.id === grouping[g].id) {
-                                groupExist = true;
-                                if (attr.groups === false) {
-                                    grouping.splice(g, 1);
-                                    g = g - 1;
-                                }
-                            }
-
                         }
 
                     }
@@ -488,24 +431,11 @@
 
                     if (attr.entity === filters[f].entity) {
 
-                        if (attr.hasOwnProperty('key')) {
-                            if (attr.key === filters[f].key) {
-                                filterExist = true;
-                                if (attr.filters === false) {
-                                    filters.splice(f, 1);
-                                    f = f - 1;
-                                }
-                            }
-                        }
-
-                        if (attr.hasOwnProperty('id')) {
-
-                            if (attr.id === filters[f].id) {
-                                filterExist = true;
-                                if (attr.filters === false) {
-                                    filters.splice(f, 1);
-                                    f = f - 1;
-                                }
+                        if (attr.key === filters[f].key) {
+                            filterExist = true;
+                            if (attr.filters === false) {
+                                filters.splice(f, 1);
+                                f = f - 1;
                             }
                         }
 
