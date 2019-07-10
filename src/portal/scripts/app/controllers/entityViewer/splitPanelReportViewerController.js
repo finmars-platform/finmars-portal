@@ -214,6 +214,8 @@
 
             vm.getView = function () {
 
+                middlewareService.deleteData('splitPanelActiveLayoutSwitched'); // reset split panel layout name
+
                 vm.listViewIsReady = false;
 
                 vm.entityViewerDataService = new EntityViewerDataService();
