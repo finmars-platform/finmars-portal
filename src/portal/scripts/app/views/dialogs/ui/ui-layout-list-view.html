@@ -26,8 +26,8 @@
                     </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.setAsDefault(item, $event)">
                         <md-tooltip md-direction="top">Set as default</md-tooltip>
-                        <ng-md-icon ng-hide="item.is_default" icon="star_border" size="24"></ng-md-icon>
-                        <ng-md-icon ng-hide="!item.is_default" icon="star" size="24"></ng-md-icon>
+                        <ng-md-icon ng-hide="vm.isDefaultLayout(item)" icon="star_border" size="24"></ng-md-icon>
+                        <ng-md-icon ng-hide="!vm.isDefaultLayout(item)" icon="star" size="24"></ng-md-icon>
                     </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.deleteItem($event, item, $event)">
                         <md-tooltip md-direction="top">Delete</md-tooltip>

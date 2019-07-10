@@ -96,8 +96,6 @@
 
                     if (action === 'edit_account' && activeObject.id) {
 
-
-
                         $mdDialog.show({
                             controller: 'EntityViewerEditDialogController as vm',
                             templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
@@ -351,7 +349,7 @@
 
                         $scope.$apply();
 
-                        entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+                        vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
 
                     }

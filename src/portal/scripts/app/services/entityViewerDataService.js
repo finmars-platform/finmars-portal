@@ -100,6 +100,7 @@
             allRowsSelected: false,
             rootEntityViewer: false,
             isSplitPanelActive: false,
+            splitPanelLayoutName: false,
             additions: {},
             report: {},
             export: {},
@@ -751,8 +752,7 @@
                     delete listLayout.data.reportOptions.item_currencies;
                     delete listLayout.data.reportOptions.item_accounts;
 
-                }
-                ;
+                };
 
                 data.activeLayoutConfiguration = listLayout;
 
@@ -883,6 +883,14 @@
             setEditorTemplateUrl('views/additions-editor-view.html');
             // setRootEntityViewer(true); // TODO what?
 
+        }
+
+        function setSplitPanelDefaultLayout(layoutId) {
+            data.splitPanelLayoutName = layoutId;
+        }
+
+        function getSplitPanelDefaultLayout() {
+            return data.splitPanelLayoutName;
         }
 
         return {
@@ -1028,6 +1036,8 @@
 
             setSplitPanelStatus: setSplitPanelStatus,
             isSplitPanelActive: isSplitPanelActive,
+            setSplitPanelDefaultLayout: setSplitPanelDefaultLayout,
+            getSplitPanelDefaultLayout: getSplitPanelDefaultLayout,
 
             setActiveObjectsCount: setActiveObjectsCount,
             getActiveObjectsCount: getActiveObjectsCount

@@ -79,7 +79,8 @@
                 <div layout="row" class="toolbar-wrapper">
                     <div class="md-toolbar-tools" flex="60" layout="start center">
                         <h2 data-ng-if="vm.currentLocation().length > 0" data-ng-bind="vm.currentLocation()"></h2>
-                        <h3 data-ng-if="vm.isStateOfEntity()" class="toolbar-layout-info">(Layout: <span>{{ vm.activeLayoutName }}</span>)
+                        <h3 data-ng-if="vm.isStateOfEntity()" class="toolbar-layout-info">
+                            (Layout: <span class="toolbar-layout-name">{{ vm.activeLayoutName }}</span><span ng-if="vm.activeSPLayoutName">; Split Panel: <span class="toolbar-layout-name">{{ vm.activeSPLayoutName }}</span></span>)
                         </h3>
                     </div>
 

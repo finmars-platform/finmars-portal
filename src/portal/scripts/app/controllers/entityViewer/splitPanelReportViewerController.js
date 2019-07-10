@@ -16,6 +16,7 @@
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
         var expressionService = require('../../services/expression.service');
+        var middlewareService = require('../../services/middlewareService');
 
         module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService) {
 
@@ -30,6 +31,9 @@
 
             vm.entityViewerDataService = null;
             vm.entityViewerEventService = null;
+
+            var additions = parentEntityViewerDataService.getAdditions();
+            var defaultLayoutId = additions.layoutId;
 
             vm.setEventListeners = function () {
 
@@ -88,6 +92,15 @@
 
                 });
 
+                vm.entityViewerEventService.addEventListener(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED, function () {
+
+                    var spDefaultLayout = vm.entityViewerDataService.getSplitPanelDefaultLayout();
+                    additions = parentEntityViewerDataService.getAdditions();
+                    additions.layoutId = spDefaultLayout;
+                    parentEntityViewerDataService.setAdditions(additions);
+
+                });
+
                 // Events that dispatch events inside parent
                 vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
 
@@ -97,7 +110,7 @@
 
             };
 
-            vm.getView = function () {
+            /*vm.getView = function () {
 
                 vm.listViewIsReady = false;
 
@@ -192,6 +205,164 @@
 
                         vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
+
+                    }
+
+                });
+
+            };*/
+
+            vm.getView = function () {
+
+                vm.listViewIsReady = false;
+
+                vm.entityViewerDataService = new EntityViewerDataService();
+                vm.entityViewerEventService = new EntityViewerEventService();
+
+                vm.entityType = $scope.$parent.vm.entityType;
+                vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                vm.entityViewerDataService.setRootEntityViewer(false);
+
+                console.log('here? 1231232', vm.entityViewerDataService.isRootEntityViewer());
+
+                var columns = parentEntityViewerDataService.getColumns();
+
+                console.log('parent columns', columns);
+
+                vm.entityViewerDataService.setAttributesFromAbove(columns);
+
+                vm.setEventListeners();
+
+                var setLayout = function (layout) {
+
+                    vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+
+                    var reportOptions = vm.entityViewerDataService.getReportOptions();
+                    var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
+
+                    // Check if there is need to solve report datepicker expression
+                    if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
+
+                        var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
+                        var reportLastDatepickerExpression = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
+
+                        if (reportFirstDatepickerExpression || reportLastDatepickerExpression) {
+
+                            var datepickerExpressionsToSolve = [];
+
+                            if (reportFirstDatepickerExpression) {
+
+                                var solveFirstExpression = function () {
+                                    return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
+                                        reportOptions.pl_first_date = data.result;
+                                    });
+                                };
+
+                                datepickerExpressionsToSolve.push(solveFirstExpression());
+                            }
+
+                            if (reportLastDatepickerExpression) {
+
+                                var solveLastExpression = function () {
+                                    return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
+                                        reportOptions.report_date = data.result;
+                                    });
+                                };
+
+                                datepickerExpressionsToSolve.push(solveLastExpression());
+                            }
+
+                            Promise.all(datepickerExpressionsToSolve).then(function () {
+
+                                vm.listViewIsReady = true;
+
+                                rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                                $scope.$apply();
+
+                                vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+
+                            });
+
+
+                        } else {
+
+                            vm.listViewIsReady = true;
+
+                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                            $scope.$apply();
+
+                            vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+
+                        }
+                    // < Check if there is need to solve report datepicker expression >
+                    } else {
+
+                        vm.listViewIsReady = true;
+
+                        rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                        $scope.$apply();
+
+                        vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+
+
+                    }
+
+                };
+
+                uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
+
+                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+
+                        var activeLayout = activeLayoutData.results[0];
+                        activeLayout.is_active = false;
+                        uiService.updateListLayout(activeLayout.id, activeLayout);
+
+                        middlewareService.setData('splitPanelActiveLayoutSwitched', activeLayout.name);
+                        setLayout(activeLayout);
+
+                    } else {
+
+                        /*uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
+                            var defaultLayout = null;
+                            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+                                defaultLayout = defaultLayoutData.results[0];
+                            }
+
+                            setLayout(defaultLayout);
+
+                        });*/
+
+                        if (defaultLayoutId) {
+
+                            uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
+
+                                if (spLayoutData) {
+                                    middlewareService.setData('splitPanelActiveLayoutSwitched', spLayoutData.name);
+                                }
+
+                                setLayout(spLayoutData);
+
+                            });
+
+                        } else {
+
+                            uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
+
+                                var defaultLayout = null;
+                                if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+
+                                    defaultLayout = defaultLayoutData.results[0];
+                                    middlewareService.setData('splitPanelActiveLayoutSwitched', defaultLayout.name);
+
+                                }
+
+                                setLayout(defaultLayout);
+
+                            });
+                        }
 
                     }
 

@@ -167,19 +167,13 @@
         var showLayoutName = false;
 
         $transitions.onFinish({}, function (transition) {
-            console.log("transition", transition, transition.to(), transition.params());
+            // console.log("transition", transition, transition.to(), transition.params());
             pageStateName = transition.to().name;
             pageStateParams = transition.params().strategyNumber;
-
-            // var layoutSwitched = middlewareService.getData('entityActiveLayoutSwitched');
 
             if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
                 showLayoutName = true;
                 vm.getActiveLayoutName();
-                /*if (layoutSwitched) {
-                    vm.getActiveLayoutName(layoutSwitched);
-                    middlewareService.deleteData('entityActiveLayoutSwitched');
-                }*/
 
             } else {
                 showLayoutName = false;
@@ -190,7 +184,8 @@
 
         vm.isStateOfEntity = function () {
 
-            var layoutSwitched = middlewareService.getData('entityActiveLayoutSwitched');
+            var newLayoutName = middlewareService.getData('entityActiveLayoutSwitched');
+            var newSplitPanelLayoutName = middlewareService.getData('splitPanelActiveLayoutSwitched');
             // Change layout information on state change
             /*if (currentState !== previousState) {
                 previousState = currentState;
@@ -203,42 +198,52 @@
                 }
             }*/
 
-            // Check if layout has been switched on the same state
-            if (layoutSwitched) {
-                vm.getActiveLayoutName(layoutSwitched);
+            // Check if layout has been switched without changing state
+            var newLayoutsData = {};
+            newLayoutsData.layoutName = newLayoutName;
+            newLayoutsData.splitPanelLayoutName = newSplitPanelLayoutName;
+
+            if (newLayoutsData.layoutName || newLayoutsData.splitPanelLayoutName !== vm.activeSPLayoutName) {
                 middlewareService.deleteData('entityActiveLayoutSwitched');
+                vm.getActiveLayoutName(newLayoutsData);
             }
 
             return showLayoutName;
         };
 
-        vm.activeLayoutName = '';
-        vm.getActiveLayoutName = function (newLayoutName) {
+        vm.activeLayoutName = null;
+        vm.activeSPLayoutName = false; // false needed for checking is split panel disabled and have no layout in middlewareService
+
+        vm.getActiveLayoutName = function (layoutsNamesData) {
+
+            var newLayoutName = null;
+            if (layoutsNamesData) {
+                newLayoutName = layoutsNamesData.layoutName;
+
+                if (layoutsNamesData.splitPanelLayoutName !== vm.activeSPLayoutName) {
+                    vm.activeSPLayoutName = layoutsNamesData.splitPanelLayoutName;
+                }
+            }
+
 
             if (typeof newLayoutName === "string") {
 
                 vm.activeLayoutName = newLayoutName;
 
             } else {
-                console.log("new layout name state", pageStateName, $stateParams);
-                var stateParams = null;
-                if (pageStateName === 'app.data.strategy') {
-
-                    console.log("new layout name stateParams", pageStateParams);
-                }
 
                 var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams);
-                console.log("new layout name entityType", entityType);
+
                 uiService.getDefaultListLayout(entityType).then(function (data) {
-                    console.log("new layout name strategy", data);
+
                     var activeLayoutRes = data.results;
                     if (activeLayoutRes && activeLayoutRes.length) {
-
-                        vm.activeLayoutName = activeLayoutRes[0].name;
-
+                        newLayoutName = activeLayoutRes[0].name;
                     } else {
-                        vm.activeLayoutName = '';
+                        newLayoutName = '';
                     }
+
+                    vm.activeLayoutName = newLayoutName;
 
                     $scope.$apply();
                 });
