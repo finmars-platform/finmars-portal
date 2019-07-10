@@ -681,12 +681,7 @@
                                 uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
 
                                     listLayout.id = data.id;
-
-                                    scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-
-                                    scope.evDataService.setListLayout(listLayout);
-                                    scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-
+                                    console.log("sp save as listLayout", listLayout);
                                     if (scope.isRootEntityViewer) {
                                         middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
                                     } else {
@@ -694,6 +689,11 @@
                                         scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
                                         middlewareService.setData('splitPanelActiveLayoutSwitched', listLayout.name); // Give signal to update active split panel layout name in the toolbar
                                     }
+
+                                    scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+                                    scope.evDataService.setListLayout(listLayout);
+                                    scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                     scope.isNewLayout = false;
 
@@ -735,9 +735,6 @@
 
                                 if (scope.isRootEntityViewer) {
                                     listLayout.is_default = true;
-                                } else {
-                                    scope.evDataService.setSplitPanelDefaultLayout(listLayout.id);
-                                    scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
                                 }
 
                                 saveAsLayout();

@@ -32,9 +32,6 @@
             vm.entityViewerDataService = null;
             vm.entityViewerEventService = null;
 
-            var additions = parentEntityViewerDataService.getAdditions();
-            var defaultLayoutId = additions.layoutId;
-
             vm.setEventListeners = function () {
 
                 parentEntityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
@@ -88,6 +85,9 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
 
+                    var spActiveLayout = vm.entityViewerDataService.getSplitPanelActiveLayout();
+                    parentEntityViewerDataService.setSplitPanelActiveLayout(spActiveLayout);
+
                     vm.getView();
 
                 });
@@ -95,7 +95,7 @@
                 vm.entityViewerEventService.addEventListener(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED, function () {
 
                     var spDefaultLayout = vm.entityViewerDataService.getSplitPanelDefaultLayout();
-                    additions = parentEntityViewerDataService.getAdditions();
+                    var additions = parentEntityViewerDataService.getAdditions();
                     additions.layoutId = spDefaultLayout;
                     parentEntityViewerDataService.setAdditions(additions);
 
@@ -229,6 +229,19 @@
 
                 console.log('parent columns', columns);
 
+                var splitPanelActiveLayoutId = parentEntityViewerDataService.getSplitPanelActiveLayout();
+                var additions = parentEntityViewerDataService.getAdditions();
+                console.log("sp save as splitPanelActiveLayoutId", splitPanelActiveLayoutId, additions);
+
+                var defaultLayoutId = null;
+
+                if (splitPanelActiveLayoutId) {
+                    defaultLayoutId = splitPanelActiveLayoutId;
+                } else {
+                    defaultLayoutId = additions.layoutId;
+                }
+                console.log("sp save as defaultLayoutId", defaultLayoutId);
+
                 vm.entityViewerDataService.setAttributesFromAbove(columns);
 
                 vm.setEventListeners();
@@ -340,6 +353,7 @@
                             uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
 
                                 if (spLayoutData) {
+                                    vm.entityViewerDataService.setSplitPanelDefaultLayout(defaultLayoutId);
                                     middlewareService.setData('splitPanelActiveLayoutSwitched', spLayoutData.name);
                                 }
 

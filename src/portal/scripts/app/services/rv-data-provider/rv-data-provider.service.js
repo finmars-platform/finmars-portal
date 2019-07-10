@@ -100,7 +100,7 @@
         });
 
         requestParameters.body = newRequestParametersBody;
-        console.log("filter injectRegularFilters requestParameters.body", JSON.parse(JSON.stringify(requestParameters.body)));
+
         entityViewerDataService.setRequestParameters(requestParameters);
 
     };
