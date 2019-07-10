@@ -349,7 +349,9 @@
 
             });
 
-            vm.initCrossTabBroadcast();
+            if (window.BroadcastChannel) {
+                vm.initCrossTabBroadcast();
+            }
 
         };
 
