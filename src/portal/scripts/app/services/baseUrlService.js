@@ -13,9 +13,9 @@
 
             return host + '/api/v1/';
 
-        } else {
-            return '/api/v1/'
         }
+
+        return '/api/v1/'
 
     };
 
