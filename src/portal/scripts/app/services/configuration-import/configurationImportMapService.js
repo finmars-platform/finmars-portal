@@ -334,6 +334,8 @@
 
     };
 
+
+    // DEPRECATED
     var mapCustomField = function (item, key, entity, code) {
 
         console.log('code', code);
@@ -370,6 +372,7 @@
 
     };
 
+    // DEPRECATED
     var mapAttributeType = function (item, key, entity, code) {
 
         console.log('code', code);
@@ -929,15 +932,12 @@
 
             if (items[index].hasOwnProperty('attribute_type')) {
 
-
                 var code = items[index].attribute_type.user_code;
                 var entity = metaContentTypesService.findEntityByContentType(items[index].content_type, 'ui');
-                var item = items[index];
-                var item_key = 'key';
 
                 if (entity) {
 
-                    mapAttributeType(item, item_key, entity, code).then(function () {
+                    configurationImportGetService.getAttributeTypeByUserCode(code, entity).then(function () {
 
                         index = index + 1;
 
@@ -1038,18 +1038,15 @@
 
             if (items[index].hasOwnProperty('custom_field')) {
 
-
                 var code = items[index].custom_field.user_code;
                 var entity = metaContentTypesService.findEntityByContentType(layoutContentType, 'ui');
-                var item = items[index];
-                var item_key = 'key';
 
                 console.log('layoutContentType', layoutContentType);
                 console.log('items[index].content_type', items[index]);
                 console.log('entity', entity);
 
 
-                mapCustomField(item, item_key, entity, code).then(function () {
+                configurationImportGetService.getCustomFieldByUserCode(code, entity).then(function () {
 
                     index = index + 1;
 
@@ -1186,7 +1183,6 @@
         mapTransactionTypeInputsRelations: mapTransactionTypeInputsRelations,
         mapTransactionTypeActionsRelations: mapTransactionTypeActionsRelations,
         mapRelation: mapRelation,
-        mapAttributeType: mapAttributeType,
         mapReportOptions: mapReportOptions,
         mapFieldsInInstrumentType: mapFieldsInInstrumentType,
         mapEditLayout: mapEditLayout,

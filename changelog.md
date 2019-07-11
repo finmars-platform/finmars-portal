@@ -1,5 +1,8 @@
 # Changelog
 
+## 11.07.2019
+- Context Data to Book Transaction from Reports
+
 ## 08.07.2019
 - New Entity Viewer Logic
 
