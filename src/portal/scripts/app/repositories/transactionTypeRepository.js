@@ -97,8 +97,25 @@
         })
     };
 
-    var initBookComplexTransaction = function (id) {
-        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
+    var initBookComplexTransaction = function (id, contextData) {
+
+        var contextDataAsQueryParameters = '';
+
+        if (Object.keys(contextData).length) {
+
+            var list = [];
+
+            Object.keys(contextData).forEach(function (key) {
+
+                list.push(key + '=' + contextData[key])
+
+            });
+
+            contextDataAsQueryParameters = '?' + list.join('&')
+
+        }
+
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/' + contextDataAsQueryParameters,
             {
                 method: 'GET',
                 credentials: 'include',

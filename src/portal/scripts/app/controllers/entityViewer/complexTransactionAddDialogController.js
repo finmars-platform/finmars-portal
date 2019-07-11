@@ -46,11 +46,35 @@
 
         vm.transactionTypeId = null;
 
+        vm.getContextParameters = function () {
+
+            var result = {};
+
+            if (vm.contextData) {
+
+                Object.keys(vm.contextData).forEach(function (key) {
+
+                    if (key.indexOf('_object') === -1) {
+                        result[key] = vm.contextData[key]
+                    }
+
+                })
+
+            }
+
+            return result
+
+        };
+
         vm.getFormLayout = function () {
 
             vm.readyStatus.layout = false;
 
-            return transactionTypeService.initBookComplexTransaction(vm.transactionTypeId).then(function (data) {
+            var contextParameters = vm.getContextParameters();
+
+            console.log('contextParameters', contextParameters);
+
+            return transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(function (data) {
 
                 var inputsWithCalculations = data.transaction_type_object.inputs;
 
@@ -59,6 +83,12 @@
                 vm.specialRulesReady = true;
                 vm.readyStatus.entity = true;
                 vm.readyStatus.permissions = true;
+
+                var keys = Object.keys(data.values);
+
+                keys.forEach(function (item) {
+                    vm.entity[item] = data.values[item];
+                });
 
                 vm.readyStatus.layout = true;
 
@@ -71,6 +101,7 @@
                         }
                     });
                 });
+
 
                 inputsWithCalculations.forEach(function (inputWithCalc) {
 
@@ -100,44 +131,6 @@
                     $mdDialog.hide();
                 };
 
-                if (vm.contextData) {
-
-                    console.log('vm.userInputs', vm.userInputs);
-
-                    console.log('vm.contextData', vm.contextData);
-
-                    vm.userInputs.forEach(function (input) {
-
-                        vm.transactionType.inputs.forEach(function (ttypeInput) {
-
-                            if (input.name === ttypeInput.name) {
-
-                                input.is_fill_from_context = ttypeInput.is_fill_from_context;
-
-                            }
-
-                        })
-
-                    });
-
-                    vm.userInputs.forEach(function (input) {
-
-                        if (vm.contextData.hasOwnProperty(input.name)) {
-
-                            if (input.is_fill_from_context) {
-
-                                vm.entity[input.name] = vm.contextData[input.name];
-                                if (vm.contextData[input.name + '_object']) {
-                                    vm.entity[input.name + '_object'] = vm.contextData[input.name + '_object']
-                                }
-
-                            }
-
-                        }
-
-                    })
-
-                }
 
                 $scope.$apply();
             });
@@ -149,6 +142,67 @@
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
+        // DEPRECATED
+        vm.setContextData = function () {
+
+            if (vm.contextData) {
+
+                console.log('vm.userInputs', vm.userInputs);
+
+                console.log('vm.contextData', vm.contextData);
+
+                vm.userInputs.forEach(function (input) {
+
+                    vm.transactionType.inputs.forEach(function (ttypeInput) {
+
+                        if (input.name === ttypeInput.name) {
+
+                            input.is_fill_from_context = ttypeInput.is_fill_from_context;
+
+                        }
+
+                    })
+
+                });
+
+                vm.userInputs.forEach(function (input) {
+
+                    if (input.is_fill_from_context) {
+
+                        if (input.content_type) {
+
+                            var keys = Object.keys(vm.contextData);
+
+                            keys.forEach(function (key) {
+
+                                if (typeof vm.contextData[key] === 'object') {
+
+                                    if (vm.contextData[key].hasOwnProperty('content_type')) {
+
+                                        if (input.content_type === vm.contextData[key].content_type) {
+
+                                            var original_key = key.split('_object')[0];
+                                            vm.entity[original_key] = vm.contextData[original_key];
+                                            vm.entity[input.name + '_object'] = vm.contextData[key]
+
+                                        }
+
+                                    }
+
+                                }
+
+
+                            })
+
+                        }
+
+                    }
+
+                })
+
+            }
+
+        };
 
         vm.formIsValid = true;
 
