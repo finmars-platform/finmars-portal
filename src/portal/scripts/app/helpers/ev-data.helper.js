@@ -352,16 +352,7 @@
         var from = Math.ceil(offsetPx / rowHeight);
         var step = evDataService.getVirtualScrollStep();
 
-        var topThreshold = 10;
-        var bottomThreshold = 10;
-
-        var to = from + step + bottomThreshold;
-
-        from = from - topThreshold;
-
-        if (from < 0) {
-            from = 0;
-        }
+        var to = from + step;
 
         console.timeEnd('Creating projection');
 
