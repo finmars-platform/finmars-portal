@@ -361,6 +361,22 @@
 
                 };
 
+                scope.openEntityViewerSettings = function ($event) {
+
+                    $mdDialog.show({
+                        controller: 'GEntityViewerSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-entity-viewer-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: {
+                                entityViewerDataService: scope.evDataService
+                            }
+                        }
+                    });
+
+                };
+
                 scope.openLayoutList = function ($event) {
 
                     $mdDialog.show({
@@ -767,9 +783,20 @@
                     downloadFileHelper.downloadFile(blobPart, "text/plain", "report.xls");
                 };
 
+                scope.exportAsCSV = function () {
+                    var rows = document.querySelectorAll('.ev-content .g-row');
+                    var columns = document.querySelectorAll('.g-columns-holder .g-cell');
+
+                    var blobPart = convertReportHelper.convertToCSV(rows, columns);
+                    downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
+                };
+
                 scope.copyReport = function ($event) {
-                    console.log('copy report');
                     reportCopyHelper.copy();
+                };
+
+                scope.copySelectedToBuffer = function () {
+                    reportCopyHelper.copySelected();
                 };
 
                 scope.openCustomFieldsManager = function () {

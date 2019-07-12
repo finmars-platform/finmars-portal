@@ -196,18 +196,34 @@
                                                         <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                     </md-button>
 
-                                                    <div ng-if="item.dynamic_attribute_id" style="display: inline-block">
+                                                    <!--<div ng-if="item.dynamic_attribute_id" style="display: inline-block">
                                                         <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
                                                                    class="md-raised md-primary import-mapping-small-btn"
                                                                    data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
                                                             <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                         </md-button>
+                                                    </div>-->
+
+                                                    <div ng-if="item.dynamic_attribute_id && vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                         style="display: inline-block">
+                                                        <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                   class="md-raised md-primary import-mapping-small-btn"
+                                                                   data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
+                                                            <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
+                                                        </md-button>
+
+                                                        <md-button data-ng-click="vm.editTreeAttr(item, $event)"
+                                                                   class="md-raised md-primary import-mapping-small-btn">
+                                                            <ng-md-icon icon="format_align_right" size="20">
+                                                                <md-tooltip md-direction="top">Edit Classifier tree
+                                                                </md-tooltip>
+                                                            </ng-md-icon>
+                                                        </md-button>
                                                     </div>
 
                                                     <md-button data-ng-if="!item.system_property_key"
-                                                               class="custom-small-icon-btn md-raised import-scheme-mapping-btn"
+                                                               class="custom-small-icon-btn md-raised import-scheme-mapping-btn md-raised m-r-0"
                                                                data-ng-click="vm.removeDynamicAttribute(item, $index)"
-                                                               class="md-raised"
                                                                style="line-height: 1">x
                                                     </md-button>
 
