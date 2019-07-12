@@ -319,7 +319,7 @@
         }
 
         function setFlatList(flatList) {
-            data.flatList = flatList
+            data.flatList = flatList;
         }
 
         function getFlatList() {

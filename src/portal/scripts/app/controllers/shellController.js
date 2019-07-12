@@ -350,6 +350,7 @@
 
         $transitions.onSuccess({}, function (transition) {
 
+            middlewareService.deleteData('splitPanelActiveLayoutSwitched');
             var from = transition.from();
 
             if (from.name === 'app.profile') {

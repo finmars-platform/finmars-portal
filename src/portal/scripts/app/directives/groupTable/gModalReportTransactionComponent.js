@@ -163,7 +163,19 @@
 
 
                     vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr) {
-                        return entityAttr.key.indexOf('complex_transaction.transaction_type.') === -1
+
+                        if (entityAttr.key.indexOf('complex_transaction.transaction_type.') !== -1) {
+
+                            switch (entityAttr.key) {
+                                case 'complex_transaction.transaction_type.name':
+                                    return true;
+                                    break;
+                            }
+
+                        } else {
+                           return true;
+                        }
+
                     });
 
                     customFieldService.getList(vm.entityType).then(function (data) {

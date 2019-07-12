@@ -15,9 +15,13 @@
 
         logService.controller('ClassificationEditorDialogController', 'initialized');
 
-        vm.classifier = data.classifier;
+        vm.classifier = {};
 
-        attributeTypeService.getByKey(data.entityType, data.classifier.id).then(function (data) {
+        if (data.classifier) {
+            vm.classifier = JSON.parse(JSON.stringify(data.classifier));
+        }
+
+        attributeTypeService.getByKey(data.entityType, vm.classifier.id).then(function (attrData) {
 
             function setText(item) {
                 item.text = item.name;
@@ -29,7 +33,7 @@
                 return item
             }
 
-            var tree = data.classifiers.map(setText);
+            var tree = attrData.classifiers.map(setText);
 
             $('#jstree_demo').jstree({
                 "core": {
@@ -131,7 +135,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide({status: 'disagree'});
         };
     }
 
