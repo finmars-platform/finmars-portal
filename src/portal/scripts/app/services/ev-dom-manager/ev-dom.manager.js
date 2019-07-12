@@ -629,18 +629,18 @@
 
     var calculatePaddingTop = function (evDataService) {
 
-        // return evDataService.getVirtualScrollOffsetPx();
+        return evDataService.getVirtualScrollOffsetPx();
 
-        var rowHeight = evDataService.getRowHeight();
-        var threshold = rowHeight * 10;
-
-        var result = evDataService.getVirtualScrollOffsetPx() - threshold;
-
-        if (result < 0) {
-            result = 0
-        }
-
-        return result;
+        // var rowHeight = evDataService.getRowHeight();
+        // var threshold = rowHeight * 10;
+        //
+        // var result = evDataService.getVirtualScrollOffsetPx() - threshold;
+        //
+        // if (result < 0) {
+        //     result = 0
+        // }
+        //
+        // return result;
 
     };
 
@@ -744,30 +744,35 @@
 
         var columnBottomRow;
 
-        var lastScrollTop = 0;
-        var direction;
+        // var lastScrollTop = 0;
+        // var direction;
+
+        var paddingTop;
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
-            if (lastScrollTop && lastScrollTop > viewportElem.scrollTop) {
-                direction = 'top'
-            }
+            // if (lastScrollTop && lastScrollTop > viewportElem.scrollTop) {
+            //     direction = 'top'
+            // }
+            //
+            // if (lastScrollTop && lastScrollTop < viewportElem.scrollTop) {
+            //     direction = 'bottom'
+            // }
 
-            if (lastScrollTop && lastScrollTop < viewportElem.scrollTop) {
-                direction = 'bottom'
-            }
-
-            evDataService.setVirtualScrollDirection(direction);
-            evDataService.setVirtualScrollPreviousOffsetPx(lastScrollTop);
+            // evDataService.setVirtualScrollDirection(direction);
+            // evDataService.setVirtualScrollPreviousOffsetPx(lastScrollTop);
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
-            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-            calculateScroll(elements, evDataService);
-
-            lastScrollTop = viewportElem.scrollTop;
 
 
-        }, 100);
+            // calculateScroll(elements, evDataService);
+
+            paddingTop = calculatePaddingTop(evDataService);
+            evScrollManager.setContentElemPaddingTop(paddingTop);
+            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+
+            // lastScrollTop = viewportElem.scrollTop;
+
+        }, 10);
 
         var scrollXHandler = function () {
 
