@@ -201,7 +201,8 @@
                             contextData.instrument_object = {
                                 id: activeObject['instrument.id'],
                                 name: activeObject['instrument.name'],
-                                user_code: activeObject['instrument.user_code']
+                                user_code: activeObject['instrument.user_code'],
+                                content_type: "instruments.instrument"
                             };
                         }
 
@@ -210,7 +211,8 @@
                             contextData.portfolio_object = {
                                 id: activeObject['portfolio.id'],
                                 name: activeObject['portfolio.name'],
-                                user_code: activeObject['portfolio.user_code']
+                                user_code: activeObject['portfolio.user_code'],
+                                content_type: "portfolios.portfolio"
                             };
                         }
 
@@ -219,7 +221,38 @@
                             contextData.account_object = {
                                 id: activeObject['account.id'],
                                 name: activeObject['account.name'],
-                                user_code: activeObject['account.user_code']
+                                user_code: activeObject['account.user_code'],
+                                content_type: "accounts.account"
+                            };
+                        }
+
+                        if (activeObject['strategy1.id']) {
+                            contextData.strategy1 = activeObject['strategy1.id'];
+                            contextData.strategy1_object = {
+                                id: activeObject['strategy1.id'],
+                                name: activeObject['strategy1.name'],
+                                user_code: activeObject['strategy1.user_code'],
+                                content_type: "strategies.strategy1"
+                            };
+                        }
+
+                        if (activeObject['strategy2.id']) {
+                            contextData.strategy2 = activeObject['strategy2.id'];
+                            contextData.strategy2_object = {
+                                id: activeObject['strategy2.id'],
+                                name: activeObject['strategy2.name'],
+                                user_code: activeObject['strategy2.user_code'],
+                                content_type: "strategies.strategy2"
+                            };
+                        }
+
+                        if (activeObject['strategy3.id']) {
+                            contextData.strategy3 = activeObject['strategy3.id'];
+                            contextData.strategy3_object = {
+                                id: activeObject['strategy3.id'],
+                                name: activeObject['strategy3.name'],
+                                user_code: activeObject['strategy3.user_code'],
+                                content_type: "strategies.strategy3"
                             };
                         }
 

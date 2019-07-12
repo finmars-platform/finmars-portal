@@ -29,8 +29,8 @@
         return transactionTypeRepository.updateBulk(entities);
     };
 
-    var initBookComplexTransaction = function (id) {
-        return transactionTypeRepository.initBookComplexTransaction(id);
+    var initBookComplexTransaction = function (id, contextData) {
+        return transactionTypeRepository.initBookComplexTransaction(id, contextData);
     };
 
     var bookComplexTransaction = function (id, transaction) {
