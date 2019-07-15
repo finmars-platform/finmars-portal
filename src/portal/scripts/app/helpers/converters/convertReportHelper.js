@@ -56,8 +56,58 @@
         return table;
     };
 
+    var convertToCSV = function (rows, columns) {
+
+        var csv = [];
+
+        csv[0] = [];
+        for (var hc = 0; hc < columns.length; hc++) {
+            var hColumnText = columns[hc].querySelector('.caption .column-name-span').textContent;
+
+            // Escaping double quotes and commas
+            if (hColumnText.indexOf('"') !== -1) {
+                hColumnText = hColumnText.replace(/"/g, '""');
+            }
+
+            hColumnText = '"' + hColumnText + '"';
+
+            csv[0].push(hColumnText);
+
+        }
+
+        for (var r = 0; r < rows.length; r++) {
+            var cells = rows[r].querySelectorAll('.g-cell');
+            var rowOrder = r + 1; // there is already row with index 0
+            csv[rowOrder] = [];
+
+            for (var c = 0; c < cells.length; c++) {
+
+                var cellText = cells[c].innerText;
+                // Removing line break
+                if (cellText.match(/\r|\n/)) {
+                    cellText = cellText.replace(/\r|\n/g, ' ');
+                }
+                // Escaping double quotes and commas
+                if (cellText.indexOf('"') !== -1) {
+                    cellText = cellText.replace(/"/g, '""');
+                }
+                cellText = '"' + cellText + '"';
+                csv[rowOrder].push(cellText);
+
+            }
+
+            csv[rowOrder] = csv[rowOrder].join(',');
+        }
+
+        csv = csv.join('\n');
+
+        return csv;
+
+    };
+
     module.exports = {
-        convertToExcel: convertToExcel
+        convertToExcel: convertToExcel,
+        convertToCSV: convertToCSV
     }
 
 }());

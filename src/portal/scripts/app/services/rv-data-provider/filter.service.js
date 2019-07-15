@@ -59,7 +59,7 @@
                             var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
                             var filterArgument = JSON.parse(JSON.stringify(filterValue));
 
-                            if (valueType === 10) {
+                            if (valueType === 10 || valueType === 30) {
 
                                 if (filterType !== 'multiselector') {
                                     valueFromTable = valueFromTable.toLowerCase();

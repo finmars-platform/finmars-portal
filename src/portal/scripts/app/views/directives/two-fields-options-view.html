@@ -12,7 +12,7 @@
 			<p ng-repeat="option in allOptions | orderBy: nameProperty | filter: {name: availableSearchTerm} as results track by option.id"
 			   ng-bind="option['{{nameProperty}}']"
 			   class="two-fields-available-option"
-			   member-group-id="{{option.id}}"
+			   data-member-group-id="{{option.id}}"
 			   ng-click="highlightOption($event)"
 			   ng-dblclick="switchOptionOnDoubleClick('select', option.id)"></p>
 		</div>
@@ -63,7 +63,7 @@
 				<p ng-repeat="sOption in selectedOptions | orderBy: nameProperty | filter: {name: selectedSearchTerm} as results track by sOption.id"
 				   ng-bind="sOption['{{nameProperty}}']"
 				   class="two-fields-selected-option"
-				   member-group-id="{{sOption.id}}"
+				   data-member-group-id="{{sOption.id}}"
 				   ng-click="highlightOption($event)"
 				   ng-dblclick="switchOptionOnDoubleClick('deselect', sOption.id)"></p>
 			</div>

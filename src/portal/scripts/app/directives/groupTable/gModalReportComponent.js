@@ -130,7 +130,7 @@
                         attrsList = attrsList.concat(vm.strategy3attrs);
 
                         syncAttrs();
-                        console.log("draganddrop attrslist", attrsList);
+
                         vm.readyStatus.content = true;
                         $scope.$apply();
                     });
@@ -297,6 +297,7 @@
 
                         if (attr.key === filters[f].key) {
                             filterExist = true;
+
                             if (attr.filters === false) {
                                 filters.splice(f, 1);
                                 f = f - 1;

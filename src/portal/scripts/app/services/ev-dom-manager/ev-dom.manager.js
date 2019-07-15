@@ -188,7 +188,7 @@
     };
 
     var handleObjectActive = function (clickData, evDataService, evEventService) {
-
+        console.log("flat list handleObjectActive click");
         var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
 
         var count = evDataService.getActiveObjectsCount();
@@ -203,6 +203,10 @@
 
             evDataService.setActiveObject(obj);
             evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+        } else if (clickData.isCtrlPressed) {
+
+            handleControlClick(clickData, evDataService, evEventService);
 
         } else {
 
@@ -373,6 +377,7 @@
 
         clickData.target = clickTarget;
         clickData.isShiftPressed = event.shiftKey;
+        clickData.isCtrlPressed = event.ctrlKey;
 
         switch (clickTarget) {
 
@@ -462,16 +467,20 @@
 
                 handleGroupClick(clickData, evDataService, evEventService);
 
-            }
+            } /*else if (event.ctrlKey && clickData.___type === 'object') {
+                console.log("flat list ctrl clicked");
+                handleControlClick(clickData, evDataService, evEventService);
+
+            } else if (clickData.___type === 'object') {
+
+                handleObjectClick(clickData, evDataService, evEventService);
+
+            }*/
 
             if (clickData.___type === 'object') {
 
                 handleObjectClick(clickData, evDataService, evEventService);
 
-            }
-
-            if (clickData.___type === 'object') {
-                handleControlClick(clickData, evDataService, evEventService);
             }
 
         })

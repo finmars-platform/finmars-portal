@@ -425,7 +425,7 @@
     <div ng-if="isReport">
         <div class="g-filters-holder g-filters-holder-container">
             <div data-ng-repeat="filter in filters">
-                <div ng-if="filter['value_type'] === 10">
+                <div ng-if="filter['value_type'] === 10 || filter['value_type'] === 30">
                     <rv-text-filter filter="filter" ev-data-service="evDataService" ev-event-service="evEventService"></rv-text-filter>
                 </div>
 

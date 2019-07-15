@@ -167,12 +167,15 @@
         var showLayoutName = false;
 
         $transitions.onFinish({}, function (transition) {
-            // console.log("transition", transition, transition.to(), transition.params());
+
             pageStateName = transition.to().name;
             pageStateParams = transition.params().strategyNumber;
 
             if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
                 showLayoutName = true;
+                vm.activeLayoutName = null;
+                vm.activeSPLayoutName = false;
+
                 vm.getActiveLayoutName();
 
             } else {
@@ -181,6 +184,9 @@
 
 
         });
+
+        vm.activeLayoutName = null;
+        vm.activeSPLayoutName = false; // false needed to check whether split panel disabled and have no layout in middlewareService
 
         vm.isStateOfEntity = function () {
 
@@ -199,32 +205,20 @@
             }*/
 
             // Check if layout has been switched without changing state
-            var newLayoutsData = {};
-            newLayoutsData.layoutName = newLayoutName;
-            newLayoutsData.splitPanelLayoutName = newSplitPanelLayoutName;
 
-            if (newLayoutsData.layoutName || newLayoutsData.splitPanelLayoutName !== vm.activeSPLayoutName) {
+            if (newLayoutName) {
                 middlewareService.deleteData('entityActiveLayoutSwitched');
-                vm.getActiveLayoutName(newLayoutsData);
+                vm.getActiveLayoutName(newLayoutName);
+            }
+
+            if (newSplitPanelLayoutName !== vm.activeSPLayoutName) {
+                vm.activeSPLayoutName = newSplitPanelLayoutName;
             }
 
             return showLayoutName;
         };
 
-        vm.activeLayoutName = null;
-        vm.activeSPLayoutName = false; // false needed for checking is split panel disabled and have no layout in middlewareService
-
-        vm.getActiveLayoutName = function (layoutsNamesData) {
-
-            var newLayoutName = null;
-            if (layoutsNamesData) {
-                newLayoutName = layoutsNamesData.layoutName;
-
-                if (layoutsNamesData.splitPanelLayoutName !== vm.activeSPLayoutName) {
-                    vm.activeSPLayoutName = layoutsNamesData.splitPanelLayoutName;
-                }
-            }
-
+        vm.getActiveLayoutName = function (newLayoutName) {
 
             if (typeof newLayoutName === "string") {
 
@@ -356,6 +350,7 @@
 
         $transitions.onSuccess({}, function (transition) {
 
+            middlewareService.deleteData('splitPanelActiveLayoutSwitched');
             var from = transition.from();
 
             if (from.name === 'app.profile') {

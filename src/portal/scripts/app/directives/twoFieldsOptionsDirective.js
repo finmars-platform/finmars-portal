@@ -48,14 +48,15 @@
 							return false;
 					}
 
-					var fieldOptions = elem.find('.active-option' + optionsType);
+					// var fieldOptions = elem.find('.active-option' + optionsType);
+					var fieldOptions = elem[0].querySelectorAll('.active-option' + optionsType);
 
 					if (fieldOptions && fieldOptions.length > 0) {
 
-						fieldOptions.each(function() {
+						for (var i = 0; i < fieldOptions.length; i++) {
 
-							var hOption = $(this);
-							var hOptionId = hOption.data('member-group-id');
+							var hOption = fieldOptions[i];
+							var hOptionId = hOption.dataset.memberGroupId;
 
 							removeFrom.forEach(function(option, optionIndex) {
 
@@ -65,7 +66,8 @@
 								}
 
 							});
-						});
+						}
+
 					}
 				};
 

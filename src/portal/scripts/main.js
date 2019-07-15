@@ -377,6 +377,7 @@ app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitl
 app.directive('valueTitle', ['$timeout', require('./app/directives/valueTitleDirective.js')]);
 
 app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'reportOptions', 'options', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
+app.controller('GEntityViewerSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/gEntityViewerSettingsDialogController')]);
 app.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/periodsEditorDialogController')]);
 app.controller('DateTreeDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dateTreeDialogController')]);
 

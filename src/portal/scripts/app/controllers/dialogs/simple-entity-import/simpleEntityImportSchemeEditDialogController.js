@@ -151,6 +151,8 @@
 
             });
 
+            console.log("classifier vm.scheme.entity_fields", vm.scheme.entity_fields);
+
             vm.inputsFunctions = vm.getFunctions();
 
             findPickedDynamicAttrs();
@@ -334,7 +336,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function ($event) {
@@ -476,6 +478,52 @@
                 }
             })
 
+        };
+
+        function setName(item) {
+            item.name = item.text;
+            if (item.id.indexOf('j') !== -1) {
+                delete item['li_attr'];
+                delete item['state'];
+                delete item['icon'];
+                delete item['a_attr'];
+                delete item['data'];
+                delete item['text'];
+                delete item['type'];
+                delete item.id;
+            }
+            item.children = item.children.map(setName);
+            return item;
+        };
+
+        vm.editTreeAttr = function (item, ev) {
+
+            var classifierObject = Object.assign({}, item);
+
+            classifierObject.id = classifierObject.dynamic_attribute_id;
+            delete classifierObject.dynamic_attribute_id;
+
+            $mdDialog.show({
+                controller: 'ClassificationEditorDialogController as vm',
+                templateUrl: 'views/classification-editor-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType,
+                        classifier: classifierObject
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+
+                    res.data.classifier.classifiers = res.data.classifier.children.map(setName);
+
+                    attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier);
+                }
+            });
         };
 
     };

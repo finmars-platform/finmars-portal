@@ -366,7 +366,7 @@
 
                             }
 
-                            if (item.value_type === 30) {
+                            /*if (item.value_type === 30) {
 
                                 promises.push(attributeTypeService.getByKey(scope.entityType, item.id).then(function (data) {
 
@@ -377,7 +377,7 @@
 
                                 }))
 
-                            }
+                            }*/
 
                         }
                     });
@@ -401,6 +401,7 @@
                                         ev.stopPropagation();
                                     });
                                 }, 100);
+
                             }
                         );
                     });
