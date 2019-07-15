@@ -7,6 +7,7 @@
 
     var logService = require('../../../../../../core/services/logService');
     var pricingPolicyService = require('../../../services/pricingPolicyService');
+    var usersService = require('../../../services/usersService');
 
     var fieldResolverService = require('../../../services/fieldResolverService');
 
@@ -25,6 +26,9 @@
         vm.priceDownloadSchemeFields = [];
 
         vm.newItem = {pricing_policy: '', expr: '', notes: ''};
+
+        vm.system_currency = null;
+        vm.systemCurrencyFields = [];
 
         pricingPolicyService.getList().then(function (data) {
             vm.policies = data.results;
@@ -171,8 +175,20 @@
 
         };
 
+        vm.setSystemCurrency = function () {
+
+            usersService.getCurrentMasterUser().then(function (data) {
+
+                vm.system_currency = data.system_currency;
+                vm.systemCurrencyFields.push(data.system_currency_object);
+
+            })
+
+        };
+
         vm.init = function () {
 
+            vm.setSystemCurrency();
             vm.setDefaultCurrencyFields();
             vm.setDefaultDailyPricingModelFields();
             vm.setDefaultPriceDownloadSchemeFields();

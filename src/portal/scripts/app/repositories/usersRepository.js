@@ -97,6 +97,17 @@
         })
     };
 
+    var getCurrentMasterUser = function () {
+        return xhrService.fetch(baseUrl + 'users/get-current-master-user', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+    };
+
     var changePassword = function (id, user) {
         return xhrService.fetch(baseUrl + 'users/user/' + id + '/set-password/', {
             method: 'PUT',
@@ -334,7 +345,7 @@
         patch: patch,
         deleteByKey: deleteByKey,
 
-
+        getCurrentMasterUser: getCurrentMasterUser,
         createMasterUser: createMasterUser,
         getMasterList: getMasterList,
         getMasterByKey: getMasterByKey,
