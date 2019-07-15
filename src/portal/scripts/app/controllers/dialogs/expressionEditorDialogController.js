@@ -249,9 +249,9 @@
 
         function isInput(token, words) {
 
-            if (token.hasDot) {
-                return false
-            }
+            // if (token.hasDot) {
+            //     return false
+            // }
 
             return words.indexOf(token.value) !== -1;
 
@@ -278,7 +278,16 @@
             vm.data.functions.forEach(function (funcGroup) {
 
                 funcGroup.map(function (item) {
-                    result.push(item.func)
+
+                    if (item.func.indexOf('[') !== -1) {
+
+                        var func = item.func.split('[').join('').split(']').join('')
+
+                        result.push(func)
+
+                    } else {
+                        result.push(item.func)
+                    }
                 });
 
             });
@@ -349,7 +358,9 @@
             for (var i = 0; i < expression.length;) {
 
 
-                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_]*$/)) && strContent === false) {
+                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_.]*$/)) && strContent === false) {
+
+                    console.log('expression[i]', expression[i]);
 
                     currentToken.value = currentToken.value + expression[i];
 
@@ -392,15 +403,9 @@
 
                 if (strContent === false) {
 
-                    if (isFunction(currentToken, functionWords, expression[i + 1])) {
-
-                        result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
-                        currentToken.value = '';
-                    }
-
                     if (isInput(currentToken, inputWords)) {
 
-                        if (i + 1 < expression.length && expression[i + 1].match(new RegExp(/^[a-zA-Z0-9_-]*$/))) {
+                        if (i + 1 < expression.length && expression[i + 1].match(new RegExp(/^[a-zA-Z0-9_.-]*$/))) {
 
                             // console.log('expression[i + 1]', expression[i + 1])
 
@@ -409,6 +414,7 @@
                         } else {
 
                             result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
+
                             currentToken.value = '';
 
                             inputsCounts = inputsCounts + 1;
@@ -417,17 +423,25 @@
 
                     }
 
-                    if (isParameter(currentToken, propertiesWords)) {
+                    if (isFunction(currentToken, functionWords, expression[i + 1])) {
 
-                        result = result + '<span class="eb-highlight-property">' + currentToken.value + '</span>';
-
+                        result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
                         currentToken.value = '';
-                        currentToken.hasDot = false;
-
                     }
+
+
+                    // if (isParameter(currentToken, propertiesWords)) {
+                    //
+                    //     result = result + '<span class="eb-highlight-property">' + currentToken.value + '</span>';
+                    //
+                    //     currentToken.value = '';
+                    //     currentToken.hasDot = false;
+                    //
+                    // }
 
                     if (isNumber(currentToken)) {
                         result = result + currentToken.value;
+
                         currentToken.value = '';
                         currentToken.hasDot = false;
                     }
