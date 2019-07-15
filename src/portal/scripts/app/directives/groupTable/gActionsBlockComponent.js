@@ -361,6 +361,22 @@
 
                 };
 
+                scope.openEntityViewerSettings = function ($event) {
+
+                    $mdDialog.show({
+                        controller: 'GEntityViewerSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-entity-viewer-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: {
+                                entityViewerDataService: scope.evDataService
+                            }
+                        }
+                    });
+
+                };
+
                 scope.openLayoutList = function ($event) {
 
                     $mdDialog.show({
@@ -682,11 +698,6 @@
 
                                     listLayout.id = data.id;
 
-                                    scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-
-                                    scope.evDataService.setListLayout(listLayout);
-                                    scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-
                                     if (scope.isRootEntityViewer) {
                                         middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
                                     } else {
@@ -694,6 +705,11 @@
                                         scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
                                         middlewareService.setData('splitPanelActiveLayoutSwitched', listLayout.name); // Give signal to update active split panel layout name in the toolbar
                                     }
+
+                                    scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+                                    scope.evDataService.setListLayout(listLayout);
+                                    scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                     scope.isNewLayout = false;
 
@@ -735,9 +751,6 @@
 
                                 if (scope.isRootEntityViewer) {
                                     listLayout.is_default = true;
-                                } else {
-                                    scope.evDataService.setSplitPanelDefaultLayout(listLayout.id);
-                                    scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
                                 }
 
                                 saveAsLayout();
@@ -770,9 +783,20 @@
                     downloadFileHelper.downloadFile(blobPart, "text/plain", "report.xls");
                 };
 
+                scope.exportAsCSV = function () {
+                    var rows = document.querySelectorAll('.ev-content .g-row');
+                    var columns = document.querySelectorAll('.g-columns-holder .g-cell');
+
+                    var blobPart = convertReportHelper.convertToCSV(rows, columns);
+                    downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
+                };
+
                 scope.copyReport = function ($event) {
-                    console.log('copy report');
                     reportCopyHelper.copy();
+                };
+
+                scope.copySelectedToBuffer = function () {
+                    reportCopyHelper.copySelected();
                 };
 
                 scope.openCustomFieldsManager = function () {

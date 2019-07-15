@@ -19,6 +19,7 @@
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
         var expressionService = require('../../services/expression.service');
+        var middlewareService = require('../../services/middlewareService');
 
         module.exports = function ($scope, $mdDialog, $transitions) {
 
@@ -462,6 +463,8 @@
             vm.getView = function () {
 
                 console.log('here?');
+
+                middlewareService.deleteData('splitPanelActiveLayoutSwitched'); // reset split panel layout name
 
                 vm.listViewIsReady = false;
 

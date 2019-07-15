@@ -15,6 +15,7 @@
         var EntityViewerEventService = require('../../services/entityViewerEventService');
 
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
+        var middlewareService = require('../../services/middlewareService');
 
         module.exports = function ($scope, $mdDialog, $state, $transitions) {
 
@@ -187,6 +188,8 @@
             };
 
             vm.getView = function () {
+
+                middlewareService.deleteData('splitPanelActiveLayoutSwitched'); // reset split panel layout name
 
                 vm.listViewIsReady = false;
 

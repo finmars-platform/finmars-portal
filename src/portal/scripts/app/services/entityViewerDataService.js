@@ -100,7 +100,8 @@
             allRowsSelected: false,
             rootEntityViewer: false,
             isSplitPanelActive: false,
-            splitPanelLayoutName: false,
+            splitPanelDefaultLayoutId: false,
+            splitPanelActiveLayoutId: false,
             additions: {},
             report: {},
             export: {},
@@ -318,7 +319,7 @@
         }
 
         function setFlatList(flatList) {
-            data.flatList = flatList
+            data.flatList = flatList;
         }
 
         function getFlatList() {
@@ -826,8 +827,6 @@
 
             } else {
 
-                console.log('default triggered');
-
                 var defaultList = uiService.getListLayoutTemplate();
 
                 listLayout = {};
@@ -886,11 +885,21 @@
         }
 
         function setSplitPanelDefaultLayout(layoutId) {
-            data.splitPanelLayoutName = layoutId;
+            data.splitPanelDefaultLayoutId = layoutId;
         }
 
         function getSplitPanelDefaultLayout() {
-            return data.splitPanelLayoutName;
+            return data.splitPanelDefaultLayoutId;
+        }
+
+        function setSplitPanelActiveLayout(layoutId) {
+            data.splitPanelActiveLayoutId = layoutId;
+        }
+
+        function getSplitPanelActiveLayout() {
+            var splitPanelActiveLayoutId = data.splitPanelActiveLayoutId;
+            data.splitPanelActiveLayoutId = false;
+            return splitPanelActiveLayoutId;
         }
 
         return {
@@ -1038,6 +1047,8 @@
             isSplitPanelActive: isSplitPanelActive,
             setSplitPanelDefaultLayout: setSplitPanelDefaultLayout,
             getSplitPanelDefaultLayout: getSplitPanelDefaultLayout,
+            setSplitPanelActiveLayout: setSplitPanelActiveLayout,
+            getSplitPanelActiveLayout: getSplitPanelActiveLayout,
 
             setActiveObjectsCount: setActiveObjectsCount,
             getActiveObjectsCount: getActiveObjectsCount

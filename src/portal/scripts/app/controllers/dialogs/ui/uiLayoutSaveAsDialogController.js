@@ -47,7 +47,7 @@
         }
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function ($event) {
