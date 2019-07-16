@@ -525,6 +525,14 @@
                         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Price</div>'
                 }
 
+                if (obj['currency.id']) {
+                    popup.innerHTML = popup.innerHTML +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="edit_fx_rate"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit FX Rate</div>'
+                }
+
                 popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
                     ' data-ev-dropdown-action="book_transaction"' +
                     ' data-object-id="' + objectId + '"' +

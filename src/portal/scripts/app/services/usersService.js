@@ -51,7 +51,10 @@
         return usersRepository.deleteByKey(id);
     };
 
-
+    var getCurrentMasterUser = function () {
+        return usersRepository.getCurrentMasterUser();
+    };
+    
     var createMasterUser = function (user) {
         return usersRepository.createMasterUser(user);
     };
@@ -129,6 +132,7 @@
         deleteByKey: deleteByKey,
 
 
+        getCurrentMasterUser: getCurrentMasterUser,
         createMasterUser: createMasterUser,
         getMasterList: getMasterList,
         getMasterByKey: getMasterByKey,
