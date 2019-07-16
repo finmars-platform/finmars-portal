@@ -268,11 +268,15 @@
         vm.bindField = function (tab, field) {
             var i, l, e;
             if (field && field.type === 'field') {
+
+                var attributes = {};
+
                 if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
                         if (field.id === vm.attrs[i].id) {
                             vm.attrs[i].options = field.options;
-                            return vm.attrs[i];
+                            // return vm.attrs[i];
+                            attributes = vm.attrs[i];
                         }
                     }
                 } else {
@@ -280,17 +284,25 @@
                     for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                         if (field.name === vm.entityAttrs[e].name) {
                             vm.entityAttrs[e].options = field.options;
-                            return vm.entityAttrs[e];
+                            // return vm.entityAttrs[e];
+                            attributes = vm.entityAttrs[e];
                         }
                     }
                     for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
                         if (field.name === vm.layoutAttrs[l].name) {
                             vm.layoutAttrs[l].options = field.options;
-                            return vm.layoutAttrs[l];
+                            // return vm.layoutAttrs[l];
+                            attributes = vm.layoutAttrs[l];
                         }
                     }
 
                 }
+
+                if (field.backgroundColor) {
+                    attributes.backgroundColor = field.backgroundColor;
+                }
+
+                return attributes;
             }
         };
 

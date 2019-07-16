@@ -377,6 +377,26 @@
 
                 };
 
+                var layoutChanged = false;
+                scope.didLayoutChanged = function () {
+
+                    var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
+                    var layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+                    if (activeLayoutConfig.hasOwnProperty('name') && layoutCurrentConfig.hasOwnProperty('name')) {
+
+                        if (layoutChanged !== !evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, scope.isReport)) {
+                            layoutChanged = !layoutChanged;
+                        }
+
+                        return layoutChanged;
+
+                    } else {
+                        return layoutChanged;
+                    }
+
+                };
+
                 scope.openLayoutList = function ($event) {
 
                     $mdDialog.show({
@@ -820,6 +840,15 @@
                 };
 
                 checkLayoutExistence();
+
+                scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS, function () {
+
+                    setTimeout(function () { // wait till information about resized columns set into entityViewerDataService
+                        scope.didLayoutChanged();
+                        scope.$apply();
+                    }, 300);
+
+                });
 
             }
         }

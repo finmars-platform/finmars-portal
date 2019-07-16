@@ -65,7 +65,7 @@ md-optgroup.bold-field-select > label {
 
   padding-left: 1em;
   padding-right: 1em;
-  md-input-container {
+  .ec-attr-row {
     margin-bottom: 20px;
   }
   &.active {
@@ -190,6 +190,36 @@ md-input-container textarea {
 
 md-checkbox.checkbox-bind-field {
   margin-left: 12px;
+}
+
+.ec-input-color-container {
+  margin: 0 0 20px;
+
+  .ec-input-color-checkbox-container {
+    md-checkbox {
+      margin: 0;
+    }
+  }
+
+  .ec-color-input {
+    height: 30px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background: transparent;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color linear .2s;
+
+    &:hover:not([disabled]) {
+      background-color: rgba(0,0,0,.2);
+    }
+
+    &[disabled] {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+
 }
 
 .ev-data-field .textarea-bind-field {
@@ -322,14 +352,13 @@ md-checkbox.checkbox-bind-field {
 
   .field-date-pick-holder {
     position: relative;
-    width: 100%;
 
     zh-date-picker {
       display: inline-block;
       margin-right: 4px;
       width: 100%;
       //padding-right: 138px;
-      padding-right: 115px;
+      //padding-right: 115px;
       box-sizing: border-box;
 
     }
@@ -419,3 +448,4 @@ md-checkbox.checkbox-bind-field {
     opacity: 0.8;
   }
 }
+
