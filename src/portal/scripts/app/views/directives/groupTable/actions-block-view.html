@@ -379,6 +379,13 @@
                 <md-button data-ng-click="openReportSettings($event)" class=" md-raised">Settings</md-button>
 
                 <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                    <span ng-show="didLayoutChanged()"
+                          class="layout-change-indicator">
+                        <ng-md-icon icon="track_changes" size="20">
+                            <md-tooltip class="tooltip_2"
+                                        md-direction="top">layout changed</md-tooltip>
+                        </ng-md-icon>
+                    </span>
                     <md-menu class="full-width" layout="row">
                         <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
                                    ng-click="$mdOpenMenu($event)">
@@ -454,7 +461,7 @@
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click="copyReport($event)" class="g-settings-option-btn">
-                                    <span>Copy all to Buffer</span>
+                                    <span>Copy all to buffer</span>
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>

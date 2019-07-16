@@ -148,7 +148,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.manageAttrs = function (ev) {
@@ -357,14 +357,6 @@
 
                     });
 
-                    /*vm.editLayout = function () {
-                        $state.go('app.data-constructor', {
-                            entityType: vm.entityType,
-                            from: vm.entityType,
-                            instanceId: vm.complexTransactionOptions.transactionTypeId
-                        });
-                        $mdDialog.hide();
-                    };*/
                     vm.dataConstructorData = {
                         entityType: vm.entityType,
                         from: vm.entityType,
@@ -422,11 +414,15 @@
         vm.bindField = function (tab, field) {
             var i, l, e, u;
             if (field && field.type === 'field') {
+
+                var attributes = {};
+
                 if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
                         if (field.id === vm.attrs[i].id) {
                             vm.attrs[i].options = field.options;
-                            return vm.attrs[i];
+                            // return vm.attrs[i];
+                            attributes = vm.attrs[i];
                         }
                     }
                 } else {
@@ -434,13 +430,15 @@
                     for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                         if (field.name === vm.entityAttrs[e].name) {
                             vm.entityAttrs[e].options = field.options;
-                            return vm.entityAttrs[e];
+                            // return vm.entityAttrs[e];
+                            attributes = vm.entityAttrs[e];
                         }
                     }
                     for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
                         if (field.name === vm.layoutAttrs[l].name) {
                             vm.layoutAttrs[l].options = field.options;
-                            return vm.layoutAttrs[l];
+                            // return vm.layoutAttrs[l];
+                            attributes = vm.layoutAttrs[l];
                         }
                     }
 
@@ -449,40 +447,56 @@
                         //console.log('vm.userInputs[u]', vm.userInputs[u]);
                         if (field.name === vm.userInputs[u].name) {
                             vm.userInputs[u].options = field.options;
-                            return vm.userInputs[u];
+                            // return vm.userInputs[u];
+                            attributes = vm.userInputs[u];
                         }
                     }
+
                 }
+
+                if (field.backgroundColor) {
+                    attributes.backgroundColor = field.backgroundColor;
+                }
+
+                return attributes;
             }
         };
 
         vm.checkFieldRender = function (tab, row, field) {
+
             if (field.row === row) {
                 if (field.type === 'field') {
                     return true;
                 } else {
-                    var i, c, x;
-                    var spannedCols = [];
-                    for (i = 0; i < tab.layout.fields.length; i = i + 1) {
-                        if (tab.layout.fields[i].row === row) {
 
-                            if (tab.layout.fields[i].type === 'field') {
-                                for (c = tab.layout.fields[i].column; c <= (tab.layout.fields[i].column + tab.layout.fields[i].colspan - 1); c = c + 1) {
-                                    spannedCols.push(c);
-                                }
+                    var spannedCols = [];
+                    var itemsInRow = tab.layout.fields.filter(function (item) {
+                        return item.row === row
+                    });
+
+
+                    itemsInRow.forEach(function (item, index) {
+
+                        if (item.type === 'field' && item.colspan > 1) {
+
+                            for (var i = 1; i < item.colspan; i = i + 1) {
+                                spannedCols.push(i + index);
                             }
+
                         }
-                    }
-                    for (x = 0; x < spannedCols.length; x = x + 1) {
-                        if (spannedCols[x] === field.column) {
-                            return false;
-                        }
+
+                    });
+
+
+                    if (spannedCols.indexOf(field.column) !== -1) {
+                        return false
                     }
 
                     return true;
                 }
             }
             return false;
+
         };
 
         vm.checkViewState = function (tab) {

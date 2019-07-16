@@ -109,7 +109,7 @@
                     <div data-ng-if="vm.readyStatus.layout && vm.transactionTypeId">
 
                         <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
-                            <md-tab data-ng-repeat="tab in vm.tabs">
+                            <md-tab data-ng-repeat="tab in vm.tabs track by $index">
                                 <md-tab-label>
                                     <span>{{tab.name}}</span>
                                 </md-tab-label>
@@ -331,7 +331,9 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
         <div>
-            <md-button ng-click="vm.editLayout()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
+            <md-button ng-click="vm.editLayout()"
+                       class="md-raised md-primary"
+                       ng-disabled="!vm.checkReadyStatus() || !vm.entity.transaction_type">
                 Edit Form
             </md-button>
             <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">

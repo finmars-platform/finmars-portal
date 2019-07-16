@@ -1,5 +1,5 @@
 <div>
-    <md-input-container class="md-block"
+    <md-input-container class="md-block no-error-spacer"
                         aria-label="select with filter">
         <!--<label>Copy text from</label>
         <md-select ng-model="item.options.copyFrom">
@@ -10,7 +10,8 @@
         <label>Copy text from</label>
         <md-select ng-model="item.options.copyFrom"
                    md-container-class="common-select-container"
-                   md-on-close="searchTerm = ''">
+                   md-on-close="searchTerm = ''"
+                   style="margin-bottom: 10px">
 
                 <md-select-header>
                     <input data-ng-model="searchTerm"
@@ -32,7 +33,9 @@
 
         </md-select>
     </md-input-container>
-    <md-checkbox data-ng-model="item.options.notNull" aria-label="checkbox">
+    <md-checkbox data-ng-model="item.options.notNull"
+                 style="margin: 0 11px"
+                 aria-label="checkbox">
         Not null
     </md-checkbox>
 </div>
