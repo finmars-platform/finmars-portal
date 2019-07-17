@@ -123,14 +123,13 @@
 
                 });
 
-                vm.editLayout = function () {
+                /*vm.editLayout = function () {
                     $state.go('app.data-constructor', {
                         entityType: vm.entityType,
                         instanceId: vm.editLayoutEntityInstanceId
                     });
                     $mdDialog.hide();
-                };
-
+                };*/
 
                 $scope.$apply();
             });
@@ -307,7 +306,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.editLayout = function (ev) {
@@ -319,21 +318,35 @@
                 preserveScope: true,
                 multiple: true,
                 locals: {
-                    data: {
-                        entityType: vm.entityType
-                    }
+                    data: vm.dataConstructorData
                 }
             }).then(function (res) {
 
                 if (res.status === "agree") {
 
-                    // vm.readyStatus.entity = false;
-                    vm.readyStatus.content = false;
+                    // vm.readyStatus.content = false;
 
-                    init();
+                    /*vm.init();
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
+                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];*/
+
+                    /*vm.getFormLayout().then(function (value) {
+
+                        Object.keys(copy).forEach(function (key) {
+                            vm.entity[key] = copy[key];
+                        });
+
+                        delete vm.entity.id;
+
+                        $scope.$apply();
+                    });
+                    vm.init();*/
+                    vm.getAttributeTypes();
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
                     vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+
+                    vm.getFormLayout();
 
                 }
 
@@ -482,26 +495,34 @@
         };
 
         vm.bindField = function (tab, field) {
+
             var i, l, e, u;
             if (field && field.type === 'field') {
+
+                var attributes = {};
+
                 if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
                         if (field.id === vm.attrs[i].id) {
                             vm.attrs[i].options = field.options;
-                            return vm.attrs[i];
+                            // return vm.attrs[i];
+                            attributes = vm.attrs[i];
                         }
                     }
                 } else {
+
                     for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                         if (field.name === vm.entityAttrs[e].name) {
                             vm.entityAttrs[e].options = field.options;
-                            return vm.entityAttrs[e];
+                            // return vm.entityAttrs[e];
+                            attributes = vm.entityAttrs[e];
                         }
                     }
                     for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
                         if (field.name === vm.layoutAttrs[l].name) {
                             vm.layoutAttrs[l].options = field.options;
-                            return vm.layoutAttrs[l];
+                            // return vm.layoutAttrs[l];
+                            attributes = vm.layoutAttrs[l];
                         }
                     }
 
@@ -510,10 +531,18 @@
                         //console.log('vm.userInputs[u]', vm.userInputs[u]);
                         if (field.name === vm.userInputs[u].name) {
                             vm.userInputs[u].options = field.options;
-                            return vm.userInputs[u];
+                            // return vm.userInputs[u];
+                            attributes = vm.userInputs[u];
                         }
                     }
+
                 }
+
+                if (field.backgroundColor) {
+                    attributes.backgroundColor = field.backgroundColor;
+                }
+
+                return attributes;
             }
         };
 
@@ -923,6 +952,11 @@
         vm.transactionTypeChange = function () {
 
             vm.entity.transaction_type = vm.transactionTypeId;
+
+            vm.dataConstructorData = {
+                entityType: vm.entityType,
+                instanceId: vm.transactionTypeId
+            };
 
             vm.getFormLayout();
 

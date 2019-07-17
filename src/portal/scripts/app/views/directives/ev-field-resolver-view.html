@@ -7,7 +7,7 @@
         </div>
         <div data-ng-if="!isSpecialSearchRelation()">
             <div data-ng-if="checkComplexEntityType()">
-                <md-input-container class="md-block">
+                <md-input-container class="md-block no-error-spacer">
                     <label data-ng-bind="getName()"></label>
                     <div>
                         <md-select md-on-close="searchTerm = ''"
@@ -42,7 +42,7 @@
             <div data-ng-if="!checkComplexEntityType()">
                 <div data-ng-if="getModelKey() !== 'price_download_scheme'">
                     <div data-ng-if="!checkForCrudSelects()">
-                        <md-input-container class="md-block">
+                        <md-input-container class="md-block no-error-spacer">
                             <label data-ng-bind="getName()"></label>
                             <md-select md-on-close="searchTerm = ''"
                                        data-ng-model="entity[getModelKey()]"
@@ -77,7 +77,7 @@
 
                 </div>
                 <div data-ng-if="getModelKey() == 'price_download_scheme'">
-                    <md-input-container class="md-block">
+                    <md-input-container class="md-block no-error-spacer">
                         <label data-ng-bind="getName()"></label>
                         <md-select md-on-close="searchTerm = ''"
                                    data-ng-model="entity[getModelKey()]"
@@ -106,7 +106,7 @@
     </div>
     <div data-ng-if="type === 'multiple-ids'">
         <div data-ng-if="checkComplexEntityType()">
-            <md-input-container class="md-block">
+            <md-input-container class="md-block no-error-spacer">
                 <label data-ng-bind="getName()"></label>
                 <md-select md-on-close="searchTerm = ''"
                            md-on-open="getData()"
@@ -134,7 +134,7 @@
         <div data-ng-if="!checkComplexEntityType()">
             <div data-ng-if="getModelKey() !== 'content_types'">
                 <div data-ng-if="resolveMultiple()">
-                    <md-input-container class="md-block">
+                    <md-input-container class="md-block no-error-spacer">
                         <label data-ng-bind="getName()"></label>
                         <md-select md-on-close="searchTerm = ''"
                                    md-on-open="getData()"
@@ -156,7 +156,7 @@
                     </md-input-container>
                 </div>
                 <div data-ng-if="!resolveMultiple()">
-                    <md-input-container class="md-block">
+                    <md-input-container class="md-block no-error-spacer">
                         <label data-ng-bind="getName()"></label>
                         <md-select md-on-close="searchTerm = ''"
                                    md-on-open="getData()"
@@ -183,7 +183,7 @@
 
             </div>
             <div data-ng-if="getModelKey() === 'content_types'">
-                <md-input-container class="md-block">
+                <md-input-container class="md-block no-error-spacer">
                     <label data-ng-bind="getName()"></label>
                     <md-select md-on-close="searchTerm = ''"
                                md-on-open="getData()"

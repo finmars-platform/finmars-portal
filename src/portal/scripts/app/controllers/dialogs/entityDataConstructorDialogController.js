@@ -17,7 +17,7 @@
     var layoutService = require('../../services/layoutService');
 
     module.exports = function ($scope, data, $stateParams, $state, $mdDialog) {
-        console.log("forms entityDataConstructor", data);
+
         var vm = this;
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
         vm.readyStatus = {constructor: false};
@@ -118,7 +118,7 @@
                 entityType = vm.fromEntityType;
             }
             $state.go('app.data.' + entityType);*/
-            $mdDialog.cancel();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.checkColspan = function (tab, row, column) {
@@ -292,6 +292,8 @@
                 tab.layout.columns = columns;
             }
 
+            vm.createFieldsTrees();
+
             vm.updateDrakeContainers();
 
         };
@@ -452,6 +454,7 @@
 
                     addRow(vm.tabs[vm.tabs.length - 1]);
 
+                    vm.createFieldsTrees();
                     vm.updateDrakeContainers();
 
                 } else {
@@ -483,8 +486,9 @@
                     }
                 });
 
-                addRow(vm.tabs[vm.tabs.length - 1]);
+                addRow(vm.tabs[0]);
 
+                vm.createFieldsTrees();
                 vm.updateDrakeContainers();
 
             }

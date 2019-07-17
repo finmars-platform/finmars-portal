@@ -2,10 +2,17 @@
     <div data-ng-if="fieldType['display_name'] === 'Number'" class="bind-field-number-field-container">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-model="entity[getModelKey()]" type="number"
-                   data-ng-if="!item.options.onlyPositive">
-            <input data-ng-model="entity[getModelKey()]" type="number" min="0"
-                   data-ng-if="item.options.onlyPositive">
+            <input data-ng-model="entity[getModelKey()]"
+                   type="number"
+                   data-ng-if="!item.options.onlyPositive"
+                   class="no-input-arrows"
+                   style="{{inputBackgroundColor()}}">
+            <input data-ng-model="entity[getModelKey()]"
+                   type="number"
+                   min="0"
+                   data-ng-if="item.options.onlyPositive"
+                   class="no-input-arrows"
+                   style="{{inputBackgroundColor()}}">
 
         </md-input-container>
 
@@ -34,8 +41,9 @@
                     class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}} {{checkValid() ? 'mdc-error' : ''}}
                     {{entity[getModelKey()] != '' ? 'md-input-has-value' : ''}}">
                 <label data-ng-bind="getName()"></label>
-                <input type="text" data-ng-model="entity[getModelKey()]"
-                       style="width: {{100 - item.buttons.length * 10}}%">
+                <input type="text"
+                       data-ng-model="entity[getModelKey()]"
+                       style="{{styleForInputWithButtons()}}">
                 <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
                            data-ng-click="copyFromField(item.options.copyFrom)">
                     <ng-md-icon icon="content_copy"></ng-md-icon>
@@ -57,11 +65,14 @@
     <div data-ng-if="fieldType['display_name'] === 'Float'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-model="entity[getModelKey()]" data-float-numbers
-                   data-ng-if="!item.options.onlyPositive">
+            <input data-ng-model="entity[getModelKey()]"
+                   data-float-numbers
+                   data-ng-if="!item.options.onlyPositive"
+                   [style="{{inputBackgroundColor()}}"]>
             <input data-ng-model="entity[getModelKey()]" data-float-numbers
                    data-only-positive="true"
-                   data-ng-if="item.options.onlyPositive">
+                   data-ng-if="item.options.onlyPositive"
+                   style="{{inputBackgroundColor()}}">
 
         </md-input-container>
 
@@ -77,8 +88,11 @@
         </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Field'">
-        <ev-field-resolver data-item="item" data-entity="entity" data-options="options"
-                           data-entity-type="entityType"></ev-field-resolver>
+        <ev-field-resolver data-item="item"
+                           data-entity="entity"
+                           data-options="options"
+                           data-entity-type="entityType"
+                           style="{{inputBackgroundColor()}}"></ev-field-resolver>
         <div data-ng-if="item.buttons.length" class="bind-field-number-btn">
             <md-button data-ng-repeat="button in item.buttons"
                        class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
@@ -91,13 +105,18 @@
         </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
-        <ev-field-resolver data-item="item" data-entity="entity" data-options="options"></ev-field-resolver>
+        <ev-field-resolver data-item="item"
+                           data-entity="entity"
+                           data-options="options"
+                           style="{{inputBackgroundColor()}}"></ev-field-resolver>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
 
-        <md-input-container class="field-date-pick-holder">
+        <md-input-container class="field-date-pick-holder no-error-spacer md-block" style="{{styleForDateInputContainer()}}">
             <label data-ng-bind="getName()"></label>
-            <zh-date-picker data-ng-change="changeWatcher()" data-date-value="entity[getModelKey()]" ng-model="entity[getModelKey()]"></zh-date-picker>
+            <zh-date-picker data-date-value="entity[getModelKey()]"
+                            ng-model="entity[getModelKey()]"
+                            style="{{styleForInputWithButtons()}}"></zh-date-picker>
             <div class="date-pick-buttons-block">
                 <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
                     T - 1

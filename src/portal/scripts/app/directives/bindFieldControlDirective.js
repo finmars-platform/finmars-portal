@@ -209,7 +209,6 @@
                     }
                 }
 
-
                 scope.changeClassifier = function () {
                     if (classifierTree) {
                         console.log('classifier id', scope.entity[scope.getModelKey()]);
@@ -220,6 +219,65 @@
                             scope.$apply();
                         })
                     }
+                };
+
+                scope.styleForInputWithButtons = function () {
+
+                    var styleValue = '';
+
+                    if (scope.item.buttons && scope.item.buttons.length > 0) {
+                        styleValue = 'width: ' + (100 - scope.item.buttons.length * 10) + '%;';
+                    }
+
+                    if (scope.item.backgroundColor) {
+
+                        if (styleValue) {
+                            styleValue = styleValue + ' ';
+                        }
+
+                        styleValue = styleValue + 'background-color: ' + scope.item.backgroundColor + ';'
+                    }
+
+                    return styleValue;
+
+                };
+
+                scope.styleForDateInputContainer = function () {
+                    var styleValue = '';
+
+                    if (scope.item.options) {
+
+                        var optionsKeys = Object.keys(scope.item.options);
+
+                        var optionButtonsCount = 0;
+
+                        if (optionsKeys && optionsKeys.length > 0) {
+
+                            optionsKeys.forEach(function (key) {
+                                if (scope.item.options[key]) {
+                                    optionButtonsCount = optionButtonsCount + 1;
+                                }
+                            });
+
+                            if (optionButtonsCount > 0) {
+                                styleValue = 'padding-right: ' + (optionButtonsCount * 34) + 'px;';
+                            }
+
+                        }
+
+                    }
+
+                    return styleValue;
+                };
+
+                scope.inputBackgroundColor = function () {
+                    var backgroundColor = '';
+
+                    if (scope.item.backgroundColor) {
+                        backgroundColor = 'background-color: ' + scope.item.backgroundColor + ';';
+                    }
+
+                    return backgroundColor;
                 };
 
             }

@@ -455,7 +455,7 @@ md-progress-circular.progress-circular-white {
   }
 }
 
-md-input-container.no-error-spacer {
+.no-error-spacer {
 
   .md-errors-spacer {
     display: none;
@@ -493,4 +493,18 @@ md-input-container:not(.md-input-focused):not(.md-input-has-value) {
 
 .white-space-no-wrap {
   white-space: nowrap;
+}
+
+md-input-container.no-input-arrows {
+  input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+}
+
+input.no-input-arrows[type="number"] {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
