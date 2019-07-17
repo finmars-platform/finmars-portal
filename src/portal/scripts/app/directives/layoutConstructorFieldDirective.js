@@ -11,13 +11,13 @@
     module.exports = function () {
         return {
             restrict: 'AE',
-            templateUrl: 'views/directives/layout-constructor-field-view.html',
             scope: {
                 tab: '=',
                 row: '=',
                 column: '=',
                 fieldsTree: '='
             },
+            templateUrl: 'views/directives/layout-constructor-field-view.html',
             link: function (scope, elem, attr) {
 
                 var choices = metaService.getTypeCaptions();
@@ -29,7 +29,11 @@
                     editMode: false
                 };
 
+                scope.fieldUsesBackgroundColor = false;
+                scope.fieldBackgroundColor = '#000000';
+
                 scope.specialOptionTemplate = '';
+
 
                 function findItem() {
                     var i;
@@ -38,6 +42,12 @@
                         if (scope.tab.layout.fields[i].row === scope.row) {
                             if (scope.tab.layout.fields[i].column === scope.column) {
                                 scope.item = scope.tab.layout.fields[i];
+
+                                if (scope.item.backgroundColor) {
+                                    scope.fieldUsesBackgroundColor = true;
+                                    scope.fieldBackgroundColor = scope.item.backgroundColor;
+                                }
+
                                 scope.backupItem = JSON.parse(JSON.stringify(scope.tab.layout.fields[i]));
                             }
                         }
@@ -133,12 +143,15 @@
                             scope.tab.layout.fields[i].colspan = scope.item.colspan;
                             scope.tab.layout.fields[i].attribute = scope.item.attribute;
 
-                            if (scope.tab.layout.fields[i].row === scope.tab.layout.rows) {
-                                addRow();
+                            if (scope.fieldUsesBackgroundColor) {
+                                scope.tab.layout.fields[i].backgroundColor = scope.fieldBackgroundColor;
                             } else {
-                                //findEmptyRows();
+                                scope.tab.layout.fields[i].backgroundColor = null;
                             }
 
+                            if (scope.tab.layout.fields[i].row === scope.tab.layout.rows) {
+                                addRow();
+                            }
                         }
                     }
 
@@ -252,6 +265,7 @@
                                 scope.tab.layout.fields[i].disabled = false;
                                 scope.tab.layout.fields[i].colspan = 1;
                                 scope.tab.layout.fields[i].name = '';
+                                scope.tab.layout.fields[i].backgroundColor = null;
                                 scope.tab.layout.fields[i].type = 'empty';
                                 findEmptyRows();
                                 break;
@@ -437,6 +451,14 @@
 
                     return false;
                 };
+
+                scope.toggleBackgroundColor = function () {
+                    scope.fieldUsesBackgroundColor = !scope.fieldUsesBackgroundColor;
+                };
+
+                scope.setFieldBackgroundColor = function (color) {
+                    scope.fieldBackgroundColor = color;
+                }
 
             }
         }

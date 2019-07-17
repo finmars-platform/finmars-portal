@@ -28,7 +28,7 @@
     </div>
     <div data-ng-if="item.editMode">
         <md-card class="ec-attr-card {{item.editMode ? 'active' : ''}}">
-            <md-input-container class="md-block" flex-gt-sm>
+            <md-input-container class="md-block ec-attr-row" flex-gt-sm>
                 <label>Please select Element</label>
                 <!--{{item.attribute}}-->
                 <md-select ng-model="item.attribute"
@@ -80,40 +80,51 @@
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block"
+            <md-input-container class="md-block no-error-spacer ec-attr-row"
                                 flex-gt-sm
                                 aria-label="select with filter">
-                <!--<label>Element width</label>
-                <md-select ng-model="item.colspan">
-                    <md-option ng-repeat="colspan in getCols()" value="{{colspan}}">
-                        {{colspan}} column(s)
-                    </md-option>
-                </md-select>-->
                 <label>Element width</label>
                 <md-select ng-model="item.colspan"
                            md-container-class="common-select-container"
                            md-on-close="searchTerm = ''">
-
                         <div class="select-options-holder">
-
                             <md-option
                                     data-ng-repeat="colspan in getCols()"
                                     value="{{colspan}}">
                                 {{colspan}} column(s)
                             </md-option>
-
                         </div>
-
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block" data-ng-if="item.attribute.value_type != 'decoration'">
+            <md-input-container class="md-block no-error-spacer ec-attr-row"
+                                data-ng-if="item.attribute.value_type != 'decoration'">
                 <label>Custom label</label>
                 <input data-ng-model="item.options.fieldName">
             </md-input-container>
-            <div data-ng-if="checkForSpecialOptions()">
+
+            <div data-ng-if="checkForSpecialOptions()" class="ec-attr-row">
                 <div data-ng-include="specialOptionTemplate"></div>
             </div>
+
+            <div class="ec-input-color-container">
+                <div layout="row" layout-align="start center" class="m-b-8">
+
+                    <md-input-container class="ec-input-color-checkbox-container">
+                        <md-checkbox ng-checked="fieldUsesBackgroundColor"
+                                     ng-click="toggleBackgroundColor()">
+                            Use colored background
+                        </md-checkbox>
+                    </md-input-container>
+
+                    <input type="color"
+                           ng-model="fieldBackgroundColor"
+                           class="ec-color-input"
+                           ng-change="setFieldBackgroundColor(fieldBackgroundColor)"
+                           ng-disabled="!fieldUsesBackgroundColor">
+                </div>
+            </div>
+
             <md-divider></md-divider>
             <div layout="row" layout-align="space-between center" class="constructor-card-actions">
                 <md-button aria-label="cancel"

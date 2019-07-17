@@ -115,7 +115,7 @@
 
                     scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                 };
 
