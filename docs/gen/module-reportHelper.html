@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Module: UtilsHelper</title>
+	<title>Documentation Module: reportHelper</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,7 +65,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: UtilsHelper</h1>
+	<h1 class="page-title">Module: reportHelper</h1>
 <section>
 
 <header>
@@ -77,7 +77,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Module contains different useful functions</p></div>
+            <div class="description"><p>Report Viewer Helper.</p></div>
         
 
         
@@ -137,15 +137,13 @@
     
 
     
-
-    
-        <h3 class="subsection-title">Type Definitions</h3>
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
-                
+            
 <hr>
 <dt>
-    <h4 class="name" id=".debounce"><span class="type-signature"></span>debounce(wait, immediate)</h4>
+    <h4 class="name" id=".convertItemsToFlat"><span class="type-signature">&lt;static> </span>convertItemsToFlat(items, reportOptions)</h4>
     
     
 </dt>
@@ -153,7 +151,7 @@
 
     
     <div class="description">
-        <p>Get list of expressions for Expression Builder.</p>
+        <p>Get list of entity attributes and all children attributes.</p>
     </div>
     
 
@@ -188,13 +186,13 @@
 
         <tr>
             
-                <td class="name"><code>wait</code></td>
+                <td class="name"><code>items</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Array.&lt;Object></span>
 
 
 
@@ -205,20 +203,20 @@
 
             
 
-            <td class="description last"><p>The second color, in hexadecimal format.</p></td>
+            <td class="description last"><p>that were received from REST API.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>immediate</code></td>
+                <td class="name"><code>reportOptions</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">any</span>
+<span class="param-type">object</span>
 
 
 
@@ -229,7 +227,7 @@
 
             
 
-            <td class="description last"><p>?</p></td>
+            <td class="description last"><p>report options.</p></td>
         </tr>
 
     
@@ -293,7 +291,7 @@
     
             
 <div class="param-desc">
-    <p>The blended color.</p>
+    <p>Array of flat objects.</p>
 </div>
 
 
@@ -304,7 +302,7 @@
     </dt>
     <dd>
         
-<span class="param-type">number</span>
+<span class="param-type">Array.&lt;Object></span>
 
 
 
@@ -317,7 +315,385 @@
     
 </dd>
 
-            </dl>
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".recursiveUnwrapRelation"><span class="type-signature">&lt;static> </span>recursiveUnwrapRelation(result, parentKey, contentType, source)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Save to result object all props from relation key in source object</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>result</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>result flat object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>parentKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>parent key (e.g. instrument.instrument_type).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>contentType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>content type.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>original item instance.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Flat object.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".unwrapItem"><span class="type-signature">&lt;static> </span>unwrapItem()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Convert single object to a flat object.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>item.</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Flat object.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        </dl>
+    
+
     
 
     

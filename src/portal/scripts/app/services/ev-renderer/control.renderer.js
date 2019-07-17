@@ -6,7 +6,7 @@
         var requestParameters = evDataService.getRequestParameters(obj.___parentId);
         var pagination = requestParameters.pagination;
 
-        var total_pages = Math.floor(pagination.count / pagination.items_per_page);
+        var total_pages = Math.ceil(pagination.count / pagination.items_per_page);
         var page = pagination.page;
 
         // console.log('requestParameters', requestParameters);
@@ -19,14 +19,14 @@
 
         var rowSelection = '<div class="g-row-selection"></div>';
 
-        var result = '<div class="' + classes + '" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var result = '<div class="' + classes + '" data-type="control" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
 
         result = result + rowSelection;
 
         if (page < total_pages) {
 
             result = result + '<button class="control-button load-more" data-type="control" data-ev-control-action="load-more" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" >Load more</button>';
-            // result = result + '<button class="control-button load-all" data-type="control" data-ev-control-action="load-all" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" > Load all</button>';
+            result = result + '<button class="control-button load-all" data-type="control" data-ev-control-action="load-all" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" > Load all</button>';
 
         } else {
 
