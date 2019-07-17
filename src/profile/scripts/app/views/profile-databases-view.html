@@ -34,7 +34,6 @@
                             </md-card-title-text>
                         </md-card-title>
                         <md-card-actions layout="row" layout-align="space-between center">
-                            <!--<md-button>Leave</md-button>-->
                             <md-button class="md-raised md-warn" data-ng-click="vm.declineInvite(item)">Decline
                             </md-button>
                             <md-button class="md-raised md-success" data-ng-click="vm.acceptInvite(item)">Accept
@@ -101,6 +100,10 @@
 
                         <md-button data-ng-if="!item.is_owner" class="md-raised md-warn"
                                    data-ng-click="vm.leaveMasterUser($event, item)">Dismiss
+                        </md-button>
+
+                        <md-button data-ng-if="item.is_owner" class="md-raised md-warn"
+                                   data-ng-click="vm.deleteMasterUser($event, item)">Delete
                         </md-button>
 
                         <md-button class="md-raised md-primary" data-ng-click="vm.activateDatabase(item)">Open

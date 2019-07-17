@@ -79,9 +79,38 @@
                     }
                 },
                 targetEvent: $event
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    usersService.leaveMasterUser(item.id).then(function () {
+
+                        vm.getMasterUsersList();
+
+                    })
+
+                }
+
+            })
+
+
+        };
+
+        vm.deleteMasterUser = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'DeleteMasterUserDialogController as vm',
+                templateUrl: 'views/dialogs/delete-master-user-dialog-view.html',
+                parent: angular.element(document.body),
+                locals: {
+                    data: {
+                        masterUser: item
+                    }
+                },
+                targetEvent: $event
             }).then(function (value) {
 
-                usersService.leaveMasterUserList(item.id).then(function () {
+                usersService.deleteMasterUser(item.id).then(function () {
 
                     vm.getMasterUsersList();
 

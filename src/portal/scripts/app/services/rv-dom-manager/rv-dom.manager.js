@@ -135,6 +135,7 @@
 
         clickData.target = clickTarget;
         clickData.isShiftPressed = event.shiftKey;
+        clickData.isCtrlPressed = event.ctrlKey;
 
         switch (clickTarget) {
 
@@ -260,7 +261,11 @@
         var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
         var count = evDataService.getActiveObjectsCount();
 
-        if (clickData.isShiftPressed) {
+        var activeObject = evDataService.getActiveObject();
+
+        // console.log('clickData', clickData);
+
+        if (clickData.isCtrlPressed) {
 
             obj.___is_activated = true;
 
@@ -273,31 +278,112 @@
 
         } else {
 
-            var objects = evDataService.getObjects();
-            var activeObject = evDataService.getActiveObject();
+            if (clickData.isShiftPressed) {
 
-            objects.forEach(function (item) {
-                item.___is_activated = false;
-                evDataService.setObject(item);
-            });
+                var list = evDataService.getFlatList();
 
-            if (!activeObject || activeObject && activeObject.___id !== obj.___id || count > 1) {
-                obj.___is_activated = true;
-            }
+                var activeObjectIndex;
+                var currentObjectIndex;
+
+                var from, to;
+
+                list.forEach(function (item, index) {
+
+                    if (item.___id === activeObject.___id) {
+                        activeObjectIndex = index
+                    }
+
+                    if (item.___id === clickData.___id) {
+                        currentObjectIndex = index
+                    }
 
 
-            // console.log('handleObjectActive.obj', obj);
+                });
 
-            evDataService.setObject(obj);
 
-            if (obj.___is_activated) {
-                evDataService.setActiveObject(obj);
-                evDataService.setActiveObjectsCount(1);
+                if (currentObjectIndex > activeObjectIndex) {
+
+                    from = activeObjectIndex;
+                    to = currentObjectIndex;
+
+                } else {
+
+                    from = currentObjectIndex;
+                    to = activeObjectIndex;
+
+                }
+
+                // console.log('from', from);
+                // console.log('to', to);
+
+                var activated_ids = [];
+
+                list.forEach(function (item, index) {
+
+                    if (index >= from && index <= to) {
+
+                        activated_ids.push(item.___id);
+
+                    }
+
+                });
+
+                console.log('activated_ids', activated_ids);
+
+                var objects = evDataService.getObjects();
+
+                objects.forEach(function (item) {
+                    item.___is_activated = false;
+                    evDataService.setObject(item);
+                });
+
+                objects.forEach(function (object) {
+
+                    if (activated_ids.indexOf(object.___id) !== -1) {
+
+                        object.___is_activated = true;
+
+                        evDataService.setObject(obj);
+
+                    }
+
+                });
+
                 evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                // console.log('shift presseed', clickData);
+                // console.log('shift list', list);
+                // console.log('activeObjectIndex', activeObjectIndex);
+                // console.log('currentObjectIndex', currentObjectIndex);
+
+
             } else {
 
-                evDataService.setActiveObjectsCount(0);
-                evDataService.setActiveObject(null);
+                var objects = evDataService.getObjects();
+
+                objects.forEach(function (item) {
+                    item.___is_activated = false;
+                    evDataService.setObject(item);
+                });
+
+                if (!activeObject || activeObject && activeObject.___id !== obj.___id || count > 1) {
+                    obj.___is_activated = true;
+                }
+
+
+                // console.log('handleObjectActive.obj', obj);
+
+                evDataService.setObject(obj);
+
+                if (obj.___is_activated) {
+                    evDataService.setActiveObject(obj);
+                    evDataService.setActiveObjectsCount(1);
+                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                } else {
+
+                    evDataService.setActiveObjectsCount(0);
+                    evDataService.setActiveObject(null);
+                }
             }
 
         }
