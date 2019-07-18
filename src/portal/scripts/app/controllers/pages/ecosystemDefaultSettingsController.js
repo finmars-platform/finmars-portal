@@ -19,6 +19,9 @@
 
         vm.getRelation = function (entityType, key, fieldsKey) {
 
+            console.log('entityType, key, fieldsKey', entityType, key, fieldsKey);
+            console.log('vm', vm);
+
             if (vm[fieldsKey].length <= 1) {
 
                 fieldResolverService.getFields(key, {

@@ -1,0 +1,33 @@
+<md-dialog aria-label="" ng-cloak class="warning-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Warning!</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar">
+        <div class="warning-text">
+            <p>Are you sure you want to delete <b>{{vm.masterUser.name}}</b> database?</p>
+
+            <p>Type the Database name to delete it:</p>
+
+            <div>
+
+                <md-input-container>
+                    <label>Database name</label>
+                    <input type="text" data-ng-model="vm.nameCheck">
+                </md-input-container>
+            </div>
+
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised md-warn" data-ng-class="{'disabled-btn': vm.nameCheck != vm.masterUser.name}"
+                   ng-click="vm.agree()" style="margin-right:20px;">
+            DELETE
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

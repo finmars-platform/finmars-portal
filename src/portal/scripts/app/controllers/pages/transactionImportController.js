@@ -8,33 +8,20 @@
     var logService = require('../../../../../core/services/logService');
 
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
-    var currencyService = require('../../services/currencyService');
-
-    var instrumentTypeService = require('../../services/instrumentTypeService');
-    var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
-    var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
-
     var importTransactionService = require('../../services/import/importTransactionService');
-    var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
 
 
     module.exports = function ($scope, $mdDialog) {
 
         logService.controller('TransactionImportController', 'initialized');
 
-        console.log('mdDialog is ', $mdDialog);
-
         var vm = this;
 
         vm.fileLocal = null;
 
         vm.readyStatus = {
-            mapping: false,
-            processing: false,
-            dailyModel: false,
-            priceDownloadScheme: false,
-            instrumentType: false,
-            currency: false
+            schemes: false,
+            processing: false
         };
         vm.dataIsImported = false;
 
@@ -53,100 +40,11 @@
             return !vm.readyStatus.processing && vm.config.scheme && vm.config.error_handling;
         };
 
-        vm.dailyModels = [];
-        vm.priceDownloadSchemes = [];
-        vm.instrumentTypes = [];
-        vm.currencies = [];
-
-        vm.dynAttributes = {};
-
         transactionSchemeService.getList().then(function (data) {
             vm.transactionSchemes = data.results;
-            vm.readyStatus.mapping = true;
+            vm.readyStatus.schemes = true;
             $scope.$apply();
         });
-
-        instrumentDailyPricingModelService.getList().then(function (data) {
-            vm.dailyModels = data;
-            vm.readyStatus.dailyModel = true;
-            $scope.$apply();
-        });
-
-        importPriceDownloadSchemeService.getList().then(function (data) {
-            vm.priceDownloadSchemes = data.results;
-            vm.readyStatus.priceDownloadScheme = true;
-            $scope.$apply();
-        });
-
-        instrumentPaymentSizeDetailService.getList().then(function (data) {
-            vm.paymentSizeDefaults = data;
-            $scope.$apply();
-        });
-
-        instrumentTypeService.getList().then(function (data) {
-            vm.instrumentTypes = data.results;
-            vm.readyStatus.instrumentType = true;
-            $scope.$apply();
-        });
-
-        currencyService.getList().then(function (data) {
-            vm.currencies = data.results;
-            vm.readyStatus.currency = true;
-            $scope.$apply();
-        });
-
-        vm.appendString = function (string) {
-            var code = vm.config.instrument_code.split(' ')[0];
-            vm.config.instrument_code = code + ' ' + string;
-        };
-
-        vm.resolveAttributeNode = function (item) {
-            var result = '';
-            if (item.hasOwnProperty('classifier_object') && item.classifier_object !== null) {
-                return item.classifier_object.name;
-            }
-            vm.dynAttributes['id_' + item.attribute_type].classifiers.forEach(function (classifier) {
-                if (classifier.id == item.classifier) {
-                    result = classifier.name;
-                }
-            });
-            return result;
-        };
-
-        vm.checkExtension = function ($event) {
-            console.log('vm.config.file', vm.config.file);
-
-            if (vm.config.file) {
-
-                var ext = vm.config.file.name.split('.')[1]
-
-                if (ext !== 'csv') {
-
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            success: {
-                                title: "Warning!",
-                                description: 'You are trying to load incorrect file'
-                            }
-                        },
-                        multiple: true,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    }).then(function (res) {
-                        if (res.status === 'agree') {
-                            vm.config.file = null;
-                        }
-                    });
-
-                }
-
-            }
-
-        };
 
         vm.checkExtension = function (file, extension, $event) {
             console.log('file', file);
@@ -183,44 +81,54 @@
 
         };
 
-        vm.findError = function (item, type, state) {
-
-            var message = '';
-            var haveError = false;
-
-            if (type == 'entityAttr') {
-                if (vm.config.errors.hasOwnProperty(item)) {
-                    message = vm.config.errors[item].join(' ');
-                    haveError = true;
-                }
-            }
-
-            if (type == 'dynAttr') {
-                //console.log('item', item);
-                if (vm.config.errors.hasOwnProperty('attribute_type_' + item.attribute_type)) {
-                    message = vm.config.errors['attribute_type_' + item.attribute_type].join(' ');
-                    haveError = true;
-                }
-            }
-
-            if (state == 'message') {
-                return message
-            } else {
-                return haveError;
-            }
-        };
-
         vm.validateImport = function ($event) {
 
             new Promise(function (resolve, reject) {
 
                 vm.validateConfig = Object.assign({}, vm.config);
 
+                $mdDialog.show({
+                    controller: 'LoaderDialogController as vm',
+                    templateUrl: 'views/dialogs/loader-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        data: {
+                            isCancelable: false,
+                            current: vm.validateConfig.processed_rows,
+                            total: vm.validateConfig.total_rows,
+                            text: 'Validation Progress:',
+                            status: vm.validateConfig.task_status,
+                            callback: function () {
+                                return {
+                                    current: vm.validateConfig.processed_rows,
+                                    total: vm.validateConfig.total_rows,
+                                    status: vm.validateConfig.task_status
+                                }
+                            }
+                        }
+                    }
+
+                });
+
                 vm.validate(resolve, $event)
 
             }).then(function (data) {
 
-                if (vm.validateConfig.error_rows.length) {
+                var errorsCount = 0;
+
+                vm.validateConfig.error_rows.forEach(function (item) {
+
+                    if (item.level === 'error') {
+                        errorsCount = errorsCount + 1;
+                    }
+
+                });
+
+                if (errorsCount) {
 
                     data.process_mode = 'validate';
 
@@ -234,8 +142,8 @@
 
                     });
 
-                    vm.validateConfig.file = {};
-                    vm.validateConfig.file.name = vm.fileLocal.name;
+                    // vm.validateConfig.file = {};
+                    // vm.validateConfig.file.name = vm.fileLocal.name;
 
                     $mdDialog.show({
                         controller: 'TransactionImportErrorsDialogController as vm',
@@ -254,7 +162,7 @@
                         skipHide: true
                     }).then(function (res) {
 
-                        vm.validateConfig = {};
+                        // vm.validateConfig = {};
                         vm.readyStatus.processing = false;
 
                     });
@@ -262,7 +170,7 @@
 
                 } else {
 
-                    vm.validateConfig = {};
+                    // vm.validateConfig = {};
                     vm.readyStatus.processing = false;
 
                     $mdDialog.show({
@@ -294,11 +202,48 @@
 
                 vm.validateConfig = Object.assign({}, vm.config);
 
+                $mdDialog.show({
+                    controller: 'LoaderDialogController as vm',
+                    templateUrl: 'views/dialogs/loader-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        data: {
+                            isCancelable: false,
+                            current: vm.validateConfig.processed_rows,
+                            total: vm.validateConfig.total_rows,
+                            text: 'Validation Progress:',
+                            status: vm.validateConfig.task_status,
+                            callback: function () {
+                                return {
+                                    current: vm.validateConfig.processed_rows,
+                                    total: vm.validateConfig.total_rows,
+                                    status: vm.validateConfig.task_status
+                                }
+                            }
+                        }
+                    }
+
+                });
+
                 vm.validate(resolve, $event)
 
             }).then(function (data) {
 
-                if (vm.validateConfig.error_rows.length) {
+                var errorsCount = 0;
+
+                vm.validateConfig.error_rows.forEach(function (item) {
+
+                    if (item.level === 'error') {
+                        errorsCount = errorsCount + 1;
+                    }
+
+                });
+
+                if (errorsCount) {
 
                     var transactionScheme;
 
@@ -346,6 +291,34 @@
 
                 } else {
                     console.log("load triggered");
+
+                    $mdDialog.show({
+                        controller: 'LoaderDialogController as vm',
+                        templateUrl: 'views/dialogs/loader-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: {
+                                isCancelable: false,
+                                current: vm.config.processed_rows,
+                                total: vm.config.total_rows,
+                                text: 'Import Progress:',
+                                status: vm.config.task_status,
+                                callback: function () {
+                                    return {
+                                        current: vm.config.processed_rows,
+                                        total: vm.config.total_rows,
+                                        status: vm.config.task_status
+                                    }
+                                }
+                            }
+                        }
+
+                    });
+
                     vm.load($event);
                 }
 
@@ -356,10 +329,9 @@
 
         };
 
-        vm.validate = function (resolve, $event, loaderDialog) {
-            vm.readyStatus.processing = true;
+        vm.validate = function (resolve, $event) {
 
-            loaderDialog = loaderDialog || false;
+            vm.readyStatus.processing = true;
 
             var formData = new FormData();
 
@@ -376,39 +348,6 @@
                 vm.fileLocal = vm.config.file;
             }
 
-            if (loaderDialog === false) {
-
-                $mdDialog.show({
-                    controller: 'LoaderDialogController as vm',
-                    templateUrl: 'views/dialogs/loader-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        data: {
-                            isCancelable: false,
-                            current: vm.validateConfig.processed_rows,
-                            total: vm.validateConfig.total_rows,
-                            text: 'Validation Progress:',
-                            status: vm.validateConfig.task_status,
-                            callback: function () {
-                                return {
-                                    current: vm.validateConfig.processed_rows,
-                                    total: vm.validateConfig.total_rows,
-                                    status: vm.validateConfig.task_status
-                                }
-                            }
-                        }
-                    }
-
-                });
-
-                loaderDialog = true;
-
-            }
-
             importTransactionService.validateImport(formData).then(function (data) {
 
                 vm.validateConfig = data;
@@ -419,14 +358,12 @@
 
                 if (vm.validateConfig.task_status === 'SUCCESS') {
 
-                    // console.log('VALIDATE IMPORT data', data);
-
                     resolve(data)
 
                 } else {
 
                     setTimeout(function () {
-                        vm.validate(resolve, $event, loaderDialog);
+                        vm.validate(resolve, $event);
                     }, 1000)
 
                 }
@@ -436,10 +373,8 @@
 
         };
 
-        vm.load = function ($event, loaderDialog) {
+        vm.load = function ($event) {
             vm.readyStatus.processing = true;
-
-            loaderDialog = loaderDialog || false;
 
             var formData = new FormData();
 
@@ -467,40 +402,6 @@
 
             });
 
-            if (loaderDialog === false) {
-
-                $mdDialog.show({
-                    controller: 'LoaderDialogController as vm',
-                    templateUrl: 'views/dialogs/loader-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        data: {
-                            isCancelable: false,
-                            current: vm.config.processed_rows,
-                            total: vm.config.total_rows,
-                            text: 'Import Progress:',
-                            status: vm.config.task_status,
-                            callback: function () {
-                                return {
-                                    current: vm.config.processed_rows,
-                                    total: vm.config.total_rows,
-                                    status: vm.config.task_status
-                                }
-                            }
-                        }
-                    }
-
-                });
-
-                loaderDialog = true;
-
-            }
-
-
             importTransactionService.startImport(formData).then(function (data) {
 
                 vm.config = data;
@@ -511,9 +412,20 @@
 
                     // vm.finishedSuccess = true;
 
+
+                    var errorsCount = 0;
+
+                    vm.config.error_rows.forEach(function (item) {
+
+                        if (item.level === 'error') {
+                            errorsCount = errorsCount + 1;
+                        }
+
+                    });
+
                     var description = '';
 
-                    if (!data.total_rows && data.error_rows.length === 0) {
+                    if (!data.total_rows && errorsCount === 0) {
 
                         $mdDialog.show({
                             controller: 'SuccessDialogController as vm',
@@ -536,8 +448,8 @@
 
                         description = '<div>' +
                             '<div>Rows total: ' + data.total_rows + '</div>' +
-                            '<div>Rows success import: ' + (data.total_rows - data.error_rows.length) + '</div>' +
-                            '<div>Rows fail import: ' + data.error_rows.length + '</div>' +
+                            '<div>Rows success import: ' + (data.total_rows - errorsCount) + '</div>' +
+                            '<div>Rows fail import: ' + errorsCount + '</div>' +
                             '</div><br/>';
 
                         description = description + '<div> You have successfully imported transactions file </div>';
@@ -568,7 +480,7 @@
                 } else {
 
                     setTimeout(function () {
-                        vm.load($event, loaderDialog);
+                        vm.load($event);
                     }, 1000)
 
                 }
@@ -593,14 +505,7 @@
 
         };
 
-        vm.recalculate = function () {
-            vm.mappedFields.forEach(function (item) {
-                vm.config.task_result_overrides[item.key] = item.value;
-            });
-            vm.load();
-        };
-
-        vm.openEditMapping = function ($event) {
+        vm.editScheme = function ($event) {
             $mdDialog.show({
                 controller: 'TransactionImportSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',

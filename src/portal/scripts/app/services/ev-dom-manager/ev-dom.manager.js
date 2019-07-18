@@ -297,15 +297,31 @@
 
         var requestParameters = evDataService.getRequestParameters(groupHashId);
 
-        console.log('requestParameters.body.page', requestParameters);
-
         if (!requestParameters.body.page) {
-            requestParameters.body.page = 1
+            requestParameters.body.page = 1;
+            requestParameters.requestedPages = [1]
         }
 
         if (clickData.target === clickTargets.LOAD_MORE_BUTTON) {
 
             requestParameters.body.page = requestParameters.body.page + 1;
+            requestParameters.pagination.page = requestParameters.pagination.page + 1;
+            requestParameters.requestedPages.push(requestParameters.body.page);
+
+            evDataService.setRequestParameters(requestParameters);
+            evDataService.setActiveRequestParametersId(requestParameters.id);
+
+        }
+
+        if (clickData.target === clickTargets.LOAD_ALL_BUTTON) {
+
+            var totalPages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.items_per_page);
+
+            requestParameters.requestedPages = [];
+
+            for (var i = 1; i <= totalPages; i = i + 1) {
+                requestParameters.requestedPages.push(i);
+            }
 
             evDataService.setRequestParameters(requestParameters);
             evDataService.setActiveRequestParametersId(requestParameters.id);
@@ -463,19 +479,17 @@
 
             var clickData = getClickData(event);
 
+            console.log('clickData', clickData);
+
             if (clickData.___type === 'group') {
 
                 handleGroupClick(clickData, evDataService, evEventService);
 
-            } /*else if (event.ctrlKey && clickData.___type === 'object') {
-                console.log("flat list ctrl clicked");
+            }
+
+            if (clickData.___type === 'control') {
                 handleControlClick(clickData, evDataService, evEventService);
-
-            } else if (clickData.___type === 'object') {
-
-                handleObjectClick(clickData, evDataService, evEventService);
-
-            }*/
+            }
 
             if (clickData.___type === 'object') {
 

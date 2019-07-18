@@ -11,8 +11,6 @@
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
-        // console.log('injectRegularFilters.requestParameters', requestParameters);
-
         var newRequestParametersBody = Object.assign({}, requestParameters.body);
 
         var filters = entityViewerDataService.getFilters();
@@ -36,8 +34,239 @@
 
         entityViewerDataService.setRequestParameters(requestParameters);
 
-        // console.log('injectRegularFilters.filters', filters);
-        // console.log('injectRegularFilters.newRequestParameters', newRequestParametersBody);
+
+    };
+
+    var deserializeObjects = function (entityViewerDataService, entityViewerEventService, data, requestParameters, page) {
+
+        var step = requestParameters.pagination.items_per_page;
+        var pageAsIndex = parseInt(page, 10) - 1;
+        var event = requestParameters.event;
+
+        var obj;
+        var i;
+
+        if (!event.___id) {
+
+            var rootGroupData = entityViewerDataService.getRootGroupData();
+
+            obj = Object.assign({}, rootGroupData);
+
+            obj.count = data.count;
+            obj.next = data.next;
+            obj.previous = data.previous;
+
+            for (i = 0; i < step; i = i + 1) {
+                if (pageAsIndex * step + i < obj.count) {
+                    obj.results[pageAsIndex * step + i] = data.results[i];
+                }
+            }
+
+        } else {
+
+            var groupData = entityViewerDataService.getData(event.___id);
+
+            console.log('groupData', groupData);
+
+            if (groupData) {
+
+                obj = Object.assign({}, groupData);
+
+                obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
+                obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
+
+                obj.count = data.count;
+                obj.next = data.next;
+                obj.previous = data.previous;
+
+                for (i = 0; i < step; i = i + 1) {
+                    if (pageAsIndex * step + i < obj.count) {
+                        obj.results[pageAsIndex * step + i] = data.results[i];
+                    }
+                }
+
+            } else {
+
+                obj = Object.assign({}, data);
+                obj.___group_name = event.groupName ? event.groupName : '-';
+                obj.___group_id = event.groupId ? event.groupId : '-';
+                obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                obj.___is_open = true;
+                obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
+
+                obj.___parentId = event.parentGroupId;
+                obj.___type = 'group';
+                obj.___id = event.___id;
+                obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+
+            }
+
+
+        }
+
+        obj.results = obj.results.filter(function (item) {
+            return item.___type !== 'control'
+        });
+
+        obj.results = obj.results.map(function (item) {
+
+            if (item.___type !== 'placeholder_object') {
+
+                item.___group_name = item.___group_name ? item.___group_name : '-';
+                item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+                item.___group_id = item.___group_id ? item.___group_id : '-';
+                item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
+
+                item.___parentId = obj.___id;
+                item.___type = 'object';
+                item.___id = evRvCommonHelper.getId(item);
+                item.___level = obj.___level + 1;
+
+            }
+
+            return item
+        });
+
+        var controlObj = {
+            ___parentId: obj.___id,
+            ___type: 'control',
+            ___level: obj.___level + 1
+        };
+
+        controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+        obj.results.push(controlObj);
+
+        entityViewerDataService.setData(obj);
+
+    };
+
+    var deserializeGroups = function (entityViewerDataService, entityViewerEventService, data, requestParameters, page) {
+
+        var step = requestParameters.pagination.items_per_page;
+        var pageAsIndex = parseInt(page, 10) - 1;
+        var event = requestParameters.event;
+
+        var obj;
+        var i;
+
+        console.log('event', event);
+
+        if (!event.___id) {
+
+            var rootGroupData = entityViewerDataService.getRootGroupData();
+
+            obj = Object.assign({}, rootGroupData);
+
+            obj.count = data.count;
+            obj.next = data.next;
+            obj.previous = data.previous;
+            for (i = 0; i < step; i = i + 1) {
+                if (pageAsIndex * step + i < obj.count) {
+                    obj.results[pageAsIndex * step + i] = data.results[i];
+                }
+            }
+
+            console.log('obj', obj);
+
+
+        } else {
+
+            var groupData = entityViewerDataService.getData(event.___id);
+
+            if (groupData) {
+
+                obj = Object.assign({}, groupData);
+
+                obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
+                obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
+
+                obj.count = data.count;
+                obj.next = data.next;
+                obj.previous = data.previous;
+
+                for (i = 0; i < step; i = i + 1) {
+                    if (pageAsIndex * step + i < obj.count) {
+                        obj.results[pageAsIndex * step + i] = data.results[i];
+                    }
+                }
+
+
+            } else {
+
+                obj = Object.assign({}, data);
+                obj.___group_name = event.groupName ? event.groupName : '-';
+                obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                obj.___group_id = event.groupId ? event.groupId : '-';
+                // obj.___group_identifier = event.groupId;
+                obj.___is_open = true;
+                obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
+
+                obj.___parentId = event.parentGroupId;
+                obj.___type = 'group';
+                obj.___id = event.___id;
+                obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+
+            }
+        }
+
+        var groups = entityViewerDataService.getGroups();
+        var parents = [];
+
+        if (obj.___parentId !== null) {
+            parents = evRvCommonHelper.getParents(obj.___parentId, entityViewerDataService);
+        }
+
+        parents.push(obj);
+
+        // evDataHelper.setDefaultGroups(obj);
+
+        obj.results = obj.results.filter(function (item) {
+            return item.___type !== 'control'
+        });
+
+        obj.results = obj.results.map(function (item) {
+
+            if (item.___type !== 'placeholder_group') {
+
+                item.___parentId = obj.___id;
+                item.___group_name = item.___group_name ? item.___group_name : '-';
+                item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+                item.___group_id = item.___group_id ? item.___group_id : '-';
+
+                item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
+
+
+                item.___level = obj.___level + 1;
+
+                if (groups.length >= parents.length) {
+                    item.___type = 'group';
+                } else {
+                    item.___type = 'object';
+                }
+
+                item.___id = evRvCommonHelper.getId(item);
+
+            }
+
+            return item
+        });
+
+        var controlObj = {
+            ___parentId: obj.___id,
+            ___type: 'control',
+            ___level: obj.___level + 1
+        };
+
+        controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+        obj.results.push(controlObj);
+
+        console.log('DESERIALIZE GROUPS', obj.results);
+
+        entityViewerDataService.setData(obj);
 
     };
 
@@ -47,150 +276,61 @@
 
         return new Promise(function (resolve, reject) {
 
+            var promises = [];
+
             var entityType = entityViewerDataService.getEntityType();
 
-            var _requestParameters = JSON.parse(JSON.stringify(requestParameters));
-            // console.log('_requestParameters', _requestParameters);
 
-            var options = _requestParameters.body;
-            var event = _requestParameters.event;
+            var pagesToRequest = requestParameters.requestedPages.filter(function (page) {
 
-            // var page = new Number(options.page) - 1;
-            var page = options.page || 1;
+                return requestParameters.processedPages.indexOf(page) === -1
 
-            console.log('getObjects.page', page);
+            });
 
-            var pagination = entityViewerDataService.getPagination();
-            var step = pagination.items_per_page;
-            var i;
+            pagesToRequest.forEach(function (pageToRequest) {
 
-            if (options.groups_types) {
+                promises.push(new Promise(function (resolveLocal) {
 
-                options.groups_types = options.groups_types.map(function (groupType) {
+                    var options = Object.assign({}, requestParameters.body);
 
-                    return groupType.key;
+                    options.page = pageToRequest;
 
-                })
+                    if (options.groups_types) {
 
-            }
+                        options.groups_types = options.groups_types.map(function (groupType) {
 
-            console.log('options', options);
+                            return groupType.key;
 
-            objectsService.getList(entityType, options).then(function (data) {
-
-                pagination.page = page;
-                pagination.count = data.count;
-
-                entityViewerDataService.setPagination(pagination);
-
-                var pageAsIndex = parseInt(page, 10) - 1;
-                var obj;
-
-                if (!event.___id) {
-
-                    var rootGroupData = entityViewerDataService.getRootGroupData();
-
-                    obj = Object.assign({}, rootGroupData);
-
-                    obj.count = data.count;
-                    obj.next = data.next;
-                    obj.previous = data.previous;
-
-                    // console.log('pageAsIndex * step', pageAsIndex * step)
-                    // console.log('obj.count', obj.count)
-
-                    for (i = 0; i < step; i = i + 1) {
-                        if (pageAsIndex * step + i < obj.count) {
-                            obj.results[pageAsIndex * step + i] = data.results[i];
-                        }
-                    }
-
-                } else {
-
-                    var groupData = entityViewerDataService.getData(event.___id);
-
-                    console.log('groupData', groupData);
-
-                    if (groupData) {
-
-                        obj = Object.assign({}, groupData);
-
-                        obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                        obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
-                        obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-
-                        obj.count = data.count;
-                        obj.next = data.next;
-                        obj.previous = data.previous;
-
-                        for (i = 0; i < step; i = i + 1) {
-                            if (pageAsIndex * step + i < obj.count) {
-                                obj.results[pageAsIndex * step + i] = data.results[i];
-                            }
-                        }
-
-                    } else {
-
-                        obj = Object.assign({}, data);
-                        obj.___group_name = event.groupName ? event.groupName : '-';
-                        obj.___group_id = event.groupId ? event.groupId : '-';
-                        obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
-                        obj.___is_open = true;
-                        obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
-
-                        obj.___parentId = event.parentGroupId;
-                        obj.___type = 'group';
-                        obj.___id = event.___id;
-                        obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+                        })
 
                     }
 
+                    evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
-                }
+                    entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                obj.results = obj.results.filter(function (item) {
-                    return item.___type !== 'control'
-                });
+                    objectsService.getList(entityType, options).then(function (data) {
 
-                // evDataHelper.setDefaultObjects(obj);
+                        requestParameters.pagination.count = data.count;
+                        requestParameters.processedPages.push(pageToRequest);
 
-                obj.results = obj.results.map(function (item) {
+                        entityViewerDataService.setRequestParameters(requestParameters);
 
-                    if (item.___type !== 'placeholder_object') {
+                        deserializeObjects(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
 
-                        item.___group_name = item.___group_name ? item.___group_name : '-';
-                        item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
-                        item.___group_id = item.___group_id ? item.___group_id : '-';
-                        item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
+                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        item.___parentId = obj.___id;
-                        item.___type = 'object';
-                        item.___id = evRvCommonHelper.getId(item);
-                        item.___level = obj.___level + 1;
+                        resolveLocal()
 
-                    }
+                    });
 
-                    return item
-                });
+                }))
 
-                var controlObj = {
-                    ___parentId: obj.___id,
-                    ___type: 'control',
-                    ___level: obj.___level + 1
-                };
+            });
 
-                controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-                obj.results.push(controlObj);
-
-                requestParameters.pagination = pagination;
-
-                entityViewerDataService.setData(obj);
-
-                entityViewerDataService.setRequestParameters(requestParameters);
-
-                resolve(obj);
-
+            Promise.all(promises).then(function () {
+                resolve();
             })
 
         });
@@ -199,203 +339,75 @@
 
     var getGroups = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
-        requestParameters.status = 'loading';
-
-        entityViewerDataService.setRequestParameters(requestParameters);
-
         entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
         return new Promise(function (resolve, reject) {
 
+            var promises = [];
+
             var entityType = entityViewerDataService.getEntityType();
 
-            var options = JSON.parse(JSON.stringify(requestParameters.body));
-            var event = requestParameters.event;
+            var pagesToRequest = requestParameters.requestedPages.filter(function (page) {
 
-            var page = options.page || 1;
-            var pagination = entityViewerDataService.getPagination();
-            var step = pagination.items_per_page;
-            var i;
+                return requestParameters.processedPages.indexOf(page) === -1
 
-            console.log('getGroups.options', options);
+            });
 
-            if (options.groups_types) {
+            pagesToRequest.forEach(function (pageToRequest) {
 
-                options.groups_types = options.groups_types.map(function (groupType) {
+                promises.push(new Promise(function (resolveLocal) {
 
-                    return groupType.key;
+                    var options = Object.assign({}, requestParameters.body);
 
-                })
+                    console.log('getGroups.options', options);
 
-            }
+                    options.page = pageToRequest;
 
-            groupsService.getList(entityType, options).then(function (data) {
+                    if (options.groups_types) {
 
-                if (data.status !== 404) {
+                        options.groups_types = options.groups_types.map(function (groupType) {
 
-                    pagination.count = data.count;
-                    pagination.page = page;
+                            return groupType.key;
 
-                    entityViewerDataService.setPagination(pagination);
+                        })
 
-                    var pageAsIndex = parseInt(page, 10) - 1;
-
-                    data.results = data.results.map(function (item) {
-
-                        var result = {};
-
-                        result.___group_name = item.group_name;
-                        result.___group_identifier = item.group_identifier;
-
-                        return result
-                    });
-
-                    var obj = {};
-
-                    console.log('event', event);
-
-                    if (!event.___id) {
-
-                        var rootGroupData = entityViewerDataService.getRootGroupData();
-
-                        obj = Object.assign({}, rootGroupData);
-
-                        obj.count = data.count;
-                        obj.next = data.next;
-                        obj.previous = data.previous;
-                        for (i = 0; i < step; i = i + 1) {
-                            if (pageAsIndex * step + i < obj.count) {
-                                obj.results[pageAsIndex * step + i] = data.results[i];
-                            }
-                        }
-
-                        console.log('obj', obj);
-
-
-                    } else {
-
-                        var groupData = entityViewerDataService.getData(event.___id);
-
-                        if (groupData) {
-
-                            obj = Object.assign({}, groupData);
-
-                            obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                            obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-                            obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
-
-                            obj.count = data.count;
-                            obj.next = data.next;
-                            obj.previous = data.previous;
-
-                            for (i = 0; i < step; i = i + 1) {
-                                if (pageAsIndex * step + i < obj.count) {
-                                    obj.results[pageAsIndex * step + i] = data.results[i];
-                                }
-                            }
-
-
-                        } else {
-
-                            obj = Object.assign({}, data);
-                            obj.___group_name = event.groupName ? event.groupName : '-';
-                            obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
-                            obj.___group_id = event.groupId ? event.groupId : '-';
-                            // obj.___group_identifier = event.groupId;
-                            obj.___is_open = true;
-                            obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
-
-                            obj.___parentId = event.parentGroupId;
-                            obj.___type = 'group';
-                            obj.___id = event.___id;
-                            obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
-
-                        }
                     }
 
-                    var groups = entityViewerDataService.getGroups();
-                    var parents = [];
+                    evDataHelper.setDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
-                    if (obj.___parentId !== null) {
-                        parents = evRvCommonHelper.getParents(obj.___parentId, entityViewerDataService);
-                    }
+                    entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                    parents.push(obj);
+                    groupsService.getList(entityType, options).then(function (data) {
 
-                    // evDataHelper.setDefaultGroups(obj);
+                        requestParameters.pagination.count = data.count;
+                        requestParameters.processedPages.push(pageToRequest);
 
-                    obj.results = obj.results.map(function (item) {
-
-                        if (item.___type !== 'placeholder_group') {
-
-                            item.___parentId = obj.___id;
-                            item.___group_name = item.___group_name ? item.___group_name : '-';
-                            item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
-                            item.___group_id = item.___group_id ? item.___group_id : '-';
-
-                            item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
+                        entityViewerDataService.setRequestParameters(requestParameters);
 
 
-                            item.___level = obj.___level + 1;
+                        data.results = data.results.map(function (item) {
 
-                            if (groups.length >= parents.length) {
-                                item.___type = 'group';
-                            } else {
-                                item.___type = 'object';
-                            }
+                            var result = {};
 
-                            item.___id = evRvCommonHelper.getId(item);
+                            result.___group_name = item.group_name;
+                            result.___group_identifier = item.group_identifier;
 
-                        }
+                            return result
+                        });
 
-                        return item
-                    });
+                        deserializeGroups(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
 
-                    var controlObj = {
-                        ___parentId: obj.___id,
-                        ___type: 'control',
-                        ___level: obj.___level + 1
-                    };
+                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                    controlObj.___id = evRvCommonHelper.getId(controlObj);
+                        resolveLocal()
 
-                    obj.results.push(controlObj);
+                    })
+                }))
+            });
 
-                    requestParameters.pagination = pagination;
-
-                    entityViewerDataService.setData(obj);
-
-                    requestParameters.status = 'loaded';
-                    entityViewerDataService.setRequestParameters(requestParameters);
-
-                    resolve(obj);
-
-                }
-
+            Promise.all(promises).then(function () {
+                resolve();
             })
-
-        })
-
-    };
-
-    var getObjectsByRequestParameters = function (entityViewerDataService, entityViewerEventService) {
-
-        var requestParameters = entityViewerDataService.getActiveRequestParameters();
-
-        getObjects(requestParameters, entityViewerDataService, entityViewerEventService)
-            .then(function () {
-                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-            })
-
-    };
-
-    var getGroupsByRequestParameters = function (entityViewerDataService, entityViewerEventService) {
-
-        var requestParameters = entityViewerDataService.getActiveRequestParameters();
-
-        getGroups(requestParameters, entityViewerDataService, entityViewerEventService).then(function () {
-
-            entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
 
         })
 
@@ -405,28 +417,28 @@
 
         console.time('Updating data structure');
 
-        // detectLevelChange(entityViewerDataService, entityViewerEventService);
         injectRegularFilters(entityViewerDataService, entityViewerEventService);
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
+        console.log('updateDataStructure.requestParameters', requestParameters);
+
         if (requestParameters.requestType === 'objects') {
 
-            // fromMemoryDecorator(
-            //     getObjectsByRequestParameters, entityViewerDataService, entityViewerEventService)
-
-
-            getObjectsByRequestParameters(entityViewerDataService, entityViewerEventService)
-
+            getObjects(requestParameters, entityViewerDataService, entityViewerEventService)
+                .then(function () {
+                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                })
 
         }
 
         if (requestParameters.requestType === 'groups') {
 
-            // fromMemoryDecorator(
-            //     getGroupsByRequestParameters, entityViewerDataService, entityViewerEventService);
+            getGroups(requestParameters, entityViewerDataService, entityViewerEventService).then(function () {
 
-            getGroupsByRequestParameters(entityViewerDataService, entityViewerEventService);
+                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+            })
 
         }
 
@@ -452,11 +464,11 @@
 
                 if (group.___id === requestsParameters[key].id) {
 
-                    requestsParameters[key].event.___id = group.___id;
-                    requestsParameters[key].event.groupName = group.___group_name;
-                    requestsParameters[key].event.groupIdentifier = group.___group_identifier;
-                    requestsParameters[key].event.groupId = group.___group_id;
-                    requestsParameters[key].event.parentGroupId = group.___parentId;
+                    // requestsParameters[key].event.___id = group.___id;
+                    // requestsParameters[key].event.groupName = group.___group_name;
+                    // requestsParameters[key].event.groupIdentifier = group.___group_identifier;
+                    // requestsParameters[key].event.groupId = group.___group_id;
+                    // requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);
                 }
@@ -475,6 +487,8 @@
             } else {
                 item.body.ordering = '-' + activeColumnSort.key
             }
+
+            item.processedPages = [];
 
             entityViewerDataService.setRequestParameters(item);
 
@@ -543,11 +557,11 @@
 
                 if (group.___id === requestsParameters[key].id) {
 
-                    requestsParameters[key].event.___id = group.___id;
-                    requestsParameters[key].event.groupName = group.___group_name;
-                    requestsParameters[key].event.groupIdentifier = group.___group_identifier;
-                    requestsParameters[key].event.groupId = group.___group_id;
-                    requestsParameters[key].event.parentGroupId = group.___parentId;
+                    // requestsParameters[key].event.___id = group.___id;
+                    // requestsParameters[key].event.groupName = group.___group_name;
+                    // requestsParameters[key].event.groupIdentifier = group.___group_identifier;
+                    // requestsParameters[key].event.groupId = group.___group_id;
+                    // requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);
                 }
@@ -562,6 +576,7 @@
             item.body.page = 1;
 
             item.body.groups_order = activeGroupSort.options.sort.toLocaleLowerCase();
+            item.processedPages = [];
 
             entityViewerDataService.setRequestParameters(item);
 

@@ -116,6 +116,7 @@
                         }
                         scope.columns[i].options.sort = null;
                     }
+
                     column.options.sort = sort;
 
                     console.log('sortHandler.column', column);
@@ -124,7 +125,7 @@
 
                     columns.forEach(function (item) {
 
-                        if (column.key === item.key || column.id === item.id) {
+                        if (column.key === item.key) {
                             item = column
                         }
 

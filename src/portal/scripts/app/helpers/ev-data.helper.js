@@ -158,7 +158,6 @@
 
     };
 
-
     var getGroupTypeId = function (groupType) {
 
         var pattern;
@@ -450,44 +449,132 @@
 
     };
 
-    var setDefaultObjects = function (obj) {
+    var setDefaultObjects = function (entityViewerDataService, entityViewerEventService, requestParameters, page) {
 
+        var obj;
+        var step = requestParameters.pagination.items_per_page;
+        var event = requestParameters.event;
+        var pageAsIndex = parseInt(page, 10) - 1;
         var i;
-        for (i = 0; i < obj.count; i = i + 1) {
 
-            if (!obj.results[i]) {
-                obj.results[i] = {
-                    id: '___placeholder_object_' + i,
-                    ___type: 'placeholder_object',
-                    ___parentId: obj.___id
-                };
+        if (!event.___id) {
 
-                obj.results[i].___id = evRvCommonHelper.getId(obj.results[i]);
+            var rootGroupData = entityViewerDataService.getRootGroupData();
+
+            obj = Object.assign({}, rootGroupData);
+
+        } else {
+            var groupData = entityViewerDataService.getData(event.___id);
+
+            if (groupData) {
+                obj = Object.assign({}, groupData);
+            } else {
+                obj = {
+                    results: []
+                }
             }
-
         }
+
+        for (i = 0; i < step; i = i + 1) {
+            if (pageAsIndex * step + i < obj.count) {
+
+                if (!obj.results[pageAsIndex * step + i]) {
+
+                    obj.results[pageAsIndex * step + i] = {
+                        id: '___placeholder_object_' + (pageAsIndex * step + i),
+                        ___type: 'placeholder_object',
+                        ___parentId: obj.___id
+                    };
+
+                    obj.results[pageAsIndex * step + i].___id = evRvCommonHelper.getId(obj.results[pageAsIndex * step + i]);
+
+                }
+
+            }
+        }
+
+        obj.results = obj.results.filter(function (item) {
+            return item.___type !== 'control'
+        });
+
+        var controlObj = {
+            ___parentId: obj.___id,
+            ___type: 'control',
+            ___level: obj.___level + 1
+        };
+
+        controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+        obj.results.push(controlObj);
+
+        entityViewerDataService.setData(obj);
 
     };
 
-    var setDefaultGroups = function (obj) {
+    var setDefaultGroups = function (entityViewerDataService, entityViewerEventService, requestParameters, page) {
 
+        var obj;
+        var step = requestParameters.pagination.items_per_page;
+        var event = requestParameters.event;
+        var pageAsIndex = parseInt(page, 10) - 1;
         var i;
-        for (i = 0; i < obj.count; i = i + 1) {
 
-            if (!obj.results[i]) {
-                obj.results[i] = {
-                    ___group_name: '___placeholder_group_' + i,
-                    ___type: 'placeholder_group',
-                    ___parentId: obj.___id,
+        if (!event.___id) {
+
+            var rootGroupData = entityViewerDataService.getRootGroupData();
+
+            obj = Object.assign({}, rootGroupData);
+
+        } else {
+            var groupData = entityViewerDataService.getData(event.___id);
+
+            if (groupData) {
+                obj = Object.assign({}, groupData);
+            } else {
+                obj = {
                     results: []
-                };
-
-                obj.results[i].___id = evRvCommonHelper.getId(obj.results[i]);
+                }
             }
-
         }
 
-        // console.log('setDefaultGroups.obj', obj);
+
+        console.log('setDefaultGroups obj.count', obj.count);
+
+        for (i = 0; i < step; i = i + 1) {
+            if (pageAsIndex * step + i < obj.count) {
+
+                if (!obj.results[pageAsIndex * step + i]) {
+
+                    obj.results[pageAsIndex * step + i] = {
+                        id: '___placeholder_group_' + (pageAsIndex * step + i),
+                        ___type: 'placeholder_group',
+                        ___parentId: obj.___id
+                    };
+
+                    obj.results[pageAsIndex * step + i].___id = evRvCommonHelper.getId(obj.results[pageAsIndex * step + i]);
+
+                }
+
+            }
+        }
+
+        console.log('SET DEFAULT GROUPS.results', obj.results);
+
+        obj.results = obj.results.filter(function (item) {
+            return item.___type !== 'control'
+        });
+
+        var controlObj = {
+            ___parentId: obj.___id,
+            ___type: 'control',
+            ___level: obj.___level + 1
+        };
+
+        controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+        obj.results.push(controlObj);
+
+        entityViewerDataService.setData(obj);
 
     };
 

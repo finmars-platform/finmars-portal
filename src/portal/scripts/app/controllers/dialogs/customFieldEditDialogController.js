@@ -101,6 +101,7 @@
                     var captions = {
                         10: 'String',
                         20: 'Number',
+                        30: 'String',
                         40: 'Date'
                     };
 
@@ -179,6 +180,7 @@
                     var captions = {
                         10: 'String',
                         20: 'Number',
+                        30: 'String',
                         40: 'Date'
                     };
 
@@ -326,6 +328,7 @@
                     var captions = {
                         10: 'String',
                         20: 'Number',
+                        30: 'String',
                         40: 'Date'
                     };
 

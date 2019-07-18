@@ -17,7 +17,7 @@
 
         for (var hc = 0; hc < columns.length; hc = hc + 1) {
 
-            table = table + '<th><b>' + columns[hc].querySelector('.caption').textContent + '</b></th>';
+            table = table + '<th><b>' + columns[hc].querySelector('.g-cell-content').textContent + '</b></th>';
         }
 
         table = table + '</tr>';
