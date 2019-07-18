@@ -454,7 +454,7 @@
             };
 
 
-            transactionTypeService.initBookComplexTransaction(book.transaction_type).then(function (data) {
+            transactionTypeService.initBookComplexTransaction(book.transaction_type, {}).then(function (data) {
 
                 var res = Object.assign(data, book);
 
@@ -708,7 +708,7 @@
 
                 new Promise(function (resolve, reject) {
 
-                    transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type).then(function (data) {
+                    transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type, {}).then(function (data) {
 
                         var res = Object.assign(data, resultEntity);
 
@@ -746,6 +746,8 @@
 
 
                 }).catch(function (data) {
+
+                    console.log('data', data);
 
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',

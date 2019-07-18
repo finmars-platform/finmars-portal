@@ -101,7 +101,7 @@
 
         var contextDataAsQueryParameters = '';
 
-        if (Object.keys(contextData).length) {
+        if (contextData && Object.keys(contextData).length) {
 
             var list = [];
 

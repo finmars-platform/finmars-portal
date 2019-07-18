@@ -604,38 +604,38 @@
                 clearDropdowns();
             });
 
-            // window.addEventListener('click', function (event) {
-            //
-            //     var objectId = event.target.dataset.objectId;
-            //     var parentGroupHashId = event.target.dataset.parentGroupHashId;
-            //     var dropdownAction = event.target.dataset.evDropdownAction;
-            //
-            //     if (objectId && dropdownAction && parentGroupHashId) {
-            //
-            //         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-            //
-            //         if (!obj) {
-            //             obj = {}
-            //         }
-            //
-            //         obj.event = event;
-            //
-            //         evDataService.setActiveObject(obj);
-            //         evDataService.setActiveObjectAction(dropdownAction);
-            //
-            //         evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-            //
-            //         clearDropdowns();
-            //
-            //     } else {
-            //
-            //         if (!event.target.classList.contains('ev-dropdown-option')) {
-            //             clearDropdowns();
-            //         }
-            //
-            //     }
-            //
-            // });
+            window.addEventListener('click', function (event) {
+
+                var objectId = event.target.dataset.objectId;
+                var parentGroupHashId = event.target.dataset.parentGroupHashId;
+                var dropdownAction = event.target.dataset.evDropdownAction;
+
+                if (objectId && dropdownAction && parentGroupHashId) {
+
+                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                    if (!obj) {
+                        obj = {}
+                    }
+
+                    obj.event = event;
+
+                    evDataService.setActiveObject(obj);
+                    evDataService.setActiveObjectAction(dropdownAction);
+
+                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                    clearDropdowns();
+
+                } else {
+
+                    if (!event.target.classList.contains('ev-dropdown-option')) {
+                        clearDropdowns();
+                    }
+
+                }
+
+            });
 
         }
 

@@ -145,13 +145,13 @@
             content: false,
             transactionTypeProcessing: false,
             instrumentProcessing: false
-        }
+        };
 
         vm.getData = function () {
 
             var promises = [];
 
-            var getTransactionTypeFields = function() {
+            var getTransactionTypeFields = function () {
 
                 return uiService.getTransactionFieldList().then(function (data) {
 
@@ -245,11 +245,11 @@
             return new Promise(function (resolve, reject) {
 
                 if (item.id) {
-                    uiService.updateTransactionField(item.id, item).then(function (data) {
+                    uiService.updateInstrumentField(item.id, item).then(function (data) {
                         resolve(data)
                     })
                 } else {
-                    uiService.createTransactionField(item).then(function (data) {
+                    uiService.createInstrumentField(item).then(function (data) {
                         resolve(data)
                     })
                 }
@@ -259,6 +259,8 @@
         };
 
         vm.saveTransactionTypeFields = function () {
+
+            var promises = [];
 
             vm.readyStatus.transactionTypeProcessing = true;
 
