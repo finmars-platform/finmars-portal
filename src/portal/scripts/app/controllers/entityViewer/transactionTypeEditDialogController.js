@@ -694,7 +694,7 @@
             if (entity === 'instruments') {
 
                 if (vm.entity.is_valid_for_all_instruments) {
-                    vm.entity.instrument_types = [];
+                    v.entity.instrument_types = [];
                     ;
                 }
 
@@ -850,12 +850,14 @@
 
         vm.bindValueType = function (row) {
             var name;
+
             vm.valueTypes.forEach(function (item) {
                 if (row.value_type == item.value) {
                     row.value_type_name = item.display_name;
-                    name = item.display_name
+                    name = item.display_name;
                 }
             });
+
             return name;
         };
 
@@ -1095,38 +1097,31 @@
 
             if (action.instrument) {
                 return "Create Instrument";
-            }
-            ;
+            };
 
             if (action.transaction) {
                 return "Create Transaction";
-            }
-            ;
+            };
 
             if (action.instrument_factor_schedule) {
                 return "Create Factor Schedule";
-            }
-            ;
+            };
 
             if (action.instrument_manual_pricing_formula) {
                 return "Create Manual Pricing Formula";
-            }
-            ;
+            };
 
             if (action.instrument_accrual_calculation_schedules) {
                 return "Create Accrual Calculation Schedules";
-            }
-            ;
+            };
 
             if (action.instrument_event_schedule) {
                 return "Create Event Schedule";
-            }
-            ;
+            };
 
             if (action.instrument_event_schedule_action) {
                 return "Create Event Schedule Action"
-            }
-            ;
+            };
         };
 
         vm.preventSpace = function ($event) {
@@ -1651,7 +1646,15 @@
         $scope.splitPanelInit = function (entityType, entityId) {
             vm.entityType = entityType;
             vm.entityId = entityId;
-        }
+        };
+
+        // Creating various variables to use as search terms for filters of repeating md-select components
+        $scope.searchTerms = {};
+
+        $scope.getInputsFilterST = function (name, index) {
+            return name + index;
+        };
+        // < Creating various variables to use as search terms for filters of repeating md-select components >
 
     }
 
