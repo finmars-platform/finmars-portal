@@ -4,7 +4,7 @@
 
     var convertReportHelper = require('./converters/convertReportHelper');
 
-    var copy = function () {
+    /*var copy = function () {
 
         var table = convertReportHelper.convertToExcel();
 
@@ -24,28 +24,80 @@
         document.removeEventListener('copy', listener, false);
 
 
+    };*/
+
+    var copy = function (evDataService, isReport, copyType) {
+
+        /*var rows = document.querySelectorAll('.ev-content .g-row.selected');
+        var columns = document.querySelectorAll('.g-columns-holder .g-cell');*/
+
+        var flatList = evDataService.getFlatList();
+
+        if (copyType === 'selected') {
+            flatList = flatList.filter(function (row) {
+                return row.___is_activated;
+            });
+        }
+
+        if (flatList.length) {
+            var columns = evDataService.getColumns();
+            var groups  = evDataService.getGroups();
+
+            var csv = convertReportHelper.convertToCSV(flatList, columns, isReport, groups.length);
+
+            var listener = function (e) {
+
+                // console.log('covert copy selected csv', csv);
+
+                e.clipboardData.setData('text/plain', csv);
+
+                e.preventDefault();
+
+            };
+
+            document.addEventListener('copy', listener, false);
+
+            document.execCommand("copy");
+
+            document.removeEventListener('copy', listener, false);
+        }
+
     };
 
-    var copySelected = function () {
+    var copySelected = function (evDataService, isReport) {
 
-        var rows = document.querySelectorAll('.ev-content .g-row.selected');
-        var columns = document.querySelectorAll('.g-columns-holder .g-cell');
+        /*var rows = document.querySelectorAll('.ev-content .g-row.selected');
+        var columns = document.querySelectorAll('.g-columns-holder .g-cell');*/
 
-        var csv = convertReportHelper.convertToCSV(rows, columns);
+        var flatList = evDataService.getFlatList();
 
-        var listener = function (e) {
+        flatList = flatList.filter(function (row) {
+           return row.___is_activated;
+        });
 
-            e.clipboardData.setData('text/plain', csv);
+        if (flatList.length) {
+            var columns = evDataService.getColumns();
+            var groups  = evDataService.getGroups();
 
-            e.preventDefault();
+            var csv = convertReportHelper.convertToCSV(flatList, columns, isReport, groups.length);
 
-        };
+            var listener = function (e) {
 
-        document.addEventListener('copy', listener, false);
+                // console.log('covert copy selected csv', csv);
 
-        document.execCommand("copy");
+                e.clipboardData.setData('text/plain', csv);
 
-        document.removeEventListener('copy', listener, false);
+                e.preventDefault();
+
+            };
+
+            document.addEventListener('copy', listener, false);
+
+            document.execCommand("copy");
+
+            document.removeEventListener('copy', listener, false);
+        }
+
     };
 
     module.exports = {

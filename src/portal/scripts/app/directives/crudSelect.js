@@ -26,19 +26,11 @@
 
                 var entityType = scope.entityType;
 
-                // assembling group entity
-                /*if (typeof scope.entityType === 'object') {
-                    var entityName = scope.entityType.entityName;
-
-                    // Removing "-group" part of entity
-                    if (entityName.indexOf('group') !== -1) {
-
-                        var lastDash = entityName.lastIndexOf('-');
-                        entityName = entityName.slice(0, lastDash);
-                    }
-
-                    entityType = entityName + '-' + scope.entityType.groupType;
-                }*/
+                if (scope.entityType && scope.entityType.indexOf('strategy') !== -1 && scope.label === 'Sub Group') {
+                    scope.labelName  = 'Group';
+                } else {
+                    scope.labelName = scope.label;
+                }
 
                 scope.searchTerm = '';
 
