@@ -208,6 +208,16 @@
                         resolve({type: 'id', key: 'type', data: data.results});
                     });
                     break;
+                case 'account_type':
+                    accountTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'type', data: data.results});
+                    });
+                    break;
+                case 'transaction_type':
+                    transactionTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'transaction_type', data: data.results});
+                    });
+                    break;
                 case 'account_cash':
                     accountRepository.getList({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'account_cash', data: data.results});

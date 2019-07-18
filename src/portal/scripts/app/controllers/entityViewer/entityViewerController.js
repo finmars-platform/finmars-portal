@@ -75,7 +75,6 @@
                             if (res.status === 'agree') {
 
 
-
                                 vm.entityViewerDataService.resetData();
                                 vm.entityViewerDataService.resetRequestParameters();
 
@@ -167,14 +166,17 @@
                                     vm.entityViewerDataService.setActiveObjectAction(null);
 
                                     if (res && res.res === 'agree') {
-                                        vm.entityViewerDataService.resetData();
-                                        vm.entityViewerDataService.resetRequestParameters();
 
-                                        var rootGroup = vm.entityViewerDataService.getRootGroupData();
+                                        console.log('res', res);
 
-                                        vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+                                        // vm.entityViewerDataService.resetData();
+                                        // vm.entityViewerDataService.resetRequestParameters();
+                                        //
+                                        // var rootGroup = vm.entityViewerDataService.getRootGroupData();
+                                        //
+                                        // vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                                        vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                                     }
                                 });
 

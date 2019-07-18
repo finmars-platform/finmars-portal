@@ -11,82 +11,6 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var handleError = function (methodName) {
-        console.log('Method: ' + methodName + '. Cannot get data from server');
-    };
-
-    var login = function (login, password) {
-        return window.fetch(baseUrl + 'users/login/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({username: login, password: password})
-        }).then(function (data) {
-            return data.json();
-        }).catch(function () {
-            handleError('login');
-            return [];
-        })
-    };
-
-    var logout = function () {
-        return window.fetch(baseUrl + 'users/logout/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({})
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var ping = function () {
-        return window.fetch(baseUrl + 'users/ping/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var protectedPing = function () {
-        return window.fetch(baseUrl + 'users/protected-ping/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var getList = function () {
-        return window.fetch(baseUrl + 'users/user/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
     var getByKey = function (id) {
         return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'GET',
@@ -97,50 +21,6 @@
             }
         }).then(function (data) {
             return data.json();
-        })
-    };
-
-    var getMe = function () {
-        return window.fetch(baseUrl + 'users/user/0/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var changePassword = function (id, user) {
-        return window.fetch(baseUrl + 'users/user/' + id + '/set-password/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-
-                if (data.status == 400) {
-                    data.json().then(function (result) {
-                        resolve({
-                            response: result,
-                            status: data.status
-                        })
-                    })
-                } else {
-                    resolve({
-                        response: {success: true},
-                        status: 200
-                    })
-                }
-
-            });
         })
     };
 
@@ -163,33 +43,6 @@
                     })
                 })
             });
-        })
-    };
-
-    var patch = function (id, user) {
-        return window.fetch(baseUrl + 'users/user/' + id + '/', {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'users/user/' + id + '/', {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
@@ -260,120 +113,12 @@
         })
     };
 
-    var patchMaster = function (id, user) {
-        return window.fetch(baseUrl + 'users/master-user/' + id + '/', {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var deleteMasterByKey = function (id) {
-        return window.fetch(baseUrl + 'users/master-user/' + id + '/', {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
     var setMasterUser = function (id) {
         return window.fetch(baseUrl + 'users/master-user/' + id + '/set-current/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var getMemberList = function () {
-        return window.fetch(baseUrl + 'users/member/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var getMemberByKey = function (id) {
-        return window.fetch(baseUrl + 'users/member/' + id, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var updateMember = function (id, user) {
-        return window.fetch(baseUrl + 'users/member/' + id, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var patchMember = function (id, user) {
-        return window.fetch(baseUrl + 'users/member/' + id, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var deleteMemberByKey = function (id) {
-        return window.fetch(baseUrl + 'users/member/' + id, {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var getGroupList = function () {
-        return window.fetch(baseUrl + 'users/group/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
@@ -410,7 +155,7 @@
         })
     };
 
-    var leaveMasterUserList = function (masterUserId) {
+    var leaveMasterUser = function (masterUserId) {
         return window.fetch(baseUrl + 'users/master-user-leave/' + masterUserId + '/', {
             method: 'GET',
             credentials: 'include',
@@ -423,39 +168,36 @@
         })
     };
 
+    var deleteMasterUser = function (masterUserId) {
+        return window.fetch(baseUrl + 'users/master-user-delete/' + masterUserId + '/', {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        })
+    };
+
     module.exports = {
-        login: login,
-        logout: logout,
 
-        ping: ping,
-        protectedPing: protectedPing,
-
-        getList: getList,
         getByKey: getByKey,
-        getMe: getMe,
-        changePassword: changePassword,
         update: update,
-        patch: patch,
-        deleteByKey: deleteByKey,
 
         createMasterUser: createMasterUser,
         getMasterList: getMasterList,
         getMasterByKey: getMasterByKey,
         updateMaster: updateMaster,
-        patchMaster: patchMaster,
-        deleteMasterByKey: deleteMasterByKey,
         setMasterUser: setMasterUser,
 
-        getMemberList: getMemberList,
-        getMemberByKey: getMemberByKey,
-        updateMember: updateMember,
-        patchMember: patchMember,
-        deleteMemberByKey: deleteMemberByKey,
-
-        getGroupList: getGroupList,
         getInviteToMasterUserList: getInviteToMasterUserList,
         updateInviteToMasterUserByKey: updateInviteToMasterUserByKey,
-        leaveMasterUserList: leaveMasterUserList
+
+        leaveMasterUser: leaveMasterUser,
+        deleteMasterUser: deleteMasterUser
     }
 
 }());

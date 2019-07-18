@@ -92,9 +92,7 @@
             rootGroupOptions: {},
             filters: [],
             pagination: {
-                page: 1,
-                items_per_page: 60,
-                count: 1
+                items_per_page: 60
             },
             status: {
                 data: null
@@ -525,7 +523,14 @@
                             groups_values: [],
                             groups_order: 'asc',
                             page_size: 60
-                        }
+                        },
+                        pagination: {
+                            page: 1,
+                            items_per_page: data.pagination.items_per_page,
+                            count: 1
+                        },
+                        requestedPages: [1],
+                        processedPages: []
                     };
 
                 } else {
@@ -545,7 +550,14 @@
                             groups_values: [],
                             groups_order: 'asc',
                             page_size: 60
-                        }
+                        },
+                        pagination: {
+                            page: 1,
+                            items_per_page: data.pagination.items_per_page,
+                            count: 1
+                        },
+                        requestedPages: [1],
+                        processedPages: []
                     };
 
                 }
