@@ -21,6 +21,8 @@
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
 
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
@@ -100,6 +102,75 @@
                             }
                         });
                     }
+                };
+
+                scope.insertObjectAfterCreateHandler = function (resultItem) {
+
+                    var groups = scope.evDataService.getDataAsList();
+                    var requestParameters = scope.evDataService.getAllRequestParameters();
+                    var requestParametersKeys = Object.keys(requestParameters);
+
+                    var matchedRequestParameter;
+
+                    for (var i = 0; i < requestParametersKeys.length; i = i + 1) {
+
+                        var key = requestParametersKeys[i];
+
+                        var match = true;
+
+                        var filter_types = requestParameters[key].body.groups_types.map(function (item) {
+                            return item.key
+                        });
+
+                        var filter_values = requestParameters[key].body.groups_values;
+
+                        if (filter_values.length) {
+                            filter_values.forEach(function (value, index) {
+
+                                if (resultItem[filter_types[index]] !== value) {
+                                    match = false
+                                }
+
+
+                            })
+                        } else {
+
+                            if (filter_types.length) {
+                                match = false;
+                            }
+                        }
+
+                        if (match) {
+                            matchedRequestParameter = requestParameters[key];
+                            break;
+                        }
+
+                    }
+
+                    if (matchedRequestParameter) {
+
+                        groups.forEach(function (group) {
+
+                            if (group.___id === matchedRequestParameter.id) {
+
+                                var exampleItem = group.results[0]; // copying of ___type, ___parentId and etc fields
+
+                                var result = Object.assign({}, exampleItem, resultItem);
+
+                                result.___id = evRvCommonHelper.getId(result);
+                                var beforeControlRowIndex = group.results.length - 1;
+
+                                group.results.splice(beforeControlRowIndex, 0, result);
+
+                            }
+
+
+                        })
+
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                 };
 
                 scope.getEntityNameByState = function () {
@@ -191,15 +262,7 @@
 
                             if (res && res.res === 'agree') {
 
-                                scope.evDataService.resetData();
-                                scope.evDataService.resetRequestParameters();
-
-                                var rootGroup = scope.evDataService.getRootGroupData();
-
-                                scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                scope.insertObjectAfterCreateHandler(res.data);
 
                             }
 
@@ -223,15 +286,7 @@
 
                                 if (res && res.res === 'agree') {
 
-                                    scope.evDataService.resetData();
-                                    scope.evDataService.resetRequestParameters();
-
-                                    var rootGroup = scope.evDataService.getRootGroupData();
-
-                                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                    scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
 
                                 }
 
@@ -253,15 +308,7 @@
 
                                 if (res && res.res === 'agree') {
 
-                                    scope.evDataService.resetData();
-                                    scope.evDataService.resetRequestParameters();
-
-                                    var rootGroup = scope.evDataService.getRootGroupData();
-
-                                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                    scope.insertObjectAfterCreateHandler(res.data);
 
                                 }
 
@@ -675,7 +722,8 @@
                         uiService.updateListLayout(listLayout.id, listLayout).then(function () {
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
                         });
-                    }; /*else {
+                    }
+                    ; /*else {
                         uiService.createListLayout(scope.entityType, listLayout).then(function () {
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
                         });

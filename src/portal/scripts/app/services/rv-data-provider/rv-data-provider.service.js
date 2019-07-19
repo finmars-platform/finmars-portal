@@ -231,25 +231,18 @@
 
                         var parentItemIsFirst = false;
 
-                        parentGroup.results.forEach(function (item) {
-                            if (event.___id === item.___id) {
-                                parentItemIsFirst = item.___is_first
-                            }
-                        });
-
                         obj = Object.assign({}, data);
 
                         obj.___group_name = event.groupName ? event.groupName : '-';
                         obj.___group_identifier = event.groupId ? event.groupId : '-';
 
                         obj.___is_open = true;
-                        obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
+                        // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
                         obj.___parentId = event.parentGroupId;
                         obj.___type = 'group';
                         obj.___id = event.___id;
                         obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
-                        obj.___is_first = parentItemIsFirst;
 
                     }
 
@@ -260,20 +253,15 @@
                     item.___group_name = item.___group_name ? item.___group_name : '-';
                     item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
-                    item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
+                    // item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
                     item.___parentId = obj.___id;
                     item.___type = 'object';
                     item.___id = evRvCommonHelper.getId(item);
                     item.___level = obj.___level + 1;
-                    item.___is_first = false;
 
                     return item
                 });
-
-                if (obj.results.length) {
-                    obj.results[0].___is_first = true;
-                }
 
                 entityViewerDataService.setData(obj);
 
@@ -360,23 +348,16 @@
 
                             var parentItemIsFirst = false;
 
-                            parentGroup.results.forEach(function (item) {
-                                if (event.___id === item.___id) {
-                                    parentItemIsFirst = item.___is_first
-                                }
-                            });
-
                             obj = Object.assign({}, data);
                             obj.___group_name = event.groupName ? event.groupName : '-';
                             obj.___group_identifier = event.groupId ? event.groupId : '-';
                             obj.___is_open = true;
-                            obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
+                            // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
                             obj.___parentId = event.parentGroupId;
                             obj.___type = 'group';
                             obj.___id = event.___id;
                             obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
-                            obj.___is_first = parentItemIsFirst;
 
                         }
                     }
@@ -396,7 +377,7 @@
                         item.___group_name = item.___group_name ? item.___group_name : '-';
                         item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
-                        item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
+                        // item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
 
                         item.___level = obj.___level + 1;
@@ -409,15 +390,8 @@
 
                         item.___id = evRvCommonHelper.getId(item);
 
-                        item.___is_first = false;
-
                         return item
                     });
-
-                    if (obj.results.length) {
-                        obj.results[0].___is_first = true;
-                    }
-
 
                     entityViewerDataService.setData(obj);
 

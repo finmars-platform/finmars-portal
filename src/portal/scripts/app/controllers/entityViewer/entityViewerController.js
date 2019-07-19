@@ -74,15 +74,26 @@
 
                             if (res.status === 'agree') {
 
+                                var objects = vm.entityViewerDataService.getObjects();
 
-                                vm.entityViewerDataService.resetData();
-                                vm.entityViewerDataService.resetRequestParameters();
+                                objects.forEach(function (obj) {
 
-                                var rootGroup = vm.entityViewerDataService.getRootGroupData();
+                                    if (res.data.id === obj.id) {
 
-                                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+                                        var parent = vm.entityViewerDataService.getData(obj.___parentId)
 
-                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                        parent.results = parent.results.filter(function (resultItem) {
+                                            return resultItem.id !== res.data.id
+                                        });
+
+                                        vm.entityViewerDataService.setData(parent)
+
+                                    }
+
+                                });
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                             }
                         })
 
@@ -108,14 +119,29 @@
                                 vm.entityViewerDataService.setActiveObjectAction(null);
 
                                 if (res && res.res === 'agree') {
-                                    vm.entityViewerDataService.resetData();
-                                    vm.entityViewerDataService.resetRequestParameters();
 
-                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
+                                    console.log('res', res);
 
-                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+                                    var objects = vm.entityViewerDataService.getObjects();
 
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                    objects.forEach(function (obj) {
+
+                                        if (res.data.id === obj.id) {
+
+                                            Object.keys(res.data).forEach(function (key) {
+
+                                                obj[key] = res.data[key]
+
+                                            });
+
+                                            vm.entityViewerDataService.setObject(obj);
+
+                                        }
+
+                                    });
+
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                                 }
                             });
 
@@ -138,14 +164,28 @@
                                     vm.entityViewerDataService.setActiveObjectAction(null);
 
                                     if (res && res.res === 'agree') {
-                                        vm.entityViewerDataService.resetData();
-                                        vm.entityViewerDataService.resetRequestParameters();
 
-                                        var rootGroup = vm.entityViewerDataService.getRootGroupData();
 
-                                        vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                                        vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                        var objects = vm.entityViewerDataService.getObjects();
+
+                                        objects.forEach(function (obj) {
+
+                                            if (res.data.complex_transaction.id === obj.id) {
+
+                                                Object.keys(res.data.complex_transaction).forEach(function (key) {
+
+                                                    obj[key] = res.data.complex_transaction[key]
+
+                                                });
+
+                                                vm.entityViewerDataService.setObject(obj);
+
+                                            }
+
+                                        });
+
+                                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                                     }
                                 });
 
@@ -167,16 +207,26 @@
 
                                     if (res && res.res === 'agree') {
 
-                                        console.log('res', res);
+                                        var objects = vm.entityViewerDataService.getObjects();
 
-                                        // vm.entityViewerDataService.resetData();
-                                        // vm.entityViewerDataService.resetRequestParameters();
-                                        //
-                                        // var rootGroup = vm.entityViewerDataService.getRootGroupData();
-                                        //
-                                        // vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+                                        objects.forEach(function (obj) {
+
+                                            if (res.data.id === obj.id) {
+
+                                                Object.keys(res.data).forEach(function (key) {
+
+                                                    obj[key] = res.data[key]
+
+                                                });
+
+                                                vm.entityViewerDataService.setObject(obj);
+
+                                            }
+
+                                        });
 
                                         vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                                     }
                                 });
 

@@ -414,7 +414,7 @@
 
                 entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
-                    $mdDialog.hide({res: 'agree'});
+                    $mdDialog.hide({res: 'agree', data: data});
 
                 }).catch(function (data) {
 

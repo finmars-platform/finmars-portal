@@ -80,6 +80,8 @@
                     dataList.forEach(function (item) {
 
                         item.___is_activated = scope.isAllSelected;
+                        item.___is_area_subtotal_activated = scope.isAllSelected;
+                        item.___is_line_subtotal_activated = scope.isAllSelected;
 
                         if (item.results && item.results.length) {
 
