@@ -107,7 +107,9 @@
 
             Object.keys(contextData).forEach(function (key) {
 
-                list.push(key + '=' + contextData[key])
+                if (contextData[key]) {
+                    list.push(key + '=' + contextData[key])
+                }
 
             });
 

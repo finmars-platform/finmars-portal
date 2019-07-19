@@ -109,6 +109,10 @@
                 item.pricing_currency_object = findEntityObject(report, 'item_currencies', item.pricing_currency);
             }
 
+            if (item.accrued_currency) {
+                item.accrued_currency_object = findEntityObject(report, 'item_currencies', item.accrued_currency);
+            }
+
             //item.pricing_currency_object = findEntityObject(report, 'item_currencies');
             //item.pricing_currency_history_object = findEntityObject(report, 'item_currencies');
             //item.report_currency_history_object = findEntityObject(report, 'item_currencies');
