@@ -396,13 +396,17 @@
                         }
                     }).then(function (res) {
 
-                        reportOptions = res.data;
+                        if (res.status === 'agree') {
 
-                        scope.evDataService.setReportOptions(reportOptions);
+                            reportOptions = res.data;
 
-                        reportOptions = reportOptions;
+                            scope.evDataService.setReportOptions(reportOptions);
 
-                        scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE)
+                            reportOptions = reportOptions;
+
+                            scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+                        }
 
                     })
 

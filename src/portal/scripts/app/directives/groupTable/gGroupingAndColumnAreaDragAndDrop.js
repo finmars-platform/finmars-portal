@@ -226,11 +226,15 @@
 
                                     } else {
 
-                                        columns.splice(activeColumnIndex, 1);
                                         for (var i = 0; i < columns.length; i++) {
 
-                                            if (nextSibling.dataset.columnKey === columns[i].key) {
+                                            if (nextSibling.dataset.columnKey === columnToAdd.key) { // if next column is column of dragged group
+                                                break;
+
+                                            } else if (nextSibling.dataset.columnKey === columns[i].key) {
+                                                columns.splice(activeColumnIndex, 1);
                                                 columns.splice(i, 0, columnToAdd);
+                                                console.log("draganddrop columns to add", columns, columnToAdd);
                                                 break;
                                             }
 

@@ -171,7 +171,7 @@
             pageStateName = transition.to().name;
             pageStateParams = transition.params().strategyNumber;
 
-            if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
+            if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport(pageStateName)) {
                 showLayoutName = true;
                 vm.activeLayoutName = null;
                 vm.activeSPLayoutName = false;
@@ -181,7 +181,6 @@
             } else {
                 showLayoutName = false;
             }
-
 
         });
 
@@ -284,9 +283,15 @@
             })
         };
 
-        vm.isReport = function () {
+        vm.isReport = function (currentStateName) {
 
-            switch ($state.current.name) {
+            var stateName = currentStateName;
+
+            if (!stateName && stateName !== '') {
+                stateName = $state.current.name;
+            }
+
+            switch (stateName) {
                 case 'app.reports.balance-report':
                     return true;
                     break;
