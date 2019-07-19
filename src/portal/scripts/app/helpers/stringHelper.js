@@ -10,8 +10,8 @@
 
     var toHash = function (str) {
 
-        // return md5Helper.md5(str);
-        return sha1Helper.sha1(str);
+        return md5Helper.md5(str);
+        // return sha1Helper.sha1(str);
     };
 
     module.exports = {
