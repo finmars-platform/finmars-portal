@@ -14,7 +14,7 @@
         logService.controller('BookmarksEditSelectedDialogController', 'initialized');
 
         var vm = this;
-
+        console.log("bookmarks data", data);
         var bookmarkData = data;
         var bookmarkCurrentLayoutId = bookmarkData.original.list_layout;
         if (bookmarkData.a_attr.list_layout && !isNaN(bookmarkData.a_attr.list_layout)) {
@@ -56,7 +56,8 @@
                 }
 
                 vm.readyStatus = true;
-
+                $scope.$apply();
+                console.log("bookmarks wizard readyStatus", vm.readyStatus);
             });
 
         // } else {
@@ -92,7 +93,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function () {

@@ -215,7 +215,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide('disagree');
         };
 
         vm.getTdValue = function (item, columnKey) {
@@ -315,24 +315,25 @@
         };
 
         vm.loadOnScroll = function () {
-            var scrollAtTheEnd = false;
-            var scrollElem = $('.entity-search-scroll-container');
-            var elemScrollHeight = scrollElem[0].scrollHeight;
-            var scrollPositionToLoadItems = elemScrollHeight / 3; // start item loading when scroll passes one third of its length
 
-            scrollElem.scroll(function () {
+            var scrollAtTheEnd = false;
+            var scrollElem = document.querySelector('.entity-search-scroll-container');
+            var elemScrollHeight = scrollElem.scrollHeight;
+            var scrollPositionToLoadItems = scrollElem.clientHeight * 1.5; // start item loading when scroll almost at the end
+
+            scrollElem.addEventListener('scroll', function () {
 
                // Call function when scroll reaches specified position
-               if (elemScrollHeight - scrollElem.scrollTop() < scrollPositionToLoadItems && !scrollAtTheEnd) {
+               if (elemScrollHeight - scrollElem.scrollTop < scrollPositionToLoadItems && !scrollAtTheEnd) {
                    scrollAtTheEnd = true;
-                   console.log("smart search loadOnScroll works", vm.itemsCount);
+                   console.log("smart search1 works", vm.itemsCount);
                    if (vm.itemsCount && vm.itemsCount > vm.items.length) {
                        page = page + 1;
 
                        vm.getEntityItems().then(function (data) {
 
                            // refreshing of scroll height after loading new page of items
-                           elemScrollHeight = scrollElem[0].scrollHeight;
+                           elemScrollHeight = scrollElem.scrollHeight;
                            scrollPositionToLoadItems = elemScrollHeight / 3;
                            scrollAtTheEnd = false;
 

@@ -21,6 +21,11 @@
         }
 
         vm.title = data.title;
+
+        if (!vm.title) {
+            vm.title = '';
+        }
+
         vm.nameProperty = data.nameProperty;
         vm.readyStatus = false;
 

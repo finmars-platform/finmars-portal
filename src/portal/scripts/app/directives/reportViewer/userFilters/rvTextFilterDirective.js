@@ -91,7 +91,7 @@
                 };
 
                 scope.getMultiselectorName = function () {
-                    var multiselectorName = scope.filter.name + ". " + "Regime = " + scope.filter.filter_type;
+                    var multiselectorName = scope.filter.name + ". " + "Regime = " + scope.filter.options.filter_type;
 
                     return multiselectorName;
                 };
@@ -236,7 +236,7 @@
 
                         scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
-                            if (['multiselector', 'date_tree', 'from_to'].indexOf(scope.filter.filter_type) === -1) {
+                            if (['multiselector', 'date_tree', 'from_to'].indexOf(scope.filter.options.filter_type) === -1) {
 
                                 var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
 
