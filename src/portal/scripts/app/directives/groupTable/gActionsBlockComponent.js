@@ -377,23 +377,25 @@
 
                 };
 
-                var layoutChanged = false;
-                scope.didLayoutChanged = function () {
+                scope.layoutChanged = false;
 
-                    var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
-                    var layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+                var didLayoutChanged = function () {
 
-                    if (activeLayoutConfig.hasOwnProperty('name') && layoutCurrentConfig.hasOwnProperty('name')) {
+                    setInterval(function () {
 
-                        if (layoutChanged !== !evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, scope.isReport)) {
-                            layoutChanged = !layoutChanged;
+                        var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
+                        var layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+                        if (activeLayoutConfig.hasOwnProperty('name') && layoutCurrentConfig.hasOwnProperty('name')) {
+
+                            if (scope.layoutChanged !== !evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, scope.isReport)) {
+                                scope.layoutChanged = !scope.layoutChanged;
+                                scope.$apply();
+                            }
+
                         }
 
-                        return layoutChanged;
-
-                    } else {
-                        return layoutChanged;
-                    }
+                    }, 1000)
 
                 };
 
@@ -674,9 +676,6 @@
                     if (listLayout.hasOwnProperty('id')) {
                         uiService.updateListLayout(listLayout.id, listLayout).then(function () {
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-
-                            scope.didLayoutChanged();
-                            scope.$apply();
                         });
                     };
 
@@ -713,6 +712,8 @@
 
                             var saveAsLayout = function () {
 
+                                listLayout.name = res.data.name;
+
                                 uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
 
                                     listLayout.id = data.id;
@@ -731,7 +732,7 @@
                                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                     scope.isNewLayout = false;
-                                    scope.didLayoutChanged();
+                                    // scope.didLayoutChanged();
                                     scope.$apply();
 
                                 });
@@ -739,8 +740,6 @@
                             };
 
                             if (listLayout.id) { // if layout based on another existing layout
-
-                                listLayout.name = res.data.name;
 
                                 if (scope.isRootEntityViewer) {
 
@@ -847,15 +846,7 @@
                 };
 
                 checkLayoutExistence();
-
-                scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS, function () {
-
-                    setTimeout(function () { // wait till information about resized columns set into entityViewerDataService
-                        scope.didLayoutChanged();
-                        scope.$apply();
-                    }, 300);
-
-                });
+                didLayoutChanged();
 
             }
         }
