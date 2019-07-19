@@ -50,7 +50,7 @@
                                        ng-value="entityAttr"
                                        class="{{entityAttr.disabled ? 'disabled' : ''}}">
                                 <!--{{attr}}-->
-                                {{entityAttr.name}} ({{bindTypeByValueType(entityAttr['value_type'])}})
+                                {{renameStrategySubgroup(entityAttr)}} ({{bindTypeByValueType(entityAttr['value_type'])}})
                             </md-option>
                         </md-optgroup>
                         <md-optgroup label="User attributes" class="bold-field-select" data-ng-if="attrs.length">

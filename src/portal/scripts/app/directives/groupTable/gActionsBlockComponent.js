@@ -721,13 +721,11 @@
                     if (listLayout.hasOwnProperty('id')) {
                         uiService.updateListLayout(listLayout.id, listLayout).then(function () {
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
+
+                            scope.didLayoutChanged();
+                            scope.$apply();
                         });
-                    }
-                    ; /*else {
-                        uiService.createListLayout(scope.entityType, listLayout).then(function () {
-                            scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-                        });
-                    }*/
+                    };
 
                     $mdDialog.show({
                         controller: 'SaveLayoutDialogController as vm',
@@ -780,6 +778,8 @@
                                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                     scope.isNewLayout = false;
+                                    scope.didLayoutChanged();
+                                    scope.$apply();
 
                                 });
 
@@ -852,19 +852,25 @@
                 };
 
                 scope.exportAsCSV = function () {
-                    var rows = document.querySelectorAll('.ev-content .g-row');
-                    var columns = document.querySelectorAll('.g-columns-holder .g-cell');
+                    /*var rows = document.querySelectorAll('.ev-content .g-row');
+                    var columns = document.querySelectorAll('.g-columns-holder .g-cell');*/
+                    var flatList = scope.evDataService.getFlatList();
+                    var columns = scope.evDataService.getColumns();
+                    var groups = scope.evDataService.getGroups();
 
-                    var blobPart = convertReportHelper.convertToCSV(rows, columns);
+                    var blobPart = convertReportHelper.convertToCSV(flatList, columns, scope.isReport, groups.length);
                     downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
                 };
 
-                scope.copyReport = function ($event) {
+                /*scope.copyReport = function ($event) {
                     reportCopyHelper.copy();
+                };*/
+                scope.copyReport = function () {
+                    reportCopyHelper.copy(scope.evDataService, scope.isReport);
                 };
 
                 scope.copySelectedToBuffer = function () {
-                    reportCopyHelper.copySelected();
+                    reportCopyHelper.copy(scope.evDataService, scope.isReport, 'selected');
                 };
 
                 scope.openCustomFieldsManager = function () {

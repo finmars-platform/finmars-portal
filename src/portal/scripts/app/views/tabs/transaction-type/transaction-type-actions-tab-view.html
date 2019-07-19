@@ -18,8 +18,12 @@
                                             md-direction="bottom">Condition to execute the Action</md-tooltip>
                             </span>
 
-                            <span ng-bind="vm.getActionTypeName(item)" style="width: 270px"></span>
-                            <span># {{$index + 1}}</span>
+                            <span class="text-weight-bold"># {{$index + 1}}</span>
+
+                            <span class="text-weight-bold"
+                                  ng-bind="vm.getActionTypeName(item) + ':'"
+                                  style="width: 270px"></span>
+
                             <span ng-if="item.isPaneExpanded">
                                 <md-input-container class="no-error-spacer" style="min-height: 35px">
                                     <label></label>

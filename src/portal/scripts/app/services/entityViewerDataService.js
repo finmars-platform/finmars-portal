@@ -1,5 +1,7 @@
 (function () {
 
+    'use strict';
+
     var stringHelper = require('../helpers/stringHelper');
     var metaService = require('../services/metaService');
 
@@ -123,7 +125,6 @@
             requestParameters: {},
             activeRequestParametersId: null,
             lastClickInfo: {},
-            activeLayoutConfiguration: {},
             unfilteredFlatList: [],
             flatList: [],
             projection: [],

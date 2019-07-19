@@ -167,7 +167,7 @@
     }
   },
   {
-    "name": "Custom Column for Layouts",
+    "name": "Custom Columns for Layouts",
     "entities": [
       "reports.balancereportcustomfield",
       "reports.plreportcustomfield",

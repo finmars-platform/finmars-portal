@@ -100,7 +100,7 @@
                         <div data-ng-repeat="item in vm.items track by $index" class="form-constructor-draggable-card" >
 
                             <md-card class="p-l-16" data-index="{{$index}}">
-                                <p><b data-ng-bind="item.name"></b> (<span
+                                <p><b data-ng-bind="vm.getFieldName(item)"></b> (<span
                                         data-ng-bind="vm.getFieldType(item.value_type)"></span>)</p>
                             </md-card>
 

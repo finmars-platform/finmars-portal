@@ -358,11 +358,28 @@
 
                 scope.bindAttrName = function (item) {
 
-                    if (item.attribute.hasOwnProperty('verbose_name')) {
-                        return item.attribute.verbose_name;
+                    if (item.attribute.key === 'subgroup' && item.attribute.name === 'Sub Group') {
+
+                        return 'Group';
+
+                    } else {
+
+                        if (item.attribute.hasOwnProperty('verbose_name')) {
+                            return item.attribute.verbose_name;
+                        }
+
+                        return item.attribute.name;
+
+                    };
+
+                };
+
+                scope.renameStrategySubgroup = function (item) {
+                    if (item.key === 'subgroup' && item.value_content_type.indexOf('strategies.strategy') !== -1) {
+                        return 'Group';
                     }
 
-                    return item.attribute.name;
+                    return item.name;
                 };
 
                 scope.bindTypeByValueType = function (valueType) {
@@ -458,7 +475,7 @@
 
                 scope.setFieldBackgroundColor = function (color) {
                     scope.fieldBackgroundColor = color;
-                }
+                };
 
             }
         }
