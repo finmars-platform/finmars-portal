@@ -363,7 +363,7 @@ app.directive('groupReportSettings', [require('./app/directives/groupTable/gRepo
 app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', ['$mdDialog', require('./app/directives/groupTable/gColumnsComponent')]);
 app.directive('groupActionsBlock', ['$mdDialog', '$state', require('./app/directives/groupTable/gActionsBlockComponent')]);
-app.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]);
+// app.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
 app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
 app.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);

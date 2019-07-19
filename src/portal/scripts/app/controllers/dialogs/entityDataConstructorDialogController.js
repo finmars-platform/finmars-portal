@@ -985,11 +985,11 @@
 
         vm.getFieldName = function (item) {
 
-            if (item.attribute.hasOwnProperty('verbose_name')) {
-                return item.attribute.verbose_name;
+            if (item.key === 'subgroup' && item.value_content_type.indexOf('strategies.strategy') !== -1) {
+                return 'Group';
             }
 
-            return item.attribute.name;
+            return item.name;
         };
 
         vm.getFieldType = function (valueType) {

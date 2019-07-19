@@ -21,7 +21,7 @@
                 options: '=',
                 entityType: '='
             },
-            templateUrl: 'views/directives/ev-field-resolver-view.html',
+            templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs) {
 
                 scope.readyStatus = {content: false, tags: false};
@@ -219,7 +219,12 @@
 
                 scope.getModelKey = scope.$parent.getModelKey;
 
-                scope.crudeEntityType = scope.item.entity;
+                if (scope.item.value_entity) {
+                    scope.crudEntityType = scope.item.value_entity;
+                } else {
+                    scope.crudEntityType = scope.item.entity;
+                }
+
                 scope.checkForCrudSelects = function () {
 
                     if (['group', 'subgroup'].indexOf(scope.getModelKey()) !== -1) {
