@@ -318,8 +318,6 @@
 
                         deserializeObjects(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
 
-                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
                         resolveLocal()
 
                     });
@@ -330,7 +328,11 @@
 
 
             Promise.all(promises).then(function () {
+
                 resolve();
+
+                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
             })
 
         });
