@@ -670,7 +670,7 @@
 
         var rowHeight = evDataService.getRowHeight();
 
-        var extraHeight = 20 * rowHeight;
+        var extraHeight = 10 * rowHeight;
 
         return Math.floor(rowHeight * count) + extraHeight;
 
