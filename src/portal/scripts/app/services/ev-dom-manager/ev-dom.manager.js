@@ -317,6 +317,8 @@
 
             var totalPages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.items_per_page);
 
+            console.log('total pages', totalPages);
+
             requestParameters.requestedPages = [];
 
             for (var i = 1; i <= totalPages; i = i + 1) {
@@ -645,17 +647,6 @@
 
         return evDataService.getVirtualScrollOffsetPx();
 
-        // var rowHeight = evDataService.getRowHeight();
-        // var threshold = rowHeight * 10;
-        //
-        // var result = evDataService.getVirtualScrollOffsetPx() - threshold;
-        //
-        // if (result < 0) {
-        //     result = 0
-        // }
-        //
-        // return result;
-
     };
 
     var calculateTotalHeight = function (evDataService) {
@@ -670,7 +661,7 @@
 
         var rowHeight = evDataService.getRowHeight();
 
-        var extraHeight = 20 * rowHeight;
+        var extraHeight = 10 * rowHeight;
 
         return Math.floor(rowHeight * count) + extraHeight;
 

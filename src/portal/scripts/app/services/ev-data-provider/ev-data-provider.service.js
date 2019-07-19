@@ -307,9 +307,13 @@
 
                     evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
+                    requestParameters.pagination.page = pageToRequest;
+                    entityViewerDataService.setRequestParameters(requestParameters);
+
                     entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                     objectsService.getList(entityType, options).then(function (data) {
+
 
                         requestParameters.pagination.count = data.count;
                         requestParameters.processedPages.push(pageToRequest);
@@ -317,8 +321,6 @@
                         entityViewerDataService.setRequestParameters(requestParameters);
 
                         deserializeObjects(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
-
-                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         resolveLocal()
 
@@ -330,7 +332,11 @@
 
 
             Promise.all(promises).then(function () {
+
                 resolve();
+
+                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
             })
 
         });
@@ -374,6 +380,9 @@
                     }
 
                     evDataHelper.setDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+
+                    requestParameters.pagination.page = pageToRequest;
+                    entityViewerDataService.setRequestParameters(requestParameters);
 
                     entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 

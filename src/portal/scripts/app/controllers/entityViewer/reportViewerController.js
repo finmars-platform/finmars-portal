@@ -356,10 +356,35 @@
 
                             var contextData = {
                                 effective_date: reportOptions.report_date,
+                                pricing_currency: null,
+                                accrued_currency: null,
                                 instrument: null,
                                 portfolio: null,
-                                account: null
+                                account: null,
+                                strategy1: null,
+                                strategy2: null,
+                                strategy3: null
                             };
+
+                            if (activeObject['pricing_currency.id']) {
+                                contextData.pricing_currency = activeObject['pricing_currency.id'];
+                                contextData.pricing_currency_object = {
+                                    id: activeObject['pricing_currency.id'],
+                                    name: activeObject['pricing_currency.name'],
+                                    user_code: activeObject['pricing_currency.user_code'],
+                                    content_type: "currencies.currency"
+                                };
+                            }
+
+                            if (activeObject['instrument.accrued_currency.id']) {
+                                contextData.accured_currency = activeObject['instrument.accrued_currency.id'];
+                                contextData.accured_currency_object = {
+                                    id: activeObject['instrument.accrued_currency.id'],
+                                    name: activeObject['instrument.accrued_currency.name'],
+                                    user_code: activeObject['instrument.accrued_currency.user_code'],
+                                    content_type: "currencies.currency"
+                                };
+                            }
 
                             if (activeObject['instrument.id']) {
                                 contextData.instrument = activeObject['instrument.id'];

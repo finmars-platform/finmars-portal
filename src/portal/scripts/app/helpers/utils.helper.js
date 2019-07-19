@@ -5,6 +5,8 @@
 
 (function () {
 
+    var metaHelper = require('./meta.helper');
+
     /**
      * Get list of expressions for Expression Builder.
      * @callback - The first color, in hexadecimal format.
@@ -81,9 +83,13 @@
 
     function convertToTree(data, rootGroup) {
 
-        var _rootGroup = JSON.parse(JSON.stringify(rootGroup));
-        var _data = JSON.parse(JSON.stringify(data));
-        var _dataOrderReference = JSON.parse(JSON.stringify(data));
+        // var _rootGroup = JSON.parse(JSON.stringify(rootGroup));
+        // var _data = JSON.parse(JSON.stringify(data));
+        // var _dataOrderReference = JSON.parse(JSON.stringify(data));
+
+        var _rootGroup = metaHelper.recursiveDeepCopy(rootGroup);
+        var _data = metaHelper.recursiveDeepCopy(data);
+        var _dataOrderReference = metaHelper.recursiveDeepCopy(data);
 
         var list = [];
 

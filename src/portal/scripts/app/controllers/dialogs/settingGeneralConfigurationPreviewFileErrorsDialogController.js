@@ -16,6 +16,60 @@
 
         vm.data = data;
 
+        vm.createFile = function () {
+
+            var result = [];
+
+            var columns = ['Object', 'Issue', 'Reaction'];
+
+            var columnRow = columns.map(function (item) {
+
+                return '"' + item + '"';
+
+            }).join(',');
+
+            result.push(columnRow);
+
+            vm.data.errors.forEach(function (errorItem) {
+
+                var content = [];
+
+                content.push(vm.getName(errorItem));
+
+                if (errorItem.error) {
+                    content.push(errorItem.error.message);
+                } else {
+                    content.push('');
+                }
+
+                content.push(errorItem.mode);
+
+                result.push(content.join(','));
+
+                result.push('\n')
+
+            });
+
+            result = result.join('\n');
+
+            return result;
+
+        };
+
+        vm.setDownloadLink = function () {
+
+            var link = document.querySelector('.download-error-link');
+
+            var text = vm.createFile();
+
+            var file = new Blob([text], {type: 'text/plain'});
+
+            link.href = URL.createObjectURL(file);
+            link.download = 'configuration_import_error_file.csv';
+
+
+        };
+
         vm.getName = function (errorItem) {
 
             var result = '';
@@ -67,6 +121,16 @@
         vm.agree = function () {
             $mdDialog.hide({status: 'agree'});
         };
+
+        vm.init = function () {
+
+            setTimeout(function () {
+                vm.setDownloadLink();
+            }, 100)
+
+        };
+
+        vm.init();
     }
 
 }());
