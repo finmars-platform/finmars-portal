@@ -40,11 +40,8 @@
 
         if (item.___type === 'object' || item.___type === 'placeholder_object') {
 
-            if (item.hasOwnProperty('item_type') && item.hasOwnProperty('item_subtype')) {
-                pattern = [item.___parentId, stringHelper.toHash(item.id + item.item_type + item.item_subtype)].join('');
-            } else {
-                pattern = [item.___parentId, stringHelper.toHash(item.id)].join('');
-            }
+            pattern = [item.___parentId, stringHelper.toHash(item.id), item.id].join('');
+
         }
 
         if (item.___type === 'subtotal') {
