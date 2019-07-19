@@ -307,9 +307,13 @@
 
                     evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
+                    requestParameters.pagination.page = pageToRequest;
+                    entityViewerDataService.setRequestParameters(requestParameters);
+
                     entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                     objectsService.getList(entityType, options).then(function (data) {
+
 
                         requestParameters.pagination.count = data.count;
                         requestParameters.processedPages.push(pageToRequest);
@@ -376,6 +380,9 @@
                     }
 
                     evDataHelper.setDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+
+                    requestParameters.pagination.page = pageToRequest;
+                    entityViewerDataService.setRequestParameters(requestParameters);
 
                     entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
