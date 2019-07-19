@@ -25,6 +25,10 @@
             rowSelection = '<div class="g-row-selection"></div>';
         }
 
+        if (group.___is_activated) {
+            classList.push('activated');
+        }
+
         var classes = classList.join(' ');
 
 

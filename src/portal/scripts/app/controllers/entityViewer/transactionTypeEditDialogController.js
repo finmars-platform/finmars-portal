@@ -183,7 +183,7 @@
                 }
             });
 
-            $mdDialog.cancel();
+            $mdDialog.hide();
 
         };
 
@@ -532,7 +532,7 @@
                 })
 
 
-                if(!action.action_notes) {
+                if (!action.action_notes) {
                     result.push({
                         action_notes: action.action_notes,
                         key: 'action_notes',
@@ -585,7 +585,7 @@
                         if (data.status === 400) {
                             vm.handleErrors($event, data);
                         } else {
-                            $mdDialog.hide({res: 'agree'});
+                            $mdDialog.hide({res: 'agree', data: data});
                         }
 
                     }).catch(function (error) {

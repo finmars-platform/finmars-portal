@@ -164,7 +164,8 @@
                             var filters = {
                                 instrument: activeObject['instrument.id'],
                                 pricing_policy: activeObject['pricing_policy.id'],
-                                date: reportOptions.report_date
+                                date_0: reportOptions.report_date,
+                                date_1: reportOptions.report_date
                             };
 
                             priceHistoryService.getList({filters: filters}).then(function (data) {
@@ -260,7 +261,8 @@
                             var filters = {
                                 instrument: activeObject['instrument.id'],
                                 pricing_policy: activeObject['pricing_policy.id'],
-                                date: reportOptions.report_date
+                                date_0: reportOptions.report_date,
+                                date_1: reportOptions.report_date
                             };
 
                             currencyHistoryService.getList({filters: filters}).then(function (data) {

@@ -10,19 +10,6 @@
 
     var rvScrollManager = new RvScrollManager();
 
-    var clickTargets = {
-        'FOLD_BUTTON': 'FOLD_BUTTON',
-        'ROW_SELECTION_OBJECT_BUTTON': 'ROW_SELECTION_OBJECT_BUTTON',
-        'ROW_SELECTION_GROUP_BUTTON': 'ROW_SELECTION_GROUP_BUTTON',
-        'ROW_SELECTION_OBJECT_SVG': 'ROW_SELECTION_OBJECT_SVG',
-        'ROW_SELECTION_GROUP_SVG': 'ROW_SELECTION_GROUP_SVG',
-        'ROW_OBJECT': 'ROW_OBJECT',
-        'ROW_CELL': 'ROW_CELL',
-        'ROW_CELL_CONTENT': 'ROW_CELL_CONTENT',
-        'ROW_CELL_CONTENT_WRAP': 'ROW_CELL_CONTENT_WRAP',
-        'ROW_GROUP': 'ROW_GROUP'
-    };
-
     var calculateTotalHeight = function (evDataService) {
 
         var count = evDataService.getFlatList().filter(function (item) {
@@ -80,102 +67,28 @@
 
     };
 
-    var getClickTarget = function (event) {
-
-        var result = '';
-
-        if (event.target.classList.contains('g-group-holder')) {
-            result = clickTargets.ROW_GROUP;
-        }
-
-        if (event.target.classList.contains('ev-fold-button')) {
-            result = clickTargets.FOLD_BUTTON;
-        }
-
-        if (event.target.classList.contains('g-row')) {
-            result = clickTargets.ROW_OBJECT;
-        }
-
-        if (event.target.classList.contains('g-cell')) {
-            result = clickTargets.ROW_CELL;
-        }
-
-        if (event.target.classList.contains('g-cell-content')) {
-            result = clickTargets.ROW_CELL_CONTENT;
-        }
-
-        if (event.target.classList.contains('g-cell-content-wrap')) {
-            result = clickTargets.ROW_CELL_CONTENT_WRAP;
-        }
-
-        if (event.target.classList.contains('g-row-selection') && event.target.parentElement.classList.contains('g-row')) {
-            result = clickTargets.ROW_SELECTION_OBJECT_BUTTON;
-        }
-
-        if (event.target.tagName === 'svg' && event.target.parentElement.parentElement.classList.contains('g-row')) {
-            result = clickTargets.ROW_SELECTION_OBJECT_SVG;
-        }
-
-        if (event.target.classList.contains('g-row-selection') && event.target.parentElement.classList.contains('g-group-holder')) {
-            result = clickTargets.ROW_SELECTION_GROUP_BUTTON;
-        }
-
-        if (event.target.tagName === 'svg' && event.target.parentElement.parentElement.classList.contains('g-group-holder')) {
-            result = clickTargets.ROW_SELECTION_GROUP_SVG;
-        }
-
-        return result;
-    };
-
     var getClickData = function (event) {
 
         var clickData = {};
+        var rowElem = event.target.closest('.g-row');
 
-        var clickTarget = getClickTarget(event);
-
-        clickData.target = clickTarget;
         clickData.isShiftPressed = event.shiftKey;
         clickData.isCtrlPressed = event.ctrlKey;
 
-        switch (clickTarget) {
+        clickData.___type = rowElem.dataset.type;
+        clickData.___id = rowElem.dataset.objectId;
+        clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
-            case clickTargets.FOLD_BUTTON:
-                clickData.___type = event.target.dataset.type;
-                clickData.___id = event.target.dataset.objectId;
-                clickData.___parentId = event.target.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_SELECTION_OBJECT_BUTTON:
-                clickData.___type = event.target.offsetParent.dataset.type;
-                clickData.___id = event.target.offsetParent.dataset.objectId;
-                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_CELL:
-                clickData.___type = event.target.offsetParent.dataset.type;
-                clickData.___id = event.target.offsetParent.dataset.objectId;
-                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_CELL_CONTENT:
-                clickData.___type = event.target.offsetParent.dataset.type;
-                clickData.___id = event.target.offsetParent.dataset.objectId;
-                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_CELL_CONTENT_WRAP:
-                clickData.___type = event.target.offsetParent.dataset.type;
-                clickData.___id = event.target.offsetParent.dataset.objectId;
-                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_OBJECT:
-                clickData.___type = event.target.dataset.type;
-                clickData.___id = event.target.dataset.objectId;
-                clickData.___parentId = event.target.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_SELECTION_OBJECT_SVG:
-                clickData.___type = event.target.parentElement.parentElement.dataset.type;
-                clickData.___id = event.target.parentElement.parentElement.dataset.objectId;
-                clickData.___parentId = event.target.parentElement.parentElement.dataset.parentGroupHashId;
-                break;
+        if (rowElem.dataset.subtotalType) {
+            clickData.___subtotal_type = rowElem.dataset.subtotalType;
         }
 
+        if (rowElem.dataset.subtotalSubtype) {
+            clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
+        }
+
+
+        console.log('clickData', clickData);
 
         return clickData;
 
@@ -256,143 +169,315 @@
 
     };
 
-    var handleObjectActive = function (clickData, evDataService, evEventService) {
+    var handleShiftSelection = function (evDataService, evEventService, clickData) {
 
-        var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
-        var count = evDataService.getActiveObjectsCount();
+        var lastActiveRow = evDataService.getLastActivatedRow();
 
-        var activeObject = evDataService.getActiveObject();
+        console.log('lastActiveRow', lastActiveRow);
 
-        // console.log('clickData', clickData);
+        if (!lastActiveRow) {
 
-        if (clickData.isCtrlPressed) {
+            if (clickData.___type === 'object') {
 
-            obj.___is_activated = true;
+                var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
 
-            count = count + 1;
-
-            evDataService.setActiveObjectsCount(count);
-
-            evDataService.setActiveObject(obj);
-            evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-        } else {
-
-            if (clickData.isShiftPressed) {
-
-                var list = evDataService.getFlatList();
-
-                var activeObjectIndex;
-                var currentObjectIndex;
-
-                var from, to;
-
-                list.forEach(function (item, index) {
-
-                    if (item.___id === activeObject.___id) {
-                        activeObjectIndex = index
-                    }
-
-                    if (item.___id === clickData.___id) {
-                        currentObjectIndex = index
-                    }
-
-
-                });
-
-
-                if (currentObjectIndex > activeObjectIndex) {
-
-                    from = activeObjectIndex;
-                    to = currentObjectIndex;
-
-                } else {
-
-                    from = currentObjectIndex;
-                    to = activeObjectIndex;
-
-                }
-
-                // console.log('from', from);
-                // console.log('to', to);
-
-                var activated_ids = [];
-
-                list.forEach(function (item, index) {
-
-                    if (index >= from && index <= to) {
-
-                        activated_ids.push(item.___id);
-
-                    }
-
-                });
-
-                console.log('activated_ids', activated_ids);
-
-                var objects = evDataService.getObjects();
-
-                objects.forEach(function (item) {
-                    item.___is_activated = false;
-                    evDataService.setObject(item);
-                });
-
-                objects.forEach(function (object) {
-
-                    if (activated_ids.indexOf(object.___id) !== -1) {
-
-                        object.___is_activated = true;
-
-                        evDataService.setObject(obj);
-
-                    }
-
-                });
-
-                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-                // console.log('shift presseed', clickData);
-                // console.log('shift list', list);
-                // console.log('activeObjectIndex', activeObjectIndex);
-                // console.log('currentObjectIndex', currentObjectIndex);
-
+                obj.___is_activated = !obj.___is_activated;
+                evDataService.setObject(obj);
+                evDataService.setLastActivatedRow(obj);
 
             } else {
 
-                var objects = evDataService.getObjects();
+                var parent = Object.assign({}, evDataService.getData(clickData.___parentId));
+                var subtotal_type;
 
-                objects.forEach(function (item) {
-                    item.___is_activated = false;
-                    evDataService.setObject(item);
+                if (clickData.___subtotal_subtype) {
+                    subtotal_type = clickData.___subtotal_subtype
+                } else {
+                    subtotal_type = clickData.___subtotal_type
+                }
+
+                if (subtotal_type === 'area') {
+                    parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
+                }
+
+                if (subtotal_type === 'line') {
+                    parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
+                }
+
+                evDataService.setLastActivatedRow({
+                    ___id: clickData.___id,
+                    ___parentId: clickData.___parentId
                 });
 
-                if (!activeObject || activeObject && activeObject.___id !== obj.___id || count > 1) {
-                    obj.___is_activated = true;
-                }
+                evDataService.setData(parent);
 
-
-                // console.log('handleObjectActive.obj', obj);
-
-                evDataService.setObject(obj);
-
-                if (obj.___is_activated) {
-                    evDataService.setActiveObject(obj);
-                    evDataService.setActiveObjectsCount(1);
-                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-                } else {
-
-                    evDataService.setActiveObjectsCount(0);
-                    evDataService.setActiveObject(null);
-                }
             }
 
+        } else {
+
+            var list = evDataService.getFlatList();
+
+            var activeObjectIndex;
+            var currentObjectIndex;
+
+            var from, to;
+
+            list.forEach(function (item, index) {
+
+                if (item.___id === lastActiveRow.___id) {
+                    activeObjectIndex = index
+                }
+
+                if (item.___id === clickData.___id) {
+                    currentObjectIndex = index
+                }
+
+
+            });
+
+
+            if (currentObjectIndex > activeObjectIndex) {
+
+                from = activeObjectIndex;
+                to = currentObjectIndex;
+
+            } else {
+
+                from = currentObjectIndex;
+                to = activeObjectIndex;
+
+            }
+
+            var activated_ids = [];
+
+            var activated_area_subtotals = []; // parentIds
+            var activated_line_subtotals = []; // parentIds
+
+            list.forEach(function (item, index) {
+
+                if (index >= from && index <= to) {
+
+                    activated_ids.push(item.___id);
+
+                    if (item.___type === 'subtotal') {
+
+                        // console.log('item', item);
+                        // console.log('index', index);
+
+                        if (item.___subtotal_subtype) {
+
+                            if (item.___subtotal_subtype === 'area') {
+                                activated_area_subtotals.push(item.___parentId)
+                            }
+
+                            if (item.___subtotal_subtype === 'line') {
+                                activated_line_subtotals.push(item.___parentId)
+                            }
+
+                        } else {
+
+                            if (item.___subtotal_type === 'area') {
+                                activated_area_subtotals.push(item.___parentId)
+                            }
+
+                            if (item.___subtotal_type === 'line') {
+                                activated_line_subtotals.push(item.___parentId)
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+            // console.log('activated_ids', activated_ids);
+            // console.log('activated_area_subtotals', activated_area_subtotals);
+            // console.log('activated_line_subtotals', activated_line_subtotals);
+
+            // var objects = evDataService.getObjects();
+
+            clearSubtotalActiveState(evDataService, evEventService);
+            clearObjectActiveState(evDataService, evEventService);
+
+            list.forEach(function (object) {
+
+                if (activated_ids.indexOf(object.___id) !== -1) {
+
+                    parent = evDataService.getData(object.___parentId);
+
+                    if (activated_area_subtotals.indexOf(parent.___id) !== -1) {
+                        parent.___is_area_subtotal_activated = true;
+                    }
+
+                    if (activated_line_subtotals.indexOf(parent.___id) !== -1) {
+                        parent.___is_line_subtotal_activated = true;
+                    }
+
+                    evDataService.setData(parent);
+
+                    object.___is_activated = true;
+                    evDataService.setObject(object);
+
+                }
+
+            });
+
         }
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 
     var handleObjectClick = function (clickData, evDataService, evEventService) {
 
-        handleObjectActive(clickData, evDataService, evEventService);
+        // console.log('handleObjectClick.clickData', clickData);
+
+        var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
+        var count = evDataService.getActiveObjectsCount();
+
+
+        if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
+
+            obj.___is_activated = !obj.___is_activated;
+            evDataService.setObject(obj);
+
+            count = count + 1;
+
+            evDataService.setLastActivatedRow(obj);
+            evDataService.setActiveObjectsCount(count);
+
+            // evDataService.setActiveObject(obj);
+            // evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+        }
+
+        if (clickData.isShiftPressed) {
+
+            handleShiftSelection(evDataService, evEventService, clickData);
+
+        }
+
+        if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
+
+            clearSubtotalActiveState(evDataService, evEventService);
+            clearObjectActiveState(evDataService, evEventService);
+
+            obj.___is_activated = !obj.___is_activated;
+
+            evDataService.setObject(obj);
+
+            if (obj.___is_activated) {
+                evDataService.setActiveObject(obj);
+                evDataService.setLastActivatedRow(obj);
+                evDataService.setActiveObjectsCount(1);
+                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+            } else {
+
+                evDataService.setActiveObjectsCount(0);
+                evDataService.setActiveObject(null);
+                evDataService.setLastActivatedRow(null);
+            }
+
+        }
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+    };
+
+    var clearSubtotalActiveState = function (evDataService, evEventService) {
+
+        var items = evDataService.getDataAsList();
+
+        items.forEach(function (item) {
+            item.___is_area_subtotal_activated = false;
+            item.___is_line_subtotal_activated = false;
+            evDataService.setData(item);
+        })
+
+    };
+
+    var clearObjectActiveState = function (evDataService, evEventService) {
+
+        var objects = evDataService.getObjects();
+
+        objects.forEach(function (item) {
+            item.___is_activated = false;
+            evDataService.setObject(item);
+        });
+
+    };
+
+    var handleSubtotalClick = function (clickData, evDataService, evEventService) {
+
+        var parent = Object.assign({}, evDataService.getData(clickData.___parentId));
+        var subtotal_type;
+
+        if (clickData.isShiftPressed) {
+            handleShiftSelection(evDataService, evEventService, clickData);
+        }
+
+        if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
+
+            if (clickData.___subtotal_subtype) {
+                subtotal_type = clickData.___subtotal_subtype
+            } else {
+                subtotal_type = clickData.___subtotal_type
+            }
+
+            if (subtotal_type === 'area') {
+                parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
+            }
+
+            if (subtotal_type === 'line') {
+                parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
+            }
+
+            evDataService.setLastActivatedRow({
+                ___id: clickData.___id,
+                ___parentId: clickData.___parentId
+            });
+
+            if (!parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
+                evDataService.setLastActivatedRow(null);
+            }
+
+            evDataService.setData(parent);
+
+        }
+
+        if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
+
+            clearSubtotalActiveState(evDataService, evEventService);
+            clearObjectActiveState(evDataService, evEventService);
+
+            if (clickData.___subtotal_subtype) {
+                subtotal_type = clickData.___subtotal_subtype
+            } else {
+                subtotal_type = clickData.___subtotal_type
+            }
+
+            if (subtotal_type === 'area') {
+                parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
+            }
+
+            if (subtotal_type === 'line') {
+                parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
+            }
+
+            evDataService.setLastActivatedRow({
+                ___id: clickData.___id,
+                ___parentId: clickData.___parentId
+            });
+
+            if (!parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
+                evDataService.setLastActivatedRow(null);
+            }
+
+            evDataService.setData(parent);
+
+        }
 
         evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
@@ -418,27 +503,19 @@
 
             }
 
+
+            if (clickData.___type === 'subtotal') {
+
+                handleSubtotalClick(clickData, evDataService, evEventService);
+
+            }
+
+
         })
 
     };
 
     var calculatePaddingTop = function (evDataService) {
-
-        // var offset = evDataService.getVirtualScrollOffset();
-        // var rowHeight = evDataService.getRowHeight();
-        // var reserveTop = evDataService.getVirtualScrollReserveTop();
-        //
-        // var reservePadding = 0;
-        //
-        // if (offset > reserveTop) {
-        //     reservePadding = reserveTop * rowHeight;
-        // }
-        //
-        // // console.log('calculatePaddingTop.reservePadding', reservePadding);
-        //
-        // var fullPaddingTop = Math.floor(offset * rowHeight);
-        //
-        // return fullPaddingTop - reservePadding;
 
         return evDataService.getVirtualScrollOffsetPx();
 

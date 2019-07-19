@@ -360,11 +360,13 @@
 
             if (data.data[obj.___parentId] && data.data[obj.___parentId].results && data.data[obj.___parentId].results.length) {
 
-                data.data[obj.___parentId].results.forEach(function (item, index) {
+                data.data[obj.___parentId].results = data.data[obj.___parentId].results.map(function (item, index) {
 
                     if (item.___id === obj.___id) {
                         item = obj;
                     }
+
+                    return item
 
                 })
 
@@ -591,6 +593,18 @@
         }
 
 
+        // Activated Row just for selection purpose
+        // Active Object for Split panel,
+
+        function setLastActivatedRow(obj) {
+            data.lastActivatedRow = obj;
+        }
+
+        function getLastActivatedRow() {
+            return data.lastActivatedRow;
+        }
+
+
         function setActiveObject(obj) {
             data.activeObject = obj
         }
@@ -766,7 +780,8 @@
                     delete listLayout.data.reportOptions.item_currencies;
                     delete listLayout.data.reportOptions.item_accounts;
 
-                };
+                }
+                ;
 
                 data.activeLayoutConfiguration = listLayout;
 
@@ -1064,7 +1079,10 @@
             getSplitPanelActiveLayout: getSplitPanelActiveLayout,
 
             setActiveObjectsCount: setActiveObjectsCount,
-            getActiveObjectsCount: getActiveObjectsCount
+            getActiveObjectsCount: getActiveObjectsCount,
+
+            setLastActivatedRow: setLastActivatedRow,
+            getLastActivatedRow: getLastActivatedRow
 
         }
     }
