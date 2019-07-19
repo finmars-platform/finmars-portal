@@ -19,6 +19,7 @@
         promises.push(attributeTypeService.getList('responsible'));
         promises.push(attributeTypeService.getList('counterparty'));
         promises.push(attributeTypeService.getList('complex-transaction'));
+        promises.push(attributeTypeService.getList('transaction-type'));
 
         return Promise.all(promises).then(function (data) {
 
@@ -29,6 +30,8 @@
             reportAttrs['counterparties.responsible'] = data[4].results;
             reportAttrs['counterparties.counterparty'] = data[5].results;
             reportAttrs['transactions.complextransaction'] = data[6].results;
+            reportAttrs['transactions.transactiontype'] = data[7].results;
+            console.log("ttype dynamicAttributesForReports", reportAttrs);
 
             return reportAttrs;
 

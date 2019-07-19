@@ -115,6 +115,35 @@
 
                 });
 
+                vm.transactionTypeAttrs = [];
+
+                vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr) {
+
+                    if (entityAttr.key.indexOf('complex_transaction.transaction_type.') !== -1) {
+
+                        switch (entityAttr.key) {
+                            case 'complex_transaction.transaction_type.name':
+                                return true;
+                                break;
+                            default:
+
+                                if (entityAttr.key.indexOf('complex_transaction.transaction_type.user_text_') === -1 &&
+                                    entityAttr.key.indexOf('complex_transaction.transaction_type.user_number_') === -1 &&
+                                    entityAttr.key.indexOf('complex_transaction.transaction_type.user_date_') === -1) {
+
+                                    vm.transactionTypeAttrs.push(entityAttr);
+
+                                }
+
+                                return false;
+                        }
+
+                    } else {
+                        return true;
+                    }
+
+                });
+
                 uiService.getInstrumentFieldList().then(function (instrumentData) {
 
                     instrumentData.results.forEach(function (field) {
@@ -161,23 +190,6 @@
 
                     });
 
-
-                    vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr) {
-
-                        if (entityAttr.key.indexOf('complex_transaction.transaction_type.') !== -1) {
-
-                            switch (entityAttr.key) {
-                                case 'complex_transaction.transaction_type.name':
-                                    return true;
-                                    break;
-                            }
-
-                        } else {
-                           return true;
-                        }
-
-                    });
-
                     customFieldService.getList(vm.entityType).then(function (data) {
 
                         vm.custom = data.results;
@@ -194,6 +206,7 @@
 
                             vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
                             vm.complexTransactionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['transactions.complextransaction'], 'transactions.complextransaction', 'complex_transaction', 'Complex Transaction');
+                            vm.transactionTypeDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['transactions.transactiontype'], 'transactions.transactiontype', 'transaction_type', 'Transaction Type');
                             vm.responsibleDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.responsible'], 'counterparties.responsible', 'responsible', 'Responsible');
                             vm.counterpartyDynmicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.counterparty'], 'counterparties.counterparty', 'counterparty', 'Counterparty');
 
@@ -210,6 +223,7 @@
 
                             attrsList = attrsList.concat(vm.transactionAttrs);
                             attrsList = attrsList.concat(vm.complexTransactionAttrs);
+                            attrsList = attrsList.concat(vm.transactionTypeAttrs);
                             attrsList = attrsList.concat(vm.portfolioAttrs);
                             attrsList = attrsList.concat(vm.instrumentAttrs);
                             attrsList = attrsList.concat(vm.responsibleAttrs);
@@ -217,6 +231,7 @@
 
                             attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
                             attrsList = attrsList.concat(vm.complexTransactionDynamicAttrs);
+                            attrsList = attrsList.concat(vm.transactionTypeDynamicAttrs);
                             attrsList = attrsList.concat(vm.responsibleDynamicAttrs);
                             attrsList = attrsList.concat(vm.counterpartyDynmicAttrs);
 
@@ -296,7 +311,9 @@
 
             syncTypeAttrs(vm.transactionAttrs);
             syncTypeAttrs(vm.complexTransactionAttrs);
+            syncTypeAttrs(vm.transactionTypeAttrs);
             syncTypeAttrs(vm.complexTransactionDynamicAttrs);
+            syncTypeAttrs(vm.transactionTypeDynamicAttrs);
 
             syncTypeAttrs(vm.portfolioAttrs);
             syncTypeAttrs(vm.portfolioDynamicAttrs);
