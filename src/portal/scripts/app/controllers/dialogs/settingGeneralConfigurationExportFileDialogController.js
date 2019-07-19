@@ -421,7 +421,7 @@
 
                                 });
 
-                                if(active) {
+                                if (active) {
                                     childItem.active = true;
                                     entityItem.someChildsActive = true;
                                 }
@@ -641,6 +641,14 @@
                     return "Instrument Dynamic Attributes";
                 case 'obj_attrs.instrumenttypeattributetype':
                     return "Instrument Type Dynamic Attributes";
+                case 'obj_attrs.transactiontypeattributetype':
+                    return "Transaction Type Dynamic Attributes";
+                case 'obj_attrs.strategy1attributetype':
+                    return "Strategy 1 Dynamic Attributes";
+                case 'obj_attrs.strategy2attributetype':
+                    return "Strategy 2 Dynamic Attributes";
+                case 'obj_attrs.strategy3attributetype':
+                    return "Strategy 3 Dynamic Attributes";
                 case 'reports.balancereportcustomfield':
                     return "Balance Report Custom Fields";
                 case 'reports.plreportcustomfield':

@@ -1712,6 +1712,18 @@
                         case 'obj_attrs.instrumenttypeattributetype':
                             resolve(createAttributeTypeIfNotExists('instruments.instrumenttype', item, errors));
                             break;
+                        case 'obj_attrs.transactiontypeattributetype':
+                            resolve(createAttributeTypeIfNotExists('transactions.transactiontype', item, errors));
+                            break;
+                        case 'obj_attrs.strategy1attributetype':
+                            resolve(createAttributeTypeIfNotExists('strategies.strategy1', item, errors));
+                            break;
+                        case 'obj_attrs.strategy2attributetype':
+                            resolve(createAttributeTypeIfNotExists('strategies.strategy2', item, errors));
+                            break;
+                        case 'obj_attrs.strategy3attributetype':
+                            resolve(createAttributeTypeIfNotExists('strategies.strategy3', item, errors));
+                            break;
                         case 'reports.balancereportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 

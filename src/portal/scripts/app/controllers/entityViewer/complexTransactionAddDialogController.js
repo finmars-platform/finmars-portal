@@ -141,68 +141,6 @@
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
-        // DEPRECATED
-        vm.setContextData = function () {
-
-            if (vm.contextData) {
-
-                console.log('vm.userInputs', vm.userInputs);
-
-                console.log('vm.contextData', vm.contextData);
-
-                vm.userInputs.forEach(function (input) {
-
-                    vm.transactionType.inputs.forEach(function (ttypeInput) {
-
-                        if (input.name === ttypeInput.name) {
-
-                            input.is_fill_from_context = ttypeInput.is_fill_from_context;
-
-                        }
-
-                    })
-
-                });
-
-                vm.userInputs.forEach(function (input) {
-
-                    if (input.is_fill_from_context) {
-
-                        if (input.content_type) {
-
-                            var keys = Object.keys(vm.contextData);
-
-                            keys.forEach(function (key) {
-
-                                if (typeof vm.contextData[key] === 'object') {
-
-                                    if (vm.contextData[key].hasOwnProperty('content_type')) {
-
-                                        if (input.content_type === vm.contextData[key].content_type) {
-
-                                            var original_key = key.split('_object')[0];
-                                            vm.entity[original_key] = vm.contextData[original_key];
-                                            vm.entity[input.name + '_object'] = vm.contextData[key]
-
-                                        }
-
-                                    }
-
-                                }
-
-
-                            })
-
-                        }
-
-                    }
-
-                })
-
-            }
-
-        };
-
         vm.formIsValid = true;
 
         vm.loadPermissions = function () {
