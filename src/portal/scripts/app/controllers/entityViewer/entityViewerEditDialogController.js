@@ -184,9 +184,20 @@
                     entityType: vm.entityType,
                     entity: entity
                 }
+            }).then(function (res) {
+
+                if (res && res.res === 'agree') {
+
+                    console.log('res', res);
+
+
+                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                }
+
             });
 
-            $mdDialog.cancel();
+            $mdDialog.hide();
 
         };
 
@@ -484,7 +495,7 @@
                     if (data.status === 400) {
                         vm.handleErrors($event, data);
                     } else {
-                        $mdDialog.hide({res: 'agree'});
+                        $mdDialog.hide({res: 'agree', data: data});
                     }
 
                 });

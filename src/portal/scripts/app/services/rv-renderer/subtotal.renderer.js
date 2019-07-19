@@ -206,7 +206,7 @@
         var grandTotalIsActive = rootGroupOptions.subtotal_type;
 
         if (obj.___level === 0 && grandTotalIsActive && columnNumber === 1) {
-            result.html_result ='<span class="text-bold">Grand Total</span>'
+            result.html_result = '<span class="text-bold">Grand Total</span>'
         }
 
         return result;
@@ -296,28 +296,54 @@
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
 
+        var parent = evDataService.getData(obj.___parentId);
+
         var classList = ['g-row'];
 
         if (obj.___subtotal_type === 'proxyline') {
             classList.push('proxyline')
         }
 
+        var is_activated = false;
+        var subtotal_type;
+
+        if (obj.___subtotal_subtype) {
+            subtotal_type = obj.___subtotal_subtype
+        } else {
+            subtotal_type = obj.___subtotal_type
+        }
+
+        if(subtotal_type === 'line') {
+            is_activated = parent.___is_line_subtotal_activated
+        }
+
+        if(subtotal_type === 'area') {
+            is_activated = parent.___is_area_subtotal_activated
+        }
+
         var rowSelection;
 
-        if (obj.___is_activated) {
+        if (is_activated) {
             classList.push('selected');
             rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
         } else {
             rowSelection = '<div class="g-row-selection"></div>';
         }
 
-        if (obj.___is_activated) {
+        if (is_activated) {
             classList.push('activated');
         }
 
         var classes = classList.join(' ');
 
-        var result = '<div class="' + classes + '" data-type="subtotal" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var result;
+
+        if (obj.___subtotal_subtype) {
+            result = '<div class="' + classes + '" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        } else {
+
+            result = '<div class="' + classes + '" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        }
         var cell;
 
         result = result + rowSelection;

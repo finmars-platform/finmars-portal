@@ -33,7 +33,7 @@
             entityResolverService.deleteByKey(vm.entityType, vm.entity.id).then(function (data) {
                 console.log('deleted!', data);
 
-                $mdDialog.hide({status: 'agree'});
+                $mdDialog.hide({status: 'agree', data: {id: vm.entity.id}});
             });
         };
 

@@ -180,7 +180,7 @@
                 }
             });
 
-            $mdDialog.cancel();
+            $mdDialog.hide();
 
         };
 
@@ -672,7 +672,7 @@
                         vm.handleComplexTransactionErrors($event, data);
 
                     } else {
-                        $mdDialog.hide({res: 'agree'});
+                        $mdDialog.hide({res: 'agree', data: data});
                     }
 
                 });
@@ -787,7 +787,6 @@
 
             vm.getItem();
             vm.getAttrs();
-
 
 
         };
