@@ -6,12 +6,15 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content  >
-        <div data-ng-if="vm.readyStatus.content" class="dialog-loader" style="padding: 24px">
-            <div data-ng-repeat="group in vm.groups" style="margin: 6px">
-                <div data-ng-if="group.content.length > 0">
+    <md-dialog-content>
+
+        <div data-ng-if="vm.readyStatus.content">
+            <div data-ng-repeat="group in vm.groups">
+                <div data-ng-if="group.content.length > 0" class="bookmarks-layouts-group">
                     <h3 data-ng-bind="group.name"></h3>
-                    <div data-ng-repeat="item in group.content" style="margin: 6px">
+                    <div data-ng-repeat="item in group.content"
+                         class="bookmarks-layout-row"
+                         ng-class="{ 'selected-bookmark-layout': vm.isSelectedLayout(item.id)}">
                         <div data-ng-click="vm.selectLayout(item)">
                             <span data-ng-bind="item.name"></span>
                         </div>
@@ -19,7 +22,8 @@
                 </div>
             </div>
         </div>
-        <div data-ng-if="!vm.readyStatus.content" class="dialog-loader">
+
+        <div data-ng-if="!vm.readyStatus.content" class="dialog-loader overflow-hidden">
             <div layout="row" layout-sm="column" layout-align="space-around">
                 <md-progress-circular md-mode="indeterminate"></md-progress-circular>
             </div>

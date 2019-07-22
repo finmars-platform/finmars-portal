@@ -154,7 +154,7 @@
 
         var findDynamicAttributesInLayouts = function () {
 
-            var dynamicAttrsGroupIndex = 4;
+            var dynamicAttrsGroupIndex = 5;
 
             var layoutsList = [];
 
@@ -295,7 +295,8 @@
                                 if (attributeIsUsed) {
                                     entityItem.attributeIsUsed__ = true;
                                     usagesCount = usagesCount + 1;
-                                    attr.countOfUsages__ = usagesCount - 1;
+                                    attr.countOfUsages__ = usagesCount - 1; // count starts from 0
+
                                 }
 
 

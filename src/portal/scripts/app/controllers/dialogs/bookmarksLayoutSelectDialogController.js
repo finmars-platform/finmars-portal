@@ -77,6 +77,15 @@
             vm.selectedLayoutName = item.name;
         };
 
+        vm.isSelectedLayout = function (layoutId) {
+
+            if (vm.selectedLayoutId === layoutId) {
+                return true;
+            }
+
+            return false;
+        };
+
         vm.agree = function () {
             $mdDialog.hide({
                 status: 'agree',
