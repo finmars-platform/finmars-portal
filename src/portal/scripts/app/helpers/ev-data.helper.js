@@ -483,7 +483,8 @@
                     obj.results[pageAsIndex * step + i] = {
                         id: '___placeholder_object_' + (pageAsIndex * step + i),
                         ___type: 'placeholder_object',
-                        ___parentId: obj.___id
+                        ___parentId: obj.___id,
+                        ___index: pageAsIndex * step + i
                     };
 
                     obj.results[pageAsIndex * step + i].___id = evRvCommonHelper.getId(obj.results[pageAsIndex * step + i]);
@@ -548,7 +549,8 @@
                     obj.results[pageAsIndex * step + i] = {
                         id: '___placeholder_group_' + (pageAsIndex * step + i),
                         ___type: 'placeholder_group',
-                        ___parentId: obj.___id
+                        ___parentId: obj.___id,
+                        ___index: pageAsIndex * step + i
                     };
 
                     obj.results[pageAsIndex * step + i].___id = evRvCommonHelper.getId(obj.results[pageAsIndex * step + i]);
