@@ -41,7 +41,7 @@
             if (!vm.entityUpdating) {
                 vm.entityUpdating = true;
 
-                uiService.getListLayout(entityType).then(function (data) {
+                /*uiService.getListLayout(entityType).then(function (data) {
                     var layouts = data.results;
 
                     if (layouts && layouts.length) {
@@ -81,6 +81,46 @@
 
                     if (layoutExist) {
                         updateDefaultLayout(layouts);
+                    } else {
+                        $state.go('app.not-found');
+                        vm.entityUpdating = false;
+                    }
+
+                });*/
+
+                uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
+                    var layout = layoutData;
+
+                    if (layout && layout.hasOwnProperty("id")) {
+                        layoutExist = true;
+                    }
+
+                    var openActiveLayout = function () {
+
+                        layout.is_active = true;
+
+                        uiService.updateListLayout(layout.id, layout).then(function () {
+
+                            if ($state.current.name === stateToGo) { // If Bookmark change layout for current state, update it
+
+                                $state.reload(stateToGo);
+                                // middlewareService.setData('entityActiveLayoutSwitched', layout.name); // Give signal to update active layout name in the toolbar
+                                $scope.$apply();
+
+                            } else {
+                                $state.go(stateToGo);
+                                // middlewareService.setData('entityActiveLayoutSwitched', layout.name); // Give signal to update active layout name in the toolbar
+                                $scope.$apply();
+                            }
+
+                            vm.entityUpdating = false;
+
+                        });
+
+                    };
+
+                    if (layoutExist) {
+                        openActiveLayout();
                     } else {
                         $state.go('app.not-found');
                         vm.entityUpdating = false;

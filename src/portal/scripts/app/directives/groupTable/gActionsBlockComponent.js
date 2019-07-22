@@ -432,7 +432,7 @@
 
                 var didLayoutChanged = function () {
 
-                    setInterval(function () {
+                    /*setInterval(function () {
 
                         var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
                         var layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
@@ -446,7 +446,7 @@
 
                         }
 
-                    }, 1000)
+                    }, 1000)*/
 
                 };
 

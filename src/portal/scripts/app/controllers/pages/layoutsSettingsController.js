@@ -438,7 +438,6 @@
 
             uiService.updateListLayout(layout.id, layout).then(function () {
                 var stateToGo = getLayoutDataByContentType(layout.content_type, 'state');
-                middlewareService.setData('entityActiveLayoutSwitched', layout.name); // Give signal to update active layout name in the toolbar
                 $state.go(stateToGo);
             });
 

@@ -29,6 +29,7 @@
     var uiService = require('../../services/uiService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
+    var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
 
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
 
@@ -39,6 +40,8 @@
 
         vm.entity = {};
         vm.complexTransactionOptions = {};
+
+        var originalEntityInputs = null;
 
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false};
 
@@ -233,6 +236,11 @@
             return new Promise(function (res, rej) {
 
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+                    console.log("ttype inputs", JSON.parse(JSON.stringify(data)));
+
+                    if (data.inputs) {
+                        originalEntityInputs = JSON.parse(JSON.stringify(data.inputs));
+                    }
 
                     vm.entity = data;
 
@@ -614,36 +622,76 @@
 
         vm.editLayout = function (ev) {
 
-            $mdDialog.show({
-                controller: 'EntityDataConstructorDialogController as vm',
-                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
-                targetEvent: ev,
-                preserveScope: true,
-                multiple: true,
-                locals: {
-                    data: {
-                        entityType: 'complex-transaction',
-                        fromEntityType: vm.entityType,
-                        instanceId: vm.entityId
+            var entityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
+
+            if (objectComparisonHelper.comparePropertiesOfObjects(originalEntityInputs, entityInputs)) {
+
+                $mdDialog.show({
+                    controller: 'EntityDataConstructorDialogController as vm',
+                    templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                    targetEvent: ev,
+                    preserveScope: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            entityType: 'complex-transaction',
+                            fromEntityType: vm.entityType,
+                            instanceId: vm.entityId
+                        }
                     }
-                }
-            }).then(function (res) {
+                }).then(function (res) {
 
-                if (res.status === "agree") {
+                    if (res.status === "agree") {
 
-                    vm.readyStatus.attrs = false;
-                    vm.readyStatus.entity = false;
-                    vm.readyStatus.layout = false;
+                        vm.readyStatus.attrs = false;
+                        vm.readyStatus.entity = false;
+                        vm.readyStatus.layout = false;
 
-                    vm.getItem();
-                    vm.getAttrs();
+                        vm.getItem();
+                        vm.getAttrs();
 
-                    vm.layoutAttrs = layoutService.getLayoutAttrs();
-                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                        vm.layoutAttrs = layoutService.getLayoutAttrs();
+                        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
-                }
+                    }
 
-            });
+                });
+
+            } else {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false,
+                    multiple: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: "You have made changes in tab INPUTS. You need to save those changes before editing Transaction Form",
+                            actionsButtons: [{
+                                name: "Save Transaction Type",
+                                response: {status: 'agree'}
+                            },
+                            {
+                                name: "Close",
+                                response: false
+                            }]
+                        }
+                    }
+
+                }).then(function (res) {
+
+                    if (res.status === 'agree') {
+
+                        vm.save();
+
+                    };
+
+                });
+
+            };
+
             /*$state.go('app.data-constructor', {entityType: vm.entityType});
             $mdDialog.hide();*/
         };
@@ -1308,7 +1356,7 @@
                     result.push(input);
                 }
             });
-            // console.log("ttype input find input function", entity, vm.contentTypes, vm.entity.inputs);
+
             return result;
 
         };
@@ -1414,7 +1462,6 @@
 
             delete actionCopy.id;
             delete actionCopy.order;
-            console.log("action copy", actionCopy, actionCopy.$$hashKey, actionCopy['"$$hashKey"']);
 
             var actionName = actionCopy.action_notes + ' (Copy)';
             var actionNameOccupied = true;

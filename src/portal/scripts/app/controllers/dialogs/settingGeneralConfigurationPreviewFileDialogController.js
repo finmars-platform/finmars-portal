@@ -108,7 +108,7 @@
 
         var findDynamicAttributesInLayouts = function () {
 
-            var dynamicAttrsGroupIndex = 4;
+            var dynamicAttrsGroupIndex = 5;
 
             var layoutsList = [];
 

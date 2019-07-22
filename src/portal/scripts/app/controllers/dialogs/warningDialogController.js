@@ -24,12 +24,12 @@
         }
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function (responseData) {
 
-            if (responseData) {
+            if (responseData !== undefined) {
                 $mdDialog.hide(responseData);
             } else {
                 $mdDialog.hide({status: 'agree'});

@@ -227,11 +227,9 @@
 
                 var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams);
 
-                uiService.getDefaultListLayout(entityType).then(function (data) {
-
-                    var activeLayoutRes = data.results;
-                    if (activeLayoutRes && activeLayoutRes.length) {
-                        newLayoutName = activeLayoutRes[0].name;
+                var setLayoutName = function (layoutData) {
+                    if (layoutData && layoutData.length) {
+                        newLayoutName = layoutData[0].name;
                     } else {
                         newLayoutName = '';
                     }
@@ -239,6 +237,28 @@
                     vm.activeLayoutName = newLayoutName;
 
                     $scope.$apply();
+                };
+
+                uiService.getActiveListLayout(entityType).then(function (activeLayoutData) {
+
+                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+
+                        var activeLayoutRes = activeLayoutData.results;
+
+                        setLayoutName(activeLayoutRes);
+
+                    } else {
+
+                        uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+
+                            var defaultLayoutRes = defaultLayoutData.results;
+
+                            setLayoutName(defaultLayoutRes);
+
+                        });
+
+                    }
+
                 });
 
             }
