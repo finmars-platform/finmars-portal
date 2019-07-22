@@ -40,7 +40,7 @@
 
         if (item.___type === 'object' || item.___type === 'placeholder_object') {
 
-            pattern = [item.___parentId, stringHelper.toHash(item.id), item.id].join('');
+            pattern = [item.___parentId, stringHelper.toHash(item.id), item.id, item.___index].join('');
 
         }
 
