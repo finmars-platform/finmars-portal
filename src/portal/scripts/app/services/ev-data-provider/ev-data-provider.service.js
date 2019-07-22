@@ -109,7 +109,7 @@
             return item.___type !== 'control'
         });
 
-        obj.results = obj.results.map(function (item) {
+        obj.results = obj.results.map(function (item, index) {
 
             if (item.___type !== 'placeholder_object') {
 
@@ -122,6 +122,7 @@
                 item.___type = 'object';
                 item.___id = evRvCommonHelper.getId(item);
                 item.___level = obj.___level + 1;
+                item.___index = index
 
             }
 
@@ -227,7 +228,7 @@
             return item.___type !== 'control'
         });
 
-        obj.results = obj.results.map(function (item) {
+        obj.results = obj.results.map(function (item, index) {
 
             if (item.___type !== 'placeholder_group') {
 
@@ -248,6 +249,7 @@
                 }
 
                 item.___id = evRvCommonHelper.getId(item);
+                item.___index = index
 
             }
 
