@@ -198,7 +198,7 @@
                              data-ng-show="vm.accountDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountDynamicAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountDynamicAttrs | filter: {name: accountSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.accountDynamicAttrs)">
