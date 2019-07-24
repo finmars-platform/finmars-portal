@@ -60,7 +60,7 @@
                     scope.datepickerFromDisplayOptions = {
                         position: 'left',
                         labelName: 'Date from (excl)'
-                    }
+                    };
 
                     scope.datepickerToDisplayOptions = {position: 'left'};
 
