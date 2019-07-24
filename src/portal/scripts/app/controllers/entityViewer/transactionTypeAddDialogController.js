@@ -254,10 +254,6 @@
 
         vm.updateEntityBeforeSave = function () {
 
-            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
-                vm.entity.attributes = [];
-            }
-
             if (vm.entity.attributes) {
                 var i, a, c;
                 var keys = Object.keys(vm.entity), attrExist;

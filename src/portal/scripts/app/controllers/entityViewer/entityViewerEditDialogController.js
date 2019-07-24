@@ -190,9 +190,6 @@
 
                     console.log('res', res);
 
-
-                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
                 }
 
             });
@@ -200,7 +197,6 @@
             $mdDialog.hide();
 
         };
-
 
         vm.getFormLayout = function () {
 
@@ -381,6 +377,8 @@
             if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
                 vm.entity.attributes = [];
             }
+
+
 
             if (vm.entity.attributes) {
                 var i, a, c;
