@@ -2,7 +2,7 @@
            style="width: 40%;" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Complex import validation errors</h2>
+            <h2>Transaction Type Validation Errors</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -10,17 +10,28 @@
         <md-content>
             <md-card>
                 <md-card-content>
-                    <h3>Please see below the list of records we failed to import</h3>
+                    <h3>Please see below the list of errors</h3>
 
                     <table>
                         <thead>
                         <tr>
-                            <th>Action name</th>
+                            <th>Location (Tab or Action Name)</th>
                             <th>Field name</th>
                             <th>Message</th>
                         </tr>
                         </thead>
                         <tbody>
+
+                        <tr data-ng-repeat="item in vm.entityErrors track by $index">
+                            <td>{{item.action_notes}}</td>
+                            <td>
+                                {{item.name}}
+                            </td>
+                            <td>
+                                Value must be not null.
+                            </td>
+                        </tr>
+
                         <tr data-ng-repeat="item in vm.actionErrors track by $index">
                             <td>{{item.action_notes}}</td>
                             <td>
@@ -30,6 +41,8 @@
                                 Value must be not null.
                             </td>
                         </tr>
+
+
                         </tbody>
 
                     </table>

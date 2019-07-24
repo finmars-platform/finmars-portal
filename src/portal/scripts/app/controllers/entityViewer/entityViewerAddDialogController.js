@@ -207,10 +207,14 @@
 
         vm.getAttributeTypes = function () {
             attributeTypeService.getList(vm.entityType).then(function (data) {
+
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
-                vm.loadPermissions();
+                vm.readyStatus.permissions = true;
+
+                $scope.$apply();
+                // vm.loadPermissions();
             });
         };
 
@@ -408,7 +412,7 @@
 
             if (vm.entity.$_isValid) {
 
-                var resultEntity = entityEditorHelper.checkForNulls(vm.entity);
+                var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
                 console.log('resultEntity', resultEntity);
 

@@ -619,7 +619,7 @@
 
             if (vm.entity.$_isValid) {
 
-                var result = entityEditorHelper.checkForNulls(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity);
 
                 result.values = {};
 
@@ -689,7 +689,7 @@
 
             if (vm.entity.$_isValid) {
 
-                var result = entityEditorHelper.checkForNulls(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity);
 
                 result.values = {};
 

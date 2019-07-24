@@ -10,6 +10,7 @@
         var vm = this;
 
         vm.actionErrors = data.actionErrors;
+        vm.entityErrors = data.entityErrors;
 
 
         vm.agree = function () {

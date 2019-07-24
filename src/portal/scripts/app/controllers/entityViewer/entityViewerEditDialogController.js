@@ -237,7 +237,9 @@
                         vm.entity.$_isValid = true;
                         vm.readyStatus.entity = true;
 
-                        vm.loadPermissions();
+                        vm.readyStatus.permissions = true;
+
+                        // vm.loadPermissions();
 
                         vm.getFormLayout();
 
@@ -466,7 +468,7 @@
 
                 if (vm.entity.$_isValid) {
 
-                    var result = entityEditorHelper.checkForNulls(vm.entity);
+                    var result = entityEditorHelper.removeNullFields(vm.entity);
 
                     entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
@@ -488,7 +490,7 @@
 
             if (vm.entity.$_isValid) {
 
-                var result = entityEditorHelper.checkForNulls(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity);
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
