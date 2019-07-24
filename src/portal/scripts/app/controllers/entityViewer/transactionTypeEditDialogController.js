@@ -315,6 +315,9 @@
         vm.getAttrs = function () {
             attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
+
+                console.log('vm.attrs', vm.attrs);
+
                 vm.readyStatus.attrs = true;
             });
         };
@@ -342,35 +345,30 @@
 
         vm.updateEntityBeforeSave = function () {
 
-            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
-                vm.entity.attributes = [];
-            }
+            console.log('here?', JSON.parse(JSON.stringify(vm.entity)))
 
             if (vm.entity.attributes) {
                 var i, a, c;
-                var keys = Object.keys(vm.entity), attrExist;
+                var keys = Object.keys(vm.entity);
+
                 for (i = 0; i < vm.attrs.length; i = i + 1) {
+
                     for (a = 0; a < keys.length; a = a + 1) {
+
                         if (vm.attrs[i].name === keys[a]) {
-                            attrExist = false;
+
                             for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
+
                                 if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
-                                    attrExist = true;
+
                                     vm.entity.attributes[c] = entityEditorHelper.updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
                                 }
-                            }
-                            if (!attrExist) {
-                                vm.entity.attributes.push(entityEditorHelper.appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
                             }
                         }
                     }
                 }
             }
 
-            if (vm.entity.attributes) {
-                vm.entity = entityEditorHelper.checkEntityAttrTypes(vm.entity, vm.entityAttrs);
-                vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
-            }
 
             if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) === -1) {
                 vm.entity["user_object_permissions"] = [];
@@ -600,6 +598,8 @@
 
             var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
             var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
+
+            console.log('vm.entity', vm.entity);
 
             console.log('actionsErrors', actionsErrors);
             console.log('entityErrors', entityErrors);

@@ -24,8 +24,6 @@
         vm.entityType = $stateParams.entityType;
         vm.fromEntityType = $stateParams.from;
         vm.isInstanceId = $stateParams.instanceId;
-        console.log('cancel button instanceId', vm.isInstanceId, $stateParams);
-        console.log('vm.entityType', vm.entityType);
 
         vm.getList = function () {
 
@@ -99,7 +97,9 @@
 
                     res.data.classifier.classifiers = res.data.classifier.children.map(setName);
 
-                    attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier).then(getList);
+                    attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier).then(function () {
+                        vm.getList();
+                    });
                 }
             });
         };
@@ -181,7 +181,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log("res", res.data);
-                    getList();
+                    vm.getList();
                 }
             });
         };
@@ -251,7 +251,7 @@
                                 }
                             })
                         } else {
-                            getList();
+                            vm.getList();
                         }
                     });
 
