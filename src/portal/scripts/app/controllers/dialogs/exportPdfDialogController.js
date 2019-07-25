@@ -66,7 +66,7 @@
 
         vm.fitLayoutOnAPage = function () {
             var pageType = vm.settings.layout;
-            var pageMargin = vm.settings.margin;
+            var pageMargins = vm.settings.margin;
             var scale = 1;
 
             var pageSize = null;
@@ -84,8 +84,7 @@
             });
             // console.log('fit layout columns', columns);
 
-            // var widthLimit = pageSize - pageMargin * 2;
-            var widthLimit = pageSize - pageMargin;
+            var widthLimit = pageSize - pageMargins * 8.2;
             // console.log('fit layout layoutWidth, limitWidth', layoutWidth, widthLimit);
             while (layoutWidth * scale > widthLimit) {
                 scale = (scale - 0.01).toFixed(2);
