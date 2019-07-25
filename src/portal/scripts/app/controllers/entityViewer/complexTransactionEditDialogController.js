@@ -289,6 +289,8 @@
                     })
                 });
 
+                book.process_mode = 'recalculate';
+
                 complexTransactionService.rebookComplexTransaction(book.id, book).then(handler);
 
             })
@@ -660,6 +662,8 @@
 
                             })
                         });
+
+                        result.process_mode = 'rebook';
 
                         complexTransactionService.rebookComplexTransaction(result.id, result).then(function (data) {
                             resolve(data);
