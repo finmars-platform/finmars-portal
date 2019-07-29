@@ -14,13 +14,13 @@
             restrict: 'AE',
             templateUrl: 'views/directives/bind-field-control-view.html',
             scope: {
-                item: '='
+                item: '=',
+                entity: '=',
+                entityType: '='
             },
             link: function (scope, elem, attr) {
 
-                scope.entityType = scope.$parent.vm.entityType;
                 scope.readyStatus = {classifier: false};
-                scope.entity = scope.$parent.vm.entity;
 
                 var attrs = scope.$parent.vm.attrs || [];
                 var userInputs = scope.$parent.vm.userInputs || [];
@@ -108,30 +108,41 @@
 
                 scope.getModelKey = function () {
 
+                    var result;
+
                     if (scope.item) {
                         if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
-                            return scope.item.name
+
+                            if (scope.item.attribute_type_object) {
+                                result = scope.item.attribute_type_object.name
+                            } else {
+                                result = scope.item.name
+                            }
                         } else {
                             var l, e, u;
 
                             for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
                                 if (scope.item.name === scope.layoutAttrs[l].name) {
 
-                                    return scope.layoutAttrs[l].key;
+                                    result = scope.layoutAttrs[l].key;
                                 }
                             }
                             for (e = 0; e < entityAttrs.length; e = e + 1) {
                                 if (scope.item.name === entityAttrs[e].name) {
-                                    return entityAttrs[e].key;
+                                    result = entityAttrs[e].key;
                                 }
                             }
                             for (u = 0; u < userInputs.length; u = u + 1) {
                                 if (scope.item.name === userInputs[u].name) {
-                                    return userInputs[u].name;
+                                    result = userInputs[u].name;
                                 }
                             }
                         }
                     }
+
+                    // console.log('get model key result', result);
+
+                    return result
                 };
 
                 var fieldKey = scope.getModelKey();

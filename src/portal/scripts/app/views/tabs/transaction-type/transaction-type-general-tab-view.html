@@ -6,26 +6,9 @@
                 <input type="text" data-ng-model="vm.entity.user_code">
             </md-input-container>
 
-            <!--<md-input-container>-->
-            <!--<label for="">Group</label>-->
-            <!--<ui-select tagging="vm.tagTransform" ng-model="vm.entity.group" theme="bootstrap"-->
-            <!--sortable="true" close-on-select="false">-->
-            <!--<ui-select-match placeholder="Group">{{$item.name}}</ui-select-match>-->
-            <!--<ui-select-choices-->
-            <!--repeat="item in vm.transactionTypeGroups | propsFilter: {name: $select.search}">-->
-            <!--<div ng-bind-html="item.name | highlight: $select.search"></div>-->
-            <!--</ui-select-choices>-->
-            <!--</ui-select>-->
-            <!--</md-input-container>-->
-
             <crud-select label="'Group'" item="vm.entity.group" entity-type="'transaction-type-group'"
                          options="vm.transactionTypeGroups"></crud-select>
-            <!--<md-input-container>-->
-                <!--<label for="">Group</label>-->
-                <!--<md-select data-ng-model="vm.entity.group">-->
-                    <!--<md-option ng-value="item.id" ng-repeat="item in vm.transactionTypeGroups">{{item.name}}</md-option>-->
-                <!--</md-select>-->
-            <!--</md-input-container>-->
+
         </div>
         <div layout="row">
             <md-input-container>
@@ -77,7 +60,7 @@
         </div>
         <div layout="row">
             <md-input-container>
-                <label for="" class="uncut-text-on-focus-label">Complex transaction date</label>
+                <label for="" class="uncut-text-on-focus-label">Complex Transaction Date</label>
                 <input type="text" data-ng-model="vm.entity.date_expr" value-title>
             </md-input-container>
 
@@ -86,7 +69,7 @@
         </div>
         <div layout="row">
             <md-input-container>
-                <label for="">Display expression</label>
+                <label for="">Display Expression</label>
                 <input type="text" data-ng-model="vm.entity.display_expr" value-title>
             </md-input-container>
 

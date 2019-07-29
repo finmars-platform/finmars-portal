@@ -98,7 +98,7 @@
 
             vm.counterData[index] = config;
 
-            vm.counter = Object.keys(vm.counterData).length
+            vm.counter = Object.keys(vm.counterData).length;
 
             // var keys = Object.keys(vm.counterData);
 
@@ -163,6 +163,8 @@
                 result.current = currentAction.processed_rows;
                 result.total = currentAction.total_rows;
             }
+
+            // console.log('getTransactionImportProgress.result', result);
 
             return result;
         };

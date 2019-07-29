@@ -51,6 +51,7 @@
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
+                multiple: true
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);

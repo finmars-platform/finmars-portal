@@ -75,9 +75,16 @@
         clickData.isShiftPressed = event.shiftKey;
         clickData.isCtrlPressed = event.ctrlKey;
 
+        console.log('event', event);
+
         clickData.___type = rowElem.dataset.type;
         clickData.___id = rowElem.dataset.objectId;
         clickData.___parentId = rowElem.dataset.parentGroupHashId;
+
+
+        if (event.target.classList.contains('ev-fold-button')) {
+            clickData.isFoldButtonPressed = true;
+        }
 
         if (rowElem.dataset.subtotalType) {
             clickData.___subtotal_type = rowElem.dataset.subtotalType;
@@ -125,9 +132,9 @@
 
     var handleFoldButtonClick = function (clickData, evDataService, evEventService) {
 
-        var group = evDataService.getData(clickData.___id);
+        var group = evDataService.getData(clickData.___parentId);
 
-        // console.log('group', group);
+        console.log('group', group);
 
         if (group) { // initialized only first data request
 
@@ -491,22 +498,24 @@
 
             console.log('clickData', clickData);
 
-            if (clickData.___type === 'foldbutton') {
+            if (clickData.isFoldButtonPressed) {
 
                 handleFoldButtonClick(clickData, evDataService, evEventService);
 
-            }
+            } else {
 
-            if (clickData.___type === 'object') {
+                if (clickData.___type === 'object') {
 
-                handleObjectClick(clickData, evDataService, evEventService);
+                    handleObjectClick(clickData, evDataService, evEventService);
 
-            }
+                }
 
 
-            if (clickData.___type === 'subtotal') {
+                if (clickData.___type === 'subtotal') {
 
-                handleSubtotalClick(clickData, evDataService, evEventService);
+                    handleSubtotalClick(clickData, evDataService, evEventService);
+
+                }
 
             }
 
