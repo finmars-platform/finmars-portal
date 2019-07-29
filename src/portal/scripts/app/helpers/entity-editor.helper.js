@@ -1,6 +1,6 @@
 (function () {
 
-    var checkForNulls = function (item) {
+    var removeNullFields = function (item) {
 
         var i;
         var keys = Object.keys(item);
@@ -150,7 +150,7 @@
 
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
-        checkForNulls: checkForNulls,
+        removeNullFields: removeNullFields,
         clearUnusedAttributeValues: clearUnusedAttributeValues,
         appendAttribute: appendAttribute,
         updateValue: updateValue,

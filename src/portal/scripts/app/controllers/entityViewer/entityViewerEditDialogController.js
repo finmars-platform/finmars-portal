@@ -190,9 +190,6 @@
 
                     console.log('res', res);
 
-
-                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
                 }
 
             });
@@ -200,7 +197,6 @@
             $mdDialog.hide();
 
         };
-
 
         vm.getFormLayout = function () {
 
@@ -237,7 +233,9 @@
                         vm.entity.$_isValid = true;
                         vm.readyStatus.entity = true;
 
-                        vm.loadPermissions();
+                        vm.readyStatus.permissions = true;
+
+                        // vm.loadPermissions();
 
                         vm.getFormLayout();
 
@@ -380,6 +378,8 @@
                 vm.entity.attributes = [];
             }
 
+
+
             if (vm.entity.attributes) {
                 var i, a, c;
                 var keys = Object.keys(vm.entity), attrExist;
@@ -466,7 +466,7 @@
 
                 if (vm.entity.$_isValid) {
 
-                    var result = entityEditorHelper.checkForNulls(vm.entity);
+                    var result = entityEditorHelper.removeNullFields(vm.entity);
 
                     entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
@@ -488,7 +488,7 @@
 
             if (vm.entity.$_isValid) {
 
-                var result = entityEditorHelper.checkForNulls(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity);
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 

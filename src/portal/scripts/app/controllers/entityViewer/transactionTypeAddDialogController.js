@@ -67,8 +67,7 @@
         };
         // < Creating various variables to use as search terms for filters of repeating md-select components >
 
-        vm.formIsValid = true;
-        vm.TTGroupChosen = true;
+        vm.formIsFilled = false;
 
         vm.loadPermissions = function () {
 
@@ -263,10 +262,6 @@
 
         vm.updateEntityBeforeSave = function () {
 
-            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
-                vm.entity.attributes = [];
-            }
-
             if (vm.entity.attributes) {
                 var i, a, c;
                 var keys = Object.keys(vm.entity), attrExist;
@@ -341,7 +336,7 @@
 
         };
 
-        var checkActionsForEmptyFields = function (actions) {
+        vm.checkActionsForEmptyFields = function (actions) {
 
             var result = [];
 
@@ -435,67 +430,108 @@
             return result;
         };
 
+        vm.checkEntityForEmptyFields = function (entity) {
+
+            var result = [];
+
+            if (entity.name === null || entity.name === undefined || entity.name === '') {
+                result.push({
+                    action_notes: 'General',
+                    key: 'name',
+                    name: 'Name',
+                    value: entity.name
+                })
+            }
+
+            if (entity.user_code === null || entity.user_code === undefined || entity.user_code === '') {
+                result.push({
+                    action_notes: 'General',
+                    key: 'user_code',
+                    name: 'User code',
+                    value: entity.user_code
+                })
+            }
+
+            if (entity.display_expr === null || entity.display_expr === undefined || entity.display_expr === '') {
+                result.push({
+                    action_notes: 'General',
+                    key: 'display_expr',
+                    name: 'Complex Transaction Date',
+                    value: entity.display_expr
+                })
+            }
+
+            if (entity.date_expr === null || entity.date_expr === undefined || entity.date_expr === '') {
+                result.push({
+                    action_notes: 'General',
+                    key: 'date_expr',
+                    name: 'Display Expression',
+                    value: entity.date_expr
+                })
+            }
+
+            if (entity.group === null || entity.group === undefined) {
+                result.push({
+                    action_notes: 'General',
+                    key: 'group',
+                    name: 'Group',
+                    value: entity.group
+                })
+            }
+
+
+            return result;
+
+        };
+
         vm.save = function ($event) {
 
             vm.updateEntityBeforeSave();
 
-            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+            var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
+            var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
 
             console.log('vm.entity before save', vm.entity);
 
-            if (vm.entity.$_isValid) {
+            if (actionsErrors.length || entityErrors.length) {
 
-                var resultEntity = entityEditorHelper.checkForNulls(vm.entity);
+                $mdDialog.show({
+                    controller: 'TransactionTypeValidationErrorsDialogController as vm',
+                    templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            actionErrors: actionsErrors,
+                            entityErrors: entityErrors
+                        }
+                    }
+                });
 
-                resultEntity.book_transaction_layout = vm.entity.book_transaction_layout;
+            } else {
 
-                var actionsErrors = checkActionsForEmptyFields(resultEntity.actions);
+                entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
 
-                console.log('resultEntity', resultEntity);
+                    $mdDialog.hide({res: 'agree', data: data});
 
-                console.log('actionsErrors', actionsErrors);
-
-                if (resultEntity.actions.length > 0 && actionsErrors.length) {
+                }).catch(function (data) {
 
                     $mdDialog.show({
-                        controller: 'TransactionTypeValidationErrorsDialogController as vm',
-                        templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
-                        parent: angular.element(document.body),
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
                         targetEvent: $event,
-                        clickOutsideToClose: false,
-                        multiple: true,
                         locals: {
-                            data: {
-                                actionErrors: actionsErrors
-                            }
-                        }
+                            validationData: data
+                        },
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true
                     })
 
-
-                } else {
-
-                    entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
-
-                        $mdDialog.hide({res: 'agree', data: data});
-
-                    }).catch(function (data) {
-
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                validationData: data
-                            },
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
-
-                    })
-
-                }
+                })
 
             }
 
@@ -1500,21 +1536,6 @@
                 }
             });
 
-            $scope.$watch('vm.entity.group', function () {
-                if (vm.entity.group && vm.entity.group.name != null) {
-                    transactionTypeGroupService.create({
-                        name: vm.entity.group.name
-                    })
-                }
-            });
-
-            $scope.$watch('vm.entity.group', function () {
-                if (vm.entity.group === 14 || !vm.entity.group) {
-                    vm.TTGroupChosen = false;
-                } else {
-                    vm.TTGroupChosen = true;
-                }
-            });
 
         };
 

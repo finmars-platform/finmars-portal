@@ -26,7 +26,7 @@
             vm.data.status = callbackData.status;
             vm.data.additional = callbackData.additional;
 
-            console.log('vm.data.status', vm.data.status);
+            // console.log('vm.data.status', vm.data.status);
             // console.log('vm.data', vm.data);
             // console.log('vm.additional', vm.data.additional[0]);
 
@@ -41,7 +41,7 @@
 
             }
 
-        }, 10);
+        }, 50);
 
         vm.cancel = function () {
             $mdDialog.hide();

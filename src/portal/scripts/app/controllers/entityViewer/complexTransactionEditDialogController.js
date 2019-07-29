@@ -289,6 +289,8 @@
                     })
                 });
 
+                book.process_mode = 'recalculate';
+
                 complexTransactionService.rebookComplexTransaction(book.id, book).then(handler);
 
             })
@@ -619,7 +621,7 @@
 
             if (vm.entity.$_isValid) {
 
-                var result = entityEditorHelper.checkForNulls(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity);
 
                 result.values = {};
 
@@ -661,6 +663,8 @@
                             })
                         });
 
+                        result.process_mode = 'rebook';
+
                         complexTransactionService.rebookComplexTransaction(result.id, result).then(function (data) {
                             resolve(data);
                         });
@@ -689,7 +693,7 @@
 
             if (vm.entity.$_isValid) {
 
-                var result = entityEditorHelper.checkForNulls(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity);
 
                 result.values = {};
 
