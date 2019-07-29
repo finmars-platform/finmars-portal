@@ -212,9 +212,14 @@
                 };
 
                 scope.getInputTextForEntitySearch = function () {
+
+                    var result = '';
+
                     if (scope.fields[0]) {
-                        return scope.fields[0].name;
+                        result = scope.fields[0].name;
                     }
+
+                    return result
                 };
 
                 scope.getModelKey = scope.$parent.getModelKey;
@@ -242,8 +247,6 @@
                         scope.fields = res.data;
                         scope.readyStatus.content = true;
 
-                        console.log('scope.fields', scope.fields);
-
                         scope.getFieldsGrouped();
 
                         scope.$apply(function () {
@@ -256,6 +259,36 @@
                         });
                     });
                 };
+
+                scope.$watch('item', function () {
+
+                    if (scope.fields.length === 1) { // only for smart search
+
+                        scope.fields = [];
+
+                        var item_object;
+
+                        if (scope.entityType === 'complex-transaction') {
+                            item_object = scope.entity[scope.item.name + '_object'];
+                        } else {
+                            item_object = scope.entity[scope.item.key + '_object'];
+                        }
+
+                        if (item_object) {
+
+                            if (Array.isArray(item_object)) {
+                                scope.fields = item_object;
+                            } else {
+                                scope.fields.push(item_object);
+                            }
+                        }
+
+                    }
+
+                    scope.inputText = scope.getInputTextForEntitySearch()
+
+                });
+
 
                 scope.init = function () {
 
@@ -276,7 +309,8 @@
                         }
                     }
 
-                    // console.log('scope.fields', scope.fields);
+
+                    scope.inputText = scope.getInputTextForEntitySearch()
 
                 };
 

@@ -2,7 +2,7 @@
 
     <div data-ng-if="type === 'id'">
         <div data-ng-if="isSpecialSearchRelation()">
-            <entity-search-select item="entity[getModelKey()]" label="getName()" input-text="getInputTextForEntitySearch()"
+            <entity-search-select item="entity[getModelKey()]" label="getName()" input-text="inputText"
                                   entity-type="getModelKeyEntity()"></entity-search-select>
         </div>
         <div data-ng-if="!isSpecialSearchRelation()">

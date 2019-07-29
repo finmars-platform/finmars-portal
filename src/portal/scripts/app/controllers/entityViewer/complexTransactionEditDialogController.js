@@ -204,7 +204,8 @@
 
             var handler = function (data) {
 
-                vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
+                // vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
+                vm.transactionTypeId = data.transaction_type;
                 vm.editLayoutEntityInstanceId = data.transaction_type;
                 vm.entity = data.complex_transaction;
 
