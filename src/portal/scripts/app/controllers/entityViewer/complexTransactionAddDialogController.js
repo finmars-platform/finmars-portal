@@ -321,82 +321,85 @@
                 values: values
             };
 
-            var handler = function (data) {
-
-                vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
-                vm.editLayoutEntityInstanceId = data.transaction_type;
-
-                vm.entity = data.complex_transaction;
-
-                var inputsWithCalculations = data.transaction_type_object.inputs;
-
-                vm.transactionType = data.transaction_type_object;
-
-                vm.specialRulesReady = true;
-                vm.readyStatus.entity = true;
-                vm.readyStatus.permissions = true;
-
-                var keys = Object.keys(data.values);
-
-                keys.forEach(function (item) {
-                    vm.entity[item] = data.values[item];
-                });
-
-                data.complex_transaction.attributes.forEach(function (item) {
-                    if (item.attribute_type_object.value_type === 10) {
-                        vm.entity[item.attribute_type_object.name] = item.value_string;
-                    }
-                    if (item.attribute_type_object.value_type === 20) {
-                        vm.entity[item.attribute_type_object.name] = item.value_float;
-                    }
-                    if (item.attribute_type_object.value_type === 30) {
-                        vm.entity[item.attribute_type_object.name] = item.classifier;
-                    }
-                    if (item.attribute_type_object.value_type === 40) {
-                        vm.entity[item.attribute_type_object.name] = item.value_date;
-                    }
-                });
-
-                vm.tabs = data.book_transaction_layout.data;
-                vm.userInputs = [];
-                vm.tabs.forEach(function (tab) {
-                    tab.layout.fields.forEach(function (field) {
-                        if (field.attribute_class === 'userInput') {
-                            vm.userInputs.push(field.attribute);
-                        }
-                    });
-                });
-
-                inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                    vm.userInputs.forEach(function (userInput) {
-                        if (userInput.name === inputWithCalc.name) {
-                            if (inputWithCalc.can_recalculate === true) {
-                                userInput.buttons = [
-                                    {
-                                        icon: 'iso',
-                                        tooltip: 'Recalculate',
-                                        caption: '',
-                                        classes: 'md-raised',
-                                        action: vm.recalculate
-                                    }
-                                ]
-                            }
-                        }
-                    })
-
-                });
-
-                $scope.$apply();
-
-            };
-
 
             transactionTypeService.initBookComplexTransaction(book.transaction_type, {}).then(function (data) {
 
                 var res = Object.assign(data, book);
 
-                transactionTypeService.bookComplexTransaction(book.transaction_type, res).then(handler);
+                transactionTypeService.bookComplexTransaction(book.transaction_type, res).then(function (data) {
+
+                    console.log('data', data);
+
+                    // vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
+                    vm.transactionTypeId = data.transaction_type;
+                    vm.editLayoutEntityInstanceId = data.transaction_type;
+
+                    vm.entity = data.complex_transaction;
+
+                    var inputsWithCalculations = data.transaction_type_object.inputs;
+
+                    vm.transactionType = data.transaction_type_object;
+
+                    vm.specialRulesReady = true;
+                    vm.readyStatus.entity = true;
+                    vm.readyStatus.permissions = true;
+
+                    var keys = Object.keys(data.values);
+
+                    keys.forEach(function (key) {
+                        vm.entity[key] = data.values[key];
+                    });
+
+                    data.complex_transaction.attributes.forEach(function (item) {
+                        if (item.attribute_type_object.value_type === 10) {
+                            vm.entity[item.attribute_type_object.name] = item.value_string;
+                        }
+                        if (item.attribute_type_object.value_type === 20) {
+                            vm.entity[item.attribute_type_object.name] = item.value_float;
+                        }
+                        if (item.attribute_type_object.value_type === 30) {
+                            vm.entity[item.attribute_type_object.name] = item.classifier;
+                        }
+                        if (item.attribute_type_object.value_type === 40) {
+                            vm.entity[item.attribute_type_object.name] = item.value_date;
+                        }
+                    });
+
+                    vm.tabs = data.book_transaction_layout.data;
+                    vm.userInputs = [];
+                    vm.tabs.forEach(function (tab) {
+                        tab.layout.fields.forEach(function (field) {
+                            if (field.attribute_class === 'userInput') {
+                                vm.userInputs.push(field.attribute);
+                            }
+                        });
+                    });
+
+                    inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                        vm.userInputs.forEach(function (userInput) {
+                            if (userInput.name === inputWithCalc.name) {
+                                if (inputWithCalc.can_recalculate === true) {
+                                    userInput.buttons = [
+                                        {
+                                            icon: 'iso',
+                                            tooltip: 'Recalculate',
+                                            caption: '',
+                                            classes: 'md-raised',
+                                            action: vm.recalculate
+                                        }
+                                    ]
+                                }
+                            }
+                        })
+
+                    });
+
+                    console.log('vm.entity', vm.entity);
+
+                    $scope.$apply();
+
+                });
 
             });
 

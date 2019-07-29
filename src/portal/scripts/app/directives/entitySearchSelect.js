@@ -17,6 +17,7 @@
             },
             link: function (scope, elem, attrs) {
 
+
                 $(elem).on('click', function (event) {
 
                     event.preventDefault();
@@ -49,7 +50,10 @@
                         }
                     });
 
-                })
+                });
+
+
+
 
             }
         };
