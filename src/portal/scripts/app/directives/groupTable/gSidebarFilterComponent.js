@@ -83,7 +83,12 @@
 
                 if (scope.isReport === true) {
 
-                    pricingPolicyService.getList().then(function (data) {
+                    var options = {
+                        pageSize: 1000,
+                        page: 1
+                    };
+
+                    pricingPolicyService.getList(options).then(function (data) {
 
                         scope.pricingPolicies = data.results;
 
@@ -91,7 +96,7 @@
 
                     });
 
-                    currencyService.getList({"pageSize": 200}).then(function (data) {
+                    currencyService.getList(options).then(function (data) {
 
                         scope.currencies = data.results;
 
@@ -272,14 +277,14 @@
                 };
 
                 scope.removeFilter = function (filter) {
-                    //console.log('filter to remove is ', filter);
+
                     scope.filters = scope.filters.map(function (item) {
                         // if (item.id === filter.id || item.name === filter.name) {
                         if (item.name === filter.name) {
                             // return undefined;
                             item = undefined;
                         }
-                        //console.log('filter in filters list', item);
+
                         return item;
                     }).filter(function (item) {
                         return !!item;

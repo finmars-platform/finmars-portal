@@ -39,9 +39,6 @@
                         return {id: cRowsContent, name: cRowsContent}
                     });
 
-                    // scope.columnRowsContent = [{name: "lorem"}, {name: "ipsum"}, {name: "dolor"}, {name: "sit"}, {name: "amet"}, {name: "lorem ipsum"}, {name: "dolorsit"}, {name: "ametlorem"}, {name: "ipsumdolor"}, {name: "sitamet"}, {name: "loremipsum"}, {name: "dolor sit amet"}, {name: "111111111"}, {name: "2222222"}]; //
-                    // console.log("filter select options", scope.filterSelectOptions, columnRowsContent);
-
                     if (!scope.isRootEntityViewer) {
                         scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
                     }
@@ -59,9 +56,11 @@
                 }
 
                 if (!scope.filter.options.filter_values) {
-
                     scope.filter.options.filter_values = [];
+                }
 
+                if (!scope.filter.options.exclude_empty_cells) {
+                    scope.filter.options.exclude_empty_cells = false;
                 }
 
                 scope.getFilterRegime = function () {
@@ -98,6 +97,9 @@
 
                 scope.changeFilterType = function (filterType) {
                     scope.filter.options.filter_type = filterType;
+                    if (filterType === 'empty') {
+                        scope.filter.options.exclude_empty_cells = false;
+                    }
                     scope.filter.options.filter_values = [];
                     scope.filterSettingsChange();
                 };

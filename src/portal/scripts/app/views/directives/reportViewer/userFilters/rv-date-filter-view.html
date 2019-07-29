@@ -31,11 +31,9 @@
                            data-ng-change="filterSettingsChange(filter.options.filter_values[0])"
                            data-ng-model-options="{debounce: 1000}"
                            aria-label="rv number filter single input">-->
-                    <zh-date-picker ng-model="filter.options.filter_values[0]"
-                                    ng-change="filterSettingsChange(filter.options.filter_values[0])"
-                                    data-ng-model-options="{debounce: 1000}"
-                                    data-date-value="filter.options.filter_values[0]"
-                                    data-position="left"></zh-date-picker>
+                    <zh-date-picker data-date-value="filter.options.filter_values[0]"
+                                    data-position="left"
+                                    data-callback-method="filterSettingsChange(filter.options.filter_values[0])"></zh-date-picker>
                 </md-input-container>
             </div>
 
@@ -50,11 +48,9 @@
                         <span>From (incl)</span>
                     </label>
 
-                    <zh-date-picker ng-model="filter.options.filter_values.min_value"
-                                    ng-change="filterSettingsChange(filter.options.filter_values.min_value)"
-                                    data-ng-model-options="{debounce: 1000}"
-                                    data-date-value="filter.options.filter_values.min_value"
-                                    data-position="left"></zh-date-picker>
+                    <zh-date-picker data-date-value="filter.options.filter_values.min_value"
+                                    data-position="left"
+                                    data-callback-method="filterSettingsChange(filter.options.filter_values.min_value)"></zh-date-picker>
                 </md-input-container>
             </div>
 
@@ -64,11 +60,9 @@
                         <span>To (incl)</span>
                     </label>
 
-                    <zh-date-picker ng-model="filter.options.filter_values.max_value"
-                                    ng-change="filterSettingsChange(filter.options.filter_values.max_value)"
-                                    data-ng-model-options="{debounce: 1000}"
-                                    data-date-value="filter.options.filter_values.min_value"
-                                    data-position="left"></zh-date-picker>
+                    <zh-date-picker data-date-value="filter.options.filter_values.max_value"
+                                    data-position="left"
+                                    data-callback-method="filterSettingsChange(filter.options.filter_values.max_value)"></zh-date-picker>
                 </md-input-container>
             </div>
 
@@ -178,6 +172,15 @@
                                 </md-button>
                             </md-menu-content>
                         </md-menu>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-checkbox ng-model="filter.options.exclude_empty_cells"
+                                     ng-change="filterSettingsChange()"
+                                     class="md-primary g-filter-options-checkbox"
+                                     aria-label="hide rows with empty cells checkbox">
+                            Exclude cells with no value
+                        </md-checkbox>
                     </md-menu-item>
 
                     <md-menu-item>

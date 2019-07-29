@@ -79,14 +79,14 @@
                                  aria-label="checkbox">
                     </md-checkbox>
                     <span data-ng-class="{
-                    'used-dynamic-attrs': child.countOfUsages__,
+                    'used-dynamic-attrs': child.countOfUsages__ || child.countOfUsages__ === 0,
                     'child-with-icon': vm.checkForTextIcon(item.entity, child),
                     'text-warning-red': child.is_duplicate && vm.settings.mode == 'overwrite',
                     'text-warning-blue': child.is_duplicate && vm.settings.mode == 'skip'}">
                         <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)" icon="folder" fill="#000"
                                     size="20"></ng-md-icon>
                         {{vm.getItemName(child)}}
-                        <span data-ng-if="child.countOfUsages__">(<b>{{child.countOfUsages__}}</b>)</span>
+                        <span data-ng-if="child.countOfUsages__ || child.countOfUsages__ === 0">(<b>{{child.countOfUsages__}}</b>)</span>
 
                         <span data-ng-if="child.is_duplicate && vm.settings.mode == 'overwrite'" class="cursor-pointer"><ng-md-icon
                                 icon="warning"

@@ -57,9 +57,11 @@
                 }
 
                 if (!scope.filter.options.filter_values) {
-
                     scope.filter.options.filter_values = [];
+                }
 
+                if (!scope.filter.options.exclude_empty_cells) {
+                    scope.filter.options.exclude_empty_cells = false;
                 }
 
                 scope.getFilterRegime = function () {
@@ -103,7 +105,7 @@
 
 
                 scope.filterSettingsChange = function () {
-                    console.log("filter filterSettingsChange", scope.filter.options.filter_values);
+                    console.log("filter filterSettingsChange", scope.filter.options);
 
                     scope.evDataService.resetData();
                     scope.evDataService.resetRequestParameters();
@@ -124,6 +126,10 @@
                         scope.filter.options.filter_values = {}
 
                     } else {
+
+                        if (filterType === 'empty') {
+                            scope.filter.options.exclude_empty_cells = false;
+                        }
 
                         scope.filter.options.filter_values = [];
 

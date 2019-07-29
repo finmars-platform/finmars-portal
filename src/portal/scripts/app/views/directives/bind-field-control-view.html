@@ -33,7 +33,9 @@
                 <label data-ng-bind="getName()"></label>
                 <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}"
                           data-ng-model="entity[getModelKey()]"
-                          cols="30" rows="{{item.options.rowCount}}"></textarea>
+                          cols="30"
+                          rows="{{item.options.rowCount}}"
+                          style="{{inputBackgroundColor()}}"></textarea>
             </md-input-container>
         </div>
         <div data-ng-if="getModelKey() !== 'notes' ">
@@ -88,11 +90,12 @@
         </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Field'">
-        <ev-field-resolver data-item="item"
-                           data-entity="entity"
-                           data-options="options"
-                           data-entity-type="entityType"
-                           style="{{inputBackgroundColor()}}"></ev-field-resolver>
+        <div style="{{inputBackgroundColor()}}">
+            <ev-field-resolver data-item="item"
+                               data-entity="entity"
+                               data-options="options"
+                               data-entity-type="entityType"></ev-field-resolver>
+        </div>
         <div data-ng-if="item.buttons.length" class="bind-field-number-btn">
             <md-button data-ng-repeat="button in item.buttons"
                        class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
@@ -105,17 +108,17 @@
         </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
-        <ev-field-resolver data-item="item"
+        <div style="{{inputBackgroundColor()}}">
+            <ev-field-resolver data-item="item"
                            data-entity="entity"
-                           data-options="options"
-                           style="{{inputBackgroundColor()}}"></ev-field-resolver>
+                           data-options="options"></ev-field-resolver>
+        </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
 
         <md-input-container class="field-date-pick-holder no-error-spacer md-block" style="{{styleForDateInputContainer()}}">
             <label data-ng-bind="getName()"></label>
             <zh-date-picker data-date-value="entity[getModelKey()]"
-                            ng-model="entity[getModelKey()]"
                             style="{{styleForInputWithButtons()}}"></zh-date-picker>
             <div class="date-pick-buttons-block">
                 <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
@@ -174,8 +177,12 @@
         </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Decoration'">
-        <span class="ec-decoration line" data-ng-if="!item.options.labelText"></span>
-        <span class="ec-decoration labeled" data-ng-if="item.options.labelText"><span class="w-rp"
-                                                                                      data-ng-bind="item.options.labelText"></span></span>
+        <span class="ec-decoration line"
+              data-ng-if="!item.options.labelText"
+              style="{{inputBackgroundColor()}}"></span>
+        <span class="ec-decoration labeled"
+              data-ng-if="item.options.labelText">
+            <span class="w-rp" data-ng-bind="item.options.labelText"></span>
+        </span>
     </div>
 </div>

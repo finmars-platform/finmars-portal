@@ -904,8 +904,6 @@
             vm.items = vm.items.concat(vm.userInputs);
             vm.items = vm.items.concat(vm.layoutAttrs);
 
-            console.log('syncItems.items before', JSON.parse(JSON.stringify(vm.items)));
-
             vm.items = vm.items.filter(function (item) {
 
                 var result = true;

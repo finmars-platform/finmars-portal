@@ -87,6 +87,10 @@
                     scope.filter.options.filter_values = [];
                 }
 
+                if (!scope.filter.options.exclude_empty_cells) {
+                    scope.filter.options.exclude_empty_cells = false;
+                }
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
@@ -139,6 +143,10 @@
                         scope.filter.options.filter_values = {};
 
                     } else {
+
+                        if (filterType === 'empty') {
+                            scope.filter.options.exclude_empty_cells = false;
+                        }
 
                         scope.filter.options.filter_values = [];
 

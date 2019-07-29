@@ -31,13 +31,19 @@
                                                    placeholder="Search for a ..."
                                                    class="md-text md-select-search-pattern">
                                         </md-select-header>
-                                        <md-optgroup label="{{group.name}}"
-                                                     data-ng-repeat="group in vm.transactionGroups">
-                                            <md-option data-ng-repeat="item in group.items | filter:{name: searchTerm}"
-                                                       ng-value="item.id">
-                                                {{item.name}}
-                                            </md-option>
-                                        </md-optgroup>
+
+                                        <div class="big-select-optgroup-container">
+
+                                            <md-optgroup label="{{group.name}}"
+                                                         data-ng-repeat="group in vm.transactionGroups">
+                                                <md-option data-ng-repeat="item in group.items | filter:{name: searchTerm}"
+                                                           ng-value="item.id">
+                                                    {{item.name}}
+                                                </md-option>
+                                            </md-optgroup>
+
+                                        </div>
+
                                     </md-select>
                                 </md-input-container>
                             </div>

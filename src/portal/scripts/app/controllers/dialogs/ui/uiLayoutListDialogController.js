@@ -69,9 +69,9 @@
                     layout.name = res.data.name;
                     uiService.updateListLayout(layout.id, layout).then(function () {
                         if (isRootEntityViewer) {
-                            middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+                            middlewareService.setData('entityActiveLayoutSwitched', layout.name); // Give signal to update active layout name in the toolbar
                         } else {
-                            middlewareService.setData('splitPanelActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+                            middlewareService.setData('splitPanelActiveLayoutSwitched', layout.name); // Give signal to update active layout name in the toolbar
                         }
 
                     });
