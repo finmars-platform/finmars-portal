@@ -68,8 +68,11 @@
         vm.getAttributes = function () {
 
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
-
+            console.log("strategies view constructor attrs", vm.entityType, JSON.parse(JSON.stringify(vm.entityAttrs)));
             vm.entityAttrs.forEach(function (item) {
+                if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                    item.name = 'Group';
+                }
                 item.entity = vm.entityType;
             });
 

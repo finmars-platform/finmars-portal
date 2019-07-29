@@ -118,10 +118,10 @@
                         <md-select ng-model="item.value_type"
                                    ng-change="vm.valueTypeChanged(item)"
                                    md-container-class="common-select-container"
-                                   md-on-close="searchTerms[getInputsFilterST('valueTypeSearchTerm', $index)] = ''">
+                                   md-on-close="vm.searchTerms[vm.getInputsFilterST('valueTypeSearchTerm', $index)] = ''">
 
                             <md-select-header>
-                                <input data-ng-model="searchTerms[getInputsFilterST('valueTypeSearchTerm', $index)]"
+                                <input data-ng-model="vm.searchTerms[vm.getInputsFilterST('valueTypeSearchTerm', $index)]"
                                        type="search"
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern select-input-filter"
@@ -131,7 +131,7 @@
                             <div class="select-options-holder">
 
                                 <md-option
-                                        data-ng-repeat="item in vm.valueTypes | filter:{name: searchTerms[getInputsFilterST('valueTypeSearchTerm', $index)]}"
+                                        data-ng-repeat="item in vm.valueTypes | filter: {display_name: vm.searchTerms[vm.getInputsFilterST('valueTypeSearchTerm', $index)]}"
                                         ng-value="item.value">
                                     {{item.display_name}}
                                 </md-option>
@@ -156,12 +156,12 @@
                         <label for="ttype-inputs-content-type">Content type</label>
                         <md-select ng-model="item.content_type"
                                    md-container-class="common-select-container"
-                                   md-on-close="searchTerms[getInputsFilterST('contentTypeSearchTerm', $index)] = ''"
+                                   md-on-close="vm.searchTerms[vm.getInputsFilterST('contentTypeSearchTerm', $index)] = ''"
                                    id="ttype-inputs-content-type"
                                    ng-disabled="item.value_type !== 100">
 
                             <md-select-header>
-                                <input data-ng-model="searchTerms[getInputsFilterST('contentTypeSearchTerm', $index)]"
+                                <input data-ng-model="vm.searchTerms[vm.getInputsFilterST('contentTypeSearchTerm', $index)]"
                                        type="search"
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern select-input-filter"
@@ -171,7 +171,7 @@
                             <div class="select-options-holder">
 
                                 <md-option
-                                        data-ng-repeat="item in vm.contentTypes | filter: {name: searchTerms[getInputsFilterST('contentTypeSearchTerm', $index)]}"
+                                        data-ng-repeat="item in vm.contentTypes | filter: {name: vm.searchTerms[vm.getInputsFilterST('contentTypeSearchTerm', $index)]}"
                                         ng-value="item.key">
                                     {{item.name}}
                                 </md-option>
@@ -192,15 +192,16 @@
 
                     <md-input-container data-ng-if="item.value_type == 100"
                                         aria-label="select with filter"
-                                        class="no-error-spacer">
+                                        class="no-error-spacer"
+                                        style="width: 213px;">
                         <label for="ttype-relation-item-input">Default value</label>
                         <md-select ng-model="item[vm.resolveRelation(item)]"
                                    md-container-class="common-select-container"
                                    md-on-open="vm.loadRelation(vm.resolveRelation(item))"
-                                   md-on-close="searchTerms[getInputsFilterST('defaultValueSearchTerms', $index)] = ''"
+                                   md-on-close="vm.searchTerms[vm.getInputsFilterST('defaultValueSearchTerms', $index)] = ''"
                                    id="ttype-relation-item-input">
                             <md-select-header>
-                                <input data-ng-model="searchTerms[getInputsFilterST('defaultValueSearchTerms', $index)]"
+                                <input data-ng-model="vm.searchTerms[vm.getInputsFilterST('defaultValueSearchTerms', $index)]"
                                        type="search"
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern select-input-filter"
@@ -210,7 +211,7 @@
                             <div class="select-options-holder">
 
                                 <md-option
-                                        data-ng-repeat="relationItem in vm.relationItems[vm.resolveRelation(item)] | filter:{name: searchTerms[getInputsFilterST('defaultValueSearchTerms', $index)]}"
+                                        data-ng-repeat="relationItem in vm.relationItems[vm.resolveRelation(item)] | filter:{name: vm.searchTerms[vm.getInputsFilterST('defaultValueSearchTerms', $index)]}"
                                         ng-value="relationItem.id">
                                     {{relationItem.name}}
                                 </md-option>
@@ -359,7 +360,9 @@
                         </md-select>
                     </md-input-container>-->
 
-                    <md-input-container data-ng-if="vm.newItem.value_type == 100" class="m-0">
+                    <md-input-container data-ng-if="vm.newItem.value_type == 100"
+                                        class="m-0"
+                                        style="width: 213px;">
                         <label></label>
                         <md-select ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"
                                    md-container-class="common-select-container"

@@ -2,9 +2,8 @@
   min-width: 600px;
 
   .g-checkbox-row {
-    div:first-of-type {
-      padding-top: 8px;
-    }
+    margin-bottom: 8px;
+
     md-card {
       //width: 250px;
       display: inline-block;
@@ -14,9 +13,20 @@
       padding-bottom: .5em;
       margin-top: 0;
     }
-    md-checkbox.md-g-green.md-checked .md-icon {
-      background-color: #58BF64;
+
+    .view-constructor-checkboxes-container {
+      width: 122px;
+      margin-right: 10px;
+
+      md-checkbox {
+        margin-bottom: 0;
+      }
+
+      md-checkbox.md-g-green.md-checked .md-icon {
+        background-color: #58BF64;
+      }
     }
+
   }
 
   .view-constructor-card-search {

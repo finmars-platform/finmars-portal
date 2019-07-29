@@ -432,7 +432,7 @@
 
                 var didLayoutChanged = function () {
 
-                    /*setInterval(function () {
+                    setInterval(function () {
 
                         var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
                         var layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
@@ -446,7 +446,7 @@
 
                         }
 
-                    }, 1000)*/
+                    }, 1000)
 
                 };
 
@@ -502,6 +502,7 @@
 
                     scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
                     if (!scope.isReport) {
                         scope.evDataService.setListLayout(listLayout);
@@ -591,9 +592,14 @@
                             };
 
 
+                            var optionsForDataRequest = {
+                                pageSize: 1000,
+                                page: 1
+                            };
+
                             var getPricingPolicy = function () {
 
-                                pricingPolicyService.getList().then(function (data) {
+                                pricingPolicyService.getList(optionsForDataRequest).then(function (data) {
 
                                     var pricingPolicies = data.results;
 
@@ -618,7 +624,7 @@
 
                             };
 
-                            currencyService.getList({"pageSize": 200}).then(function (data) {
+                            currencyService.getList(optionsForDataRequest).then(function (data) {
 
                                 var currencies = data.results;
 

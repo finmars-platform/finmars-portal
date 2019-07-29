@@ -1968,15 +1968,25 @@ md-input-container .md-placeholder, md-input-container label:not(.md-no-float):n
 
 .big-select {
 
-  max-height: 512px;
-
   md-select-menu {
 
     max-height: 512px;
 
     md-content {
+      max-height: 100%;
+      padding-bottom: 0;
 
-      max-height: 512px;
+      md-select-header {
+        input {
+          box-sizing: border-box;
+        }
+      }
+
+      .big-select-optgroup-container {
+        max-height: 445px;
+        overflow: auto;
+      }
+
     }
   }
 }
@@ -2284,5 +2294,11 @@ md-menu-content.dropdown-buttons-menu {
 
   .loader-spinner {
     margin-top: 64px;
+  }
+}
+
+.dialog-containers-wrap {
+  div.md-dialog-container {
+    z-index: 55;
   }
 }
