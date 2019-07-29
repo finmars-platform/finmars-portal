@@ -396,9 +396,7 @@
 
                 var res = Object.assign(data, book);
 
-                transactionTypeService.bookComplexTransaction(book.transaction_type, res).then(function (data) {
-                    resolve(data);
-                }).then(handler);
+                transactionTypeService.bookComplexTransaction(book.transaction_type, res).then(handler);
 
             });
 
