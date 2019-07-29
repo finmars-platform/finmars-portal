@@ -85,7 +85,12 @@
 
             vm.readyStatus.pricingPolicy = false;
 
-            pricingPolicyService.getList().then(function (data) {
+            var opitons = {
+                pageSize: 1000,
+                page: 1
+            };
+
+            pricingPolicyService.getList(opitons).then(function (data) {
 
                 vm.pricingPolicies = data.results;
                 vm.readyStatus.pricingPolicy = true;
@@ -103,7 +108,12 @@
 
             vm.readyStatus.currency = false;
 
-            currencyService.getList().then(function (data) {
+            var options = {
+                page: 1,
+                pageSize: 1000
+            };
+
+            currencyService.getList(options).then(function (data) {
 
                 vm.currencies = data.results;
                 vm.readyStatus.currency = true;

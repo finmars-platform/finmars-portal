@@ -147,6 +147,7 @@
                                                 ng-show="filter.options.filter_type === 'empty'"></ng-md-icon>
                                     Empty cells
                                 </md-button>
+
                                 <!--<md-button ng-click="changeFilterType('top_n')">
                                     <ng-md-icon icon="done"
                                                 ng-show="filter.options.filter_type !== 'top_n'"
@@ -165,6 +166,15 @@
                                 </md-button>-->
                             </md-menu-content>
                         </md-menu>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-checkbox ng-model="filter.options.exclude_empty_cells"
+                                     ng-change="filterSettingsChange()"
+                                     class="md-primary g-filter-options-checkbox"
+                                     aria-label="hide rows with empty cells checkbox">
+                            Exclude cells with no value
+                        </md-checkbox>
                     </md-menu-item>
 
                     <md-menu-item>

@@ -5,6 +5,7 @@
             <label class="uncut-text-on-focus-label">{{ getDatepickerName() }}</label>
             <div class="pick-me-up">
                 <input data-ng-model="date"
+                       ng-blur="testModelChange()"
                        class="complex-datepicker-input"
                        type="text">
             </div>

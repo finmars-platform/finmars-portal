@@ -190,6 +190,22 @@
             vm.showHidden = !vm.showHidden;
         };
 
+        vm.getReturnSref = function () {
+
+            if (vm.entityType.indexOf('strategy-') !== -1) {
+
+                var strategyNumber = vm.entityType.split('-')[1];
+                return 'app.data.strategy({strategyNumber: ' + strategyNumber + '})';
+
+            } else {
+                return 'app.data.' + vm.entityType;
+            }
+            switch (vm.entityType) {
+                case '':
+                    break;
+            }
+        };
+
         vm.checkIsHidden = function (attribute) {
             if (vm.showHidden == false && attribute.is_hidden == true) {
                 return false;

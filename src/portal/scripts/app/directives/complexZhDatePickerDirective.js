@@ -8,7 +8,7 @@
     var expressionService = require('../services/expression.service');
     var evEvents = require('../services/entityViewerEvents');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, pickmeup) {
 
         return {
             restrict: 'AE',
@@ -25,7 +25,8 @@
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
-                var input = $(elem).find('.complex-datepicker-input');
+                // var input = $(elem).find('.complex-datepicker-input');
+                var input = elem[0].querySelector('.complex-datepicker-input');
 
                 var linkToAboveEventIndex;
                 var attributesFromAbove;
@@ -78,7 +79,7 @@
 
                 if (scope.date) {
 
-                    input.pickmeup({
+                    /*input.pickmeup({
                         date: new Date(scope.date),
                         current: new Date(scope.date),
                         position: position,
@@ -89,24 +90,37 @@
                             scope.date = this.value;
                             scope.$apply();
                             scope.callbackMethod();
+                            console.log("report options called");
                         }
+                    });*/
+                    pickmeup(input, {
+                        date: new Date(scope.date),
+                        current: new Date(scope.date),
+                        position: position,
+                        default_date: defaultDate,
+                        hide_on_select: true,
+                        format: 'Y-m-d'
                     });
 
                 } else {
 
-                    input.pickmeup({
+                    pickmeup(input, {
                         position: position,
                         default_date: defaultDate,
                         hide_on_select: true,
-                        format: 'Y-m-d',
-                        change: function () {
-                            scope.date = this.value;
-                            scope.$apply();
-                            scope.callbackMethod();
-                        }
+                        format: 'Y-m-d'
                     });
 
                 }
+
+                input.addEventListener("pickmeup-change", function (event) {
+                    scope.date = event.detail.formatted_date;
+                });
+
+                scope.testModelChange = function () {
+                    // scope.$apply();
+                    scope.callbackMethod();
+                };
 
                 scope.toggleMode = function (mode) {
                     scope.datepickerOptions.datepickerMode = mode;
@@ -116,7 +130,7 @@
 
                     scope.datepickerActiveModeTitle = 'Today';
                     scope.datepickerOptions.expression = "now()";
-                    input.attr('disabled', '');
+                    input.setAttribute('disabled', '');
 
                     var today = moment(new Date()).format('YYYY-MM-DD');
                     scope.date = today;
@@ -137,7 +151,7 @@
 
                     scope.datepickerActiveModeTitle = 'Yesterday';
                     scope.datepickerOptions.expression = "now()-days(1)";
-                    input.attr('disabled', '');
+                    input.setAttribute('disabled', '');
 
                     var yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
 
@@ -163,7 +177,7 @@
                     setTimeout(function () {
                         scope.callbackMethod()
                     }, 500);
-                    input.removeAttr('disabled');
+                    input.removeAttribute('disabled');
 
                     if (linkToAboveEventIndex) {
                         scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
@@ -175,7 +189,7 @@
                 var enableExpressionMode = function () {
                     scope.datepickerActiveModeTitle = 'Custom';
 
-                    input.attr('disabled', '');
+                    input.setAttribute('disabled', '');
 
                     if (linkToAboveEventIndex) {
                         scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
@@ -298,7 +312,7 @@
                     scope.datepickerActiveModeTitle = 'Link To Above';
 
                     delete scope.datepickerOptions.expression;
-                    input.attr('disabled', '');
+                    input.setAttribute('disabled', '');
 
                     linkToAboveEventIndex = scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 

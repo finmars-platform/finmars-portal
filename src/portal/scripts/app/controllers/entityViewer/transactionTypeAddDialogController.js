@@ -59,6 +59,14 @@
 
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
+        // Creating various variables to use as search terms for filters of repeating md-select components
+        vm.searchTerms = {};
+
+        vm.getInputsFilterST = function (name, index) {
+            return name + index;
+        };
+        // < Creating various variables to use as search terms for filters of repeating md-select components >
+
         vm.formIsValid = true;
         vm.TTGroupChosen = true;
 

@@ -469,6 +469,15 @@
                     return false;
                 };
 
+                scope.hasBackgroundColorInput = function () {
+
+                    if (scope.item.attribute.value_type === 'decoration') {
+                        return false;
+                    };
+
+                    return true;
+                };
+
                 scope.toggleBackgroundColor = function () {
                     scope.fieldUsesBackgroundColor = !scope.fieldUsesBackgroundColor;
                 };

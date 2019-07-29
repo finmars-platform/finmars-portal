@@ -49,14 +49,14 @@
                 scope.getName = function () {
 
                     if (scope.item.hasOwnProperty('verbose_name')) {
-                        return scope.item.verbose_name
+                        return scope.item.verbose_name;
                     }
 
                     if (scope.item.options && scope.item.options.fieldName) {
                         return scope.item.options.fieldName;
                     }
 
-                    return scope.item.name
+                    return scope.item.name;
                 };
 
                 scope.hideIscanceledCheckbox = function (checkboxName) {
@@ -251,7 +251,7 @@
 
                         var optionButtonsCount = 0;
 
-                        if (optionsKeys && optionsKeys.length > 0) {
+                        /*if (optionsKeys && optionsKeys.length > 0) {
 
                             optionsKeys.forEach(function (key) {
                                 if (scope.item.options[key]) {
@@ -263,7 +263,7 @@
                                 styleValue = 'padding-right: ' + (optionButtonsCount * 34) + 'px;';
                             }
 
-                        }
+                        }*/
 
                     }
 

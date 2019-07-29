@@ -8,7 +8,7 @@
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
-        console.log("filter datesTree data", data);
+
         vm.title = data.title;
 
         if (!data.datesTree) {
@@ -75,7 +75,6 @@
         };*/
 
         var checkForInactiveYears = function () {
-            console.log("filter datesTree checkForinactiveYears", JSON.parse(JSON.stringify(vm.datesTree)));
 
             var allItemsSelected = false;
 
@@ -302,8 +301,7 @@
 
             checkDatesTreeForUnavailableGroups();
             checkForInactiveYears();
-            // setDateGroupsCheckboxesState();
-            // console.log("filter datestree datesTree", JSON.parse(JSON.stringify(vm.datesTree)));
+
         };
 
         vm.expandCollapseAll = function () {

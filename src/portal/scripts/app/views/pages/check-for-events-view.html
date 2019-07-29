@@ -6,16 +6,14 @@
         <md-input-container data-ng-class="{'disabled-btn': vm.loading}" class="m-r-16 m-l-0">
             <label for="">Effective date from</label>
             <zh-date-picker data-date-value="vm.effective_date_from"
-                            data-ng-model="vm.effective_date_from"
-                            data-ng-change="vm.effective_date_to = vm.effective_date_from; vm.events = []"
+                            data-callback-method="vm.effective_date_to = vm.effective_date_from; vm.events = []"
             ></zh-date-picker>
         </md-input-container>
 
         <md-input-container data-ng-class="{'disabled-btn': vm.loading}">
             <label for="">Effective date to</label>
             <zh-date-picker date-data-value="vm.effective_date_to"
-                            data-ng-model="vm.effective_date_to"
-                            data-ng-change="vm.events = []"
+                            data-callback-method="vm.events = []"
             ></zh-date-picker>
         </md-input-container>
 
