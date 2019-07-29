@@ -2,6 +2,7 @@
 
     var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
+
         if (filterType === 'from_to') {
 
             if (regularFilterValue.min_value !== undefined &&
@@ -10,10 +11,6 @@
                 regularFilterValue.max_value !== null) {
                 return true;
             }
-
-        } else if (filterType === 'empty') {
-
-            return true;
 
         } else if (Array.isArray(regularFilterValue)) {
 
@@ -28,7 +25,7 @@
     };
 
     var filterTableRows = function (items, regularFilters) {
-        // console.log("filter filter.service filterTableRows", items, regularFilters);
+
         var match;
 
         return items.filter(function (item, tableRowIndex) {
@@ -41,20 +38,20 @@
                 var keyProperty = regularFilters[k].key;
                 var valueType = regularFilters[k].value_type;
                 var filterType = regularFilters[k].filter_type;
+                var excludeEmptyCells = regularFilters[k].exclude_empty_cells;
                 var filterValue = regularFilters[k].value;
 
-                // console.log("filter filter settings", valueType, filterType);
-                if (keyProperty !== 'ordering') {
-                    // console.log("filter data key", keyProperty, item);
 
-                    if (item.hasOwnProperty(keyProperty) && item[keyProperty]) {
+                if (keyProperty !== 'ordering') {
+
+                    if (item.hasOwnProperty(keyProperty) && item[keyProperty]) { // check if cell used to filter row is not empty
+
+                        if (filterType === 'empty') { // prevent pass of cells with values
+                            match = false;
+                            break;
+                        }
 
                         if (checkForEmptyRegularFilter(filterValue, filterType)) {
-
-                            if (filterType === 'empty') { // empty cells will pass before this step
-                                match = false;
-                                break;
-                            }
 
                             var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
                             var filterArgument = JSON.parse(JSON.stringify(filterValue));
@@ -120,13 +117,18 @@
                         }
 
                     } else {
-                        match = true;
+
+                        if (excludeEmptyCells) { // if user choose to hide empty cells
+                            match = false;
+                        } else {
+                            match = true;
+                        }
                     }
 
                 }
 
             }
-            // console.log("filter filter.service match", keyProperty, item[keyProperty], match);
+
             return match;
 
         });
@@ -134,7 +136,7 @@
     };
 
     var filterValueFromTable = function (valueToFilter, filterBy, operationType) {
-        // console.log("filter filterValueFromTable", valueToFilter, filterBy);
+
         switch (operationType) {
 
             case 'contain':
@@ -202,7 +204,7 @@
             case 'from_to':
                 var minValue = filterBy.min_value;
                 var maxValue = filterBy.max_value;
-                // console.log("filter from_to values", minValue, maxValue);
+
                 if (valueToFilter >= minValue && valueToFilter <= maxValue) {
                     return true;
                 }

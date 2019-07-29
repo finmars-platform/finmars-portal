@@ -79,6 +79,7 @@
                     var filterSettings = {
                         key: key,
                         filter_type: item.options.filter_type,
+                        exclude_empty_cells: item.options.exclude_empty_cells,
                         value_type: item.value_type,
                         value: item.options.filter_values
                     };

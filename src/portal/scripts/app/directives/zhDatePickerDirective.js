@@ -5,22 +5,22 @@
 
     'use strict';
 
-    module.exports = function () {
+    module.exports = function (pickmeup) {
 
         return {
             restrict: 'AE',
             scope: {
                 position: '@',
                 defaultDate: '=',
-                dateValue: '='
+                dateValue: '=',
+                callbackMethod: '&?'
             },
-            require: '?ngModel',
-            template: '<div class="pick-me-up overflow-hidden"><input type="text" value=""></div>',
-            link: function (scope, elem, attrs, ngModel) {
+            // require: '?ngModel',
+            template: '<div class="pick-me-up overflow-hidden"><input type="text" ng-model="dateValue" ng-blur="delayCallbackMethod()"></div>',
+            link: function (scope, elem, attrs) {
 
-                // console.log('datepicker!');
-
-                var input = $(elem).find('input');
+                var input = elem[0].querySelector('input');
+                var settedDate = scope.dateValue;
 
                 var position = 'right';
 
@@ -33,7 +33,7 @@
                     defaultDate = true;
                 }
 
-                scope.$watch(function () {
+                /*scope.$watch(function () {
 
                     return ngModel.$modelValue;
 
@@ -41,36 +41,45 @@
                     if (ngModel.$modelValue) {
                         input.val(newValue);
                     }
-                });
+                });*/
+
+                scope.delayCallbackMethod = function () {
+
+                    if (scope.callbackMethod && scope.dateValue !== settedDate) {
+
+                        settedDate = scope.dateValue;
+                        scope.callbackMethod();
+
+                    }
+
+                };
 
                 if (scope.dateValue) {
 
                     $(elem).parent().addClass('md-input-has-value');
-                    input.pickmeup({
+                    pickmeup(input, {
                         date: new Date(scope.dateValue),
                         current: new Date(scope.dateValue),
                         position: position,
                         default_date: defaultDate,
                         hide_on_select: true,
-                        format: 'Y-m-d',
-                        change: function () {
-                            ngModel.$setViewValue(this.value);
-                        }
+                        format: 'Y-m-d'
                     });
 
                 } else {
 
-                    input.pickmeup({
+                    pickmeup(input, {
                         position: position,
                         default_date: defaultDate,
                         hide_on_select: true,
-                        format: 'Y-m-d',
-                        change: function () {
-                            ngModel.$setViewValue(this.value);
-                        }
+                        format: 'Y-m-d'
                     });
 
-                }
+                };
+
+                input.addEventListener('pickmeup-change', function (event) {
+                    scope.dateValue = event.detail.formatted_date;
+                });
 
             }
         }

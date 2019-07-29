@@ -67,6 +67,13 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
 }]);
 
+app.factory('pickmeup', function ($window) {
+    console.log("pickmeup $window", $window);
+    if ($window.pickmeup) {
+        return $window.pickmeup;
+    }
+});
+
 // Common
 
 app.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
@@ -405,8 +412,8 @@ app.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/tw
 app.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
 app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
-app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);
-app.directive('complexZhDatePicker', ['$mdDialog', require('./app/directives/complexZhDatePickerDirective')]);
+app.directive('zhDatePicker', ['pickmeup', require('./app/directives/zhDatePickerDirective')]);
+app.directive('complexZhDatePicker', ['$mdDialog', 'pickmeup', require('./app/directives/complexZhDatePickerDirective')]);
 app.directive('dateTreeInput', ['$mdDialog', require('./app/directives/dateTreeInputDirective')]);
 app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);

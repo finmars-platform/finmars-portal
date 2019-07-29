@@ -121,22 +121,15 @@
 
                     if (entityAttr.key.indexOf('complex_transaction.transaction_type.') !== -1) {
 
-                        switch (entityAttr.key) {
-                            case 'complex_transaction.transaction_type.name':
-                                return true;
-                                break;
-                            default:
+                        if (entityAttr.key.indexOf('complex_transaction.transaction_type.user_text_') === -1 &&
+                            entityAttr.key.indexOf('complex_transaction.transaction_type.user_number_') === -1 &&
+                            entityAttr.key.indexOf('complex_transaction.transaction_type.user_date_') === -1) {
 
-                                if (entityAttr.key.indexOf('complex_transaction.transaction_type.user_text_') === -1 &&
-                                    entityAttr.key.indexOf('complex_transaction.transaction_type.user_number_') === -1 &&
-                                    entityAttr.key.indexOf('complex_transaction.transaction_type.user_date_') === -1) {
+                            vm.transactionTypeAttrs.push(entityAttr);
 
-                                    vm.transactionTypeAttrs.push(entityAttr);
-
-                                }
-
-                                return false;
                         }
+
+                        return false;
 
                     } else {
                         return true;

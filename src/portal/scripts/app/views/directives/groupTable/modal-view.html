@@ -26,7 +26,9 @@
                             <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.entityAttrs | filter: {name: entitySearchTerms}" layout="row">
-                            <div>
+                            <div class="view-constructor-checkboxes-container"
+                                 layout="row"
+                                 layout-align="start center">
                                 <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                                 <md-checkbox
@@ -61,7 +63,9 @@
                             <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.attrs | filter: {name: userAttrSearchTerms}" layout="row">
-                            <div>
+                            <div class="view-constructor-checkboxes-container"
+                                 layout="row"
+                                 layout-align="start center">
                                 <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria="groups" class="md-g-green"

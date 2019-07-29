@@ -89,7 +89,9 @@
         var data = {
             columns: [],
             groups: [],
-            rootGroupOptions: {},
+            rootGroupOptions: {
+                subtotal_type: false
+            },
             filters: [],
             pagination: {
                 items_per_page: 60
@@ -820,6 +822,7 @@
 
                 listLayout.data.reportOptions = JSON.parse(JSON.stringify(getReportOptions()));
                 listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(getReportLayoutOptions()));
+                listLayout.data.rootGroupOptions = JSON.parse(JSON.stringify(getRootGroupOptions()));
 
                 if (getExportOptions()) {
                     listLayout.data.export = JSON.parse(JSON.stringify(getExportOptions()));
@@ -874,11 +877,15 @@
 
                 var reportOptions = getReportOptions();
                 var reportLayoutOptions = getReportLayoutOptions();
+                var rootGroupOptions = getRootGroupOptions();
+
                 var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
                 var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
+                var newRootGroupOptions = Object.assign({}, rootGroupOptions, listLayout.data.rootGroupOptions);
 
                 setReportOptions(newReportOptions);
                 setReportLayoutOptions(newReportLayoutOptions);
+                setRootGroupOptions(newRootGroupOptions);
 
                 setExportOptions(listLayout.data.export);
 
@@ -887,7 +894,6 @@
             setColumns(listLayout.data.columns);
             setGroups(listLayout.data.grouping);
             setFilters(listLayout.data.filters);
-            // setAdditions(listLayout.data.additions);
 
             if (isRootEntityViewer()) {
                 setAdditions(listLayout.data.additions);

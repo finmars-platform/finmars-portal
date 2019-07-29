@@ -43,6 +43,14 @@
 
         var originalEntityInputs = null;
 
+        // Creating various variables to use as search terms for filters of repeating md-select components
+        vm.searchTerms = {};
+
+        vm.getInputsFilterST = function (name, index) {
+            return name + index;
+        };
+        // < Creating various variables to use as search terms for filters of repeating md-select components >
+
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false};
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
@@ -233,7 +241,6 @@
             return new Promise(function (res, rej) {
 
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
-                    console.log("ttype inputs", JSON.parse(JSON.stringify(data)));
 
                     if (data.inputs) {
                         originalEntityInputs = JSON.parse(JSON.stringify(data.inputs));
@@ -1731,14 +1738,6 @@
             vm.entityType = entityType;
             vm.entityId = entityId;
         };
-
-        // Creating various variables to use as search terms for filters of repeating md-select components
-        $scope.searchTerms = {};
-
-        $scope.getInputsFilterST = function (name, index) {
-            return name + index;
-        };
-        // < Creating various variables to use as search terms for filters of repeating md-select components >
 
     }
 
