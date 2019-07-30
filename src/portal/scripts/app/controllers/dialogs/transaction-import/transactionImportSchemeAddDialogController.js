@@ -280,6 +280,22 @@
             });
         };
 
+        vm.editTransactionType = function (ttypeId, $event) {
+
+            $mdDialog.show({
+                controller: 'TransactionTypeEditDialogController as vm',
+                templateUrl: 'views/entity-viewer/transaction-type-edit-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    entityType: 'transaction-type',
+                    entityId: ttypeId
+                }
+            })
+
+        };
+
     };
 
 }());

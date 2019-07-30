@@ -70,23 +70,6 @@
                 vm.scheme.entity_fields.map(function (field) {
                     if (field.dynamic_attribute_id) {
 
-                        /*if (pickedDynamicAttrs.length > 0) {
-                            var dynamicAttrMarked = false;
-                            pickedDynamicAttrs.map(function (dynamicAttr) {
-
-                                if (dynamicAttr === field.dynamic_attribute_id) {
-                                    dynamicAttrMarked = true;
-                                }
-
-                            });
-
-                            if (!dynamicAttrMarked) {
-                                pickedDynamicAttrs.push(field.dynamic_attribute_id);
-                            }
-
-                        } else {
-                            pickedDynamicAttrs.push(field.dynamic_attribute_id);
-                        }*/
                         pickedDynamicAttrs.push(field.dynamic_attribute_id);
 
                     }
@@ -442,13 +425,17 @@
 
         vm.checkForClassifierMapping = function (classifierId) {
 
-            var i;
-            for (i = 0; i < vm.dynamicAttributes.length; i++) {
+            if (classifierId) {
 
-                if (vm.dynamicAttributes[i].id === classifierId) {
+                var i;
+                for (i = 0; i < vm.dynamicAttributes.length; i++) {
 
-                    if (vm.dynamicAttributes[i].value_type === 30) {
-                        return true;
+                    if (vm.dynamicAttributes[i].id === classifierId) {
+
+                        if (vm.dynamicAttributes[i].value_type === 30) {
+                            return true;
+                        }
+
                     }
 
                 }
@@ -496,12 +483,21 @@
             return item;
         };
 
-        vm.editTreeAttr = function (item, ev) {
+        vm.editTreeAttr = function (attrId, ev) {
 
-            var classifierObject = Object.assign({}, item);
+            var classifierObject = {};
 
-            classifierObject.id = classifierObject.dynamic_attribute_id;
-            delete classifierObject.dynamic_attribute_id;
+            for (var i = 0; i < vm.dynamicAttributes.length; i++) {
+
+                if (vm.dynamicAttributes[i].id === attrId) {
+                    classifierObject = Object.assign({}, vm.dynamicAttributes[i]);
+                    break;
+                }
+
+            };
+
+            /*classifierObject.id = classifierObject.dynamic_attribute_id;
+            delete classifierObject.dynamic_attribute_id;*/
 
             $mdDialog.show({
                 controller: 'ClassificationEditorDialogController as vm',

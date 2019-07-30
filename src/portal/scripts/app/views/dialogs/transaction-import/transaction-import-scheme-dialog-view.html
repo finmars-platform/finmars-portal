@@ -47,8 +47,9 @@
                                                 <span style="position: relative; top: 8px">#</span>
                                                 <md-input-container flex="20" style="position: relative">
                                                     <!--<label for="">Number</label>-->
-                                                    <input type="number"
-                                                           data-ng-model="item.column"
+                                                    <input class="no-input-arrows"
+                                                           type="number"
+                                                           ng-model="item.column"
                                                            aria-label="provider field column number">
                                                 </md-input-container>
                                                 <md-input-container flex="70">
@@ -61,7 +62,7 @@
                                             </div>
                                             <div>
                                                 <md-button style="min-width: 40px;"
-                                                           data-ng-click="vm.removeProviderField(item, $index)"
+                                                           ng-click="vm.removeProviderField(item, $index)"
                                                            class="md-raised"
                                                            style="line-height: 1">x</md-button>
                                             </div>
@@ -76,7 +77,7 @@
                             </md-card>
                         </div>
                         <div layout="row">
-                            <md-button class="md-raised" data-ng-click="vm.addProviderField()">
+                            <md-button class="md-raised" ng-click="vm.addProviderField()">
                                 Add field
                             </md-button>
                         </div>
@@ -130,21 +131,45 @@
                                                     </md-select>
                                                 </md-input-container>
                                             </div>
-                                            <div flex="20">
+                                            <!--<div flex="20">
                                                 <md-button
                                                         class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
-                                                        data-ng-click="vm.openInputs(item, $event)">
+                                                        ng-click="vm.openInputs(item, $event)">
                                                     Inputs
                                                 </md-button>
                                             </div>
                                             <div flex="10">
                                                 <md-button
                                                         class="custom-small-icon-btn md-raised"
-                                                        data-ng-click="vm.removeMappingField(item, $index)"
+                                                        ng-click="vm.removeMappingField(item, $index)"
                                                         data-ng-if="!item.required"
                                                         class="md-raised"
                                                         style="line-height: 1">x
                                                 </md-button>
+                                            </div>-->
+                                            <div flex="30">
+
+                                                <md-button
+                                                        class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
+                                                        ng-click="vm.openInputs(item, $event)">
+                                                    Inputs
+                                                </md-button>
+
+                                                <md-button class="md-raised md-primary import-mapping-small-btn"
+                                                           ng-class="{'disabled-btn': !item.transaction_type}"
+                                                           ng-click="vm.editTransactionType(item.transaction_type, $event)">
+                                                    <ng-md-icon icon="mode_edit" size="20"></ng-md-icon>
+                                                    <md-tooltip class="tooltip_1" md-direction="top">Edit transaction type</md-tooltip>
+                                                </md-button>
+
+                                                <md-button
+                                                        class="custom-small-icon-btn md-raised"
+                                                        ng-click="vm.removeMappingField(item, $index)"
+                                                        data-ng-if="!item.required"
+                                                        class="md-raised"
+                                                        style="line-height: 1">x
+                                                </md-button>
+
                                             </div>
                                         </div>
                                     </div>
@@ -152,7 +177,7 @@
                             </md-card>
                         </div>
                         <div layout="row">
-                            <md-button class="md-raised" data-ng-click="vm.addMapField()">Add field</md-button>
+                            <md-button class="md-raised" ng-click="vm.addMapField()">Add field</md-button>
                         </div>
                     </div>
                 </div>

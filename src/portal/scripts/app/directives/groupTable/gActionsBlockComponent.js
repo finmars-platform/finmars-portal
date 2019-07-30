@@ -867,7 +867,7 @@
                     var columns = scope.evDataService.getColumns();
                     var groups = scope.evDataService.getGroups();
 
-                    var blobPart = convertReportHelper.convertToCSV(flatList, columns, scope.isReport, groups.length);
+                    var blobPart = convertReportHelper.convertFlatListToCSV(flatList, columns, scope.isReport, groups.length);
                     downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
                 };
 

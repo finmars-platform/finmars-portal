@@ -67,12 +67,11 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
 }]);
 
-app.factory('pickmeup', function ($window) {
-    console.log("pickmeup $window", $window);
+app.factory('pickmeup', ['$window', function ($window) {
     if ($window.pickmeup) {
         return $window.pickmeup;
     }
-});
+}]);
 
 // Common
 
