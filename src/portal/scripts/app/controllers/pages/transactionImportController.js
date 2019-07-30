@@ -142,8 +142,8 @@
 
                     });
 
-                    // vm.validateConfig.file = {};
-                    // vm.validateConfig.file.name = vm.fileLocal.name;
+                    vm.validateConfig.file = {};
+                    vm.validateConfig.file.name = vm.fileLocal.name;
 
                     $mdDialog.show({
                         controller: 'TransactionImportErrorsDialogController as vm',
