@@ -327,7 +327,10 @@
                             return {
                                 current: vm.counter,
                                 total: vm.activeItemTotal,
-                                status: vm.status
+                                status: vm.status,
+                                additional: [
+                                    vm.getTransactionImportProgress()
+                                ]
                             }
                         }
                     }
@@ -376,7 +379,10 @@
                                         return {
                                             current: vm.counter,
                                             total: vm.activeItemTotal,
-                                            status: vm.status
+                                            status: vm.status,
+                                            additional: [
+                                                vm.getTransactionImportProgress()
+                                            ]
                                         }
                                     }
                                 }
