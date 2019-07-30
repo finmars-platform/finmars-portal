@@ -43,49 +43,13 @@
             var columns = evDataService.getColumns();
             var groups  = evDataService.getGroups();
 
-            var csv = convertReportHelper.convertToCSV(flatList, columns, isReport, groups.length);
+            var table = convertReportHelper.convertFlatListToExcel(flatList, columns, isReport, groups.length);
 
             var listener = function (e) {
 
                 // console.log('covert copy selected csv', csv);
 
-                e.clipboardData.setData('text/plain', csv);
-
-                e.preventDefault();
-
-            };
-
-            document.addEventListener('copy', listener, false);
-
-            document.execCommand("copy");
-
-            document.removeEventListener('copy', listener, false);
-        }
-
-    };
-
-    var copySelected = function (evDataService, isReport) {
-
-        /*var rows = document.querySelectorAll('.ev-content .g-row.selected');
-        var columns = document.querySelectorAll('.g-columns-holder .g-cell');*/
-
-        var flatList = evDataService.getFlatList();
-
-        flatList = flatList.filter(function (row) {
-           return row.___is_activated;
-        });
-
-        if (flatList.length) {
-            var columns = evDataService.getColumns();
-            var groups  = evDataService.getGroups();
-
-            var csv = convertReportHelper.convertToCSV(flatList, columns, isReport, groups.length);
-
-            var listener = function (e) {
-
-                // console.log('covert copy selected csv', csv);
-
-                e.clipboardData.setData('text/plain', csv);
+                e.clipboardData.setData('text/plain', table);
 
                 e.preventDefault();
 
@@ -101,8 +65,7 @@
     };
 
     module.exports = {
-        copy: copy,
-        copySelected: copySelected
+        copy: copy
     }
 
 }());

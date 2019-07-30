@@ -51,7 +51,10 @@
                                         <div class="iscm-item" layout="row">
                                             <span style="position: relative; top: 8px">#</span>
                                             <md-input-container flex="20">
-                                                <input class="no-input-arrows" type="number" data-ng-model="item.column" aria-label="index">
+                                                <input class="no-input-arrows"
+                                                       type="number"
+                                                       data-ng-model="item.column"
+                                                       aria-label="index">
                                             </md-input-container>
                                             <md-input-container flex="70">
                                                 <input aria-label="key"
@@ -176,15 +179,15 @@
                                                         </md-button>
                                                     </div>-->
 
-                                                    <div ng-if="item.dynamic_attribute_id && vm.checkForClassifierMapping(item.dynamic_attribute_id)"
-                                                         style="display: inline-block">
+                                                    <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)" style="display: inline-block">
                                                         <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
-                                                                   class="md-raised md-primary import-mapping-small-btn"
-                                                                   data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
+                                                                   class="md-raised md-primary import-mapping-small-btn">
                                                             <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                         </md-button>
+                                                    </div>
 
-                                                        <md-button data-ng-click="vm.editTreeAttr(item, $event)"
+                                                    <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)" style="display: inline-block">
+                                                        <md-button data-ng-click="vm.editTreeAttr(item.dynamic_attribute_id, $event)"
                                                                    class="md-raised md-primary import-mapping-small-btn">
                                                             <ng-md-icon icon="format_align_right" size="20">
                                                                 <md-tooltip md-direction="top">Edit Classifier tree
