@@ -165,7 +165,7 @@
                 }).join(',');
 
                 result.push(contentRow);
-                result.push('\n')
+                // result.push('\n')
 
 
             });
