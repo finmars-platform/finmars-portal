@@ -20,7 +20,7 @@
             templateUrl: 'views/directives/reportViewer/userFilters/rv-number-filter-view.html',
             link: function (scope, elem, attrs) {
 
-                console.log("filter filterNumberData", scope.filter);
+                // console.log("filter filterNumberData", scope.filter);
 
                 scope.filters = scope.evDataService.getFilters();
 
@@ -105,7 +105,7 @@
 
 
                 scope.filterSettingsChange = function () {
-                    console.log("filter filterSettingsChange", scope.filter.options);
+                    // console.log("filter filterSettingsChange", scope.filter.options);
 
                     scope.evDataService.resetData();
                     scope.evDataService.resetRequestParameters();

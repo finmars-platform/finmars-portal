@@ -214,7 +214,7 @@
 
             vm.getView = function () {
 
-                middlewareService.deleteData('splitPanelActiveLayoutSwitched'); // reset split panel layout name
+                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.listViewIsReady = false;
 
@@ -333,7 +333,7 @@
                         activeLayout.is_active = false;
                         uiService.updateListLayout(activeLayout.id, activeLayout);
 
-                        middlewareService.setData('splitPanelActiveLayoutSwitched', activeLayout.name);
+                        middlewareService.setNewSplitPanelLayoutName(activeLayout.name);
                         setLayout(activeLayout);
 
                     } else {
@@ -369,7 +369,7 @@
                                 if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
 
                                     defaultLayout = defaultLayoutData.results[0];
-                                    middlewareService.setData('splitPanelActiveLayoutSwitched', defaultLayout.name);
+                                    middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
 
                                 }
 

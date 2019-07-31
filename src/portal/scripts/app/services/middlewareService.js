@@ -5,32 +5,63 @@
 
     'use strict';
 
-    var data = {};
-
-    var setData = function (propertyName, propertyValue) {
-        data[propertyName] = propertyValue;
+    var data = {
+        newEntityViewerLayoutName: false,
+        newSplitPanelLayoutName: false,
+        warnOnLayoutChangeFn: false
     };
 
-    var getData = function (propertyName) {
+    function setNewEntityViewerLayoutName(layoutName) {
+        data.newEntityViewerLayoutName = layoutName;
+    };
 
-        if (data.hasOwnProperty(propertyName)) {
-            return data[propertyName];
-        } else {
-            return false;
-        }
+    function getNewEntityViewerLayoutName() {
+
+        var newLayout = data.newEntityViewerLayoutName;
+        data.newEntityViewerLayoutName = false;
+
+        return newLayout;
 
     };
 
-    var deleteData = function (propertyName) {
-        if (data.hasOwnProperty(propertyName)) {
-            delete data[propertyName];
-        }
+    function setNewSplitPanelLayoutName(layoutName) {
+        data.newSplitPanelLayoutName = layoutName;
+    };
+
+    function getNewSplitPanelLayoutName() {
+        return data.newSplitPanelLayoutName;
+    };
+
+    function setWarningOnLayoutChangeFn(callbackFn) {
+        data.warnOnLayoutChangeFn = callbackFn;
+    };
+
+    function getWarningOnLayoutChangeFn() {
+        var callbackFn = data.warnOnLayoutChangeFn;
+        data.warnOnLayoutChangeFn = false;
+        return callbackFn;
+    };
+
+    function resetData() {
+        data = {
+            entityViewerLayouts: {
+                newLayoutName: false,
+                newSplitPanelLayoutName: false,
+                checkForLayoutChangesFn: false
+            }
+        };
     };
 
     module.exports = {
-        setData: setData,
-        getData: getData,
-        deleteData: deleteData
+        setNewEntityViewerLayoutName: setNewEntityViewerLayoutName,
+        getNewEntityViewerLayoutName: getNewEntityViewerLayoutName,
+        setNewSplitPanelLayoutName: setNewSplitPanelLayoutName,
+        getNewSplitPanelLayoutName: getNewSplitPanelLayoutName,
+
+        setWarningOnLayoutChangeFn: setWarningOnLayoutChangeFn,
+        getWarningOnLayoutChangeFn: getWarningOnLayoutChangeFn,
+
+        resetData: resetData
     }
 
 }());
