@@ -142,15 +142,15 @@
 
             reportOptions.recieved_at = new Date().getTime();
 
-            // console.log('reportOptions', reportOptions);
+            console.log('reportOptions', reportOptions);
 
             if (reportOptions.items && reportOptions.items.length) {
 
                 reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
                 reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 entityViewerDataService.setUnfilteredFlatList(reportOptions.items),
-                // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
-                reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
+                    // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
+                    reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
             }
 
