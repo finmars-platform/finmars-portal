@@ -210,7 +210,7 @@
                         isCancelable: false,
                         current: vm.counter,
                         total: vm.activeItemTotal,
-                        text: 'Validation Progress:',
+                        text: 'Validation Progress: Step',
                         status: vm.status,
                         callback: function () {
                             return {
@@ -321,7 +321,7 @@
                         isCancelable: false,
                         current: vm.counter,
                         total: vm.activeItemTotal,
-                        text: 'Validation Progress:',
+                        text: 'Validation Progress: Step',
                         status: vm.status,
                         callback: function () {
                             return {
@@ -373,7 +373,7 @@
                                     isCancelable: false,
                                     current: vm.counter,
                                     total: vm.activeItemTotal,
-                                    text: 'Import Progress:',
+                                    text: 'Import Progress: Step',
                                     status: vm.status,
                                     callback: function () {
                                         return {
