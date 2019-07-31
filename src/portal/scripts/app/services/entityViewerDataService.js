@@ -454,6 +454,8 @@
             var rootHash = stringHelper.toHash('root');
             var defaultRootGroup = getDefaultRootGroup();
 
+            console.log('defaultRootGroup', defaultRootGroup);
+
             setData(defaultRootGroup);
 
         }
