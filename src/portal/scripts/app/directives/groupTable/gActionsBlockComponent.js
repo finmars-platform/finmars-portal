@@ -355,7 +355,7 @@
                     if (scope.currentAdditions.type === type) {
 
                         clearAdditions();
-                        middlewareService.deleteData('splitPanelActiveLayoutSwitched');
+                        middlewareService.setNewSplitPanelLayoutName(false);
 
                     } else {
                         var additions = scope.evDataService.getAdditions();
@@ -432,7 +432,7 @@
 
                 var didLayoutChanged = function () {
 
-                    setInterval(function () {
+                    /*setInterval(function () {
 
                         var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
                         var layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
@@ -444,9 +444,9 @@
                                 scope.$apply();
                             }
 
-                        }
+                        };
 
-                    }, 1000)
+                    }, 1000);*/
 
                 };
 
@@ -471,9 +471,9 @@
 
                             scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
                             if (scope.isRootEntityViewer) {
-                                middlewareService.setData('entityActiveLayoutSwitched', res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                             } else {
-                                middlewareService.setData('splitPanelActiveLayoutSwitched', res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                             }
 
                         }
@@ -554,7 +554,7 @@
 
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                            middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
+                            middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
 
                             scope.isNewLayout = true;
 
@@ -672,7 +672,7 @@
 
                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
+                        middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
 
                         scope.isNewLayout = true;
 
@@ -747,7 +747,7 @@
 
                     });
 
-                    // middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
+                    // middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
                 };
 
                 scope.saveAsLayoutList = function ($event) {
@@ -776,11 +776,11 @@
                                     listLayout.id = data.id;
 
                                     if (scope.isRootEntityViewer) {
-                                        middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
+                                        middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
                                     } else {
                                         scope.evDataService.setSplitPanelDefaultLayout(listLayout.id);
                                         scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-                                        middlewareService.setData('splitPanelActiveLayoutSwitched', listLayout.name); // Give signal to update active split panel layout name in the toolbar
+                                        middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active split panel layout name in the toolbar
                                     }
 
                                     scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);

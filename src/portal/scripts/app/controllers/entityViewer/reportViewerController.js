@@ -491,7 +491,7 @@
 
                 console.log('here?');
 
-                middlewareService.deleteData('splitPanelActiveLayoutSwitched'); // reset split panel layout name
+                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.listViewIsReady = false;
 
@@ -622,12 +622,12 @@
 
             var checkLayoutForChanges = function () {
 
-                var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-                var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
+                return new Promise(function (resolve, reject) {
 
-                if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
+                    var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
+                    var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
 
-                    return new Promise(function (resolve, reject) {
+                    if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
 
                         $mdDialog.show({
                             controller: 'LayoutChangesLossWarningDialogController as vm',
@@ -682,18 +682,32 @@
 
                                 resolve(true);
 
-                            }
+                            } else {
+
+                                reject(false);
+
+                            };
 
                         }).catch(function () {
                             reject();
                         });
-                    });
 
-                }
+                    } else {
+                        resolve(true);
+                    };
+
+                });
 
             };
 
-            var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
+            var deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
+
+            var doOnMasterUserSelect = function () {
+                deregisterOnBeforeTransitionHook();
+                return checkLayoutForChanges();
+            };
+
+            middlewareService.setWarningOnLayoutChangeFn(doOnMasterUserSelect);
 
             var warnAboutLayoutChangesLoss = function (event) {
 
@@ -710,9 +724,10 @@
             window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
 
             this.$onDestroy = function () {
-                doBeforeStateChange();
+                deregisterOnBeforeTransitionHook();
 
-                window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss)
+                window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
+                middlewareService.setWarningOnLayoutChangeFn(false);
             }
         }
 

@@ -20,7 +20,7 @@
             templateUrl: 'views/directives/reportViewer/userFilters/rv-date-filter-view.html',
             link: function (scope, elem, attrs) {
 
-                console.log("filter filterDateData", scope.filter);
+                // console.log("filter filterDateData", scope.filter);
 
                 scope.filters = scope.evDataService.getFilters();
 
@@ -196,7 +196,7 @@
                 };
 
                 scope.filterSettingsChange = function () {
-                    console.log("filter filterSettingsChange", scope.filter.options.filter_values);
+                    // console.log("filter filterSettingsChange", scope.filter.options.filter_values);
                     if (scope.filter.options.filter_type === 'date_tree') {
                         scope.filter.options.filter_values = convertDatesTreeToFlatList();
                     }

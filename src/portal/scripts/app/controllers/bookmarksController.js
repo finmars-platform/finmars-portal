@@ -68,7 +68,7 @@
 
                             if ($state.current.name === stateToGo) { // If Bookmark change layout for current state, update it
                                 $state.reload(stateToGo);
-                                middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+                                middlewareService.setNewEntityViewerLayoutName('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
                                 $scope.$apply();
                             }
                             else {
@@ -104,12 +104,12 @@
                             if ($state.current.name === stateToGo) { // If Bookmark change layout for current state, update it
 
                                 $state.reload(stateToGo);
-                                // middlewareService.setData('entityActiveLayoutSwitched', layout.name); // Give signal to update active layout name in the toolbar
+                                // middlewareService.setNewEntityViewerLayoutName(layout.name); // Give signal to update active layout name in the toolbar
                                 $scope.$apply();
 
                             } else {
                                 $state.go(stateToGo);
-                                // middlewareService.setData('entityActiveLayoutSwitched', layout.name); // Give signal to update active layout name in the toolbar
+                                // middlewareService.setNewEntityViewerLayoutName(layout.name); // Give signal to update active layout name in the toolbar
                                 $scope.$apply();
                             }
 

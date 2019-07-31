@@ -20,7 +20,7 @@
             templateUrl: 'views/directives/reportViewer/userFilters/rv-text-filter-view.html',
             link: function (scope, elem, attrs) {
 
-                console.log("filter filterTextData", scope.filter);
+                // console.log("filter filterTextData", scope.filter);
 
                 scope.filters = scope.evDataService.getFilters();
 

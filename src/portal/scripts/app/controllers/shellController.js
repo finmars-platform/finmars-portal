@@ -124,19 +124,40 @@
 
         vm.selectMaster = function (master) {
 
-            usersService.setMasterUser(master.id).then(function (value) {
+            var checkLayoutForChanges = middlewareService.getWarningOnLayoutChangeFn();
 
-                $state.go('app.home');
+            var changeMasterUser = function () {
 
-                if (vm.broadcastManager) {
-                    vm.broadcastManager.postMessage({event: crossTabEvents.MASTER_USER_CHANGED});
+                usersService.setMasterUser(master.id).then(function (value) {
+
+                    $state.go('app.home');
+
+                    if (vm.broadcastManager) {
+                        vm.broadcastManager.postMessage({event: crossTabEvents.MASTER_USER_CHANGED});
+                    }
+
+                    vm.getMasterUsersList();
+
+
+                });
+            };
+
+            if (vm.currentMasterUser.id !== master.id) {
+
+                if (checkLayoutForChanges) {
+
+                    checkLayoutForChanges().then(function () {
+
+                        changeMasterUser();
+
+                    });
+
+                } else {
+
+                    changeMasterUser();
+
                 }
-
-                vm.getMasterUsersList();
-
-
-            })
-
+            }
 
         };
 
@@ -189,8 +210,8 @@
 
         vm.isStateOfEntity = function () {
 
-            var newLayoutName = middlewareService.getData('entityActiveLayoutSwitched');
-            var newSplitPanelLayoutName = middlewareService.getData('splitPanelActiveLayoutSwitched');
+            var newLayoutName = middlewareService.getNewEntityViewerLayoutName();
+            var newSplitPanelLayoutName = middlewareService.getNewSplitPanelLayoutName();
             // Change layout information on state change
             /*if (currentState !== previousState) {
                 previousState = currentState;
@@ -206,7 +227,6 @@
             // Check if layout has been switched without changing state
 
             if (newLayoutName) {
-                middlewareService.deleteData('entityActiveLayoutSwitched');
                 vm.getActiveLayoutName(newLayoutName);
             }
 
@@ -375,7 +395,7 @@
 
         $transitions.onSuccess({}, function (transition) {
 
-            middlewareService.deleteData('splitPanelActiveLayoutSwitched');
+            middlewareService.setNewSplitPanelLayoutName(false);
             var from = transition.from();
 
             if (from.name === 'app.profile') {

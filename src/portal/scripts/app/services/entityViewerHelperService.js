@@ -1,6 +1,10 @@
 /**
  * Created by szhitenev on 06.05.2016.
  */
+/**
+ * Entity viewer helper service.
+ * @module EntityViewerHelperService
+ */
 (function () {
 
     var objectComparisonHelper = require('../helpers/objectsComparisonHelper');
@@ -51,6 +55,14 @@
 
     };
 
+    /**
+     * Check if layout has been changed before changing masteruser
+     * @param {object} activeLayoutConfig - Object with configuration of layout saved on server
+     * @param {object} layoutCurrentConfig - Object with current
+     * @param {boolean} isReport
+     * @memberOf module:EntityViewerHelperService
+     * @return {boolean} Returns true if layout has been changed, otherwise false
+     */
     var checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
 
         if (isReport) {
