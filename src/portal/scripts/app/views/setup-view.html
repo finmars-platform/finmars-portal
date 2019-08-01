@@ -1,73 +1,148 @@
-<div class="p-16">
+<div class="p-16 setup-page">
 
-    <div data-ng-if="vm.readyStatus.content">
+    <div data-ng-if="vm.readyStatus.content && vm.readyStatus.member">
 
-        <h1 class="text-center">Welcome</h1>
+        <div data-ng-if="!vm.finishingSetup">
 
-        <h2 class="m-0 text-center m-b-16">Setup your account</h2>
+            <h1 class="text-center">Welcome</h1>
 
-        <p class="text-center">Please select init configuration you would like to use:</p>
+            <h2 class="m-0 text-center m-b-16">Setup your account</h2>
 
-        <div class="margin-auto setup-wrapper">
+            <div class="text-center f-s-20 m-b-50">Step <b>{{vm.currentStep}} / {{vm.totalSteps}}</b></div>
 
-            <div data-ng-repeat="item in vm.items" class="setup-item">
+            <div data-ng-if="vm.currentStep == 1" class="margin-auto" style="max-width: 800px">
 
-                <div>
+                <p class="text-center">Please select your complexity level:</p>
 
-                    <div class="setup-name p-t-8 m-b-8">{{item.name}}</div>
+                <md-input-container class="md-block" style="height: 64px">
+                    <label>Complexity</label>
+                    <md-select data-ng-model="vm.interface_level">
+                        <md-option value="5">Front Office</md-option>
+                        <md-option value="10">Middle Office</md-option>
+                        <md-option value="15">Sophisticated User</md-option>
+                        <md-option value="20">Advanced Sophisticated User</md-option>
+                    </md-select>
+                </md-input-container>
 
-                    <div data-ng-if="item.description" class="setup-description">
-                        {{item.description}}
+
+                <md-button class="md-raised md-primary m-0 float-right" data-ng-class="{'disabled-btn': !vm.interface_level}" data-ng-click="vm.finishStep1()">
+                    Next
+                </md-button>
+
+
+            </div>
+
+            <div data-ng-if="vm.currentStep == 2" class="margin-auto" style="max-width: 800px">
+
+                <p class="text-center">Please select init configuration you would like to use:</p>
+
+                <div class="margin-auto setup-wrapper">
+
+                    <div data-ng-repeat="item in vm.items" class="setup-item" ng-class="{active: vm.activeConfig === item.id}">
+
+                        <div>
+
+                            <div class="setup-name p-t-8 m-b-8">{{item.name}}</div>
+
+                            <div data-ng-if="item.description" class="setup-description">
+                                {{item.description}}
+                            </div>
+
+                            <div class="setup-item-footer">
+
+                                <md-button class="md-raised m-0 float-right"
+                                           ng-class="{active: vm.activeConfig === item.id}"
+                                           data-ng-click="vm.setActiveConfig(item.id)">
+                                <span data-ng-show="vm.activeConfig === item.id">
+                                    Activated
+                                </span>
+                                    <span data-ng-show="vm.activeConfig !== item.id">
+                                    Activate
+                                </span>
+                                </md-button>
+
+                            </div>
+
+
+                        </div>
+
                     </div>
 
+                </div>
+
+                <p class="text-center"> or </p>
+
+                <div class="margin-auto setup-wrapper">
+                    <div class="setup-item" ng-class="{active: vm.activeConfig === 'custom'}">
+
+                        <div>
+
+                            <div class="setup-name p-t-8 m-b-8">Custom</div>
+
+                            <div class="setup-description">
+                                Configure all forms, layouts and tables by myself
+                            </div>
+
+                            <div class="setup-item-footer">
+
+                                <md-button class="md-raised m-0 float-right"
+                                           ng-class="{active: vm.activeConfig === 'custom'}"
+                                           data-ng-click="vm.setActiveConfig('custom')">
+
+                                <span data-ng-show="vm.activeConfig === 'custom'">
+                                    Activated
+                                </span>
+                                    <span data-ng-show="vm.activeConfig !== 'custom'">
+                                    Activate
+                                </span>
+
+                                </md-button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="m-t-24">
                     <div class="setup-item-footer">
 
-                        <md-button class="md-raised md-primary m-0 float-right" data-ng-click="vm.applyItem($event, item)">
-                            Apply
+                        <md-button class="md-raised md-warn m-0 float-left"
+                                   data-ng-click="vm.currentStep = vm.currentStep - 1">
+                            Back
+                        </md-button>
+
+                        <md-button class="md-raised md-primary m-0 float-right" ng-class="{'disabled-btn': !vm.activeConfig}" data-ng-click="vm.finishSetup($event)">
+                            Finish
                         </md-button>
 
                     </div>
-
-
                 </div>
 
             </div>
 
         </div>
 
-        <p class="text-center"> or </p>
+        <div data-ng-if="vm.finishingSetup">
 
-        <div class="margin-auto setup-wrapper">
-            <div class="setup-item">
+            <h1 class="text-center">Applying new settings</h1>
 
-                <div>
+            <h2 class="m-0 text-center m-b-50">Please, wait</h2>
 
-                    <div class="setup-name p-t-8 m-b-8">Custom</div>
-
-                    <div class="setup-description">
-                        Configure all forms, layouts and tables by myself
-                    </div>
-
-                    <div class="setup-item-footer">
-
-                        <md-button class="md-raised md-primary m-0 float-right" data-ng-click="vm.ownSetup()">
-                            Apply
-                        </md-button>
-
-                    </div>
-
-                </div>
-
+            <div class="m-l-16" layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-diameter="50" md-mode="indeterminate"></md-progress-circular>
             </div>
+
         </div>
 
 
     </div>
 
 
-    <div data-ng-if="!vm.readyStatus.content">
+    <div data-ng-if="!vm.readyStatus.content || !vm.readyStatus.member">
         <div class="m-l-16" layout="row" layout-sm="column" layout-align="space-around">
-            <md-progress-circular md-diameter="50" md-mode="indeterminate"></md-progress-circular>
+            <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
         </div>
     </div>
 

@@ -6,11 +6,94 @@
     'use strict';
 
     var metaService = require('../services/metaService');
+    var usersService = require('../services/usersService');
+    var uiService = require('../services/uiService');
 
     module.exports = function ($scope, $mdDialog, $transition) {
 
         var vm = this;
         vm.sections = [];
+
+        vm.readyStatus = {
+            access: false
+        };
+
+        vm.accessSectionTable = {
+            history: true,
+            journal: true,
+            import: true,
+
+            settings_data: true,
+            settings_import_from_providers: true,
+            settings_import_from_files: true,
+
+            settings_administration: true
+
+        };
+
+        vm.accessTable = {
+
+            data_portfolio: true,
+            data_account: true,
+            data_instrument: true,
+            data_responsible: true,
+            data_counterparty: true,
+            data_currency: true,
+            data_strategies: true,
+            data_transaction: true,
+            data_price_history: true,
+            data_fx_history: true,
+            data_simple_import: true,
+            data_transaction_import: true,
+            data_complex_import: true,
+            data_instrument_download: true,
+            data_prices_download: true,
+
+            report_balance: true,
+            report_pl: true,
+            report_transaction: true,
+            report_performance: true,
+            report_cash_flow: true,
+            report_dashboard: true,
+            report_event: true,
+            report_bookmark: true,
+            report_instrument_audit: true,
+            report_transaction_audit: true,
+            report_base_transaction: true,
+            report_activity_log: true,
+            report_forum: true,
+
+            configuration_account_type: true,
+            configuration_instrument_type: true,
+            configuration_transaction_type: true,
+            configuration_pricing_policy: true,
+            configuration_price_download_scheme: true,
+            configuration_instrument_download_scheme: true,
+            configuration_automated_price_downloads: true,
+            configuration_simple_import_scheme: true,
+            configuration_transaction_import_scheme: true,
+            configuration_complex_import_scheme: true,
+            configuration_mapping_tables: true,
+            configuration_user_attributes: true,
+            configuration_aliases: true,
+
+            settings_notification: true,
+            settings_export_configuration: true,
+            settings_import_configuration: true,
+            settings_export_mapping: true,
+            settings_import_mapping: true,
+            settings_provider: true,
+            settings_init_configuration: true,
+            settings_users_groups_permission: true,
+            settings_new_objects_permission: true,
+            settings_timezone: true,
+            settings_ecosystem_default: true,
+
+            account_settings: true,
+            account_personal_data: true,
+            account_ecosystem_management: true
+
+        };
 
         vm.sideNavStatus = 'expand';
 
@@ -150,6 +233,109 @@
             }
 
         });
+
+        vm.syncInterfaceAccess = function () {
+
+            Object.keys(vm.accessTable).forEach(function (key) {
+
+                vm.accessTable[key] = false;
+
+            });
+
+            vm.interfaceAccess.forEach(function (item) {
+
+                if (item.value <= vm.member.interface_level) {
+                    vm.accessTable[item.system_code] = true;
+                }
+
+
+            });
+
+            vm.accessSectionTable.history =
+                vm.accessTable.data_transaction ||
+                vm.accessTable.data_price_history ||
+                vm.accessTable.data_fx_history;
+
+
+            vm.accessSectionTable.journal =
+                vm.accessTable.report_instrument_audit ||
+                vm.accessTable.report_transaction_audit ||
+                vm.accessTable.report_base_transaction;
+
+            vm.accessSectionTable.import =
+                vm.accessTable.data_simple_import ||
+                vm.accessTable.data_transaction_import ||
+                vm.accessTable.data_complex_import ||
+                vm.accessTable.data_instrument_download ||
+                vm.accessTable.data_prices_download ||
+                vm.accessTable.configuration_mapping_tables;
+
+            vm.accessSectionTable.settings_data =
+                vm.accessTable.configuration_account_type ||
+                vm.accessTable.configuration_instrument_type ||
+                vm.accessTable.configuration_transaction_type ||
+                vm.accessTable.configuration_pricing_policy ||
+                vm.accessTable.configuration_user_attributes;
+
+            vm.accessSectionTable.settings_import_from_providers =
+                vm.accessTable.configuration_price_download_scheme ||
+                vm.accessTable.configuration_instrument_download_scheme ||
+                vm.accessTable.configuration_automated_price_downloads;
+
+            vm.accessSectionTable.settings_import_from_files =
+                vm.accessTable.configuration_simple_import_scheme ||
+                vm.accessTable.configuration_transaction_import_scheme ||
+                vm.accessTable.configuration_complex_import_scheme;
+
+
+
+            vm.accessSectionTable.settings_administration =
+                vm.accessTable.settings_provider ||
+                vm.accessTable.settings_init_configuration ||
+                vm.accessTable.settings_users_groups_permission ||
+                vm.accessTable.settings_ecosystem_default
+
+        };
+
+        vm.getInterfaceAccess = function () {
+
+            uiService.getPortalInterfaceAccess().then(function (data) {
+
+                console.log('vm.getInterfaceAccess', data);
+
+                vm.interfaceAccess = data;
+
+                vm.syncInterfaceAccess();
+
+                vm.readyStatus.access = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getMember = function () {
+
+            usersService.getOwnMemberSettings().then(function (data) {
+
+                console.log('vm.getMember.data', data);
+
+                vm.member = data.results[0];
+
+                vm.getInterfaceAccess();
+
+            })
+
+        };
+
+        vm.init = function () {
+
+            vm.getMember();
+
+        };
+
+        vm.init();
     }
 
 }());

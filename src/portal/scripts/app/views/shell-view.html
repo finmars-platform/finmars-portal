@@ -1,4 +1,4 @@
-<div data-ng-if="vm.getCurrentState() == 'profile'" class="min-height">
+<div data-ng-if="vm.currentGlobalState == 'profile'" class="min-height">
 
     <md-toolbar class="header">
 
@@ -68,7 +68,7 @@
 
 </div>
 
-<div data-ng-if="vm.getCurrentState() == 'portal'" class="min-height">
+<div data-ng-if="vm.currentGlobalState == 'portal'" class="min-height">
 
     <div layout="row" class="min-height">
         <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm"
@@ -209,6 +209,12 @@
             </md-content>
         </div>
     </div>
+
+</div>
+
+<div data-ng-if="vm.currentGlobalState == 'setup'" class="min-height">
+
+    <div data-ui-view class="shell-view"></div>
 
 </div>
 

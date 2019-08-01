@@ -15,6 +15,19 @@
 
     var baseUrl = baseUrlService.resolve();
 
+    var getPortalInterfaceAccess = function (uiLayoutId) {
+        return xhrService.fetch(baseUrl + 'ui/portal-interface-access/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var getEditLayout = function (entity) {
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
@@ -533,6 +546,8 @@
     };
 
     module.exports = {
+
+        getPortalInterfaceAccess: getPortalInterfaceAccess,
 
         getDefaultEditLayout: getDefaultEditLayout,
         getDefaultListLayout: getDefaultListLayout,
