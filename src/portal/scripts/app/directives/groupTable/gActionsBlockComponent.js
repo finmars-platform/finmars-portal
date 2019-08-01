@@ -17,6 +17,8 @@
     var convertReportHelper = require('../../helpers/converters/convertReportHelper');
     var reportCopyHelper = require('../../helpers/reportCopyHelper');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
+    var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
+    var metaHelper = require('../../helpers/meta.helper');
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
@@ -432,21 +434,262 @@
 
                 var didLayoutChanged = function () {
 
-                    /*setInterval(function () {
+                    var changedEntityViewerParts = {}; // Will be needed to check if changes have been reset by user.
 
-                        var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
-                        var layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+                    var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
 
-                        if (activeLayoutConfig.hasOwnProperty('name') && layoutCurrentConfig.hasOwnProperty('name')) {
+                    var dleEventIndex = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                        activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
+                    });
 
-                            if (scope.layoutChanged !== !evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, scope.isReport)) {
-                                scope.layoutChanged = !scope.layoutChanged;
-                                scope.$apply();
+                    var isLayoutTheSame = function (data1, data2) {
+
+                        if (typeof data1 === 'object' && typeof data2 === 'object') {
+
+                            return objectComparisonHelper.comparePropertiesOfObjects(data1, data2);
+
+                        } else {
+
+                            if (data1 !== data2) {
+                                return false;
                             }
+
+                            return true;
 
                         };
 
-                    }, 1000);*/
+                    };
+
+                    var areReportOptionsTheSame = function () {
+
+                        var originalReportOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportOptions);
+
+                        delete originalReportOptions.task_id;
+                        delete originalReportOptions.recieved_at;
+                        delete originalReportOptions.task_status;
+
+                        var currentReportOptions = metaHelper.recursiveDeepCopy(scope.evDataService.getReportOptions());
+
+                        delete currentReportOptions.task_id;
+                        delete currentReportOptions.recieved_at;
+                        delete currentReportOptions.task_status;
+                        delete currentReportOptions.custom_fields;
+                        delete currentReportOptions.custom_fields_object;
+                        delete currentReportOptions.items;
+                        delete currentReportOptions.item_complex_transactions;
+                        delete currentReportOptions.item_counterparties;
+                        delete currentReportOptions.item_responsibles;
+                        delete currentReportOptions.item_strategies3;
+                        delete currentReportOptions.item_strategies2;
+                        delete currentReportOptions.item_strategies1;
+                        delete currentReportOptions.item_portfolios;
+                        delete currentReportOptions.item_instruments;
+                        delete currentReportOptions.item_instrument_pricings;
+                        delete currentReportOptions.item_instrument_accruals;
+                        delete currentReportOptions.item_currency_fx_rates;
+                        delete currentReportOptions.item_currencies;
+                        delete currentReportOptions.item_accounts;
+
+                        return isLayoutTheSame(originalReportOptions, currentReportOptions);
+                    };
+
+                    var groupsChangeEventIndex = scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+
+                        var originalGroups = activeLayoutConfig.data.grouping;
+                        var currentGroups = scope.evDataService.getGroups();
+
+                        if (!isLayoutTheSame(currentGroups, originalGroups)) {
+                            scope.layoutChanged = true;
+                            removeChangesTrackingEventListeners();
+                        };
+
+                    });
+
+                    var columnsChangeEventIndex = scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+                        var originalColumns = activeLayoutConfig.data.columns;
+                        var currentColumns = scope.evDataService.getColumns();
+
+                        if (!isLayoutTheSame(currentColumns, originalColumns)) {
+                            scope.layoutChanged = true;
+                            removeChangesTrackingEventListeners();
+                        };
+
+                    });
+
+                    var columnsSortChangeEventIndex = scope.evEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
+
+                        var originalColumns = activeLayoutConfig.data.columns;
+                        var currentColumns = scope.evDataService.getColumns();
+
+                        if (!isLayoutTheSame(currentColumns, originalColumns)) {
+                            scope.layoutChanged = true;
+                            removeChangesTrackingEventListeners();
+                        };
+
+                    });
+
+                    var rceEventIndex = scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
+
+                        var originalColumns = activeLayoutConfig.data.columns;
+                        var currentColumns = scope.evDataService.getColumns();
+
+                        if (!isLayoutTheSame(currentColumns, originalColumns)) {
+                            scope.layoutChanged = true;
+                            removeChangesTrackingEventListeners();
+                            scope.$apply();
+                        };
+
+                    });
+
+                    var filtersChangeEventIndex = scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+
+                        var originalFilters = activeLayoutConfig.data.filters;
+                        var currentFilters = scope.evDataService.getFilters();
+
+                        if (!isLayoutTheSame(currentFilters, originalFilters)) {
+                            scope.layoutChanged = true;
+                            removeChangesTrackingEventListeners();
+                        };
+
+                    });
+
+                    var additionsChangeEventIndex = scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+
+                        var originAdditions = activeLayoutConfig.data.additions;
+                        var currentAdditions = scope.evDataService.getAdditions();
+
+                        if (!isLayoutTheSame(originAdditions, currentAdditions)) {
+                            scope.layoutChanged = true;
+                            removeChangesTrackingEventListeners();
+                        };
+
+                    });
+
+                    var utvEventIndex = scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
+
+                        var originInterfaceLayout = activeLayoutConfig.data.interfaceLayout;
+                        var currentInterfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        if (!isLayoutTheSame(originInterfaceLayout, currentInterfaceLayout)) {
+                            scope.layoutChanged = true;
+                            removeChangesTrackingEventListeners();
+                        };
+
+                    });
+
+                    var tfaEventIndex = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+                        var originInterfaceLayout = activeLayoutConfig.data.interfaceLayout;
+                        var currentInterfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        if (!isLayoutTheSame(originInterfaceLayout, currentInterfaceLayout)) {
+                            scope.layoutChanged = true;
+                            removeChangesTrackingEventListeners();
+                            scope.$apply();
+                        };
+
+                    });
+
+                    if (scope.isReport) {
+
+                        var roChangeEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+
+                            var originReportLayoutOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportLayoutOptions);
+
+                            if (originReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+                                delete activeLayoutConfig.data.reportOptions.pl_first_date;
+                            }
+
+                            if (originReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+                                delete activeLayoutConfig.data.reportOptions.report_date;
+                            }
+
+
+                            var currentReportLayoutOptions = metaHelper.recursiveDeepCopy(scope.evDataService.getReportLayoutOptions());
+
+                            if (currentReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+                                delete activeLayoutConfig.data.reportOptions.pl_first_date;
+                            }
+
+                            if (currentReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+                                delete activeLayoutConfig.data.reportOptions.report_date;
+                            }
+
+                            if (!areReportOptionsTheSame() ||
+                                !isLayoutTheSame(originReportLayoutOptions, currentReportLayoutOptions)) {
+                                scope.layoutChanged = true;
+                                removeChangesTrackingEventListeners();
+                                // scope.$apply();
+                            }
+
+                        });
+
+                        var rtvChangedEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_TABLE_VIEW_CHANGED, function () {
+
+                            var originalColumns = activeLayoutConfig.data.columns;
+                            var currentColumns = scope.evDataService.getColumns();
+
+                            var originalRootGroupOptions = activeLayoutConfig.data.rootGroupOptions;
+                            var currentRootGroupOptions = scope.evDataService.getRootGroupOptions();
+
+                            var originalGroups = activeLayoutConfig.data.grouping;
+                            var currentGroups = scope.evDataService.getGroups();
+
+                            if (!isLayoutTheSame(originalColumns, currentColumns) ||
+                                !isLayoutTheSame(originalGroups, currentGroups) ||
+                                !isLayoutTheSame(originalRootGroupOptions, currentRootGroupOptions) ||
+                                !areReportOptionsTheSame()) {
+                                scope.layoutChanged = true;
+                                removeChangesTrackingEventListeners();
+
+                            };
+
+                        });
+
+                        var reoChangeEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_EXPORT_OPTIONS_CHANGED, function () {
+
+                            var originalReportExportOptions = activeLayoutConfig.data.export;
+                            var currentReportExportOptions = scope.evDataService.getExportOptions();
+
+                            if (!isLayoutTheSame(originalReportExportOptions, currentReportExportOptions)) {
+                                scope.layoutChanged = true;
+                                removeChangesTrackingEventListeners();
+                            }
+
+                        });
+
+                    };
+
+                    var changesTrackingEvents = {
+                        GROUPS_CHANGE: groupsChangeEventIndex,
+                        COLUMNS_CHANGE: columnsChangeEventIndex,
+                        COLUMN_SORT_CHANGE: columnsSortChangeEventIndex,
+                        RESIZE_COLUMNS_END: rceEventIndex,
+                        FILTERS_CHANGE: filtersChangeEventIndex,
+                        ADDITIONS_CHANGE: additionsChangeEventIndex,
+                        UPDATE_TABLE_VIEWPORT: utvEventIndex,
+                        TOGGLE_FILTER_AREA: tfaEventIndex,
+                        REPORT_OPTIONS_CHANGE: roChangeEventIndex,
+                        REPORT_TABLE_VIEW_CHANGED: rtvChangedEventIndex,
+                        REPORT_EXPORT_OPTIONS_CHANGED: reoChangeEventIndex,
+                        DATA_LOAD_END: dleEventIndex
+                    };
+
+                    var removeChangesTrackingEventListeners = function () {
+
+                        var trackingEventsListenerNames = Object.keys(changesTrackingEvents);
+
+                        for (var i = 0; i < trackingEventsListenerNames.length; i++) {
+                            var telName = trackingEventsListenerNames[i];
+
+                            if (changesTrackingEvents[telName]) { // execute only if event listener has been added
+
+                                scope.evEventService.removeEventListener(evEvents[telName], changesTrackingEvents[telName]);
+
+                            }
+                        };
+                    };
 
                 };
 
@@ -548,6 +791,7 @@
                             scope.evDataService.setListLayout(listLayout);
 
                             scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+                            scope.$apply(); // needed to update Report settings area in right sidebar
                             scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 
                             scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport});
@@ -789,7 +1033,6 @@
                                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                     scope.isNewLayout = false;
-                                    // scope.didLayoutChanged();
                                     scope.$apply();
 
                                 });
@@ -903,7 +1146,10 @@
                 };
 
                 checkLayoutExistence();
-                didLayoutChanged();
+
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    didLayoutChanged();
+                });
 
             }
         }

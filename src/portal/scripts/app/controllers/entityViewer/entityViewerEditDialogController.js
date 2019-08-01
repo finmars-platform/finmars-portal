@@ -537,8 +537,6 @@
 
         vm.getInstrumentUserFields = function () {
 
-            console.log('getInstrumentUserFields');
-
             uiService.getInstrumentFieldList().then(function (data) {
 
                 console.log('data', data);

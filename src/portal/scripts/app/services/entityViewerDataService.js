@@ -3,7 +3,7 @@
     'use strict';
 
     var stringHelper = require('../helpers/stringHelper');
-    var metaService = require('../services/metaService');
+    var metaHelper = require('../helpers/meta.helper');
 
     var getDefaultInterfaceLayout = function () {
 
@@ -758,15 +758,15 @@
 
             } else {
 
-                var listLayout = JSON.parse(JSON.stringify(getListLayout()));
+                var listLayout = metaHelper.recursiveDeepCopy(getListLayout());
 
                 if (options && options.isReport) {
 
-                    listLayout.data.reportOptions = JSON.parse(JSON.stringify(getReportOptions()));
-                    listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(getReportLayoutOptions()));
+                    listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
+                    listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
 
                     if (getExportOptions()) {
-                        listLayout.data.export = JSON.parse(JSON.stringify(getExportOptions()));
+                        listLayout.data.export = metaHelper.recursiveDeepCopy(getExportOptions());
                     }
 
                     delete listLayout.data.reportOptions.items;
@@ -784,8 +784,7 @@
                     delete listLayout.data.reportOptions.item_currencies;
                     delete listLayout.data.reportOptions.item_accounts;
 
-                }
-                ;
+                };
 
                 data.activeLayoutConfiguration = listLayout;
 
@@ -799,7 +798,7 @@
 
         function getLayoutCurrentConfiguration(isReport) {
 
-            var listLayout = JSON.parse(JSON.stringify(getListLayout()));
+            var listLayout = metaHelper.recursiveDeepCopy(getListLayout());
 
             listLayout.data.columns = getColumns();
             listLayout.data.grouping = getGroups();
@@ -822,12 +821,12 @@
 
             if (isReport) {
 
-                listLayout.data.reportOptions = JSON.parse(JSON.stringify(getReportOptions()));
-                listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(getReportLayoutOptions()));
-                listLayout.data.rootGroupOptions = JSON.parse(JSON.stringify(getRootGroupOptions()));
+                listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
+                listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
+                listLayout.data.rootGroupOptions = metaHelper.recursiveDeepCopy(getRootGroupOptions());
 
                 if (getExportOptions()) {
-                    listLayout.data.export = JSON.parse(JSON.stringify(getExportOptions()));
+                    listLayout.data.export = metaHelper.recursiveDeepCopy(getExportOptions());
                 }
 
                 delete listLayout.data.reportOptions.items;

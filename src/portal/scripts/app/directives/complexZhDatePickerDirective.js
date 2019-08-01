@@ -79,20 +79,6 @@
 
                 if (scope.date) {
 
-                    /*input.pickmeup({
-                        date: new Date(scope.date),
-                        current: new Date(scope.date),
-                        position: position,
-                        default_date: defaultDate,
-                        hide_on_select: true,
-                        format: 'Y-m-d',
-                        change: function () {
-                            scope.date = this.value;
-                            scope.$apply();
-                            scope.callbackMethod();
-                            console.log("report options called");
-                        }
-                    });*/
                     pickmeup(input, {
                         date: new Date(scope.date),
                         current: new Date(scope.date),
@@ -115,10 +101,10 @@
 
                 input.addEventListener("pickmeup-change", function (event) {
                     scope.date = event.detail.formatted_date;
+                    scope.$apply();
                 });
 
                 scope.testModelChange = function () {
-                    // scope.$apply();
                     scope.callbackMethod();
                 };
 
@@ -171,7 +157,6 @@
 
                 var enableDatepickerMode = function () {
                     scope.datepickerActiveModeTitle = 'Datepicker';
-                    // scope.datepickerOptions.datepickerMode = 'datepicker';
                     delete scope.datepickerOptions.expression;
 
                     setTimeout(function () {
@@ -202,6 +187,10 @@
                     if (scope.datepickerOptions.datepickerMode !== 'expression') {
                         scope.datepickerOptions.datepickerMode = 'expression';
                         scope.datepickerOptions.expression = undefined;
+
+                        setTimeout(function () {
+                            scope.callbackMethod()
+                        }, 500);
                     }
 
                     var datepickerOptionsCopy = JSON.parse(JSON.stringify(scope.datepickerOptions));
@@ -217,6 +206,7 @@
 
                         }
                     }).then(function (res) {
+
                         if (res.status === 'agree') {
                             console.log("res", res.data);
 
@@ -253,11 +243,11 @@
 
                             });
                         }
+
                     });
                 };
 
                 var enableInceptionDateMode = function () {
-                    // scope.datepickerOptions.datepickerMode = 'datepicker';
                     delete scope.datepickerOptions.expression;
 
                     scope.date = '0001-01-01';
@@ -302,7 +292,8 @@
 
                             columnKey = res.data.item;
 
-                        }
+                        };
+
                     })
 
                 };
@@ -366,8 +357,7 @@
                             break;
                         default:
                             scope.datepickerOptions.datepickerMode = 'datepicker';
-                            // scope.date = moment(new Date()).format('YYYY-MM-DD');
-                            // enableDatepickerMode();
+
                     }
                 });
 
