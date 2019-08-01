@@ -354,7 +354,7 @@
 
                                 if (spLayoutData) {
                                     vm.entityViewerDataService.setSplitPanelDefaultLayout(defaultLayoutId);
-                                    middlewareService.setData('splitPanelActiveLayoutSwitched', spLayoutData.name);
+                                    middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
                                 }
 
                                 setLayout(spLayoutData);

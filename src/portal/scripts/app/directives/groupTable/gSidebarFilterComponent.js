@@ -124,6 +124,11 @@
                     scope.evDataService.setReportOptions(newReportOptions);
                     scope.evDataService.setReportLayoutOptions(newReportLayoutOptions);
 
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE); // needed to keep tracks of changes for didLayoutChanged from gActionsBlockComponent
+
+                    setTimeout(function () {
+                        scope.$apply();
+                    }, 200)
                 };
 
                 scope.openPeriodsDialog = function ($event) {
@@ -458,12 +463,6 @@
 
                         scope.reportOptions = scope.evDataService.getReportOptions();
                         scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
-
-                        setTimeout(function () {
-                            scope.$apply();
-                        }, 500);
-
-                        // prepareReportLayoutOptions();
 
                     });
 
