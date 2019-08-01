@@ -262,7 +262,7 @@
 
                         var optionButtonsCount = 0;
 
-                        /*if (optionsKeys && optionsKeys.length > 0) {
+                        if (optionsKeys && optionsKeys.length > 0) {
 
                             optionsKeys.forEach(function (key) {
                                 if (scope.item.options[key]) {
@@ -274,7 +274,7 @@
                                 styleValue = 'padding-right: ' + (optionButtonsCount * 34) + 'px;';
                             }
 
-                        }*/
+                        }
 
                     }
 

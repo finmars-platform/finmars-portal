@@ -320,13 +320,17 @@
 
                         rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
 
-                        scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS, function () {
+                        scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_START, function () {
                             clearOverflowingCells();
                         });
 
-                        scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
+                        scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
                             cellContentOverflow();
                         });
+
+                        /*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
+                            cellContentOverflow();
+                        });*/
 
                     } else {
 

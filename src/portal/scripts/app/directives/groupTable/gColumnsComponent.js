@@ -153,6 +153,7 @@
                     }
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
 
                 scope.checkSubtotalFormula = function (column, type) {
@@ -198,6 +199,7 @@
                     }
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
 
                 scope.checkRoundFormatFormula = function (column, type) {
@@ -223,6 +225,7 @@
                     }
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
 
                 scope.checkThousandsSeparatorFormat = function (column, type) {
@@ -248,6 +251,7 @@
                     }
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
 
                 scope.checkNegativeColor = function (column, type) {
@@ -273,6 +277,7 @@
                     }
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
 
                 scope.checkNegativeFormatFormula = function (column, type) {
@@ -298,6 +303,7 @@
                     }
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
 
                 scope.checkZeroFormatFormula = function (column, type) {
@@ -308,7 +314,8 @@
                         }
 
                     }
-                    return false
+                    return false;
+
                 };
 
                 var createGroupFromColumn = function (column) {
@@ -520,6 +527,7 @@
                     column.report_settings.hide_subtotal = !column.report_settings.hide_subtotal;
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 
                 };
 
