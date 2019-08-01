@@ -5,6 +5,7 @@
     var exportPdfService = require('../../services/exportPdfService');
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
     var uiService = require('../../services/uiService');
+    var evEvents = require('../../services/entityViewerEvents');
 
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
 
@@ -104,6 +105,7 @@
             exportOptions.pdf.margin = vm.settings.margin;
 
             evDataService.setExportOptions(exportOptions);
+            evEventService.dispatchEvent(evEvents.REPORT_EXPORT_OPTIONS_CHANGED);
 
             $mdDialog.show({
                 controller: 'SuccessDialogController as vm',

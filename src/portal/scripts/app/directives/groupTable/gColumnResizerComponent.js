@@ -157,7 +157,7 @@
                         e.preventDefault();
                         e.stopPropagation();
 
-                        scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS);
+                        scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_START);
 
                         var gColumnElem = $(this).parents('md-card.g-cell.g-column');
                         var column = findColumnById(gColumnElem[0].dataset.columnId);
@@ -195,7 +195,8 @@
 
                         $(window).bind('mouseup', function () {
                             $(window).unbind('mousemove');
-                            scope.evEventService.dispatchEvent(evEvents.START_CELLS_OVERFLOW);
+                            scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_END);
+                            // scope.evEventService.dispatchEvent(evEvents.START_CELLS_OVERFLOW);
                         });
 
                     });

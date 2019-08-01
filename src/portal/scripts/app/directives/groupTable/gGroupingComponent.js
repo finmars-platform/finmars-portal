@@ -170,7 +170,8 @@
 
                     scope.evDataService.setRootGroupOptions(scope.rootGroupOptions);
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
 
                 scope.reportSetSubtotalType = function (group, type) {
@@ -185,8 +186,8 @@
                         group.report_settings.subtotal_type = type;
                     }
 
-
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
 
                 scope.isReportGroupHaveExtSettings = function (group, $index) {
