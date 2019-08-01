@@ -75,6 +75,10 @@
 
             usersService.getOwnMemberSettings().then(function (data) {
                 vm.member = data.results[0];
+
+
+                console.log('vm.member', vm.member);
+
                 vm.readyStatus.member = true;
                 $scope.$apply();
             });
@@ -89,7 +93,11 @@
 
                 vm.items = data.results;
 
+                console.log('vm.items', vm.items);
+
                 vm.readyStatus.content = true;
+
+                $scope.$apply();
 
             })
 
