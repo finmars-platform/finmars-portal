@@ -9,6 +9,10 @@
 
     var uiRepository = require('../repositories/uiRepository');
 
+    var getPortalInterfaceAccess = function () {
+        return uiRepository.getPortalInterfaceAccess();
+    }
+
     var getEditLayout = function (entity) {
         return uiRepository.getEditLayout(entity);
     };
@@ -122,6 +126,9 @@
     };
 
     module.exports = {
+
+        getPortalInterfaceAccess: getPortalInterfaceAccess,
+
         getListLayoutTemplate: getListLayoutTemplate,
         getDefaultListLayout: getDefaultListLayout,
         getActiveListLayout: getActiveListLayout,

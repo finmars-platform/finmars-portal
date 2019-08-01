@@ -31,7 +31,7 @@
 
         vm.readyStatus = {masters: false};
 
-        vm.currentState = 'portal';
+        vm.currentGlobalState = 'portal';
         vm.currentMasterUser = '';
 
         vm.broadcastManager = null;
@@ -161,14 +161,14 @@
 
         };
 
-        vm.currentState = function () {
-            return '';
-        };
-
-        vm.getCurrentState = function () {
+        vm.getCurrentGlobalState = function () {
 
             if ($state.current.name.indexOf('app.profile') !== -1) {
                 return 'profile'
+            }
+
+            if($state.current.name.indexOf('app.setup') !== -1) {
+                return 'setup';
             }
 
             return 'portal';
@@ -187,23 +187,35 @@
 
         var showLayoutName = false;
 
-        $transitions.onFinish({}, function (transition) {
+        vm.initTransitionListener = function(){
 
-            pageStateName = transition.to().name;
-            pageStateParams = transition.params().strategyNumber;
+            $transitions.onSuccess({}, function () {
 
-            if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport(pageStateName)) {
-                showLayoutName = true;
-                vm.activeLayoutName = null;
-                vm.activeSPLayoutName = false;
+                vm.currentGlobalState = vm.getCurrentGlobalState();
 
-                vm.getActiveLayoutName();
+                console.log('on onSuccess', vm.currentGlobalState)
 
-            } else {
-                showLayoutName = false;
-            }
+            });
 
-        });
+            $transitions.onFinish({}, function (transition) {
+
+                pageStateName = transition.to().name;
+                pageStateParams = transition.params().strategyNumber;
+
+                if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport(pageStateName)) {
+                    showLayoutName = true;
+                    vm.activeLayoutName = null;
+                    vm.activeSPLayoutName = false;
+
+                    vm.getActiveLayoutName();
+
+                } else {
+                    showLayoutName = false;
+                }
+
+            });
+
+        }
 
         vm.activeLayoutName = null;
         vm.activeSPLayoutName = false; // false needed to check whether split panel disabled and have no layout in middlewareService
@@ -414,6 +426,10 @@
         };
 
         vm.init = function () {
+
+            vm.currentGlobalState = vm.getCurrentGlobalState();
+
+            vm.initTransitionListener();
 
             vm.getMasterUsersList().then(function () {
 
