@@ -24,7 +24,7 @@
                 </th>
                 </th>
                 <th>Input expr</th>
-                <th>
+                <th style="text-align: center">
                     <md-button class="md-icon-button" aria-label="ttype inputs search button">
                         <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
                     </md-button>
@@ -93,13 +93,13 @@
                 </td>-->
                 <td class="edit-state-td">
                     <md-input-container class="no-error-spacer">
-                        <label for="">Name</label>
+<!--                        <label for="">Name</label>-->
                         <input type="text" data-ng-model="item.name">
                     </md-input-container>
                 </td>
                 <td class="edit-state-td">
                     <md-input-container class="no-error-spacer">
-                        <label for="">Verbose name</label>
+<!--                        <label for="">Verbose name</label>-->
                         <input type="text" data-ng-model="item.verbose_name">
                     </md-input-container>
                 </td>
@@ -113,8 +113,10 @@
                         </md-select>
                     </md-input-container>-->
 
-                    <md-input-container class="md-block" aria-label="select with filter">
-                        <label>Value type</label>
+                    <md-input-container class="md-block"
+                                        aria-label="select with filter"
+                                        md-no-float="">
+<!--                        <label>Value type</label>-->
                         <md-select ng-model="item.value_type"
                                    ng-change="vm.valueTypeChanged(item)"
                                    md-container-class="common-select-container"
@@ -152,8 +154,10 @@
                         </md-select>
                     </md-input-container>-->
 
-                    <md-input-container class="md-block" aria-label="select with filter">
-                        <label for="ttype-inputs-content-type">Content type</label>
+                    <md-input-container class="md-block"
+                                        md-no-float=""
+                                        aria-label="select with filter">
+<!--                        <label for="ttype-inputs-content-type">Content type</label>-->
                         <md-select ng-model="item.content_type"
                                    md-container-class="common-select-container"
                                    md-on-close="vm.searchTerms[vm.getInputsFilterST('contentTypeSearchTerm', $index)] = ''"
@@ -184,7 +188,7 @@
 
                 <td class="edit-state-td">
                     <md-input-container class="no-error-spacer" data-ng-if="item.value_type != 100">
-                        <label for="">Default value</label>
+<!--                        <label for="">Default value</label>-->
                         <input type="text" data-ng-model="item.value">
                     </md-input-container>
 
@@ -193,8 +197,9 @@
                     <md-input-container data-ng-if="item.value_type == 100"
                                         aria-label="select with filter"
                                         class="no-error-spacer"
-                                        style="width: 213px;">
-                        <label for="ttype-relation-item-input">Default value</label>
+                                        style="width: 213px;"
+                                        md-no-float="">
+<!--                        <label for="ttype-relation-item-input">Default value</label>-->
                         <md-select ng-model="item[vm.resolveRelation(item)]"
                                    md-container-class="common-select-container"
                                    md-on-open="vm.loadRelation(vm.resolveRelation(item))"
@@ -228,15 +233,13 @@
                 <td class="edit-state-td ttype-inputs-checkbox-td">
                     <md-input-container class="no-error-spacer">
                         <md-checkbox data-ng-model="item.is_fill_from_context"
-                                     ng-disabled="item.value_type !== 100">
-                            Fill from context
-                        </md-checkbox>
+                                     ng-disabled="item.value_type !== 100"></md-checkbox>
                     </md-input-container>
                 </td>
 
                 <td class="edit-state-td">
                     <md-input-container class="no-error-spacer">
-                        <label for="">Input expr</label>
+<!--                        <label for="">Input expr</label>-->
                         <input type="text" data-ng-model="item.value_expr">
                     </md-input-container>
 
@@ -248,8 +251,14 @@
                         Ok
                     </md-button>
                 </td>-->
-                <td class="edit-state-td">
-                    <md-button data-ng-click="vm.deleteItem(item, $index)" aria-label="ttype delete input row button">
+                <td class="ttype-inputs-actions-td">
+                    <md-button ng-if="vm.entity.id"
+                               data-ng-click="vm.saveInputsRow(item)"
+                               aria-label="ttype save input row button">
+                        Apply
+                    </md-button>
+                    <md-button data-ng-click="vm.deleteItem(item, $index)"
+                               aria-label="ttype delete input row button">
                         Delete
                     </md-button>
                 </td>
@@ -276,8 +285,10 @@
                             </md-option>
                         </md-select>
                     </md-input-container>-->
-                    <md-input-container class="md-block m-0" aria-label="select with filter">
-                        <label for="ttype-inputs-value-type"></label>
+                    <md-input-container class="md-block m-0"
+                                        aria-label="select with filter"
+                                        md-no-float="">
+<!--                        <label for="ttype-inputs-value-type"></label>-->
                         <md-select ng-model="vm.newItem.value_type"
                                    md-container-class="common-select-container"
                                    ng-change="vm.valueTypeChanged(vm.newItem)"
@@ -312,7 +323,9 @@
                             </md-option>
                         </md-select>
                     </md-input-container>-->
-                    <md-input-container class="md-block m-0" aria-label="content type input">
+                    <md-input-container class="md-block m-0"
+                                        aria-label="content type input"
+                                        md-no-float="">
                         <label for="ttype-inputs-default-value"></label>
                         <md-select ng-model="vm.newItem.content_type"
                                    md-container-class="common-select-container"
@@ -362,8 +375,9 @@
 
                     <md-input-container data-ng-if="vm.newItem.value_type == 100"
                                         class="m-0"
+                                        md-no-float=""
                                         style="width: 213px;">
-                        <label></label>
+
                         <md-select ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"
                                    md-container-class="common-select-container"
                                    md-on-open="vm.loadRelation(vm.resolveRelation(vm.newItem))"
@@ -394,20 +408,20 @@
                 <td class="ttype-inputs-checkbox-td">
                     <md-input-container class="no-error-spacer m-0">
                         <md-checkbox data-ng-model="vm.newItem.is_fill_from_context"
-                                     ng-disabled="vm.newItem.value_type !== 100">Fill from context</md-checkbox>
+                                     ng-disabled="vm.newItem.value_type !== 100"></md-checkbox>
                     </md-input-container>
                 </td>
 
                 <td>
                     <md-input-container class="no-error-spacer m-0">
-                        <label for="">Input expr</label>
+<!--                        <label for="">Input expr</label>-->
                         <input type="text" data-ng-model="vm.newItem.value_expr">
                     </md-input-container>
 
                     <expression-editor-button data-item="vm.newItem.value_expr"></expression-editor-button>
                 </td>
 
-                <td>
+                <td class="ttype-inputs-actions-td">
                     <md-button data-ng-click="vm.addRow()" aria-label="ttype add input row button">
                         Add
                     </md-button>

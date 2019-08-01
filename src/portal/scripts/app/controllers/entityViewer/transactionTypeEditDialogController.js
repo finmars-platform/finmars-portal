@@ -39,6 +39,7 @@
         vm.entityId = entityId;
 
         vm.entity = {};
+        var originalEntity = {};
         vm.complexTransactionOptions = {};
 
         var originalEntityInputs = null;
@@ -286,7 +287,7 @@
 
                     entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
                         vm.entity = transformEntityData[0];
-
+                        originalEntity = JSON.parse(JSON.stringify(vm.entity));
 
                         vm.getTransactionUserFields().then(function () {
 
@@ -333,7 +334,7 @@
             return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout;
         };
 
-        vm.handleErrors = function ($event, data) {
+        vm.handleErrors = function (data, $event) {
 
             $mdDialog.show({
                 controller: 'ValidationDialogController as vm',
@@ -352,7 +353,7 @@
 
         vm.updateEntityBeforeSave = function () {
 
-            console.log('here?', JSON.parse(JSON.stringify(vm.entity)))
+            console.log('here?', JSON.parse(JSON.stringify(vm.entity)));
 
             if (vm.entity.attributes) {
                 var i, a, c;
@@ -599,12 +600,18 @@
 
         };
 
-        vm.save = function ($event) {
+        vm.save = function (entityToSave, withoutUpdating) {
 
-            vm.updateEntityBeforeSave();
+            if (!entityToSave) {
+                entityToSave = vm.entity;
+            }
 
-            var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
-            var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
+            if (!withoutUpdating) {
+                vm.updateEntityBeforeSave();
+            }
+
+            var actionsErrors = vm.checkActionsForEmptyFields(entityToSave.actions);
+            var entityErrors = vm.checkEntityForEmptyFields(entityToSave);
 
             console.log('vm.entity', vm.entity);
 
@@ -617,7 +624,6 @@
                     controller: 'TransactionTypeValidationErrorsDialogController as vm',
                     templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
                     parent: angular.element(document.body),
-                    targetEvent: $event,
                     clickOutsideToClose: false,
                     multiple: true,
                     locals: {
@@ -635,9 +641,13 @@
                     console.log('data', data);
 
                     if (data.status === 400) {
-                        vm.handleErrors($event, data);
+                        vm.handleErrors(data);
                     } else {
-                        $mdDialog.hide({res: 'agree', data: data});
+
+                        if (!withoutUpdating) {
+                            $mdDialog.hide({res: 'agree', data: data});
+                        }
+
                     }
 
                 }).catch(function (error) {
@@ -729,8 +739,7 @@
 
                         vm.save();
 
-                    }
-                    ;
+                    };
 
                 });
 
@@ -1071,6 +1080,20 @@
             item.editStatus = false;
         };
 
+        vm.saveInputsRow = function (input) {
+            for (var i = 0; i < originalEntity.inputs.length; i++) {
+
+                if (originalEntity.inputs[i].id === input.id) {
+                    originalEntity.inputs[i] = input;
+
+                    vm.save(originalEntity, true);
+                    break;
+
+                }
+
+            }
+        };
+
         vm.deleteItem = function (item, index) {
 
             vm.entity.inputs.splice(index, 1);
@@ -1111,6 +1134,7 @@
         };
 
         vm.addRow = function () {
+
             vm.entity.inputs.push({
                 name: vm.newItem.name,
                 verbose_name: vm.newItem.verbose_name,
@@ -1135,6 +1159,32 @@
                 value_expr: vm.newItem.value_expr
             });
 
+            originalEntity.inputs.push({
+                name: vm.newItem.name,
+                verbose_name: vm.newItem.verbose_name,
+                value_type: vm.newItem.value_type,
+                content_type: vm.newItem.content_type,
+                is_fill_from_context: vm.newItem.is_fill_from_context,
+                account: vm.newItem.account,
+                instrument_type: vm.newItem.instrument_type,
+                instrument: vm.newItem.instrument,
+                currency: vm.newItem.currency,
+                counterparty: vm.newItem.counterparty,
+                responsible: vm.newItem.responsible,
+                portfolio: vm.newItem.portfolio,
+                strategy1: vm.newItem.strategy1,
+                strategy2: vm.newItem.strategy2,
+                strategy3: vm.newItem.strategy3,
+                daily_pricing_model: vm.newItem.daily_pricing_model,
+                payment_size_detail: vm.newItem.payment_size_detail,
+                price_download_scheme: vm.newItem.price_download_scheme,
+                pricing_policy: vm.newItem.pricing_policy,
+                value: vm.newItem.value,
+                value_expr: vm.newItem.value_expr
+            });
+
+            vm.save(originalEntity, true);
+
             vm.newItem.name = null;
             vm.newItem.verbose_name = null;
             vm.newItem.value_type = null;
@@ -1156,7 +1206,8 @@
             vm.newItem.pricing_policy = null;
             vm.newItem.value = null;
             vm.newItem.value_expr = null;
-        }
+
+        };
 
         // Transaction Type Input Controller end
 
