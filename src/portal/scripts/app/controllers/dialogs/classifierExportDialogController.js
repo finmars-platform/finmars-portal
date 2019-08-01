@@ -28,7 +28,11 @@
 
             var link = document.querySelector('.export-classifier-link');
 
-            var text = 'User Attribute: ' + vm.item.user_code + ' (' + vm.item.name + ')\n';
+            // "User Attribute for "+"["+entity_Name+"]"+": " + user_attribute_id +" ("+user_attribute_full_name+")"
+
+            var entityTypeBeauty = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
+
+            var text = 'User Attribute for ' + entityTypeBeauty + ': ' + vm.item.user_code + ' (' + vm.item.name + ')\n';
 
             vm.classifier.classifiers.forEach(function (item) {
 

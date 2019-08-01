@@ -58,9 +58,14 @@
                 }
 
                 // console.log('sorted items, ', items);
+
+                result.count = items.length;
+                result.results = items;
+            } else {
+                result.count = 0;
+                result.results = [];
             }
-            result.count = items.length;
-            result.results = items;
+
 
             resolve(result)
 
