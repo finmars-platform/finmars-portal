@@ -412,6 +412,11 @@
                 templateUrl: 'views/settings/profile-settings-view.html',
                 controller: 'SettingsGeneralProfileController as vm'
             })
+            .state('app.settings.interface-access', {
+                url: '/interface',
+                templateUrl: 'views/settings/interface-access-settings-view.html',
+                controller: 'SettingsGeneralInterfaceAccessController as vm'
+            })
             .state('app.settings.entities-custom-attributes', {
                 url: '/entities-custom-attributes',
                 templateUrl: 'views/pages/entities-custom-attributes-view.html',
