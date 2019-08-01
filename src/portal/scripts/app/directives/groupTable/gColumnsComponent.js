@@ -138,6 +138,7 @@
                     scope.evDataService.setColumns(columns);
 
                     scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
+
                 };
 
                 scope.selectSubtotalType = function (column, type) {

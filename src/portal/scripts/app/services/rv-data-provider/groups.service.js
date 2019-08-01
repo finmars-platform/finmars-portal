@@ -120,10 +120,15 @@
                 } else {
                     groups = sortService.sortItems(groups, '___group_name');
                 }
+
+                result.count = groups.length;
+                result.results = groups;
+
+            } else {
+                result.count = 0;
+                result.results = [];
             }
 
-            result.count = groups.length;
-            result.results = groups;
 
             // console.log('get groups', JSON.parse(JSON.stringify(result)));
 
