@@ -6,7 +6,7 @@
 
     var errorService = require('./errorService');
 
-    var requestsPerMinuteLimit = 490; // 500 on backend
+    var requestsPerMinuteLimit = 450; // 500 on backend
     var requestsCount = 0;
     var lastRequestTime = new Date().getTime();
     var currentTime;
