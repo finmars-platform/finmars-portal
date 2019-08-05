@@ -51,8 +51,6 @@
 
                 // console.log('groups filters length', items.length);
 
-                console.log('options', options);
-
                 if (options.ordering) {
                     items = sortService.sortItems(items, options.ordering);
                 }
