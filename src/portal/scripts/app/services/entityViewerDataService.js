@@ -919,7 +919,7 @@
 
         }
 
-        function setSplitPanelDefaultLayout(layoutId) {
+        function setSplitPanelDefaultLayout(layoutId) { // used to change split panel default layout from Split Panel
             data.splitPanelDefaultLayoutId = layoutId;
         }
 

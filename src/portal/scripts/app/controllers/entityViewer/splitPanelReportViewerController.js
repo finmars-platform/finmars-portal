@@ -214,7 +214,7 @@
 
             vm.getView = function () {
 
-                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+                // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.listViewIsReady = false;
 

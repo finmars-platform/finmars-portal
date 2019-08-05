@@ -76,14 +76,19 @@
                 sel = ref.get_selected();
 
             $mdDialog.show({
-                controller: 'BookmarksLayoutSelectDialogController as vm',
-                templateUrl: 'views/dialogs/bookmarks-layout-select-dialog-view.html',
+                controller: 'SelectLayoutDialogController as vm',
+                templateUrl: 'views/dialogs/select-layout-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
-                multiple: true
+                multiple: true,
+                locals: {
+                    options: {
+                        dialogTitle: "UI layouts"
+                    }
+                }
             }).then(function (res) {
                 if (res.status === 'agree') {
                     ref.set_type(sel, 'folder');

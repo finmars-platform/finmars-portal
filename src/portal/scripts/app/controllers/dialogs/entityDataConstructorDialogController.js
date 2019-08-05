@@ -29,7 +29,7 @@
 
         vm.items = [];
 
-        vm.fieldsTrees = {};
+        vm.fieldsTree = {};
 
         vm.entityType = data.entityType;
 
@@ -123,46 +123,7 @@
 
         vm.checkColspan = function (tab, row, column) {
 
-            //console.log('VM TAB', tab);
-
-            /*var i, c;
-
-            var rowMap = [];
-            var startColumn;
-            var colspans;
-
-            for (i = 0; i < tab.layout.fields.length; i = i + 1) {
-                if (tab.layout.fields[i].row == row) {
-                    startColumn = tab.layout.fields[i].column;
-                    colspans = parseInt(tab.layout.fields[i].colspan, 10);
-                    for (c = 0; c < colspans; c = c + 1) {
-                        if (!rowMap[startColumn]) {
-                            rowMap[startColumn] = [];
-                        }
-                        rowMap[startColumn].push(parseInt(startColumn, 10) + parseInt(c, 10));
-                    }
-                }
-            }
-
-            var x, z;
-            var keys = Object.keys(rowMap);
-
-            for (x = 0; x < keys.length; x = x + 1) {
-                if (keys[x] === column) {
-                    return true;
-                } else {
-                    for (z = 1; z < rowMap[keys[x]].length; z = z + 1) {
-                        if (column == rowMap[keys[x]][z]) {
-                            //console.log('rowMap[keys[x]][z]', rowMap[keys[x]][z]);
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            return true;*/
-
-            var fieldsTree = vm.fieldsTrees[tab.id];
+            var fieldsTree = vm.fieldsTree[tab.id];
             var fieldRow = fieldsTree[row];
             var colspanSizeToHide = 2;
 
@@ -292,7 +253,7 @@
                 tab.layout.columns = columns;
             }
 
-            vm.createFieldsTrees();
+            vm.createFieldsTree();
 
             vm.updateDrakeContainers();
 
@@ -394,7 +355,7 @@
             var totalColspans = 0;
             var i;
             var field;
-            for (i = 0; i < tab.layout.fields.length; i = i + 1) {
+            /*for (i = 0; i < tab.layout.fields.length; i = i + 1) {
                 if (tab.layout.fields[i].row === row) {
                     if (tab.layout.fields[i].column === column) {
                         field = tab.layout.fields[i];
@@ -402,7 +363,14 @@
 
                     totalColspans = totalColspans + parseInt(tab.layout.fields[i].colspan, 10);
                 }
+            }*/
+            for (i = 0; i < vm.fieldsTree[tab.id][row].length; i++) {
+                var colFromRow = vm.fieldsTree[tab.id][row][i];
+                totalColspans = totalColspans + parseInt(colFromRow.colspan, 10);
             }
+
+            field = vm.fieldsTree[tab.id][row][column];
+
             var flexUnit = 100 / tab.layout.columns;
             if (field) {
                 return Math.floor(field.colspan * flexUnit);
@@ -454,7 +422,7 @@
 
                     addRow(vm.tabs[vm.tabs.length - 1]);
 
-                    vm.createFieldsTrees();
+                    vm.createFieldsTree();
                     vm.updateDrakeContainers();
 
                 } else {
@@ -488,7 +456,7 @@
 
                 addRow(vm.tabs[0]);
 
-                vm.createFieldsTrees();
+                vm.createFieldsTree();
                 vm.updateDrakeContainers();
 
             }
@@ -575,7 +543,7 @@
 
                 var entityType = vm.entityType;
                 if (vm.fromEntityType === 'transaction-type') {
-                    entityType = 'complex-transaction'
+                    entityType = 'complex-transaction';
                 }
                 entityAddress = {entityType: entityType, from: vm.fromEntityType, instanceId: vm.instanceId};
             }
@@ -681,17 +649,19 @@
 
         };
 
-        vm.createFieldsTrees = function () {
+        vm.createFieldsTree = function () {
 
-            vm.fieldsTrees = {};
+            var tabs = JSON.parse(JSON.stringify(vm.tabs));
 
-            vm.tabs.forEach(function (tab) {
+            vm.fieldsTree = {};
 
-                vm.fieldsTrees[tab.id] = {};
+            tabs.forEach(function (tab) {
+
+                vm.fieldsTree[tab.id] = {};
                 var f;
                 for (f = 0; f < tab.layout.fields.length; f++) {
 
-                    var treeTab = vm.fieldsTrees[tab.id];
+                    var treeTab = vm.fieldsTree[tab.id];
 
                     var field = tab.layout.fields[f];
                     var fRow = field.row;
@@ -706,7 +676,9 @@
                     }
 
                     treeTab[fRow][fCol] = field;
-                }
+
+                };
+
             });
 
         };
@@ -830,18 +802,17 @@
                                                 field.attribute_class = 'decorationAttr';
                                             }
 
-
                                         }
                                     });
 
                                     if (row === tab.layout.rows) {
-                                        addRow(tab)
+                                        addRow(tab);
                                     }
                                 }
 
                             });
 
-                            vm.createFieldsTrees();
+                            vm.createFieldsTree();
                             vm.syncItems();
 
                             $scope.$apply();
@@ -877,7 +848,7 @@
                     vm.dragAndDrop.drake.containers = [];
                     vm.dragAndDrop.drake.containers = vm.getDrakeContainers();
 
-                }, 500)
+                }, 500);
 
             }
 
@@ -1006,7 +977,7 @@
             vm.getLayout().then(function () {
 
                 vm.getItems();
-                vm.createFieldsTrees();
+                vm.createFieldsTree();
 
             });
 

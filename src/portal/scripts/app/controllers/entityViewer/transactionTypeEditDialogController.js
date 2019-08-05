@@ -1084,7 +1084,7 @@
             for (var i = 0; i < originalEntity.inputs.length; i++) {
 
                 if (originalEntity.inputs[i].id === input.id) {
-                    originalEntity.inputs[i] = input;
+                    originalEntity.inputs[i] = JSON.parse(JSON.stringify(input));
 
                     vm.save(originalEntity, true);
                     break;
