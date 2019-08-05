@@ -37,11 +37,13 @@
                                     <div data-ng-if="!tab.editState" data-ng-click="">
                                         <span class="ec-tab-item-name">{{tab.name}}</span>
                                         <md-button class="ec-tab-btn"
-                                                   data-ng-click="vm.toggleEditTab(tab)">
+                                                   data-ng-click="vm.toggleEditTab(tab)"
+                                                   aria-label="input form editor tab edition toggle">
                                             <ng-md-icon icon="edit"></ng-md-icon>
                                         </md-button>
                                         <md-button class="ec-tab-btn"
-                                                   data-ng-click="vm.deleteTab(tab)">
+                                                   data-ng-click="vm.deleteTab(tab)"
+                                                   aria-label="input form editor tab deletion">
                                             <ng-md-icon icon="delete"></ng-md-icon>
                                         </md-button>
                                     </div>
@@ -55,7 +57,8 @@
                                             <ng-md-icon icon="save"></ng-md-icon>
                                         </md-button>
                                         <md-button class="ec-tab-btn"
-                                                   data-ng-click="vm.toggleEditTab(tab, 'back', $index)">
+                                                   data-ng-click="vm.toggleEditTab(tab, 'back', $index)"
+                                                   aria-label="input form editor tab edition toggle">
                                             <ng-md-icon icon="cancel"></ng-md-icon>
                                         </md-button>
                                     </div>
@@ -66,7 +69,8 @@
                                             <span class="select-layout-caption">Select layout</span>
                                             <md-button class="{{tab.layout.columns === item ? 'active' : '' }} ec-layout-btn"
                                                        data-ng-click="vm.setLayoutColumns(tab, item, $event)"
-                                                       data-ng-repeat="item in vm.boxColumns">
+                                                       data-ng-repeat="item in vm.boxColumns"
+                                                       aria-label="input form editor columns quantity">
                                                 <ng-md-icon icon="stop" data-ng-repeat="icon in vm.range(item)"></ng-md-icon>
                                             </md-button>
                                         </div>
@@ -80,7 +84,7 @@
                                                     <layout-constructor-field tab="tab"
                                                                               row="row"
                                                                               column="column"
-                                                                              fields-tree="vm.fieldsTrees[tab.id]"></layout-constructor-field>
+                                                                              tab-fields-tree="vm.fieldsTree[tab.id]"></layout-constructor-field>
                                                 </div>
                                             </div>
                                         </div>

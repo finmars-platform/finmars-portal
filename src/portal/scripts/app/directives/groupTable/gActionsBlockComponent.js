@@ -360,16 +360,71 @@
                         middlewareService.setNewSplitPanelLayoutName(false);
 
                     } else {
-                        var additions = scope.evDataService.getAdditions();
 
-                        additions.isOpen = true;
-                        additions.type = type;
-                        delete additions.layoutId;
+                        var entityType = null;
 
-                        scope.evDataService.setSplitPanelStatus(true);
-                        scope.evDataService.setAdditions(additions);
-                        scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-                        scope.currentAdditions = scope.evDataService.getAdditions();
+                        switch (type) {
+                            case "balance-report":
+                            case "pl-report":
+                            case "transaction-report":
+                                entityType = type;
+                                break;
+                        };
+
+                        if (entityType) {
+
+                            $mdDialog.show({
+                                controller: 'SelectLayoutDialogController as vm',
+                                templateUrl: 'views/dialogs/select-layout-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    options: {
+                                        dialogTitle: 'Choose layout to open Split Panel with',
+                                        entityType: entityType,
+                                        noFolding: true
+                                    }
+                                }
+
+                            }).then(function (res) {
+
+                                if (res.status === 'agree') {
+
+                                    var additions = scope.evDataService.getAdditions();
+
+                                    additions.isOpen = true;
+                                    additions.type = type;
+
+                                    if (res.data.listLayoutId) {
+                                        additions.layoutId = res.data.listLayoutId;
+                                    } else {
+                                        delete additions.layoutId;
+                                    };
+
+                                    scope.evDataService.setSplitPanelStatus(true);
+                                    scope.evDataService.setAdditions(additions);
+                                    scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
+                                    scope.currentAdditions = scope.evDataService.getAdditions();
+
+                                };
+
+                            });
+
+                        } else {
+
+                            var additions = scope.evDataService.getAdditions();
+
+                            additions.isOpen = true;
+                            additions.type = type;
+                            delete additions.layoutId;
+
+                            scope.evDataService.setSplitPanelStatus(true);
+                            scope.evDataService.setAdditions(additions);
+                            scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
+                            scope.currentAdditions = scope.evDataService.getAdditions();
+
+                        }
+
+
 
                     }
 

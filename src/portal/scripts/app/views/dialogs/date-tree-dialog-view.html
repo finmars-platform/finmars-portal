@@ -9,7 +9,7 @@
 
         <div ng-if="vm.readyStatus">
             <div class="m-b-24" layout="row">
-                <md-button class="md-raised date-tree-folding-btn"
+                <md-button class="md-raised small-folding-btn1 date-tree-folding-btn"
                            ng-click="vm.expandCollapseAll()"
                            aria-label="date tree fold all button">
                     <span ng-if="vm.allGroupsExpanded">+</span>
@@ -28,7 +28,7 @@
                  ng-show="year.available">
 
                 <div layout="row">
-                    <md-button class="md-raised date-tree-folding-btn"
+                    <md-button class="md-raised small-folding-btn1 date-tree-folding-btn"
                                ng-click="year.showMonths = !year.showMonths"
                                aria-label="date tree years folding button">
                         <span ng-if="!year.showMonths">+</span>
@@ -46,7 +46,7 @@
                          ng-show="month.available"
                          style="margin-left: 30px">
                         <div layout="row" class="m-b-8">
-                            <md-button class="md-raised date-tree-folding-btn"
+                            <md-button class="md-raised small-folding-btn1 date-tree-folding-btn"
                                        ng-click="month.showDays = !month.showDays"
                                        aria-label="date tree months folding button">
                                 <span ng-if="!month.showDays">+</span>

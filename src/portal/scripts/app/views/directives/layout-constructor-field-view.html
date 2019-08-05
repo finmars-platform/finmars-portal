@@ -34,7 +34,6 @@
                 <md-select ng-model="item.attribute"
                            md-container-class="common-select-container"
                            md-on-close="searchTerm = ''"
-                           ng-change="changeModel(item.attribute)"
                            ng-focus="findAttrsLeft()">
                     <md-select-header>
                         <input data-ng-model="searchTerm"
@@ -86,7 +85,8 @@
                 <label>Element width</label>
                 <md-select ng-model="item.colspan"
                            md-container-class="common-select-container"
-                           md-on-close="searchTerm = ''">
+                           md-on-close="searchTerm = ''"
+                           ng-change="changeFieldColspan(item.colspan)">
                         <div class="select-options-holder">
                             <md-option
                                     data-ng-repeat="colspan in getCols()"

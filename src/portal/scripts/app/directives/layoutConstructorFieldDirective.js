@@ -13,9 +13,9 @@
             restrict: 'AE',
             scope: {
                 tab: '=',
-                row: '=',
-                column: '=',
-                fieldsTree: '='
+                row: '<',
+                column: '<',
+                tabFieldsTree: '='
             },
             templateUrl: 'views/directives/layout-constructor-field-view.html',
             link: function (scope, elem, attr) {
@@ -34,27 +34,25 @@
 
                 scope.specialOptionTemplate = '';
 
+                scope.$watch('tabFieldsTree', function () {
+
+                    if (scope.tabFieldsTree) {
+                        findItem();
+                    };
+
+                });
 
                 function findItem() {
-                    var i;
 
-                    for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
-                        if (scope.tab.layout.fields[i].row === scope.row) {
-                            if (scope.tab.layout.fields[i].column === scope.column) {
-                                scope.item = scope.tab.layout.fields[i];
+                    scope.item = JSON.parse(JSON.stringify(scope.tabFieldsTree[scope.row][scope.column]));
 
-                                if (scope.item.backgroundColor) {
-                                    scope.fieldUsesBackgroundColor = true;
-                                    scope.fieldBackgroundColor = scope.item.backgroundColor;
-                                }
-
-                                scope.backupItem = JSON.parse(JSON.stringify(scope.tab.layout.fields[i]));
-                            }
-                        }
+                    if (scope.item.backgroundColor) {
+                        scope.fieldUsesBackgroundColor = true;
+                        scope.fieldBackgroundColor = scope.item.backgroundColor;
                     }
                 }
 
-                findItem();
+                // findItem();
 
                 scope.fieldType = null;
                 scope.editMode = false;
@@ -76,6 +74,12 @@
 
                 var tabs = scope.$parent.vm.tabs;
 
+                scope.changeFieldColspan = function(colspan) {
+
+                    scope.tabFieldsTree[scope.row][scope.column].colspan = colspan;
+
+                };
+
                 function addRow() {
                     var c;
                     scope.tab.layout.rows = scope.tab.layout.rows + 1;
@@ -86,20 +90,25 @@
                             colspan: 1,
                             type: 'empty'
                         });
-                    }
+                    };
 
-                }
+                };
 
                 scope.cancel = function () {
 
-                    var backupItem = JSON.parse(JSON.stringify(scope.backupItem));
-                    if (scope.item.name || scope.item.id) {
-                        scope.item = backupItem;
-                        scope.item.colspan = backupItem.colspan;
-                    } else {
-                        scope.item.attr = null;
-                        scope.item.colspan = 1;
-                    }
+                    var i;
+                    var originalFieldSettings;
+
+                    for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
+                        if (scope.tab.layout.fields[i].row === scope.row && scope.tab.layout.fields[i].column === scope.column) {
+                            scope.tab.layout.fields[i].editMode = false;
+                            originalFieldSettings = JSON.parse(JSON.stringify(scope.tab.layout.fields[i]));
+                            break;
+                        }
+                    };
+
+                    scope.item = originalFieldSettings;
+                    scope.tabFieldsTree[scope.row][scope.column] = originalFieldSettings; // needed to reset colspan
 
                     scope.item.editMode = false;
 
@@ -157,9 +166,8 @@
 
                     scope.item.editMode = false;
 
-                    scope.$parent.vm.createFieldsTrees();
+                    scope.$parent.vm.createFieldsTree();
                     scope.$parent.vm.syncItems();
-
 
                 };
 
@@ -222,7 +230,7 @@
                 scope.getCols = function () {
 
                     var colsLeft = [1];
-                    var row = scope.fieldsTree[scope.row];
+                    var row = scope.tabFieldsTree[scope.row];
                     var columnsInTotal = scope.tab.layout.columns;
 
                     var i;
@@ -241,9 +249,9 @@
 
                 };
 
-                scope.changeModel = function (item) {
+                /*scope.changeModel = function (item) {
                     scope.item.attribute = item;
-                };
+                };*/
 
                 scope.deleteField = function () {
 
@@ -261,6 +269,7 @@
                             if (scope.tab.layout.fields[i].column === scope.item.column) {
                                 scope.tab.layout.fields[i].id = null;
                                 scope.tab.layout.fields[i].key = null;
+                                scope.tab.layout.fields[i].attribute = null;
                                 scope.tab.layout.fields[i].attribute_class = null;
                                 scope.tab.layout.fields[i].disabled = false;
                                 scope.tab.layout.fields[i].colspan = 1;
@@ -273,7 +282,7 @@
                         }
                     }
 
-                    scope.$parent.vm.createFieldsTrees();
+                    scope.$parent.vm.createFieldsTree();
                     scope.$parent.vm.syncItems();
                 };
 
@@ -283,26 +292,22 @@
                         if (scope.attrs[i].id && scope.item.id) {
                             if (scope.attrs[i].id === scope.item.id) {
                                 scope.item.attribute = scope.attrs[i];
-                                scope.backupItem.attribute = scope.attrs[i];
                             }
                         } else {
                             for (e = 0; e < scope.entityAttrs.length; e = e + 1) {
                                 if (scope.entityAttrs[e].name === scope.item.name) {
                                     scope.item.attribute = scope.entityAttrs[e];
-                                    scope.backupItem.attribute = scope.entityAttrs[e];
                                 }
                             }
                             for (u = 0; u < scope.userInputs.length; u = u + 1) {
                                 if (scope.userInputs[u].name === scope.item.name) {
                                     scope.item.attribute = scope.userInputs[u];
-                                    scope.backupItem.attribute = scope.userInputs[u];
                                 }
                             }
                             if (!scope.item.attribute) {
                                 for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
                                     if (scope.layoutAttrs[l].name === scope.item.name) {
                                         scope.item.attribute = scope.layoutAttrs[l];
-                                        scope.backupItem.attribute = scope.layoutAttrs[l];
                                     }
                                 }
                             }
@@ -471,8 +476,12 @@
 
                 scope.hasBackgroundColorInput = function () {
 
-                    if (scope.item.attribute.value_type === 'decoration') {
+                    if (!scope.item.attribute ||
+                        scope.item.type === 'empty' ||
+                        scope.item.attribute.value_type === 'decoration') {
+
                         return false;
+
                     };
 
                     return true;

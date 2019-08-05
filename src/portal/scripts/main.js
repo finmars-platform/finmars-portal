@@ -310,6 +310,7 @@ app.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('.
 
 app.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
 app.controller('UiLayoutSaveAsDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutSaveAsDialogController')]);
+app.controller('SelectLayoutDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/selectLayoutDialogController')]);
 
 // Bookmarks
 
