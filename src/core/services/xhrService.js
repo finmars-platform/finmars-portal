@@ -6,7 +6,7 @@
 
     var errorService = require('./errorService');
 
-    var requestsPerMinuteLimit = 490; // 500 on backend
+    var requestsPerMinuteLimit = 400; // 500 on backend
     var requestsCount = 0;
     var lastRequestTime = new Date().getTime();
     var currentTime;
@@ -24,34 +24,23 @@
 
         return new Promise(function (resolve, reject) {
 
+            console.log('requestsCount', requestsCount);
+
             if (requestsCount > requestsPerMinuteLimit) {
 
-                currentTime = new Date().getTime();
+                setTimeout(function () {
 
-                if (lastRequestTime + minute < currentTime) {
+                    makeRequest(url, params).then(function (data) {
 
-                    requestsCount = 0;
-                    lastRequestTime = new Date().getTime();
+                        console.log("Timeout 60s");
 
-                    resolve(makeRequest(url, params))
+                        requestsCount = 0;
 
-                } else {
+                        resolve(data)
 
-                    setTimeout(function () {
+                    })
 
-                        makeRequest(url, params).then(function (data) {
-
-                            console.log("Timeout 60s");
-
-                            requestsCount = 0;
-
-                            resolve(data)
-
-                        })
-
-                    }, minute)
-
-                }
+                }, minute + 1000)
 
             } else {
 

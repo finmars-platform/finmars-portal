@@ -163,6 +163,7 @@
             obj.count = data.count;
             obj.next = data.next;
             obj.previous = data.previous;
+            obj.___is_open = true;
             for (i = 0; i < step; i = i + 1) {
                 if (pageAsIndex * step + i < obj.count) {
                     obj.results[pageAsIndex * step + i] = data.results[i];
@@ -187,6 +188,7 @@
                 obj.count = data.count;
                 obj.next = data.next;
                 obj.previous = data.previous;
+                obj.___is_open = true;
 
                 for (i = 0; i < step; i = i + 1) {
                     if (pageAsIndex * step + i < obj.count) {
@@ -236,6 +238,7 @@
                 item.___group_name = item.___group_name ? item.___group_name : '-';
                 item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
                 item.___group_id = item.___group_id ? item.___group_id : '-';
+
 
                 item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
@@ -361,6 +364,8 @@
 
             });
 
+            console.log('pagesToRequest', pagesToRequest);
+
             pagesToRequest.forEach(function (pageToRequest) {
 
                 promises.push(new Promise(function (resolveLocal) {
@@ -389,6 +394,8 @@
                     entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                     groupsService.getList(entityType, options).then(function (data) {
+
+                        console.log('get groups', data);
 
                         requestParameters.pagination.count = data.count;
                         requestParameters.processedPages.push(pageToRequest);
@@ -432,7 +439,7 @@
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
-        console.log('updateDataStructure.requestParameters', requestParameters);
+        console.log('updateDataStructure.requestParameters', JSON.parse(JSON.stringify(requestParameters)));
 
         if (requestParameters.requestType === 'objects') {
 

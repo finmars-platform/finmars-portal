@@ -10,25 +10,9 @@
 
     var metaService = require('../../services/metaService');
 
-    var clickTargets = {
-        'FOLD_BUTTON': 'FOLD_BUTTON',
-        'ROW_SELECTION_OBJECT_BUTTON': 'ROW_SELECTION_OBJECT_BUTTON',
-        'ROW_SELECTION_GROUP_BUTTON': 'ROW_SELECTION_GROUP_BUTTON',
-        'ROW_SELECTION_OBJECT_SVG': 'ROW_SELECTION_OBJECT_SVG',
-        'ROW_SELECTION_GROUP_SVG': 'ROW_SELECTION_GROUP_SVG',
-        'ROW_OBJECT': 'ROW_OBJECT',
-        'ROW_CELL': 'ROW_CELL',
-        'ROW_CELL_CONTENT': 'ROW_CELL_CONTENT',
-        'ROW_GROUP': 'ROW_GROUP',
-        'LOAD_MORE_BUTTON': 'LOAD_MORE_BUTTON',
-        'LOAD_ALL_BUTTON': 'LOAD_ALL_BUTTON'
-    };
-
     var evScrollManager = new EvScrollManager();
 
     var requestGroups = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
-
-        var oldRequestParameters = evDataService.getActiveRequestParameters();
 
         var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
         var currentGroupIdentifier = evDataHelper.getGroupIdentifierFromParent(groupHashId, parentGroupHashId, evDataService);
@@ -42,14 +26,18 @@
             groupIdentifier: currentGroupIdentifier
         };
 
-        var newRequestParameters = {
+        var requestParameters = {
             requestType: 'groups',
             id: groupHashId,
+            pagination: {
+                page: 1,
+                items_per_page: pagination.items_per_page,
+                count: 1
+            },
             event: {
                 ___id: groupHashId,
                 parentGroupId: parentGroupHashId,
                 groupId: groupHashId,
-
                 groupName: currentGroupName,
                 groupIdentifier: currentGroupIdentifier
 
@@ -57,11 +45,12 @@
             body: {
                 groups_types: evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService),
                 groups_values: evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService),
-                page_size: pagination.items_per_page
-            }
+                page_size: pagination.items_per_page,
+                page: 1
+            },
+            requestedPages: [1],
+            processedPages: []
         };
-
-        var requestParameters = Object.assign({}, oldRequestParameters, newRequestParameters);
 
         console.log('requestParameters', requestParameters);
 
@@ -103,10 +92,13 @@
             groupIdentifier: currentGroupIdentifier
         };
 
+        requestParameters.requestedPages = [1];
+
         requestParameters.body = {
             groups_types: groupTypes,
             groups_values: groupValues,
-            page_size: pagination.items_per_page
+            page_size: pagination.items_per_page,
+            page: 1
         };
 
         evDataService.setRequestParameters(requestParameters);
@@ -143,29 +135,140 @@
 
     };
 
-    var handleGroupSelection = function (clickData, evDataService, evEventService) {
+    var clearObjectActiveState = function (evDataService, evEventService) {
 
-        var group = evDataService.getData(clickData.___id);
+        var objects = evDataService.getObjects();
 
-        if (group) {
+        objects.forEach(function (item) {
+            item.___is_activated = false;
+            evDataService.setObject(item);
+        });
 
-            group.___is_activated = !group.___is_activated;
+    };
 
-            evDataService.setData(group);
+    var clearGroupActiveState = function (evDataService, evEventService) {
+
+        var groups = evDataService.getDataAsList();
+
+        groups.forEach(function (item) {
+            item.___is_activated = false;
+            evDataService.setData(item);
+        });
+
+    };
+
+    var handleShiftSelection = function (evDataService, evEventService, clickData) {
+
+        var lastActiveRow = evDataService.getLastActivatedRow();
+
+        console.log('lastActiveRow', lastActiveRow);
+
+        if (!lastActiveRow) {
+
+            if (clickData.___type === 'object') {
+
+                var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
+
+                obj.___is_activated = !obj.___is_activated;
+                evDataService.setObject(obj);
+                evDataService.setLastActivatedRow(obj);
+
+            } else if (clickData.___type === 'group') {
+
+                var group = evDataService.getData(clickData.___id);
+
+                if (group) {
+
+                    group.___is_activated = !group.___is_activated;
+
+                    evDataService.setLastActivatedRow({
+                        ___id: clickData.___id,
+                        ___parentId: clickData.___parentId
+                    });
+
+                    evDataService.setData(group);
+
+                } else {
+
+                    var objGroup = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
+
+                    objGroup.___is_activated = !objGroup.___is_activated;
+                    evDataService.setObject(objGroup);
+
+                }
+
+            }
 
         } else {
 
-            var parentGroup = evDataService.getData(clickData.___parentId);
+            var list = evDataService.getFlatList();
 
-            parentGroup.results.forEach(function (item) {
+            var activeObjectIndex;
+            var currentObjectIndex;
+
+            var from, to;
+
+            list.forEach(function (item, index) {
+
+                if (item.___id === lastActiveRow.___id) {
+                    activeObjectIndex = index
+                }
 
                 if (item.___id === clickData.___id) {
-                    item.___is_activated = !item.___is_activated;
+                    currentObjectIndex = index
+                }
+
+
+            });
+
+
+            if (currentObjectIndex > activeObjectIndex) {
+
+                from = activeObjectIndex;
+                to = currentObjectIndex;
+
+            } else {
+
+                from = currentObjectIndex;
+                to = activeObjectIndex;
+
+            }
+
+            var activated_ids = [];
+
+
+            list.forEach(function (item, index) {
+
+                if (index >= from && index <= to) {
+
+                    activated_ids.push(item.___id);
+
                 }
 
             });
 
-            evDataService.setData(parentGroup);
+            console.log('activated_ids', activated_ids);
+
+            clearGroupActiveState(evDataService, evEventService);
+            clearObjectActiveState(evDataService, evEventService);
+
+            list.forEach(function (object) {
+
+                if (activated_ids.indexOf(object.___id) !== -1) {
+
+                    group = evDataService.getData(object.___parentId);
+
+                    if (group) {
+                        group.___is_activated = true;
+                        evDataService.setData(group);
+                    }
+
+                    object.___is_activated = true;
+                    evDataService.setObject(object);
+
+                }
+
+            });
 
         }
 
@@ -173,87 +276,28 @@
 
     };
 
-    var handleGroupFold = function (clickData, evDataService, evEventService) {
-
-        var group = evDataService.getData(clickData.___id);
-
-        group.___is_open = false;
-
-        evDataService.setData(group);
-
-        foldChildGroups(group.___id, evDataService);
-
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
-
-    };
-
-    var handleObjectActive = function (clickData, evDataService, evEventService) {
-        console.log("flat list handleObjectActive click");
-        var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
-
-        var count = evDataService.getActiveObjectsCount();
-
-        if (clickData.isShiftPressed) {
-
-            obj.___is_activated = true;
-
-            count = count + 1;
-
-            evDataService.setActiveObjectsCount(count);
-
-            evDataService.setActiveObject(obj);
-            evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-        } else if (clickData.isCtrlPressed) {
-
-            handleControlClick(clickData, evDataService, evEventService);
-
-        } else {
-
-            var objects = evDataService.getObjects();
-            var activeObject = evDataService.getActiveObject();
-
-            objects.forEach(function (item) {
-                item.___is_activated = false;
-                evDataService.setObject(item);
-            });
-
-            if (!activeObject || activeObject && activeObject.___id !== obj.___id || count > 1) {
-                obj.___is_activated = true;
-            }
-
-
-            // console.log('handleObjectActive.obj', obj);
-
-            evDataService.setObject(obj);
-
-            if (obj.___is_activated) {
-                evDataService.setActiveObject(obj);
-                evDataService.setActiveObjectsCount(1);
-                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-            } else {
-
-                evDataService.setActiveObjectsCount(0);
-                evDataService.setActiveObject(null);
-            }
-
-        }
-
-    };
-
     var handleGroupClick = function (clickData, evDataService, evEventService) {
 
-        if (clickData.target === clickTargets.ROW_SELECTION_GROUP_BUTTON || clickData.target === clickTargets.ROW_SELECTION_GROUP_SVG) {
+        var group = evDataService.getData(clickData.___id);
+        var obj;
 
-            handleGroupSelection(clickData, evDataService, evEventService);
+        if (!group) {
+            obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
+        }
 
-        } else {
+        var isFoldButtonPressed = clickData.target.classList.contains('ev-fold-button');
 
-            var group = evDataService.getData(clickData.___id);
+        if (isFoldButtonPressed) {
 
             if (group && group.___is_open) {
 
-                handleGroupFold(clickData, evDataService, evEventService);
+                group.___is_open = false;
+
+                evDataService.setData(group);
+
+                foldChildGroups(group.___id, evDataService);
+
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
 
             } else {
 
@@ -279,15 +323,107 @@
 
             }
 
+        } else {
+
+            if (clickData.isShiftPressed) {
+
+                handleShiftSelection(evDataService, evEventService, clickData);
+
+            }
+
+            if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
+
+                if (group) {
+                    group.___is_activated = true;
+                    evDataService.setData(group);
+                    evDataService.setLastActivatedRow(group);
+                } else {
+
+                    var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
+                    obj.___is_activated = true;
+                    evDataService.setObject(obj);
+                    evDataService.setLastActivatedRow(obj);
+
+                }
+
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            }
+
+            if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
+
+                var state;
+
+                if (group) {
+                    state = group.___is_activated;
+                } else {
+                    state = obj.___is_activated
+                }
+
+                clearGroupActiveState(evDataService, evEventService);
+                clearObjectActiveState(evDataService, evEventService);
+
+                if (group) {
+                    group.___is_activated = !state;
+                    evDataService.setData(group);
+                    evDataService.setLastActivatedRow(group);
+                } else {
+                    obj.___is_activated = !state;
+                    evDataService.setObject(obj);
+                    evDataService.setLastActivatedRow(obj);
+                }
+
+
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            }
+
+
         }
+
 
     };
 
     var handleObjectClick = function (clickData, evDataService, evEventService) {
 
-        handleObjectActive(clickData, evDataService, evEventService);
+        var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
 
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        if (clickData.isShiftPressed) {
+
+            handleShiftSelection(evDataService, evEventService, clickData);
+
+        }
+
+        if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
+
+            obj.___is_activated = true;
+            evDataService.setObject(obj);
+            evDataService.setLastActivatedRow(obj);
+
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        }
+
+        if (!clickData.isShiftPressed && !clickData.isCtrlPressed) {
+
+
+            clearObjectActiveState(evDataService, evEventService);
+
+            obj.___is_activated = !obj.___is_activated;
+            evDataService.setObject(obj);
+
+            if (obj.___is_activated) {
+                evDataService.setActiveObject(obj);
+                evDataService.setActiveObjectsCount(1);
+                evDataService.setLastActivatedRow(obj);
+                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+            } else {
+
+                evDataService.setActiveObjectsCount(0);
+                evDataService.setActiveObject(null);
+                evDataService.setLastActivatedRow(null);
+            }
+
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        }
+
 
     };
 
@@ -302,7 +438,10 @@
             requestParameters.requestedPages = [1]
         }
 
-        if (clickData.target === clickTargets.LOAD_MORE_BUTTON) {
+        var isLoadMoreButtonPressed = clickData.target.classList.contains('load-more');
+        var isLoadAllButtonPressed = clickData.target.classList.contains('load-all');
+
+        if (isLoadMoreButtonPressed) {
 
             requestParameters.body.page = requestParameters.body.page + 1;
             requestParameters.pagination.page = requestParameters.pagination.page + 1;
@@ -313,7 +452,7 @@
 
         }
 
-        if (clickData.target === clickTargets.LOAD_ALL_BUTTON) {
+        if (isLoadAllButtonPressed) {
 
             var totalPages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.items_per_page);
 
@@ -334,142 +473,39 @@
 
     };
 
-    var getClickTarget = function (event) {
-
-        var result = '';
-
-        console.log('getClickTarget.event', event);
-
-        if (event.target.classList.contains('g-group-holder')) {
-            result = clickTargets.ROW_GROUP;
-        }
-
-        if (event.target.classList.contains('ev-fold-button')) {
-            result = clickTargets.FOLD_BUTTON;
-        }
-
-        if (event.target.classList.contains('g-row')) {
-            result = clickTargets.ROW_OBJECT;
-        }
-
-        if (event.target.classList.contains('g-cell')) {
-            result = clickTargets.ROW_CELL;
-        }
-
-        if (event.target.classList.contains('g-cell-content')) {
-            result = clickTargets.ROW_CELL_CONTENT;
-        }
-
-        if (event.target.classList.contains('g-row-selection') && event.target.parentElement.classList.contains('g-row')) {
-            result = clickTargets.ROW_SELECTION_OBJECT_BUTTON;
-        }
-
-        if (event.target.tagName === 'svg' && event.target.parentElement.parentElement.classList.contains('g-row')) {
-            result = clickTargets.ROW_SELECTION_OBJECT_SVG;
-        }
-
-        if (event.target.classList.contains('g-row-selection') && event.target.parentElement.classList.contains('g-group-holder')) {
-            result = clickTargets.ROW_SELECTION_GROUP_BUTTON;
-        }
-
-        if (event.target.tagName === 'svg' && event.target.parentElement.parentElement.classList.contains('g-group-holder')) {
-            result = clickTargets.ROW_SELECTION_GROUP_SVG;
-        }
-
-        if (event.target.classList.contains('control-button') && event.target.classList.contains('load-more')) {
-            result = clickTargets.LOAD_MORE_BUTTON;
-        }
-
-        if (event.target.classList.contains('control-button') && event.target.classList.contains('load-all')) {
-            result = clickTargets.LOAD_ALL_BUTTON;
-        }
-
-        return result;
-    };
-
     var getClickData = function (event) {
 
         var clickData = {};
+        var rowElem = event.target.closest('.g-row');
 
-        var clickTarget = getClickTarget(event);
 
-        clickData.target = clickTarget;
         clickData.isShiftPressed = event.shiftKey;
         clickData.isCtrlPressed = event.ctrlKey;
+        clickData.target = event.target;
 
-        switch (clickTarget) {
+        if (rowElem) {
 
-            case clickTargets.ROW_CELL:
-                clickData.___type = event.target.offsetParent.dataset.type;
-                clickData.___id = event.target.offsetParent.dataset.objectId;
-                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_CELL_CONTENT:
-                clickData.___type = event.target.offsetParent.dataset.type;
-                clickData.___id = event.target.offsetParent.dataset.objectId;
-                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_OBJECT:
-                clickData.___type = event.target.dataset.type;
-                clickData.___id = event.target.dataset.objectId;
-                clickData.___parentId = event.target.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_GROUP:
-                clickData.___type = event.target.dataset.type;
-                clickData.___id = event.target.dataset.groupHashId;
-                clickData.___parentId = event.target.dataset.parentGroupHashId;
-                break;
-            case clickTargets.FOLD_BUTTON:
+            clickData.___type = rowElem.dataset.type;
+            clickData.___id = rowElem.dataset.objectId;
 
-                var parentWithData = event.target.parentElement;
-                var parent = event.target.parentElement;
+            clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
-                for (var i = 0; i < 15; i++) { // safeguard in case of endless loop
-                    if (parent.classList.contains('g-group-holder')) {
-                        parentWithData = parent;
-                        break;
-                    } else if (parent === null) {
-                        break;
-                    } else {
-                        parent = parent.parentElement;
-                    }
-                }
 
-                clickData.___type = parentWithData.dataset.type;
-                clickData.___id = parentWithData.dataset.groupHashId;
-                clickData.___parentId = parentWithData.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_SELECTION_OBJECT_BUTTON:
-                clickData.___type = event.target.offsetParent.dataset.type;
-                clickData.___id = event.target.offsetParent.dataset.objectId;
-                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_SELECTION_GROUP_BUTTON:
-                clickData.___type = event.target.parentElement.dataset.type;
-                clickData.___id = event.target.parentElement.dataset.groupHashId;
-                clickData.___parentId = event.target.parentElement.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_SELECTION_OBJECT_SVG:
-                clickData.___type = event.target.parentElement.parentElement.dataset.type;
-                clickData.___id = event.target.parentElement.parentElement.dataset.objectId;
-                clickData.___parentId = event.target.parentElement.parentElement.dataset.parentGroupHashId;
-                break;
-            case clickTargets.ROW_SELECTION_GROUP_SVG:
-                clickData.___type = event.target.parentElement.parentElement.dataset.type;
-                clickData.___id = event.target.parentElement.parentElement.dataset.groupHashId;
-                clickData.___parentId = event.target.parentElement.parentElement.dataset.parentGroupHashId;
-                break;
-            case clickTargets.LOAD_ALL_BUTTON:
-                clickData.___type = event.target.offsetParent.dataset.type;
-                clickData.___id = event.target.offsetParent.dataset.objectId;
-                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-                break;
-            case clickTargets.LOAD_MORE_BUTTON:
-                clickData.___type = event.target.offsetParent.dataset.type;
-                clickData.___id = event.target.offsetParent.dataset.objectId;
-                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-                break;
+            if (event.target.classList.contains('ev-fold-button')) {
+                clickData.isFoldButtonPressed = true;
+            }
+
+            if (rowElem.dataset.subtotalType) {
+                clickData.___subtotal_type = rowElem.dataset.subtotalType;
+            }
+
+            if (rowElem.dataset.subtotalSubtype) {
+                clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
+            }
+
         }
+
+        console.log('clickData', clickData);
 
         return clickData;
 

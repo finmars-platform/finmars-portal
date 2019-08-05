@@ -6,14 +6,14 @@
 
     var render = function (group) {
 
-        var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button">+</div></div>';
+        var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">+</div></div>';
 
 
         if (group.___is_open) {
-            foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button">-</div></div>';
+            foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">-</div></div>';
         }
 
-        var classList = ['g-group-holder'];
+        var classList = ['g-group-holder', 'g-row'];
         classList.push('level-' + group.___level);
 
         var rowSelection;
@@ -28,7 +28,7 @@
         var classes = classList.join(' ');
 
 
-        return '<div class="' + classes + '" data-type="group" data-group-hash-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' +
+        return '<div class="' + classes + '" data-type="group" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' +
             rowSelection + foldButton + group.___group_name + '</div>'
 
     };
