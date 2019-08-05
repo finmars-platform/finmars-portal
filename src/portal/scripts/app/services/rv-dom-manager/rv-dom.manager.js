@@ -75,25 +75,26 @@
         clickData.isShiftPressed = event.shiftKey;
         clickData.isCtrlPressed = event.ctrlKey;
 
-        console.log('event', event);
+        if (rowElem) {
 
-        clickData.___type = rowElem.dataset.type;
-        clickData.___id = rowElem.dataset.objectId;
-        clickData.___parentId = rowElem.dataset.parentGroupHashId;
+            clickData.___type = rowElem.dataset.type;
+            clickData.___id = rowElem.dataset.objectId;
+            clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 
-        if (event.target.classList.contains('ev-fold-button')) {
-            clickData.isFoldButtonPressed = true;
+            if (event.target.classList.contains('ev-fold-button')) {
+                clickData.isFoldButtonPressed = true;
+            }
+
+            if (rowElem.dataset.subtotalType) {
+                clickData.___subtotal_type = rowElem.dataset.subtotalType;
+            }
+
+            if (rowElem.dataset.subtotalSubtype) {
+                clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
+            }
+
         }
-
-        if (rowElem.dataset.subtotalType) {
-            clickData.___subtotal_type = rowElem.dataset.subtotalType;
-        }
-
-        if (rowElem.dataset.subtotalSubtype) {
-            clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
-        }
-
 
         console.log('clickData', clickData);
 
@@ -358,6 +359,8 @@
             // evDataService.setActiveObject(obj);
             // evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
         }
 
         if (clickData.isShiftPressed) {
@@ -387,9 +390,11 @@
                 evDataService.setLastActivatedRow(null);
             }
 
+
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
         }
 
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 
@@ -452,6 +457,8 @@
 
             evDataService.setData(parent);
 
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
         }
 
         if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
@@ -484,9 +491,10 @@
 
             evDataService.setData(parent);
 
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
         }
 
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 
