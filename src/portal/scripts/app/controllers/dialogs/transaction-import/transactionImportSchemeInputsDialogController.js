@@ -54,7 +54,7 @@
                 }
 
                 vm.inputs.push(inputObject);
-                vm.inputIds(inputObject.id);
+                vm.inputIds.push(inputObject.id);
 
             });
 
