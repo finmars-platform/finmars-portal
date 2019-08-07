@@ -40,7 +40,10 @@
         });
 
         transactionTypeService.getByKey(vm.item.transaction_type).then(function (data) {
+
             vm.transactionType = data;
+
+            vm.inputIds = [];
 
             vm.transactionType.inputs.forEach(function (input) {
 
@@ -51,6 +54,13 @@
                 }
 
                 vm.inputs.push(inputObject);
+                vm.inputIds(inputObject.id);
+
+            });
+
+            vm.item.fields = vm.item.fields.filter(function (field) {
+
+                return vm.inputIds.indexOf(field.transaction_type_input) !== -1;
 
             });
 
