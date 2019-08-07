@@ -403,7 +403,7 @@
                                         item: errorOptions.item,
                                         content_type: errorOptions.content_type,
                                         error: {
-                                            message: "Can't find Transaction Type input for fields. Missing Input names: " + fieldsError.join(', ')
+                                            message: "Can't find Transaction Type (" + rule.___transaction_type__user_code + " # " + rule._order+ ") input for fields. Missing Input names: " + fieldsError.join(', ')
                                         },
                                         mode: 'The related Transaction Type has been deleted from layout'
 
