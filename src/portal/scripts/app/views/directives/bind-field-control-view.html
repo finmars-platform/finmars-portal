@@ -1,5 +1,6 @@
 <div>
     <div data-ng-if="fieldType['display_name'] === 'Number'" class="bind-field-number-field-container">
+
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
             <input data-ng-model="entity[getModelKey()]"
@@ -13,6 +14,12 @@
                    data-ng-if="item.options.onlyPositive"
                    class="no-input-arrows"
                    style="{{inputBackgroundColor()}}">
+
+            <md-button class="bind-field-calculator-btn" ng-click="openCalculatorDialog($event)">
+                <ng-md-icon icon="chrome_reader_mode" size="19">
+                    <md-tooltip md-direction="top">Calculator</md-tooltip>
+                </ng-md-icon>
+            </md-button>
 
         </md-input-container>
 
@@ -176,7 +183,7 @@
             </div>
         </div>
     </div>
-    <div data-ng-if="fieldType['display_name'] === 'Decoration'">
+    <div data-ng-if="fieldType['display_name'] === 'Decoration'" class="ec-decoration-container">
         <span class="ec-decoration line"
               data-ng-if="!item.options.labelText"
               style="{{inputBackgroundColor()}}"></span>

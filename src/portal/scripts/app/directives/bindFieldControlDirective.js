@@ -9,7 +9,7 @@
     var layoutService = require('../services/layoutService');
     var attributeTypeService = require('../services/attributeTypeService');
 
-    module.exports = function () {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             templateUrl: 'views/directives/bind-field-control-view.html',
@@ -289,6 +289,33 @@
                     }
 
                     return backgroundColor;
+                };
+
+                scope.openCalculatorDialog = function ($event) {
+
+                    var fieldModel = scope.entity[scope.getModelKey()];
+
+                    $mdDialog.show({
+                        controller: 'CalculatorDialogController as vm',
+                        templateUrl: 'views/dialogs/calculator-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                               numberValue: fieldModel
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.entity[scope.getModelKey()] = res.numberValue;
+
+                        };
+
+                    });
+
                 };
 
             }

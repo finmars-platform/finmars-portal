@@ -469,21 +469,23 @@
 
             if (field.row === row) {
                 if (field.type === 'field') {
+                    // console.log("form editor checkFieldRender1", tab, row, field);
                     return true;
                 } else {
 
                     var spannedCols = [];
                     var itemsInRow = tab.layout.fields.filter(function (item) {
-                        return item.row === row
+                        return item.row === row;
                     });
 
 
-                    itemsInRow.forEach(function (item, index) {
+                    itemsInRow.forEach(function (item) {
 
                         if (item.type === 'field' && item.colspan > 1) {
+                            var columnsToSpan = item.column + item.colspan - 1;
 
-                            for (var i = 1; i < item.colspan; i = i + 1) {
-                                spannedCols.push(i + index);
+                            for (var i = item.column; i < columnsToSpan; i = i + 1) {
+                                spannedCols.push(i);
                             }
 
                         }
