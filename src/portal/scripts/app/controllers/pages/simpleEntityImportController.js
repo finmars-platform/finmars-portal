@@ -38,6 +38,10 @@
             classifier_handler: 'skip'
         };
 
+        vm.validateConfig = {
+            mode: 1
+        };
+
         vm.loadIsAvailable = function () {
             if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
                 return true;
@@ -99,13 +103,17 @@
             vm.getSchemeList();
         };
 
-        vm.validate = function ($event, mode) {
+        vm.validate = function (resolve, $event) {
 
-            return new Promise(function (resolve, reject) {
+            vm.readyStatus.processing = true;
 
-                vm.readyStatus.processing = true;
+            var formData = new FormData();
 
-                var formData = new FormData();
+            if (vm.validateConfig.task_id) {
+
+                formData.append('task_id', vm.validateConfig.task_id);
+
+            } else {
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
@@ -115,104 +123,93 @@
                 formData.append('missing_data_handler', vm.config.missing_data_handler);
                 formData.append('classifier_handler', vm.config.classifier_handler);
 
-                console.log('vm.config', vm.config);
+            }
 
-                var schemeObject;
+            console.log('vm.validateConfig', vm.validateConfig);
 
-                vm.entitySchemes.forEach(function (scheme) {
+            importEntityService.validateImport(formData).then(function (data) {
 
-                    if (scheme.id == vm.config.scheme) {
-                        schemeObject = scheme;
-                    }
+                vm.validateConfig = data;
 
-                });
+                $scope.$apply();
 
-                importEntityService.validateImport(formData).then(function (data) {
+                if (vm.validateConfig.task_status === 'SUCCESS') {
 
-                    vm.readyStatus.processing = false;
-                    vm.dataIsImported = true;
+                    console.log('resolve?');
 
-                    var hasErrors = false;
+                    resolve(data)
 
-                    data.stats.forEach(function (item) {
+                } else {
 
-                        if (item.level === 'error') {
-                            hasErrors = true;
-                        }
+                    setTimeout(function () {
+                        vm.validate(resolve, $event);
+                    }, 1000)
 
-                    });
-
-                    if (!hasErrors) {
-
-                        resolve({status: 'agree'})
-
-                    } else {
-
-                        data.process_mode = mode;
-
-                        console.log('data', data);
-
-                        $mdDialog.show({
-                            controller: 'SimpleEntityImportErrorsDialogController as vm',
-                            templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                data: {
-                                    validationResult: data,
-                                    scheme: schemeObject,
-                                    config: vm.config
-                                }
-                            }
-                        }).then(function (res) {
-
-                            if (res && res.status === 'agree') {
-                                resolve({status: 'agree'})
-                            } else {
-                                resolve({status: 'disagree'});
-                            }
-
-                        })
-
-
-                    }
-
-
-                }).catch(function (reason) {
-
-                    vm.readyStatus.processing = false;
-
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            validationData: {
-                                message: "An error occurred. Please try again later"
-                            }
-                        }
-                    });
-
-                    resolve({status: 'disagree'});
-
-                    $scope.$apply();
-
-                })
+                }
 
             })
+
         };
 
         vm.validateImport = function ($event) {
 
-            vm.validate($event, 'validate').then(function (res) {
-                if (res.status === 'agree') {
+            new Promise(function (resolve, reject) {
+
+                vm.validateConfig = Object.assign({}, vm.config);
+
+                $mdDialog.show({
+                    controller: 'LoaderDialogController as vm',
+                    templateUrl: 'views/dialogs/loader-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        data: {
+                            isCancelable: false,
+                            current: vm.validateConfig.processed_rows,
+                            total: vm.validateConfig.total_rows,
+                            text: 'Validation Progress:',
+                            status: vm.validateConfig.task_status,
+                            callback: function () {
+                                return {
+                                    current: vm.validateConfig.processed_rows,
+                                    total: vm.validateConfig.total_rows,
+                                    status: vm.validateConfig.task_status
+                                }
+                            }
+                        }
+                    }
+
+                });
+
+                vm.validate(resolve, $event)
+
+            }).then(function (data) {
+
+                console.log('validateImport.data', data);
+
+                var hasErrors = false;
+
+                vm.readyStatus.processing = false;
+                vm.dataIsImported = true;
+
+                $scope.$apply();
+
+
+                data.stats.forEach(function (item) {
+
+                    if (item.level === 'error') {
+                        hasErrors = true;
+                    }
+
+                });
+
+                console.log('hasErrors', hasErrors);
+
+                if (!hasErrors) {
+
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
@@ -224,131 +221,95 @@
                         locals: {
                             success: {
                                 title: "Success",
-                                description: "Validation successful"
+                                description: "File is Valid"
                             }
                         }
 
                     });
 
+                } else {
+
+                    var schemeObject;
+
+                    vm.entitySchemes.forEach(function (scheme) {
+
+                        if (scheme.id == vm.config.scheme) {
+                            schemeObject = scheme;
+                        }
+
+                    });
+
+                    console.log('data', data);
+
+                    $mdDialog.show({
+                        controller: 'SimpleEntityImportErrorsDialogController as vm',
+                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: {
+                                validationResult: data,
+                                scheme: schemeObject,
+                                config: vm.config
+                            }
+                        }
+                    })
+
                 }
+
+
             });
 
 
         };
 
-        vm.load = function ($event) {
+        vm.import = function (resolve, $event) {
 
             vm.readyStatus.processing = true;
 
             var formData = new FormData();
 
-            formData.append('file', vm.config.file);
-            formData.append('scheme', vm.config.scheme);
-            formData.append('error_handler', vm.config.error_handler);
-            formData.append('delimiter', vm.config.delimiter);
-            formData.append('mode', vm.config.mode);
-            formData.append('missing_data_handler', vm.config.missing_data_handler);
-            formData.append('classifier_handler', vm.config.classifier_handler);
+            if (vm.config.task_id) {
+
+                formData.append('task_id', vm.config.task_id);
+
+            } else {
+
+                formData.append('file', vm.config.file);
+                formData.append('scheme', vm.config.scheme);
+                formData.append('error_handler', vm.config.error_handler);
+                formData.append('delimiter', vm.config.delimiter);
+                formData.append('mode', vm.config.mode);
+                formData.append('missing_data_handler', vm.config.missing_data_handler);
+                formData.append('classifier_handler', vm.config.classifier_handler);
+
+            }
 
             console.log('vm.config', vm.config);
 
-            var schemeObject;
-
-            vm.entitySchemes.forEach(function (scheme) {
-
-                if (scheme.id == vm.config.scheme) {
-                    schemeObject = scheme;
-                }
-
-            });
-
             importEntityService.startImport(formData).then(function (data) {
 
-                vm.readyStatus.processing = false;
-                vm.dataIsImported = true;
-
-                var hasErrors = false;
-
-                console.log('data', data);
-
-                $mdDialog.hide();
-
-                var description = '';
-
-                var errorsCount = 0;
-
-                data.stats.forEach(function (item) {
-
-                    if (item.level === 'error') {
-                        errorsCount = errorsCount + 1;
-                    }
-
-                });
-
-                if (vm.config.error_handler === 'continue') {
-
-                    description = '<div>' +
-                        '<div>Rows total: ' + (data.total - 1) + '</div>' +
-                        '<div>Rows success import: ' + (data.stats - errorsCount) + '</div>' +
-                        '<div>Rows fail import: ' + errorsCount + '</div>' +
-                        '</div><br/>';
-
-                }
-
-                if (vm.config.error_handler === 'break') {
-
-                    description = '<div>' +
-                        '<div>Rows total: ' + (data.total - 1) + '</div>' +
-                        '<div>Rows success import: ' + (data.stats.length - errorsCount) + '</div>' +
-                        '<div>Rows fail import: ' + errorsCount + '</div>' +
-                        '</div><br/>';
-
-                }
-
-                console.log('description', description);
-
-                description = description + '<div> You have successfully imported csv file </div>';
-
-                $mdDialog.show({
-                    controller: 'SuccessDialogController as vm',
-                    templateUrl: 'views/dialogs/success-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        success: {
-                            title: "Success",
-                            description: description
-                        }
-                    }
-
-                });
-
-
-            }).catch(function (reason) {
-
-                console.log('here? ', reason);
-
-                vm.readyStatus.processing = false;
-
-                $mdDialog.show({
-                    controller: 'ValidationDialogController as vm',
-                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        validationData: {
-                            message: "An error occurred. Please try again later"
-                        }
-                    }
-                });
+                vm.config = data;
 
                 $scope.$apply();
+
+                if (vm.config.task_status === 'SUCCESS') {
+
+                    console.log('resolve?');
+
+                    resolve(data)
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.import(resolve, $event);
+                    }, 1000)
+
+                }
+
 
             })
         };
@@ -390,12 +351,199 @@
             $mdDialog.cancel();
         };
 
-        vm.import = function ($event) {
+        vm.startImport = function ($event) {
 
-            vm.validate($event, 'import').then(function (res) {
+            new Promise(function (resolve, reject) {
 
-                if (res.status === 'agree') {
-                    vm.load();
+                delete vm.config.task_id;
+                delete vm.config.task_status;
+
+                $mdDialog.show({
+                    controller: 'LoaderDialogController as vm',
+                    templateUrl: 'views/dialogs/loader-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        data: {
+                            isCancelable: false,
+                            current: vm.config.processed_rows,
+                            total: vm.config.total_rows,
+                            text: 'Import Progress:',
+                            status: vm.config.task_status,
+                            callback: function () {
+                                return {
+                                    current: vm.config.processed_rows,
+                                    total: vm.config.total_rows,
+                                    status: vm.config.task_status
+                                }
+                            }
+                        }
+                    }
+
+                });
+
+                vm.import(resolve, $event)
+
+            }).then(function (data) {
+
+                console.log('import.data', data);
+
+                vm.readyStatus.processing = false;
+                vm.dataIsImported = true;
+
+                $scope.$apply();
+
+
+                var errors = data.stats.filter(function (item) {
+                    return item.level === 'error'
+                });
+
+                console.log('errors', errors);
+
+
+                var description;
+
+                if (vm.config.error_handler === 'continue') {
+
+                    description = '<div>' +
+                        '<div>Rows total: ' + (data.total_rows - 1) + '</div>' +
+                        '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
+                        '<div>Rows fail import: ' + errors.length + '</div>' +
+                        '</div><br/>';
+
+                }
+
+                if (vm.config.error_handler === 'break') {
+
+                    description = '<div>' +
+                        '<div>Rows total: ' + (data.total_rows - 1) + '</div>' +
+                        '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
+                        '<div>Rows fail import: ' + errors.length + '</div>' +
+                        '</div><br/>';
+
+                }
+
+                console.log('description', description);
+
+                description = description + '<div> You have successfully imported csv file </div>';
+
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        success: {
+                            title: "Success",
+                            description: description
+                        }
+                    }
+
+                });
+
+
+            });
+
+        };
+
+        vm.startImportWithValidation = function ($event) {
+
+            return new Promise(function (resolve, reject) {
+
+                vm.validateConfig = Object.assign({}, vm.config);
+
+                $mdDialog.show({
+                    controller: 'LoaderDialogController as vm',
+                    templateUrl: 'views/dialogs/loader-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        data: {
+                            isCancelable: false,
+                            current: vm.validateConfig.processed_rows,
+                            total: vm.validateConfig.total_rows,
+                            text: 'Validation Progress:',
+                            status: vm.validateConfig.task_status,
+                            callback: function () {
+                                return {
+                                    current: vm.validateConfig.processed_rows,
+                                    total: vm.validateConfig.total_rows,
+                                    status: vm.validateConfig.task_status
+                                }
+                            }
+                        }
+                    }
+
+                });
+
+                vm.validate(resolve, $event)
+
+            }).then(function (data) {
+
+                console.log('validateImport.data', data);
+
+                var hasErrors = false;
+
+                vm.readyStatus.processing = false;
+                vm.dataIsImported = true;
+
+                $scope.$apply();
+
+
+                data.stats.forEach(function (item) {
+
+                    if (item.level === 'error') {
+                        hasErrors = true;
+                    }
+
+                });
+
+                console.log('hasErrors', hasErrors);
+
+                if (!hasErrors) {
+
+                    vm.startImport($event);
+
+                } else {
+
+                    var schemeObject;
+
+                    vm.entitySchemes.forEach(function (scheme) {
+
+                        if (scheme.id == vm.config.scheme) {
+                            schemeObject = scheme;
+                        }
+
+                    });
+
+                    console.log('data', data);
+
+                    $mdDialog.show({
+                        controller: 'SimpleEntityImportErrorsDialogController as vm',
+                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: {
+                                validationResult: data,
+                                scheme: schemeObject,
+                                config: vm.config
+                            }
+                        }
+                    })
+
                 }
 
 

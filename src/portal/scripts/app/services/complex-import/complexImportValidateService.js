@@ -8,36 +8,66 @@
     var importEntityService = require('../import/importEntityService');
     var importTransactionService = require('../../services/import/importTransactionService');
 
-    var handleCsvImportAction = function (action, file, delimiter) {
-
-        var config = {
-            file: file,
-            scheme: action.csv_import_scheme,
-            error_handler: action.error_handler,
-            missing_data_handler: action.missing_data_handler,
-            classifier_handler: action.classifier_handler,
-            delimiter: delimiter,
-            mode: action.mode
-        };
+    var importSimple = function (resolve, config, index, updateCounter) {
 
         var formData = new FormData();
 
-        formData.append('file', config.file);
-        formData.append('scheme', config.scheme);
-        formData.append('error_handler', config.error_handler);
-        formData.append('missing_data_handler', config.missing_data_handler);
-        formData.append('classifier_handler', config.classifier_handler);
-        formData.append('delimiter', config.delimiter);
-        formData.append('mode', config.mode);
+        if (config.task_id) {
+            formData.append('task_id', config.task_id);
+        } else {
+
+            formData.append('file', config.file);
+            formData.append('scheme', config.scheme);
+            formData.append('error_handler', config.error_handler);
+            formData.append('missing_data_handler', config.missing_data_handler);
+            formData.append('classifier_handler', config.classifier_handler);
+            formData.append('delimiter', config.delimiter);
+            formData.append('mode', config.mode);
+
+        }
 
         // console.log('action', action);
 
         return importEntityService.validateImport(formData).then(function (data) {
 
-            return {
-                config: config,
-                data: data
+            config = data;
+
+            updateCounter(index, config);
+
+            if (config.task_status === 'SUCCESS') {
+                resolve({
+                    config: config,
+                    data: data
+                });
+            } else {
+                setTimeout(function () {
+                    importSimple(resolve, config, index, updateCounter);
+                }, 1000)
+
             }
+
+        })
+
+    };
+
+    var handleCsvImportAction = function (action, file, delimiter, index, updateCounter) {
+
+        return new Promise(function (resolve, reject) {
+
+            var config = {
+                file: file,
+                scheme: action.csv_import_scheme,
+                error_handler: action.error_handler,
+                missing_data_handler: action.missing_data_handler,
+                classifier_handler: action.classifier_handler,
+                delimiter: delimiter,
+                mode: action.mode
+            };
+
+            // console.log('handleComplexTransactionImportAction.config', config)
+
+            importSimple(resolve, config, index, updateCounter);
+
         })
 
     };
@@ -105,7 +135,7 @@
         return new Promise(function (resolve, reject) {
 
             if (action.csv_import_scheme) {
-                resolve(handleCsvImportAction(action.csv_import_scheme, file, delimiter))
+                resolve(handleCsvImportAction(action.csv_import_scheme, file, delimiter, index, updateCounter))
             }
 
             if (action.complex_transaction_import_scheme) {
