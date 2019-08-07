@@ -498,12 +498,13 @@
                     });
 
 
-                    itemsInRow.forEach(function (item, index) {
+                    itemsInRow.forEach(function (item) {
 
                         if (item.type === 'field' && item.colspan > 1) {
+                            var columnsToSpan = item.column + item.colspan - 1;
 
-                            for (var i = 1; i < item.colspan; i = i + 1) {
-                                spannedCols.push(i + index);
+                            for (var i = item.column; i < columnsToSpan; i = i + 1) {
+                                spannedCols.push(i);
                             }
 
                         }

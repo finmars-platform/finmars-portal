@@ -100,6 +100,7 @@ app.controller('NotificationsController', ['$scope', '$state', '$stateParams', r
 app.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/headerNotificationsDialogController')]);
 app.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/helpDialogController')]);
 app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
+app.controller('CalculatorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/calculatorDialogController')]);
 
 
 app.controller('EcosystemDefaultSettingsController', ['$scope', '$mdDialog', require('./app/controllers/pages/ecosystemDefaultSettingsController')]);
@@ -326,7 +327,7 @@ app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
 app.directive('sidenavDropdownMenu', [require('./app/directives/sidenavDropdownMenuDirective')]);
 
-app.directive('bindFieldControl', [require('./app/directives/bindFieldControlDirective')]);
+app.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
 app.directive('layoutConstructorField', [require('./app/directives/layoutConstructorFieldDirective')]);
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 
@@ -420,6 +421,7 @@ app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);
 app.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
 app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
+// app.directive('calculatorButton', [require('./app/directives/calculatorButtonDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('trustAsUrl', ['$sce', require('./app/filters/trustAsUrlFilter')]);

@@ -32,6 +32,16 @@
         var columns = document.querySelectorAll('.g-columns-holder .g-cell');*/
 
         var flatList = evDataService.getFlatList();
+        // console.log("conversion falt list", flatList);
+
+        /*flatList.forEach(function(item){
+
+            if (item.___type === 'subtotal') {
+                var parentGroup = evDataService.getData(item.___parentId)
+                console.log("conversion parentGroup", parentGroup);
+            }
+
+        });*/
 
         if (copyType === 'selected') {
             flatList = flatList.filter(function (row) {

@@ -26,11 +26,11 @@
                         </md-tab-label>
                         <md-tab-body>
                             <md-content class="md-padding p-t-26">
-                                <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
+                                <div layout="row"
+                                     ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
-                                    <div class="ev-data-field
-								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
-                                         data-ng-repeat="field in tab.layout.fields"
+                                    <div class="ev-data-field {{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
+                                         ng-repeat="field in tab.layout.fields"
                                          flex="{{vm.bindFlex(tab, row, field)}}"
                                          data-ng-if="vm.checkFieldRender(tab, row, field)">
                                         <bind-field-control
