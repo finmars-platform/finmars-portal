@@ -100,26 +100,57 @@
 
             vm.counter = Object.keys(vm.counterData).length;
 
-            // var keys = Object.keys(vm.counterData);
-
-            // keys.forEach(function (key) {
-            //
-            //     if (vm.counterData[key]) {
-            //         if (vm.counterData[key].hasOwnProperty('task_status')) {
-            //
-            //             if (vm.counterData[key].task_status === 'SUCCESS') {
-            //                 vm.counter = vm.counter + 1;
-            //             }
-            //
-            //         } else {
-            //             vm.counter = vm.counter + 1;
-            //         }
-            //     }
-            //
-            // });
-
             $scope.$apply()
         }
+
+        vm.getSimpleImportProgress = function(){
+
+            var result = {};
+
+            var keys = Object.keys(vm.counterData);
+
+            var currentAction;
+            var currentActionIndex;
+
+            var schemeObject;
+
+            vm.schemes.forEach(function (scheme) {
+
+                if (scheme.id === vm.config.scheme) {
+                    schemeObject = scheme;
+                }
+
+            });
+
+            keys.forEach(function (key) {
+
+                if (vm.counterData[key].hasOwnProperty('error_handler') && vm.counterData[key].hasOwnProperty('task_status')) {
+
+                    if (vm.counterData[key].task_status !== 'SUCCESS') {
+                        currentAction = vm.counterData[key];
+                        currentActionIndex = key;
+                    }
+
+                }
+
+            });
+
+
+
+            if (currentAction && currentActionIndex && schemeObject) {
+
+                // console.log('currentActionIndex', currentActionIndex);
+
+                result.text = 'Processing ' + schemeObject.actions[currentActionIndex].action_notes + ':';
+                result.current = currentAction.processed_rows;
+                result.total = currentAction.total_rows;
+            }
+
+            // console.log('getTransactionImportProgress.result', result);
+
+            return result;
+
+        };
 
         vm.getTransactionImportProgress = function () {
 
@@ -218,7 +249,8 @@
                                 total: vm.activeItemTotal,
                                 status: vm.status,
                                 additional: [
-                                    vm.getTransactionImportProgress()
+                                    vm.getTransactionImportProgress(),
+                                    vm.getSimpleImportProgress()
                                 ]
                             }
                         }

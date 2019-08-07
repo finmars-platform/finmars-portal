@@ -76,8 +76,8 @@
                             </thead>
                             <tbody>
                             <tr data-ng-repeat="item in vm.instrumentsPrices | filter:vm.query">
-                                <td data-ng-bind="vm.bindPricingPolicy(item)"></td>
-                                <td data-ng-bind="vm.bindInstrument(item)"></td>
+                                <td data-ng-bind="item.instrument_object.user_code"></td>
+                                <td data-ng-bind="item.pricing_policy_object.user_code"></td>
                                 <td data-ng-bind="item.date"></td>
                                 <!--<td>
                                     <md-input-container>

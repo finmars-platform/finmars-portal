@@ -92,7 +92,7 @@
             </md-button>
             <md-button
                     class="md-raised colored-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
-                    data-ng-click="vm.import($event)">
+                    data-ng-click="vm.startImportWithValidation($event)">
                 IMPORT
             </md-button>
             <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
