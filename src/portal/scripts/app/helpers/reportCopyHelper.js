@@ -34,20 +34,41 @@
         var flatList = evDataService.getFlatList();
         // console.log("conversion falt list", flatList);
 
-        /*flatList.forEach(function(item){
-
-            if (item.___type === 'subtotal') {
-                var parentGroup = evDataService.getData(item.___parentId)
-                console.log("conversion parentGroup", parentGroup);
-            }
-
-        });*/
-
         if (copyType === 'selected') {
-            flatList = flatList.filter(function (row) {
-                return row.___is_activated;
-            });
-        }
+
+            if (isReport) {
+
+                flatList = flatList.filter(function (row) {
+
+                    if (row.___type === 'subtotal') {
+
+                        var parentGroup = evDataService.getData(row.___parentId);
+                        console.log("conversion parentGroup", flatList, parentGroup);
+                        if (row.___subtotal_type === "line" && parentGroup.___is_line_subtotal_activated) {
+                            return true;
+                        };
+
+                        if (row.___subtotal_type === "area" && parentGroup.___is_area_subtotal_activated) {
+                            return true;
+                        };
+
+                    } else if (row.___is_activated) {
+                        return true;
+                    };
+
+                    return false;
+
+                });
+
+            } else {
+
+                flatList = flatList.filter(function (row) {
+                    return row.___is_activated;
+                });
+
+            };
+
+        };
 
         if (flatList.length) {
             var columns = evDataService.getColumns();
