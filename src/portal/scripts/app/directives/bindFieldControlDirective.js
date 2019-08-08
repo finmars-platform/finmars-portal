@@ -294,6 +294,7 @@
                 scope.openCalculatorDialog = function ($event) {
 
                     var fieldModel = scope.entity[scope.getModelKey()];
+                    var calculatorTitle = "Calculator for: " + scope.getName();
 
                     $mdDialog.show({
                         controller: 'CalculatorDialogController as vm',
@@ -302,7 +303,8 @@
                         multiple: true,
                         locals: {
                             data: {
-                               numberValue: fieldModel
+                               numberValue: fieldModel,
+                               calculatorTitle: calculatorTitle
                             }
                         }
 

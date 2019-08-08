@@ -12,6 +12,11 @@
         vm.numberToShow = 0;
         vm.calculationsHistory = "";
         vm.smallFontForCurrentNumber = false;
+        vm.calculatorTitle = "Calculator";
+
+        if (data.calculatorTitle) {
+            vm.calculatorTitle = data.calculatorTitle;
+        }
 
         if (data.numberValue) {
             vm.numberToShow = data.numberValue;
@@ -256,11 +261,13 @@
 
         var operatorSymbols = ['+', '-', '*', '/'];
 
-        document.addEventListener('keydown', function (event) {
+        function inputDataFromKeyboard (event) {
 
             var pressedKey = event.key;
-
-            if (!isNaN(pressedKey) || pressedKey === '.' || pressedKey === ',') {
+            console.log("calculator key pressed", pressedKey);
+            if (!isNaN(pressedKey) ||
+                pressedKey === '.' ||
+                pressedKey === ',') {
 
                 event.preventDefault();
                 if (pressedKey === ',') {
@@ -291,20 +298,26 @@
                 };
 
             };
-        });
+        };
+
+        document.addEventListener('keydown', inputDataFromKeyboard);
 
         vm.close = function () {
+            document.removeEventListener('keydown', inputDataFromKeyboard);
             $mdDialog.hide({status: 'disagree'});
         };
 
         vm.returnNumber = function () {
+
+            document.removeEventListener('keydown', inputDataFromKeyboard);
             var numberToReturn = "";
 
             if (!isNaN(vm.numberToShow)) {
                 numberToReturn = Number(vm.numberToShow);
             }
 
-            $mdDialog.hide({status: 'agree', numberValue: numberToReturn})
+            $mdDialog.hide({status: 'agree', numberValue: numberToReturn});
+
         };
 
     };

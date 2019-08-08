@@ -208,7 +208,13 @@
       "obj_attrs.responsibleattributetype",
       "obj_attrs.counterpartyattributetype",
       "obj_attrs.instrumentattributetype",
-      "obj_attrs.instrumenttypeattributetype"
+      "obj_attrs.instrumenttypeattributetype",
+      "obj_attrs.transactiontypeattributetype",
+      "obj_attrs.strategy1attributetype",
+      "obj_attrs.strategy2attributetype",
+      "obj_attrs.strategy3attributetype",
+      "ui.transactionuserfieldmodel",
+      "ui.instrumentuserfieldmodel"
     ],
     "firstElementExist": false
   },
