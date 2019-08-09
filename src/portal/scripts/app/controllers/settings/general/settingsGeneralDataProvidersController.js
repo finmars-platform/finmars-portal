@@ -63,17 +63,38 @@
 
         };
 
+        vm.requestTestCertificate = function(resolve, data) {
+
+            dataProvidersService.bloombergTestCertificate(data).then(function (data) {
+
+                console.log('data', data);
+
+                if(data.task_object.status === 'SUCCESS') {
+                    resolve(data);
+                } else {
+                    vm.requestTestCertificate(resolve, data);
+                }
+
+            })
+
+        };
+
         vm.testBloombergCall = function() {
 
             console.log("Test bloomberg request")
 
-            dataProvidersService.bloombergTestCertificate({}).then(function (data) {
+            new Promise(function (resolve, reject) {
 
-                console.log('data', data);
+                vm.requestTestCertificate(resolve, {})
+
+            }).then(function (data) {
+
+                console.log('testBloombergCall data', data);
 
                 vm.getConfigs();
 
             })
+
 
         };
 
