@@ -47,6 +47,11 @@
                             provider.has_p12cert = config.has_p12cert;
                         }
 
+                        if (provider.id === config.provider) {
+                            provider.is_valid = config.is_valid;
+                        }
+
+
                     })
 
                 });
@@ -65,6 +70,8 @@
             dataProvidersService.bloombergTestCertificate({}).then(function (data) {
 
                 console.log('data', data);
+
+                vm.getConfigs();
 
             })
 
