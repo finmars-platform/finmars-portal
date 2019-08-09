@@ -6,7 +6,7 @@
                 <div layout="row" layout-align="space-between">
                     <div layout="row" layout-align="begin center">
 
-                        <div class="float-left m-r-8" style="width: 24px">
+                        <div class="float-left m-r-8" style="width: 48px" layout="row">
                             <ng-md-icon icon="check_circle" class="color-success" data-ng-if="dataProvider.has_p12cert">
                                 <md-tooltip md-direction="top">Certificate is imported</md-tooltip>
                             </ng-md-icon>
@@ -14,13 +14,21 @@
                                         data-ng-if="!dataProvider.has_p12cert">
                                 <md-tooltip md-direction="top">Certificate is not imported</md-tooltip>
                             </ng-md-icon>
+
+                            <ng-md-icon icon="swap_vertial_circle" class="color-success" data-ng-if="dataProvider.is_valid">
+                                <md-tooltip md-direction="top">Certificate is verified</md-tooltip>
+                            </ng-md-icon>
+                            <ng-md-icon icon="swap_vertial_circle" class="color-grey"
+                                        data-ng-if="!dataProvider.is_valid">
+                                <md-tooltip md-direction="top">Certificate is not verified</md-tooltip>
+                            </ng-md-icon>
                         </div>
 
                         {{dataProvider.name}}
                     </div>
                     <div layout="row" layout-align="end center">
                         <md-button
-                                class="md-raised md-primary"
+                                class="md-raised md-primary" ng-class="{'disabled-btn': !dataProvider.has_p12cert}"
                                 data-ng-click="vm.testBloombergCall()">
                             Make a Test Request
                         </md-button>
