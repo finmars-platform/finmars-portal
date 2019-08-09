@@ -25,14 +25,12 @@
                         <tbody>
                         <tr data-ng-repeat="action in vm.complexImportScheme.actions track by $index">
                             <td>{{ $index + 1 }}</td>
-                            <td>
-                                {{action.action_notes}}
-                            </td>
-                            <td>
 
+                            <td>{{action.action_notes}}</td>
+
+                            <td>
                                 <div data-ng-if="vm.validationResults.errors[$index].length">Error</div>
                                 <div data-ng-if="!vm.validationResults.errors[$index].length">Ok</div>
-
                             </td>
 
                             <td>
@@ -44,6 +42,7 @@
                                         file</a>
                                 </div>
                             </td>
+
                         </tr>
                         </tbody>
 
