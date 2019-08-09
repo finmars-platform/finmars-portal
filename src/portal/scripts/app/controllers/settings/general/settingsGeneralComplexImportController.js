@@ -65,6 +65,7 @@
         };
 
         vm.deleteScheme = function ($event, item) {
+
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/warning-dialog-view.html',
@@ -79,6 +80,7 @@
                 autoWrap: true,
                 skipHide: true,
                 multiple: true
+
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);

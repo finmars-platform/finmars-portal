@@ -664,9 +664,9 @@
                 case 'reports.transactionreportcustomfield':
                     return "Transaction Report Custom Fields";
                 case 'ui.instrumentuserfieldmodel':
-                    return 'Instrument User Fields';
+                    return 'Instrument User Text Field Names';
                 case 'ui.transactionuserfieldmodel':
-                    return 'Transaction User Fields';
+                    return 'Transaction User Field Names';
                 default:
                     return "Unknown"
             }
