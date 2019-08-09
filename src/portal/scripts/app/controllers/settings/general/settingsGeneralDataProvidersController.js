@@ -115,7 +115,7 @@
                 if(data.status === 'error') {
 
                     $mdDialog.show({
-                        controller: 'WarningDialogController as vm',
+                        controller: 'InfoDialogController as vm',
                         templateUrl: 'views/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
@@ -124,7 +124,7 @@
                         multiple: true,
                         skipHide: true,
                         locals: {
-                            warning: {
+                            info: {
                                 title: 'Warning',
                                 description: 'Something wrong with Certificate/Password.'
                             }
