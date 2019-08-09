@@ -72,7 +72,7 @@
 
                 console.log('data', data);
 
-                if(data.task_object.status === 'SUCCESS') {
+                if(data.task_object.status === 'D') {
                     resolve(data);
                 } else {
                     setTimeout(function () {
