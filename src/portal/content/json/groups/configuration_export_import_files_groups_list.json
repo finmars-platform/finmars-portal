@@ -5,7 +5,10 @@
       "ui.editlayout",
       "ui.listlayout",
       "ui.reportlayout",
-      "ui.bookmark"
+      "ui.bookmark",
+      "reports.balancereportcustomfield",
+      "reports.plreportcustomfield",
+      "reports.transactionreportcustomfield"
     ],
     "firstLevelGroup": "User Interface",
     "firstElementExist": false,
@@ -168,29 +171,27 @@
   },
   {
     "name": "Custom Columns for Layouts",
-    "entities": [
-      "reports.balancereportcustomfield",
-      "reports.plreportcustomfield",
-      "reports.transactionreportcustomfield"
-    ],
+    "entities": [],
     "firstElementExist": false
   },
   {
     "name": "Transaction Types",
     "entities": [
       "transactions.transactiontype",
-      "transactions.transactiontypegroup"
+      "transactions.transactiontypegroup",
+      "ui.transactionuserfieldmodel"
     ],
     "firstLevelGroup": "Database Configuration",
     "firstElementExist": false
   },
   {
-    "name": "Base Elements",
+    "name": "Data Settings",
     "entities": [
       "instruments.instrumenttype",
       "accounts.accounttype",
       "currencies.currency",
-      "instruments.pricingpolicy"
+      "instruments.pricingpolicy",
+      "ui.instrumentuserfieldmodel"
     ],
     "firstElementExist": false
   },
@@ -212,9 +213,7 @@
       "obj_attrs.transactiontypeattributetype",
       "obj_attrs.strategy1attributetype",
       "obj_attrs.strategy2attributetype",
-      "obj_attrs.strategy3attributetype",
-      "ui.transactionuserfieldmodel",
-      "ui.instrumentuserfieldmodel"
+      "obj_attrs.strategy3attributetype"
     ],
     "firstElementExist": false
   },
