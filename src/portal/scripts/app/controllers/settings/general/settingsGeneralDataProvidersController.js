@@ -14,6 +14,7 @@
         var vm = this;
 
         vm.dataProviders = [];
+        vm.testCertificateConfig = {};
 
         vm.readyStatus = {dataProviders: false, configs: false};
 
@@ -63,16 +64,20 @@
 
         };
 
-        vm.requestTestCertificate = function(resolve, data) {
+        vm.requestTestCertificate = function(resolve) {
 
-            dataProvidersService.bloombergTestCertificate(data).then(function (data) {
+            dataProvidersService.bloombergTestCertificate(vm.testCertificateConfig).then(function (data) {
+
+                vm.testCertificateConfig = data;
 
                 console.log('data', data);
 
                 if(data.task_object.status === 'SUCCESS') {
                     resolve(data);
                 } else {
-                    vm.requestTestCertificate(resolve, data);
+                    setTimeout(function () {
+                        vm.requestTestCertificate(resolve);
+                    }, 1000)
                 }
 
             })
@@ -82,6 +87,8 @@
         vm.testBloombergCall = function() {
 
             console.log("Test bloomberg request")
+
+            vm.testCertificateConfig = {};
 
             new Promise(function (resolve, reject) {
 
