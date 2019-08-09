@@ -18,15 +18,15 @@
             vm.calculatorTitle = data.calculatorTitle;
         }
 
-        if (data.numberValue) {
-            vm.numberToShow = data.numberValue;
-            currentNumber = data.numberValue;
-        }
-
         var calcResultNumber = ""; // used to decide whether add a character to existing string or start new string with number
         var prevNumber = ""; // should stay string
         var currentNumber = ""; // should stay string
         var operatorType;
+
+        if (data.numberValue) {
+            vm.numberToShow = data.numberValue;
+            currentNumber = data.numberValue;
+        }
 
         vm.showCalculatorBlock = false;
 
@@ -264,7 +264,7 @@
         function inputDataFromKeyboard (event) {
 
             var pressedKey = event.key;
-            console.log("calculator key pressed", pressedKey);
+
             if (!isNaN(pressedKey) ||
                 pressedKey === '.' ||
                 pressedKey === ',') {
