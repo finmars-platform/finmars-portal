@@ -20,9 +20,14 @@
                     </div>
                     <div layout="row" layout-align="end center">
                         <md-button
+                                class="md-raised md-primary"
+                                data-ng-click="vm.testBloombergCall()">
+                            Make a Test Request
+                        </md-button>
+                        <md-button
                                 class="md-raised data-provider-btn-sref"
                                 data-ui-sref="app.settings.data-providers-config({dataProviderId: dataProvider.id})">
-                            <ng-md-icon icon="keyboard_arrow_right"></ng-md-icon>
+                            Edit
                         </md-button>
                     </div>
                 </div>

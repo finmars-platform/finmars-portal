@@ -58,6 +58,18 @@
 
         };
 
+        vm.testBloombergCall = function() {
+
+            console.log("Test bloomberg request")
+
+            dataProvidersService.bloombergTestCertificate({}).then(function (data) {
+
+                console.log('data', data);
+
+            })
+
+        };
+
         vm.init = function () {
 
             vm.getProviders();

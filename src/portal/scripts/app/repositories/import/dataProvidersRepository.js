@@ -55,6 +55,8 @@
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json',
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
                 body: provider
@@ -70,6 +72,8 @@
                 method: 'POST',
                 credentials: 'include',
                 headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json',
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
                 body: provider
@@ -78,12 +82,28 @@
 
     };
 
+    var bloombergTestCertificate = function (data) {
+
+        return xhrService.fetch(baseUrl + 'import/test-certificate/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
     module.exports = {
         getList: getList,
         getConfigs: getConfigs,
         getConfig: getConfig,
         setConfig: setConfig,
-        createConfig: createConfig
+        createConfig: createConfig,
+        bloombergTestCertificate: bloombergTestCertificate
     }
 
 }());
