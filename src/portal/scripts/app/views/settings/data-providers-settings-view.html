@@ -32,7 +32,7 @@
                         </div>
                         <md-button
                                 class="md-raised md-primary" ng-class="{'disabled-btn': !dataProvider.has_p12cert || vm.testCertificateProcessing}"
-                                data-ng-click="vm.testBloombergCall()">
+                                data-ng-click="vm.testBloombergCall($event)">
                             Make a Test Request
                         </md-button>
                         <md-button

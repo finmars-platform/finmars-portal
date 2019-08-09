@@ -87,7 +87,7 @@
 
         };
 
-        vm.testBloombergCall = function () {
+        vm.testBloombergCall = function ($event) {
 
             console.log("Test bloomberg request")
 
