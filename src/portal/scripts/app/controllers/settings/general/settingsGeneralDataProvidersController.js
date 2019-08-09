@@ -74,8 +74,10 @@
                 console.log('data', data);
 
                 if (data.task_object.status === 'D') {
-                    resolve(data);
-                } else {
+                    resolve({status: 'success'});
+                } else if(data.task_object.status === 'E') {
+                    resolve({status: 'error'});
+                }else {
                     setTimeout(function () {
                         vm.requestTestCertificate(resolve);
                     }, 1000)
@@ -103,7 +105,35 @@
                 vm.testCertificateProcessing = false;
                 $scope.$apply();
 
-                vm.getConfigs();
+
+                if(data.status === 'success') {
+
+                    vm.getConfigs();
+
+                }
+
+                if(data.status === 'error') {
+
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        preserveScope: true,
+                        autoWrap: true,
+                        multiple: true,
+                        skipHide: true,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: 'Something wrong with Certificate/Password.'
+                            }
+                        }
+                    })
+
+                }
+
+
 
             })
 
