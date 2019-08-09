@@ -15,6 +15,7 @@
 
         vm.dataProviders = [];
         vm.testCertificateConfig = {};
+        vm.testCertificateProcessing = false;
 
         vm.readyStatus = {dataProviders: false, configs: false};
 
@@ -64,7 +65,7 @@
 
         };
 
-        vm.requestTestCertificate = function(resolve) {
+        vm.requestTestCertificate = function (resolve) {
 
             dataProvidersService.bloombergTestCertificate(vm.testCertificateConfig).then(function (data) {
 
@@ -72,7 +73,7 @@
 
                 console.log('data', data);
 
-                if(data.task_object.status === 'D') {
+                if (data.task_object.status === 'D') {
                     resolve(data);
                 } else {
                     setTimeout(function () {
@@ -84,11 +85,12 @@
 
         };
 
-        vm.testBloombergCall = function() {
+        vm.testBloombergCall = function () {
 
             console.log("Test bloomberg request")
 
             vm.testCertificateConfig = {};
+            vm.testCertificateProcessing = true;
 
             new Promise(function (resolve, reject) {
 
@@ -97,6 +99,9 @@
             }).then(function (data) {
 
                 console.log('testBloombergCall data', data);
+
+                vm.testCertificateProcessing = false;
+                $scope.$apply();
 
                 vm.getConfigs();
 
