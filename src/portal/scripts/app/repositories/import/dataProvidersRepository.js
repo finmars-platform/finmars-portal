@@ -50,13 +50,15 @@
 
     var setConfig = function (providerId, provider) {
 
+        // Important! No headers as below required:
+        // Accept: 'application/json',
+        // 'Content-type': 'application/json'
+
         return xhrService.fetch(baseUrl + 'import/config/' + providerId + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json',
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
                 body: provider
@@ -67,13 +69,15 @@
 
     var createConfig = function (provider) {
 
+        // Important! No headers as below required:
+        // Accept: 'application/json',
+        // 'Content-type': 'application/json
+
         return xhrService.fetch(baseUrl + 'import/config/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json',
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
                 body: provider
