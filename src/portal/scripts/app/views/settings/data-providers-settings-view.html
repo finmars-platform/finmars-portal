@@ -27,8 +27,11 @@
                         {{dataProvider.name}}
                     </div>
                     <div layout="row" layout-align="end center">
+                        <div layout="row" layout-sm="column" layout-align="space-around" data-ng-if="vm.testCertificateProcessing">
+                            <md-progress-circular md-mode="indeterminate" md-diameter="36"></md-progress-circular>
+                        </div>
                         <md-button
-                                class="md-raised md-primary" ng-class="{'disabled-btn': !dataProvider.has_p12cert}"
+                                class="md-raised md-primary" ng-class="{'disabled-btn': !dataProvider.has_p12cert || vm.testCertificateProcessing}"
                                 data-ng-click="vm.testBloombergCall()">
                             Make a Test Request
                         </md-button>
