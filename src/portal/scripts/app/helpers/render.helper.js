@@ -42,7 +42,25 @@
 
         if (column.report_settings) {
 
-            if (column.report_settings.round_format_id === 0) {
+            switch (column.report_settings.round_format_id) {
+                case 0:
+                    return value;
+                    break;
+                case 1:
+                    return parseInt(value, 10);
+                    break;
+                case 2:
+                    return parseFloat(value).toFixed(1);
+                    break;
+                case 3:
+                    return parseFloat(value).toFixed(2);
+                    break;
+                case 4:
+                    return parseFloat(value).toFixed(4);
+                    break;
+            }
+
+            /*if (column.report_settings.round_format_id === 0) {
                 return value
             }
 
@@ -50,9 +68,9 @@
                 return parseInt(value, 10);
             }
 
-            if (column.report_settings.round_format_id === 2) {
+            if (column.report_settings.round_format_id === 3) {
                 return parseFloat(value).toFixed(2);
-            }
+            }*/
 
         }
 
@@ -151,6 +169,39 @@
 
     };
 
+    var formatPercentage = function (value, column) {
+
+        if (column.report_settings) {
+
+            switch (column.report_settings.percentage_format_id) {
+
+                case 0:
+                    return value;
+                    break;
+                case 1:
+                    return parseInt(value * 100) + '%';
+                    break;
+                case 2:
+                    return parseFloat(value * 100).toFixed(1) + '%';
+                    break;
+                case 3:
+                    return parseFloat(value * 100).toFixed(2) + '%';
+                    break;
+                case 4:
+                    return parseInt(value * 10000) + ' bps';
+                    break;
+                case 5:
+                    return parseFloat(value * 10000).toFixed(1) + ' bps';
+                    break;
+
+            };
+
+        };
+
+        return value;
+
+    };
+
     var formatValue = function (obj, column) {
 
         var value = obj[column.key];
@@ -162,6 +213,8 @@
         value = formatZero(value, column);
 
         value = formatNegative(value, column);
+
+        value = formatPercentage(value, column);
 
         return value;
 

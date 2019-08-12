@@ -846,7 +846,7 @@
                             scope.evDataService.setListLayout(listLayout);
 
                             scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
-                            scope.$apply(); // needed to update Report settings area in right sidebar
+
                             scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 
                             scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport});
@@ -854,7 +854,7 @@
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                             middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
-
+                            scope.$apply(); // needed to update Report settings area in right sidebar and layout name
                             scope.isNewLayout = true;
 
                         };

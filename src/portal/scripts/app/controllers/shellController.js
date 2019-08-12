@@ -66,10 +66,6 @@
 
         }
 
-        $transitions.onStart({}, function () {
-            $mdDialog.cancel();
-        });
-
         vm.getMasterUsersList = function () {
 
             vm.readyStatus.masters = false;
@@ -109,14 +105,15 @@
 
                 console.log(ev);
 
-                if (event.data.event === crossTabEvents.MASTER_USER_CHANGED) {
+                if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
+                    middlewareService.masterUserChanged(true);
                     $state.go('app.home');
                     vm.getMasterUsersList();
-                }
+                };
 
-                if (event.data.event === crossTabEvents.LOGOUT) {
+                if (ev.data.event === crossTabEvents.LOGOUT) {
                     window.location.href = '/';
-                }
+                };
 
 
             }
@@ -124,9 +121,11 @@
 
         vm.selectMaster = function (master) {
 
-            var checkLayoutForChanges = middlewareService.getWarningOnLayoutChangeFn();
+            // var checkLayoutForChanges = middlewareService.getWarningOfLayoutChangesLossFn();
 
             var changeMasterUser = function () {
+
+                middlewareService.masterUserChanged(true);
 
                 usersService.setMasterUser(master.id).then(function (value) {
 
@@ -144,20 +143,39 @@
 
             if (vm.currentMasterUser.id !== master.id) {
 
-                if (checkLayoutForChanges) {
+                $mdDialog.show({
+                    controller: "WarningDialogController as vm",
+                    templateUrl: "views/warning-dialog-view.html",
+                    multiple: true,
+                    clickOutsideToClose: false,
+                    locals: {
+                        warning: {
+                            title: "Warning",
+                            description: "All unsaved changes of layouts in all FinMARS browser tabs will be lost!",
+                            actionsButtons: [
+                                {
+                                    name: "CANCEL",
+                                    response: {status: 'disagree'}
+                                },
+                                {
+                                    name: "OK, PROCEED",
+                                    response: {status: 'agree'}
+                                }
+                            ]
+                        }
+                    }
 
-                    checkLayoutForChanges().then(function () {
+                }).then(function (res) {
+
+                    if (res.status === 'agree') {
 
                         changeMasterUser();
 
-                    });
+                    }
 
-                } else {
+                });
 
-                    changeMasterUser();
-
-                }
-            }
+            };
 
         };
 
@@ -189,12 +207,8 @@
 
         vm.initTransitionListener = function(){
 
-            $transitions.onSuccess({}, function () {
-
-                vm.currentGlobalState = vm.getCurrentGlobalState();
-
-                console.log('on onSuccess', vm.currentGlobalState)
-
+            $transitions.onStart({}, function () {
+                $mdDialog.cancel();
             });
 
             $transitions.onFinish({}, function (transition) {
@@ -215,7 +229,15 @@
 
             });
 
-        }
+            $transitions.onSuccess({}, function () {
+
+                vm.currentGlobalState = vm.getCurrentGlobalState();
+
+                console.log('on onSuccess', vm.currentGlobalState)
+
+            });
+
+        };
 
         vm.activeLayoutName = null;
         vm.activeSPLayoutName = false; // false needed to check whether split panel disabled and have no layout in middlewareService
