@@ -18,8 +18,8 @@
         return eventsRepository.informedEventAction(id);
     };
 
-    var errorEventAction = function (id) {
-        return eventsRepository.errorEventAction(id);
+    var errorEventAction = function (id, actionId, data) {
+        return eventsRepository.errorEventAction(id, actionId, data);
     };
 
     var generateEvents = function () {

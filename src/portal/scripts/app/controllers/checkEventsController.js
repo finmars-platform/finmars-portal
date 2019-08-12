@@ -142,7 +142,11 @@
                             title: "",
                             description: "Events were successfully processed"
                         }
-                    }
+                    }.then(function (data) {
+
+                        vm.requestEvents();
+
+                    })
 
                 });
 
@@ -185,12 +189,10 @@
                 vm.direction = !vm.direction;
                 if (vm.direction) {
                     sortOrder = 'DSC';
-                }
-                else {
+                } else {
                     sortOrder = 'ASC';
                 }
-            }
-            else {
+            } else {
                 vm.sort = sortParameter;
             }
 
@@ -301,20 +303,22 @@
                     return 'New';
                 case 2:
                     return 'Informed';
-
                 case 3:
                     return 'Booked (system, default)';
                 case 4:
                     return 'Booked (user, actions)';
                 case 5:
                     return 'Booked (user, default)';
-
                 case 6:
                     return 'Booked, pending (system, default)';
                 case 7:
                     return 'Booked, pending (user, actions)';
                 case 8:
                     return 'Booked, pending (user, default)';
+                case 9:
+                    return 'Error';
+                default:
+                    return 'Unknown'
 
             }
 

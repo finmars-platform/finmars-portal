@@ -76,9 +76,9 @@
 
     };
 
-    var errorEventAction = function (id) {
+    var errorEventAction = function (id, actionId, data) {
 
-        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + id + '/error/',
+        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + id + '/error/?action=' + actionId,
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -86,7 +86,8 @@
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
-                }
+                },
+                body: JSON.stringify(data)
             })
 
     };
