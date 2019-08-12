@@ -27,12 +27,17 @@
         return dataProvidersRepository.createConfig(provider)
     };
 
+    var bloombergTestCertificate = function(data) {
+        return dataProvidersRepository.bloombergTestCertificate(data)
+    }
+
     module.exports = {
         getList: getList,
         getConfigs: getConfigs,
         getConfig: getConfig,
         setConfig: setConfig,
-        createConfig: createConfig
+        createConfig: createConfig,
+        bloombergTestCertificate: bloombergTestCertificate
     }
 
 }());
