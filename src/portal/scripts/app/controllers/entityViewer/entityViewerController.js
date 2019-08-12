@@ -21,6 +21,8 @@
 
             var vm = this;
 
+            middlewareService.masterUserChanged(false); // in case viewer opened right after master user changed
+
             var setEventListeners = function () {
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
@@ -343,81 +345,90 @@
 
                 return new Promise(function (resolve, reject) {
 
-                    var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-                    var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
+                    var masterUserChanged = middlewareService.didMasterUserChange();
 
-                    if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false)) {
+                    if (!masterUserChanged) {
 
-                        $mdDialog.show({
-                            controller: 'LayoutChangesLossWarningDialogController as vm',
-                            templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                            parent: angular.element(document.body),
-                            preserveScope: true,
-                            autoWrap: true,
-                            multiple: true,
-                            locals: {
-                                data: {
-                                    evDataService: vm.entityViewerDataService,
-                                    entityType: vm.entityType
-                                }
-                            }
-                        }).then(function (res, rej) {
+                        var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
+                        var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
 
-                            if (res.status === 'save_layout') {
+                        if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false)) {
 
-                                if (layoutCurrentConfig.hasOwnProperty('id')) {
-
-                                    uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
-                                        resolve(true);
-                                    });
-
-                                } else {
-
-                                    if (res.data && res.data.layoutName) {
-                                        layoutCurrentConfig.name = res.data.layoutName;
+                            $mdDialog.show({
+                                controller: 'LayoutChangesLossWarningDialogController as vm',
+                                templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
+                                parent: angular.element(document.body),
+                                preserveScope: true,
+                                autoWrap: true,
+                                multiple: true,
+                                locals: {
+                                    data: {
+                                        evDataService: vm.entityViewerDataService,
+                                        entityType: vm.entityType
                                     }
+                                }
+                            }).then(function (res, rej) {
 
-                                    uiService.getDefaultListLayout(vm.entityType).then(function (data) {
+                                if (res.status === 'save_layout') {
 
-                                        layoutCurrentConfig.is_default = true;
+                                    if (layoutCurrentConfig.hasOwnProperty('id')) {
 
-                                        if (data.count > 0 && data.results) {
-                                            var activeLayout = data.results[0];
-                                            activeLayout.is_default = false;
+                                        uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                                            resolve(true);
+                                        });
 
-                                            uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+                                    } else {
 
+                                        if (res.data && res.data.layoutName) {
+                                            layoutCurrentConfig.name = res.data.layoutName;
+                                        }
+
+                                        uiService.getDefaultListLayout(vm.entityType).then(function (data) {
+
+                                            layoutCurrentConfig.is_default = true;
+
+                                            if (data.count > 0 && data.results) {
+                                                var activeLayout = data.results[0];
+                                                activeLayout.is_default = false;
+
+                                                uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+
+                                                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                        resolve(true);
+                                                    });
+
+                                                });
+
+                                            } else {
                                                 uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
                                                     resolve(true);
                                                 });
+                                            }
 
-                                            });
+                                        });
 
-                                        } else {
-                                            uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                                resolve(true);
-                                            });
-                                        }
+                                    }
 
-                                    });
+                                } else if (res.status === 'do_not_save_layout') {
+
+                                    resolve(true);
+
+                                } else {
+
+                                    reject(false);
 
                                 }
 
-                            } else if (res.status === 'do_not_save_layout') {
-
-                                resolve(true);
-
-                            } else {
-
+                            }).catch(function () {
                                 reject(false);
+                            });
 
-                            }
-
-                        }).catch(function () {
-                            reject(false);
-                        });
+                        } else {
+                            resolve(true);
+                        }
 
                     } else {
+                        removeTransitionWatcher();
                         resolve(true);
                     };
 
@@ -427,10 +438,10 @@
 
             var deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
 
-            var doOnMasterUserSelect = function () {
+            /*var doOnMasterUserSelect = function () {
                 deregisterOnBeforeTransitionHook();
                 return checkLayoutForChanges();
-            };
+            };*/
 
             var warnAboutLayoutChangesLoss = function (event) {
 
@@ -440,25 +451,30 @@
                 if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false)) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
-                }
+                };
 
             };
 
-            if (vm.stateWithLayout) {
-
-                middlewareService.setWarningOnLayoutChangeFn(doOnMasterUserSelect);
-
-                window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
-            }
-
-            this.$onDestroy = function () {
+            var removeTransitionWatcher = function () {
 
                 if (vm.stateWithLayout) {
                     deregisterOnBeforeTransitionHook();
                 }
 
                 window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
-                middlewareService.setWarningOnLayoutChangeFn(false);
+            };
+
+            if (vm.stateWithLayout) {
+
+                //middlewareService.setWarningOfLayoutChangesLossFn(doOnMasterUserSelect);
+
+                window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
+            }
+
+            this.$onDestroy = function () {
+                removeTransitionWatcher();
+
+                // middlewareService.setWarningOfLayoutChangesLossFn(false);
             }
         }
 

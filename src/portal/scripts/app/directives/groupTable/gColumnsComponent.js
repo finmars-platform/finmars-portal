@@ -448,6 +448,32 @@
 
                 };
 
+                scope.openColumnNumbersRenderingSettings = function (column, $event) {
+
+                    $mdDialog.show({
+                        controller: 'gColumnNumbersRenderingSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-column-numbers-rendering-settings-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                column: column
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            column.report_settings = res.data.report_settings;
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+
+                        };
+
+                    });
+                };
+
                 scope.checkForExistingGroupingColumn = function (index) {
                     var groups = scope.evDataService.getGroups();
                     if (groups.length > 0 && index <= groups.length - 1) {

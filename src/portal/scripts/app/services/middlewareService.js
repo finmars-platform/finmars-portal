@@ -8,7 +8,8 @@
     var data = {
         newEntityViewerLayoutName: false,
         newSplitPanelLayoutName: false,
-        warnOnLayoutChangeFn: false
+        warnOnLayoutChangeFn: false,
+        masterUserChanged: false
     };
 
     function setNewEntityViewerLayoutName(layoutName) {
@@ -32,23 +33,30 @@
         return data.newSplitPanelLayoutName;
     };
 
-    function setWarningOnLayoutChangeFn(callbackFn) {
+    function setWarningOfLayoutChangesLossFn(callbackFn) {
         data.warnOnLayoutChangeFn = callbackFn;
     };
 
-    function getWarningOnLayoutChangeFn() {
+    function getWarningOfLayoutChangesLossFn() {
         var callbackFn = data.warnOnLayoutChangeFn;
         data.warnOnLayoutChangeFn = false;
         return callbackFn;
     };
 
+    function didMasterUserChange () {
+        return data.masterUserChanged;
+    };
+
+    function masterUserChanged (status) {
+        data.masterUserChanged = status;
+    };
+
     function resetData() {
         data = {
-            entityViewerLayouts: {
-                newLayoutName: false,
-                newSplitPanelLayoutName: false,
-                checkForLayoutChangesFn: false
-            }
+            newEntityViewerLayoutName: false,
+            newSplitPanelLayoutName: false,
+            warnOnLayoutChangeFn: false,
+            masterUserChanged: false
         };
     };
 
@@ -58,8 +66,11 @@
         setNewSplitPanelLayoutName: setNewSplitPanelLayoutName,
         getNewSplitPanelLayoutName: getNewSplitPanelLayoutName,
 
-        setWarningOnLayoutChangeFn: setWarningOnLayoutChangeFn,
-        getWarningOnLayoutChangeFn: getWarningOnLayoutChangeFn,
+        setWarningOfLayoutChangesLossFn: setWarningOfLayoutChangesLossFn,
+        getWarningOfLayoutChangesLossFn: getWarningOfLayoutChangesLossFn,
+
+        didMasterUserChange: didMasterUserChange,
+        masterUserChanged: masterUserChanged,
 
         resetData: resetData
     }
