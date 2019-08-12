@@ -14,6 +14,8 @@
         var vm = this;
 
         vm.dataProviders = [];
+        vm.testCertificateConfig = {};
+        vm.testCertificateProcessing = false;
 
         vm.readyStatus = {dataProviders: false, configs: false};
 
@@ -47,6 +49,11 @@
                             provider.has_p12cert = config.has_p12cert;
                         }
 
+                        if (provider.id === config.provider) {
+                            provider.is_valid = config.is_valid;
+                        }
+
+
                     })
 
                 });
@@ -54,6 +61,81 @@
 
                 $scope.$apply();
             });
+
+
+        };
+
+        vm.requestTestCertificate = function (resolve) {
+
+            dataProvidersService.bloombergTestCertificate(vm.testCertificateConfig).then(function (data) {
+
+                vm.testCertificateConfig = data;
+
+                console.log('data', data);
+
+                if (data.task_object.status === 'D') {
+                    resolve({status: 'success'});
+                } else if(data.task_object.status === 'E') {
+                    resolve({status: 'error'});
+                }else {
+                    setTimeout(function () {
+                        vm.requestTestCertificate(resolve);
+                    }, 1000)
+                }
+
+            })
+
+        };
+
+        vm.testBloombergCall = function ($event) {
+
+            console.log("Test bloomberg request")
+
+            vm.testCertificateConfig = {};
+            vm.testCertificateProcessing = true;
+
+            new Promise(function (resolve, reject) {
+
+                vm.requestTestCertificate(resolve, {})
+
+            }).then(function (data) {
+
+                console.log('testBloombergCall data', data);
+
+                vm.testCertificateProcessing = false;
+                $scope.$apply();
+
+
+                if(data.status === 'success') {
+
+                    vm.getConfigs();
+
+                }
+
+                if(data.status === 'error') {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        preserveScope: true,
+                        autoWrap: true,
+                        multiple: true,
+                        skipHide: true,
+                        locals: {
+                            info: {
+                                title: 'Warning',
+                                description: 'Something wrong with Certificate/Password.'
+                            }
+                        }
+                    })
+
+                }
+
+
+
+            })
 
 
         };

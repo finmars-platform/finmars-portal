@@ -93,7 +93,7 @@
                         multiple: true
                     }).then(function (value) {
 
-                        eventsService.errorEventAction(vm.event.id).then(function () {
+                        eventsService.errorEventAction(vm.event.id, action.id, event).then(function () {
 
                             $mdDialog.hide({status: 'agree'});
 
