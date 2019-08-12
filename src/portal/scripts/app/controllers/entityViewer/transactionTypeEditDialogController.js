@@ -1299,11 +1299,11 @@
             },
             {
                 name: "Clear & Append",
-                id: 6
+                id: 3
             },
             {
                 name: "If book: Clear & Append. If rebook: Skip",
-                id: 3
+                id: 6
             },
             {
                 name: "Clear",

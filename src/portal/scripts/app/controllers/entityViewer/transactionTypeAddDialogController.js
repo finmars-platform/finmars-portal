@@ -988,53 +988,28 @@
         };
 
         vm.rebookInstrumentReactions = [
-            /*{
-                name: "Proceed (Overwrite if exists)",
-                id: 2
-            },
-            {
-                name: "Skip",
-                id: 1
-            },
-            {
-                name: "Proceed (Skip if exists)",
-                id: 4
-            }*/
             {
                 name: "Create Instrument. If exists: Overwrite",
                 id: 2
             },
             {
                 name: "If exists: Phantom = existing Instrument. If not exists: create Instrument",
-                id: 1
+                id: 0
             },
             {
                 name: "Find the Instrument. If not found: create on the first booking. On rebook: nothing is created",
-                id: 4
+                id: 5
             }
         ];
 
         vm.rebookOtherReactions = [
-            /*{
-                name: "Append",
-                id: 0
-            },
-            {
-                name: "Skip",
-                id: 1
-            },
-            {
-                name: "Clear & Append",
-                id: 3
-            }*/
-
             {
                 name: "Append",
                 id: 0
             },
             {
                 name: "If book: Append. If rebook: Skip",
-                id: 1
+                id: 4
             },
             {
                 name: "Clear & Append",
@@ -1042,11 +1017,11 @@
             },
             {
                 name: "If book: Clear & Append. If rebook: Skip",
-                id: null
+                id: 6
             },
             {
                 name: "Clear",
-                id: null
+                id: 7
             }
         ];
 
