@@ -142,13 +142,13 @@
                             title: "",
                             description: "Events were successfully processed"
                         }
-                    }.then(function (data) {
+                    }
 
-                        vm.requestEvents();
+                }).then(function (data) {
 
-                    })
+                    vm.requestEvents();
 
-                });
+                })
 
             })
 
