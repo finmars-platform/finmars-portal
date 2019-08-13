@@ -281,16 +281,20 @@
             });
 
             var warningMessage = '';
+            var warningTitle = '';
 
             var importedColumnsNumberZero = false;
             var importedColumnsNumberEmpty = false;
 
-            vm.scheme.csv_fields.map(function (field) {
-                console.log('simple import field column', field.column);
+
+            for (var i = 0; i < vm.scheme.csv_fields.length; i++) {
+
+                var field = vm.scheme.csv_fields[i];
+
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";
                     importedColumnsNumberZero = true;
-                }
+                };
 
                 if (field.column === null && !importedColumnsNumberEmpty) {
 
@@ -301,12 +305,27 @@
                     }
 
                     importedColumnsNumberEmpty = true;
-                }
+                };
 
-            });
-            console.log('simple import invalid #', importedColumnsNumberZero, importedColumnsNumberEmpty);
-            if (importedColumnsNumberZero || importedColumnsNumberEmpty) {
-                warningMessage = 'Imported Columns Field #: ' + warningMessage + '.';
+                if (!importedColumnsNumberZero &&
+                    !importedColumnsNumberEmpty &&
+                    !field.name_expr) {
+
+                    warningMessage += '<p>Imported Columns Field # ' + field.column + ' has no F(X) expression</p>';
+
+                };
+            };
+
+            if (warningMessage) {
+
+                if (importedColumnsNumberZero || importedColumnsNumberEmpty) {
+
+                    warningTitle = 'Incorrect Imported Columns field #';
+                    warningMessage = 'Imported Columns Field #: ' + warningMessage + '.';
+
+                } else { // if number of column correct but F(X) expression not
+                    warningTitle = 'Incorrect Imported Columns F(X)';
+                }
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
@@ -315,12 +334,18 @@
                     clickOutsideToClose: false,
                     locals: {
                         warning: {
-                            title: 'Incorrect Imported Columns field #',
-                            description: warningMessage
+                            title: warningTitle,
+                            description: warningMessage,
+                            actionsButtons: [
+                                {
+                                    name: 'CLOSE',
+                                    response: false
+                                }
+                            ]
                         }
                     },
                     multiple: true
-                })
+                });
 
             } else {
 

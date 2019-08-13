@@ -153,8 +153,6 @@
 
                                     }
 
-                                } else if (target === groupsHolder) {
-                                    drake.cancel();
                                 // < If column's card dragged to grouping area >
 
                                 // If column's cards order changed
@@ -198,6 +196,8 @@
                                     }
 
                                 // < If column's cards order changed >
+                                } else {
+                                    drake.cancel();
                                 }
                             // < Methods for column's cards dragging >
 
@@ -209,12 +209,12 @@
                                     var identifier = elem.dataset.groupKey;
 
                                     var columnToAdd;
-                                    var activeColumnIndex;
+                                    var columnOfDragedGroupIndex;
 
                                     for (var i = 0; i < columns.length; i = i + 1) {
                                         if (columns[i].key === identifier) {
                                             columnToAdd = columns[i];
-                                            activeColumnIndex = i;
+                                            columnOfDragedGroupIndex = i;
                                             break;
                                         }
                                     }
@@ -222,7 +222,7 @@
                                     if (target === columnsBag) {
 
                                         columns.push(columnToAdd);
-                                        columns.splice(activeColumnIndex, 1);
+                                        columns.splice(columnOfDragedGroupIndex, 1);
 
                                     } else {
 
@@ -232,8 +232,12 @@
                                                 break;
 
                                             } else if (nextSibling.dataset.columnKey === columns[i].key) {
-                                                columns.splice(activeColumnIndex, 1);
-                                                columns.splice(i, 0, columnToAdd);
+                                                columns.splice(columnOfDragedGroupIndex, 1);
+                                                var indexToAddColumn = i - 1; // we adding group's column before next column
+                                                if (indexToAddColumn < 0) {
+                                                    indexToAddColumn = 0;
+                                                };
+                                                columns.splice(indexToAddColumn, 0, columnToAdd);
                                                 console.log("draganddrop columns to add", columns, columnToAdd);
                                                 break;
                                             }
@@ -308,6 +312,8 @@
 
                             // < Methods for group's cards dragging >
                             }
+
+                            console.log("dragndrop drop location", elem, target);
 
                         });
 

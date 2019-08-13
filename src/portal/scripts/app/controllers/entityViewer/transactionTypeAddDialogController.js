@@ -993,11 +993,11 @@
                 id: 2
             },
             {
-                name: "If exists: Phantom = existing Instrument. If not exists: create Instrument",
+                name: "If exists: Phantom = existing Instrument, don't Overwrite. If not exists: create Instrument.",
                 id: 0
             },
             {
-                name: "Find the Instrument. If not found: create on the first booking. On rebook: nothing is created",
+                name: "Find the Instrument. If not found: create on the first booking. On rebook: nothing is created, Phantom = Default Instrument.",
                 id: 5
             }
         ];

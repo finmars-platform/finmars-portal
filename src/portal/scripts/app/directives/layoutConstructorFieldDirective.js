@@ -49,6 +49,9 @@
                     if (scope.item.backgroundColor) {
                         scope.fieldUsesBackgroundColor = true;
                         scope.fieldBackgroundColor = scope.item.backgroundColor;
+                    } else {
+                        scope.fieldUsesBackgroundColor = false;
+                        scope.fieldBackgroundColor = '#000000';
                     }
                 }
 
@@ -109,8 +112,17 @@
 
                     scope.item = originalFieldSettings;
                     scope.tabFieldsTree[scope.row][scope.column] = originalFieldSettings; // needed to reset colspan
-
                     scope.item.editMode = false;
+
+                    if (scope.item.backgroundColor) {
+                        scope.fieldUsesBackgroundColor = true;
+                        scope.fieldBackgroundColor = scope.item.backgroundColor;
+                    } else {
+                        scope.fieldUsesBackgroundColor = false;
+                        scope.fieldBackgroundColor = '#000000';
+                    }
+
+                    scope.$parent.vm.updateDrakeContainers();
 
                 };
 
@@ -121,6 +133,7 @@
                     }
 
                     scope.item.editMode = true;
+
                 };
 
                 scope.saveField = function () {
@@ -282,6 +295,9 @@
                         }
                     }
 
+                    scope.fieldUsesBackgroundColor = false;
+                    scope.fieldBackgroundColor = '#000000';
+
                     scope.$parent.vm.createFieldsTree();
                     scope.$parent.vm.syncItems();
                 };
@@ -363,17 +379,21 @@
 
                 scope.bindAttrName = function (item) {
 
-                    if (item.attribute.key === 'subgroup' && item.attribute.name === 'Sub Group') {
+                    if (item.hasOwnProperty('attribute')) { // when adding row between occupied rows, this method triggers for empty rows
 
-                        return 'Group';
+                        if (item.attribute.key === 'subgroup' && item.attribute.name === 'Sub Group') {
 
-                    } else {
+                            return 'Group';
 
-                        if (item.attribute.hasOwnProperty('verbose_name')) {
-                            return item.attribute.verbose_name;
-                        }
+                        } else {
 
-                        return item.attribute.name;
+                            if (item.attribute.hasOwnProperty('verbose_name')) {
+                                return item.attribute.verbose_name;
+                            }
+
+                            return item.attribute.name;
+
+                        };
 
                     };
 
@@ -408,12 +428,12 @@
                     return false;
                 };
 
-                scope.copyFromValue = function (attr) {
+                /*scope.copyFromValue = function (attr) {
                     if (attr.id) {
                         return JSON.stringify({id: attr.id});
                     }
                     return JSON.stringify({key: attr.key});
-                };
+                };*/
 
                 scope.findStringAttributes = function () {
                     var b, a, e;

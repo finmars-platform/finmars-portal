@@ -59,6 +59,11 @@ md-optgroup.bold-field-select > label {
   overflow: hidden;
 }
 
+.ec-layout-row {
+  position: relative;
+  padding-right: 55px;
+}
+
 .ec-attr-card {
   overflow: hidden;
   fill: #898989;
@@ -414,6 +419,35 @@ md-checkbox.checkbox-bind-field {
   height: 100%;
   overflow: auto;
   margin-right: 320px;
+}
+
+button.ec-insert-row-btn {
+  position: absolute;
+  min-width: 0;
+  width: 40px;
+  min-height: 0;
+  height: 40px;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  margin: 0;
+  font-size: 24px;
+  border-radius: 24px;
+  color: #fff;
+  background-color: #F4AF8B;
+  transition: opacity 0.3s linear;
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  &:not([disabled]):hover {
+    background-color: #F4AF8B;
+  }
+
+  &:not([disabled]):focus {
+    background-color: #F4AF8B;
+  }
 }
 
 .form-constructor-sidebar {

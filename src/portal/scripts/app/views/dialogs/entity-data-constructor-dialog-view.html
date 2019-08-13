@@ -76,16 +76,22 @@
                                         </div>
 
                                         <div class="ec-layout">
-                                            <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
+                                            <div layout="row"
+                                                 data-ng-repeat="row in vm.range(tab.layout.rows)"
+                                                 class="ec-layout-row">
                                                 <div data-ng-repeat="column in vm.range(tab.layout.columns)"
                                                      class="form-constructor-field-wrap"
                                                      flex="{{vm.bindFlex(tab, row, column)}}"
-                                                     data-ng-if="vm.checkColspan(tab, row, column)">
+                                                     ng-if="vm.checkColspan(tab, row, column)">
                                                     <layout-constructor-field tab="tab"
                                                                               row="row"
                                                                               column="column"
                                                                               tab-fields-tree="vm.fieldsTree[tab.id]"></layout-constructor-field>
                                                 </div>
+                                                <md-button class="md-button ec-insert-row-btn" ng-click="vm.insertRow(tab, row)">
+                                                    +
+                                                    <md-tooltip class="tooltip_1" md-direction="top">Insert row below</md-tooltip>
+                                                </md-button>
                                             </div>
                                         </div>
                                     </div>

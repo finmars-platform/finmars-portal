@@ -145,11 +145,11 @@
         function addRowForTab() {
             var i;
             for (i = 0; i < vm.tabs.length; i = i + 1) {
-                addRow(vm.tabs[i]);
+                addRows(vm.tabs[i]);
             }
         }
 
-        function addRow(tab) {
+        function addRows(tab) {
 
             // calculating how much rows needs creating in addition to first five
             var rowsToAdd = 5 - tab.layout.rows;
@@ -172,9 +172,9 @@
                     };
                     tab.layout.fields.push(field);
 
-                }
+                };
 
-            }
+            };
 
         }
 
@@ -255,6 +255,39 @@
 
             vm.createFieldsTree();
 
+            vm.updateDrakeContainers();
+
+        };
+
+        vm.insertRow = function (tab, row) {
+
+            var rwoToAddNumber = row + 1;
+
+            var r;
+            for (r = 0; r < tab.layout.fields.length; r++) { // increase counts of rows that follows new one by 1
+
+                if (tab.layout.fields[r].row > row) {
+                    tab.layout.fields[r].row = tab.layout.fields[r].row + 1;
+                };
+
+            };
+
+            tab.layout.rows = tab.layout.rows + 1;
+
+            var field = {};
+
+            var c;
+            for (c = 0; c < tab.layout.columns; c = c + 1) {
+                field = {
+                    row: rwoToAddNumber,
+                    column: c + 1,
+                    colspan: 1,
+                    type: 'empty'
+                };
+                tab.layout.fields.push(field);
+            };
+
+            vm.createFieldsTree();
             vm.updateDrakeContainers();
 
         };
@@ -387,6 +420,7 @@
                 }
             }
 
+            vm.createFieldsTree();
             vm.syncItems()
         };
 
@@ -420,7 +454,7 @@
                         }
                     });
 
-                    addRow(vm.tabs[vm.tabs.length - 1]);
+                    addRows(vm.tabs[vm.tabs.length - 1]);
 
                     vm.createFieldsTree();
                     vm.updateDrakeContainers();
@@ -454,7 +488,7 @@
                     }
                 });
 
-                addRow(vm.tabs[0]);
+                addRows(vm.tabs[0]);
 
                 vm.createFieldsTree();
                 vm.updateDrakeContainers();
@@ -806,7 +840,7 @@
                                     });
 
                                     if (row === tab.layout.rows) {
-                                        addRow(tab);
+                                        addRows(tab);
                                     }
                                 }
 
