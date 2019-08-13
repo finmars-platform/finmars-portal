@@ -227,7 +227,22 @@
                                                 targetEvent: activeObject.event,
                                                 locals: {
                                                     entityType: 'price-history',
-                                                    entity: {}
+                                                    entity: {
+                                                        instrument: activeObject['instrument.id'],
+                                                        instrument_object: {
+                                                            id: activeObject['instrument.id'],
+                                                            name: activeObject['instrument.name'],
+                                                            user_code: activeObject['instrument.user_code'],
+                                                            short_name: activeObject['instrument.short_name']
+                                                        },
+                                                        pricing_policy: activeObject['pricing_policy.id'],
+                                                        pricing_policy_object: { //TODO check, looks like missing
+                                                            id:  activeObject['pricing_policy.id'],
+                                                            name: activeObject['pricing_policy.name'],
+                                                            user_code: activeObject['pricing_policy.user_code']
+                                                        },
+                                                        date: reportOptions.report_date
+                                                    }
                                                 }
                                             }).then(function (res) {
 
@@ -324,7 +339,22 @@
                                                 targetEvent: activeObject.event,
                                                 locals: {
                                                     entityType: 'currency-history',
-                                                    entity: {}
+                                                    entity: {
+                                                        currency: activeObject['currency.id'],
+                                                        currency_object: {
+                                                            id: activeObject['currency.id'],
+                                                            name: activeObject['currency.name'],
+                                                            user_code: activeObject['currency.user_code'],
+                                                            short_name: activeObject['currency.short_name']
+                                                        },
+                                                        pricing_policy: activeObject['pricing_policy.id'],
+                                                        pricing_policy_object: {
+                                                            id:  activeObject['pricing_policy.id'],
+                                                            name: activeObject['pricing_policy.name'],
+                                                            user_code: activeObject['pricing_policy.user_code']
+                                                        },
+                                                        date: reportOptions.report_date
+                                                    }
                                                 }
                                             }).then(function (res) {
 
@@ -356,6 +386,7 @@
 
                             var contextData = {
                                 effective_date: reportOptions.report_date,
+                                position: null,
                                 pricing_currency: null,
                                 accrued_currency: null,
                                 instrument: null,
@@ -365,6 +396,10 @@
                                 strategy2: null,
                                 strategy3: null
                             };
+
+                            if(activeObject['position_size']) {
+                                contextData.position = activeObject['position_size'];
+                            }
 
                             if (activeObject['pricing_currency.id']) {
                                 contextData.pricing_currency = activeObject['pricing_currency.id'];
