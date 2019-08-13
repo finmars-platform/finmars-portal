@@ -25,7 +25,7 @@
 
         if (data.numberValue) {
             vm.numberToShow = data.numberValue;
-            currentNumber = data.numberValue;
+            currentNumber = data.numberValue.toString();
         }
 
         vm.showCalculatorBlock = false;

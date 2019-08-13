@@ -211,18 +211,21 @@
 
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.rules = vm.mapFields;
-            console.log("import transaction scheme", vm.scheme);
+
             var warningMessage = '';
+            var warningTitle = '';
 
             var importedColumnsNumberZero = false;
             var importedColumnsNumberEmpty = false;
 
-            vm.providerFields.map(function (field) {
+
+            for (var i = 0; i < vm.scheme.csv_fields.length; i++) {
+                var field = vm.scheme.csv_fields[i];
 
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";
                     importedColumnsNumberZero = true;
-                }
+                };
 
                 if (field.column === null && !importedColumnsNumberEmpty) {
 
@@ -233,12 +236,27 @@
                     }
 
                     importedColumnsNumberEmpty = true;
+                };
+
+                if (!importedColumnsNumberZero &&
+                    !importedColumnsNumberEmpty &&
+                    !field.name_expr) {
+
+                    warningMessage += '<p>Imported Columns Field # ' + field.column + ' has no F(X) expression</p>';
+
+                };
+            };
+
+            if (warningMessage) {
+
+                if (importedColumnsNumberZero || importedColumnsNumberEmpty) {
+
+                    warningTitle = 'Incorrect Imported Columns field #';
+                    warningMessage = 'Imported Columns Field #: ' + warningMessage + '.';
+
+                } else { // if number of column correct but F(X) expression not
+                    warningTitle = 'Incorrect Imported Columns F(X)';
                 }
-
-            });
-
-            if (importedColumnsNumberZero || importedColumnsNumberEmpty) {
-                warningMessage = 'Imported Columns Field #: ' + warningMessage + '.';
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
@@ -247,12 +265,19 @@
                     clickOutsideToClose: false,
                     locals: {
                         warning: {
-                            title: 'Incorrect Imported Columns field #',
-                            description: warningMessage
+                            title: warningTitle,
+                            description: warningMessage,
+                            actionsButtons: [
+                                {
+                                    name: 'CLOSE',
+                                    response: false
+                                }
+                            ]
                         }
                     },
                     multiple: true
-                })
+                });
+
             } else {
 
                 transactionSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
