@@ -217,9 +217,12 @@
 
     var getDefaultEditLayout = function (entityType) {
 
-        var fields;
+        console.log('entityType', entityType);
 
-        if (metaRestrictionsRepository.getEntitiesWithoutBaseAttrsList().indexOf(entityType) !== -1) {
+        var fields;
+        var entitiesWithoutBaseAttrs = metaRestrictionsRepository.getEntitiesWithoutBaseAttrsList();
+
+        if (entitiesWithoutBaseAttrs.indexOf(entityType) !== -1) {
             fields = []
         } else {
             fields = [
@@ -245,6 +248,8 @@
                 }
             ];
         }
+
+        console.log('fields', fields);
 
         return [
             {
