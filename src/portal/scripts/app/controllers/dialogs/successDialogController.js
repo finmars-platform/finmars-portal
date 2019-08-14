@@ -15,10 +15,6 @@
 
         vm.success = success;
 
-        vm.cancel = function () {
-            $mdDialog.cancel();
-        };
-
         vm.agree = function () {
             $mdDialog.hide({status: 'agree'});
         };

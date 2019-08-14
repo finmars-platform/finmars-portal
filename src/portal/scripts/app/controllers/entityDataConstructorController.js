@@ -59,7 +59,7 @@
                             vm.ui = data;
                         } else {
                             vm.uiIsDefault = true;
-                            vm.ui = uiService.getDefaultEditLayout()[0];
+                            vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
                         }
                         vm.tabs = vm.ui.data || [];
                         vm.tabs.forEach(function (tab) {
@@ -80,7 +80,7 @@
                             vm.ui = data.results[0];
                         } else {
                             vm.uiIsDefault = true;
-                            vm.ui = uiService.getDefaultEditLayout()[0];
+                            vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
                         }
                         vm.tabs = vm.ui.data;
                         vm.tabs.forEach(function (tab) {
