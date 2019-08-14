@@ -198,8 +198,8 @@
             var importedColumnsNumberEmpty = false;
 
 
-            for (var i = 0; i < vm.scheme.csv_fields.length; i++) {
-                var field = vm.scheme.csv_fields[i];
+            for (var i = 0; i < vm.providerFields.length; i++) {
+                var field = vm.providerFields[i];
 
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";

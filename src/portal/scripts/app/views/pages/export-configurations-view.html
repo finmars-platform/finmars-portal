@@ -7,8 +7,8 @@
         <div layout="row" class="m-b-24">
             <div data-ng-if="vm.readyStatus.layouts">
 
-                <div data-ng-if="vm.layouts.length" layout="row">
-                    <div class="export-configuration-layout-select-container">
+                <div layout="row">
+                    <div data-ng-if="vm.layouts.length" class="export-configuration-layout-select-container">
                         <md-input-container class="width-80">
                             <label>Layout</label>
                             <md-select data-ng-model="vm.activeLayout" data-ng-change="vm.syncWithLayout()">
@@ -20,15 +20,17 @@
                     </div>
 
                     <div class="width-30">
-                        <md-button class="md-raised" data-ng-click="vm.updateLayout()">Manage Configuration Export Settings
+                        <md-button class="md-raised"
+                                   ng-class="{'m-l-0': !vm.layouts.length}"
+                                   ng-click="vm.updateLayout()">Manage Configuration Export Settings
                         </md-button>
                     </div>
                 </div>
 
-                <div data-ng-if="!vm.layouts.length">
+                <!-- <div data-ng-if="!vm.layouts.length">
                     <md-button class="md-raised" data-ng-click="vm.createLayout()">Manage Configuration Export Settings
                     </md-button>
-                </div>
+                </div> -->
             </div>
 
             <div data-ng-if="!vm.readyStatus.layouts">
