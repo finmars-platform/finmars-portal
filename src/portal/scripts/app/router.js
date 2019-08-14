@@ -261,7 +261,11 @@
                 templateUrl: 'views/pages/mapping-table-view.html',
                 controller: 'MappingTablesController as vm'
             })
-
+            .state('app.import.reference-tables', {
+                url: '/reference-tables',
+                templateUrl: 'views/pages/reference-tables-view.html',
+                controller: 'ReferenceTablesController as vm'
+            })
             .state('app.settings', {
                 abstract: true,
                 url: '/settings',
