@@ -1233,38 +1233,31 @@
 
             if (action.instrument) {
                 return "Create Instrument";
-            }
-            ;
+            };
 
             if (action.transaction) {
                 return "Create Transaction";
-            }
-            ;
+            };
 
             if (action.instrument_factor_schedule) {
                 return "Create Factor Schedule";
-            }
-            ;
+            };
 
             if (action.instrument_manual_pricing_formula) {
                 return "Create Manual Pricing Formula";
-            }
-            ;
+            };
 
             if (action.instrument_accrual_calculation_schedules) {
                 return "Create Accrual Calculation Schedules";
-            }
-            ;
+            };
 
             if (action.instrument_event_schedule) {
                 return "Create Event Schedule";
-            }
-            ;
+            };
 
             if (action.instrument_event_schedule_action) {
                 return "Create Event Schedule Action"
-            }
-            ;
+            };
         };
 
         vm.preventSpace = function ($event) {
@@ -1283,7 +1276,7 @@
                 id: 0
             },
             {
-                name: "Find the Instrument. If not found: create on the first booking. On rebook: nothing is created",
+                name: "Find the Instrument. If not found: create on the first booking. On rebook: nothing is created, Phantom = Default Instrument.",
                 id: 5
             }
         ];

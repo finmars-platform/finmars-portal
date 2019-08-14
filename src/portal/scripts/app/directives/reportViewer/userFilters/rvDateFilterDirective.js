@@ -200,6 +200,7 @@
                     if (scope.filter.options.filter_type === 'date_tree') {
                         scope.filter.options.filter_values = convertDatesTreeToFlatList();
                     }
+                    console.log("filters scope.filter", JSON.parse(JSON.stringify(scope.filter)));
 
                     scope.applyFilter();
 
