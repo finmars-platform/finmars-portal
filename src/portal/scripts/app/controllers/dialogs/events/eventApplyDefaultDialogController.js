@@ -109,7 +109,9 @@
                         multiple: true
                     }).then(function (value) {
 
-                        eventsService.errorEventAction(vm.event.id).then(function () {
+                        eventsService.errorEventAction(vm.event.id, action.id, event).then(function () {
+
+                            console.log('Handle Error Event #', vm.event.id, event);
 
                             index = index + 1;
 
@@ -146,7 +148,9 @@
 
                     vm.recursiveHandleEvent(index, actions, resolve, $event)
 
-                }).then(function (value) {
+                }).then(function (data) {
+
+                    console.log('vm.applyDefault.data', data);
 
                     $mdDialog.hide({status: 'agree'});
 
