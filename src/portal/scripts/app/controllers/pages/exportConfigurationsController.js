@@ -478,7 +478,7 @@
                         var result = getECProperties(child);
 
                         if (result || typeof result === "string") {
-                            vm.activeLayout.data.statuses[item.entity].push(result)
+                            vm.activeLayout.data.statuses[item.entity].push(result);
                         }
                     }
 
@@ -505,12 +505,13 @@
 
                 if (res.status === 'agree') {
                     vm.getConfigurationExportLayouts();
-                }
+                };
+
             })
 
         };
 
-        vm.createLayout = function ($event) {
+        /*vm.createLayout = function ($event) {
 
             var configuration = Object.assign({}, vm.activeLayout);
 
@@ -518,7 +519,7 @@
 
                 if (!configuration.hasOwnProperty(item.entity)) {
                     configuration[item.entity] = [];
-                }
+                };
 
                 item.content.forEach(function (child) {
 
@@ -526,10 +527,11 @@
 
                         var name = getECProperties(child);
 
-                        configuration[item.entity].push(name)
-                    }
+                        configuration[item.entity].push(name);
 
-                })
+                    };
+
+                });
 
             });
 
@@ -557,7 +559,7 @@
                 }
             });
 
-        };
+        };*/
 
         vm.toggleSelectAll = function () {
 
