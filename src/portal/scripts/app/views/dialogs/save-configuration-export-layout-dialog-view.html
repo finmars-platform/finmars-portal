@@ -15,16 +15,21 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-warn" data-ng-if="vm.layout.id" ng-click="vm.delete()" style="margin-right:20px;">
+        <md-button class="md-warn"
+                   data-ng-if="vm.layout.id"
+                   ng-click="vm.delete()"
+                   style="margin-right:20px;">
             Delete
         </md-button>
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
         <md-button class="md-raised" ng-click="vm.save()" style="margin-right:20px;">
-            Rename
+            <span>Rename</span>
         </md-button>
-        <md-button class="md-raised" data-ng-if="vm.layout.id" ng-click="vm.saveAs()" style="margin-right:20px;">
+        <md-button class="md-raised"
+                   ng-click="vm.saveAs()"
+                   style="margin-right:20px;">
             Save as new
         </md-button>
     </md-dialog-actions>
