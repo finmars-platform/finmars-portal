@@ -241,6 +241,8 @@
                     return "Report builder layouts";
                 case 'ui.bookmark':
                     return "Bookmarks";
+                case 'reference_tables.referencetable':
+                    return "Reference Tables";
                 case 'csv_import.csvimportscheme':
                     return "Simple Entity Import Schemes";
                 case 'complex_import.compleximportscheme':
