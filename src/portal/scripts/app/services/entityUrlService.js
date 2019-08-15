@@ -64,7 +64,54 @@
 
         }
 
+        /*switch (entityType) {
+
+            case 'portfolio':
+                return 'portfolios/portfolio-with-fllters';
+            case 'account':
+                return 'accounts/account-with-fllters';
+            case 'account-type':
+                return 'accounts/account-type-with-fllters';
+            case 'responsible':
+                return 'counterparties/responsible-with-fllters';
+            case 'responsible-group':
+                return 'counterparties/responsible-group-with-fllters';
+            case 'counterparty':
+                return 'counterparties/counterparty-with-fllters';
+            case 'counterparty-group':
+                return 'counterparties/counterparty-group-with-fllters';
+            case 'instrument':
+                return 'instruments/instrument-with-fllters';
+            case 'instrument-type':
+                return 'instruments/instrument-type-with-fllters';
+            case 'price-history':
+                return 'instruments/price-history-with-fllters';
+            case 'transaction':
+                return 'transactions/transaction-with-fllters';
+            case 'transaction-type':
+                return 'transactions/transaction-type-with-fllters';
+            case 'transaction-type-group':
+                return 'transactions/transaction-type-group-with-fllters';
+            case 'complex-transaction':
+                return 'transactions/complex-transaction-with-fllters';
+            case 'currency':
+                return 'currencies/currency-with-fllters';
+            case 'currency-history':
+                return 'currencies/currency-history-with-fllters';
+            case 'pricing-policy':
+                return 'instruments/pricing-policy-with-fllters';
+            case 'strategy-1':
+                return 'strategies/1/strategy-with-fllters';
+            case 'strategy-2':
+                return 'strategies/2/strategy-with-fllters';
+            case 'strategy-3':
+                return 'strategies/3/strategy-with-fllters';
+
+        }*/
+
     };
+
+
     module.exports = {
         resolve: resolve
     }

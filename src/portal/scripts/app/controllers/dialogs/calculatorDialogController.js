@@ -13,6 +13,7 @@
         vm.calculationsHistory = "";
         vm.smallFontForCurrentNumber = false;
         vm.calculatorTitle = "Calculator";
+        vm.calculatorIsBroken = false;
 
         if (data.calculatorTitle) {
             vm.calculatorTitle = data.calculatorTitle;
@@ -23,7 +24,7 @@
         var currentNumber = ""; // should stay string
         var operatorType;
 
-        if (data.numberValue) {
+        if (data.numberValue && data.numberValue !== 0) {
             vm.numberToShow = data.numberValue;
             currentNumber = data.numberValue.toString();
         }
@@ -41,15 +42,24 @@
 
             } else { // Otherwise, add digit to previous number
 
-                if (number !== "." ||
-                    !currentNumber ||
-                    currentNumber.indexOf(".") === -1) {
+                if (currentNumber) {
+
+                    if (currentNumber === "0") {
+
+                        currentNumber = number.toString();
+
+                    } else if (number !== "." || currentNumber.indexOf(".") === -1) { // prevent adding more than one "." to a number
+                        currentNumber += number;
+                    };
+
+                } else {
 
                     currentNumber += number;
 
-                }
+                };
 
-            }
+
+            };
 
             if (currentNumber === ".") {
                 currentNumber = "0."
@@ -75,12 +85,14 @@
                             vm.clearAll();
                             vm.smallFontForCurrentNumber = true;
                             vm.numberToShow = "Error occured";
+                            vm.calculatorIsBroken = true;
 
                         } else { // If result is infinity, set off by dividing by zero
 
                             vm.clearAll();
                             vm.smallFontForCurrentNumber = true;
                             vm.numberToShow = "Can't divide by zero";
+                            vm.calculatorIsBroken = true;
 
                         }
 
@@ -211,12 +223,14 @@
                         vm.clearAll();
                         vm.smallFontForCurrentNumber = true;
                         vm.numberToShow = "Can't divide by zero";
+                        vm.calculatorIsBroken = true;
 
                     } else { // If result is infinity, set off by dividing by zero
 
                         vm.clearAll();
                         vm.smallFontForCurrentNumber = true;
                         vm.numberToShow = "Can't divide by zero";
+                        vm.calculatorIsBroken = true;
 
                     }
 
@@ -241,6 +255,7 @@
             vm.smallFontForCurrentNumber = false;
             vm.calculationsHistory = "";
             vm.numberToShow = 0;
+            vm.calculatorIsBroken = false;
             // equals.setAttribute("data-result", calcResultNumber);
         };
 
@@ -263,38 +278,42 @@
 
         function inputDataFromKeyboard (event) {
 
-            var pressedKey = event.key;
+            if (!vm.calculatorIsBroken) {
 
-            if (!isNaN(pressedKey) ||
-                pressedKey === '.' ||
-                pressedKey === ',') {
+                var pressedKey = event.key;
 
-                event.preventDefault();
-                if (pressedKey === ',') {
-                    pressedKey = '.';
-                }
-                vm.setNumber(pressedKey);
-                $scope.$apply();
+                if (!isNaN(pressedKey) ||
+                    pressedKey === '.' ||
+                    pressedKey === ',') {
 
-            } else if (operatorSymbols.indexOf(pressedKey) !== -1) {
+                    event.preventDefault();
+                    if (pressedKey === ',') {
+                        pressedKey = '.';
+                    }
+                    vm.setNumber(pressedKey);
+                    $scope.$apply();
 
-                event.preventDefault();
-                vm.applyOperator(pressedKey);
-                $scope.$apply();
+                } else if (operatorSymbols.indexOf(pressedKey) !== -1) {
 
-            } else {
+                    event.preventDefault();
+                    vm.applyOperator(pressedKey);
+                    $scope.$apply();
 
-                switch (pressedKey) {
-                    case "Enter":
-                        event.preventDefault();
-                        vm.calculateResult();
-                        $scope.$apply();
-                        break;
-                    case "Backspace":
-                        event.preventDefault();
-                        vm.deleteLastChar();
-                        $scope.$apply();
-                        break;
+                } else {
+
+                    switch (pressedKey) {
+                        case "Enter":
+                            event.preventDefault();
+                            vm.calculateResult();
+                            $scope.$apply();
+                            break;
+                        case "Backspace":
+                            event.preventDefault();
+                            vm.deleteLastChar();
+                            $scope.$apply();
+                            break;
+                    };
+
                 };
 
             };
