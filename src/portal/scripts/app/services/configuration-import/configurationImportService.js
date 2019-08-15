@@ -1798,6 +1798,9 @@
                         case 'obj_attrs.strategy3attributetype':
                             resolve(createAttributeTypeIfNotExists('strategies.strategy3', item, errors));
                             break;
+                        case 'obj_attrs.currencyattributetype':
+                            resolve(createAttributeTypeIfNotExists('currencies.currency', item, errors));
+                            break;
                         case 'reports.balancereportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 
