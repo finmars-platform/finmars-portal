@@ -27,7 +27,7 @@
 
         }
 
-        console.log('action', action);
+        // console.log('action', action);
 
         return importEntityService.startImport(formData).then(function (data) {
 
