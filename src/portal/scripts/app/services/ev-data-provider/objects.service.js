@@ -6,6 +6,8 @@
     var entityUrlService = require('../../services/entityUrlService');
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
+    var filterService = require('./filter.service');
+
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (entityType, options) {
@@ -30,7 +32,26 @@
             return data.json();
         })
 
+        /*return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + entityUrl, options),
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(function (response) {
 
+                if (!response.ok) {
+                    throw response;
+                }
+
+                return response.json();
+            })
+*/
     };
 
     module.exports = {

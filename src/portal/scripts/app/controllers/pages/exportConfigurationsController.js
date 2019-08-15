@@ -34,6 +34,8 @@
                     vm.items = data.body;
 
                     var groups = [];
+                    var renderedFirstLevelGroups = []; // used to check if property with first level group name already added
+
                     metaService.getContentGroups("exportImportConfigGroups").then(function (data) {
                         groups = data;
 
@@ -65,8 +67,9 @@
 
                                                 if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
 
-                                                    if (groups[g].hasOwnProperty('firstLevelGroup')) {
+                                                    if (renderedFirstLevelGroups.indexOf(groups[g].firstLevelGroup) === -1) {
                                                         parent.first_level_header__ = groups[g].firstLevelGroup;
+                                                        renderedFirstLevelGroups.push(groups[g].firstLevelGroup);
                                                     }
 
                                                     parent.first_item__ = groups[g].name;

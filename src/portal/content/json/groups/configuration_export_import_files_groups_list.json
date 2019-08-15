@@ -193,11 +193,13 @@
       "instruments.pricingpolicy",
       "ui.instrumentuserfieldmodel"
     ],
+    "firstLevelGroup": "Database Configuration",
     "firstElementExist": false
   },
   {
     "name": "Configurations",
     "entities": ["import.pricingautomatedschedule"],
+    "firstLevelGroup": "Database Configuration",
     "firstElementExist": false
   },
   {
@@ -215,6 +217,7 @@
       "obj_attrs.strategy2attributetype",
       "obj_attrs.strategy3attributetype"
     ],
+    "firstLevelGroup": "Database Configuration",
     "firstElementExist": false
   },
   {
@@ -223,6 +226,7 @@
       "csv_import.csvimportscheme",
       "integrations.complextransactionimportscheme"
     ],
+    "firstLevelGroup": "Database Configuration",
     "firstElementExist": false
   },
   {
@@ -231,6 +235,19 @@
       "integrations.instrumentdownloadscheme",
       "integrations.pricedownloadscheme"
     ],
+    "firstLevelGroup": "Database Configuration",
+    "firstElementExist": false
+  },
+  {
+    "name": "Configuration Elements",
+    "entities": [],
+    "firstLevelGroup": "Mapping Tables",
+    "firstElementExist": false
+  },
+  {
+    "name": "System Elements",
+    "entities": [],
+    "firstLevelGroup": "Mapping Tables",
     "firstElementExist": false
   }
 ]
