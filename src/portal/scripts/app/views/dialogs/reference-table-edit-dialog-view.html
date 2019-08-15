@@ -13,9 +13,9 @@
 
                 <div layout="row">
 
-                    <md-input-container>
+                    <md-input-container >
                         <label>Key</label>
-                        <input type="text" data-ng-model="item.key">
+                        <input type="text" data-ng-class="{'key-duplicate': item.is_duplicate && vm.validationEnabled}" data-ng-model="item.key" data-ng-keyup="vm.checkForDuplicates()">
                     </md-input-container>
 
                     <md-input-container>
@@ -45,7 +45,7 @@
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;">
             Update
         </md-button>
     </md-dialog-actions>

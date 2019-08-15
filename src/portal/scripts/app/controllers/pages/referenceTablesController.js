@@ -43,12 +43,12 @@
                 skipHide: true,
                 locals: {
                     data: {
-                        referenceTable: Object.assign({}, item)
+                        referenceTable: JSON.parse(JSON.stringify(item))
                     }
                 }
             }).then(function (res) {
 
-                if (res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     vm.getData();
                 }
 
@@ -68,12 +68,12 @@
                 skipHide: true,
                 locals: {
                     data: {
-                        referenceTable: Object.assign({}, item)
+                        referenceTable: JSON.parse(JSON.stringify(item))
                     }
                 }
             }).then(function (res) {
 
-                if (res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     vm.getData();
                 }
 
@@ -99,7 +99,7 @@
                 }
             }).then(function (res) {
 
-                if (res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     referenceTablesService.deleteByKey(item.id).then(function (data) {
 
                         vm.getData();
@@ -145,6 +145,52 @@
             };
 
             referenceTablesService.create(referenceTable).then(function () {
+
+                vm.getData()
+
+            })
+
+        };
+
+        vm.exportReferenceTable = function($event, item){
+
+            $mdDialog.show({
+                controller: 'ReferenceTableExportDialogController as vm',
+                templateUrl: 'views/dialogs/reference-table-export-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        item: item
+                    }
+                }
+            }).then(function (value) {
+
+                vm.getData()
+
+            })
+
+        };
+
+        vm.importReferenceTable = function($event, item){
+
+            $mdDialog.show({
+                controller: 'ReferenceTableImportDialogController as vm',
+                templateUrl: 'views/dialogs/reference-table-import-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        item: item
+                    }
+                }
+            }).then(function (value) {
 
                 vm.getData()
 

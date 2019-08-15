@@ -13,6 +13,14 @@
                 </button>
                 <button class="md-button md-raised warn" data-ng-click="vm.deleteReferenceTable($event, item)">Delete
                 </button>
+                <md-button class="md-button md-raised"
+                           data-ng-click="vm.exportReferenceTable($event, item)">
+                    Export
+                </md-button>
+                <md-button class="md-button md-raised"
+                           data-ng-click="vm.importReferenceTable($event, item)">
+                    Import from .csv file
+                </md-button>
             </div>
 
         </div>

@@ -15,7 +15,8 @@
         vm.entityType = data.entityType;
         vm.itemsCount = null;
 
-        vm.readyStatus = false;
+        vm.readyStatus = {data: false};
+        vm.processing = false;
 
         var selectedRow = data.selectedItem;
 
@@ -265,12 +266,10 @@
 
                 if (vm.sortDescending) {
                     sortOrder = 'DSC';
-                }
-                else {
+                } else {
                     sortOrder = 'ASC';
                 }
-            }
-            else {
+            } else {
                 vm.sort = sortParameter
                 vm.sortDescending = true;
             }
@@ -323,25 +322,25 @@
 
             scrollElem.addEventListener('scroll', function () {
 
-               // Call function when scroll reaches specified position
-               if (elemScrollHeight - scrollElem.scrollTop < scrollPositionToLoadItems && !scrollAtTheEnd) {
-                   scrollAtTheEnd = true;
-                   console.log("smart search1 works", vm.itemsCount);
-                   if (vm.itemsCount && vm.itemsCount > vm.items.length) {
-                       page = page + 1;
+                // Call function when scroll reaches specified position
+                if (elemScrollHeight - scrollElem.scrollTop < scrollPositionToLoadItems && !scrollAtTheEnd) {
+                    scrollAtTheEnd = true;
+                    console.log("smart search1 works", vm.itemsCount);
+                    if (vm.itemsCount && vm.itemsCount > vm.items.length) {
+                        page = page + 1;
 
-                       vm.getEntityItems().then(function (data) {
+                        vm.getEntityItems().then(function (data) {
 
-                           // refreshing of scroll height after loading new page of items
-                           elemScrollHeight = scrollElem.scrollHeight;
-                           scrollPositionToLoadItems = elemScrollHeight / 3;
-                           scrollAtTheEnd = false;
+                            // refreshing of scroll height after loading new page of items
+                            elemScrollHeight = scrollElem.scrollHeight;
+                            scrollPositionToLoadItems = elemScrollHeight / 3;
+                            scrollAtTheEnd = false;
 
-                       });
+                        });
 
-                   }
+                    }
 
-               }
+                }
 
             });
         };
@@ -362,31 +361,11 @@
             return options;
         };
 
-        entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
-
-            if (data.hasOwnProperty('count')) {
-                vm.itemsCount = data.count;
-            };
-
-            vm.items = data.results;
-
-            if (selectedRow) {
-                vm.items = vm.items.map(function (item) {
-
-                    if (item.id === selectedRow) {
-                        item.active = true;
-                    }
-
-                    return item;
-                });
-            };
-
-            $scope.$apply();
-            vm.loadOnScroll();
-
-        });
 
         vm.getEntityItems = function (reloadTable) {
+
+            vm.processing = true;
+            $scope.$apply();
 
             return new Promise(function (resolve, reject) {
 
@@ -396,6 +375,7 @@
                     vm.itemsCount = null;
                     $('.entity-search-scroll-container').scrollTop(0);
                 }
+
 
                 entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
 
@@ -409,12 +389,50 @@
                         vm.items = vm.items.concat(data.results);
                     }
 
-                    $scope.$apply()
-                    resolve({status: 'loaded'});
 
+                    setTimeout(function () {
+
+                        vm.processing = false;
+
+                        $scope.$apply()
+                        resolve({status: 'loaded'});
+
+                    }, 2000)
                 });
             })
         }
+
+        vm.init = function () {
+
+            entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
+
+                vm.readyStatus.data = true;
+
+                if (data.hasOwnProperty('count')) {
+                    vm.itemsCount = data.count;
+                }
+
+                vm.items = data.results;
+
+                if (selectedRow) {
+                    vm.items = vm.items.map(function (item) {
+
+                        if (item.id === selectedRow) {
+                            item.active = true;
+                        }
+
+                        return item;
+                    });
+                }
+
+                $scope.$apply();
+                vm.loadOnScroll();
+
+            });
+
+        };
+
+        vm.init();
 
     };
 
