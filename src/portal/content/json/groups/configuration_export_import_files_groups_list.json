@@ -215,7 +215,8 @@
       "obj_attrs.transactiontypeattributetype",
       "obj_attrs.strategy1attributetype",
       "obj_attrs.strategy2attributetype",
-      "obj_attrs.strategy3attributetype"
+      "obj_attrs.strategy3attributetype",
+      "obj_attrs.currencyattributetype"
     ],
     "firstLevelGroup": "Database Configuration",
     "firstElementExist": false

@@ -28,6 +28,8 @@
     var configurationImportMapService = require('./configurationImportMapService');
     var configurationImportSyncService = require('./configurationImportSyncService');
 
+    var referenceTablesService = require('../../services/referenceTablesService');
+
     // Overwrite handler start
 
     var recursiveOverwriteItem = function (resolve, index, entityItem, cacheContainer, errors) {
@@ -883,6 +885,54 @@
 
                             }));
                             break;
+                        case 'reference_tables.referencetable':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                console.log('OVERWRITE REFERENCE TABLES')
+
+
+                                var options = {
+                                    filters: {
+                                        name: item.name
+                                    }
+                                };
+
+                                referenceTablesService.getList(options).then(function (data) {
+
+                                    var result;
+
+                                    if (data.results.length) {
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.name === item.name) {
+                                                result = resultItem;
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolveLocal(referenceTablesService.update(item.id, item))
+
+                                        } else {
+
+                                            resolveLocal(referenceTablesService.create(item));
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(referenceTablesService.create(item));
+                                    }
+
+                                })
+
+
+                            }));
+                            break;
+
                     }
 
                 } catch (error) {
@@ -970,7 +1020,7 @@
                     'csv_import.csvimportscheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
                     'integrations.complextransactionimportscheme', 'complex_import.compleximportscheme',
                     'reports.balancereportcustomfield', 'reports.plreportcustomfield', 'reports.transactionreportcustomfield',
-                    'ui.instrumentuserfieldmodel', 'ui.transactionuserfieldmodel'].indexOf(item.entity) !== -1;
+                    'ui.instrumentuserfieldmodel', 'ui.transactionuserfieldmodel', 'reference_tables.referencetable'].indexOf(item.entity) !== -1;
             });
 
             overwriteEntityItems(overwriteEntities, cacheContainer, errors).then(function (data) {
@@ -1090,10 +1140,34 @@
                                     if (data.results.length) {
                                         uiRepository.updateEditLayout(data.results[0].id, item).then(function (item) {
                                             resolve({})
+                                        }).catch(function (reason) {
+
+                                            errors.push({
+                                                content_type: entity,
+                                                item: item,
+                                                error: {
+                                                    message: "Can't update Edit Layout Form"
+                                                },
+                                                mode: 'overwrite'
+                                            });
+
+                                            resolve(reason);
                                         })
                                     } else {
                                         uiRepository.createEditLayout(item).then(function (item) {
                                             resolve({})
+                                        }).catch(function (reason) {
+
+                                            errors.push({
+                                                content_type: entity,
+                                                item: item,
+                                                error: {
+                                                    message: "Can't update Edit Layout Form"
+                                                },
+                                                mode: 'overwrite'
+                                            });
+
+                                            resolve(reason);
                                         })
                                     }
 
@@ -1724,6 +1798,9 @@
                         case 'obj_attrs.strategy3attributetype':
                             resolve(createAttributeTypeIfNotExists('strategies.strategy3', item, errors));
                             break;
+                        case 'obj_attrs.currencyattributetype':
+                            resolve(createAttributeTypeIfNotExists('currencies.currency', item, errors));
+                            break;
                         case 'reports.balancereportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 
@@ -1883,6 +1960,62 @@
                                     }
 
                                 });
+
+                            }));
+                            break;
+                        case 'reference_tables.referencetable':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                referenceTablesService.getList({
+                                    filters: {
+                                        name: item.name
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.name === item.name) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode === 'overwrite') {
+                                                console.warn('Reference Table already exists: name ' + item.name);
+                                            } else {
+
+                                                errors.push({
+                                                    content_type: 'reference_tables.referencetable',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Reference Table already exists: name ' + item.name
+                                                    },
+                                                    mode: 'skip'
+                                                });
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(referenceTablesService.create(item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(referenceTablesService.create(item));
+
+                                    }
+
+                                });
+
 
                             }));
                             break;

@@ -197,6 +197,9 @@
                         case "obj_attrs.instrumenttypeattributetype":
                             matchingLayout.push("instruments.instrumenttype");
                             break;
+                        case "obj_attrs.currencyattributetype":
+                            matchingLayout.push("currencies.currency");
+                            break;
                     }
 
                     entityItem.content.map(function (attr) {
@@ -630,6 +633,8 @@
                     return "Report builder layouts";
                 case 'ui.bookmark':
                     return "Bookmarks";
+                case 'reference_tables.referencetable':
+                    return "Reference Tables";
                 case 'csv_import.csvimportscheme':
                     return "Data import from CSV schemes";
                 case 'complex_import.compleximportscheme':
@@ -662,6 +667,8 @@
                     return "Strategy 2 Dynamic Attributes";
                 case 'obj_attrs.strategy3attributetype':
                     return "Strategy 3 Dynamic Attributes";
+                case 'obj_attrs.currencyattributetype':
+                    return "Currency Dynamic Attributes";
                 case 'reports.balancereportcustomfield':
                     return "Balance Report Custom Fields";
                 case 'reports.plreportcustomfield':
