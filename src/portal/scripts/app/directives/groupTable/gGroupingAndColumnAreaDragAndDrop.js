@@ -1,11 +1,13 @@
 /**
- * Created by szhitenev on 20.06.2019.
+ * Created by mevstratov on 20.06.2019.
  */
 (function () {
 
     'use strict';
 
     var evEvents = require('../../services/entityViewerEvents');
+
+    var metaService = require('../../services/metaService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -19,10 +21,8 @@
 
                 scope.entityType = scope.evDataService.getEntityType();
 
-                /*scope.isReport = ['balance-report',
-                    'cash-flow-projection-report',
-                    'performance-report', 'pl-report',
-                    'transaction-report'].indexOf(scope.entityType) !== -1;*/
+                var entityType = scope.evDataService.getEntityType();
+                var isReport = metaService.isReport(entityType);
 
                 var createTableItemFromAnotherItem = function (item) {
 
@@ -72,6 +72,7 @@
 
                         });
                         this.dragula.on('drop', function (elem, target, source, nextSibling) {
+
                             $(target).removeClass('active');
 
                             var columnsHolder = scope.contentWrapElement.querySelector('.g-columns-holder');
@@ -109,18 +110,10 @@
 
                                         var groupToAdd = createTableItemFromAnotherItem(activeColumn);
 
-                                        /*var nodes = Array.prototype.slice.call(target.children);
-                                        var index = nodes.indexOf(elem);
-
-                                        if (target === groupsBag) {
-                                            groups.push(groupToAdd);
-                                        } else {
-                                            groups.splice(index, 0, groupToAdd);
-                                        }*/
-
                                         groups.push(groupToAdd);
 
-                                        drake.remove();
+                                        drake.cancel();
+
                                         areaItemsChanged = true;
                                         scope.evDataService.setGroups(groups);
 
@@ -164,7 +157,6 @@
 
                                     for (var i = 0; i < columnElems.length; i = i + 1) {
 
-
                                         for (var x = 0; x < columns.length; x = x + 1) {
 
                                             if (columnElems[i].dataset.columnKey === columns[x].key) {
@@ -206,65 +198,77 @@
 
                                 // If group's card dragged to column area
                                 if (target === columnsHolder || target === columnsBag) {
+
                                     var identifier = elem.dataset.groupKey;
 
-                                    var columnToAdd;
-                                    var columnOfDragedGroupIndex;
+                                    if (isReport) {
 
-                                    for (var i = 0; i < columns.length; i = i + 1) {
-                                        if (columns[i].key === identifier) {
-                                            columnToAdd = columns[i];
-                                            columnOfDragedGroupIndex = i;
-                                            break;
-                                        }
-                                    }
+                                        var columnToAdd;
+                                        var columnOfDragedGroupIndex;
 
-                                    if (target === columnsBag) {
-
-                                        columns.push(columnToAdd);
-                                        columns.splice(columnOfDragedGroupIndex, 1);
-
-                                    } else {
-
-                                        for (var i = 0; i < columns.length; i++) {
-
-                                            if (nextSibling.dataset.columnKey === columnToAdd.key) { // if next column is column of dragged group
-                                                break;
-
-                                            } else if (nextSibling.dataset.columnKey === columns[i].key) {
-                                                columns.splice(columnOfDragedGroupIndex, 1);
-                                                var indexToAddColumn = i - 1; // we adding group's column before next column
-                                                if (indexToAddColumn < 0) {
-                                                    indexToAddColumn = 0;
-                                                };
-                                                columns.splice(indexToAddColumn, 0, columnToAdd);
-                                                console.log("draganddrop columns to add", columns, columnToAdd);
+                                        for (var i = 0; i < columns.length; i = i + 1) {
+                                            if (columns[i].key === identifier) {
+                                                columnToAdd = columns[i];
+                                                columnOfDragedGroupIndex = i;
                                                 break;
                                             }
-
                                         }
 
-                                    }
+                                        if (target === columnsBag) {
+
+                                            columns.push(columnToAdd);
+                                            columns.splice(columnOfDragedGroupIndex, 1);
+
+                                        } else {
+
+                                            if (nextSibling.dataset.columnKey !== columnToAdd.key) { // if next column is column of dragged group
+
+                                                columns.splice(columnOfDragedGroupIndex, 1);
+
+                                                for (var i = 0; i < columns.length; i++) {
+
+                                                    if (nextSibling.dataset.columnKey === columns[i].key) {
+
+                                                        /*var indexToAddColumn = i; // we adding group's column before next column
+                                                        if (indexToAddColumn < 0) {
+                                                            indexToAddColumn = 0;
+                                                        };*/
+
+                                                        columns.splice(i, 0, columnToAdd);
+                                                        break;
+                                                    };
+
+                                                };
+
+                                            };
+
+                                        };
+
+                                    };
 
                                     for (var i = 0; i < groups.length; i++) {
 
                                         if (groups[i].key === identifier) {
                                             groups.splice(i, 1);
                                             break;
-                                        }
-                                    }
+                                        };
+
+                                    };
 
                                     drake.remove();
 
                                     areaItemsChanged = true;
 
                                     scope.evDataService.setColumns(columns);
-                                    scope.evDataService.setGroups(groups);
 
-                                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                    if (isReport) {
+                                        scope.evDataService.setGroups(groups);
+
+                                        scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                    }
+
                                     scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
 
                                 // < If group's card dragged to column area >
 
@@ -312,8 +316,6 @@
 
                             // < Methods for group's cards dragging >
                             }
-
-                            console.log("dragndrop drop location", elem, target);
 
                         });
 
