@@ -502,10 +502,6 @@
 
             });
 
-            if (vm.settings.mode === 'overwrite') {
-                vm.activeItemTotal = vm.activeItemTotal * 2;
-            }
-
             try {
 
                 var timeout = setInterval(function () {
@@ -658,7 +654,19 @@
 
         vm.init = function () {
 
-            vm.items = vm.file.body;
+            vm.sections = vm.file.body;
+
+
+            vm.sections.forEach(function (item) {
+
+                if(item.section_name === 'configuration') {
+                    vm.items = item.items;
+                }
+
+            });
+
+
+
             console.log("file to import", vm.items, vm.file, data);
             vm.items.forEach(function (item) {
 

@@ -16,7 +16,7 @@
 
         var vm = this;
 
-        vm.items = file.body;
+        vm.items = [];
 
         vm.processing = false;
         vm.counter = 0;
@@ -613,6 +613,22 @@
         vm.cancel = function () {
             $mdDialog.cancel();
         };
+
+        vm.init = function () {
+
+            var sections = file.body;
+
+            sections.forEach(function (item) {
+
+                if(item.section_name === 'mappings') {
+                    vm.items = item.items
+                }
+
+            })
+
+        };
+
+        vm.init();
 
     }
 

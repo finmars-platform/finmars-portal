@@ -2272,6 +2272,10 @@
 
         return new Promise(function (resolve, reject) {
 
+            if(!settings) {
+                throw "Settings is undefined"
+            }
+
             configurationImportCompatibilityService.repairItems(items).then(function () {
 
                 console.log('Repair items success');
@@ -2279,26 +2283,11 @@
                 var errors = [];
                 var cacheContainer = {};
 
-                createEntities(items, settings, cacheContainer, errors).then(function () {
+                if (settings.mode === 'skip') {
 
-                    console.log('Create items success');
+                    createEntities(items, settings, cacheContainer, errors).then(function () {
 
-                    if (settings && settings.mode === 'overwrite') {
-
-                        overwriteEntities(items, settings, cacheContainer, errors).then(function () {
-
-                            console.log('Overwrite items success');
-
-                            console.log('Finish import success');
-
-                            console.log('Error', errors);
-
-                            resolve({
-                                errors: errors
-                            })
-                        })
-
-                    } else {
+                        console.log('Create items success');
 
                         console.log('Finish import success');
 
@@ -2307,10 +2296,35 @@
                         resolve({
                             errors: errors
                         })
-                    }
 
 
-                })
+                    })
+
+                } else if (settings.mode === 'overwrite') {
+
+                    overwriteEntities(items, settings, cacheContainer, errors).then(function () {
+
+                        console.log('Overwrite items success');
+
+                        console.log('Finish import success');
+
+                        console.log('Error', errors);
+
+                        resolve({
+                            errors: errors
+                        })
+                    })
+
+                } else {
+
+                    console.log('Finish import success');
+
+                    console.log('Error', errors);
+
+                    resolve({
+                        errors: errors
+                    })
+                }
 
             })
 
