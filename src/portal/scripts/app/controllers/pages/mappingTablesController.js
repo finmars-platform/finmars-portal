@@ -20,9 +20,9 @@
 
             if (file) {
 
-                var ext = file.name.split('.')[1]
+                var ext = file.name.split('.')[1];
 
-                if (ext !== 'fmpg') {
+                if (ext !== 'fcfg') {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',

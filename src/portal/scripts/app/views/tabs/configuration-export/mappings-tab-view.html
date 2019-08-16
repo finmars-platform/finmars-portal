@@ -1,0 +1,46 @@
+<div>
+
+    <div>
+
+        <md-checkbox data-ng-checked="vm.selectAllStateMappings"
+                     data-ng-click="vm.toggleSelectAllMappings()"
+                     aria-label="checkbox">
+        </md-checkbox>
+
+        <b>Select all</b>
+
+    </div>
+
+    <div data-ng-repeat="item in vm.mappingItems">
+
+        <div class="cie-entity-holder">
+            <md-checkbox data-ng-checked="item.active"
+                         data-ng-click="vm.toggleActiveForChilds(item)"
+                         data-ng-class="item.someChildsActive"
+                         aria-label="checkbox">
+            </md-checkbox>
+            <span data-ng-bind="vm.getMappingsEntityName(item)"></span>
+            ({{item.count}})
+            <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
+                    data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
+            </md-button>
+        </div>
+
+
+        <div data-ng-show="item.displayItems" style="padding-left: 20px">
+
+            <div data-ng-repeat="child in item.content">
+                <md-checkbox data-ng-checked="child.active"
+                             data-ng-click="vm.updateActiveForParent(child, item)"
+                             aria-label="checkbox">
+                </md-checkbox>
+                {{child.value}}
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>

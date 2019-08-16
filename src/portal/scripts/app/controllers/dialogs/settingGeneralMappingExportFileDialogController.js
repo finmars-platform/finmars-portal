@@ -169,6 +169,7 @@
             vm.checkSelectAll();
 
         };
+
         vm.getEntityDependenciesCaptions = function (entity) {
 
             var result = '';
@@ -196,39 +197,7 @@
 
         };
 
-        function isEntitySelected(entity) {
-
-            var result = false;
-
-            entity.content.forEach(function (item) {
-
-                if (item.active) {
-                    result = true;
-                }
-
-            });
-
-            return result;
-
-        }
-
-        function findEntity(items, entityName) {
-
-            var result;
-
-            items.forEach(function (item) {
-
-                if (item.entity === entityName) {
-                    result = item;
-                }
-
-            });
-
-            return result;
-
-        }
-
-        function exportConfiguration(items) {
+        vm.exportConfiguration = function(items) {
 
             return new Promise(function (resolve, reject) {
 
@@ -279,7 +248,7 @@
 
         vm.agree = function ($event) {
 
-            exportConfiguration(vm.items).then(function (data) {
+            vm.exportConfiguration(vm.items).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {}});
 

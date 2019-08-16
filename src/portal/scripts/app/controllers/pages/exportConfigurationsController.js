@@ -14,6 +14,8 @@
 
         var vm = this;
 
+        vm.activeTab = 'configuration';
+
         vm.readyStatus = {content: false, layouts: false};
         vm.layouts = [];
 
@@ -102,7 +104,7 @@
                                                     });
                                                 } else if (parent.entity === "transactions.transactiontype") {
 
-                                                    groupByProperty(parent.content, '___group__user_code');
+                                                    vm.groupByProperty(parent.content, '___group__user_code');
 
                                                 }
                                                 // < Divide children into subgroups >
@@ -116,7 +118,7 @@
 
                         });
 
-                        findDynamicAttributesInLayouts();
+                        vm.findDynamicAttributesInLayouts();
 
                         vm.readyStatus.content = true;
                         resolve($scope.$apply());
@@ -127,7 +129,7 @@
             });
         };
 
-        var groupByProperty = function (elements, propertyToGroupBy) { // add headers to groups of layouts
+        vm.groupByProperty = function (elements, propertyToGroupBy) { // add headers to groups of layouts
 
             var hasFirstElement = [];
 
@@ -152,7 +154,7 @@
 
         };
 
-        var findDynamicAttributesInLayouts = function () {
+        vm.findDynamicAttributesInLayouts = function () {
 
             var dynamicAttrsGroupIndex = 5;
 
@@ -219,7 +221,8 @@
                             case "accounts.account":
                                 daContentType = "Account";
                                 break;
-                        };
+                        }
+                        ;
 
                         var daName = attr.name;
                         var usagesCount = 0;
@@ -313,7 +316,7 @@
 
         };
 
-        var getECProperties = function (item) {
+        vm.getECProperties = function (item) {
 
             var result = {};
 
@@ -411,7 +414,7 @@
 
                     entityItem.content.forEach(function (childItem) {
 
-                        var searchItem = getECProperties(childItem);
+                        var searchItem = vm.getECProperties(childItem);
 
                         // console.log('searchItem', searchItem);
 
@@ -478,7 +481,7 @@
 
                     if (child.active) {
 
-                        var result = getECProperties(child);
+                        var result = vm.getECProperties(child);
 
                         if (result || typeof result === "string") {
                             vm.activeLayout.data.statuses[item.entity].push(result);
@@ -508,61 +511,12 @@
 
                 if (res.status === 'agree') {
                     vm.getConfigurationExportLayouts();
-                };
+                }
+                ;
 
             })
 
         };
-
-        /*vm.createLayout = function ($event) {
-
-            var configuration = Object.assign({}, vm.activeLayout);
-
-            vm.items.forEach(function (item) {
-
-                if (!configuration.hasOwnProperty(item.entity)) {
-                    configuration[item.entity] = [];
-                };
-
-                item.content.forEach(function (child) {
-
-                    if (child.active) {
-
-                        var name = getECProperties(child);
-
-                        configuration[item.entity].push(name);
-
-                    };
-
-                });
-
-            });
-
-            console.log('createLayout.configuration', configuration);
-
-            $mdDialog.show({
-                controller: 'SaveConfigurationExportLayoutDialogController as vm',
-                templateUrl: 'views/dialogs/save-configuration-export-layout-dialog-view.html',
-                targetEvent: $event,
-                locals: {
-                    data: {
-                        layout: {
-                            data: configuration
-                        }
-                    }
-                },
-                multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-                    vm.getConfigurationExportLayouts();
-                }
-            });
-
-        };*/
 
         vm.toggleSelectAll = function () {
 
@@ -820,55 +774,39 @@
 
         };
 
-        function exportConfiguration(items) {
-
-            /*return new Promise(function (resolve, reject) {
-
-                var results = [];
-
-                console.log("export items", items);
-
-                items.forEach(function (item) {
-
-                    var result = {
-                        entity: item.entity,
-                        content: [],
-                        dependencies: item.dependencies,
-                        count: 0
-                    };
-
-                    item.content.forEach(function (child) {
-
-                        if (child.active) {
-                            result.content.push(child)
-                        }
-
-                    });
-
-                    result.count = result.content.length;
-
-                    if (result.count > 0) {
-                        results.push(result)
-                    }
-
-                });
-
-                vm.file.notes = vm.activeLayout.data.notes;
-                vm.file.body = results;
-                console.log("export vm.file", vm.file);
-                var resultFile = JSON.stringify(vm.file);
-
-                var a = document.getElementById("exportButton");
-                var result = new File([resultFile], {type: 'text/json;charset=utf-8'});
-
-                a.href = URL.createObjectURL(result);
-                a.download = vm.filename ? vm.filename + '.fcfg' : "configuration.fcfg";
-
-                resolve(vm.file);
-
-            })*/
+        vm.cleanItemsBeforeExport = function(items){
 
             var results = [];
+
+            if (items) {
+                results = JSON.parse(JSON.stringify(items));
+
+                // removing properties created for data rendering
+
+                results.forEach(function (entity) {
+                    delete entity.order__;
+                    delete entity.first_item__;
+                    delete entity.attributeIsUsed__;
+                    delete entity.first_level_header__;
+
+                    entity.content.forEach(function (item) {
+                        delete item.order__;
+                        delete item.first_item__;
+                        delete item.countOfUsages__;
+                    });
+
+                    return entity;
+                });
+
+            }
+
+            return results
+
+        };
+
+        vm.convertToExportStructure = function(items) {
+
+            var results = []
 
             items.forEach(function (item) {
 
@@ -895,8 +833,37 @@
 
             });
 
+            return results
+
+        };
+
+        vm.export = function () {
+
+            var configurationItems = vm.cleanItemsBeforeExport(vm.items);
+            var mappingsItems = vm.cleanItemsBeforeExport(vm.mappingItems);
+
+            var configurationResults = vm.convertToExportStructure(configurationItems);
+            var mappingsResults = vm.convertToExportStructure(mappingsItems);
+
+            console.log('vm.export.configurationResults', configurationResults);
+            console.log('vm.export.mappingsResults', mappingsResults);
+
             vm.file.notes = vm.activeLayout.data.notes;
-            vm.file.body = results;
+            vm.file.body = [];
+
+            if(configurationResults.length) {
+                vm.file.body.push({
+                    section_name: 'configuration',
+                    items: configurationResults
+                })
+            }
+
+            if(mappingsResults.length) {
+                vm.file.body.push({
+                    section_name: 'mappings',
+                    items: mappingsResults
+                })
+            }
 
             var resultFile = JSON.stringify(vm.file);
 
@@ -912,40 +879,94 @@
             setTimeout(function () {
                 document.body.removeChild(a);
             }, 100);
-        }
-
-        vm.export = function () {
-
-            var items = [];
-            if (vm.items) {
-                items = JSON.parse(JSON.stringify(vm.items));
-
-                // removing properties created for data rendering
-                items.forEach(function (entity) {
-                    delete entity.order__;
-                    delete entity.first_item__;
-                    delete entity.attributeIsUsed__;
-                    delete entity.first_level_header__;
-
-                    entity.content.forEach(function (item) {
-                        delete item.order__;
-                        delete item.first_item__;
-                        delete item.countOfUsages__;
-                    });
-
-                    return entity;
-                });
-
-                exportConfiguration(items);
-            }
 
         };
+
+        // Mapping Section Start
+
+        vm.getMappingFile = function () {
+
+            configurationService.getMappingData().then(function (data) {
+
+                console.log('configurationService.getConfigurationData', data);
+
+                vm.file = data;
+
+                vm.mappingItems = data.body;
+
+                vm.mappingItems = vm.mappingItems.filter(function (item) {
+
+                    return [
+                        'integrations.portfoliomapping',
+                        'integrations.currencymapping',
+                        'integrations.accountmapping',
+                        'integrations.instrumentmapping',
+                        'integrations.counterpartymapping',
+                        'integrations.responsiblemapping',
+                        'integrations.strategy1mapping',
+                        'integrations.strategy2mapping',
+                        'integrations.strategy3mapping'].indexOf(item.entity) === -1
+
+                });
+
+                vm.mappingItems.forEach(function (parent) {
+
+                    parent.content = parent.content.filter(function (child) {
+
+                        if (child.hasOwnProperty('user_code') && child.user_code === '-') {
+                            return false
+                        }
+
+                        if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                            return false
+                        }
+
+                        return true;
+
+                    })
+
+                });
+
+                vm.readyStatus.content = true;
+
+                $scope.$apply();
+
+            });
+
+        };
+
+        vm.toggleSelectAllMappings = function () {
+
+            vm.selectAllStateMappings = !vm.selectAllStateMappings;
+
+            vm.mappingItems.forEach(function (item) {
+                item.someChildsActive = false;
+                item.active = vm.selectAllStateMappings;
+
+
+                item.content.forEach(function (child) {
+                    child.active = vm.selectAllStateMappings;
+                })
+
+            })
+
+        };
+
+        vm.getMappingsEntityName = function (item) {
+
+            return metaContentTypesService.getEntityNameByContentType(item.entity)
+
+        };
+
+        // Mapping Section End
 
         vm.init = function () {
 
             vm.getFile().then(function () {
                 vm.getConfigurationExportLayouts();
-            })
+            });
+
+            vm.getMappingFile();
 
         };
 
