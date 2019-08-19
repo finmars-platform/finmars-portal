@@ -8,6 +8,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
+    // DEPRECATED
     var getList = function (entityType, options) {
 
         var entityUrl = entityUrlService.resolve(entityType);
@@ -33,8 +34,30 @@
 
     };
 
+    var getFilteredList = function (entityType, options) {
+
+        var entityUrl = entityUrlService.resolve(entityType);
+
+        return window.fetch(baseUrl + entityUrl + '/filtered/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(options)
+            }).then(function (data) {
+            return data.json();
+        })
+
+
+    };
+
     module.exports = {
-        getList: getList
+        getList: getList, // DEPRECATED
+        getFilteredList: getFilteredList
     }
 
 }());

@@ -317,7 +317,7 @@
 
                     entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                    objectsService.getList(entityType, options).then(function (data) {
+                    objectsService.getFilteredList(entityType, options).then(function (data) {
 
 
                         requestParameters.pagination.count = data.count;
@@ -393,7 +393,7 @@
 
                     entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                    groupsService.getList(entityType, options).then(function (data) {
+                    groupsService.getFilteredList(entityType, options).then(function (data) {
 
                         console.log('get groups', data);
 
