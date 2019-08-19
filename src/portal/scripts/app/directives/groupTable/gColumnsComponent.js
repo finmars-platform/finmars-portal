@@ -25,7 +25,7 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
                 scope.groups = scope.evDataService.getGroups();
-
+                console.log("dragndrop columnComponent columns", scope.columns);
                 scope.isReport = ['balance-report',
                     'cash-flow-projection-report',
                     'performance-report', 'pl-report',
@@ -428,11 +428,11 @@
                     }
                 };
 
-                if (!scope.isReport) {
+                /*if (!scope.isReport) {
                     setTimeout(function () {
                         dragAndDrop.init();
                     }, 500);
-                }
+                }*/
 
                 scope.isSortable = function (column) {
 
@@ -524,7 +524,7 @@
 
                     scope.evDataService.setColumns(scope.columns);
                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE)
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 

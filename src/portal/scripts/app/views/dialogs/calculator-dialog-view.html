@@ -21,38 +21,73 @@
             </div>
 
             <div layout="row" layout-align="space-between center">
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.deleteLastChar()">
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.deleteLastChar()"
+                        ng-disabled="vm.calculatorIsBroken">
                     <ng-md-icon icon="keyboard_backspace" style="fill: rgba(255, 255, 255, 0.87);"></ng-md-icon>
                 </button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.clearAll()">C</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.clearAll()">C</button>
             </div>
 
             <div layout="row">
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(7)">7</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(8)">8</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(9)">9</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.applyOperator('+')">+</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(7)"
+                        ng-disabled="vm.calculatorIsBroken">7</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(8)"
+                        ng-disabled="vm.calculatorIsBroken">8</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(9)"
+                        ng-disabled="vm.calculatorIsBroken">9</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.applyOperator('+')"
+                        ng-disabled="vm.calculatorIsBroken">+</button>
             </div>
 
             <div layout="row">
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(4)">4</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(5)">5</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(6)">6</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.applyOperator('-')">-</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(4)"
+                        ng-disabled="vm.calculatorIsBroken">4</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(5)"
+                        ng-disabled="vm.calculatorIsBroken">5</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(6)"
+                        ng-disabled="vm.calculatorIsBroken">6</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.applyOperator('-')"
+                        ng-disabled="vm.calculatorIsBroken">-</button>
             </div>
 
             <div layout="row">
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(1)">1</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(2)">2</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(3)">3</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.applyOperator('*')">*</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(1)"
+                        ng-disabled="vm.calculatorIsBroken">1</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(2)"
+                        ng-disabled="vm.calculatorIsBroken">2</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(3)"
+                        ng-disabled="vm.calculatorIsBroken">3</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.applyOperator('*')"
+                        ng-disabled="vm.calculatorIsBroken">*</button>
             </div>
 
             <div layout="row">
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber(0)">0</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.setNumber('.')">.</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.calculateResult()">=</button>
-                <button class="calculator-btn md-ink-ripple" ng-click="vm.applyOperator('/')">/</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber(0)"
+                        ng-disabled="vm.calculatorIsBroken">0</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.setNumber('.')"
+                        ng-disabled="vm.calculatorIsBroken">.</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.calculateResult()"
+                        ng-disabled="vm.calculatorIsBroken">=</button>
+                <button class="calculator-btn md-ink-ripple"
+                        ng-click="vm.applyOperator('/')"
+                        ng-disabled="vm.calculatorIsBroken">/</button>
             </div>
 
         </div>
@@ -61,7 +96,8 @@
 
     <md-dialog-actions layout="row" layout-align="space-between">
         <md-button ng-click="vm.close()">Close</md-button>
-        <md-button ng-click="vm.returnNumber()">Use number</md-button>
+        <md-button ng-click="vm.returnNumber()"
+                   ng-disabled="vm.calculatorIsBroken">Use number</md-button>
     </md-dialog-actions>
 
 </md-dialog>

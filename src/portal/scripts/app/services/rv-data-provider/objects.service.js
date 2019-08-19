@@ -42,6 +42,8 @@
 
                 var groupTypes = entityViewerDataService.getGroups();
 
+                console.log('regularFilters', regularFilters);
+
                 items = filterService.filterTableRows(items, regularFilters);
                 /*items = filterService.filterByRegularFilters(items, regularFilters);
 

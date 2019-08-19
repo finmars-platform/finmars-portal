@@ -426,11 +426,11 @@
                     }
                 };
 
-                if (!scope.isReport) {
+                /*if (!scope.isReport) {
                     setTimeout(function () {
                         dragAndDrop.init();
                     }, 500);
-                }
+                }*/
 
                 var init = function () {
 

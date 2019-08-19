@@ -66,12 +66,6 @@
 
             if (item.options && item.options.enabled) {
 
-                /*if (item.options.query && item.options.enabled) {
-
-                    var key = queryParamsHelper.entityPluralToSingular(item.key);
-
-                    newRequestParametersBody[key] = item.options.query
-                }*/
                 if (item.options.filter_values) {
 
                     var key = queryParamsHelper.entityPluralToSingular(item.key);
@@ -83,14 +77,6 @@
                         value_type: item.value_type,
                         value: item.options.filter_values
                     };
-
-                    /*if (item.options.filter_type) {
-
-
-
-                    }*/
-
-                    // newRequestParametersBody[key] = item.options.filter_values;
 
                     newRequestParametersBody['filter_settings'].push(filterSettings);
 
@@ -148,9 +134,9 @@
 
                 reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
                 reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
-                entityViewerDataService.setUnfilteredFlatList(reportOptions.items),
-                    // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
-                    reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
+                entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
+                // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
+                reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
             }
 

@@ -121,56 +121,10 @@
 
                 };
 
-                /*scope.toggleFilterSelectMenu = function (action) {
-                    console.log("filter toggleFilterSelectMenu", action);
-                    var selectMenu = elem[0].querySelector(".text-filter-select-menu");
-                    var selectFilterContainer = elem[0].querySelector(".text-filter-select");
-
-                    if (action === 'show') {
-
-                        selectMenu.classList.remove("visibility-hidden");
-                        selectFilterContainer.classList.add("select-menu-visible");
-
-                        setTimeout(function () {
-                            window.addEventListener('click', selectClickOutsideToClose);
-                        }, 100);
-
-                    } else {
-                        selectMenu.classList.add("visibility-hidden");
-                        selectFilterContainer.classList.remove("select-menu-visible");
-                    }
-                };*/
-
                 scope.selectFilterOption = function (selectOption) {
-
-                    /*var selectMenu = elem[0].querySelector(".text-filter-select-menu");
-                    selectMenu.classList.add('visibility-hidden');
-                    window.removeEventListener('click', selectClickOutsideToClose);*/
 
                     scope.filter.options.filter_values[0] = selectOption;
                     scope.filterSettingsChange();
-                };
-
-                var selectClickOutsideToClose = function (event) {
-                    console.log("filter clicked");
-                    var clickedElement = event.target;
-
-                    var i;
-                    for (i = 0; i < 7; i++) {
-
-                        clickedElement = clickedElement.parentNode;
-
-                        if (clickedElement.classList.contains("text-filter-select")) {
-                            return;
-                        } else if (clickedElement.tagName === "HTML") {
-                            break;
-                        }
-
-                    }
-
-                    var selectMenu = elem[0].querySelector(".text-filter-select-menu");
-                    selectMenu.classList.add('visibility-hidden');
-                    window.removeEventListener('click', selectClickOutsideToClose);
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
