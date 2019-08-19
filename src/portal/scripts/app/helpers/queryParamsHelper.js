@@ -58,22 +58,50 @@
 
                     for (x = 0; x < valuesLen; x = x + 1) {
 
-                        resultArr.push(keys[i] + '=' + values[x])
+                        resultArr.push(keys[i] + '=' + values[x]);
 
                     }
 
                 }
-            }
+            };
 
-        }
+        };
 
-        return resultArr.join('&')
+        return resultArr.join('&');
 
     };
 
+    /*var formatFilterSettingsForQueryParams = function (filter) {
+
+        var formattedFilterData = {};
+
+        formattedFilterData.filter_type = filter.options.filter_type;
+        formattedFilterData.filter_value_type = filter.value_type;
+
+        if (filter.filter_type === 'from_to') {
+
+            formattedFilterData.filter_value_from = filter.options.filter_values.min_value;
+            formattedFilterData.filter_value_to = filter.options.filter_values.max_value;
+
+        } else {
+
+            filter.options.filter_values.forEach(function (filterValue, index) {
+
+                var valueName = 'filter_values_' + index;
+                formattedFilterData[valueName] = filterValue;
+
+            });
+
+        };
+
+        return formattedFilterData;
+
+    };*/
+
     module.exports = {
         toQueryParamsString: toQueryParamsString,
-        entityPluralToSingular: entityPluralToSingular
+        entityPluralToSingular: entityPluralToSingular,
+        // formatFilterSettingsForQueryParams: formatFilterSettingsForQueryParams
     }
 
 }());

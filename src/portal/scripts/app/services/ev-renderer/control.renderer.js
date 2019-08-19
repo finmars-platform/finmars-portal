@@ -30,7 +30,7 @@
 
         } else {
 
-            result = result + '<p class="m-0" style="padding-top: 2px; padding-left: 15px;">Data is fetched</p>'
+            result = result + '<p class="m-0" style="padding-top: 2px; padding-left: 15px; color: #868686;">Data fully loaded</p>'
         }
 
         result = result + '</div>';

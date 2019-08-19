@@ -12,6 +12,7 @@
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
         var newRequestParametersBody = Object.assign({}, requestParameters.body);
+        newRequestParametersBody['filter_settings'] = [];
 
         var filters = entityViewerDataService.getFilters();
 
@@ -30,10 +31,34 @@
 
         });
 
+        /*filters.forEach(function (item) {
+
+            if (item.options && item.options.enabled) {
+
+                if (item.options.filter_values) {
+
+                    // var key = queryParamsHelper.entityPluralToSingular(item.key);
+                    //var filterSettings = queryParamsHelper.formatFilterSettingsForQueryParams(item);
+
+                    var filterSettings = {
+                        key: key,
+                        filter_type: item.options.filter_type,
+                        exclude_empty_cells: item.options.exclude_empty_cells,
+                        value_type: item.value_type,
+                        value: item.options.filter_values
+                    };
+
+                    newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
+
+                };
+
+            };
+
+        });*/
+
         requestParameters.body = newRequestParametersBody;
 
         entityViewerDataService.setRequestParameters(requestParameters);
-
 
     };
 
@@ -285,7 +310,11 @@
 
             var entityType = entityViewerDataService.getEntityType();
 
+            var pagination = entityViewerDataService.getPagination();
 
+            var itemsPerPage = pagination.items_per_page;
+
+            console.log("ev events");
             var pagesToRequest = requestParameters.requestedPages.filter(function (page) {
 
                 return requestParameters.processedPages.indexOf(page) === -1
@@ -300,15 +329,15 @@
 
                     options.page = pageToRequest;
 
-                    if (options.groups_types) {
-
-                        options.groups_types = options.groups_types.map(function (groupType) {
-
-                            return groupType.key;
-
-                        })
-
-                    }
+                    // if (options.groups_types) {
+                    //
+                    //     options.groups_types = options.groups_types.map(function (groupType) {
+                    //
+                    //         return groupType.key;
+                    //
+                    //     })
+                    //
+                    // }
 
                     evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
@@ -331,7 +360,7 @@
 
                     });
 
-                }))
+                }));
 
             });
 

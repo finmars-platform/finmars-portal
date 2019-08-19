@@ -380,6 +380,7 @@ app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportView
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
 app.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]);
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
+app.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evTextFilterDirective')]);
 app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', ['$mdDialog', require('./app/directives/groupTable/gColumnsComponent')]);
 app.directive('groupActionsBlock', ['$mdDialog', '$state', require('./app/directives/groupTable/gActionsBlockComponent')]);
@@ -432,7 +433,6 @@ app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);
 app.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
 app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
-// app.directive('calculatorButton', [require('./app/directives/calculatorButtonDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('trustAsUrl', ['$sce', require('./app/filters/trustAsUrlFilter')]);

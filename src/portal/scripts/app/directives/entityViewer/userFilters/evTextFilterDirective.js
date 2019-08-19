@@ -1,5 +1,5 @@
 /**
- * Created by mevstratov on 30.05.2019.
+ * Created by mevstratov on 14.08.2019.
  */
 (function () {
 
@@ -9,7 +9,8 @@
 
     var userFilterService = require('../../../services/rv-data-provider/user-filter.service');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function () {
+
         return {
             restrict: 'E',
             scope: {
@@ -17,61 +18,34 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            templateUrl: 'views/directives/reportViewer/userFilters/rv-date-filter-view.html',
-            link: function (scope, elem, attrs) {
+            templateUrl: 'views/directives/reportViewer/userFilters/rv-text-filter-view.html',
+            link: function (scope, elem, attr) {
 
-                // console.log("filter filterDateData", scope.filter);
+                scope.isRootEntityViewer = true;
 
+                // console.log("filter filterTextData", scope.filter);
+                console.log("ev filter filter", scope.filter);
                 scope.filters = scope.evDataService.getFilters();
 
                 scope.filterValue = undefined;
-                scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
+                scope.showSelectMenu = false;
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.attributesFromAbove = [];
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
+                    var columnRowsContent = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
-                        return {
-                            value: cRowsContent,
-                            active: false
-                        }
+                        return {id: cRowsContent, name: cRowsContent}
                     });
 
-                    // ---------------- For Testing -----------------
-                    /*scope.columnRowsContent = [
-                        new Date('2019-05-20'),
-                        new Date('2019-05-23'),
-                        new Date('2019-05-01'),
-                        new Date('2019-05-05'),
-                        new Date('2019-05-13'),
-                        new Date('2019-02-21'),
-                        new Date('2019-02-28'),
-                        new Date('2019-02-20'),
-                        new Date('2019-03-24'),
-                        new Date('2019-03-11'),
-                        new Date('2018-11-20'),
-                        new Date('2018-11-11'),
-                        new Date('2018-11-18'),
-                        new Date('2018-06-21'),
-                        new Date('2018-06-22'),
-                        new Date('2018-06-23'),
-                        new Date('2018-06-24'),
-                        new Date('2016-05-20'),
-                        new Date('2016-05-21'),
-                        new Date('2016-05-22'),
-                        new Date('2016-05-23')
-                    ];*/
-
-                    if(!scope.isRootEntityViewer) {
+                    if (!scope.isRootEntityViewer) {
                         scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
                     }
 
-                    console.log("date tree columnRows", scope.columnRowsContent);
                     scope.$apply();
 
                 });
@@ -81,7 +55,7 @@
                 }
 
                 if (!scope.filter.options.filter_type) {
-                    scope.filter.options.filter_type = "equal";
+                    scope.filter.options.filter_type = "contain";
                 }
 
                 if (!scope.filter.options.filter_values) {
@@ -97,95 +71,48 @@
                     var filterRegime = "";
 
                     switch (scope.filter.options.filter_type) {
-
-                        case "equal":
-                            filterRegime = "Equal";
+                        case "contain":
+                            filterRegime = "Contains";
                             break;
-                        case "not_equal":
-                            filterRegime = "Not equal";
+                        case "does_not_contain":
+                            filterRegime = "Does not contains";
                             break;
-                        case "greater":
-                            filterRegime = "Greater than";
+                        case "selector":
+                            filterRegime = "Selector";
                             break;
-                        case "greater_equal":
-                            filterRegime = "Greater or equal to";
-                            break;
-                        case "less":
-                            filterRegime = "Less than";
-                            break;
-                        case "less_equal":
-                            filterRegime = "Less or equal to";
+                        case "multiselector":
+                            filterRegime = "Multiple selector";
                             break;
                         case "empty":
                             filterRegime = "Show empty cells";
                             break;
-                        case "date_tree":
-                            filterRegime = "Date tree";
-                            break;
-
                     }
 
                     return filterRegime;
 
                 };
 
+                scope.getMultiselectorName = function () {
+                    var multiselectorName = scope.filter.name + ". " + "Regime = " + scope.filter.options.filter_type;
+
+                    return multiselectorName;
+                };
+
                 scope.changeFilterType = function (filterType) {
-
                     scope.filter.options.filter_type = filterType;
-
-                    if (filterType === 'date_tree') {
-
-                        scope.filter.options.dates_tree = [];
-
+                    if (filterType === 'empty') {
+                        scope.filter.options.exclude_empty_cells = false;
                     }
-
-                    if (filterType === 'from_to') {
-
-                        scope.filter.options.filter_values = {};
-
-                    } else {
-
-                        if (filterType === 'empty') {
-                            scope.filter.options.exclude_empty_cells = false;
-                        }
-
-                        scope.filter.options.filter_values = [];
-
-                    }
-
+                    scope.filter.options.filter_values = [];
                     scope.filterSettingsChange();
                 };
 
-                var convertDatesTreeToFlatList = function () {
+                scope.filterSettingsChange = function () {
 
-                    var datesList = [];
+                    /*if (scope.filter.options.filter_type === "contain" || scope.filter.option.filter_type === "does_not_contain") {
+                        scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();
+                    }*/
 
-                    scope.filter.options.dates_tree.map(function (yearGroup) {
-
-                        yearGroup.items.map(function (monthGroup) {
-
-                            monthGroup.items.map(function (date) {
-
-                                delete date.dayNumber;
-                                delete date.available;
-
-                                date = JSON.parse(angular.toJson(date));
-
-                                if (date.active) {
-                                    datesList.push(date.value);
-                                }
-
-                            });
-
-                        });
-
-                    });
-                    // console.log("date tree date to save", datesList);
-                    return datesList;
-
-                };
-
-                scope.applyFilter = function () {
                     scope.evDataService.resetData();
                     scope.evDataService.resetRequestParameters();
 
@@ -194,16 +121,13 @@
                     scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
                 };
 
-                scope.filterSettingsChange = function () {
-                    //console.log("filter filterSettingsChange", scope.filter.options.filter_values);
-                    if (scope.filter.options.filter_type === 'date_tree') {
-                        scope.filter.options.filter_values = convertDatesTreeToFlatList();
-                    }
+                scope.selectFilterOption = function (selectOption) {
 
-                    scope.applyFilter();
-
+                    scope.filter.options.filter_values[0] = selectOption;
+                    scope.filterSettingsChange();
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
@@ -227,7 +151,7 @@
                     /*console.log('filter scope.filters', scope.filters);
                     scope.filters = scope.filters.map(function (item) {
                         // if (item.id === filter.id || item.name === filter.name) {
-                        if (item.key === filter.key) {
+                        if (item.name === filter.name) {
                             // return undefined;
                             item = undefined;
                         }
@@ -238,7 +162,7 @@
                     });*/
                     scope.filters.map(function (item, index) {
                         if (item.key === filter.key) {
-                            scope.filters.splice(index, 1)
+                            scope.filters.splice(index, 1);
                         }
                     });
 
@@ -246,6 +170,7 @@
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 };
+
 
                 scope.updateFilters = function(){
 
@@ -298,13 +223,13 @@
 
                     scope.initSplitPanelMode();
 
-
                 };
 
                 scope.init()
 
+
             }
-        }
+        };
     }
 
 }());
