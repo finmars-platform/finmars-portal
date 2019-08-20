@@ -38,7 +38,7 @@
 
         var entityUrl = entityUrlService.resolve(entityType);
 
-        return window.fetch(baseUrl + entityUrl + '-ev-group/' + '/filtered/',
+        return window.fetch(baseUrl + entityUrl + '-ev-group/filtered/',
             {
                 method: 'POST',
                 credentials: 'include',
