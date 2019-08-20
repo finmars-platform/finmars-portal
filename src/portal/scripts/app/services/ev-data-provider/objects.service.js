@@ -57,33 +57,33 @@
 
     var filter_settings = [
         {
-            "key":"name",
-            "filter_type":"contain",
+            "key":"user_text_1",
+            "filter_type":"contains",
             "exclude_empty_cells":false,
             "value_type":10,
             "value":[
-                "bank"
+                "1"
             ]
         },
-        {
-            "key":"user_code",
-            "filter_type":"does_not_contain",
-            "exclude_empty_cells":false,
-            "value_type":10,
-            "value":[
-                "10"
-            ]
-        },
-        {
-            "key":"position_size",
-            "filter_type":"from_to",
-            "exclude_empty_cells":false,
-            "value_type":20,
-            "value":{
-                "max_value":900000,
-                "min_value":0
-            }
-        }
+        // {
+        //     "key":"user_code",
+        //     "filter_type":"does_not_contain",
+        //     "exclude_empty_cells":false,
+        //     "value_type":10,
+        //     "value":[
+        //         "10"
+        //     ]
+        // },
+        // {
+        //     "key":"position_size",
+        //     "filter_type":"from_to",
+        //     "exclude_empty_cells":false,
+        //     "value_type":20,
+        //     "value":{
+        //         "max_value":900000,
+        //         "min_value":0
+        //     }
+        // }
     ];
 
     var getFilteredList = function (entityType, options) {
