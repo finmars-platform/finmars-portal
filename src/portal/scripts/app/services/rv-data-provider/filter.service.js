@@ -1,19 +1,12 @@
 (function () {
-
-    var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
+    // filters with empty values have been removed in rv-data-provider.service
+    /*var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
 
         if (filterType === 'from_to') {
 
-            /*if (regularFilterValue.min_value !== undefined &&
-                regularFilterValue.max_value !== undefined &&
-                regularFilterValue.min_value !== null &&
-                regularFilterValue.max_value !== null) {
-                return true;
-            }*/
-
-            if (regularFilterValue.min_value &&
-                regularFilterValue.max_value) {
+            if ((regularFilterValue.min_value || regularFilterValue.min_value === 0) &&
+                (regularFilterValue.max_value || regularFilterValue.max_value === 0)) {
                 return true;
             }
 
@@ -27,7 +20,7 @@
 
         return false;
 
-    };
+    };*/
 
     var filterTableRows = function (items, regularFilters) {
         // console.log("ev filter filterTableRows", items, regularFilters);
@@ -56,7 +49,7 @@
                             break;
                         }
 
-                        if (checkForEmptyRegularFilter(filterValue, filterType)) {
+                        //if (checkForEmptyRegularFilter(filterValue, filterType)) {
 
                             var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
                             var filterArgument = JSON.parse(JSON.stringify(filterValue));
@@ -119,7 +112,7 @@
                             if (!match) {
                                 break;
                             }
-                        };
+                        //};
 
                     } else {
 

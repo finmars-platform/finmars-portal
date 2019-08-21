@@ -62,27 +62,58 @@
 
         var filters = entityViewerDataService.getFilters();
 
+        var isFilterValid = function (filterItem) {
+
+            if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
+
+                var filterType = filterItem.options.filter_type;
+
+                if (filterType === 'empty') { // if filter works for empty cells
+
+                    return true;
+
+                } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
+
+                    var filterValues = filterItem.options.filter_values;
+
+                    if (filterType === 'from_to') {
+
+                        if ((filterValues.min_value || filterValues.min_value === 0) &&
+                            (filterValues.max_value || filterValues.max_value === 0)) {
+                            return true;
+                        };
+
+                    } else if (Array.isArray(filterValues)) {
+
+                        if (filterValues[0] && filterValues[0] !== null) {
+                            return true;
+                        };
+
+                    };
+                };
+
+            };
+
+            return false;
+        };
+
         filters.forEach(function (item) {
 
-            if (item.options && item.options.enabled) {
+            if (isFilterValid(item)) {
 
-                if (item.options.filter_values) {
+                var key = queryParamsHelper.entityPluralToSingular(item.key);
 
-                    var key = queryParamsHelper.entityPluralToSingular(item.key);
+                var filterSettings = {
+                    key: key,
+                    filter_type: item.options.filter_type,
+                    exclude_empty_cells: item.options.exclude_empty_cells,
+                    value_type: item.value_type,
+                    value: item.options.filter_values
+                };
 
-                    var filterSettings = {
-                        key: key,
-                        filter_type: item.options.filter_type,
-                        exclude_empty_cells: item.options.exclude_empty_cells,
-                        value_type: item.value_type,
-                        value: item.options.filter_values
-                    };
+                newRequestParametersBody['filter_settings'].push(filterSettings);
 
-                    newRequestParametersBody['filter_settings'].push(filterSettings);
-
-                }
-
-            }
+            };
 
         });
 
