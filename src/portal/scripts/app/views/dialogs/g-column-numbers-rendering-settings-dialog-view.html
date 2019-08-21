@@ -3,7 +3,7 @@
     <md-toolbar>
         <div class="md-toolbar-tools">
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
-            <h2>Bookmarks manager</h2>
+            <h2>Number formatting for: {{vm.modalName}}</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -15,12 +15,13 @@
                 <legend>Zero</legend>
 
                 <div layout="column">
-                    <md-checkbox ng-click="vm.selectZeroFormat(0)"
-                                 ng-checked="vm.reportSettings.zero_format_id === 0">0</md-checkbox>
-                    <md-checkbox ng-click="vm.selectZeroFormat(1)"
-                                 ng-checked="vm.reportSettings.zero_format_id === 1">-</md-checkbox>
-                    <md-checkbox ng-click="vm.selectZeroFormat(2)"
-                                 ng-checked="vm.reportSettings.zero_format_id === 2">(empty)</md-checkbox>
+                    <md-radio-group ng-model="vm.reportSettings.zero_format_id">
+
+                        <md-radio-button ng-value="0">0</md-radio-button>
+                        <md-radio-button ng-value="1">-</md-radio-button>
+                        <md-radio-button ng-value="2">(empty)</md-radio-button>
+
+                    </md-radio-group>
                 </div>
 
             </fieldset>
@@ -29,19 +30,25 @@
                 <legend>Negative</legend>
 
                 <div layout="row">
+
                     <div layout="column" class="p-r-16">
-                        <md-checkbox ng-click="vm.selectNegativeFormat(0)"
-                                     ng-checked="vm.reportSettings.negative_format_id === 0">Minus</md-checkbox>
-                        <md-checkbox ng-click="vm.selectNegativeFormat(1)"
-                                     ng-checked="vm.reportSettings.negative_format_id === 1">Bracket</md-checkbox>
+
+                            <md-radio-group ng-model="vm.reportSettings.negative_format_id">
+                            <md-radio-button ng-value="0">Minus</md-radio-button>
+                            <md-radio-button ng-value="1">Bracket</md-radio-button>
+                        </md-radio-group>
+
                     </div>
 
                     <div layout="column">
-                        <md-checkbox ng-click="vm.selectNegativeColor(0)"
-                                     ng-checked="vm.reportSettings.negative_color_format_id === 0">Black</md-checkbox>
-                        <md-checkbox ng-click="vm.selectNegativeColor(1)"
-                                     ng-checked="vm.reportSettings.negative_color_format_id === 1">Red</md-checkbox>
+
+                        <md-radio-group ng-model="vm.reportSettings.negative_color_format_id">
+                            <md-radio-button ng-value="0">Black</md-radio-button>
+                            <md-radio-button ng-value="1">Red</md-radio-button>
+                        </md-radio-group>
+
                     </div>
+
                 </div>
 
             </fieldset>
@@ -52,17 +59,16 @@
                 <legend>Rounding</legend>
 
                 <div layout="column">
-                    <md-checkbox ng-click="vm.selectRoundFormat(0)"
-                                 ng-checked="vm.reportSettings.round_format_id === 0">no rounding</md-checkbox>
+                    <md-radio-group ng-model="vm.reportSettings.round_format_id">
 
-                    <md-checkbox ng-click="vm.selectRoundFormat(1)"
-                                 ng-checked="vm.reportSettings.round_format_id === 1">0</md-checkbox>
-                    <md-checkbox ng-click="vm.selectRoundFormat(2)"
-                                 ng-checked="vm.reportSettings.round_format_id === 2">0.0</md-checkbox>
-                    <md-checkbox ng-click="vm.selectRoundFormat(3)"
-                                 ng-checked="vm.reportSettings.round_format_id === 3">0.00</md-checkbox>
-                    <md-checkbox ng-click="vm.selectRoundFormat(4)"
-                                 ng-checked="vm.reportSettings.round_format_id === 4">0.000</md-checkbox>
+                        <md-radio-button ng-value="0" style="margin-bottom: 28px;">no rounding</md-radio-button>
+
+                        <md-radio-button ng-value="1">0</md-radio-button>
+                        <md-radio-button ng-value="2">0.0</md-radio-button>
+                        <md-radio-button ng-value="3">0.00</md-radio-button>
+                        <md-radio-button ng-value="4">0.000</md-radio-button>
+
+                    </md-radio-group>
                 </div>
 
             </fieldset>
@@ -71,12 +77,15 @@
                 <legend>Thousands separation</legend>
 
                 <div layout="column">
-                    <md-checkbox ng-click="vm.selectThousandsSeparatorFormat(0)"
-                                 ng-checked="vm.reportSettings.thousands_separator_format_id === 0">no separation</md-checkbox>
-                    <md-checkbox ng-click="vm.selectThousandsSeparatorFormat(1)"
-                                 ng-checked="vm.reportSettings.thousands_separator_format_id === 1">space</md-checkbox>
-                    <md-checkbox ng-click="vm.selectThousandsSeparatorFormat(2)"
-                                 ng-checked="vm.reportSettings.thousands_separator_format_id === 2">apostrophe</md-checkbox>
+
+                    <md-radio-group ng-model="vm.reportSettings.thousands_separator_format_id">
+
+                        <md-radio-button ng-value="0">no separation</md-radio-button>
+                        <md-radio-button ng-value="1">space</md-radio-button>
+                        <md-radio-button ng-value="2">apostrophe</md-radio-button>
+
+                    </md-radio-group>
+
                 </div>
 
             </fieldset>
@@ -88,18 +97,18 @@
                 <legend>Percentage</legend>
 
                 <div layout="column">
-                    <md-checkbox ng-click="vm.selectPercentageFormat(0)"
-                                 ng-checked="vm.reportSettings.percentage_format_id === 0">n.a.</md-checkbox>
-                    <md-checkbox ng-click="vm.selectPercentageFormat(1)"
-                                 ng-checked="vm.reportSettings.percentage_format_id === 1">0%</md-checkbox>
-                    <md-checkbox ng-click="vm.selectPercentageFormat(2)"
-                                 ng-checked="vm.reportSettings.percentage_format_id === 2">0.0%</md-checkbox>
-                    <md-checkbox ng-click="vm.selectPercentageFormat(3)"
-                                 ng-checked="vm.reportSettings.percentage_format_id === 3">0.00%</md-checkbox>
-                    <md-checkbox ng-click="vm.selectPercentageFormat(4)"
-                                 ng-checked="vm.reportSettings.percentage_format_id === 4">0 bps</md-checkbox>
-                    <md-checkbox ng-click="vm.selectPercentageFormat(5)"
-                                 ng-checked="vm.reportSettings.percentage_format_id === 5">0.0 bps</md-checkbox>
+
+                    <md-radio-group ng-model="vm.reportSettings.percentage_format_id">
+
+                        <md-radio-button ng-value="0">n.a.</md-radio-button>
+                        <md-radio-button ng-value="1">0%</md-radio-button>
+                        <md-radio-button ng-value="2">0.0%</md-radio-button>
+                        <md-radio-button ng-value="3">0.00%</md-radio-button>
+                        <md-radio-button ng-value="4">0 bps</md-radio-button>
+                        <md-radio-button ng-value="5">0.0 bps</md-radio-button>
+
+                    </md-radio-group>
+
                 </div>
 
             </fieldset>

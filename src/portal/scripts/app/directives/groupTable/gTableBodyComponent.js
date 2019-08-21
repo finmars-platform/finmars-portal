@@ -14,6 +14,8 @@
     var rvDataHelper = require('../../helpers/rv-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
+    var evFilterService = require('../../services/ev-data-provider/filter.service');
+
     var metaService = require('../../services/metaService');
 
     module.exports = function () {
@@ -94,6 +96,44 @@
                         item.___flat_list_index = i;
                         return item
                     });
+
+                    scope.evDataService.setUnfilteredFlatList(flatList);
+
+                    var groups = scope.evDataService.getGroups();
+                    var filters = scope.evDataService.getFilters();
+                    //console.log("ev filter gTableBody vanila flatList", JSON.parse(JSON.stringify(flatList)), groups, filters);
+
+                    //console.log("ev filter gTableBody filters", filters);
+                    var frontEndFilters = [];
+
+                    for (var f = 0; f < filters.length; f++) {
+                        var filter = filters[f];
+
+                        if (filter.options &&
+                            filter.options.is_frontend_filter &&
+                            filter.options.enabled) {
+
+                            var filterOptions = {
+                                key: filter.key,
+                                filter_type: filter.options.filter_type,
+                                exclude_empty_cells: filter.options.exclude_empty_cells,
+                                value_type: filter.value_type,
+                                value: filter.options.filter_values
+                            };
+
+                            frontEndFilters.push(filterOptions);
+
+                        };
+                    };
+
+                    // console.log("ev filter gTableBody frontEndFilters", frontEndFilters);
+
+                    if (frontEndFilters.length > 0) {
+                        var groups = scope.evDataService.getGroups();
+                        flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
+                        //console.log("ev filter gTableBody filtered", flatList);
+                    };
+
 
                     scope.evDataService.setFlatList(flatList);
 

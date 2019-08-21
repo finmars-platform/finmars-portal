@@ -108,6 +108,7 @@
             report: {},
             export: {},
             data: {},
+            sourceData: {},
             layoutToOpen: null,
             listLayout: {},
             virtualScroll: {
@@ -354,6 +355,19 @@
 
         function setAllData(data) {
             data.data = data;
+        }
+
+        function setSourceData(obj) {
+            data.sourceData[obj.___id] = obj;
+        }
+
+        function getSourceData(hashId) {
+
+            if (hashId) {
+                return data.sourceData[hashId];
+            }
+
+            return data.sourceData;
         }
 
         function setObject(obj) {

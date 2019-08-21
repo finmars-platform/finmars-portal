@@ -407,7 +407,6 @@
     </div>
     <!--<div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">-->
     <div ng-if="isReport">
-    <!-- <div> -->
         <div class="g-filters-holder g-filters-holder-container">
             <div data-ng-repeat="filter in filters">
                 <div ng-if="filter['value_type'] === 10 || filter['value_type'] === 30">
@@ -432,6 +431,30 @@
     </div>
 
     <div ng-if="!isReport">
+        <div class="g-filters-holder g-filters-holder-container">
+            <div data-ng-repeat="filter in filters">
+                <div ng-if="filter['value_type'] === 10 || filter['value_type'] === 30 || filter['value_type'] === 'field'">
+                    <ev-text-filter filter="filter"
+                                    ev-data-service="evDataService"
+                                    ev-event-service="evEventService"></ev-text-filter>
+                </div>
+
+                <div ng-if="filter['value_type'] === 20">
+                    <ev-number-filter filter="filter"
+                                      ev-data-service="evDataService"
+                                      ev-event-service="evEventService"></ev-number-filter>
+                </div>
+
+                <div ng-if="filter['value_type'] === 40">
+                    <ev-date-filter filter="filter"
+                                    ev-data-service="evDataService"
+                                    ev-event-service="evEventService"></ev-date-filter>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<div ng-if="!isReport">
         <div class="g-filters-holder">
             <md-card data-ng-repeat="filter in filters"
                      class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item"
@@ -594,7 +617,7 @@
                 </div>
             </md-card>
         </div>
-    </div>
+    </div>-->
     <div class="drop-new-filter">
         Drop new Filter
     </div>

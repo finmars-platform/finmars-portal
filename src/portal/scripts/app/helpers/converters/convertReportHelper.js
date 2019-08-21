@@ -144,12 +144,13 @@
 
                 if (flatList[r].___type === 'group') {
 
+
                     var columnWithGroupName = flatList[r].___level - 1; // group level count starts from 1 and we omit root group
 
                     if (c === 0) {
 
                         if (columnWithGroupName > 0) {
-                            cellText = '  '.repeat(columnWithGroupName) + String(flatList[r].___group_name); // distinguish group level by spaces
+                            cellText = '&nbsp;&nbsp;'.repeat(columnWithGroupName) + String(flatList[r].___group_name); // distinguish group level by spaces
                         } else {
                             cellText = String(flatList[r].___group_name);
                         }
@@ -203,10 +204,14 @@
 
             } else {
 
-                entityViewerGetTdElements();
+                if (flatList[r].___type !== 'control') {
 
-                tr = tr + '<tr>' + entityViewerGetTdElements() + '</tr>';
-                table = table + tr;
+                    entityViewerGetTdElements();
+
+                    tr = tr + '<tr>' + entityViewerGetTdElements() + '</tr>';
+                    table = table + tr;
+
+                }
 
             }
 
@@ -377,9 +382,12 @@
 
             } else {
 
-                entityViewerAddCellsToCSVRow(csvRowOrder);
+                if (flatList[r].___type !== 'control') {
 
-                csv[csvRowOrder] = csv[csvRowOrder].join(',');
+                    entityViewerAddCellsToCSVRow(csvRowOrder);
+
+                    csv[csvRowOrder] = csv[csvRowOrder].join(',');
+                }
 
             }
 
