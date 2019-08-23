@@ -74,7 +74,7 @@
     };
 
     module.exports = {
-        getList: getList
+            getList: getList
     }
 
 }());

@@ -8,6 +8,7 @@
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var metaService = require('../../services/metaService');
     var configurationImportService = require('../../services/configuration-import/configurationImportService');
+    var mappingsImportService = require('../../services/mappings-import/mappingsImportService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -477,6 +478,99 @@
             return window.importConfigurationCounter;
         };
 
+        // MAPPINGS START HERE
+
+        vm.selectAllMappingsState = false;
+
+        vm.toggleSelectMappingsAll = function () {
+
+            vm.selectAllMappingsState = !vm.selectAllMappingsState;
+
+            vm.mappingItems.forEach(function (item) {
+                item.someChildsActive = false;
+                item.active = vm.selectAllState;
+
+                item.content.forEach(function (child) {
+                    child.active = vm.selectAllState;
+                })
+
+            })
+
+        };
+
+        vm.checkSelectMappingsAll = function () {
+
+            var active = true;
+
+            vm.mappingItems.forEach(function (item) {
+
+                if (!item.active) {
+                    active = false;
+                }
+
+                item.content.forEach(function (child) {
+
+                    if (!child.active) {
+                        active = false;
+                    }
+
+                })
+
+            });
+
+            vm.selectAllMappingsState = active;
+
+        };
+
+        vm.toggleActiveMappingsForChilds = function (item) {
+
+            item.active = !item.active;
+            item.someChildsActive = false;
+            item.content.forEach(function (child) {
+                child.active = item.active;
+            });
+
+            vm.checkSelectMappingsAll();
+
+        };
+
+        vm.getMappingsEntityName = function (item) {
+
+            return metaContentTypesService.getEntityNameByContentType(item.entity)
+
+        };
+
+        vm.updateActiveMappingsForParent = function (child, parent) {
+
+            child.active = !child.active;
+
+            var ChildIsActive = false;
+            var ChildIsNotActive = false;
+            var parentIsActive = false;
+
+            parent.content.forEach(function (item) {
+                if (item.active) {
+                    ChildIsActive = true;
+                } else {
+                    ChildIsNotActive = true;
+                }
+
+                if (ChildIsActive && !ChildIsNotActive) {
+                    parentIsActive = true;
+                } else if (!ChildIsActive && ChildIsNotActive) {
+                    parent.someChildsActive = false;
+                } else {
+                    parentIsActive = false;
+                    parent.someChildsActive = true;
+                }
+            });
+
+            parent.active = parentIsActive;
+
+            vm.checkSelectMappingsAll();
+
+        };
+
         vm.agree = function ($event) {
 
             vm.processing = true;
@@ -514,54 +608,59 @@
 
                 }, 1000);
 
-                configurationImportService.importConfiguration(vm.items, vm.settings).then(function (data) {
+                configurationImportService.importConfiguration(vm.items, vm.settings).then(function (configurationData) {
 
-                    clearInterval(timeout);
+                    mappingsImportService.importMappings(vm.mappingItems, vm.settings).then(function (mappingsData) {
 
-                    $mdDialog.hide({status: 'agree', data: {}});
+                        clearInterval(timeout);
 
-                    console.log('data', data);
+                        $mdDialog.hide({status: 'agree', data: {}});
 
-                    if (data.errors.length) {
+                        console.log('mappingsData', configurationData);
+                        console.log('mappingsData', mappingsData);
 
-                        $mdDialog.show({
-                            controller: 'SettingGeneralConfigurationPreviewFileErrorsDialogController as vm',
-                            templateUrl: 'views/dialogs/settings-general-configuration-preview-file-errors-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                data: {
-                                    errors: data.errors
+                        if (configurationData.errors.length) {
+
+                            $mdDialog.show({
+                                controller: 'SettingGeneralConfigurationPreviewFileErrorsDialogController as vm',
+                                templateUrl: 'views/dialogs/settings-general-configuration-preview-file-errors-dialog-view.html',
+                                targetEvent: $event,
+                                preserveScope: true,
+                                multiple: true,
+                                autoWrap: true,
+                                skipHide: true,
+                                locals: {
+                                    data: {
+                                        errors: configurationData.errors
+                                    }
                                 }
-                            }
 
-                        });
+                            });
 
 
-                    } else {
+                        } else {
 
-                        $mdDialog.show({
-                            controller: 'SuccessDialogController as vm',
-                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                success: {
-                                    title: "",
-                                    description: "You have successfully imported configuration file"
+                            $mdDialog.show({
+                                controller: 'SuccessDialogController as vm',
+                                templateUrl: 'views/dialogs/success-dialog-view.html',
+                                targetEvent: $event,
+                                preserveScope: true,
+                                multiple: true,
+                                autoWrap: true,
+                                skipHide: true,
+                                locals: {
+                                    success: {
+                                        title: "",
+                                        description: "You have successfully imported configuration file"
+                                    }
                                 }
-                            }
 
-                        });
+                            });
 
 
-                    }
+                        }
+
+                    })
 
 
                 }).catch(function (reason) {
@@ -659,18 +758,25 @@
 
             vm.sections = vm.file.body;
 
+            vm.items = [];
+            vm.mappingItems = [];
 
             vm.sections.forEach(function (item) {
 
-                if(item.section_name === 'configuration') {
+                if (item.section_name === 'configuration') {
                     vm.items = item.items;
+                }
+
+                if (item.section_name === 'mappings') {
+                    vm.mappingItems = item.items;
                 }
 
             });
 
 
+            console.log("vm.mappingItems", vm.mappingItems);
+            console.log("vm.items", vm.items);
 
-            console.log("file to import", vm.items, vm.file, data);
             vm.items.forEach(function (item) {
 
                 item.active = false;

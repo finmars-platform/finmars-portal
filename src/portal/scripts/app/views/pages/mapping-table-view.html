@@ -2,29 +2,29 @@
     <h2 class="m-b-35">Export / Import Mapping Table</h2>
 
     <div layout="row" style="margin-bottom: 55px;">
-        <div style="width: 300px; margin-right: 24px";>
+        <!--<div style="width: 300px; margin-right: 24px";>-->
 
-            <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
-                <input type="file"
-                       accept=".fmpg"
-                       id="mappingFileImport"
-                       input-file-directive
-                       read-file="vm.mappingFile"
-                       read-file-change="vm.checkExtension(vm.mappingFile, $event)">
-            </md-input-container>
-            <div class="input-upload-file-container">
-                <p class="mappingFileImport">Select file</p>
-                <label for="mappingFileImport" class="md-button md-raised md-primary IFUlabel">
-                    <ng-md-icon icon="file_upload"></ng-md-icon>
-                    <span>BROWSE</span></label>
-            </div>
+            <!--<md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">-->
+                <!--<input type="file"-->
+                       <!--accept=".fmpg"-->
+                       <!--id="mappingFileImport"-->
+                       <!--input-file-directive-->
+                       <!--read-file="vm.mappingFile"-->
+                       <!--read-file-change="vm.checkExtension(vm.mappingFile, $event)">-->
+            <!--</md-input-container>-->
+            <!--<div class="input-upload-file-container">-->
+                <!--<p class="mappingFileImport">Select file</p>-->
+                <!--<label for="mappingFileImport" class="md-button md-raised md-primary IFUlabel">-->
+                    <!--<ng-md-icon icon="file_upload"></ng-md-icon>-->
+                    <!--<span>BROWSE</span></label>-->
+            <!--</div>-->
 
-        </div>
-        <button style="margin-right: 50px"
-                class="md-raised m-t-0 m-l-0 md-button md-ink-ripple {{vm.mappingFileIsAvailable() ? '' : 'disabled-btn' }}"
-                type="button"
-                data-ng-click="vm.openImportMappingManager($event)">Import
-        </button>
+        <!--</div>-->
+        <!--<button style="margin-right: 50px"-->
+                <!--class="md-raised m-t-0 m-l-0 md-button md-ink-ripple {{vm.mappingFileIsAvailable() ? '' : 'disabled-btn' }}"-->
+                <!--type="button"-->
+                <!--data-ng-click="vm.openImportMappingManager($event)">Import-->
+        <!--</button>-->
         <a class="md-button md-raised md-ink-ripple m-0"
            type="button"
            data-ng-click="vm.openExportMappingManager($event)"
