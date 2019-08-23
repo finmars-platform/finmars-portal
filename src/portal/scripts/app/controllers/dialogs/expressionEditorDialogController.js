@@ -229,10 +229,6 @@
 
         function isFunction(token, words, nextLetter) {
 
-            if (token.hasDot) {
-                return false
-            }
-
             if (nextLetter !== '(') {
                 return false;
             }
@@ -241,19 +237,11 @@
 
         }
 
-        function isParameter(token, words) {
-
-            return words.indexOf(token.value) !== -1;
-
-        }
-
         function isInput(token, words) {
 
-            // if (token.hasDot) {
-            //     return false
-            // }
+            var val = token.value.split('.')[0]
 
-            return words.indexOf(token.value) !== -1;
+            return words.indexOf(val) !== -1;
 
         }
 
@@ -336,133 +324,280 @@
 
         }
 
+        function isInputAreNextToken(expression, currentIndex) {
+
+            if (isNumber({value: expression[currentIndex]})) {
+                return false
+            }
+
+            var i;
+
+            var result = false;
+            var count = 0;
+
+            for (i = currentIndex; i < expression.length; i = i + 1) {
+
+                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_.]*$/))) {
+                    count = count + 1;
+                } else {
+                    break
+                }
+
+            }
+
+            console.log('lookupForInput.count', count);
+
+
+            if (count > 0) {
+                result = true
+            }
+
+            return result
+
+        }
+
+
+        function recursiveGetProperties(properties, expression, x) {
+
+            var propertyToken = '';
+
+
+            for (; x < expression.length; x = x + 1) {
+
+                // console.log('recursiveGetProperties.expression[x]', expression[x]);
+
+                if (expression[x] === '.' || x === expression.length - 1) {
+
+                    if (x === expression.length - 1) {
+                        propertyToken = propertyToken + expression[x]
+                    }
+
+
+                    if (propertyToken) {
+                        properties.push(propertyToken);
+                    }
+
+                    if (x < expression.length - 1) {
+
+                        if (isInputAreNextToken(expression, x + 1)) {
+                            recursiveGetProperties(properties, expression, x + 1)
+                        }
+
+                    }
+
+                    break;
+
+                } else {
+
+                    if (expression[x].match(new RegExp(/^[a-zA-Z0-9_.]*$/))) {
+
+                        if (expression[x] !== '.') {
+
+                            propertyToken = propertyToken + expression[x]
+
+                        } else {
+
+                            break;
+                        }
+
+                    } else {
+                        break;
+                    }
+
+                }
+
+
+            }
+
+
+        }
+
+        function isPropertyDynamicAttribute(properties, currentIndex) {
+
+            var result = false;
+
+            if(currentIndex > 0) {
+
+                if(properties[currentIndex-1] === 'attributes') {
+                    result = true
+                }
+
+
+            }
+
+            return result
+
+        }
+
         vm.getHtmlExpression = function (expression) {
 
             var result = '';
 
             var currentToken = {
                 value: '',
-                hasDot: false
             };
 
             var functionWords = getFunctionWords();
             var propertiesWords = getPropertiesWords();
             var inputWords = getInputWords();
 
+            console.log('inputWords', inputWords);
+
             var strContent = false;
             var strType;
 
-            var inputsCounts = 0;
             var isNum;
 
             for (var i = 0; i < expression.length;) {
 
+                if (isInputAreNextToken(expression, i) && strContent === false) {
 
-                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_.]*$/)) && strContent === false) {
+                    console.log('Input lookup logic here')
 
-                    console.log('expression[i]', expression[i]);
+                    var x;
+                    var inputToken = '';
 
-                    currentToken.value = currentToken.value + expression[i];
+                    for (x = i; x < expression.length; x = x + 1) {
+
+                        if (expression[x].match(new RegExp(/^[a-zA-Z0-9_.]*$/))) {
+
+                            if (expression[x] !== '.') {
+
+                                inputToken = inputToken + expression[x]
+
+                            } else {
+                                break;
+                            }
+
+                        } else {
+                            break;
+                        }
+
+                    }
+
+
+                    console.log('inputToken', inputToken);
+
+                    if (inputWords.indexOf(inputToken) !== -1) {
+
+                        result = result + '<span class="eb-highlight-input">' + inputToken + '</span>';
+
+                    } else {
+                        result = result + '<span class="eb-highlight-error">' + inputToken + '</span>';
+                        vm.status = 'inputs-error';
+                    }
+
+                    var properties = [];
+
+                    console.log('x before propss', x);
+
+                    recursiveGetProperties(properties, expression, x + 1);
+
+                    console.log('properties', properties);
+
+                    var propsIndex = 0;
+
+                    if (properties.length) {
+
+                        properties.forEach(function (property) {
+                            propsIndex = propsIndex + property.length
+                        });
+
+                        propsIndex = propsIndex + properties.length - 1 // add number of dots
+
+
+                        properties.forEach(function (property, index) {
+
+
+
+                            if (propertiesWords.indexOf(property) !== -1 || property === 'attributes' || isPropertyDynamicAttribute(properties, index)) {
+
+                                result = result + '.' + '<span class="eb-highlight-property">' + property + '</span>';
+                            } else {
+                                result = result + '.' + '<span class="eb-highlight-error">' + property + '</span>';
+                                vm.status = 'error';
+                            }
+                        });
+
+                    }
+
+                    console.log('x after', x);
+
+                    i = i + x + propsIndex + 1
+
 
                 } else {
 
-                    if (currentToken.value !== '') {
+                    if (expression[i].match(new RegExp(/^[a-zA-Z0-9_.]*$/)) && strContent === false) {
 
-                        result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
-                        vm.status = 'inputs-error';
-                    }
+                        console.log('expression[i]', expression[i]);
 
-                    currentToken.value = '';
-                    currentToken.hasDot = false;
-                    result = result + expression[i]
-                }
-
-                if (expression[i] === '.') {
-                    currentToken.hasDot = true;
-                }
-
-                if (expression[i] === '"' || expression[i] === "'") {
-
-                    if (strContent === false) {
-
-                        strType = expression[i];
-                        strContent = true
+                        currentToken.value = currentToken.value + expression[i];
 
                     } else {
 
-                        if (strType === expression[i]) {
-                            strType = null;
-                            strContent = false;
-                        } else {
+                        if (currentToken.value !== '') {
+
+                            result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
+                            vm.status = 'inputs-error';
+                        }
+
+                        currentToken.value = '';
+                        result = result + expression[i]
+                    }
+
+                    if (expression[i] === '"' || expression[i] === "'") {
+
+                        if (strContent === false) {
+
                             strType = expression[i];
+                            strContent = true
+
+                        } else {
+
+                            if (strType === expression[i]) {
+                                strType = null;
+                                strContent = false;
+                            } else {
+                                strType = expression[i];
+                            }
+
                         }
 
                     }
 
-                }
+                    if (strContent === false) {
 
-                if (strContent === false) {
+                        if (isFunction(currentToken, functionWords, expression[i + 1])) {
 
-                    if (isInput(currentToken, inputWords)) {
+                            result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
+                            currentToken.value = '';
+                        }
 
-                        if (i + 1 < expression.length && expression[i + 1].match(new RegExp(/^[a-zA-Z0-9_.-]*$/))) {
-
-                            // console.log('expression[i + 1]', expression[i + 1])
-
-                            // if next letter also part of input, then continue to lookup
-
-                        } else {
-
-                            result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
+                        if (isNumber(currentToken)) {
+                            result = result + currentToken.value;
 
                             currentToken.value = '';
-
-                            inputsCounts = inputsCounts + 1;
-
                         }
 
                     }
 
-                    if (isFunction(currentToken, functionWords, expression[i + 1])) {
+                    i = i + 1;
 
-                        result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
-                        currentToken.value = '';
-                    }
+                    if (i === expression.length && currentToken.value !== '') {
 
+                        isNum = /^\d+$/.test(currentToken.value);
 
-                    // if (isParameter(currentToken, propertiesWords)) {
-                    //
-                    //     result = result + '<span class="eb-highlight-property">' + currentToken.value + '</span>';
-                    //
-                    //     currentToken.value = '';
-                    //     currentToken.hasDot = false;
-                    //
-                    // }
+                        if (!isNum) {
 
-                    if (isNumber(currentToken)) {
-                        result = result + currentToken.value;
+                            // console.log('end', currentToken.value);
 
-                        currentToken.value = '';
-                        currentToken.hasDot = false;
+                            result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
+                            vm.status = 'inputs-error';
+                        }
                     }
 
                 }
-
-                i = i + 1;
-
-                if (i === expression.length && currentToken.value !== '') {
-
-                    isNum = /^\d+$/.test(currentToken.value);
-
-                    if (!isNum) {
-
-                        // console.log('end', currentToken.value);
-
-                        result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
-                        vm.status = 'inputs-error';
-                    }
-                }
-
 
             }
 

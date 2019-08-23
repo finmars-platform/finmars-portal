@@ -229,7 +229,12 @@
 
                 });
 
-                vm.file.body = results;
+                vm.file.body = [
+                    {
+                        section_name: 'mappings',
+                        items: results
+                    }
+                ];
 
                 var resultFile = JSON.stringify(vm.file);
 
@@ -237,7 +242,7 @@
                 var result = new File([resultFile], {type: 'text/json;charset=utf-8'});
 
                 a.href = URL.createObjectURL(result);
-                a.download = vm.filename ? vm.filename + '.fmpg' : "mapping.fmpg";
+                a.download = vm.filename ? vm.filename + '.fcfg' : "mapping.fcfg";
 
                 resolve(vm.file);
 
