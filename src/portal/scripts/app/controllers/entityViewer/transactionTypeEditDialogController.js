@@ -900,48 +900,66 @@
 
         // Transaction Type Inputs Controller start
 
-        vm.contextProperties = [
-            {
-                id: 1,
-                name: 'instrument'
-            },
-            {
-                id: 2,
-                name: 'pricing_currency'
-            },
-            {
-                id: 3,
-                name: 'accrued_currency'
-            },
-            {
-                id: 4,
-                name: 'portfolio'
-            },
-            {
-                id: 5,
-                name: 'account'
-            },
-            {
-                id: 6,
-                name: 'strategy1'
-            },
-            {
-                id: 7,
-                name: 'strategy2'
-            },
-            {
-                id: 8,
-                name: 'strategy3'
-            },
-            {
-                id: 9,
-                name: 'position'
-            },
-            {
-                id: 10,
-                name: 'effective_date'
-            }
-        ];
+        vm.contextProperties = {
+
+            'instruments.instrument': [
+                {
+                    id: 1,
+                    name: 'instrument'
+                }
+
+                // TODO is not in use now
+                // {
+                //     id: 9,
+                //     name: 'position'
+                // },
+                // {
+                //     id: 10,
+                //     name: 'effective_date'
+                // }
+            ],
+            'currencies.currency': [
+                {
+                    id: 2,
+                    name: 'pricing_currency'
+                },
+                {
+                    id: 3,
+                    name: 'accrued_currency'
+                }
+            ],
+            'portfolios.portfolio': [
+                {
+                    id: 4,
+                    name: 'portfolio'
+                }
+            ],
+            'accounts.account': [
+                {
+                    id: 5,
+                    name: 'account'
+                }
+            ],
+            'strategies.strategy1': [
+                {
+                    id: 6,
+                    name: 'strategy1'
+                }
+            ],
+            'strategies.strategy2': [
+                {
+                    id: 7,
+                    name: 'strategy2'
+                }
+            ],
+            'strategies.strategy3': [
+                {
+                    id: 8,
+                    name: 'strategy3'
+                }
+            ]
+
+        };
 
         vm.relationItems = {};
 
