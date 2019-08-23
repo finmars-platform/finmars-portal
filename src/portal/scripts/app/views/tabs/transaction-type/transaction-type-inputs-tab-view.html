@@ -100,6 +100,7 @@
                                         aria-label="select with filter">
                         <md-select ng-model="item.content_type"
                                    md-container-class="common-select-container"
+                                   ng-change="item.context_property = null"
                                    md-on-close="vm.searchTerms[vm.getInputsFilterST('contentTypeSearchTerm', $index)] = ''"
                                    id="ttype-inputs-content-type"
                                    ng-disabled="item.value_type !== 100">
@@ -143,7 +144,7 @@
                             <div class="select-options-holder">
 
                                 <md-option
-                                        data-ng-repeat="item in vm.contextProperties"
+                                        data-ng-repeat="item in vm.contextProperties[item.content_type]"
                                         ng-value="item.id">
                                     {{item.name}}
                                 </md-option>
