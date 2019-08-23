@@ -17,7 +17,7 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            templateUrl: 'views/directives/reportViewer/userFilters/rv-number-filter-view.html',
+            templateUrl: 'views/directives/entityViewer/userFilters/ev-number-filter-view.html',
             link: function (scope, elem, attrs) {
 
                 // console.log("filter filterNumberData", scope.filter);
@@ -64,6 +64,12 @@
                     scope.filter.options.exclude_empty_cells = false;
                 }
 
+                if (scope.filter.options.is_frontend_filter) {
+                    scope.filter.options.is_frontend_filter = false;
+                };
+
+                var filterEnabled = scope.filter.options.enabled; // check for filter turning off
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
@@ -107,14 +113,28 @@
                 scope.filterSettingsChange = function () {
                     // console.log("filter filterSettingsChange", scope.filter.options);
 
-                    scope.evDataService.resetData();
-                    scope.evDataService.resetRequestParameters();
+                    if (scope.filter.options.enabled || filterEnabled) {
 
-                    var rootGroup = scope.evDataService.getRootGroupData();
+                        filterEnabled = scope.filter.options.enabled;
 
-                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                        if (scope.filter.options.is_frontend_filter) {
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                        } else {
+
+                            scope.evDataService.resetData();
+                            scope.evDataService.resetRequestParameters();
+
+                            var rootGroup = scope.evDataService.getRootGroupData();
+
+                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                        };
+
+                    }
 
                 };
 
@@ -123,7 +143,7 @@
 
                     if (filterType === 'from_to') {
 
-                        scope.filter.options.filter_values = {}
+                        scope.filter.options.filter_values = {};
 
                     } else {
 

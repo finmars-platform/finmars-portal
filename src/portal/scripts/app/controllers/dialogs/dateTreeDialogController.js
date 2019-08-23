@@ -83,7 +83,7 @@
 
                 if (!vm.datesTree[i].available) {
 
-                    if (!vm.datesTree[i].active) {
+                    if (!vm.datesTree[i].active) { // Only inactive unavailable checkboxes affect Select All checkbox status
                         allItemsSelected = false;
                         break;
                     }
@@ -92,6 +92,9 @@
 
                     if (vm.datesTree[i].active) {
                         allItemsSelected = true;
+                    } else {
+                        allItemsSelected = false;
+                        break;
                     }
 
                 }

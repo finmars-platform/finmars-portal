@@ -1,20 +1,18 @@
 (function () {
-
-    /*var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
+    // method needed to prevent removal of all rows in case of using filter with empty value but active excludeEmptyCells
+    var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
 
         if (filterType === 'from_to') {
 
-            if (regularFilterValue.min_value !== undefined &&
-                regularFilterValue.max_value !== undefined &&
-                regularFilterValue.min_value !== null &&
-                regularFilterValue.max_value !== null) {
+            if ((regularFilterValue.min_value || regularFilterValue.min_value === 0) &&
+                (regularFilterValue.max_value || regularFilterValue.max_value === 0)) {
                 return true;
             }
 
         } else if (Array.isArray(regularFilterValue)) {
 
-            if (regularFilterValue[0] && regularFilterValue[0] !== null) {
+            if (regularFilterValue[0] || regularFilterValue[0] === 0) {
                 return true;
             }
 
@@ -22,7 +20,7 @@
 
         return false;
 
-    };*/
+    };
 
     var filterTableRows = function (flatList, regularFilters, groupsList) {
         var match;
@@ -67,69 +65,73 @@
                             break;
                         };
 
-                        var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
-                        var filterArgument = JSON.parse(JSON.stringify(filterValue));
+                        if (checkForEmptyRegularFilter(filterValue, filterType)) {
 
-                        if (valueType === 10 ||
-                            valueType === 30 ||
-                            valueType === 'field') {
+                            var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
+                            var filterArgument = JSON.parse(JSON.stringify(filterValue));
 
-                            if (filterType !== 'multiselector') {
-                                valueFromTable = valueFromTable.toLowerCase();
-                                filterArgument = filterArgument[0].toLowerCase();
+                            if (valueType === 10 ||
+                                valueType === 30 ||
+                                valueType === 'field') {
+
+                                if (filterType !== 'multiselector') {
+                                    valueFromTable = valueFromTable.toLowerCase();
+                                    filterArgument = filterArgument[0].toLowerCase();
+                                }
+
+                            };
+
+                            if (valueType === 20) {
+
+                                if (filterType !== 'from_to') {
+                                    filterArgument = filterArgument[0];
+                                }
+
+                                // Compare position number of item with maximum allowed
+                                /*if (filterType === 'top_n') {
+                                    valueFromTable = tableRowIndex;
+                                }
+
+                                if (filterType === 'bottom_n') {
+                                    valueFromTable = tableRowIndex;
+                                    filterArgument = items.length - 1 - filterArgument // calculate how much items from beginning should be skipped
+                                }*/
+                                // < Compare position number of item with maximum allowed >
+
+                            };
+
+                            if (valueType === 40) {
+
+                                switch (filterType) {
+                                    case 'equal':
+                                    case 'not_equal':
+                                        valueFromTable = new Date(valueFromTable).toDateString();
+                                        filterArgument = new Date(filterArgument[0]).toDateString();
+                                        break;
+                                    case 'from_to':
+                                        valueFromTable = new Date(item[keyProperty]);
+                                        filterArgument.min_value = new Date(filterArgument.min_value);
+                                        filterArgument.max_value = new Date(filterArgument.max_value);
+                                        break;
+                                    case 'date_tree':
+                                        valueFromTable = new Date(item[keyProperty]);
+                                        // filterArgument is array of strings
+                                        break;
+                                    default:
+                                        valueFromTable = new Date(item[keyProperty]);
+                                        filterArgument = new Date(filterArgument[0]);
+                                        break;
+                                }
+
+                            };
+
+                            match = filterValueFromTable(valueFromTable, filterArgument, filterType);
+
+                            if (!match) {
+                                break;
                             }
 
                         };
-
-                        if (valueType === 20) {
-
-                            if (filterType !== 'from_to') {
-                                filterArgument = filterArgument[0];
-                            }
-
-                            // Compare position number of item with maximum allowed
-                            /*if (filterType === 'top_n') {
-                                valueFromTable = tableRowIndex;
-                            }
-
-                            if (filterType === 'bottom_n') {
-                                valueFromTable = tableRowIndex;
-                                filterArgument = items.length - 1 - filterArgument // calculate how much items from beginning should be skipped
-                            }*/
-                            // < Compare position number of item with maximum allowed >
-
-                        };
-
-                        if (valueType === 40) {
-
-                            switch (filterType) {
-                                case 'equal':
-                                case 'not_equal':
-                                    valueFromTable = new Date(valueFromTable).toDateString();
-                                    filterArgument = new Date(filterArgument[0]).toDateString();
-                                    break;
-                                case 'from_to':
-                                    valueFromTable = new Date(item[keyProperty]);
-                                    filterArgument.min_value = new Date(filterArgument.min_value);
-                                    filterArgument.max_value = new Date(filterArgument.max_value);
-                                    break;
-                                case 'date_tree':
-                                    valueFromTable = new Date(item[keyProperty]);
-                                    // filterArgument is array of strings
-                                    break;
-                                default:
-                                    valueFromTable = new Date(item[keyProperty]);
-                                    filterArgument = new Date(filterArgument[0]);
-                                    break;
-                            }
-
-                        };
-
-                        match = filterValueFromTable(valueFromTable, filterArgument, filterType);
-
-                        if (!match) {
-                            break;
-                        }
 
                     } else {
 
@@ -243,15 +245,14 @@
                 }
                 break;
 
-        }
+        };
 
         return false;
 
     };
 
     module.exports = {
-        filterGroups: filterGroups,
-        filterObjects: filterObjects
+        filterTableRows: filterTableRows
     }
 
 }());

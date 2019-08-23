@@ -92,6 +92,8 @@
                     scope.filter.options.exclude_empty_cells = false;
                 }
 
+                var filterEnabled = scope.filter.options.enabled; // check for filter turning off
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
@@ -186,14 +188,22 @@
                 };
 
                 scope.applyFilter = function () {
-                    scope.evDataService.resetData();
-                    scope.evDataService.resetRequestParameters();
 
-                    var rootGroup = scope.evDataService.getRootGroupData();
+                    if (scope.filter.options.enabled || filterEnabled) {
 
-                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                        filterEnabled = scope.filter.options.enabled;
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        scope.evDataService.resetData();
+                        scope.evDataService.resetRequestParameters();
+
+                        var rootGroup = scope.evDataService.getRootGroupData();
+
+                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                    };
+
                 };
 
                 scope.filterSettingsChange = function () {

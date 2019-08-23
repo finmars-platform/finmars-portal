@@ -162,7 +162,7 @@
                                                 ng-show="filter.options.filter_type === 'empty'"></ng-md-icon>
                                     Empty cells
                                 </md-button>
-                                <md-button ng-click="changeFilterType('date_tree')">
+                                <md-button ng-click="changeFilterType('date_tree')" ng-disabled="!filter.options.is_frontend_filter">
                                     <ng-md-icon icon="done"
                                                 ng-show="filter.options.filter_type !== 'date_tree'"
                                                 style="visibility: hidden;"></ng-md-icon>
@@ -172,6 +172,15 @@
                                 </md-button>
                             </md-menu-content>
                         </md-menu>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-checkbox ng-model="filter.options.is_frontend_filter"
+                                     ng-change="toggleFrontendFilter()"
+                                     class="md-primary g-filter-options-checkbox"
+                                     aria-label="toggle filtering on frontend">
+                            Preview Filter
+                        </md-checkbox>
                     </md-menu-item>
 
                     <md-menu-item>

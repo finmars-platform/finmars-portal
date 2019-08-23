@@ -87,6 +87,42 @@
 
                 }
 
+                var isFilterValid = function (filterItem) {
+
+                    if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
+
+                        var filterType = filterItem.options.filter_type;
+
+                        if (filterType === 'empty' ||
+                            filterItem.options.exclude_empty_cells) { // if filter works for empty cells
+
+                            return true;
+
+                        } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
+
+                            var filterValues = filterItem.options.filter_values;
+
+                            if (filterType === 'from_to') {
+
+                                if ((filterValues.min_value || filterValues.min_value === 0) &&
+                                    (filterValues.max_value || filterValues.max_value === 0)) {
+                                    return true;
+                                };
+
+                            } else if (Array.isArray(filterValues)) {
+
+                                if (filterValues[0] || filterValues[0] === 0) {
+                                    return true;
+                                };
+
+                            };
+                        };
+
+                    };
+
+                    return false;
+                };
+
                 function renderEntityViewer() {
 
                     var flatList = evDataHelper.getFlatStructure(scope.evDataService);
@@ -111,7 +147,8 @@
 
                         if (filter.options &&
                             filter.options.is_frontend_filter &&
-                            filter.options.enabled) {
+                            filter.options.enabled &&
+                            isFilterValid(filter)) {
 
                             var filterOptions = {
                                 key: filter.key,
@@ -131,7 +168,7 @@
                     if (frontEndFilters.length > 0) {
                         var groups = scope.evDataService.getGroups();
                         flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
-                        //console.log("ev filter gTableBody filtered", flatList);
+                        // console.log("ev filter gTableBody filtered", flatList);
                     };
 
 
