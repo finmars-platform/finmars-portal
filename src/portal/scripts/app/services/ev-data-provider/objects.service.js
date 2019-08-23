@@ -57,33 +57,33 @@
 
     var filter_settings = [
         {
-            "key":"user_text_1",
-            "filter_type":"contains",
-            "exclude_empty_cells":false,
+            "key":"attributes.Asse_Sub_Type",
+            "filter_type":"does_not_contains",
+            "exclude_empty_cells": false,
             "value_type":10,
             "value":[
-                "1"
+                'Bank notes'
             ]
         },
         // {
-        //     "key":"user_code",
-        //     "filter_type":"does_not_contain",
+        //     "key":"attributes.ISIN",
+        //     "filter_type":"contains",
         //     "exclude_empty_cells":false,
         //     "value_type":10,
         //     "value":[
-        //         "10"
+        //         'US 12344444'
         //     ]
         // },
         // {
-        //     "key":"position_size",
-        //     "filter_type":"from_to",
+        //     "key":"attributes.number_attr",
+        //     "filter_type":"equal",
         //     "exclude_empty_cells":false,
         //     "value_type":20,
-        //     "value":{
-        //         "max_value":900000,
-        //         "min_value":0
-        //     }
+        //     "value":[
+        //         15242
+        //     ]
         // }
+
     ];
 
     var getFilteredList = function (entityType, options) {
