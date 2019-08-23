@@ -1,4 +1,4 @@
-<div style="padding: 20px 20px 0">
+<div style="padding: 20px 20px 0" class="export-configuration-page">
 
     <div data-ng-if="vm.readyStatus.content" class="configuration-export-page">
 
@@ -67,28 +67,21 @@
             </div>
         </div>
 
-        <div class="m-b-24" style="border-bottom: 1px solid #ddd">
+        <div class="overflow-hidden">
 
-            <button class="md-button"
-                    data-ng-click="vm.activeTab = 'configuration'"
-                    data-ng-class="{'md-primary': vm.activeTab == 'configuration'}">Configuration</button>
-            <button class="md-button"
-                    data-ng-click="vm.activeTab = 'mappings'"
-                    data-ng-class="{'md-primary': vm.activeTab == 'mappings'}">Mappings</button>
+            <div class="export-section export-section-configuration">
 
-        </div>
-
-        <div data-ng-show="vm.activeTab == 'configuration'">
-
-            <div data-ng-include="'views/tabs/configuration-export/configuration-tab-view.html'"></div>
+                <div data-ng-include="'views/tabs/configuration-export/configuration-tab-view.html'"></div>
 
 
-        </div>
+            </div>
 
-        <div data-ng-show="vm.activeTab == 'mappings'">
+            <div class="export-section export-section-mappings">
 
-            <div data-ng-include="'views/tabs/configuration-export/mappings-tab-view.html'"></div>
+                <div data-ng-include="'views/tabs/configuration-export/mappings-tab-view.html'"></div>
 
+
+            </div>
 
         </div>
 
