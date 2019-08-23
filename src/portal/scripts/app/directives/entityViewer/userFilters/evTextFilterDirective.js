@@ -115,6 +115,7 @@
                         if (scope.filter.options.filter_type === "multiselector" ||
                             scope.filter.options.filter_type === "selector") {
 
+                            scope.filter.options.filter_values = [];
                             scope.filter.options.filter_type = "contains";
 
                         };

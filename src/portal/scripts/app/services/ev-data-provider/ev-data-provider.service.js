@@ -55,7 +55,7 @@
 
                     } else if (Array.isArray(filterValues)) {
 
-                        if (filterValues[0] && filterValues[0] !== null) {
+                        if (filterValues[0] || filterValues[0] === 0) {
                             return true;
                         };
 

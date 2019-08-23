@@ -169,6 +169,15 @@
                     </md-menu-item>
 
                     <md-menu-item>
+                        <md-checkbox ng-model="filter.options.is_frontend_filter"
+                                     ng-change="filterSettingsChange()"
+                                     class="md-primary g-filter-options-checkbox"
+                                     aria-label="toggle filtering on frontend">
+                            Preview Filter
+                        </md-checkbox>
+                    </md-menu-item>
+
+                    <md-menu-item>
                         <md-checkbox ng-model="filter.options.exclude_empty_cells"
                                      ng-change="filterSettingsChange()"
                                      class="md-primary g-filter-options-checkbox"

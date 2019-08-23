@@ -64,6 +64,8 @@
                     scope.filter.options.exclude_empty_cells = false;
                 }
 
+                var filterRegime = scope.filter.options.enabled;
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
@@ -107,14 +109,20 @@
                 scope.filterSettingsChange = function () {
                     // console.log("filter filterSettingsChange", scope.filter.options);
 
-                    scope.evDataService.resetData();
-                    scope.evDataService.resetRequestParameters();
+                    if (scope.filter.options.enabled || filterRegime) {
 
-                    var rootGroup = scope.evDataService.getRootGroupData();
+                        filterRegime = scope.filter.options.enabled;
 
-                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                        scope.evDataService.resetData();
+                        scope.evDataService.resetRequestParameters();
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        var rootGroup = scope.evDataService.getRootGroupData();
+
+                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                    }
 
                 };
 

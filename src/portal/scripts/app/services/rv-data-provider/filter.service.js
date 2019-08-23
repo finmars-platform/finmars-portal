@@ -1,6 +1,6 @@
 (function () {
-    // filters with empty values have been removed in rv-data-provider.service
-    /*var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
+    // method needed to prevent removal of all rows in case of using filter with empty value but active excludeEmptyCells
+    var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
 
         if (filterType === 'from_to') {
@@ -12,7 +12,7 @@
 
         } else if (Array.isArray(regularFilterValue)) {
 
-            if (regularFilterValue[0] && regularFilterValue[0] !== null) {
+            if (regularFilterValue[0] || regularFilterValue[0] === 0) {
                 return true;
             }
 
@@ -20,7 +20,7 @@
 
         return false;
 
-    };*/
+    };
 
     var filterTableRows = function (items, regularFilters) {
         // console.log("ev filter filterTableRows", items, regularFilters);
@@ -49,7 +49,7 @@
                             break;
                         }
 
-                        //if (checkForEmptyRegularFilter(filterValue, filterType)) {
+                        if (checkForEmptyRegularFilter(filterValue, filterType)) {
 
                             var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
                             var filterArgument = JSON.parse(JSON.stringify(filterValue));
@@ -112,7 +112,7 @@
                             if (!match) {
                                 break;
                             }
-                        //};
+                        };
 
                     } else {
 
