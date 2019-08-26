@@ -10,12 +10,41 @@
         var vm = this;
 
         vm.reportSettings = data.column.report_settings;
+        vm.modalName = data.column.name;
+
+        if (data.column.layout_name) {
+            vm.modalName = data.column.layout_name;
+        }
 
         if (!vm.reportSettings) {
             vm.reportSettings = {};
         };
 
-        vm.selectZeroFormat = function (type) {
+        if (!vm.reportSettings.zero_format_id) {
+            vm.reportSettings.zero_format_id = 0;
+        };
+
+        if (!vm.reportSettings.negative_format_id) {
+            vm.reportSettings.negative_format_id = 0;
+        };
+
+        if (!vm.reportSettings.negative_color_format_id) {
+            vm.reportSettings.negative_color_format_id = 0;
+        };
+
+        if (!vm.reportSettings.round_format_id) {
+            vm.reportSettings.round_format_id = 0;
+        };
+
+        if (!vm.reportSettings.thousands_separator_format_id) {
+            vm.reportSettings.thousands_separator_format_id = 0;
+        };
+
+        if (!vm.reportSettings.percentage_format_id) {
+            vm.reportSettings.percentage_format_id = 0;
+        };
+
+        /*vm.selectZeroFormat = function (type) {
 
             if (vm.reportSettings.zero_format_id === type) {
                 vm.reportSettings.zero_format_id = null;
@@ -73,7 +102,7 @@
                 vm.reportSettings.percentage_format_id = type;
             };
 
-        };
+        };*/
 
         vm.cancel = function () {
             $mdDialog.hide();

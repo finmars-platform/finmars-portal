@@ -208,9 +208,7 @@
                     </md-button>
                     <md-menu-content width="4">
                         <md-menu-item>
-                            <md-button ng-click="console.log('export to csv')"
-                                       class="g-settings-option-btn"
-                                       disabled>
+                            <md-button ng-click="exportAsCSV()" class="g-settings-option-btn">
                                 <span>Export to CSV</span>
                             </md-button>
                         </md-menu-item>
@@ -224,9 +222,8 @@
                             Copy to buffer
                         </md-button>-->
                         <md-menu-item>
-                            <md-button ng-click=""
-                                       class="g-settings-option-btn"
-                                       disabled>
+                            <md-button ng-click="copyReport()"
+                                       class="g-settings-option-btn">
                                 <span>Copy all to buffer</span>
                             </md-button>
                         </md-menu-item>
@@ -467,7 +464,7 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="copyReport($event)" class="g-settings-option-btn">
+                                <md-button ng-click="copyReport()" class="g-settings-option-btn">
                                     <span>Copy all to buffer</span>
                                 </md-button>
                             </md-menu-item>

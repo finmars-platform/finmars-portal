@@ -114,6 +114,13 @@
                 localValue = value.split("'").join('')
             }
 
+            if (value.toString().indexOf("%") !== -1) {
+                localValue = value.slice(0, value.length - 1);
+            }
+
+            if (value.toString().indexOf("bps") !== -1) {
+                localValue = value.slice(0, value.length - 3);
+            }
 
             if (localValue < 0) {
 
@@ -179,19 +186,19 @@
                     return value;
                     break;
                 case 1:
-                    return parseInt(value * 100) + '%';
+                    return (parseInt(value) * 100) + '%';
                     break;
                 case 2:
-                    return parseFloat(value * 100).toFixed(1) + '%';
+                    return (parseFloat(value) * 100).toFixed(1) + '%';
                     break;
                 case 3:
-                    return parseFloat(value * 100).toFixed(2) + '%';
+                    return (parseFloat(value) * 100).toFixed(2) + '%';
                     break;
                 case 4:
-                    return parseInt(value * 10000) + ' bps';
+                    return parseInt(value) * 10000 + ' bps';
                     break;
                 case 5:
-                    return parseFloat(value * 10000).toFixed(1) + ' bps';
+                    return (parseFloat(value) * 10000).toFixed(1) + ' bps';
                     break;
 
             };
@@ -206,6 +213,8 @@
 
         var value = obj[column.key];
 
+        value = formatPercentage(value, column);
+
         value = formatRounding(value, column);
 
         value = formatThousandsSeparator(value, column);
@@ -213,8 +222,6 @@
         value = formatZero(value, column);
 
         value = formatNegative(value, column);
-
-        value = formatPercentage(value, column);
 
         return value;
 

@@ -9,8 +9,7 @@
 
     var userFilterService = require('../../../services/rv-data-provider/user-filter.service');
 
-    module.exports = function () {
-
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'E',
             scope: {
@@ -18,13 +17,9 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            templateUrl: 'views/directives/reportViewer/userFilters/rv-text-filter-view.html',
-            link: function (scope, elem, attr) {
+            templateUrl: 'views/directives/entityViewer/userFilters/ev-text-filter-view.html',
+            link: function (scope, elem, attrs) {
 
-                scope.isRootEntityViewer = true;
-
-                // console.log("filter filterTextData", scope.filter);
-                console.log("ev filter filter", scope.filter);
                 scope.filters = scope.evDataService.getFilters();
 
                 scope.filterValue = undefined;
@@ -52,29 +47,35 @@
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
-                }
+                };
 
                 if (!scope.filter.options.filter_type) {
-                    scope.filter.options.filter_type = "contain";
-                }
+                    scope.filter.options.filter_type = "contains";
+                };
 
                 if (!scope.filter.options.filter_values) {
                     scope.filter.options.filter_values = [];
-                }
+                };
 
                 if (!scope.filter.options.exclude_empty_cells) {
                     scope.filter.options.exclude_empty_cells = false;
-                }
+                };
+
+                if (scope.filter.options.is_frontend_filter) {
+                    scope.filter.options.is_frontend_filter = false;
+                };
+
+                var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
 
                     switch (scope.filter.options.filter_type) {
-                        case "contain":
+                        case "contains":
                             filterRegime = "Contains";
                             break;
-                        case "does_not_contain":
+                        case "does_not_contains":
                             filterRegime = "Does not contains";
                             break;
                         case "selector":
@@ -104,30 +105,61 @@
                         scope.filter.options.exclude_empty_cells = false;
                     }
                     scope.filter.options.filter_values = [];
-                    scope.filterSettingsChange();
+                    scope.filterSettingsChanged();
                 };
 
-                scope.filterSettingsChange = function () {
+                scope.toggleFrontendFilter = function () {
+
+                    if (scope.filter.options.is_frontend_filter) {
+
+                        if (scope.filter.options.filter_type === "multiselector" ||
+                            scope.filter.options.filter_type === "selector") {
+
+                            scope.filter.options.filter_values = [];
+                            scope.filter.options.filter_type = "contains";
+
+                        };
+
+                    };
+
+                    scope.filterSettingsChanged();
+
+                };
+
+                scope.filterSettingsChanged = function () {
 
                     /*if (scope.filter.options.filter_type === "contain" || scope.filter.option.filter_type === "does_not_contain") {
                         scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();
                     }*/
+                    if (scope.filter.options.enabled || filterEnabled) {
 
-                    scope.evDataService.resetData();
-                    scope.evDataService.resetRequestParameters();
+                        filterEnabled = scope.filter.options.enabled;
 
-                    var rootGroup = scope.evDataService.getRootGroupData();
+                        if (scope.filter.options.is_frontend_filter) {
 
-                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        } else {
+
+                            scope.evDataService.resetData();
+                            scope.evDataService.resetRequestParameters();
+
+                            var rootGroup = scope.evDataService.getRootGroupData();
+
+                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                        };
+
+                    }
 
                 };
 
                 scope.selectFilterOption = function (selectOption) {
 
                     scope.filter.options.filter_values[0] = selectOption;
-                    scope.filterSettingsChange();
+                    scope.filterSettingsChanged();
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
@@ -148,18 +180,7 @@
 
                 scope.removeFilter = function (filter) {
                     scope.filters = scope.evDataService.getFilters();
-                    /*console.log('filter scope.filters', scope.filters);
-                    scope.filters = scope.filters.map(function (item) {
-                        // if (item.id === filter.id || item.name === filter.name) {
-                        if (item.name === filter.name) {
-                            // return undefined;
-                            item = undefined;
-                        }
-                        //console.log('filter in filters list', item);
-                        return item;
-                    }).filter(function (item) {
-                        return !!item;
-                    });*/
+
                     scope.filters.map(function (item, index) {
                         if (item.key === filter.key) {
                             scope.filters.splice(index, 1);
@@ -227,9 +248,8 @@
 
                 scope.init()
 
-
             }
-        };
+        }
     }
 
 }());

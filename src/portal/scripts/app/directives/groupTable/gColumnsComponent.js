@@ -466,6 +466,7 @@
                         if (res.status === 'agree') {
 
                             column.report_settings = res.data.report_settings;
+                            console.log("number format res", res, column.report_settings);
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 

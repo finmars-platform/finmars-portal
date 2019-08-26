@@ -14,89 +14,70 @@
         <md-checkbox ng-model="filter.options.enabled"
                      aria-label="filters"
                      class="md-primary table-filter-activity-checkbox"
-                     ng-change="filterSettingsChange()"
+                     ng-change="applyFilter()"
                      flex="15"></md-checkbox>
 
-        <div ng-if="filter.options.filter_type !== 'multiselector'"
+        <div ng-if="filter.options.filter_type !== 'from_to' && filter.options.filter_type !== 'date_tree'"
              flex="70">
-            <div ng-if="filter.options.filter_type !== 'selector'" class="table-filter-input-container">
+
+            <div class="table-filter-input-container" >
                 <md-input-container>
                     <label>
                         <span ng-bind="getFilterRegime()"></span>
                     </label>
 
-                    <input data-ng-model="filter.options.filter_values[0]"
-                           data-ng-change="filterSettingsChange()"
-                           data-ng-model-options="{debounce: 1000}">
+                    <!--<input type="number"
+                           data-ng-model="filter.options.filter_values[0]"
+                           data-ng-change="filterSettingsChange(filter.options.filter_values[0])"
+                           data-ng-model-options="{debounce: 1000}"
+                           aria-label="rv number filter single input">-->
+                    <zh-date-picker data-date-value="filter.options.filter_values[0]"
+                                    data-position="left"
+                                    data-callback-method="filterSettingsChange(filter.options.filter_values[0])"></zh-date-picker>
                 </md-input-container>
-            </div>
-
-            <div ng-if="filter.options.filter_type === 'selector'"
-                 class="table-filter-input-container text-filter-select">
-
-                <md-menu>
-                    <md-input-container>
-                        <label>
-                            <span ng-bind="getFilterRegime()"></span>
-                        </label>
-
-                        <input ng-model="filter.options.filter_values[0]"
-                               ng-change="filterSettingsChange()"
-                               ng-model-options="{debounce: 1000}"
-                               ng-click="$mdOpenMenu($event)">
-                        <!--<input ng-model="filter.options.filter_values[0]"
-                               ng-change="filterSettingsChange()"
-                               ng-model-options="{debounce: 1000}"
-                               ng-click="toggleFilterSelectMenu('show')">-->
-                    </md-input-container>
-
-                    <md-menu-content class="text-filter-select-menu">
-                        <md-input-container md-no-float class="no-error-spacer">
-                            <input type="search"
-                                   ng-model="searchTerm"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern simple-search-filter-input"
-                                   ng-keydown="$event.stopPropagation()">
-                        </md-input-container>
-                            <md-button ng-repeat="rowContent in columnRowsContent | orderBy: 'name' | filter: searchTerm as results track by $index"
-                                       ng-bind="rowContent.name"
-                                       ng-click="selectFilterOption(rowContent.name)">
-                            </md-button>
-
-                    </md-menu-content>
-                </md-menu>
-
-                <!--<div class="table-filter-select-options text-filter-select-menu visibility-hidden">
-                    <md-input-container md-no-float>
-                        <input type="search"
-                               ng-model="searchTerm"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern simple-search-filter-input"
-                               ng-keydown="$event.stopPropagation()">
-                    </md-input-container>
-                    <div class="table-filter-select-options-holder">
-                        <md-button
-                                ng-repeat="rowContent in columnRowsContent | filter: searchTerm as results track by $index"
-                                ng-bind="rowContent"
-                                ng-click="selectFilterOption(rowContent)">
-                        </md-button>
-                    </div>
-                </div>-->
-
             </div>
 
         </div>
 
-        <div ng-if="filter.options.filter_type === 'multiselector'"
+        <div ng-if="filter.options.filter_type === 'from_to'"
              flex="70">
-            <two-fields-multiselect ng-model="filter.options.filter_values"
-                                    ng-change="filterSettingsChange()"
-                                    title="{{getMultiselectorName()}}"
-                                    items="columnRowsContent"
-                                    model="filter.options.filter_values"
-                                    nothing-selected-text="Off"
-                                    name-property="name"
-                                    class="table-filter-input-container"></two-fields-multiselect>
+
+            <div class="table-filter-input-container">
+                <md-input-container class="md-block">
+                    <label>
+                        <span>From (incl)</span>
+                    </label>
+
+                    <zh-date-picker data-date-value="filter.options.filter_values.min_value"
+                                    data-position="left"
+                                    data-callback-method="filterSettingsChange(filter.options.filter_values.min_value)"></zh-date-picker>
+                </md-input-container>
+            </div>
+
+            <div class="table-filter-input-container">
+                <md-input-container class="md-block">
+                    <label>
+                        <span>To (incl)</span>
+                    </label>
+
+                    <zh-date-picker data-date-value="filter.options.filter_values.max_value"
+                                    data-position="left"
+                                    data-callback-method="filterSettingsChange(filter.options.filter_values.max_value)"></zh-date-picker>
+                </md-input-container>
+            </div>
+
+        </div>
+        
+        <div ng-if="filter.options.filter_type === 'date_tree'" 
+             class="table-filter-input-container" 
+             flex="70">
+
+            <date-tree-input title="{{getFilterRegime()}}"
+                             dates-list="columnRowsContent"
+                             dates-tree="filter.options.dates_tree"
+                             nothing-selected-text="Off"
+                             callback-method="filterSettingsChange(filter.options.filter_values)"></date-tree-input>
+            
         </div>
 
         <div class="settings-btn" flex="15">
@@ -117,37 +98,61 @@
                                 <span>Filter</span>
                             </md-button>
                             <md-menu-content class="dropdown-buttons-menu" width="3">
-                                <md-button ng-click="changeFilterType('contains')">
+                                <md-button ng-click="changeFilterType('equal')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'contains'"
+                                                ng-show="filter.options.filter_type !== 'equal'"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'contains'"></ng-md-icon>
-                                    Contains
+                                                ng-show="filter.options.filter_type === 'equal'"></ng-md-icon>
+                                    Equal
                                 </md-button>
-                                <md-button ng-click="changeFilterType('does_not_contains')">
+                                <md-button ng-click="changeFilterType('not_equal')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'does_not_contains'"
+                                                ng-show="filter.options.filter_type !== 'not_equal'"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'does_not_contains'"></ng-md-icon>
-                                    Does not contains
+                                                ng-show="filter.options.filter_type === 'not_equal'"></ng-md-icon>
+                                    Not equal
                                 </md-button>
-                                <md-button ng-click="changeFilterType('selector')">
+                                <md-button ng-click="changeFilterType('greater')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'selector'"
+                                                ng-show="filter.options.filter_type !== 'greater'"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'selector'"></ng-md-icon>
-                                    Select
+                                                ng-show="filter.options.filter_type === 'greater'"></ng-md-icon>
+                                    Greater than
                                 </md-button>
-                                <md-button ng-click="changeFilterType('multiselector')">
+                                <md-button ng-click="changeFilterType('greater_equal')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'multiselector'"
+                                                ng-show="filter.options.filter_type !== 'greater_equal'"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'multiselector'"></ng-md-icon>
-                                    Multiple Select
+                                                ng-show="filter.options.filter_type === 'greater_equal'"></ng-md-icon>
+                                    Greater or equal to
+                                </md-button>
+                                <md-button ng-click="changeFilterType('less')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'less'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'less'"></ng-md-icon>
+                                    Less than
+                                </md-button>
+                                <md-button ng-click="changeFilterType('less_equal')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'less_equal'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'less_equal'"></ng-md-icon>
+                                    Less or equal to
+                                </md-button>
+                                <md-button ng-click="changeFilterType('from_to')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'from_to'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'from_to'"></ng-md-icon>
+                                    From ... to ... (incl)
                                 </md-button>
                                 <md-button ng-click="changeFilterType('empty')">
                                     <ng-md-icon icon="done"
@@ -157,8 +162,25 @@
                                                 ng-show="filter.options.filter_type === 'empty'"></ng-md-icon>
                                     Empty cells
                                 </md-button>
+                                <md-button ng-click="changeFilterType('date_tree')" ng-disabled="!filter.options.is_frontend_filter">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'date_tree'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'date_tree'"></ng-md-icon>
+                                    Date tree
+                                </md-button>
                             </md-menu-content>
                         </md-menu>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-checkbox ng-model="filter.options.is_frontend_filter"
+                                     ng-change="toggleFrontendFilter()"
+                                     class="md-primary g-filter-options-checkbox"
+                                     aria-label="toggle filtering on frontend">
+                            Preview Filter
+                        </md-checkbox>
                     </md-menu-item>
 
                     <md-menu-item>
@@ -188,9 +210,9 @@
                     </md-menu-item>
 
                     <md-menu-item ng-if="!isRootEntityViewer">
-                            <use-from-above-button item="filter.options.use_from_above"
-                                                   data="{attributes: attributesFromAbove}"
-                                                   class="rv-filter-link-to-above-btn"></use-from-above-button>
+                        <use-from-above-button item="filter.options.use_from_above"
+                                               data="{attributes: attributesFromAbove}"
+                                               class="rv-filter-link-to-above-btn"></use-from-above-button>
                     </md-menu-item>
 
                 </md-menu-content>
@@ -201,7 +223,7 @@
                            ng-click="openFilterSettings($mdOpenMenu, $event)">
                     <ng-md-icon icon="settings"></ng-md-icon>
                 </md-button>
-    
+
                 <md-menu-content width="3">
                     <md-menu-item>
                         <md-menu>
@@ -254,8 +276,5 @@
         </div>
 
 
-
-
     </div>
-
 </md-card>

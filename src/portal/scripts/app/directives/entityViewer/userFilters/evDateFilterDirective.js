@@ -17,7 +17,7 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            templateUrl: 'views/directives/reportViewer/userFilters/rv-date-filter-view.html',
+            templateUrl: 'views/directives/entityViewer/userFilters/ev-date-filter-view.html',
             link: function (scope, elem, attrs) {
 
                 // console.log("filter filterDateData", scope.filter);
@@ -92,6 +92,10 @@
                     scope.filter.options.exclude_empty_cells = false;
                 }
 
+                if (scope.filter.options.is_frontend_filter) {
+                    scope.filter.options.is_frontend_filter = false;
+                };
+
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 
                 scope.getFilterRegime = function () {
@@ -158,6 +162,23 @@
                     scope.filterSettingsChange();
                 };
 
+                scope.toggleFrontendFilter = function () {
+
+                    if (scope.filter.options.is_frontend_filter) {
+
+                        if (scope.filter.options.filter_type === "date_tree") {
+
+                            scope.filter.options.filter_values = [];
+                            scope.filter.options.filter_type = "equal";
+
+                        };
+
+                    };
+
+                    scope.filterSettingsChange();
+
+                };
+
                 var convertDatesTreeToFlatList = function () {
 
                     var datesList = [];
@@ -188,19 +209,27 @@
                 };
 
                 scope.applyFilter = function () {
-
+                    console.log("ev filter evDateFilter update table");
                     if (scope.filter.options.enabled || filterEnabled) {
 
                         filterEnabled = scope.filter.options.enabled;
 
-                        scope.evDataService.resetData();
-                        scope.evDataService.resetRequestParameters();
+                        if (scope.filter.options.is_frontend_filter) {
 
-                        var rootGroup = scope.evDataService.getRootGroupData();
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                        } else {
 
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            scope.evDataService.resetData();
+                            scope.evDataService.resetRequestParameters();
+
+                            var rootGroup = scope.evDataService.getRootGroupData();
+
+                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                        };
 
                     };
 
@@ -208,6 +237,7 @@
 
                 scope.filterSettingsChange = function () {
                     //console.log("filter filterSettingsChange", scope.filter.options.filter_values);
+
                     if (scope.filter.options.filter_type === 'date_tree') {
                         scope.filter.options.filter_values = convertDatesTreeToFlatList();
                     }

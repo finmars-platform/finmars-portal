@@ -16,7 +16,7 @@
 
         var filters = entityViewerDataService.getFilters();
 
-        filters.forEach(function (item) {
+        /*filters.forEach(function (item) {
 
             if (item.options && item.options.enabled) {
 
@@ -29,32 +29,69 @@
 
             }
 
-        });
+        });*/
 
-        /*filters.forEach(function (item) {
+        var isFilterValid = function (filterItem) {
 
-            if (item.options && item.options.enabled) {
+            if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
 
-                if (item.options.filter_values) {
+                var filterType = filterItem.options.filter_type;
 
-                    // var key = queryParamsHelper.entityPluralToSingular(item.key);
-                    //var filterSettings = queryParamsHelper.formatFilterSettingsForQueryParams(item);
+                if (filterType === 'empty' ||
+                    filterItem.options.exclude_empty_cells) { // if filter works for empty cells
 
-                    var filterSettings = {
-                        key: key,
-                        filter_type: item.options.filter_type,
-                        exclude_empty_cells: item.options.exclude_empty_cells,
-                        value_type: item.value_type,
-                        value: item.options.filter_values
+                    return true;
+
+                } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
+
+                    var filterValues = filterItem.options.filter_values;
+
+                    if (filterType === 'from_to') {
+
+                        if ((filterValues.min_value || filterValues.min_value === 0) &&
+                            (filterValues.max_value || filterValues.max_value === 0)) {
+                            return true;
+                        };
+
+                    } else if (Array.isArray(filterValues)) {
+
+                        if (filterValues[0] || filterValues[0] === 0) {
+                            return true;
+                        };
+
                     };
-
-                    newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
-
                 };
 
             };
 
-        });*/
+            return false;
+        };
+
+        filters.forEach(function (item) {
+
+            if (isFilterValid(item)) {
+
+                // var key = queryParamsHelper.entityPluralToSingular(item.key);
+                //var filterSettings = queryParamsHelper.formatFilterSettingsForQueryParams(item);
+
+                var filterSettings = {
+                    key: item.key,
+                    filter_type: item.options.filter_type,
+                    exclude_empty_cells: item.options.exclude_empty_cells,
+                    value_type: item.value_type,
+                    value: item.options.filter_values
+                };
+
+                if (item.options.is_frontend_filter) {
+                    filterSettings.is_frontend_filter = true;
+                };
+
+                //newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
+                newRequestParametersBody['filter_settings'].push(filterSettings);
+
+            };
+
+        });
 
         requestParameters.body = newRequestParametersBody;
 
@@ -131,7 +168,11 @@
         }
 
         obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'control'
+            if (item && item.___type !== 'control') {
+                return true;
+            }
+
+            return false;
         });
 
         obj.results = obj.results.map(function (item, index) {
@@ -321,58 +362,70 @@
 
             });
 
-            pagesToRequest.forEach(function (pageToRequest) {
+            //if (requestParameters.body.frontend_filter_changed) {
 
-                promises.push(new Promise(function (resolveLocal) {
+                pagesToRequest.forEach(function (pageToRequest) {
 
-                    var options = Object.assign({}, requestParameters.body);
+                    promises.push(new Promise(function (resolveLocal) {
 
-                    options.page = pageToRequest;
+                        var options;
 
-                    // if (options.groups_types) {
-                    //
-                    //     options.groups_types = options.groups_types.map(function (groupType) {
-                    //
-                    //         return groupType.key;
-                    //
-                    //     })
-                    //
-                    // }
+                        options = Object.assign({}, requestParameters.body);
 
-                    evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+                        options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
+                            if (!optionsFilter.is_frontend_filter) {
+                                return true;
+                            };
 
-                    requestParameters.pagination.page = pageToRequest;
-                    entityViewerDataService.setRequestParameters(requestParameters);
+                            return false;
+                        });
+
+                        options.page = pageToRequest;
+
+                        if (options.groups_types) {
+
+                            options.groups_types = options.groups_types.map(function (groupType) {
+
+                                return groupType.key;
+
+                            })
+
+                        }
+
+                        evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+
+                        requestParameters.pagination.page = pageToRequest;
+                        entityViewerDataService.setRequestParameters(requestParameters);
+
+                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                        objectsService.getFilteredList(entityType, options).then(function (data) {
+
+
+                            requestParameters.pagination.count = data.count;
+                            requestParameters.processedPages.push(pageToRequest);
+
+                            entityViewerDataService.setRequestParameters(requestParameters);
+
+                            deserializeObjects(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
+
+                            resolveLocal()
+
+                        });
+
+                    }));
+
+                });
+
+
+                Promise.all(promises).then(function () {
+
+                    resolve();
 
                     entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                    objectsService.getFilteredList(entityType, options).then(function (data) {
-
-
-                        requestParameters.pagination.count = data.count;
-                        requestParameters.processedPages.push(pageToRequest);
-
-                        entityViewerDataService.setRequestParameters(requestParameters);
-
-                        deserializeObjects(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
-
-                        resolveLocal()
-
-                    });
-
-                }));
-
-            });
-
-
-            Promise.all(promises).then(function () {
-
-                resolve();
-
-                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-            })
-
+                })
+            //};
         });
 
     };
@@ -399,8 +452,17 @@
 
                 promises.push(new Promise(function (resolveLocal) {
 
+                    var options;
+
                     var options = Object.assign({}, requestParameters.body);
 
+                    options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
+                        if (!optionsFilter.is_frontend_filter) {
+                            return true;
+                        };
+
+                        return false;
+                    });
                     console.log('getGroups.options', options);
 
                     options.page = pageToRequest;

@@ -17,16 +17,17 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            templateUrl: 'views/directives/reportViewer/userFilters/rv-date-filter-view.html',
+            templateUrl: 'views/directives/entityViewer/userFilters/ev-number-filter-view.html',
             link: function (scope, elem, attrs) {
 
-                // console.log("filter filterDateData", scope.filter);
+                // console.log("filter filterNumberData", scope.filter);
 
                 scope.filters = scope.evDataService.getFilters();
 
                 scope.filterValue = undefined;
                 scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
+                scope.nItemsValue = null;
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.attributesFromAbove = [];
@@ -36,42 +37,13 @@
                     var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
-                        return {
-                            value: cRowsContent,
-                            active: false
-                        }
+                        return cRowsContent;
                     });
-
-                    // ---------------- For Testing -----------------
-                    /*scope.columnRowsContent = [
-                        new Date('2019-05-20'),
-                        new Date('2019-05-23'),
-                        new Date('2019-05-01'),
-                        new Date('2019-05-05'),
-                        new Date('2019-05-13'),
-                        new Date('2019-02-21'),
-                        new Date('2019-02-28'),
-                        new Date('2019-02-20'),
-                        new Date('2019-03-24'),
-                        new Date('2019-03-11'),
-                        new Date('2018-11-20'),
-                        new Date('2018-11-11'),
-                        new Date('2018-11-18'),
-                        new Date('2018-06-21'),
-                        new Date('2018-06-22'),
-                        new Date('2018-06-23'),
-                        new Date('2018-06-24'),
-                        new Date('2016-05-20'),
-                        new Date('2016-05-21'),
-                        new Date('2016-05-22'),
-                        new Date('2016-05-23')
-                    ];*/
 
                     if(!scope.isRootEntityViewer) {
                         scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
                     }
 
-                    console.log("date tree columnRows", scope.columnRowsContent);
                     scope.$apply();
 
                 });
@@ -92,6 +64,10 @@
                     scope.filter.options.exclude_empty_cells = false;
                 }
 
+                if (scope.filter.options.is_frontend_filter) {
+                    scope.filter.options.is_frontend_filter = false;
+                };
+
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 
                 scope.getFilterRegime = function () {
@@ -99,7 +75,6 @@
                     var filterRegime = "";
 
                     switch (scope.filter.options.filter_type) {
-
                         case "equal":
                             filterRegime = "Equal";
                             break;
@@ -121,25 +96,50 @@
                         case "empty":
                             filterRegime = "Show empty cells";
                             break;
-                        case "date_tree":
-                            filterRegime = "Date tree";
+                        /*case "top_n":
+                            filterRegime = "Top N items";
                             break;
-
+                        case "bottom_n":
+                            filterRegime = "Bottom N items";
+                            break;*/
                     }
 
                     return filterRegime;
 
                 };
 
-                scope.changeFilterType = function (filterType) {
 
-                    scope.filter.options.filter_type = filterType;
 
-                    if (filterType === 'date_tree') {
+                scope.filterSettingsChange = function () {
+                    // console.log("filter filterSettingsChange", scope.filter.options);
 
-                        scope.filter.options.dates_tree = [];
+                    if (scope.filter.options.enabled || filterEnabled) {
+
+                        filterEnabled = scope.filter.options.enabled;
+
+                        if (scope.filter.options.is_frontend_filter) {
+
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                        } else {
+
+                            scope.evDataService.resetData();
+                            scope.evDataService.resetRequestParameters();
+
+                            var rootGroup = scope.evDataService.getRootGroupData();
+
+                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                        };
 
                     }
+
+                };
+
+                scope.changeFilterType = function (filterType) {
+                    scope.filter.options.filter_type = filterType;
 
                     if (filterType === 'from_to') {
 
@@ -156,64 +156,6 @@
                     }
 
                     scope.filterSettingsChange();
-                };
-
-                var convertDatesTreeToFlatList = function () {
-
-                    var datesList = [];
-
-                    scope.filter.options.dates_tree.map(function (yearGroup) {
-
-                        yearGroup.items.map(function (monthGroup) {
-
-                            monthGroup.items.map(function (date) {
-
-                                delete date.dayNumber;
-                                delete date.available;
-
-                                date = JSON.parse(angular.toJson(date));
-
-                                if (date.active) {
-                                    datesList.push(date.value);
-                                }
-
-                            });
-
-                        });
-
-                    });
-                    // console.log("date tree date to save", datesList);
-                    return datesList;
-
-                };
-
-                scope.applyFilter = function () {
-
-                    if (scope.filter.options.enabled || filterEnabled) {
-
-                        filterEnabled = scope.filter.options.enabled;
-
-                        scope.evDataService.resetData();
-                        scope.evDataService.resetRequestParameters();
-
-                        var rootGroup = scope.evDataService.getRootGroupData();
-
-                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                    };
-
-                };
-
-                scope.filterSettingsChange = function () {
-                    //console.log("filter filterSettingsChange", scope.filter.options.filter_values);
-                    if (scope.filter.options.filter_type === 'date_tree') {
-                        scope.filter.options.filter_values = convertDatesTreeToFlatList();
-                    }
-
-                    scope.applyFilter();
-
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
@@ -241,14 +183,14 @@
                             // return undefined;
                             item = undefined;
                         }
-                        //console.log('filter in filters list', item);
+
                         return item;
                     }).filter(function (item) {
                         return !!item;
                     });*/
                     scope.filters.map(function (item, index) {
                         if (item.key === filter.key) {
-                            scope.filters.splice(index, 1)
+                            scope.filters.splice(index, 1);
                         }
                     });
 

@@ -14,7 +14,7 @@
         <md-checkbox ng-model="filter.options.enabled"
                      aria-label="filters"
                      class="md-primary table-filter-activity-checkbox"
-                     ng-change="filterSettingsChange()"
+                     ng-change="filterSettingsChanged()"
                      flex="15"></md-checkbox>
 
         <div ng-if="filter.options.filter_type !== 'multiselector'"
@@ -26,7 +26,7 @@
                     </label>
 
                     <input data-ng-model="filter.options.filter_values[0]"
-                           data-ng-change="filterSettingsChange()"
+                           data-ng-change="filterSettingsChanged()"
                            data-ng-model-options="{debounce: 1000}">
                 </md-input-container>
             </div>
@@ -41,11 +41,11 @@
                         </label>
 
                         <input ng-model="filter.options.filter_values[0]"
-                               ng-change="filterSettingsChange()"
+                               ng-change="filterSettingsChanged()"
                                ng-model-options="{debounce: 1000}"
                                ng-click="$mdOpenMenu($event)">
                         <!--<input ng-model="filter.options.filter_values[0]"
-                               ng-change="filterSettingsChange()"
+                               ng-change="filterSettingsChanged()"
                                ng-model-options="{debounce: 1000}"
                                ng-click="toggleFilterSelectMenu('show')">-->
                     </md-input-container>
@@ -58,10 +58,10 @@
                                    class="md-text md-select-search-pattern simple-search-filter-input"
                                    ng-keydown="$event.stopPropagation()">
                         </md-input-container>
-                            <md-button ng-repeat="rowContent in columnRowsContent | orderBy: 'name' | filter: searchTerm as results track by $index"
-                                       ng-bind="rowContent.name"
-                                       ng-click="selectFilterOption(rowContent.name)">
-                            </md-button>
+                        <md-button ng-repeat="rowContent in columnRowsContent | orderBy: 'name' | filter: searchTerm as results track by $index"
+                                   ng-bind="rowContent.name"
+                                   ng-click="selectFilterOption(rowContent.name)">
+                        </md-button>
 
                     </md-menu-content>
                 </md-menu>
@@ -90,7 +90,7 @@
         <div ng-if="filter.options.filter_type === 'multiselector'"
              flex="70">
             <two-fields-multiselect ng-model="filter.options.filter_values"
-                                    ng-change="filterSettingsChange()"
+                                    ng-change="filterSettingsChanged()"
                                     title="{{getMultiselectorName()}}"
                                     items="columnRowsContent"
                                     model="filter.options.filter_values"
@@ -133,7 +133,7 @@
                                                 ng-show="filter.options.filter_type === 'does_not_contains'"></ng-md-icon>
                                     Does not contains
                                 </md-button>
-                                <md-button ng-click="changeFilterType('selector')">
+                                <md-button ng-click="changeFilterType('selector')" ng-disabled="!filter.options.is_frontend_filter">
                                     <ng-md-icon icon="done"
                                                 ng-show="filter.options.filter_type !== 'selector'"
                                                 style="visibility: hidden;"></ng-md-icon>
@@ -141,7 +141,7 @@
                                                 ng-show="filter.options.filter_type === 'selector'"></ng-md-icon>
                                     Select
                                 </md-button>
-                                <md-button ng-click="changeFilterType('multiselector')">
+                                <md-button ng-click="changeFilterType('multiselector')" ng-disabled="!filter.options.is_frontend_filter">
                                     <ng-md-icon icon="done"
                                                 ng-show="filter.options.filter_type !== 'multiselector'"
                                                 style="visibility: hidden;"></ng-md-icon>
@@ -162,8 +162,17 @@
                     </md-menu-item>
 
                     <md-menu-item>
+                        <md-checkbox ng-model="filter.options.is_frontend_filter"
+                                     ng-change="toggleFrontendFilter()"
+                                     class="md-primary g-filter-options-checkbox"
+                                     aria-label="toggle filtering on frontend">
+                            Preview Filter
+                        </md-checkbox>
+                    </md-menu-item>
+
+                    <md-menu-item>
                         <md-checkbox ng-model="filter.options.exclude_empty_cells"
-                                     ng-change="filterSettingsChange()"
+                                     ng-change="filterSettingsChanged()"
                                      class="md-primary g-filter-options-checkbox"
                                      aria-label="hide rows with empty cells checkbox">
                             Exclude cells with no value
@@ -188,9 +197,9 @@
                     </md-menu-item>
 
                     <md-menu-item ng-if="!isRootEntityViewer">
-                            <use-from-above-button item="filter.options.use_from_above"
-                                                   data="{attributes: attributesFromAbove}"
-                                                   class="rv-filter-link-to-above-btn"></use-from-above-button>
+                        <use-from-above-button item="filter.options.use_from_above"
+                                               data="{attributes: attributesFromAbove}"
+                                               class="rv-filter-link-to-above-btn"></use-from-above-button>
                     </md-menu-item>
 
                 </md-menu-content>
