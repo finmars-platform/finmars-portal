@@ -34,19 +34,24 @@
             var item = flItem;
             var useFilterExprs = true;
 
-            if (flItem.___type === 'group') {
-
-                item = {};
-                var groupIndex = flItem.___level - 1;
-                var groupData = groupsList[groupIndex];
-                item[groupData['key']] = flItem.___group_name;
-
-            } else if (flItem.___type === 'control') {
+            if (flItem.___parentId && filteredOutGroupsIds.indexOf(flItem.___parentId) !== -1) { // if item is a part of filtered out group
 
                 useFilterExprs = false;
+                match = false;
 
-                if (flItem.___parentId && filteredOutGroupsIds.indexOf(flItem.___parentId) !== -1) {
-                    match = false;
+            } else {
+
+                if (flItem.___type === 'group') {
+
+                    item = {};
+                    var groupIndex = flItem.___level - 1;
+                    var groupData = groupsList[groupIndex];
+                    item[groupData['key']] = flItem.___group_name;
+
+                } else if (flItem.___type === 'control') {
+
+                    useFilterExprs = false;
+
                 };
 
             };
@@ -78,7 +83,7 @@
                                 var filterArgument = JSON.parse(JSON.stringify(filterValue));
                                 var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
 
-                                if (valueType === 'field') {
+                                if (valueType === 'field' && flItem.___type !== 'group') {
 
                                     var relationFieldData = item[keyProperty + '_object'];
 
