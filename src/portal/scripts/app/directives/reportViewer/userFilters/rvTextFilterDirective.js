@@ -20,7 +20,7 @@
             templateUrl: 'views/directives/reportViewer/userFilters/rv-text-filter-view.html',
             link: function (scope, elem, attrs) {
 
-                // console.log("filter filterTextData", scope.filter);
+                console.log("filter filterTextData", scope.filter);
 
                 scope.filters = scope.evDataService.getFilters();
 
@@ -52,7 +52,7 @@
                 }
 
                 if (!scope.filter.options.filter_type) {
-                    scope.filter.options.filter_type = "contain";
+                    scope.filter.options.filter_type = "contains";
                 }
 
                 if (!scope.filter.options.filter_values) {
@@ -63,15 +63,17 @@
                     scope.filter.options.exclude_empty_cells = false;
                 }
 
+                var filterEnabled = scope.filter.options.enabled;
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
 
                     switch (scope.filter.options.filter_type) {
-                        case "contain":
+                        case "contains":
                             filterRegime = "Contains";
                             break;
-                        case "does_not_contain":
+                        case "does_not_contains":
                             filterRegime = "Does not contains";
                             break;
                         case "selector":
@@ -110,14 +112,20 @@
                         scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();
                     }*/
 
-                    scope.evDataService.resetData();
-                    scope.evDataService.resetRequestParameters();
+                    if (scope.filter.options.enabled || filterEnabled) {
 
-                    var rootGroup = scope.evDataService.getRootGroupData();
+                        filterEnabled = scope.filter.options.enabled;
 
-                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                        scope.evDataService.resetData();
+                        scope.evDataService.resetRequestParameters();
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        var rootGroup = scope.evDataService.getRootGroupData();
+
+                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                    };
 
                 };
 

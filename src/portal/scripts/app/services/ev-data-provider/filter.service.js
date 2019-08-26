@@ -1,20 +1,18 @@
 (function () {
-
+    // method needed to prevent removal of all rows in case of using filter with empty value but active excludeEmptyCells
     var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
 
         if (filterType === 'from_to') {
 
-            if (regularFilterValue.min_value !== undefined &&
-                regularFilterValue.max_value !== undefined &&
-                regularFilterValue.min_value !== null &&
-                regularFilterValue.max_value !== null) {
+            if ((regularFilterValue.min_value || regularFilterValue.min_value === 0) &&
+                (regularFilterValue.max_value || regularFilterValue.max_value === 0)) {
                 return true;
             }
 
         } else if (Array.isArray(regularFilterValue)) {
 
-            if (regularFilterValue[0] && regularFilterValue[0] !== null) {
+            if (regularFilterValue[0] || regularFilterValue[0] === 0) {
                 return true;
             }
 
@@ -24,46 +22,64 @@
 
     };
 
-    var filterTableRows = function (items, regularFilters) {
-
+    var filterTableRows = function (flatList, regularFilters, groupsList) {
         var match;
 
-        return items.filter(function (item, tableRowIndex) {
+        return flatList.filter(function (flItem) {
 
             match = true;
 
-            var k;
-            for (k = 0; k < regularFilters.length; k++) {
+            var rf;
+            for (rf = 0; rf < regularFilters.length; rf++) {
 
-                var keyProperty = regularFilters[k].key;
-                var valueType = regularFilters[k].value_type;
-                var filterType = regularFilters[k].filter_type;
-                var excludeEmptyCells = regularFilters[k].exclude_empty_cells;
-                var filterValue = regularFilters[k].value;
+                var item;
 
+                var keyProperty = regularFilters[rf].key;
+                var valueType = regularFilters[rf].value_type;
+                var filterType = regularFilters[rf].filter_type;
+                var excludeEmptyCells = regularFilters[rf].exclude_empty_cells;
+                var filterValue = regularFilters[rf].value;
 
                 if (keyProperty !== 'ordering') {
+
+                    if (flItem.___type === 'group') {
+
+                        var groupIndex = flItem.___level - 1;
+                        var groupData = groupsList[groupIndex];
+                        item = {};
+                        item[groupData['key']] = flItem.___group_name;
+
+                    } else if (flItem.___type === 'object') {
+
+                        item = flItem;
+
+                    } else {
+                        match = true;
+                        break;
+                    };
 
                     if (item.hasOwnProperty(keyProperty) && item[keyProperty]) { // check if cell used to filter row is not empty
 
                         if (filterType === 'empty') { // prevent pass of cells with values
                             match = false;
                             break;
-                        }
+                        };
 
                         if (checkForEmptyRegularFilter(filterValue, filterType)) {
 
                             var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
                             var filterArgument = JSON.parse(JSON.stringify(filterValue));
 
-                            if (valueType === 10 || valueType === 30) {
+                            if (valueType === 10 ||
+                                valueType === 30 ||
+                                valueType === 'field') {
 
                                 if (filterType !== 'multiselector') {
                                     valueFromTable = valueFromTable.toLowerCase();
                                     filterArgument = filterArgument[0].toLowerCase();
                                 }
 
-                            }
+                            };
 
                             if (valueType === 20) {
 
@@ -82,7 +98,7 @@
                                 }*/
                                 // < Compare position number of item with maximum allowed >
 
-                            }
+                            };
 
                             if (valueType === 40) {
 
@@ -107,45 +123,45 @@
                                         break;
                                 }
 
-                            }
+                            };
 
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
                             if (!match) {
                                 break;
                             }
+
                         };
 
                     } else {
 
-                        if (excludeEmptyCells) { // if user choose to hide empty cells
+                        if (excludeEmptyCells && flItem.___type !== 'group') { // if user choose to hide empty cells
                             match = false;
                         } else {
                             match = true;
                         }
                     };
 
-                }
+                };
 
-            }
+            };
 
             return match;
 
         });
-
     };
 
     var filterValueFromTable = function (valueToFilter, filterBy, operationType) {
 
         switch (operationType) {
 
-            case 'contain':
+            case 'contains':
                 if (valueToFilter.indexOf(filterBy) !== -1) {
                     return true;
                 }
                 break;
 
-            case 'does_not_contain':
+            case 'does_not_contains':
                 if (valueToFilter.indexOf(filterBy) === -1) {
                     return true;
                 }
@@ -229,42 +245,14 @@
                 }
                 break;
 
-        }
+        };
 
         return false;
 
     };
 
-    var getRegularFilters = function (options) {
-
-        var result = {};
-
-        if (options.hasOwnProperty('filter_settings')) {
-
-            result = options.filter_settings;
-
-        } else {
-
-            Object.keys(options).filter(function (key) {
-
-                if (['groups_order', 'groups_types', 'groups_values', 'page', 'page_size'].indexOf(key) === -1) {
-
-                    result[key] = options[key];
-
-                }
-
-            });
-
-        }
-
-        // console.log("filter getRegularFilters result", result);
-        return result;
-
-    };
-
     module.exports = {
-        filterTableRows: filterTableRows,
-        getRegularFilters: getRegularFilters
+        filterTableRows: filterTableRows
     }
 
 }());

@@ -32,7 +32,6 @@
         var columns = document.querySelectorAll('.g-columns-holder .g-cell');*/
 
         var flatList = evDataService.getFlatList();
-        // console.log("conversion falt list", flatList);
 
         if (copyType === 'selected') {
 
@@ -43,7 +42,7 @@
                     if (row.___type === 'subtotal') {
 
                         var parentGroup = evDataService.getData(row.___parentId);
-                        console.log("conversion parentGroup", flatList, parentGroup);
+
                         if (row.___subtotal_type === "line" && parentGroup.___is_line_subtotal_activated) {
                             return true;
                         };

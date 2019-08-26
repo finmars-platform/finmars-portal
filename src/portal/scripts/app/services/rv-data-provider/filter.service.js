@@ -1,25 +1,18 @@
 (function () {
-
+    // method needed to prevent removal of all rows in case of using filter with empty value but active excludeEmptyCells
     var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
 
         if (filterType === 'from_to') {
 
-            /*if (regularFilterValue.min_value !== undefined &&
-                regularFilterValue.max_value !== undefined &&
-                regularFilterValue.min_value !== null &&
-                regularFilterValue.max_value !== null) {
-                return true;
-            }*/
-
-            if (regularFilterValue.min_value &&
-                regularFilterValue.max_value) {
+            if ((regularFilterValue.min_value || regularFilterValue.min_value === 0) &&
+                (regularFilterValue.max_value || regularFilterValue.max_value === 0)) {
                 return true;
             }
 
         } else if (Array.isArray(regularFilterValue)) {
 
-            if (regularFilterValue[0] && regularFilterValue[0] !== null) {
+            if (regularFilterValue[0] || regularFilterValue[0] === 0) {
                 return true;
             }
 
