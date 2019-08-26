@@ -23,7 +23,7 @@
     };
 
     var filterTableRows = function (items, regularFilters) {
-        // console.log("ev filter filterTableRows", items, regularFilters);
+
         var match;
 
         return items.filter(function (item, tableRowIndex) {

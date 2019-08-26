@@ -1,21 +1,41 @@
 (function () {
 
-    var getDataByKey = function (entityViewerDataService, key) {
+    var getCellValueByKey = function (entityViewerDataService, key) {
 
         var data = entityViewerDataService.getUnfilteredFlatList();
         var result = [];
 
         data.forEach(function (item) {
 
+            var cellValue = '';
+
             if (item.hasOwnProperty(key)) {
 
-                if (result.indexOf(item[key]) === -1) {
+                var fieldObjKey = key + '_object';
 
-                    result.push(item[key]);
+                if (item.hasOwnProperty(fieldObjKey)) {
 
-                }
+                    cellValue = item[fieldObjKey].name;
 
-            }
+                    if (item[fieldObjKey].display_name) {
+
+                        cellValue = item[fieldObjKey].display_name;
+
+                    };
+
+                } else {
+
+                    cellValue = item[key];
+
+                };
+
+                if (result.indexOf(cellValue) === -1) {
+
+                    result.push(cellValue);
+
+                };
+
+            };
 
         });
 
@@ -24,7 +44,7 @@
     };
 
     module.exports = {
-        getDataByKey: getDataByKey
+        getCellValueByKey: getCellValueByKey
     }
 
 }());

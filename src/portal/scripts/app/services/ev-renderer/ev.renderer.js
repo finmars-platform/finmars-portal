@@ -17,9 +17,35 @@
 
         var columns = evDataService.getColumns();
 
-        var rows = projection.map(function (item) {
+        var previousRow = null;
 
-            if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
+        var rows = projection.map(function (item, index) {
+
+            var renderedRow = null;
+
+            switch (item.___type) {
+                case 'placeholder_group':
+                case 'placeholder_object':
+                    renderedRow = placeholderRender.render(item, columns);
+                    break;
+                case 'group':
+                    renderedRow = groupRender.render(item);
+                    break;
+                case 'object':
+                    renderedRow = objectRender.render(item, columns);
+                    break;
+                case 'control':
+                    renderedRow = controlRender.render(item, evDataService, previousRow);
+                    break;
+            };
+
+            if (renderedRow) {
+                previousRow = renderedRow;
+
+                return renderedRow;
+            };
+
+            /*if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
                 return placeholderRender.render(item, columns)
             }
 
@@ -37,7 +63,7 @@
             if (item.___type === 'control') {
 
                 return controlRender.render(item, evDataService);
-            }
+            }*/
 
         });
 
