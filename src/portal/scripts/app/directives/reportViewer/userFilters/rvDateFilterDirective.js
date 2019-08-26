@@ -33,7 +33,7 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
+                    var columnRowsContent  = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
                         return {
@@ -78,19 +78,19 @@
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
-                }
+                };
 
                 if (!scope.filter.options.filter_type) {
                     scope.filter.options.filter_type = "equal";
-                }
+                };
 
                 if (!scope.filter.options.filter_values) {
                     scope.filter.options.filter_values = [];
-                }
+                };
 
-                if (!scope.filter.options.exclude_empty_cells) {
+                if (!scope.filter.options.hasOwnProperty('exclude_empty_cells')) {
                     scope.filter.options.exclude_empty_cells = false;
-                }
+                };
 
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 

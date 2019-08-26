@@ -33,7 +33,7 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
+                    var columnRowsContent  = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
                         return {
@@ -78,21 +78,21 @@
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
-                }
+                };
 
                 if (!scope.filter.options.filter_type) {
                     scope.filter.options.filter_type = "equal";
-                }
+                };
 
                 if (!scope.filter.options.filter_values) {
                     scope.filter.options.filter_values = [];
-                }
+                };
 
-                if (!scope.filter.options.exclude_empty_cells) {
+                if (!scope.filter.options.hasOwnProperty('exclude_empty_cells')) {
                     scope.filter.options.exclude_empty_cells = false;
-                }
+                };
 
-                if (scope.filter.options.is_frontend_filter) {
+                if (!scope.filter.options.hasOwnProperty('is_frontend_filter')) {
                     scope.filter.options.is_frontend_filter = false;
                 };
 
@@ -209,7 +209,7 @@
                 };
 
                 scope.applyFilter = function () {
-                    console.log("ev filter evDateFilter update table");
+
                     if (scope.filter.options.enabled || filterEnabled) {
 
                         filterEnabled = scope.filter.options.enabled;

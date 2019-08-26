@@ -31,7 +31,7 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    var columnRowsContent = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
+                    var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
                         return {id: cRowsContent, name: cRowsContent}
@@ -57,11 +57,11 @@
                     scope.filter.options.filter_values = [];
                 };
 
-                if (!scope.filter.options.exclude_empty_cells) {
+                if (!scope.filter.options.hasOwnProperty('exclude_empty_cells')) {
                     scope.filter.options.exclude_empty_cells = false;
                 };
 
-                if (scope.filter.options.is_frontend_filter) {
+                if (!scope.filter.options.hasOwnProperty('is_frontend_filter')) {
                     scope.filter.options.is_frontend_filter = false;
                 };
 

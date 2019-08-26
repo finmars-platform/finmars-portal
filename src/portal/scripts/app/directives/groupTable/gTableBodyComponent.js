@@ -137,9 +137,7 @@
 
                     var groups = scope.evDataService.getGroups();
                     var filters = scope.evDataService.getFilters();
-                    //console.log("ev filter gTableBody vanila flatList", JSON.parse(JSON.stringify(flatList)), groups, filters);
 
-                    //console.log("ev filter gTableBody filters", filters);
                     var frontEndFilters = [];
 
                     for (var f = 0; f < filters.length; f++) {
@@ -163,12 +161,9 @@
                         };
                     };
 
-                    // console.log("ev filter gTableBody frontEndFilters", frontEndFilters);
-
                     if (frontEndFilters.length > 0) {
                         var groups = scope.evDataService.getGroups();
                         flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
-                        // console.log("ev filter gTableBody filtered", flatList);
                     };
 
 

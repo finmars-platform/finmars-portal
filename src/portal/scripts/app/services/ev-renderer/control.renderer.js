@@ -1,7 +1,7 @@
 (function () {
 
 
-    var render = function (obj, evDataService) {
+    var render = function (obj, evDataService, prevObj) {
 
         var requestParameters = evDataService.getRequestParameters(obj.___parentId);
         var pagination = requestParameters.pagination;
@@ -30,7 +30,15 @@
 
         } else {
 
-            result = result + '<p class="m-0" style="padding-top: 2px; padding-left: 15px; color: #868686;">Data fully loaded</p>'
+            if (!prevObj || obj.___parentId === prevObj.___id) {
+
+                result = result + '<p class="m-0" style="padding-top: 2px; padding-left: 15px; color: #868686;">No items subject to the Filters</p>';
+
+            } else {
+
+                result = result + '<p class="m-0" style="padding-top: 2px; padding-left: 15px; color: #868686;">Data fully loaded</p>';
+
+            }
         }
 
         result = result + '</div>';

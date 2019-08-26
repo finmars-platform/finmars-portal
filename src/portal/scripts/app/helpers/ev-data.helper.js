@@ -323,7 +323,6 @@
     var getFlatStructure = function (evDataService) {
 
         var data = JSON.parse(JSON.stringify(evDataService.getData()));
-        console.log("ev filter evDataHelper data", data);
         var rootGroup = JSON.parse(JSON.stringify(evDataService.getRootGroupData()));
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
