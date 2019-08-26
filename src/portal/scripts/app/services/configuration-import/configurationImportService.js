@@ -1750,13 +1750,49 @@
 
                                         } else {
 
-                                            resolveLocal(transactionSchemeService.create(item));
+
+                                            transactionSchemeService.create(item).then(function (data) {
+
+                                                resolveLocal();
+                                            }).catch(function (reason) {
+
+                                                errors.push({
+                                                    content_type: entity,
+                                                    item: item,
+                                                    error: {
+                                                        message: "Can't create Transaction Import Scheme"
+                                                    },
+                                                    mode: 'skip'
+                                                });
+
+                                                resolveLocal(reason);
+
+                                            })
+
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(transactionSchemeService.create(item));
+                                        transactionSchemeService.create(item).then(function (value1) {
+
+                                            resolveLocal();
+
+                                        }).catch(function (reason) {
+
+                                            errors.push({
+                                                content_type: entity,
+                                                item: item,
+                                                error: {
+                                                    message: "Can't create Transaction Import Scheme"
+                                                },
+                                                mode: 'skip'
+                                            });
+
+                                            resolveLocal(reason);
+
+                                        })
+
 
                                     }
 
@@ -2272,7 +2308,7 @@
 
         return new Promise(function (resolve, reject) {
 
-            if(!settings) {
+            if (!settings) {
                 throw "Settings is undefined"
             }
 
