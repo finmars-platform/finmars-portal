@@ -226,6 +226,12 @@
                 controller: 'CheckEventsController as vm'
             })
 
+            .state('app.processes', {
+                url: '/processes',
+                templateUrl: 'views/pages/processes-view.html',
+                controller: 'ProcessesController as vm'
+            })
+
             .state('app.import', {
                 url: '/import',
                 abstract: true,
