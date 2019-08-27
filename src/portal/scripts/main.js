@@ -383,7 +383,7 @@ app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportVi
 app.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]);
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
 app.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evTextFilterDirective')]);
-app.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evnumberFilterDirective')]);
+app.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evNumberFilterDirective')]);
 app.directive('evDateFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evDateFilterDirective')]);
 app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', ['$mdDialog', require('./app/directives/groupTable/gColumnsComponent')]);

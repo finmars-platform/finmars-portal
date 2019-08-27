@@ -596,6 +596,12 @@
                         value: '['
                     };
                     currentIndex = currentIndex + token.value.length;
+                } else {
+                    token = {
+                        type: 'unknown',
+                        value: expression[currentIndex]
+                    };
+                    currentIndex = currentIndex + token.value.length;
                 }
 
 
