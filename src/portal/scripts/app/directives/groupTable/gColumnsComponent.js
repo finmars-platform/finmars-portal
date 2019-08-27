@@ -25,7 +25,8 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
                 scope.groups = scope.evDataService.getGroups();
-                console.log("dragndrop columnComponent columns", scope.columns);
+                scope.downloadedItemsCount = null;
+
                 scope.isReport = ['balance-report',
                     'cash-flow-projection-report',
                     'performance-report', 'pl-report',
@@ -40,11 +41,11 @@
 
                         if (column.key === groups[index].key) {
                             return false;
-                        }
+                        };
 
                         return true;
 
-                    }
+                    };
 
                     return true;
 
@@ -56,11 +57,11 @@
 
                         if (column.key === scope.groups[index].key) {
                             return false;
-                        }
+                        };
 
                         return true;
 
-                    }
+                    };
 
 
                     return true;
@@ -89,9 +90,9 @@
 
                                 childItem.___is_activated = scope.isAllSelected;
 
-                            })
+                            });
 
-                        }
+                        };
 
                     });
 
@@ -151,7 +152,7 @@
                         column.report_settings.subtotal_formula_id = null;
                     } else {
                         column.report_settings.subtotal_formula_id = type;
-                    }
+                    };
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
@@ -206,12 +207,13 @@
                 scope.checkRoundFormatFormula = function (column, type) {
 
                     if (column.hasOwnProperty('report_settings') && column.report_settings) {
+
                         if (column.report_settings.round_format_id == type) {
                             return true;
-                        }
+                        };
 
-                    }
-                    return false
+                    };
+                    return false;
                 };
 
                 scope.selectThousandsSeparatorFormat = function (column, type) {
@@ -289,7 +291,7 @@
                         }
 
                     }
-                    return false
+                    return false;
                 };
 
                 scope.selectZeroFormat = function (column, type) {
@@ -310,11 +312,13 @@
                 scope.checkZeroFormatFormula = function (column, type) {
 
                     if (column.hasOwnProperty('report_settings') && column.report_settings) {
+
                         if (column.report_settings.zero_format_id == type) {
                             return true;
-                        }
+                        };
 
-                    }
+                    };
+
                     return false;
 
                 };
@@ -325,15 +329,15 @@
 
                     if (column.hasOwnProperty('key')) {
                         groupToAdd.key = column.key;
-                    }
+                    };
 
                     if (column.hasOwnProperty('entity')) {
                         groupToAdd.entity = column.entity;
-                    }
+                    };
 
                     if (column.hasOwnProperty('id')) {
                         groupToAdd.id = column.id;
-                    }
+                    };
 
                     groupToAdd.name = column.name;
                     groupToAdd.value_type = column.value_type;
@@ -398,7 +402,7 @@
 
                                 if (resultItem.___column_id !== columns[index].___column_id) {
                                     isChanged = true;
-                                }
+                                };
 
 
                             });
@@ -476,12 +480,14 @@
                 };
 
                 scope.checkForExistingGroupingColumn = function (index) {
+
                     var groups = scope.evDataService.getGroups();
                     if (groups.length > 0 && index <= groups.length - 1) {
                         return false;
                     } else {
                         return true;
                     }
+
                 };
 
                 scope.addColumnEntityToGrouping = function (column) {
@@ -563,6 +569,19 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_HEAD_COLUMNS_SIZE);
                 };
 
+                var getDownloadedTableItemsCount = function () {
+                    var unfilteredFlatList = scope.evDataService.getUnfilteredFlatList();
+
+                    unfilteredFlatList = unfilteredFlatList.filter(function (item) {
+
+                        return item.___type !== 'control';
+
+                    });
+
+                    scope.downloadedItemsCount = unfilteredFlatList.length;
+
+                };
+
                 var init = function () {
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
@@ -586,6 +605,10 @@
                 };
 
                 init();
+
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    getDownloadedTableItemsCount();
+                });
             }
         }
     }
