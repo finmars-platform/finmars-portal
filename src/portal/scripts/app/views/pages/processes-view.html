@@ -1,6 +1,81 @@
 <div class="processes-page p-24">
 
-    <h1>Active Processes</h1>
+    <div layout="row">
+        <h1>Active Processes</h1>
+
+        <!--<button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"-->
+                <!--data-ng-class="{'disabled-btn': !vm.readyStatus.data}"-->
+                <!--data-ng-click="vm.toggleShowAll()">-->
+
+            <!--<span data-ng-if="vm.showAll">Show Active</span>-->
+            <!--<span data-ng-if="!vm.showAll">Show All</span>-->
+
+        <!--</button>-->
+
+        <button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"
+                data-ng-class="{'disabled-btn': !vm.readyStatus.data}"
+                data-ng-click="vm.autoRefresh = !vm.autoRefresh">
+
+            <span data-ng-if="vm.autoRefresh">Disable Auto Refresh</span>
+            <span data-ng-if="!vm.autoRefresh">Enable Auto Refresh</span>
+
+        </button>
+
+    </div>
+
+    <div data-ng-if="vm.readyStatus.data">
+
+        <div data-ng-if="vm.items.length">
+
+            <div layout="row">
+
+                <div class="m-16" style="width: 400px">
+                    <b>Task Type</b>
+                </div>
+
+                <div class="m-16" style="width: 100px">
+                    <b>Status</b>
+                </div>
+
+                <div class="m-16">
+                    <b>Info</b>
+                </div>
+
+            </div>
+
+            <div data-ng-repeat="item in vm.items" layout="row">
+
+                <div class="m-16" style="width: 400px">
+                    {{vm.getTaskType(item)}}
+                </div>
+
+                <div class="m-16" style="width: 100px">
+                    {{vm.getStatus(item)}}
+                </div>
+
+                <div class="m-16">
+                    {{vm.getInfo(item)}}
+                </div>
+
+                <div>
+                    <button class="md-raised md-button" data-ng-click="vm.delete(item)">Delete</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div data-ng-if="!vm.items.length">
+            <h4 class="text-center">No Active Processes</h4>
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+    </div>
 
 
 </div>
