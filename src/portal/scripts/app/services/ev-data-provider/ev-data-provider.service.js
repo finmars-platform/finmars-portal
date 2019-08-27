@@ -281,6 +281,14 @@
             }
         }
 
+        obj.results = obj.results.filter(function (item) {
+            if (item && item.___type !== 'control') {
+                return true;
+            }
+
+            return false;
+        });
+
         var groups = entityViewerDataService.getGroups();
         var parents = [];
 
@@ -291,7 +299,6 @@
         parents.push(obj);
 
         // evDataHelper.setDefaultGroups(obj);
-
         obj.results = obj.results.filter(function (item) {
             return item.___type !== 'control'
         });

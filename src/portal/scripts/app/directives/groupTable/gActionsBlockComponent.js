@@ -322,6 +322,17 @@
 
                 };
 
+                scope.applyFilters = function () {
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
+
+                    var rootGroup = scope.evDataService.getRootGroupData();
+
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                };
+
                 scope.openActions = function ($mdOpenMenu, $event) {
 
                     $mdOpenMenu($event);

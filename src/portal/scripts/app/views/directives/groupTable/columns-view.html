@@ -1,5 +1,7 @@
 <div class="g-columns-component g-thead" group-column-init-width columns="columns">
-    <div class="g-column-title-row" layout="row" data-ng-if="components.columnAreaHeader">
+    <div class="g-column-title-row"
+         layout="row"
+         data-ng-if="components.columnAreaHeader">
         <p class="g-column-title"><span class="g-meta-circle red">C</span>OLUMN AREA
             <ng-md-icon class="tooltips-sign"
                         icon="info" size="20"
@@ -7,6 +9,8 @@
                 <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
             </ng-md-icon>
         </p>
+        <div ng-if="downloadedItemsCount"
+             class="g-downloaded-items-count">Objects Loaded: {{downloadedItemsCount}}</div>
     </div>
     <div class="g-column-bottom-row">
         <div class="g-cell-select all {{isAllSelected ? 'active' : ''}}" data-ng-click="selectAllRows()">

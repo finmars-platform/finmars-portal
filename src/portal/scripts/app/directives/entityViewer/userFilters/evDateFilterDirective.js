@@ -93,7 +93,7 @@
                 };
 
                 if (!scope.filter.options.hasOwnProperty('is_frontend_filter')) {
-                    scope.filter.options.is_frontend_filter = false;
+                    scope.filter.options.is_frontend_filter = true;
                 };
 
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
@@ -164,7 +164,7 @@
 
                 scope.toggleFrontendFilter = function () {
 
-                    if (scope.filter.options.is_frontend_filter) {
+                    if (!scope.filter.options.is_frontend_filter) {
 
                         if (scope.filter.options.filter_type === "date_tree") {
 
@@ -217,17 +217,6 @@
                         if (scope.filter.options.is_frontend_filter) {
 
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                        } else {
-
-                            scope.evDataService.resetData();
-                            scope.evDataService.resetRequestParameters();
-
-                            var rootGroup = scope.evDataService.getRootGroupData();
-
-                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                         };
 
