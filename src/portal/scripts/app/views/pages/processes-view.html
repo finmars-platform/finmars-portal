@@ -3,17 +3,25 @@
     <div layout="row">
         <h1>Active Processes</h1>
 
-        <!--<button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"-->
-                <!--data-ng-class="{'disabled-btn': !vm.readyStatus.data}"-->
-                <!--data-ng-click="vm.toggleShowAll()">-->
+        <button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"
+                data-ng-class="{'disabled-btn': !vm.readyStatus.data || vm.autoRefresh}"
+                data-ng-click="vm.toggleShowAll()">
 
-            <!--<span data-ng-if="vm.showAll">Show Active</span>-->
-            <!--<span data-ng-if="!vm.showAll">Show All</span>-->
+            <span data-ng-if="vm.showAll">Show Active</span>
+            <span data-ng-if="!vm.showAll">Show All</span>
 
-        <!--</button>-->
+        </button>
 
         <button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"
-                data-ng-class="{'disabled-btn': !vm.readyStatus.data}"
+                data-ng-class="{'disabled-btn': !vm.readyStatus.data || vm.autoRefresh}"
+                data-ng-click="vm.getData()">
+
+            <span>Refresh list</span>
+
+        </button>
+
+        <button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"
+                data-ng-class="{'disabled-btn': !vm.readyStatus.data || vm.showAll}"
                 data-ng-click="vm.autoRefresh = !vm.autoRefresh">
 
             <span data-ng-if="vm.autoRefresh">Disable Auto Refresh</span>
@@ -28,6 +36,14 @@
         <div data-ng-if="vm.items.length">
 
             <div layout="row">
+
+                <div class="m-16" style="width: 10%">
+                    <b>Start Time</b>
+                </div>
+
+                <div class="m-16" style="width: 10%">
+                    <b>Member</b>
+                </div>
 
                 <div class="m-16" style="width: 400px">
                     <b>Task Type</b>
@@ -44,6 +60,14 @@
             </div>
 
             <div data-ng-repeat="item in vm.items" layout="row">
+
+                <div class="m-16" style="width: 10%">
+                    {{vm.getStartedAt(item)}}
+                </div>
+
+                <div class="m-16" style="width: 10%">
+                    {{item.member_object.display_name}}
+                </div>
 
                 <div class="m-16" style="width: 400px">
                     {{vm.getTaskType(item)}}

@@ -31,6 +31,9 @@
         vm.counter = 0;
         vm.activeItemTotal = 0;
 
+        vm.processing = false;
+        vm.loaderData = {};
+
         vm.loadIsAvailable = function () {
             if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
                 return true;
@@ -100,10 +103,20 @@
 
             vm.counter = Object.keys(vm.counterData).length;
 
+
+            vm.loaderData.current = vm.counter;
+            vm.loaderData.total = vm.activeItemTotal;
+            vm.loaderData.status = vm.status;
+
+            vm.loaderData.additional = [
+                vm.getTransactionImportProgress(),
+                vm.getSimpleImportProgress()
+            ];
+
             $scope.$apply()
         }
 
-        vm.getSimpleImportProgress = function(){
+        vm.getSimpleImportProgress = function () {
 
             var result = {};
 
@@ -134,7 +147,6 @@
                 }
 
             });
-
 
 
             if (currentAction && currentActionIndex && schemeObject) {
@@ -185,7 +197,6 @@
             });
 
 
-
             if (currentAction && currentActionIndex && schemeObject) {
 
                 // console.log('currentActionIndex', currentActionIndex);
@@ -204,7 +215,7 @@
 
             vm.counterData = {};
 
-            vm.readyStatus.processing = true;
+            vm.processing = true;
 
             var formData = new FormData();
 
@@ -247,9 +258,10 @@
 
                 } else if (action.complex_transaction_import_scheme) {
 
-                    actionFields =  action.complex_transaction_import_scheme;
+                    actionFields = action.complex_transaction_import_scheme;
 
-                };
+                }
+                ;
 
                 actionKeys = Object.keys(actionFields);
 
@@ -267,7 +279,8 @@
                             }
                         }
 
-                    };
+                    }
+                    ;
                 });
 
                 if (actionFieldsErrors.empty_fields) {
@@ -292,44 +305,26 @@
 
             } else {
 
-                $mdDialog.show({
-                    controller: 'LoaderDialogController as vm',
-                    templateUrl: 'views/dialogs/loader-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        data: {
-                            isCancelable: false,
-                            current: vm.counter,
-                            total: vm.activeItemTotal,
-                            text: 'Validation Progress: Step',
-                            status: vm.status,
-                            callback: function () {
-                                return {
-                                    current: vm.counter,
-                                    total: vm.activeItemTotal,
-                                    status: vm.status,
-                                    additional: [
-                                        vm.getTransactionImportProgress(),
-                                        vm.getSimpleImportProgress()
-                                    ]
-                                }
-                            }
-                        }
-                    }
-
-                });
+                vm.loaderData = {
+                    current: vm.counter,
+                    total: vm.activeItemTotal,
+                    text: 'Validation Progress: Step',
+                    status: vm.status,
+                    additional: [
+                        vm.getTransactionImportProgress(),
+                        vm.getSimpleImportProgress()
+                    ]
+                };
 
                 complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
                     // console.log('data', data);
 
+                    vm.processing = false;
+
                     vm.status = 'SUCCESS';
 
-                    vm.readyStatus.processing = false;
+                    vm.processing = false;
 
                     if (data.errors.length === 0) {
 
@@ -376,10 +371,9 @@
 
         };
 
-
         vm.import = function ($event) {
 
-            vm.readyStatus.processing = true;
+            vm.processing = true;
 
             var formData = new FormData();
 
@@ -422,9 +416,10 @@
 
                 } else if (action.complex_transaction_import_scheme) {
 
-                    actionFields =  action.complex_transaction_import_scheme;
+                    actionFields = action.complex_transaction_import_scheme;
 
-                };
+                }
+                ;
 
                 actionKeys = Object.keys(actionFields);
 
@@ -442,7 +437,8 @@
                             }
                         }
 
-                    };
+                    }
+                    ;
                 });
 
                 if (actionFieldsErrors.empty_fields) {
@@ -467,39 +463,22 @@
 
             } else {
 
-                $mdDialog.show({
-                    controller: 'LoaderDialogController as vm',
-                    templateUrl: 'views/dialogs/loader-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        data: {
-                            isCancelable: false,
-                            current: vm.counter,
-                            total: vm.activeItemTotal,
-                            text: 'Validation Progress: Step',
-                            status: vm.status,
-                            callback: function () {
-                                return {
-                                    current: vm.counter,
-                                    total: vm.activeItemTotal,
-                                    status: vm.status,
-                                    additional: [
-                                        vm.getTransactionImportProgress()
-                                    ]
-                                }
-                            }
-                        }
-                    }
-
-                });
+                vm.loaderData = {
+                    current: vm.counter,
+                    total: vm.activeItemTotal,
+                    text: 'Validation Progress: Step',
+                    status: vm.status,
+                    additional: [
+                        vm.getTransactionImportProgress(),
+                        vm.getSimpleImportProgress()
+                    ]
+                };
 
                 complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
                     // console.log('validation data', data);
+
+                    vm.processing = false;
 
                     vm.status = 'SUCCESS';
 
@@ -517,37 +496,20 @@
 
                         setTimeout(function () {
 
+                            vm.processing = true;
+
                             vm.status = 'PROGRESS';
 
-                            $mdDialog.show({
-                                controller: 'LoaderDialogController as vm',
-                                templateUrl: 'views/dialogs/loader-dialog-view.html',
-                                targetEvent: $event,
-                                preserveScope: true,
-                                multiple: true,
-                                autoWrap: true,
-                                skipHide: true,
-                                locals: {
-                                    data: {
-                                        isCancelable: false,
-                                        current: vm.counter,
-                                        total: vm.activeItemTotal,
-                                        text: 'Import Progress: Step',
-                                        status: vm.status,
-                                        callback: function () {
-                                            return {
-                                                current: vm.counter,
-                                                total: vm.activeItemTotal,
-                                                status: vm.status,
-                                                additional: [
-                                                    vm.getTransactionImportProgress()
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-
-                            });
+                            vm.loaderData = {
+                                current: vm.counter,
+                                total: vm.activeItemTotal,
+                                text: 'Import Progress: Step',
+                                status: vm.status,
+                                additional: [
+                                    vm.getTransactionImportProgress(),
+                                    vm.getSimpleImportProgress()
+                                ]
+                            };
 
                             vm.counterData = {};
 
@@ -556,7 +518,7 @@
                                 // console.log('data', data);
 
                                 vm.status = 'SUCCESS';
-                                vm.readyStatus.processing = false;
+                                vm.processing = false;
 
                                 errorsCount = 0;
 
@@ -620,7 +582,7 @@
 
                                 // console.log('here? ', reason);
 
-                                vm.readyStatus.processing = false;
+                                vm.processing = false;
 
                                 vm.status = 'SUCCESS';
 
@@ -647,7 +609,7 @@
 
                     } else {
 
-                        vm.readyStatus.processing = false;
+                        vm.processing = false;
                         vm.status = 'SUCCESS';
 
                         $mdDialog.show({

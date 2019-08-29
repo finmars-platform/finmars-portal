@@ -80,6 +80,12 @@
 
         };
 
+        vm.getStartedAt = function(item) {
+
+            return new Date(item.started_at).toLocaleDateString() + ' ' + new Date(item.started_at).toLocaleTimeString()
+
+        };
+
         vm.getTaskType = function (item) {
 
             if (item.task_type === 'validate_simple_import') {
