@@ -80,18 +80,24 @@
 
         };
 
+        vm.getStartedAt = function(item) {
+
+            return new Date(item.started_at).toLocaleDateString() + ' ' + new Date(item.started_at).toLocaleTimeString()
+
+        };
+
         vm.getTaskType = function (item) {
 
             if (item.task_type === 'validate_simple_import') {
-                return 'Simple Entity Import Validation'
+                return 'Entity Import Validation'
             }
 
             if (item.task_type === 'simple_import') {
-                return 'Simple Entity Import'
+                return 'Entity Import'
             }
 
             if (item.task_type === 'validate_transaction_import') {
-                return 'Transaction Validation'
+                return 'Transaction Import Validation'
             }
 
             if (item.task_type === 'transaction_import') {

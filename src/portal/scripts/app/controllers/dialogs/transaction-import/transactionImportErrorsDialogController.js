@@ -23,11 +23,7 @@
 
         vm.validationResult = data.validationResult;
 
-        vm.error_rows = vm.validationResult.error_rows.filter(function (item) {
-
-            return item.level === 'error';
-
-        });
+        vm.error_rows = []
 
         vm.scheme = data.scheme;
         vm.config = data.config;
@@ -282,6 +278,20 @@
 
 
         vm.init = function () {
+
+            vm.error_rows = vm.validationResult.error_rows.filter(function (item) {
+
+                return item.level === 'error';
+
+            });
+
+            vm.error_rows = vm.error_rows.map(function (item) {
+
+                item.original_row_pretty = item.original_row.join(' ');
+
+                return item;
+            });
+
 
             if (vm.config.error_handling === 'break') {
                 vm.rowsSuccessCount = vm.validationResult.error_row_index - 1;
