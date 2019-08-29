@@ -34,6 +34,27 @@
 
                 scope.specialOptionTemplate = '';
 
+                scope.fieldType = null;
+                scope.editMode = false;
+                scope.entityType = scope.$parent.vm.entityType;
+
+                scope.attrs = scope.$parent.vm.attrs || [];
+                scope.entityAttrs = scope.$parent.vm.entityAttrs || [];
+                scope.userInputs = scope.$parent.vm.userInputs || [];
+
+                scope.layoutAttrs = layoutService.getLayoutAttrs();
+
+                var entityAttrsKeys = [];
+                scope.entityAttrs.forEach(function (entityAttr) {
+                    entityAttrsKeys.push(entityAttr.key);
+                });
+                var layoutAttrsKeys = [];
+                scope.layoutAttrs.forEach(function (layoutAttr) {
+                    layoutAttrsKeys.push(layoutAttr.key);
+                });
+
+                var tabs = scope.$parent.vm.tabs;
+
                 scope.$watch('tabFieldsTree', function () {
 
                     if (scope.tabFieldsTree) {
@@ -53,29 +74,54 @@
                         scope.fieldUsesBackgroundColor = false;
                         scope.fieldBackgroundColor = '#000000';
                     }
-                }
 
-                // findItem();
+                    findAttribute();
 
-                scope.fieldType = null;
-                scope.editMode = false;
-                scope.entityType = scope.$parent.vm.entityType;
+                };
 
-                scope.attrs = scope.$parent.vm.attrs || [];
-                scope.entityAttrs = scope.$parent.vm.entityAttrs || [];
-                scope.userInputs = scope.$parent.vm.userInputs || [];
-                scope.layoutAttrs = layoutService.getLayoutAttrs();
+                function findAttribute() {
 
-                var entityAttrsKeys = [];
-                scope.entityAttrs.forEach(function (entityAttr) {
-                    entityAttrsKeys.push(entityAttr.key);
-                });
-                var layoutAttrsKeys = [];
-                scope.layoutAttrs.forEach(function (layoutAttr) {
-                    layoutAttrsKeys.push(layoutAttr.key);
-                });
+                    var attrFound = false;
 
-                var tabs = scope.$parent.vm.tabs;
+                    var i, b, l, e, u;
+                    for (i = 0; i < scope.attrs.length; i = i + 1) {
+                        if (scope.attrs[i].id && scope.item.id) {
+                            if (scope.attrs[i].id === scope.item.id) {
+                                scope.item.attribute = scope.attrs[i];
+                                attrFound = true;
+                                break;
+                            }
+                        }
+                    };
+
+                    if (!attrFound) {
+                        for (e = 0; e < scope.entityAttrs.length; e = e + 1) {
+                            if (scope.entityAttrs[e].name === scope.item.name) {
+                                scope.item.attribute = scope.entityAttrs[e];
+                                attrFound = true;
+                                break;
+                            }
+                        };
+                    };
+
+                    if (!attrFound) {
+                        for (u = 0; u < scope.userInputs.length; u = u + 1) {
+                            if (scope.userInputs[u].name === scope.item.name) {
+                                scope.item.attribute = scope.userInputs[u];
+                                attrFound = true;
+                                break;
+                            }
+                        };
+                    }
+
+                    if (!scope.item.attribute) {
+                        for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
+                            if (scope.layoutAttrs[l].name === scope.item.name) {
+                                scope.item.attribute = scope.layoutAttrs[l];
+                            }
+                        }
+                    };
+                };
 
                 scope.changeFieldColspan = function(colspan) {
 
@@ -157,6 +203,10 @@
 
                             if (layoutAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
                                 scope.tab.layout.fields[i].attribute_class = 'decorationAttr';
+                            }
+
+                            if (scope.item.options) {
+                                scope.tab.layout.fields[i].options = scope.item.options;
                             }
 
 
@@ -301,37 +351,6 @@
                     scope.$parent.vm.createFieldsTree();
                     scope.$parent.vm.syncItems();
                 };
-
-                function findAttribute() {
-                    var i, b, l, e, u;
-                    for (i = 0; i < scope.attrs.length; i = i + 1) {
-                        if (scope.attrs[i].id && scope.item.id) {
-                            if (scope.attrs[i].id === scope.item.id) {
-                                scope.item.attribute = scope.attrs[i];
-                            }
-                        } else {
-                            for (e = 0; e < scope.entityAttrs.length; e = e + 1) {
-                                if (scope.entityAttrs[e].name === scope.item.name) {
-                                    scope.item.attribute = scope.entityAttrs[e];
-                                }
-                            }
-                            for (u = 0; u < scope.userInputs.length; u = u + 1) {
-                                if (scope.userInputs[u].name === scope.item.name) {
-                                    scope.item.attribute = scope.userInputs[u];
-                                }
-                            }
-                            if (!scope.item.attribute) {
-                                for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
-                                    if (scope.layoutAttrs[l].name === scope.item.name) {
-                                        scope.item.attribute = scope.layoutAttrs[l];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                findAttribute();
 
                 scope.findAttrsLeft = function () {
 

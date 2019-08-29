@@ -10,6 +10,11 @@
     "content": []
   },
   {
+    "key": "reports.transactionreport",
+    "name": "Transaction Reports",
+    "content": []
+  },
+  {
     "key": "portfolios.portfolio",
     "name": "Portfolio",
     "content": []

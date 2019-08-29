@@ -83,26 +83,76 @@
 
                 if (scope.isReport === true) {
 
-                    var options = {
+                    var ppOptions = {
                         pageSize: 1000,
                         page: 1
                     };
 
-                    pricingPolicyService.getList(options).then(function (data) {
+                    scope.pricingPolicies = [];
 
-                        scope.pricingPolicies = data.results;
+                    var getPricingPolicies = function () {
 
-                        scope.$apply();
+                        new Promise(function (resolve, reject) {
 
-                    });
+                            pricingPolicyService.getList(ppOptions).then(function (data) {
 
-                    currencyService.getList(options).then(function (data) {
+                                scope.pricingPolicies = scope.pricingPolicies.concat(data.results);
 
-                        scope.currencies = data.results;
+                                if (data.next) {
 
-                        scope.$apply();
+                                    ppOptions.page = ppOptions.page + 1;
+                                    getPricingPolicies(resolve, reject);
 
-                    });
+                                } else {
+                                    scope.$apply();
+                                    resolve(true);
+                                };
+
+                            }).catch(function (error) {
+                                reject(error);
+                            });
+
+                        });
+
+                    };
+
+                    getPricingPolicies();
+
+
+                    var currencyOptions = {
+                        pageSize: 1000,
+                        page: 1
+                    };
+
+                    scope.currencies = [];
+
+                    var getCurrencies = function () {
+
+                        new Promise(function (resolve, reject) {
+
+                            currencyService.getList(currencyOptions).then(function (data) {
+
+                                scope.currencies = scope.currencies.concat(data.results);
+
+                                if (data.next) {
+
+                                    currencyOptions.page = currencyOptions.page + 1;
+                                    getPricingPolicies(resolve, reject);
+
+                                } else {
+                                    scope.$apply();
+                                    resolve(true);
+                                };
+
+                            }).catch(function (error) {
+                                reject(error);
+                            });
+
+                        });
+
+                    };
+
+                    getCurrencies();
 
                     prepareReportLayoutOptions();
 

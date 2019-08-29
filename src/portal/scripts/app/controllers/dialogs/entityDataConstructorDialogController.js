@@ -102,7 +102,7 @@
                         });
 
                         addRowForTab();
-
+                        console.log("vm.tabs", vm.tabs);
                         resolve(vm.tabs);
 
                     });
@@ -286,6 +286,53 @@
                 };
                 tab.layout.fields.push(field);
             };
+
+            vm.createFieldsTree();
+            vm.updateDrakeContainers();
+
+        };
+
+        vm.isRowEmpty = function (tabId, rowNumber, columnsNumber) {
+
+            var isEmpty = true;
+            for (var i = 1; i < columnsNumber; i++) {
+                var socket = vm.fieldsTree[tabId][rowNumber][i];
+
+                if (socket && socket.type !== 'empty') {
+
+                    isEmpty = false;
+                    break;
+
+                } else if (!socket) {
+                    isEmpty = false;
+                    break;
+                };
+
+            };
+
+            return isEmpty;
+
+        };
+
+        vm.deleteRow = function (tab, row) {
+
+            tab.layout.fields = tab.layout.fields.filter(function (field) {
+
+                if (field.row > row) {
+
+                    field.row = field.row - 1;
+
+                } else if (field.row === row) {
+
+                    return false;
+
+                };
+
+                return true;
+
+            });
+
+            tab.layout.rows = tab.layout.rows - 1;
 
             vm.createFieldsTree();
             vm.updateDrakeContainers();
@@ -589,11 +636,56 @@
             attributeTypeService.getList(vm.entityType).then(function (data) {
 
                 vm.attrs = data.results;
-                var doNotShowAttrs = ['code', 'date', 'status', 'text'];
                 var entityAttrs = metaService.getEntityAttrs(vm.entityType);
-                vm.entityAttrs = entityAttrs.filter(function (entity) {
-                    return doNotShowAttrs.indexOf(entity.key) === -1;
-                });
+
+                /*if (vm.entityType === 'transaction-type') {
+
+                    var doNotShowAttrs = ['code', 'date', 'status', 'text'];
+                    vm.entityAttrs = entityAttrs.filter(function (entity) {
+                        return doNotShowAttrs.indexOf(entity.key) === -1;
+                    });
+
+                } else {
+                    vm.entityAttrs = entityAttrs;
+                }*/
+
+                switch (vm.entityType) {
+
+                    case 'complex-transaction':
+                    case 'transaction-type':
+
+                        var doNotShowAttrs = ['code', 'date', 'status', 'text',
+                            'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4',
+                            'user_text_5', 'user_text_6', 'user_text_7', 'user_text_8',
+                            'user_text_9', 'user_text_10', 'user_number_1', 'user_number_2',
+                            'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6',
+                            'user_number_7', 'user_number_8', 'user_number_9', 'user_number_10',
+                            'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
+
+                        vm.entityAttrs = entityAttrs.filter(function (entity) {
+                            return doNotShowAttrs.indexOf(entity.key) === -1;
+                        });
+
+                        break;
+
+                    case 'instrument':
+
+                        var doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
+                            'accrued_multiplier', 'default_accrued',
+                            'pricing_currency', 'price_multiplier',
+                            'default_price', 'daily_pricing_model',
+                            'price_download_scheme', 'reference_for_pricing'];
+
+                        vm.entityAttrs = entityAttrs.filter(function (entity) {
+                            return doNotShowAttrs.indexOf(entity.key) === -1;
+                        });
+
+                        break;
+
+                    default:
+                        vm.entityAttrs = entityAttrs;
+
+                };
 
                 vm.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -893,18 +985,6 @@
             vm.items = [];
 
             vm.items = vm.items.concat(vm.attrs);
-            // if (vm.entityType === 'complex-transaction' && !vm.instanceId) {
-            //    console.log('remove fields complex-transaction');
-            //    var entityAttrsForCT = doNotShowAttrs.filter(function (entityAttr) {
-            //        return doNotShowAttrs.indexOf(entityAttr) === -1;
-            //    });
-            //
-            //    vm.items.concat(entityAttrsForCT);
-            //
-            // }
-            // else {
-            //     vm.items = vm.items.concat(vm.entityAttrs);
-            // }
             vm.items = vm.items.concat(vm.entityAttrs);
             vm.items = vm.items.concat(vm.userInputs);
             vm.items = vm.items.concat(vm.layoutAttrs);
@@ -942,7 +1022,7 @@
 
             console.log('vm.entityType', vm.entityType);
 
-            if (vm.entityType === 'instrument') {
+            /*if (vm.entityType === 'instrument') {
 
                 vm.items = vm.items.filter(function (item) {
 
@@ -978,7 +1058,7 @@
                 });
 
 
-            }
+            }*/
 
             vm.updateDrakeContainers();
 

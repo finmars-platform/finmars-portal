@@ -9,7 +9,7 @@
                 <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
             </ng-md-icon>
         </p>
-        <div ng-if="downloadedItemsCount"
+        <div ng-if="!isReport && downloadedItemsCount"
              class="g-downloaded-items-count">Objects Loaded: {{downloadedItemsCount}}</div>
     </div>
     <div class="g-column-bottom-row">

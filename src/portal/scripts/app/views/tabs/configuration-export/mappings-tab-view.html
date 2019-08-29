@@ -11,7 +11,9 @@
 
     </div>
 
-    <div data-ng-repeat="item in vm.mappingItems">
+    <div data-ng-repeat="item in vm.mappingItems"
+         class="cie-mapping-group-item"
+         data-group-entity="{{item.entity}}">
 
         <div class="cie-entity-holder">
             <md-checkbox data-ng-checked="item.active"
@@ -27,7 +29,7 @@
         </div>
 
 
-        <div data-ng-show="item.displayItems" style="padding-left: 20px">
+        <div data-ng-show="item.displayItems" style="padding-left: 20px; position: relative;">
 
             <div data-ng-repeat="child in item.content">
                 <md-checkbox data-ng-checked="child.active"

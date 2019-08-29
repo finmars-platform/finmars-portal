@@ -21,7 +21,7 @@
             ng-bind="item.first_item__"
             class="cie-entities-group-h2"></h2>
 
-        <div class="cie-entity-holder">
+        <div class="cie-entity-holder cie-configuration-group-item" data-group-entity="{{item.entity}}">
             <md-checkbox data-ng-checked="item.active"
                          data-ng-click="vm.toggleActiveForChilds(item)"
                          data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"

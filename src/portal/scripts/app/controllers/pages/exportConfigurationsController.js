@@ -224,8 +224,7 @@
                             case "accounts.account":
                                 daContentType = "Account";
                                 break;
-                        }
-                        ;
+                        };
 
                         var daName = attr.name;
                         var usagesCount = 0;
@@ -311,7 +310,7 @@
 
                             }
 
-                        })
+                        });
                         // < Searching attribute usage in layout  >
                     });
                 }
@@ -514,8 +513,7 @@
 
                 if (res.status === 'agree') {
                     vm.getConfigurationExportLayouts();
-                }
-                ;
+                };
 
             })
 
@@ -961,12 +959,46 @@
 
         };
 
+        var configsToMappingsEntityMatches = {
+            "integrations.accounttypemapping": "obj_attrs.accounttypeattributetype",
+            "integrations.instrumenttypemapping": "obj_attrs.instrumentattributetype",
+            "integrations.pricingpolicymapping": "instruments.pricingpolicy",
+            "integrations.pricedownloadschememapping": "integrations.pricedownloadscheme"
+        };
+
+        var alginMappingsWithCorrespondingConfigs = function () {
+
+            var mappingGroups = document.querySelectorAll(".cie-mapping-group-item");
+            var configGroups = document.querySelectorAll(".cie-configuration-group-item");
+
+            var m,c;
+            for (m = 0; m < mappingGroups.length; m++) {
+                var mItem = mappingGroups[m];
+                var configEntity = configsToMappingsEntityMatches[mItem.dataset.groupEntity];
+
+                for (c = 0; c < configGroups.length; c++) {
+                    var cItem = configGroups[c];
+
+                    if (cItem.dataset.groupEntity === configEntity) {
+
+                        var mappingTopOffset = cItem.offsetTop - mItem.offsetTop;
+                        mItem.style.top = mappingTopOffset + "px";
+
+                    };
+                };
+
+            };
+
+        };
+
         // Mapping Section End
 
         vm.init = function () {
 
             vm.getFile().then(function () {
                 vm.getConfigurationExportLayouts();
+
+                alginMappingsWithCorrespondingConfigs();
             });
 
             vm.getMappingFile();

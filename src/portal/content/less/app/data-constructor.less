@@ -61,7 +61,7 @@ md-optgroup.bold-field-select > label {
 
 .ec-layout-row {
   position: relative;
-  padding-right: 55px;
+  padding-right: 95px;
 }
 
 .ec-attr-card {
@@ -421,32 +421,46 @@ md-checkbox.checkbox-bind-field {
   margin-right: 320px;
 }
 
-button.ec-insert-row-btn {
+button.ec-manage-row-btn {
   position: absolute;
   min-width: 0;
   width: 40px;
   min-height: 0;
   height: 40px;
   top: 50%;
-  right: 10px;
+  //right: 10px;
   transform: translateY(-50%);
   margin: 0;
   font-size: 24px;
   border-radius: 24px;
-  color: #fff;
-  background-color: #F4AF8B;
-  transition: opacity 0.3s linear;
+  color: #f4af8b;
+  //background-color: #f4af8b;
+  background-color: transparent;
+  border: 2px solid #F4AF8B;
+  transition: all 0.2s linear;
 
-  &:hover {
-    opacity: 0.5;
-  }
+  /*&:hover {
+    //opacity: 0.5;
+    background-color: #f4af8b;
+    color: #fff;
+  }*/
 
   &:not([disabled]):hover {
-    background-color: #F4AF8B;
+    background-color: #f4af8b;
+    color: #fff;
   }
 
   &:not([disabled]):focus {
-    background-color: #F4AF8B;
+    background-color: transparent;
+  }
+
+  &[disabled]:focus {
+    background-color: transparent;
+  }
+
+  &[disabled] {
+    color: #f4af8b;
+    opacity: 0.5;
   }
 }
 
