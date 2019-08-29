@@ -20,11 +20,30 @@
 
                                 <md-input-container class="md-block" flex-gt-sm>
                                     <label>Reference Name</label>
-                                    <input data-ng-model="vm.attribute.user_code"  data-ng-keyup="vm.validateUserCode()">
+                                    <input data-ng-model="vm.attribute.user_code" data-ng-keyup="vm.validateUserCode()">
 
                                 </md-input-container>
 
-                                <div class="color-danger m-l-16" data-ng-if="vm.userCodeError">Only alphabet, numbers and underscores allowed</div>
+                                <div class="color-danger m-l-16" data-ng-if="vm.userCodeError">Only alphabet, numbers
+                                    and underscores allowed
+                                </div>
+
+                                <md-input-container class="md-block" flex-gt-sm>
+                                    <md-checkbox class="md-secondary"
+                                                 ng-model="vm.attribute.can_recalculate"
+                                                 data-ng-change="vm.attribute.expr = ''">Can recalculate
+                                    </md-checkbox>
+                                </md-input-container>
+
+                                <div data-ng-if="vm.attribute.can_recalculate" layout="row">
+                                    <md-input-container class="md-block" style="width: 80%">
+                                        <label>Expression</label>
+                                        <input data-ng-model="vm.attribute.expr">
+                                    </md-input-container>
+
+                                    <expression-editor-button
+                                            data-item="vm.attribute.expr"></expression-editor-button>
+                                </div>
 
                                 <div data-ng-if="vm.editRestriction" flex-gt-sm>
                                     <md-input-container class="md-block">
@@ -243,7 +262,8 @@
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised md-primary {{vm.userCodeError ? 'disabled-btn': ''}}" ng-click="vm.agree($event)" style="margin-right:20px;">
+        <md-button class="md-raised md-primary {{vm.userCodeError ? 'disabled-btn': ''}}" ng-click="vm.agree($event)"
+                   style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>

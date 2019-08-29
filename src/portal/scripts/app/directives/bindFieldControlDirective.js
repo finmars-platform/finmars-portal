@@ -29,9 +29,15 @@
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
+                scope.isDisabled = false;
+
                 if (scope.item) {
                     scope.fieldType = null;
                     scope.attribute = scope.item;
+
+                    if(scope.attribute && scope.attribute.can_recalculate) {
+                        scope.isDisabled = true;
+                    }
 
                     var i;
                     for (i = 0; i < choices.length; i = i + 1) {
