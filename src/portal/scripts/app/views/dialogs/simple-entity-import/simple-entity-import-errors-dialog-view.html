@@ -40,7 +40,7 @@
 
                             <div>
 
-                                <div><b>Rows total</b>: {{vm.validationResult.total - 1}}</div>
+                                <div><b>Rows total</b>: {{vm.validationResult.total_rows - 1}}</div>
                                 <div><b>Rows success import</b>: {{vm.rowsSuccessTotal}}</div>
                                 <div><b>Rows omitted</b>: {{vm.rowsSkippedCount}}</div>
                                 <div><b>Rows fail import</b>: {{vm.rowsFailedCount}}</div>
@@ -60,9 +60,9 @@
                                     <th>
                                         Row number
                                     </th>
-                                    <th style="max-width:200px">Inputs</th>
-                                    <th style="max-width: 460px">Row content</th>
-                                    <th style="min-width:300px">Message</th>
+                                    <th style="max-width:200px; width: 200px">Inputs</th>
+                                    <th style="max-width: 460px; width: 400px">Row content</th>
+                                    <th style="min-width:300px; width: 300px">Message</th>
                                     <th>Reaction</th>
                                 </tr>
                                 </thead>
@@ -71,13 +71,13 @@
                                     <td>
                                         <span data-ng-bind="item.original_row_index"></span>
                                     </td>
-                                    <td>
+                                    <td style="max-width:200px; width: 200px">
                                         <div data-ng-repeat="(key, val) in item.inputs">
                                             <b data-ng-bind="key"></b>: {{val}}
                                         </div>
                                     </td>
-                                    <td data-ng-bind="item.original_row"></td>
-                                    <td data-ng-bind="item.error_message"></td>
+                                    <td style="max-width: 460px; width: 400px" data-ng-bind="item.original_row_pretty"></td>
+                                    <td style="min-width:300px; width: 300px" data-ng-bind="item.error_message"></td>
                                     <td><span data-ng-bind="item.error_reaction"
                                               style="white-space: pre-wrap;"></span></td>
                                 </tr>

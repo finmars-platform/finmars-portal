@@ -17,9 +17,7 @@
         vm.scheme = data.scheme;
         vm.config = data.config;
 
-        vm.errors = vm.validationResult.stats.filter(function (item) {
-            return item.level === 'error';
-        });
+        vm.errors = [];
 
         vm.imported_columns = [];
         vm.converted_imported_columns = [];
@@ -66,7 +64,7 @@
             result.push('Import Rules - if object is not found, ' + config.missing_data_handler);
             // result.push('Entity, ' + vm.scheme.content_type);
 
-            result.push('Rows total, ' + (validationResult.total - 1));
+            result.push('Rows total, ' + (validationResult.total_rows - 1));
 
             var rowsSuccessTotal;
 
@@ -87,7 +85,7 @@
 
             } else {
 
-                rowsSuccessTotal = validationResult.total - 1 - rowsFailedCount - rowsSkippedCount;
+                rowsSuccessTotal = validationResult.total_rows - 1 - rowsFailedCount - rowsSkippedCount;
             }
 
             if (rowsSuccessTotal < 0) {
@@ -221,6 +219,19 @@
 
         vm.init = function () {
 
+            vm.errors = vm.validationResult.stats.filter(function (item) {
+                return item.level === 'error';
+            });
+
+            vm.errors = vm.errors.map(function (item) {
+
+                item.original_row_pretty = item.original_row.join(' ')
+
+                return item
+
+            });
+
+
             vm.rowsSkippedCount = vm.validationResult.stats.filter(function (item) {
                 return item.error_reaction === 'Skipped';
             }).length;
@@ -240,7 +251,7 @@
 
             } else {
 
-                vm.rowsSuccessTotal = vm.validationResult.total - 1 - vm.rowsFailedCount - vm.rowsSkippedCount;
+                vm.rowsSuccessTotal = vm.validationResult.total_rows - 1 - vm.rowsFailedCount - vm.rowsSkippedCount;
             }
 
             if (vm.rowsSuccessTotal < 0) {
