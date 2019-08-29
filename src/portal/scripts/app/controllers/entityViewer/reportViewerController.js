@@ -27,7 +27,7 @@
 
             vm.listViewIsReady = false;
 
-            middlewareService.masterUserChanged(false); // in case viewer opened right after master user changed
+            var doNotCheckLayoutChanges = false;
 
             vm.setEventListeners = function () {
 
@@ -650,6 +650,13 @@
 
             vm.init = function () {
 
+                middlewareService.onMasterUserChanged(function () {
+                    doNotCheckLayoutChanges = true;
+                });
+
+                middlewareService.initLogOut(function () {
+                    doNotCheckLayoutChanges = true;
+                });
 
                 vm.getView();
 
@@ -661,9 +668,7 @@
 
                 return new Promise(function (resolve, reject) {
 
-                    var masterUserChanged = middlewareService.didMasterUserChange();
-
-                    if (!masterUserChanged) {
+                    if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
                         var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
@@ -777,7 +782,7 @@
             this.$onDestroy = function () {
 
                 removeTransitionWatcher();
-                //middlewareService.setWarningOfLayoutChangesLossFn(false);
+
             }
         }
 

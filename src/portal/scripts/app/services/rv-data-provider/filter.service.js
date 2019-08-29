@@ -235,8 +235,6 @@
 
     var filterByRegularFilters = function (items, regularFilters) {
 
-        console.log('regularFilters', regularFilters);
-
         var match;
 
         return items.filter(function (item) {

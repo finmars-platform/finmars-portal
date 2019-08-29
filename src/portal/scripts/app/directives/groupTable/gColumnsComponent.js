@@ -600,15 +600,17 @@
 
                         scope.groups = scope.evDataService.getGroups();
 
-                    })
+                    });
+
+                    if (!scope.isReport) {
+                        scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                            getDownloadedTableItemsCount();
+                        });
+                    }
 
                 };
 
                 init();
-
-                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                    getDownloadedTableItemsCount();
-                });
             }
         }
     }

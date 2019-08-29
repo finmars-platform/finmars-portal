@@ -88,9 +88,20 @@
                                                                               column="column"
                                                                               tab-fields-tree="vm.fieldsTree[tab.id]"></layout-constructor-field>
                                                 </div>
-                                                <md-button class="md-button ec-insert-row-btn" ng-click="vm.insertRow(tab, row)">
+
+                                                <md-button class="md-button ec-manage-row-btn"
+                                                           ng-click="vm.insertRow(tab, row)" style="right: 55px">
                                                     +
                                                     <md-tooltip class="tooltip_1" md-direction="top">Insert row below</md-tooltip>
+                                                </md-button>
+                                                <md-button ng-if="tab.layout.rows > row"
+                                                           class="md-button ec-manage-row-btn"
+                                                           ng-click="vm.deleteRow(tab, row)"
+                                                           style="right: 10px;"
+                                                           ng-disabled="!vm.isRowEmpty(tab.id, row, tab.layout.columns)">
+                                                    -
+                                                    <md-tooltip class="tooltip_1" md-direction="top" ng-hide="!vm.isRowEmpty(tab.id, row, tab.layout.columns)">Remove row</md-tooltip>
+                                                    <md-tooltip class="tooltip_1" md-direction="top" ng-hide="vm.isRowEmpty(tab.id, row, tab.layout.columns)">Empty row before removing it</md-tooltip>
                                                 </md-button>
                                             </div>
                                         </div>

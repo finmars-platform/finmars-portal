@@ -39,7 +39,7 @@
         var pageStateName = $state.current.name;
         var pageStateParams = $stateParams.strategyNumber;
 
-        vm.logout = function () {
+        /*vm.logout = function () {
             console.log('Logged out');
 
             usersService.logout();
@@ -51,7 +51,7 @@
             window.location.pathname = '/';
             cookiesService.deleteCookie();
             //usersService.logout();
-        };
+        };*/
 
         if ('__PROJECT_ENV__' === 'development') {
 
@@ -106,13 +106,21 @@
                 console.log(ev);
 
                 if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
-                    middlewareService.masterUserChanged(true);
+                    middlewareService.masterUserChanged();
                     $state.go('app.home');
                     vm.getMasterUsersList();
                 };
 
                 if (ev.data.event === crossTabEvents.LOGOUT) {
-                    window.location.href = '/';
+
+                    middlewareService.initLogOut();
+
+                    usersService.logout().then(function (data) {
+                        console.log('Logged out');
+                        sessionStorage.removeItem('afterLoginEvents');
+                        window.location.pathname = '/';
+                    });
+
                 };
 
 
@@ -125,7 +133,7 @@
 
             var changeMasterUser = function () {
 
-                middlewareService.masterUserChanged(true);
+                middlewareService.masterUserChanged();
 
                 usersService.setMasterUser(master.id).then(function (value) {
 
@@ -229,11 +237,20 @@
 
             });
 
-            $transitions.onSuccess({}, function () {
+            $transitions.onSuccess({}, function (transition) {
+
+                middlewareService.clearEvents();
 
                 vm.currentGlobalState = vm.getCurrentGlobalState();
 
                 console.log('on onSuccess', vm.currentGlobalState)
+
+                middlewareService.setNewSplitPanelLayoutName(false);
+                var from = transition.from();
+
+                if (from.name === 'app.profile') {
+                    vm.getMasterUsersList();
+                }
 
             });
 
@@ -427,7 +444,7 @@
             });
         };
 
-        $transitions.onSuccess({}, function (transition) {
+        /*$transitions.onSuccess({}, function (transition) {
 
             middlewareService.setNewSplitPanelLayoutName(false);
             var from = transition.from();
@@ -436,13 +453,21 @@
                 vm.getMasterUsersList();
             }
 
-        });
+        });*/
 
         vm.logOutMethod = function () {
+
+            middlewareService.initLogOut();
+
             usersService.logout().then(function (data) {
                 console.log('Logged out');
                 sessionStorage.removeItem('afterLoginEvents');
                 window.location.pathname = '/';
+
+                if (vm.broadcastManager) {
+                    vm.broadcastManager.postMessage({event: crossTabEvents.LOGOUT});
+                };
+
                 cookiesService.deleteCookie();
             });
         };

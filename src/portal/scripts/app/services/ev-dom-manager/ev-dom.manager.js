@@ -705,10 +705,16 @@
 
     var calculateContentWrapHeight = function (contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
 
-        var interfaceLayout = evDataService.getInterfaceLayout();
-        var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;
+        var splitPanelIsActive = evDataService.isSplitPanelActive();
 
-        contentWrapElement.style.height = contentWrapElementHeight + "px";
+        if (splitPanelIsActive) {
+            var interfaceLayout = evDataService.getInterfaceLayout();
+            var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;
+
+            contentWrapElement.style.height = contentWrapElementHeight + "px";
+        } else {
+            contentWrapElement.style.height = "";
+        };
 
     };
 

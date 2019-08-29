@@ -21,7 +21,7 @@
 
             var vm = this;
 
-            middlewareService.masterUserChanged(false); // in case viewer opened right after master user changed
+            var doNotCheckLayoutChanges = false;
 
             var setEventListeners = function () {
 
@@ -301,16 +301,16 @@
 
             vm.init = function () {
 
-                /*vm.entityType = $scope.$parent.vm.entityType;
-                vm.contentType = $scope.$parent.vm.contentType;
-                vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
-                vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);*/
+                middlewareService.onMasterUserChanged(function () {
+                    console.log("logout called");
+                    doNotCheckLayoutChanges = true;
+                });
 
-                // setEventListener();
+                middlewareService.initLogOut(function () {
+                    doNotCheckLayoutChanges = true;
+                });
 
                 vm.getView();
-
-                // entityViewerReducer.initReducer(vm.entityViewerDataService, vm.entityViewerEventService, $mdDialog, vm.getView);
 
             };
 
@@ -345,9 +345,7 @@
 
                 return new Promise(function (resolve, reject) {
 
-                    var masterUserChanged = middlewareService.didMasterUserChange();
-
-                    if (!masterUserChanged) {
+                    if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
                         var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
@@ -466,15 +464,11 @@
 
             if (vm.stateWithLayout) {
 
-                //middlewareService.setWarningOfLayoutChangesLossFn(doOnMasterUserSelect);
-
                 window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
             }
 
             this.$onDestroy = function () {
                 removeTransitionWatcher();
-
-                // middlewareService.setWarningOfLayoutChangesLossFn(false);
             }
         }
 

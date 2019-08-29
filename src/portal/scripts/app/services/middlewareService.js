@@ -9,7 +9,8 @@
         newEntityViewerLayoutName: false,
         newSplitPanelLayoutName: false,
         warnOnLayoutChangeFn: false,
-        masterUserChanged: false
+        masterUserChangeEvents: [],
+        logOutEvents: []
     };
 
     function setNewEntityViewerLayoutName(layoutName) {
@@ -43,13 +44,42 @@
         return callbackFn;
     };
 
-    function didMasterUserChange () {
-        return data.masterUserChanged;
+    function onMasterUserChanged (callback) {
+
+        if (callback) {
+            data.masterUserChangeEvents.push(callback);
+        };
+
     };
 
-    function masterUserChanged (status) {
-        data.masterUserChanged = status;
+    function masterUserChanged () {
+
+        data.masterUserChangeEvents.forEach(function (callback) {
+            callback();
+        });
+
     };
+
+    function onLogOut (callback) {
+
+        if (callback) {
+            data.logOutEvents.push(callback);
+        };
+
+    };
+
+    function initLogOut () {
+
+        data.logOutEvents.forEach(function (callback) {
+            callback();
+        });
+
+    };
+
+    function clearEvents () {
+        data.masterUserChangeEvents = [];
+        data.logOutEvents = [];
+    }
 
     function resetData() {
         data = {
@@ -69,9 +99,13 @@
         setWarningOfLayoutChangesLossFn: setWarningOfLayoutChangesLossFn,
         getWarningOfLayoutChangesLossFn: getWarningOfLayoutChangesLossFn,
 
-        didMasterUserChange: didMasterUserChange,
+        onMasterUserChanged: onMasterUserChanged,
         masterUserChanged: masterUserChanged,
 
+        onLogOut: onLogOut,
+        initLogOut: initLogOut,
+
+        clearEvents: clearEvents,
         resetData: resetData
     }
 

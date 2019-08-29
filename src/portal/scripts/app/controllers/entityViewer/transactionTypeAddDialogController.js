@@ -1547,6 +1547,17 @@
             })
         };
 
+        vm.getNameByContentType = function (contentType) {
+            var typeName = '';
+            vm.contentTypes.forEach(function (cType) {
+                if (cType.key === contentType) {
+                    typeName = cType.name;
+                };
+            });
+
+            return typeName;
+        };
+
         // Transaction type actions controller end
 
         vm.init = function () {
