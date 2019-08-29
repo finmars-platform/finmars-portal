@@ -165,7 +165,7 @@
 
                             var filters = {
                                 instrument: activeObject['instrument.id'],
-                                pricing_policy: activeObject['pricing_policy.id'],
+                                pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
                             };
@@ -237,12 +237,8 @@
                                                             user_code: activeObject['instrument.user_code'],
                                                             short_name: activeObject['instrument.short_name']
                                                         },
-                                                        pricing_policy: activeObject['pricing_policy.id'],
-                                                        pricing_policy_object: { //TODO check, looks like missing
-                                                            id:  activeObject['pricing_policy.id'],
-                                                            name: activeObject['pricing_policy.name'],
-                                                            user_code: activeObject['pricing_policy.user_code']
-                                                        },
+                                                        pricing_policy: reportOptions.pricing_policy,
+                                                        pricing_policy_object: reportOptions.pricing_policy_object,
                                                         date: reportOptions.report_date
                                                     }
                                                 }
@@ -277,7 +273,7 @@
 
                             var filters = {
                                 instrument: activeObject['instrument.id'],
-                                pricing_policy: activeObject['pricing_policy.id'],
+                                pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
                             };
@@ -349,12 +345,8 @@
                                                             user_code: activeObject['currency.user_code'],
                                                             short_name: activeObject['currency.short_name']
                                                         },
-                                                        pricing_policy: activeObject['pricing_policy.id'],
-                                                        pricing_policy_object: {
-                                                            id:  activeObject['pricing_policy.id'],
-                                                            name: activeObject['pricing_policy.name'],
-                                                            user_code: activeObject['pricing_policy.user_code']
-                                                        },
+                                                        pricing_policy: reportOptions.pricing_policy,
+                                                        pricing_policy_object: reportOptions.pricing_policy_object,
                                                         date: reportOptions.report_date
                                                     }
                                                 }
