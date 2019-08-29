@@ -904,8 +904,8 @@
 
             'instruments.instrument': [
                 {
-                    id: 1,
-                    name: 'instrument'
+                    key: 'instrument',
+                    name: 'Instrument'
                 }
 
                 // TODO is not in use now
@@ -920,42 +920,42 @@
             ],
             'currencies.currency': [
                 {
-                    id: 2,
-                    name: 'pricing_currency'
+                    key: 'pricing_currency',
+                    name: 'Pricing Currency'
                 },
                 {
-                    id: 3,
-                    name: 'accrued_currency'
+                    key: 'accrued_currency',
+                    name: 'Accrued Currency'
                 }
             ],
             'portfolios.portfolio': [
                 {
-                    id: 4,
-                    name: 'portfolio'
+                    id: 'portfolio',
+                    name: 'Portfolio'
                 }
             ],
             'accounts.account': [
                 {
-                    id: 5,
-                    name: 'account'
+                    id: 'account',
+                    name: 'Account'
                 }
             ],
             'strategies.strategy1': [
                 {
-                    id: 6,
-                    name: 'strategy1'
+                    id: 'strategy1',
+                    name: 'Strategy 1'
                 }
             ],
             'strategies.strategy2': [
                 {
-                    id: 7,
-                    name: 'strategy2'
+                    id: 'strategy2',
+                    name: 'Strategy 2'
                 }
             ],
             'strategies.strategy3': [
                 {
-                    id: 8,
-                    name: 'strategy3'
+                    id: 'strategy3',
+                    name: 'Strategy 3'
                 }
             ]
 

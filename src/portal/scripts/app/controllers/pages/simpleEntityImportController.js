@@ -20,7 +20,7 @@
         var vm = this;
 
         vm.readyStatus = {
-            mapping: false,
+            schemes: false,
             processing: false,
             dailyModel: false,
             priceDownloadScheme: false,
@@ -37,6 +37,9 @@
             missing_data_handler: 'throw_error',
             classifier_handler: 'skip'
         };
+
+        vm.processing = false;
+        vm.loaderData = {};
 
         vm.validateConfig = {
             mode: 1
@@ -57,7 +60,7 @@
 
             csvImportSchemeService.getList(options).then(function (data) {
                 vm.entitySchemes = data.results;
-                vm.readyStatus.mapping = true;
+                vm.readyStatus.schemes = true;
                 $scope.$apply();
             });
 
@@ -131,6 +134,13 @@
 
                 vm.validateConfig = data;
 
+                vm.loaderData = {
+                    current: vm.validateConfig.processed_rows,
+                    total: vm.validateConfig.total_rows,
+                    text: 'Validation Progress:',
+                    status: vm.validateConfig.task_status
+                };
+
                 $scope.$apply();
 
                 if (vm.validateConfig.task_status === 'SUCCESS') {
@@ -155,38 +165,22 @@
 
             new Promise(function (resolve, reject) {
 
+                vm.processing = true;
+
                 vm.validateConfig = Object.assign({}, vm.config);
 
-                $mdDialog.show({
-                    controller: 'LoaderDialogController as vm',
-                    templateUrl: 'views/dialogs/loader-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        data: {
-                            isCancelable: false,
-                            current: vm.validateConfig.processed_rows,
-                            total: vm.validateConfig.total_rows,
-                            text: 'Validation Progress:',
-                            status: vm.validateConfig.task_status,
-                            callback: function () {
-                                return {
-                                    current: vm.validateConfig.processed_rows,
-                                    total: vm.validateConfig.total_rows,
-                                    status: vm.validateConfig.task_status
-                                }
-                            }
-                        }
-                    }
-
-                });
+                vm.loaderData = {
+                    current: vm.validateConfig.processed_rows,
+                    total: vm.validateConfig.total_rows,
+                    text: 'Validation Progress:',
+                    status: vm.validateConfig.task_status
+                };
 
                 vm.validate(resolve, $event)
 
             }).then(function (data) {
+
+                vm.processing = false;
 
                 console.log('validateImport.data', data);
 
@@ -294,6 +288,13 @@
 
                 vm.config = data;
 
+                vm.loaderData = {
+                    current: vm.config.processed_rows,
+                    total: vm.config.total_rows,
+                    text: 'Import Progress:',
+                    status: vm.config.task_status
+                };
+
                 $scope.$apply();
 
                 if (vm.config.task_status === 'SUCCESS') {
@@ -358,36 +359,20 @@
                 delete vm.config.task_id;
                 delete vm.config.task_status;
 
-                $mdDialog.show({
-                    controller: 'LoaderDialogController as vm',
-                    templateUrl: 'views/dialogs/loader-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        data: {
-                            isCancelable: false,
-                            current: vm.config.processed_rows,
-                            total: vm.config.total_rows,
-                            text: 'Import Progress:',
-                            status: vm.config.task_status,
-                            callback: function () {
-                                return {
-                                    current: vm.config.processed_rows,
-                                    total: vm.config.total_rows,
-                                    status: vm.config.task_status
-                                }
-                            }
-                        }
-                    }
+                vm.processing = true;
 
-                });
+                vm.loaderData = {
+                    current: vm.config.processed_rows,
+                    total: vm.config.total_rows,
+                    text: 'Import Progress:',
+                    status: vm.config.task_status
+                };
 
                 vm.import(resolve, $event)
 
             }).then(function (data) {
+
+                vm.processing = false;
 
                 console.log('import.data', data);
 
@@ -456,38 +441,22 @@
 
             return new Promise(function (resolve, reject) {
 
+                vm.processing = true;
+
                 vm.validateConfig = Object.assign({}, vm.config);
 
-                $mdDialog.show({
-                    controller: 'LoaderDialogController as vm',
-                    templateUrl: 'views/dialogs/loader-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        data: {
-                            isCancelable: false,
-                            current: vm.validateConfig.processed_rows,
-                            total: vm.validateConfig.total_rows,
-                            text: 'Validation Progress:',
-                            status: vm.validateConfig.task_status,
-                            callback: function () {
-                                return {
-                                    current: vm.validateConfig.processed_rows,
-                                    total: vm.validateConfig.total_rows,
-                                    status: vm.validateConfig.task_status
-                                }
-                            }
-                        }
-                    }
-
-                });
+                vm.loaderData = {
+                    current: vm.validateConfig.processed_rows,
+                    total: vm.validateConfig.total_rows,
+                    text: 'Validation Progress:',
+                    status: vm.validateConfig.task_status
+                };
 
                 vm.validate(resolve, $event)
 
             }).then(function (data) {
+
+                vm.processing = false;
 
                 console.log('validateImport.data', data);
 

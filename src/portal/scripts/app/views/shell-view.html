@@ -84,9 +84,16 @@
                         </h3>
                     </div>
 
-                    <div class="md-toolbar-tools" flex="40" layout-align="end center">
+                    <div class="md-toolbar-tools" flex="relative main-content-container layout-fill layout-column40" layout-align="end center">
 
                         <div class="header-misc" layout="row">
+
+                            <md-button class="md-button toggle-bookmarks-panel-btn header-cloud-layout-btn"
+                                       data-ui-sref="app.processes" >
+                                <ng-md-icon icon="cloud_download" size="24">
+                                    <md-tooltip class="tooltip_1" md-direction="bottom">Open Active Processes</md-tooltip>
+                                </ng-md-icon>
+                            </md-button>
 
                             <md-button class="md-button toggle-bookmarks-panel-btn header-cloud-layout-btn"
                                        data-ng-click="vm.toggleBookmarksPanel()">
