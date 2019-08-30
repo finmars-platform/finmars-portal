@@ -644,10 +644,12 @@
 
                 middlewareService.onMasterUserChanged(function () {
                     doNotCheckLayoutChanges = true;
+                    removeTransitionWatcher();
                 });
 
-                middlewareService.initLogOut(function () {
+                middlewareService.onLogOut(function () {
                     doNotCheckLayoutChanges = true;
+                    removeTransitionWatcher();
                 });
 
                 vm.getView();
