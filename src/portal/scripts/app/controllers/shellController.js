@@ -116,7 +116,7 @@
                     middlewareService.initLogOut();
 
                     usersService.logout().then(function (data) {
-                        console.log('Logged out boadcast');
+                        console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
                         window.location.pathname = '/';
 
