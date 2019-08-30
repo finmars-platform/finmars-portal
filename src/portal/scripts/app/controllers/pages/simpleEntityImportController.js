@@ -511,6 +511,12 @@
                                 config: vm.config
                             }
                         }
+                    }).then(function (res) {
+
+                        if (res && res.status === 'agree') {
+                            vm.startImport($event);
+                        }
+
                     })
 
                 }
