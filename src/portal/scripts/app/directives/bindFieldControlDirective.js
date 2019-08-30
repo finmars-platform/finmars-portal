@@ -238,28 +238,53 @@
                     }
                 };
 
-                scope.styleForInputWithButtons = function () {
-
+                scope.styleForInputsWithButtons = function () {
                     var styleValue = '';
 
+                    // -------------------- Space For Buttons -------------------
+                    var buttonsCount = 0;
+
+                    if (scope.fieldType['display_name'] === 'Number' ||
+                        scope.fieldType['display_name'] === 'Float') {
+                        buttonsCount = 1;
+                    };
+
+                    if (scope.item.options) { // for date specific buttons
+
+                        var optionsKeys = Object.keys(scope.item.options);
+
+                        if (optionsKeys && optionsKeys.length > 0) {
+
+                            optionsKeys.forEach(function (key) {
+                                if (scope.item.options[key]) {
+                                    buttonsCount = buttonsCount + 1;
+                                }
+                            });
+
+                        };
+
+                    };
+
                     if (scope.item.buttons && scope.item.buttons.length > 0) {
-                        styleValue = 'width: ' + (100 - scope.item.buttons.length * 10) + '%;';
-                    }
+
+                        buttonsCount = buttonsCount + scope.item.buttons.length;
+
+                    };
+
+                    if (buttonsCount > 0) {
+                        styleValue = 'padding-right: ' + (buttonsCount * 34) + 'px; ';
+                    };
+
+                    // ----------------------- Background Color -----------------
 
                     if (scope.item.backgroundColor) {
-
-                        if (styleValue) {
-                            styleValue = styleValue + ' ';
-                        }
-
-                        styleValue = styleValue + 'background-color: ' + scope.item.backgroundColor + ';'
-                    }
+                        styleValue = styleValue + 'background-color: ' + scope.item.backgroundColor + ';';
+                    };
 
                     return styleValue;
-
                 };
 
-                scope.styleForDateInputContainer = function () {
+                /*scope.styleForDateInputContainer = function () {
                     var styleValue = '';
 
                     if (scope.item.options) {
@@ -286,6 +311,27 @@
 
                     return styleValue;
                 };
+
+                scope.styleForInputWithButtons = function () {
+
+                    var styleValue = '';
+
+                    if (scope.item.buttons && scope.item.buttons.length > 0) {
+                        styleValue = 'width: ' + (100 - scope.item.buttons.length * 10) + '%;';
+                    }
+
+                    if (scope.item.backgroundColor) {
+
+                        if (styleValue) {
+                            styleValue = styleValue + ' ';
+                        }
+
+                        styleValue = styleValue + 'background-color: ' + scope.item.backgroundColor + ';'
+                    }
+
+                    return styleValue;
+
+                };*/
 
                 scope.inputBackgroundColor = function () {
                     var backgroundColor = '';

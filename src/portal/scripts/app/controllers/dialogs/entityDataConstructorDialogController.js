@@ -29,6 +29,7 @@
 
         vm.items = [];
 
+        vm.tabs = [];
         vm.fieldsTree = {};
 
         vm.entityType = data.entityType;
@@ -86,6 +87,7 @@
                     });
 
                 } else {
+
                     uiService.getEditLayout(vm.entityType).then(function (data) {
 
                         if (data.results.length) {
@@ -94,7 +96,7 @@
                             vm.uiIsDefault = true;
                             vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
                         }
-                        vm.tabs = vm.ui.data;
+                        vm.tabs = vm.ui.data || [];
                         vm.tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (field) {
                                 field.editMode = false;
@@ -106,9 +108,10 @@
                         resolve(vm.tabs);
 
                     });
+
                 }
 
-            })
+            });
 
         };
 
@@ -356,17 +359,13 @@
                 }
                 vm.ui.data = vm.tabs;
 
+                console.log("constructor vm.ui", vm.ui);
+
                 if (vm.uiIsDefault) {
                     if (vm.instanceId) {
                         uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
                             console.log('layout saved1');
-                            /*var route;
-                            if (vm.entityType === 'complex-transaction') {
-                                route = routeResolver.findExistingState('app.data.', 'transaction-type');
-                            } else {
-                                route = routeResolver.findExistingState('app.data.', vm.entityType);
-                            }
-                            $state.go(route.state, route.options);*/
+
                             $scope.$apply();
 
                             $mdDialog.hide({status: 'agree'});
@@ -375,8 +374,6 @@
                         uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
                             console.log('layout saved2');
 
-                            /*var route = routeResolver.findExistingState('app.data.', vm.entityType);
-                            $state.go(route.state, route.options);*/
                             $scope.$apply();
 
                             $mdDialog.hide({status: 'agree'});
@@ -387,13 +384,6 @@
                         uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
                             console.log('layout saved3');
 
-                            /*var route;
-                            if (vm.entityType === 'complex-transaction') {
-                                route = routeResolver.findExistingState('app.data.', 'transaction-type');
-                            } else {
-                                route = routeResolver.findExistingState('app.data.', vm.entityType);
-                            }
-                             $state.go(route.state, route.options);*/
                             $scope.$apply();
 
                             $mdDialog.hide({status: 'agree'});
@@ -402,8 +392,6 @@
                         uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
                             console.log('layout saved4');
 
-                            /*var route = routeResolver.findExistingState('app.data.', vm.entityType);
-                            $state.go(route.state, route.options);*/
                             $scope.$apply();
 
                             $mdDialog.hide({status: 'agree'});

@@ -19,11 +19,8 @@
 }
 
 .entity-constructor {
-  min-height: 100%;
+  min-height: 300px;
   height: 100%;
-  md-tabs {
-    //height: 100%;
-  }
 }
 
 md-optgroup.bold-field-select > label {
@@ -177,8 +174,11 @@ md-optgroup.bold-field-select > label {
       width: 80%;
     }
     .bf-copy-btn {
-      min-width: 0;
-      margin: 2px;
+      min-width: 29px;
+      width: 29px;
+      min-height: 29px;
+      height: 29px;
+      margin: 0 4px 0 0;
     }
   }
 }
@@ -231,8 +231,11 @@ md-checkbox.checkbox-bind-field {
   margin-bottom: 30px;
 }
 
-.textarea-bind-field label:not(.md-container-ignore) {
-  left: 5px;
+.textarea-bind-field {
+
+  label:not(.md-container-ignore) {
+    left: 5px;
+  }
 }
 
 .ev-data-field {
@@ -272,16 +275,26 @@ md-checkbox.checkbox-bind-field {
       margin-right: 40px;
 
       .bind-field-calculator-btn {
-        position: absolute;
+        //position: absolute;
         min-width: 20px;
         min-height: 20px;
-        top: 0;
-        right: -5px;
-        margin: 0;
+        width: 29px;
+        height: 29px;
+        //top: 0;
+        //right: -5px;
+        margin: 0 4px 0 0;
         -moz-transform: rotate(90deg);
         -webkit-transform: rotate(90deg);
         -ms-transform: rotate(90deg);
         transform: rotate(-90deg);
+
+        &:not([disabled]):hover {
+          background: none;
+        }
+
+        &:not([disabled]):focus, &:focus {
+          background: none;
+        }
       }
 
       .md-error-spacer {
@@ -390,6 +403,12 @@ md-checkbox.checkbox-bind-field {
 
     }
   }
+}
+
+.bind-field-buttons-block {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .w-rp {
