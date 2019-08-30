@@ -116,7 +116,7 @@
                     middlewareService.initLogOut();
 
                     usersService.logout().then(function (data) {
-                        console.log('Logged out');
+                        console.log('Logged out boadcast');
                         sessionStorage.removeItem('afterLoginEvents');
                         window.location.pathname = '/';
                     });
@@ -457,18 +457,47 @@
 
         vm.logOutMethod = function () {
 
-            middlewareService.initLogOut();
+            $mdDialog.show({
+                controller: "WarningDialogController as vm",
+                templateUrl: "views/warning-dialog-view.html",
+                multiple: true,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: "Warning",
+                        description: "All unsaved changes of layouts in all FinMARS browser tabs will be lost!",
+                        actionsButtons: [
+                            {
+                                name: "CANCEL",
+                                response: {status: 'disagree'}
+                            },
+                            {
+                                name: "OK, PROCEED",
+                                response: {status: 'agree'}
+                            }
+                        ]
+                    }
+                }
 
-            usersService.logout().then(function (data) {
-                console.log('Logged out');
-                sessionStorage.removeItem('afterLoginEvents');
-                window.location.pathname = '/';
+            }).then(function (res) {
 
-                if (vm.broadcastManager) {
-                    vm.broadcastManager.postMessage({event: crossTabEvents.LOGOUT});
-                };
+                if (res.status === 'agree') {
 
-                cookiesService.deleteCookie();
+                    if (vm.broadcastManager) {
+                        vm.broadcastManager.postMessage({event: crossTabEvents.LOGOUT});
+                    };
+
+                    middlewareService.initLogOut();
+
+                    usersService.logout().then(function (data) {
+
+                        console.log('Logged out');
+                        window.location.pathname = '/';
+
+                    });
+
+                }
+
             });
         };
 
