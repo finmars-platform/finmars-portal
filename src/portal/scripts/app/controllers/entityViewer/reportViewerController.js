@@ -647,7 +647,7 @@
                     removeTransitionWatcher();
                 });
 
-                middlewareService.initLogOut(function () {
+                middlewareService.onLogOut(function () {
                     doNotCheckLayoutChanges = true;
                     removeTransitionWatcher();
                 });
