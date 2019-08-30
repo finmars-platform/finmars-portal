@@ -695,31 +695,31 @@
             ],
             'portfolios.portfolio': [
                 {
-                    id: 'portfolio',
+                    key: 'portfolio',
                     name: 'Portfolio'
                 }
             ],
             'accounts.account': [
                 {
-                    id: 'account',
+                    key: 'account',
                     name: 'Account'
                 }
             ],
             'strategies.strategy1': [
                 {
-                    id: 'strategy1',
+                    key: 'strategy1',
                     name: 'Strategy 1'
                 }
             ],
             'strategies.strategy2': [
                 {
-                    id: 'strategy2',
+                    key: 'strategy2',
                     name: 'Strategy 2'
                 }
             ],
             'strategies.strategy3': [
                 {
-                    id: 'strategy3',
+                    key: 'strategy3',
                     name: 'Strategy 3'
                 }
             ]
