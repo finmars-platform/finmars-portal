@@ -161,7 +161,18 @@
 
                     </div>
 
-                    <div data-ng-if="item.value_type != 100">
+                    <div data-ng-if="item.is_fill_from_context && item.value_type != 100">
+
+                        <md-input-container class="no-error-spacer ttinputs-input-with-expression">
+                            <input type="text" data-ng-model="item.context_property">
+                        </md-input-container>
+
+                        <expression-editor-button
+                                data-item="item.context_property"></expression-editor-button>
+
+                    </div>
+
+                    <div data-ng-if="!item.is_fill_from_context && item.value_type != 100">
 
                         <md-input-container class="no-error-spacer ttinputs-input-with-expression">
                             <input type="text" data-ng-model="item.value">
@@ -339,7 +350,18 @@
 
                     </div>
 
-                    <div data-ng-if="vm.newItem.value_type != 100">
+                    <div data-ng-if="vm.newItem.is_fill_from_context && vm.newItem.value_type != 100">
+
+                        <md-input-container class="no-error-spacer ttinputs-input-with-expression">
+                            <input type="text" data-ng-model="vm.newItem.context_property">
+                        </md-input-container>
+
+                        <expression-editor-button
+                                data-item="vm.newItem.context_property"></expression-editor-button>
+
+                    </div>
+
+                    <div data-ng-if="!vm.newItem.is_fill_from_context && vm.newItem.value_type != 100">
 
                         <md-input-container class="no-error-spacer ttinputs-input-with-expression m-0">
                             <input type="text" data-ng-model="vm.newItem.value">
