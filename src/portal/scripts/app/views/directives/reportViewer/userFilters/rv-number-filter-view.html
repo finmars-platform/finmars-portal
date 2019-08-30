@@ -1,4 +1,4 @@
-<md-card ng-class="{'f-disabled': !filter.options.enabled}" class="g-filter-item">
+<md-card ng-class="getClassesForFilter()" class="g-filter-item">
     <!--<md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span
             data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>-->
 

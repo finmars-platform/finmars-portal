@@ -60,14 +60,13 @@
                     <span ng-bind="item.name"></span>
                 </td>
                 <td class="edit-state-td">
-                    <!--<md-input-container class="no-error-spacer">
+                    <md-input-container class="no-error-spacer">
                         <input type="text" ng-model="item.verbose_name">
-                    </md-input-container>-->
-                    <span ng-bind="item.verbose_name"></span>
+                    </md-input-container>
                 </td>
                 <td class="edit-state-td">
 
-                    <md-input-container class="md-block"
+                    <!--<md-input-container class="md-block"
                                         aria-label="select with filter"
                                         md-no-float="">
                         <md-select ng-model="item.value_type"
@@ -95,7 +94,8 @@
                             </div>
 
                         </md-select>
-                    </md-input-container>
+                    </md-input-container>-->
+                    <span ng-bind="vm.getNameByValueType(item.value_type)"></span>
                 </td>
 
                 <td class="edit-state-td">

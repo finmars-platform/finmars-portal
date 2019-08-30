@@ -1547,15 +1547,24 @@
             })
         };
 
-        vm.getNameByContentType = function (contentType) {
-            var typeName = '';
-            vm.contentTypes.forEach(function (cType) {
-                if (cType.key === contentType) {
-                    typeName = cType.name;
-                };
-            });
+        vm.getNameByValueType = function (value) {
+            console.log("valueTYpe value ", value);
+            for (var i = 0; i < vm.valueTypes.length; i++) {
+                if (vm.valueTypes[i].value === value) {
+                    return vm.valueTypes[i].display_name;
+                }
+            }
 
-            return typeName;
+        };
+
+        vm.getNameByContentType = function (contentType) {
+
+            for (var i = 0; i < vm.contentTypes.length; i++) {
+                if (vm.contentTypes[i].key === contentType) {
+                    return vm.contentTypes[i].name;
+                };
+            };
+
         };
 
         // Transaction type actions controller end

@@ -42,7 +42,7 @@
                 var contentWrapElem = scope.contentWrapElement;
 
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
-                console.log("bookmarks toggleBookmarksBtn", toggleBookmarksBtn);
+
                 var elements = {
                     viewportElem: viewportElem,
                     contentElem: contentElem,
@@ -416,7 +416,7 @@
                     }
 
                     toggleBookmarksBtn.addEventListener('click', function () {
-                        console.log("bookmarks bookmark panel toggled!");
+
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
                         var headerToolbar = document.querySelector('md-toolbar.header');

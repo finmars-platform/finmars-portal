@@ -1,4 +1,5 @@
-<md-card ng-class="{'f-disabled': !filter.options.enabled}" class="g-filter-item">
+<md-card ng-class="getClassesForFilter()"
+         class="g-filter-item">
     <!--<md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span
             data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>-->
 
@@ -157,6 +158,14 @@
                                                 ng-show="filter.options.filter_type === 'empty'"></ng-md-icon>
                                     Empty cells
                                 </md-button>
+                                <md-menu-item ng-if="!isRootEntityViewer">
+                                    <use-from-above-button item="filter.options.use_from_above"
+                                                           data="{attributes: attributesFromAbove}"
+                                                           class="rv-filter-link-to-above-btn"></use-from-above-button>
+                                </md-menu-item>
+                                <md-button>
+
+                                </md-button>
                             </md-menu-content>
                         </md-menu>
                     </md-menu-item>
@@ -185,12 +194,6 @@
                             <ng-md-icon icon="visibility_off"></ng-md-icon>
                             <span>Remove</span>
                         </md-button>
-                    </md-menu-item>
-
-                    <md-menu-item ng-if="!isRootEntityViewer">
-                            <use-from-above-button item="filter.options.use_from_above"
-                                                   data="{attributes: attributesFromAbove}"
-                                                   class="rv-filter-link-to-above-btn"></use-from-above-button>
                     </md-menu-item>
 
                 </md-menu-content>

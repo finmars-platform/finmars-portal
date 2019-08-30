@@ -1835,6 +1835,16 @@
             })
         };
 
+        vm.getNameByValueType = function (value) {
+
+            for (var i = 0; i < vm.valueTypes.length; i++) {
+                if (vm.valueTypes[i].value === value) {
+                    return vm.valueTypes[i].display_name;
+                }
+            }
+
+        };
+
         vm.getNameByContentType = function (contentType) {
             var typeName = '';
             vm.contentTypes.forEach(function (cType) {

@@ -67,27 +67,52 @@
 
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 
+                scope.getClassesForFilter = function () {
+                    var filterClasses = '';
+
+                    if (!scope.filter.options.enabled) {
+                        filterClasses = 'f-disabled ';
+                    }
+
+                    if (!filter.options.is_frontend_filter) {
+                        filterClasses += 'ev-backend-filter ';
+                    }
+
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                        filterClasses += 'link-to-above-filter';
+                    }
+
+                    return filterClasses;
+                };
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
 
-                    switch (scope.filter.options.filter_type) {
-                        case "contains":
-                            filterRegime = "Contains";
-                            break;
-                        case "does_not_contains":
-                            filterRegime = "Does not contains";
-                            break;
-                        case "selector":
-                            filterRegime = "Selector";
-                            break;
-                        case "multiselector":
-                            filterRegime = "Multiple selector";
-                            break;
-                        case "empty":
-                            filterRegime = "Show empty cells";
-                            break;
-                    }
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+
+                        filterRegime = "Linked to Selection";
+
+                    } else {
+
+                        switch (scope.filter.options.filter_type) {
+                            case "contains":
+                                filterRegime = "Contains";
+                                break;
+                            case "does_not_contains":
+                                filterRegime = "Does not contains";
+                                break;
+                            case "selector":
+                                filterRegime = "Selector";
+                                break;
+                            case "multiselector":
+                                filterRegime = "Multiple selector";
+                                break;
+                            case "empty":
+                                filterRegime = "Show empty cells";
+                                break;
+                        }
+                    };
 
                     return filterRegime;
 
@@ -109,6 +134,8 @@
                 };
 
                 scope.toggleFrontendFilter = function () {
+
+                    scope.filter.options.is_frontend_filter = !scope.filter.options.is_frontend_filter;
 
                     if (!scope.filter.options.is_frontend_filter) {
 
@@ -224,7 +251,13 @@
 
                         })
 
-                    }
+                    } else {
+
+                        if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                            scope.noDataForLinkingTo = true;
+                        };
+
+                    };
 
                 };
 
