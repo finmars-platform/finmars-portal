@@ -94,38 +94,59 @@
 
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 
+                scope.getClassesForFilter = function () {
+                    var filterClasses = '';
+
+                    if (!scope.filter.options.enabled) {
+                        filterClasses = 'f-disabled ';
+                    }
+
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                        filterClasses += 'link-to-above-filter';
+                    }
+
+                    return filterClasses;
+                };
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
 
-                    switch (scope.filter.options.filter_type) {
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
 
-                        case "equal":
-                            filterRegime = "Equal";
-                            break;
-                        case "not_equal":
-                            filterRegime = "Not equal";
-                            break;
-                        case "greater":
-                            filterRegime = "Greater than";
-                            break;
-                        case "greater_equal":
-                            filterRegime = "Greater or equal to";
-                            break;
-                        case "less":
-                            filterRegime = "Less than";
-                            break;
-                        case "less_equal":
-                            filterRegime = "Less or equal to";
-                            break;
-                        case "empty":
-                            filterRegime = "Show empty cells";
-                            break;
-                        case "date_tree":
-                            filterRegime = "Date tree";
-                            break;
+                        filterRegime = "Linked to Selection";
 
-                    }
+                    } else {
+
+                        switch (scope.filter.options.filter_type) {
+
+                            case "equal":
+                                filterRegime = "Equal";
+                                break;
+                            case "not_equal":
+                                filterRegime = "Not equal";
+                                break;
+                            case "greater":
+                                filterRegime = "Greater than";
+                                break;
+                            case "greater_equal":
+                                filterRegime = "Greater or equal to";
+                                break;
+                            case "less":
+                                filterRegime = "Less than";
+                                break;
+                            case "less_equal":
+                                filterRegime = "Less or equal to";
+                                break;
+                            case "empty":
+                                filterRegime = "Show empty cells";
+                                break;
+                            case "date_tree":
+                                filterRegime = "Date tree";
+                                break;
+
+                        };
+                    };
 
                     return filterRegime;
 
@@ -297,9 +318,15 @@
 
                             }
 
-                        })
+                        });
 
-                    }
+                    } else {
+
+                        if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                            scope.noDataForLinkingTo = true;
+                        };
+
+                    };
 
                 };
 

@@ -64,41 +64,63 @@
                     scope.filter.options.exclude_empty_cells = false;
                 };
 
-                var filterRegime = scope.filter.options.enabled;
+                var filterEnabled = scope.filter.options.enabled;
+
+                scope.getClassesForFilter = function () {
+                    var filterClasses = '';
+
+                    if (!scope.filter.options.enabled) {
+                        filterClasses = 'f-disabled ';
+                    }
+
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                        filterClasses += 'link-to-above-filter';
+                    }
+
+                    return filterClasses;
+                };
 
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
 
-                    switch (scope.filter.options.filter_type) {
-                        case "equal":
-                            filterRegime = "Equal";
-                            break;
-                        case "not_equal":
-                            filterRegime = "Not equal";
-                            break;
-                        case "greater":
-                            filterRegime = "Greater than";
-                            break;
-                        case "greater_equal":
-                            filterRegime = "Greater or equal to";
-                            break;
-                        case "less":
-                            filterRegime = "Less than";
-                            break;
-                        case "less_equal":
-                            filterRegime = "Less or equal to";
-                            break;
-                        case "empty":
-                            filterRegime = "Show empty cells";
-                            break;
-                        /*case "top_n":
-                            filterRegime = "Top N items";
-                            break;
-                        case "bottom_n":
-                            filterRegime = "Bottom N items";
-                            break;*/
-                    }
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+
+                        filterRegime = "Linked to Selection";
+
+                    } else {
+
+                        switch (scope.filter.options.filter_type) {
+                            case "equal":
+                                filterRegime = "Equal";
+                                break;
+                            case "not_equal":
+                                filterRegime = "Not equal";
+                                break;
+                            case "greater":
+                                filterRegime = "Greater than";
+                                break;
+                            case "greater_equal":
+                                filterRegime = "Greater or equal to";
+                                break;
+                            case "less":
+                                filterRegime = "Less than";
+                                break;
+                            case "less_equal":
+                                filterRegime = "Less or equal to";
+                                break;
+                            case "empty":
+                                filterRegime = "Show empty cells";
+                                break;
+                            /*case "top_n":
+                                filterRegime = "Top N items";
+                                break;
+                            case "bottom_n":
+                                filterRegime = "Bottom N items";
+                                break;*/
+                        };
+
+                    };
 
                     return filterRegime;
 
@@ -109,9 +131,9 @@
                 scope.filterSettingsChange = function () {
                     // console.log("filter filterSettingsChange", scope.filter.options);
 
-                    if (scope.filter.options.enabled || filterRegime) {
+                    if (scope.filter.options.enabled || filterEnabled) {
 
-                        filterRegime = scope.filter.options.enabled;
+                        filterEnabled = scope.filter.options.enabled;
 
                         scope.evDataService.resetData();
                         scope.evDataService.resetRequestParameters();
@@ -225,11 +247,17 @@
 
                                 scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                            }
+                            };
 
-                        })
+                        });
 
-                    }
+                    } else {
+
+                        if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                            scope.noDataForLinkingTo = true;
+                        };
+
+                    };
 
                 };
 
@@ -237,7 +265,6 @@
                 scope.init = function () {
 
                     scope.initSplitPanelMode();
-
 
                 };
 

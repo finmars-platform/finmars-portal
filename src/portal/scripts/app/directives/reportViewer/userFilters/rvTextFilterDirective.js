@@ -65,27 +65,49 @@
 
                 var filterEnabled = scope.filter.options.enabled;
 
+                scope.getClassesForFilter = function () {
+                    var filterClasses = '';
+
+                    if (!scope.filter.options.enabled) {
+                        filterClasses = 'f-disabled ';
+                    }
+
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                        filterClasses += 'link-to-above-filter ';
+                    }
+
+                    return filterClasses;
+                };
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
 
-                    switch (scope.filter.options.filter_type) {
-                        case "contains":
-                            filterRegime = "Contains";
-                            break;
-                        case "does_not_contains":
-                            filterRegime = "Does not contains";
-                            break;
-                        case "selector":
-                            filterRegime = "Selector";
-                            break;
-                        case "multiselector":
-                            filterRegime = "Multiple selector";
-                            break;
-                        case "empty":
-                            filterRegime = "Show empty cells";
-                            break;
-                    }
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+
+                        filterRegime = "Linked to Selection";
+
+                    } else {
+
+                        switch (scope.filter.options.filter_type) {
+                            case "contains":
+                                filterRegime = "Contains";
+                                break;
+                            case "does_not_contains":
+                                filterRegime = "Does not contains";
+                                break;
+                            case "selector":
+                                filterRegime = "Selector";
+                                break;
+                            case "multiselector":
+                                filterRegime = "Multiple selector";
+                                break;
+                            case "empty":
+                                filterRegime = "Show empty cells";
+                                break;
+                        };
+
+                    };
 
                     return filterRegime;
 
@@ -108,7 +130,7 @@
 
                 scope.filterSettingsChange = function () {
 
-                    /*if (scope.filter.options.filter_type === "contain" || scope.filter.option.filter_type === "does_not_contain") {
+                    /*if (scope.filter.options.filter_type === "contains" || scope.filter.option.filter_type === "does_not_contains") {
                         scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();
                     }*/
 
@@ -193,6 +215,36 @@
 
                 };
 
+                scope.openUseFromAboveDialog = function ($event) {
+
+                    console.log('control item', scope.item);
+                    console.log('control data', scope.data);
+
+                    $mdDialog.show({
+                        controller: 'UseFromAboveDialogController as vm',
+                        templateUrl: 'views/dialogs/use-from-above-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            item: scope.item,
+                            data: scope.data
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.item = res.data.item;
+
+                        }
+
+                    });
+
+                };
+
 
                 scope.initSplitPanelMode = function () {
 
@@ -215,11 +267,17 @@
 
                                 scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                            }
+                            };
 
-                        })
+                        });
 
-                    }
+                    } else {
+
+                        if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                            scope.noDataForLinkingTo = true;
+                        };
+
+                    };
 
                 };
 

@@ -70,39 +70,64 @@
 
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 
+                scope.getClassesForFilter = function () {
+                    var filterClasses = '';
+
+                    if (!scope.filter.options.enabled) {
+                        filterClasses = 'f-disabled ';
+                    }
+
+                    if (!filter.options.is_frontend_filter) {
+                        filterClasses += 'ev-backend-filter ';
+                    }
+
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                        filterClasses += 'link-to-above-filter';
+                    }
+
+                    return filterClasses;
+                };
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
 
-                    switch (scope.filter.options.filter_type) {
-                        case "equal":
-                            filterRegime = "Equal";
-                            break;
-                        case "not_equal":
-                            filterRegime = "Not equal";
-                            break;
-                        case "greater":
-                            filterRegime = "Greater than";
-                            break;
-                        case "greater_equal":
-                            filterRegime = "Greater or equal to";
-                            break;
-                        case "less":
-                            filterRegime = "Less than";
-                            break;
-                        case "less_equal":
-                            filterRegime = "Less or equal to";
-                            break;
-                        case "empty":
-                            filterRegime = "Show empty cells";
-                            break;
-                        /*case "top_n":
-                            filterRegime = "Top N items";
-                            break;
-                        case "bottom_n":
-                            filterRegime = "Bottom N items";
-                            break;*/
-                    }
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+
+                        filterRegime = "Linked to Selection";
+
+                    } else {
+
+                        switch (scope.filter.options.filter_type) {
+                            case "equal":
+                                filterRegime = "Equal";
+                                break;
+                            case "not_equal":
+                                filterRegime = "Not equal";
+                                break;
+                            case "greater":
+                                filterRegime = "Greater than";
+                                break;
+                            case "greater_equal":
+                                filterRegime = "Greater or equal to";
+                                break;
+                            case "less":
+                                filterRegime = "Less than";
+                                break;
+                            case "less_equal":
+                                filterRegime = "Less or equal to";
+                                break;
+                            case "empty":
+                                filterRegime = "Show empty cells";
+                                break;
+                            /*case "top_n":
+                                filterRegime = "Top N items";
+                                break;
+                            case "bottom_n":
+                                filterRegime = "Bottom N items";
+                                break;*/
+                        }
+                    };
 
                     return filterRegime;
 
@@ -144,6 +169,11 @@
 
                     }
 
+                    scope.filterSettingsChange();
+                };
+
+                scope.toggleFrontendFilter = function () {
+                    scope.filter.options.is_frontend_filter = !scope.filter.options.is_frontend_filter;
                     scope.filterSettingsChange();
                 };
 
@@ -230,7 +260,13 @@
 
                         })
 
-                    }
+                    } else {
+
+                        if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                            scope.noDataForLinkingTo = true;
+                        };
+
+                    };
 
                 };
 
