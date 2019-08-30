@@ -304,10 +304,13 @@
                 middlewareService.onMasterUserChanged(function () {
                     console.log("logout called");
                     doNotCheckLayoutChanges = true;
+                    removeTransitionWatcher();
                 });
 
                 middlewareService.initLogOut(function () {
+                    console.log("logout called");
                     doNotCheckLayoutChanges = true;
+                    removeTransitionWatcher();
                 });
 
                 vm.getView();
