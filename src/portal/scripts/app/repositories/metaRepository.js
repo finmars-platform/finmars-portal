@@ -108,6 +108,9 @@
             "value": 30,
             "display_name": "Classifier"
         }, {
+            "value": 110,
+            "display_name": "Selector"
+        },{
             "value": "decoration",
             "display_name": "Decoration"
         }, {
