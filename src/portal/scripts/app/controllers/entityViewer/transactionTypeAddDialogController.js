@@ -736,6 +736,7 @@
             currency: null,
             counterparty: null,
             is_fill_from_context: false,
+            reference_table: false,
             responsible: null,
             portfolio: null,
             strategy1: null,
@@ -766,7 +767,7 @@
             },
             {
                 "display_name": "Selector",
-                "value": 'selector'
+                "value": 110
             }
         ];
 
@@ -955,6 +956,7 @@
                 value_type: vm.newItem.value_type,
                 content_type: vm.newItem.content_type,
                 is_fill_from_context: vm.newItem.is_fill_from_context,
+                reference_table: vm.newItem.reference_table,
                 account: vm.newItem.account,
                 instrument_type: vm.newItem.instrument_type,
                 instrument: vm.newItem.instrument,

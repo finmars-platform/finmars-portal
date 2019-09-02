@@ -131,7 +131,8 @@
                         </md-select>
 
                     </md-input-container>-->
-                    <span ng-bind="vm.getNameByContentType(item.content_type)"></span>
+                    <span data-ng-if="item.value_type == 110" ng-bind="item.reference_table"></span>
+                    <span data-ng-if="item.value_type == 100" ng-bind="vm.getNameByContentType(item.content_type)"></span>
                 </td>
 
                 <td class="edit-state-td ttype-inputs-checkbox-td">
@@ -284,7 +285,9 @@
                     </md-input-container>
                 </td>
                 <td>
-                    <md-input-container class="md-block m-0"
+
+
+                    <md-input-container data-ng-if="vm.newItem.value_type !== 110" class="md-block m-0"
                                         aria-label="content type input"
                                         md-no-float="">
                         <label for="ttype-inputs-default-value"></label>
@@ -315,6 +318,40 @@
 
                         </md-select>
                     </md-input-container>
+
+                    <md-input-container data-ng-if="vm.newItem.value_type === 110" class="md-block m-0"
+                                        aria-label="content type input"
+                                        md-no-float="">
+                        <label for="ttype-inputs-default-value"></label>
+                        <md-select ng-model="vm.newItem.reference_table"
+                                   md-container-class="common-select-container"
+                                   md-on-close="newItemContentTypeSearchTerm = ''"
+                                   id="ttype-inputs-selector-default-value"
+                                   aria-label="select with filter"
+                                   ng-disabled="vm.newItem.value_type !== 110">
+
+                            <md-select-header>
+                                <input data-ng-model="newItemReferenceTableSearchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+
+                            <div class="select-options-holder">
+
+                                <md-option
+                                        data-ng-repeat="item in vm.referenceTables | filter:{name: newItemReferenceTableSearchTerm}"
+                                        ng-value="item.name">
+                                    {{item.name}}
+                                </md-option>
+
+                            </div>
+
+                        </md-select>
+                    </md-input-container>
+
+
                 </td>
 
                 <td class="ttype-inputs-checkbox-td">
