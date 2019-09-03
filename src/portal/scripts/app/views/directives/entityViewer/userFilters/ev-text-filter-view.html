@@ -120,44 +120,51 @@
                             <md-menu-content class="dropdown-buttons-menu" width="3">
                                 <md-button ng-click="changeFilterType('contains')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'contains'"
+                                                ng-show="!showFRCheckMark('contains')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'contains'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('contains')"></ng-md-icon>
                                     Contains
                                 </md-button>
                                 <md-button ng-click="changeFilterType('does_not_contains')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'does_not_contains'"
+                                                ng-show="!showFRCheckMark('does_not_contains')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'does_not_contains'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('does_not_contains')"></ng-md-icon>
                                     Does not contains
                                 </md-button>
                                 <md-button ng-click="changeFilterType('selector')" ng-disabled="!filter.options.is_frontend_filter">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'selector'"
+                                                ng-show="!showFRCheckMark('selector')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'selector'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('selector')"></ng-md-icon>
                                     Select
                                 </md-button>
                                 <md-button ng-click="changeFilterType('multiselector')" ng-disabled="!filter.options.is_frontend_filter">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'multiselector'"
+                                                ng-show="!showFRCheckMark('multiselector')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'multiselector'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('multiselector')"></ng-md-icon>
                                     Multiple Select
                                 </md-button>
                                 <md-button ng-click="changeFilterType('empty')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'empty'"
+                                                ng-show="!showFRCheckMark('empty')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'empty'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('empty')"></ng-md-icon>
                                     Empty cells
                                 </md-button>
+                                <md-menu-item ng-if="!isRootEntityViewer">
+                                    <use-from-above-button item="filter.options.use_from_above"
+                                                           data="{attributes: attributesFromAbove, filterTypes: useFromAboveFilterTypes}"
+                                                           filter-type="filter.options.filter_type"
+                                                           update-filter-fn="filterSettingsChanged()"
+                                                           class="rv-filter-link-to-above-btn"></use-from-above-button>
+                                </md-menu-item>
                             </md-menu-content>
                         </md-menu>
                     </md-menu-item>
@@ -195,12 +202,6 @@
                             <ng-md-icon icon="visibility_off"></ng-md-icon>
                             <span>Remove</span>
                         </md-button>
-                    </md-menu-item>
-
-                    <md-menu-item ng-if="!isRootEntityViewer">
-                        <use-from-above-button item="filter.options.use_from_above"
-                                               data="{attributes: attributesFromAbove}"
-                                               class="rv-filter-link-to-above-btn"></use-from-above-button>
                     </md-menu-item>
 
                 </md-menu-content>

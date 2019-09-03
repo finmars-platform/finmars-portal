@@ -1,22 +1,25 @@
-<md-dialog aria-label="" ng-cloak class="expression-editor-dialog draggable-dialog" drag-dialog style="width: 75%">
+<md-dialog class="use-from-above-dialog draggable-dialog"
+           drag-dialog aria-label="use from above dialog"
+           style="width: 680px">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h2>Use from above manager</h2>
         </div>
     </md-toolbar>
+
     <md-dialog-content class="p-16">
 
-        <div class="p-20">
+        <div class="p-20" layout="row">
 
-            <md-input-container>
+            <md-input-container class="md-block" style="width: 400px;">
                 <label>Select field</label>
                 <div>
                     <md-select ng-model="vm.item"
                                md-container-class="common-select-container"
                                md-on-close="searchTerm = ''">
                         <md-select-header>
-                            <input data-ng-model="searchTerm"
+                            <input data-ng-model="attrsSearchTerm"
                                    type="search"
                                    placeholder="Search for a ..."
                                    class="md-text md-select-search-pattern select-input-filter"
@@ -25,7 +28,7 @@
 
                         <div class="select-options-holder">
 
-                            <md-option data-ng-repeat="item in vm.data.attributes | filter:{name: searchTerm}"
+                            <md-option data-ng-repeat="item in vm.data.attributes | filter:{name: attrsSearchTerm}"
                                        ng-value="item.key">
                                 {{item.name}} ({{item.key}})
                             </md-option>
@@ -36,10 +39,40 @@
                 </div>
             </md-input-container>
 
+            <md-input-container class="md-block" style="width: 200px">
+
+                <label>Filter type</label>
+                <div>
+                    <md-select ng-model="vm.filterType"
+                               md-container-class="common-select-container"
+                               md-on-close="searchTerm = ''"
+                               ng-disabled="vm.filterTypes.length < 2">
+                        <md-select-header>
+                            <input data-ng-model="filterTypeSearchTerm"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+
+                        <div class="select-options-holder">
+
+                            <md-option data-ng-repeat="filterType in vm.filterTypes | filter:{name: filterTypeSearchTerm}"
+                                       ng-value="filterType.key"
+                                       ng-bind="filterType.name">
+                            </md-option>
+
+                        </div>
+
+                    </md-select>
+                </div>
+
+            </md-input-container>
 
         </div>
 
     </md-dialog-content>
+
     <md-dialog-actions layout="row" layout-align="space-between">
 
         <div>
