@@ -635,7 +635,7 @@
                             <md-input-container>
                                 <label for="" content-title>Allocation-Balance</label>
                                 <md-select
-                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'allocation_balance')]">
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_balance')]">
                                     <md-optgroup label="Inputs">
                                         <md-option
                                                 data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_balance')"

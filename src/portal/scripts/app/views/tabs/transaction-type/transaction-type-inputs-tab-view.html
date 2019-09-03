@@ -131,17 +131,33 @@
                         </md-select>
 
                     </md-input-container>-->
-                    <span ng-bind="vm.getNameByContentType(item.content_type)"></span>
+                    <span data-ng-if="item.value_type == 110" ng-bind="item.reference_table"></span>
+                    <span data-ng-if="item.value_type == 100" ng-bind="vm.getNameByContentType(item.content_type)"></span>
                 </td>
 
                 <td class="edit-state-td ttype-inputs-checkbox-td">
-                    <md-input-container class="no-error-spacer">
+                    <md-input-container class="no-error-spacer" data-ng-if="item.value_type == 100">
                         <md-checkbox data-ng-model="item.is_fill_from_context"
                         ></md-checkbox>
                     </md-input-container>
+
+                    <div data-ng-if="item.value_type != 100">
+                        &nbsp;
+                    </div>
                 </td>
 
                 <td class="edit-state-td">
+
+                    <div data-ng-if="item.value_type != 100">
+
+                        <md-input-container class="no-error-spacer ttinputs-input-with-expression">
+                            <input type="text" data-ng-model="item.value">
+                        </md-input-container>
+
+                        <expression-editor-button
+                                data-item="item.value"></expression-editor-button>
+
+                    </div>
 
                     <div data-ng-if="item.is_fill_from_context && item.value_type == 100">
 
@@ -161,35 +177,13 @@
 
                     </div>
 
-                    <div data-ng-if="item.is_fill_from_context && item.value_type != 100">
-
-                        <md-input-container class="no-error-spacer ttinputs-input-with-expression">
-                            <input type="text" data-ng-model="item.context_property">
-                        </md-input-container>
-
-                        <expression-editor-button
-                                data-item="item.context_property"></expression-editor-button>
-
-                    </div>
-
-                    <div data-ng-if="!item.is_fill_from_context && item.value_type != 100">
-
-                        <md-input-container class="no-error-spacer ttinputs-input-with-expression">
-                            <input type="text" data-ng-model="item.value">
-                        </md-input-container>
-
-                        <expression-editor-button
-                                                  data-item="item.value"></expression-editor-button>
-
-                    </div>
-
                     <div data-ng-if="!item.is_fill_from_context && item.value_type == 100">
 
                         <md-input-container
-                                            aria-label="select with filter"
-                                            class="no-error-spacer"
-                                            style="width: 213px;"
-                                            md-no-float="">
+                                aria-label="select with filter"
+                                class="no-error-spacer"
+                                style="width: 213px;"
+                                md-no-float="">
                             <md-select ng-model="item[vm.resolveRelation(item)]"
                                        md-container-class="common-select-container"
                                        md-on-open="vm.loadRelation(vm.resolveRelation(item))"
@@ -291,7 +285,9 @@
                     </md-input-container>
                 </td>
                 <td>
-                    <md-input-container class="md-block m-0"
+
+
+                    <md-input-container data-ng-if="vm.newItem.value_type !== 110" class="md-block m-0"
                                         aria-label="content type input"
                                         md-no-float="">
                         <label for="ttype-inputs-default-value"></label>
@@ -322,15 +318,62 @@
 
                         </md-select>
                     </md-input-container>
+
+                    <md-input-container data-ng-if="vm.newItem.value_type === 110" class="md-block m-0"
+                                        aria-label="content type input"
+                                        md-no-float="">
+                        <label for="ttype-inputs-default-value"></label>
+                        <md-select ng-model="vm.newItem.reference_table"
+                                   md-container-class="common-select-container"
+                                   md-on-close="newItemContentTypeSearchTerm = ''"
+                                   id="ttype-inputs-selector-default-value"
+                                   aria-label="select with filter"
+                                   ng-disabled="vm.newItem.value_type !== 110">
+
+                            <md-select-header>
+                                <input data-ng-model="newItemReferenceTableSearchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+
+                            <div class="select-options-holder">
+
+                                <md-option
+                                        data-ng-repeat="item in vm.referenceTables | filter:{name: newItemReferenceTableSearchTerm}"
+                                        ng-value="item.name">
+                                    {{item.name}}
+                                </md-option>
+
+                            </div>
+
+                        </md-select>
+                    </md-input-container>
+
+
                 </td>
 
                 <td class="ttype-inputs-checkbox-td">
-                    <md-input-container class="no-error-spacer m-0">
+                    <md-input-container class="no-error-spacer m-0" data-ng-if="vm.newItem.value_type == 100">
                         <md-checkbox data-ng-model="vm.newItem.is_fill_from_context"></md-checkbox>
                     </md-input-container>
+                    <div data-ng-if="vm.newItem.value_type != 100">
+                        &nbsp;
+                    </div>
                 </td>
 
                 <td>
+
+                    <div data-ng-if="!vm.newItem.is_fill_from_context && vm.newItem.value_type != 100">
+
+                        <md-input-container class="no-error-spacer ttinputs-input-with-expression m-0">
+                            <input type="text" data-ng-model="vm.newItem.value">
+                        </md-input-container>
+
+                        <expression-editor-button data-item="vm.newItem.value"></expression-editor-button>
+
+                    </div>
 
                     <div data-ng-if="item.is_fill_from_context && item.value_type == 100">
 
@@ -350,33 +393,12 @@
 
                     </div>
 
-                    <div data-ng-if="vm.newItem.is_fill_from_context && vm.newItem.value_type != 100">
-
-                        <md-input-container class="no-error-spacer ttinputs-input-with-expression">
-                            <input type="text" data-ng-model="vm.newItem.context_property">
-                        </md-input-container>
-
-                        <expression-editor-button
-                                data-item="vm.newItem.context_property"></expression-editor-button>
-
-                    </div>
-
-                    <div data-ng-if="!vm.newItem.is_fill_from_context && vm.newItem.value_type != 100">
-
-                        <md-input-container class="no-error-spacer ttinputs-input-with-expression m-0">
-                            <input type="text" data-ng-model="vm.newItem.value">
-                        </md-input-container>
-
-                        <expression-editor-button data-item="vm.newItem.value"></expression-editor-button>
-
-                    </div>
-
                     <div data-ng-if="!item.is_fill_from_context && vm.newItem.value_type == 100">
 
                         <md-input-container
-                                            class="m-0"
-                                            md-no-float=""
-                                            style="width: 213px;">
+                                class="m-0"
+                                md-no-float=""
+                                style="width: 213px;">
 
                             <md-select ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"
                                        md-container-class="common-select-container"

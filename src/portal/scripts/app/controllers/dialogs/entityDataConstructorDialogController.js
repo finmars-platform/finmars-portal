@@ -721,6 +721,7 @@
                             vm.userInputs.push({
                                 key: contentType,
                                 name: input.name,
+                                reference_table: input.reference_table,
                                 verbose_name: input.verbose_name,
                                 content_type: input.content_type,
                                 value_type: input_value_type
