@@ -31,6 +31,8 @@
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
 
+    var referenceTableService = require('../../services/referenceTablesService')
+
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
 
         var vm = this;
@@ -661,10 +663,24 @@
 
         };
 
+        vm.getReferenceTables = function () {
+            referenceTableService.getList().then(function (data) {
+
+                vm.referenceTables = data.results;
+
+                console.log('vm.referenceTables', vm.referenceTables);
+
+                $scope.$apply();
+
+            })
+        };
+
         vm.init = function () {
 
             vm.getItem();
             vm.getAttrs();
+            vm.getReferenceTables();
+
 
             vm.layoutAttrs = layoutService.getLayoutAttrs();
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
@@ -739,7 +755,8 @@
 
                         vm.save();
 
-                    };
+                    }
+                    ;
 
                 });
 
@@ -971,6 +988,7 @@
             currency: null,
             counterparty: null,
             is_fill_from_context: false,
+            reference_table: null,
             responsible: null,
             portfolio: null,
             strategy1: null,
@@ -998,6 +1016,10 @@
             {
                 "display_name": "Relation",
                 "value": 100
+            },
+            {
+                "display_name": "Selector",
+                "value": 110
             }
         ];
 
@@ -1188,6 +1210,7 @@
         vm.valueTypeChanged = function (item) {
             item.content_type = null;
             item.is_fill_from_context = false;
+            item.context_property = null;
 
             if (item.value_type === 100) {
                 item.content_type = "accounts.account";
@@ -1202,6 +1225,7 @@
                 value_type: vm.newItem.value_type,
                 content_type: vm.newItem.content_type,
                 is_fill_from_context: vm.newItem.is_fill_from_context,
+                reference_table: vm.newItem.reference_table,
                 account: vm.newItem.account,
                 instrument_type: vm.newItem.instrument_type,
                 instrument: vm.newItem.instrument,
@@ -1294,31 +1318,38 @@
 
             if (action.instrument) {
                 return "Create Instrument";
-            };
+            }
+            ;
 
             if (action.transaction) {
                 return "Create Transaction";
-            };
+            }
+            ;
 
             if (action.instrument_factor_schedule) {
                 return "Create Factor Schedule";
-            };
+            }
+            ;
 
             if (action.instrument_manual_pricing_formula) {
                 return "Create Manual Pricing Formula";
-            };
+            }
+            ;
 
             if (action.instrument_accrual_calculation_schedules) {
                 return "Create Accrual Calculation Schedules";
-            };
+            }
+            ;
 
             if (action.instrument_event_schedule) {
                 return "Create Event Schedule";
-            };
+            }
+            ;
 
             if (action.instrument_event_schedule_action) {
                 return "Create Event Schedule Action"
-            };
+            }
+            ;
         };
 
         vm.preventSpace = function ($event) {
@@ -1850,7 +1881,8 @@
             vm.contentTypes.forEach(function (cType) {
                 if (cType.key === contentType) {
                     typeName = cType.name;
-                };
+                }
+                ;
             });
 
             return typeName;

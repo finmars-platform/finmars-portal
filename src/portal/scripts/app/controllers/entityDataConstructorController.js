@@ -550,6 +550,7 @@
                                 name: input.name,
                                 verbose_name: input.verbose_name,
                                 content_type: input.content_type,
+                                reference_table: input.reference_table,
                                 value_type: input_value_type
                             });
 

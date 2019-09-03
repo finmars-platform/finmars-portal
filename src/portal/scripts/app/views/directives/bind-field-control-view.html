@@ -259,4 +259,11 @@
             <span class="w-rp" data-ng-bind="item.options.labelText"></span>
         </span>
     </div>
+
+    <div data-ng-if="fieldType['display_name'] === 'Selector'" class="ec-decoration-container">
+        <ev-selector-resolver data-item="item"
+                           data-entity="entity"
+                           data-options="options"
+                           data-entity-type="entityType"></ev-selector-resolver>
+    </div>
 </div>

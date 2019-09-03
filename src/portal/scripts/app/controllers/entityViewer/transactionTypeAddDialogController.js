@@ -736,6 +736,7 @@
             currency: null,
             counterparty: null,
             is_fill_from_context: false,
+            reference_table: false,
             responsible: null,
             portfolio: null,
             strategy1: null,
@@ -763,6 +764,10 @@
             {
                 "display_name": "Relation",
                 "value": 100
+            },
+            {
+                "display_name": "Selector",
+                "value": 110
             }
         ];
 
@@ -937,6 +942,7 @@
         vm.valueTypeChanged = function (item) {
             item.content_type = null;
             item.is_fill_from_context = false;
+            item.context_property = null;
 
             if (item.value_type === 100) {
                 item.content_type = "accounts.account";
@@ -950,6 +956,7 @@
                 value_type: vm.newItem.value_type,
                 content_type: vm.newItem.content_type,
                 is_fill_from_context: vm.newItem.is_fill_from_context,
+                reference_table: vm.newItem.reference_table,
                 account: vm.newItem.account,
                 instrument_type: vm.newItem.instrument_type,
                 instrument: vm.newItem.instrument,
