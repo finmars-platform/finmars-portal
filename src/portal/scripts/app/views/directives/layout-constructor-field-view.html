@@ -107,6 +107,17 @@
                 <div data-ng-include="specialOptionTemplate"></div>
             </div>
 
+            <div>
+
+                <md-input-container class="ec-input-color-checkbox-container">
+                    <md-checkbox ng-checked="item.editable"
+                                 ng-click="item.editable = !item.editable">
+                        Editable
+                    </md-checkbox>
+                </md-input-container>
+
+            </div>
+
             <div ng-if="hasBackgroundColorInput()" class="ec-input-color-container">
                 <div layout="row" layout-align="start center" class="m-b-8">
 

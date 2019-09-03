@@ -4,7 +4,9 @@
 
     var checkIcon = renderHelper.getCheckIcon();
 
-    var render = function (group) {
+    var render = function (group, groupTypes) {
+
+        var groupType = groupTypes[group.___level - 1];
 
         var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">+</div></div>';
 
@@ -27,9 +29,14 @@
 
         var classes = classList.join(' ');
 
+        var additionalText = '';
+
+        if(groupType.value_type === 'field') {
+            additionalText = additionalText + ' (' + group.___group_identifier + ')'
+        }
 
         return '<div class="' + classes + '" data-type="group" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' +
-            rowSelection + foldButton + group.___group_name + '</div>'
+            rowSelection + foldButton + group.___group_name + additionalText +'</div>'
 
     };
 

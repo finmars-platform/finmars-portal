@@ -175,9 +175,11 @@
                     };
                     tab.layout.fields.push(field);
 
-                };
+                }
+                ;
 
-            };
+            }
+            ;
 
         }
 
@@ -271,9 +273,11 @@
 
                 if (tab.layout.fields[r].row > row) {
                     tab.layout.fields[r].row = tab.layout.fields[r].row + 1;
-                };
+                }
+                ;
 
-            };
+            }
+            ;
 
             tab.layout.rows = tab.layout.rows + 1;
 
@@ -288,7 +292,8 @@
                     type: 'empty'
                 };
                 tab.layout.fields.push(field);
-            };
+            }
+            ;
 
             vm.createFieldsTree();
             vm.updateDrakeContainers();
@@ -309,9 +314,11 @@
                 } else if (!socket) {
                     isEmpty = false;
                     break;
-                };
+                }
+                ;
 
-            };
+            }
+            ;
 
             return isEmpty;
 
@@ -329,7 +336,8 @@
 
                     return false;
 
-                };
+                }
+                ;
 
                 return true;
 
@@ -673,7 +681,8 @@
                     default:
                         vm.entityAttrs = entityAttrs;
 
-                };
+                }
+                ;
 
                 vm.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -792,7 +801,8 @@
 
                     treeTab[fRow][fCol] = field;
 
-                };
+                }
+                ;
 
             });
 
@@ -1007,6 +1017,17 @@
 
                 return result;
 
+            });
+
+
+            // set all items to Editable = True state by default
+            vm.items = vm.items.map(function (item) {
+
+                if (item.editable !== false) {
+                    item.editable = true
+                }
+
+                return item
             });
 
             console.log('vm.entityType', vm.entityType);
