@@ -910,6 +910,7 @@
                                         if (field.column === column && field.row === row) {
 
                                             field.attribute = vm.items[itemIndex];
+                                            field.editable = vm.items[itemIndex].editable;
                                             field.name = field.attribute.name;
                                             field.attribute_class = 'userInput';
                                             field.type = 'field';
@@ -1030,6 +1031,7 @@
                 return item
             });
 
+            console.log('vm.items', vm.items);
             console.log('vm.entityType', vm.entityType);
 
             /*if (vm.entityType === 'instrument') {

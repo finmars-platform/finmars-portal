@@ -276,6 +276,9 @@
 
         vm.bindField = function (tab, field) {
             var i, l, e;
+
+            console.log('field', field);
+
             if (field && field.type === 'field') {
 
                 var attributes = {};

@@ -107,11 +107,10 @@
                 <div data-ng-include="specialOptionTemplate"></div>
             </div>
 
-            <div>
+            <div data-ng-if="entityType == 'transaction-type' || entityType == 'complex-transaction'">
 
                 <md-input-container class="ec-input-color-checkbox-container">
-                    <md-checkbox ng-checked="item.editable"
-                                 ng-click="item.editable = !item.editable">
+                    <md-checkbox ng-model="item.editable">
                         Editable
                     </md-checkbox>
                 </md-input-container>
