@@ -73,6 +73,12 @@ app.factory('pickmeup', ['$window', function ($window) {
     };
 }]);
 
+// Dashboard
+
+app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
+app.controller('DashboardConstructorController', ['$scope', '$mdDialog', require('./app/controllers/dashboardConstructorController')]);
+
+
 // Common
 
 app.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
@@ -81,7 +87,6 @@ app.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', requ
 app.controller('HomeController', ['$scope', '$mdDialog', require('./app/controllers/homeController')]);
 app.controller('SetupController', ['$scope', '$state', require('./app/controllers/setupController')]);
 app.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
-app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 app.controller('EntityDataConstructorDialogController', ['$scope', 'data', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dialogs/entityDataConstructorDialogController')]);
 app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/expressionEditorDialogController')]);
