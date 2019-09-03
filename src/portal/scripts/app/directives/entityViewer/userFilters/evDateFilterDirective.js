@@ -163,6 +163,7 @@
 
                 scope.changeFilterType = function (filterType) {
 
+                    delete scope.filter.options.use_from_above;
                     scope.filter.options.filter_type = filterType;
 
                     if (filterType === 'date_tree') {
@@ -186,6 +187,17 @@
                     }
 
                     scope.filterSettingsChange();
+                };
+
+                scope.showFRCheckMark = function (filterRegime) {
+                    if (scope.filter.options.filter_type === filterRegime &&
+                        !scope.filter.options.use_from_above) {
+
+                        return true;
+
+                    };
+
+                    return false;
                 };
 
                 scope.toggleFrontendFilter = function () {
@@ -321,19 +333,39 @@
                 };
 
 
+                scope.noDataForLinkingTo = true;
+                var columns = scope.evDataService.getColumns();
+
+                for (var c = 0; c < columns.length; c++) {
+                    if (columns[c].key === scope.filter.options.use_from_above) {
+                        scope.noDataForLinkingTo = false;
+                        break;
+                    };
+                };
+
                 scope.initSplitPanelMode = function () {
 
                     if (!scope.isRootEntityViewer) {
 
                         scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
-                            if (['multiselector', 'date_tree', 'from_to'].indexOf(scope.filter.options.filter_type) === -1) {
+                            scope.noDataForLinkingTo = true;
+                            var columns = scope.evDataService.getColumns();
+                            var key = scope.filter.options.use_from_above;
 
+                            for (var c = 0; c < columns.length; c++) {
+                                if (columns[c].key === key) {
+                                    scope.noDataForLinkingTo = false;
+                                    break;
+                                };
+                            };
+
+                            if (scope.filter.options.hasOwnProperty('use_from_above') && !scope.noDataForLinkingTo) {
+                                console.log("use above row selected", key);
                                 var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
 
                                 scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
 
-                                var key = scope.filter.options.use_from_above;
                                 var value = activeObjectFromAbove[key];
 
                                 scope.filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
@@ -342,7 +374,7 @@
 
                                 scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                            }
+                            };
 
                         });
 

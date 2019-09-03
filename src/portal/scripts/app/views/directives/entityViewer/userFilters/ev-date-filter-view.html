@@ -171,6 +171,14 @@
                                                 ng-show="filter.options.filter_type === 'date_tree'"></ng-md-icon>
                                     Date tree
                                 </md-button>
+
+                                <md-menu-item ng-if="!isRootEntityViewer">
+                                    <use-from-above-button item="filter.options.use_from_above"
+                                                           data="{attributes: attributesFromAbove, valueType: filter.value_type}"
+                                                           filter-type="filter.options.filter_type"
+                                                           update-filter-fn="filterSettingsChange()"
+                                                           class="rv-filter-link-to-above-btn"></use-from-above-button>
+                                </md-menu-item>
                             </md-menu-content>
                         </md-menu>
                     </md-menu-item>
@@ -208,12 +216,6 @@
                             <ng-md-icon icon="visibility_off"></ng-md-icon>
                             <span>Remove</span>
                         </md-button>
-                    </md-menu-item>
-
-                    <md-menu-item ng-if="!isRootEntityViewer">
-                        <use-from-above-button item="filter.options.use_from_above"
-                                               data="{attributes: attributesFromAbove}"
-                                               class="rv-filter-link-to-above-btn"></use-from-above-button>
                     </md-menu-item>
 
                 </md-menu-content>
