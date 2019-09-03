@@ -258,9 +258,14 @@
                     } else {
                         result.push(item.func)
                     }
+
+
                 });
 
             });
+
+            result.push('custom_fields');
+            result.push('this');
 
             return result;
         }
@@ -291,6 +296,21 @@
                         }
 
                     })
+
+                }
+
+            });
+
+            vm.expressions.forEach(function (item) {
+
+                if (item.groups === 'custom_field') {
+
+                    var pieces = item.func.split('custom_fields.');
+
+                    if (pieces.length > 1) {
+                        propertiesWords.push(pieces[1])
+                    }
+
 
                 }
 
