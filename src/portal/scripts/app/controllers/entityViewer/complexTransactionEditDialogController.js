@@ -461,6 +461,8 @@
                     attributes.backgroundColor = field.backgroundColor;
                 }
 
+                attributes.editable = field.editable;
+
                 return attributes;
             }
         };

@@ -1,4 +1,4 @@
-<div>
+<div ng-class="{'disabled-field': isNotEditableField()}">
     <div data-ng-if="fieldType['display_name'] === 'Number'" class="bind-field-number-field-container">
 
         <md-input-container class="md-block no-error-spacer">
@@ -90,7 +90,8 @@
                                    data-ng-click="button.action(item)">
                             {{button.caption}}
                             <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                            <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
+                            <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">
+                                {{button.tooltip}}
                             </md-tooltip>
                         </md-button>
                     </div>
@@ -170,8 +171,8 @@
     <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
         <div style="{{inputBackgroundColor()}}">
             <ev-field-resolver data-item="item"
-                           data-entity="entity"
-                           data-options="options"></ev-field-resolver>
+                               data-entity="entity"
+                               data-options="options"></ev-field-resolver>
         </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
@@ -181,13 +182,16 @@
             <zh-date-picker data-date-value="entity[getModelKey()]"
                             ng-class="{'disabled-btn': isDisabled}"></zh-date-picker>
             <div class="bind-field-buttons-block">
-                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
+                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayMinus"
+                           data-ng-click="setDateMinus()">
                     T - 1
                 </md-button>
-                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateToday" data-ng-click="setDateToday()">
+                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateToday"
+                           data-ng-click="setDateToday()">
                     T
                 </md-button>
-                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayPlus" data-ng-click="setDatePlus()">
+                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayPlus"
+                           data-ng-click="setDatePlus()">
                     T + 1
                 </md-button>
 
@@ -262,8 +266,8 @@
 
     <div data-ng-if="fieldType['display_name'] === 'Selector'" class="ec-decoration-container">
         <ev-selector-resolver data-item="item"
-                           data-entity="entity"
-                           data-options="options"
-                           data-entity-type="entityType"></ev-selector-resolver>
+                              data-entity="entity"
+                              data-options="options"
+                              data-entity-type="entityType"></ev-selector-resolver>
     </div>
 </div>
