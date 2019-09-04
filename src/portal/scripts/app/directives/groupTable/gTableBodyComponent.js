@@ -55,6 +55,8 @@
                 var isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
+                var activeLayoutConfigIsSet = false;
+
                 function renderReportViewer() {
 
                     console.log('renderReportViewer');
@@ -327,6 +329,11 @@
                         contentElem.style.opacity = '1';
                     }
                     updateTableContent();
+
+                    if (!activeLayoutConfigIsSet) {
+                        activeLayoutConfigIsSet = true;
+                        scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
+                    };
 
                 });
 

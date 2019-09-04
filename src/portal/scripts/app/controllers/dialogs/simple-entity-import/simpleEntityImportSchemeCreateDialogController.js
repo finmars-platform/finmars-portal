@@ -105,7 +105,7 @@
         vm.readyStatus = {scheme: true, entitySchemeAttributes: false};
 
         vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport();
-        console.log("import vm.contentTypes", vm.contentTypes);
+
         vm.scheme.content_type = vm.contentTypes[0].key;
         vm.getAttrs();
 

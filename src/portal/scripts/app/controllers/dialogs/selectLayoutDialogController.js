@@ -125,6 +125,19 @@
                     for (i = 0; i < vm.items.length; i++) {
                         var item = vm.items[i];
 
+                        if (Array.isArray(item.data.filters)) {
+                            var f;
+                            for (f = 0; f < item.data.filters.length; f++) {
+                                var filter = item.data.filters[f];
+
+                                if (filter.options.hasOwnProperty('use_from_above')) {
+                                    item.hasUseFromAboveFilter = true;
+                                    break;
+                                };
+
+                            };
+                        };
+
                         for (c = 0; c < vm.groups.length; c++) {
                             if (item.content_type === vm.groups[c].key) {
                                 vm.groups[c].content.push(item);

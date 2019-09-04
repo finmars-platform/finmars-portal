@@ -6,7 +6,7 @@
         var requestParameters = evDataService.getRequestParameters(obj.___parentId);
         var pagination = requestParameters.pagination;
 
-        var total_pages = Math.ceil(pagination.count / pagination.items_per_page);
+        var total_pages = Math.ceil(pagination.count / pagination.page_size);
         var page = pagination.page;
 
         // console.log('requestParameters', requestParameters);

@@ -12,13 +12,18 @@
         var entityViewerDataService = data.entityViewerDataService;
 
         var pagePagination = entityViewerDataService.getPagination();
-        vm.itemsToLoad = pagePagination.items_per_page;
+        vm.itemsToLoad = pagePagination.page_size;
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
         vm.saveSettings = function () {
+
+            pagePagination = entityViewerDataService.getPagination();
+            pagePagination.page_size = vm.itemsToLoad;
+
+            entityViewerDataService.setPagination(pagePagination);
             $mdDialog.hide({status: 'agree'});
         };
 

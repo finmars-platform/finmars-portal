@@ -59,7 +59,8 @@
                 <legend>Rounding</legend>
 
                 <div layout="column">
-                    <md-radio-group ng-model="vm.reportSettings.round_format_id">
+                    <md-radio-group ng-model="vm.reportSettings.round_format_id"
+                                    ng-change="vm.onRoundingChange()">
 
                         <md-radio-button ng-value="0" style="margin-bottom: 28px;">no rounding</md-radio-button>
 
@@ -98,7 +99,8 @@
 
                 <div layout="column">
 
-                    <md-radio-group ng-model="vm.reportSettings.percentage_format_id">
+                    <md-radio-group ng-model="vm.reportSettings.percentage_format_id"
+                                    ng-change="vm.onPercentageChange()">
 
                         <md-radio-button ng-value="0">n.a.</md-radio-button>
                         <md-radio-button ng-value="1">0%</md-radio-button>

@@ -480,6 +480,23 @@
 
                 };
 
+                scope.openInputFormEditor = function (ev) {
+
+                    $mdDialog.show({
+                        controller: 'EntityDataConstructorDialogController as vm',
+                        templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                        targetEvent: ev,
+                        preserveScope: true,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                entityType: scope.entityType
+                            }
+                        }
+                    });
+
+                };
+
                 scope.openEntityViewerSettings = function ($event) {
 
                     $mdDialog.show({

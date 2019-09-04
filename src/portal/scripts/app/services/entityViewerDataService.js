@@ -94,7 +94,7 @@
             },
             filters: [],
             pagination: {
-                items_per_page: 60
+                page_size: 60
             },
             status: {
                 data: null
@@ -248,7 +248,11 @@
         }
 
         function setPagination(pagination) {
-            data.pagination = pagination;
+
+            if (pagination) {
+                data.pagination = pagination;
+            }
+
         }
 
         function setAdditions(additions) {
@@ -546,7 +550,7 @@
                         },
                         pagination: {
                             page: 1,
-                            items_per_page: data.pagination.items_per_page,
+                            page_size: data.pagination.page_size,
                             count: 1
                         },
                         requestedPages: [1],
@@ -573,7 +577,7 @@
                         },
                         pagination: {
                             page: 1,
-                            items_per_page: data.pagination.items_per_page,
+                            page_size: data.pagination.page_size,
                             count: 1
                         },
                         requestedPages: [1],

@@ -1,4 +1,6 @@
-<md-dialog ng-cloak class="g-entity-viewer-settings-dialog-view draggable-dialog" drag-dialog aria-label="entity viewer settings dialog">
+<md-dialog class="g-entity-viewer-settings-dialog-view draggable-dialog"
+           drag-dialog
+           aria-label="entity viewer settings dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
@@ -8,10 +10,12 @@
     </md-toolbar>
 
     <md-dialog-content class="p-24">
+        <p style="margin: 0 10px 10px;">Table items to load on "Load more" button press</p>
         <md-input-container style="min-width: 340px">
-            <label>Table items to load on "Load more" button press</label>
-            <input type="text"
-                   ng-model="vm.itemsToLoad">
+            <label></label>
+            <input type="number"
+                   ng-model="vm.itemsToLoad"
+                   class="no-input-arrows">
         </md-input-container>
     </md-dialog-content>
 
