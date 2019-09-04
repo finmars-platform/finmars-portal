@@ -26,6 +26,12 @@
             controller: 'DashboardController as vm'
         });
 
+        $stateProvider.state('app.dashboard-constructor', {
+            url: '/dashboard-constructor',
+            templateUrl: 'views/dashboard-constructor-view.html',
+            controller: 'DashboardConstructorController as vm'
+        });
+
         $stateProvider.state('app.home', {
             url: '/',
             templateUrl: 'views/home-view.html',

@@ -107,6 +107,16 @@
                 <div data-ng-include="specialOptionTemplate"></div>
             </div>
 
+            <div data-ng-if="entityType == 'transaction-type' || entityType == 'complex-transaction'">
+
+                <md-input-container class="ec-input-color-checkbox-container">
+                    <md-checkbox ng-model="item.editable">
+                        Editable
+                    </md-checkbox>
+                </md-input-container>
+
+            </div>
+
             <div ng-if="hasBackgroundColorInput()" class="ec-input-color-container">
                 <div layout="row" layout-align="start center" class="m-b-8">
 

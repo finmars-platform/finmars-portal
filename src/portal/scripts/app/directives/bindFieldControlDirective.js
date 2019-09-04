@@ -31,11 +31,18 @@
 
                 scope.isDisabled = false;
 
+                scope.isNotEditableField = function () {
+                    // console.log('scope.item', scope.item);
+                    if (scope.item) {
+                        return scope.item.editable === false
+                    }
+                };
+
                 if (scope.item) {
                     scope.fieldType = null;
                     scope.attribute = scope.item;
 
-                    if(scope.attribute && scope.attribute.can_recalculate) {
+                    if (scope.attribute && scope.attribute.can_recalculate) {
                         scope.isDisabled = true;
                     }
 
@@ -247,7 +254,8 @@
                     if (scope.fieldType['display_name'] === 'Number' ||
                         scope.fieldType['display_name'] === 'Float') {
                         buttonsCount = 1;
-                    };
+                    }
+                    ;
 
                     if (scope.item.options) { // for date specific buttons
 
@@ -261,25 +269,30 @@
                                 }
                             });
 
-                        };
+                        }
+                        ;
 
-                    };
+                    }
+                    ;
 
                     if (scope.item.buttons && scope.item.buttons.length > 0) {
 
                         buttonsCount = buttonsCount + scope.item.buttons.length;
 
-                    };
+                    }
+                    ;
 
                     if (buttonsCount > 0) {
                         styleValue = 'padding-right: ' + (buttonsCount * 34) + 'px; ';
-                    };
+                    }
+                    ;
 
                     // ----------------------- Background Color -----------------
 
                     if (scope.item.backgroundColor) {
                         styleValue = styleValue + 'background-color: ' + scope.item.backgroundColor + ';';
-                    };
+                    }
+                    ;
 
                     return styleValue;
                 };
@@ -355,8 +368,8 @@
                         multiple: true,
                         locals: {
                             data: {
-                               numberValue: fieldModel,
-                               calculatorTitle: calculatorTitle
+                                numberValue: fieldModel,
+                                calculatorTitle: calculatorTitle
                             }
                         }
 
@@ -366,7 +379,8 @@
 
                             scope.entity[scope.getModelKey()] = res.numberValue;
 
-                        };
+                        }
+                        ;
 
                     });
 

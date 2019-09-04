@@ -16,6 +16,7 @@
         console.time("Rendering projection");
 
         var columns = evDataService.getColumns();
+        var groups = evDataService.getGroups();
 
         var previousRow = null;
 
@@ -29,7 +30,7 @@
                     renderedRow = placeholderRender.render(item, columns);
                     break;
                 case 'group':
-                    renderedRow = groupRender.render(item);
+                    renderedRow = groupRender.render(item, groups);
                     break;
                 case 'object':
                     renderedRow = objectRender.render(item, columns);

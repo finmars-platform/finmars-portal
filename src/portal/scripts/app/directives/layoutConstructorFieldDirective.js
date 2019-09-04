@@ -59,7 +59,8 @@
 
                     if (scope.tabFieldsTree) {
                         findItem();
-                    };
+                    }
+                    ;
 
                 });
 
@@ -74,6 +75,8 @@
                         scope.fieldUsesBackgroundColor = false;
                         scope.fieldBackgroundColor = '#000000';
                     }
+
+                    console.log('scope.item', scope.item)
 
                     findAttribute();
 
@@ -92,7 +95,8 @@
                                 break;
                             }
                         }
-                    };
+                    }
+                    ;
 
                     if (!attrFound) {
                         for (e = 0; e < scope.entityAttrs.length; e = e + 1) {
@@ -101,8 +105,10 @@
                                 attrFound = true;
                                 break;
                             }
-                        };
-                    };
+                        }
+                        ;
+                    }
+                    ;
 
                     if (!attrFound) {
                         for (u = 0; u < scope.userInputs.length; u = u + 1) {
@@ -111,7 +117,8 @@
                                 attrFound = true;
                                 break;
                             }
-                        };
+                        }
+                        ;
                     }
 
                     if (!scope.item.attribute) {
@@ -120,10 +127,11 @@
                                 scope.item.attribute = scope.layoutAttrs[l];
                             }
                         }
-                    };
+                    }
+                    ;
                 };
 
-                scope.changeFieldColspan = function(colspan) {
+                scope.changeFieldColspan = function (colspan) {
 
                     scope.tabFieldsTree[scope.row][scope.column].colspan = colspan;
 
@@ -139,7 +147,8 @@
                             colspan: 1,
                             type: 'empty'
                         });
-                    };
+                    }
+                    ;
 
                 };
 
@@ -154,7 +163,8 @@
                             originalFieldSettings = JSON.parse(JSON.stringify(scope.tab.layout.fields[i]));
                             break;
                         }
-                    };
+                    }
+                    ;
 
                     scope.item = originalFieldSettings;
                     scope.tabFieldsTree[scope.row][scope.column] = originalFieldSettings; // needed to reset colspan
@@ -214,6 +224,12 @@
                             scope.tab.layout.fields[i].type = 'field';
                             scope.tab.layout.fields[i].colspan = scope.item.colspan;
                             scope.tab.layout.fields[i].attribute = scope.item.attribute;
+
+                            if (scope.item.editable) { // its important
+                                scope.tab.layout.fields[i].editable = true
+                            } else {
+                                scope.tab.layout.fields[i].editable = false
+                            }
 
                             if (scope.fieldUsesBackgroundColor) {
                                 scope.tab.layout.fields[i].backgroundColor = scope.fieldBackgroundColor;
@@ -325,6 +341,7 @@
                     scope.item.attribute_class = null;
                     scope.item.disabled = false;
                     scope.item.options = null;
+                    scope.item.editable = null;
                     scope.item.colspan = 1;
 
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
@@ -412,9 +429,11 @@
 
                             return item.attribute.name;
 
-                        };
+                        }
+                        ;
 
-                    };
+                    }
+                    ;
 
                 };
 
@@ -521,7 +540,8 @@
 
                         return false;
 
-                    };
+                    }
+                    ;
 
                     return true;
                 };
