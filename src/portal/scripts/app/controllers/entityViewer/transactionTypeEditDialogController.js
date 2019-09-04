@@ -1100,28 +1100,6 @@
 
         };
 
-        vm.loadRelation = function (entity) {
-
-            //console.log('entity', entity);
-
-            return new Promise(function (resolve, reject) {
-                if (!vm.relationItems[entity]) {
-                    entityResolverService.getList(entity).then(function (data) {
-
-                        if (data.hasOwnProperty('results')) {
-                            vm.relationItems[entity] = data.results;
-                        } else {
-                            vm.relationItems[entity] = data;
-                        }
-
-                        resolve(vm.relationItems[entity]);
-                    })
-                } else {
-                    resolve(vm.relationItems[entity]);
-                }
-            })
-        };
-
         vm.toggleQuery = function () {
             vm.queryStatus = !vm.queryStatus;
             vm.query = {};
@@ -1143,7 +1121,7 @@
 
                 return {
                     "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                    "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
+                    "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
                     "groups": "input",
                     "func": input.name
                 }
@@ -1152,7 +1130,7 @@
 
         };
 
-        vm.editItem = function (item) {
+        /*vm.editItem = function (item) {
             item.editStatus = true;
         };
 
@@ -1161,7 +1139,7 @@
             vm.updateInputFunctions();
 
             item.editStatus = false;
-        };
+        };*/
 
         /*vm.saveInputsRow = function (input) {
             for (var i = 0; i < originalEntity.inputs.length; i++) {
@@ -1291,6 +1269,8 @@
             vm.newItem.pricing_policy = null;
             vm.newItem.value = null;
             vm.newItem.value_expr = null;
+
+            vm.updateInputFunctions();
 
         };
 
@@ -1523,18 +1503,22 @@
         vm.findInputs = function (entity) {
 
             var content_type = '';
-            var result = [];
+            var result;
 
-            vm.contentTypes.forEach(function (contentTypeItem) {
-                if (contentTypeItem.entity === entity) {
-                    content_type = contentTypeItem.key
-                }
-            });
+            for (var i = 0; i < vm.contentTypes.length; i++) {
+                if (vm.contentTypes[i].entity === entity) {
+                    content_type = vm.contentTypes[i].key;
+                    break;
+                };
+            };
 
-            vm.entity.inputs.forEach(function (input) {
+            result = vm.entity.inputs.filter(function (input) {
+
                 if (input.content_type === content_type) {
-                    result.push(input);
-                }
+                    return true;
+                };
+
+                return false;
             });
 
             return result;
@@ -1839,7 +1823,7 @@
         };
 
         vm.loadRelation = function (field) {
-
+            console.log("loadrelation2");
             console.log('field', field);
 
             return new Promise(function (resolve, reject) {

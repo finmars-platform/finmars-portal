@@ -846,28 +846,6 @@
 
         };
 
-        vm.loadRelation = function (entity) {
-
-            //console.log('entity', entity);
-
-            return new Promise(function (resolve, reject) {
-                if (!vm.relationItems[entity]) {
-                    entityResolverService.getList(entity).then(function (data) {
-
-                        if (data.hasOwnProperty('results')) {
-                            vm.relationItems[entity] = data.results;
-                        } else {
-                            vm.relationItems[entity] = data;
-                        }
-
-                        resolve(vm.relationItems[entity]);
-                    })
-                } else {
-                    resolve(vm.relationItems[entity]);
-                }
-            })
-        };
-
         vm.toggleQuery = function () {
             vm.queryStatus = !vm.queryStatus;
             vm.query = {};
@@ -996,7 +974,7 @@
             vm.newItem.pricing_policy = null;
             vm.newItem.value = null;
             vm.newItem.value_expr = null;
-        }
+        };
 
         // Transaction Type Input Controller end
 
@@ -1218,20 +1196,24 @@
         vm.findInputs = function (entity) {
 
             var content_type = '';
-            var result = [];
+            var result;
 
-            vm.contentTypes.forEach(function (contentTypeItem) {
-                if (contentTypeItem.entity === entity) {
-                    content_type = contentTypeItem.key
-                }
-            });
+            for (var i = 0; i < vm.contentTypes.length; i++) {
+                if (vm.contentTypes[i].entity === entity) {
+                    content_type = vm.contentTypes[i].key;
+                    break;
+                };
+            };
 
-            vm.entity.inputs.forEach(function (input) {
+            result = vm.entity.inputs.filter(function (input) {
+
                 if (input.content_type === content_type) {
-                    result.push(input);
-                }
+                    return true;
+                };
+
+                return false;
             });
-            // console.log("ttype input find input function", entity, vm.contentTypes, vm.entity.inputs);
+
             return result;
 
         };
