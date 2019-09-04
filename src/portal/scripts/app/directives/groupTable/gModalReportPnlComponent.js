@@ -137,8 +137,9 @@
                         attrsList = attrsList.concat(vm.strategy3attrs);
 
 
-                        syncAttrs();
+                        vm.allAttributesList = attrsList;
 
+                        syncAttrs();
 
                         vm.readyStatus.content = true;
                         $scope.$apply();

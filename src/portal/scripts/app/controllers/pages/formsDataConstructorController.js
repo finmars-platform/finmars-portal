@@ -87,10 +87,11 @@
         };
 
         transactionTypeService.getList({pageSize: 1000}).then(function (data) {
-            console.log("forms transactionType", data);
+
             vm.transactionTypes = data.results;
             vm.readyStatus.transactionType = true;
             $scope.$apply();
+
         });
 
     }

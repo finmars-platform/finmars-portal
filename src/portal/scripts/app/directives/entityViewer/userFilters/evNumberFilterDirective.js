@@ -77,7 +77,7 @@
                         filterClasses = 'f-disabled ';
                     }
 
-                    if (!filter.options.is_frontend_filter) {
+                    if (!scope.filter.options.is_frontend_filter) {
                         filterClasses += 'ev-backend-filter ';
                     }
 
@@ -274,7 +274,7 @@
                             };
 
                             if (scope.filter.options.hasOwnProperty('use_from_above') && !scope.noDataForLinkingTo) {
-                                console.log("use above row selected", key);
+
                                 var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
 
                                 scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();

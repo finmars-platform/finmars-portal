@@ -101,7 +101,7 @@
 
     var deserializeObjects = function (entityViewerDataService, entityViewerEventService, data, requestParameters, page) {
 
-        var step = requestParameters.pagination.items_per_page;
+        var step = requestParameters.pagination.page_size;
         var pageAsIndex = parseInt(page, 10) - 1;
         var event = requestParameters.event;
 
@@ -211,7 +211,7 @@
 
     var deserializeGroups = function (entityViewerDataService, entityViewerEventService, data, requestParameters, page) {
 
-        var step = requestParameters.pagination.items_per_page;
+        var step = requestParameters.pagination.page_size;
         var pageAsIndex = parseInt(page, 10) - 1;
         var event = requestParameters.event;
 
@@ -359,9 +359,7 @@
             var entityType = entityViewerDataService.getEntityType();
 
             var pagination = entityViewerDataService.getPagination();
-
-            var itemsPerPage = pagination.items_per_page;
-
+            var itemsPerPage = pagination.page_size;
             console.log("ev events");
             var pagesToRequest = requestParameters.requestedPages.filter(function (page) {
 
@@ -375,9 +373,7 @@
 
                     promises.push(new Promise(function (resolveLocal) {
 
-                        var options;
-
-                        options = Object.assign({}, requestParameters.body);
+                        var options = Object.assign({}, requestParameters.body);
 
                         options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
                             if (!optionsFilter.is_frontend_filter) {
@@ -388,6 +384,7 @@
                         });
 
                         options.page = pageToRequest;
+                        options.page_size = itemsPerPage;
 
                         if (options.groups_types) {
 
@@ -455,11 +452,12 @@
 
             console.log('pagesToRequest', pagesToRequest);
 
+            var pagination = entityViewerDataService.getPagination();
+            var itemsPerPage = pagination.page_size;
+
             pagesToRequest.forEach(function (pageToRequest) {
 
                 promises.push(new Promise(function (resolveLocal) {
-
-                    var options;
 
                     var options = Object.assign({}, requestParameters.body);
 
@@ -473,6 +471,7 @@
                     console.log('getGroups.options', options);
 
                     options.page = pageToRequest;
+                    options.page_size = itemsPerPage;
 
                     if (options.groups_types) {
 

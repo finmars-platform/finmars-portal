@@ -892,8 +892,8 @@
             vm.inputsFunctions = vm.entity.inputs.map(function (input) {
 
                 return {
-                    "name": "Input: " + input.name + " (" + input.verbose_name + ")",
-                    "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
+                    "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                    "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
                     "groups": "input",
                     "func": input.name
                 }

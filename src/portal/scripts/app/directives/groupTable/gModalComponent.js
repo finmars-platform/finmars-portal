@@ -109,6 +109,8 @@
                     attrsList = attrsList.concat(vm.entityAttrs);
                     attrsList = attrsList.concat(vm.attrs);
 
+                    vm.allAttributesList = attrsList;
+
                     syncAttrs();
 
                     vm.readyStatus.content = true;

@@ -129,6 +129,8 @@
                         attrsList = attrsList.concat(vm.strategy2attrs);
                         attrsList = attrsList.concat(vm.strategy3attrs);
 
+                        vm.allAttributesList = attrsList;
+
                         syncAttrs();
 
                         vm.readyStatus.content = true;

@@ -1562,7 +1562,18 @@ md-input-container.SC-entity-select-container {
   cursor: pointer;
 
   .ll-name {
-    cursor: text;
+    position: relative;
+
+    .ll-use-from-above-indicator {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+
+    span {
+      padding-left: 20px;
+      cursor: text;
+    };
   }
 
   &.active {

@@ -479,6 +479,54 @@
                     });
                 };
 
+                scope.activateColumnNumberRenderingPreset = function (column, rendPreset) {
+                    console.log("number format column", column);
+                    if (!column.report_settings) {
+                        column.report_settings = {};
+                    };
+
+                    switch (rendPreset) {
+
+                        case 'price':
+                            column.report_settings.zero_format_id = 1;
+                            column.report_settings.negative_color_format_id = 0;
+                            column.report_settings.negative_format_id = 0;
+                            break;
+                        case 'market_value':
+                            column.report_settings.zero_format_id = 1;
+                            column.report_settings.negative_color_format_id = 1;
+                            column.report_settings.negative_format_id = 1;
+                            column.report_settings.thousands_separator_format_id = 2;
+                            break;
+                        case 'amount':
+                            column.report_settings.zero_format_id = 1;
+                            column.report_settings.negative_color_format_id = 1;
+                            column.report_settings.negative_format_id = 0;
+                            column.report_settings.thousands_separator_format_id = 2;
+                            column.report_settings.round_format_id = 3;
+                            column.report_settings.percentage_format_id = 0;
+                            break;
+                        case 'exposure':
+                            column.report_settings.zero_format_id = 1;
+                            column.report_settings.negative_color_format_id = 1;
+                            column.report_settings.negative_format_id = 1;
+                            column.report_settings.round_format_id = 0;
+                            column.report_settings.percentage_format_id = 2;
+                            break;
+                        case 'return':
+                            column.report_settings.zero_format_id = 1;
+                            column.report_settings.negative_color_format_id = 1;
+                            column.report_settings.negative_format_id = 0;
+                            column.report_settings.percentage_format_id = 3;
+                            break;
+
+                    };
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+
+                };
+
                 scope.checkForExistingGroupingColumn = function (index) {
 
                     var groups = scope.evDataService.getGroups();

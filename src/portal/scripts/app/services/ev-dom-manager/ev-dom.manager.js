@@ -31,7 +31,7 @@
             id: groupHashId,
             pagination: {
                 page: 1,
-                items_per_page: pagination.items_per_page,
+                page_size: pagination.page_size,
                 count: 1
             },
             event: {
@@ -45,7 +45,7 @@
             body: {
                 groups_types: evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService),
                 groups_values: evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService),
-                page_size: pagination.items_per_page,
+                page_size: pagination.page_size,
                 page: 1
             },
             requestedPages: [1],
@@ -97,7 +97,7 @@
         requestParameters.body = {
             groups_types: groupTypes,
             groups_values: groupValues,
-            page_size: pagination.items_per_page,
+            page_size: pagination.page_size,
             page: 1
         };
 
@@ -454,7 +454,7 @@
 
         if (isLoadAllButtonPressed) {
 
-            var totalPages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.items_per_page);
+            var totalPages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
 
             console.log('total pages', totalPages);
 
