@@ -133,11 +133,44 @@
         })
     };
 
+    var recalculateAttributes = function(entity, id){
+
+        return xhrService.fetch(baseUrl + endPointResolver(entity) + id + '/recalculate/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    };
+
+    var getRecalculateAttributeCount = function(entity, id){
+
+        return xhrService.fetch(baseUrl + endPointResolver(entity) + id + '/objects-to-recalculate/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        recalculateAttributes: recalculateAttributes,
+        getRecalculateAttributeCount: getRecalculateAttributeCount
     }
 }());
