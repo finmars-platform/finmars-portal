@@ -69,42 +69,101 @@
         vm.getStatus = function (item) {
 
             if (item.task_status === 'P') {
-                return 'Pending'
+                return 'Running'
             }
 
-            if (item.task_status === 'SUCCESS') {
-                return 'Success'
+            if (item.task_status === 'SUCCESS' || item.task_status === 'D') {
+                return 'Done'
+            }
+
+            if (item.task_status === 'E') {
+                return 'Error'
             }
 
             return 'Unknown'
 
         };
 
-        vm.getStartedAt = function(item) {
+        vm.getStartedAt = function (item) {
 
             return new Date(item.started_at).toLocaleDateString() + ' ' + new Date(item.started_at).toLocaleTimeString()
 
         };
 
-        vm.getTaskType = function (item) {
+        vm.getProcessName = function (item) {
+
+            var result = '';
 
             if (item.task_type === 'validate_simple_import') {
-                return 'Entity Import Validation'
+                result = 'Entity Import Validation';
+
+                if (item.data) {
+                    if (item.data.scheme_name) {
+                        result = result + ': ' + item.data.scheme_name
+                    }
+
+                    if (item.data.file_name) {
+                        result = result + '; File: ' + item.data.file_name
+                    }
+                }
+
             }
 
             if (item.task_type === 'simple_import') {
-                return 'Entity Import'
+                result = 'Entity Import';
+
+                if (item.data) {
+                    if (item.data.scheme_name) {
+                        result = result + ': ' + item.data.scheme_name
+                    }
+
+                    if (item.data.file_name) {
+                        result = result + '; File: ' + item.data.file_name
+                    }
+                }
             }
 
             if (item.task_type === 'validate_transaction_import') {
-                return 'Transaction Import Validation'
+                result = 'Transaction Import Validation';
+
+                if (item.data) {
+                    if (item.data.scheme_name) {
+                        result = result + ': ' + item.data.scheme_name
+                    }
+
+                    if (item.data.file_name) {
+                        result = result + '; File: ' + item.data.file_name
+                    }
+                }
             }
 
             if (item.task_type === 'transaction_import') {
-                return 'Transaction Import'
+                result = 'Transaction Import';
+
+                if (item.data) {
+                    if (item.data.scheme_name) {
+                        result = result + ': ' + item.data.scheme_name
+                    }
+
+                    if (item.data.file_name) {
+                        result = result + '; File: ' + item.data.file_name
+                    }
+                }
             }
 
-            return 'Unknown Task'
+            if (item.task_type === 'user_download_pricing') {
+                result = 'User Triggered Prices Download'
+            }
+
+            if (item.task_type === 'automated_download_pricing') {
+                result = 'Automated Prices Download'
+            }
+
+            if (!result) {
+                result = 'Unknown Task'
+            }
+
+            return result
 
         };
 
