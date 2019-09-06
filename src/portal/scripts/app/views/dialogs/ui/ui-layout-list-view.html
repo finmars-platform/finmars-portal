@@ -17,19 +17,26 @@
                  ng-click="vm.selectLayout(item, $event)">
 <!--                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">-->
                 <div layout="row" class="ll-name">
-                    {{item.name}}
+                    <ng-md-icon ng-if="item.hasUseFromAboveFilter"
+                                icon="flag"
+                                size="17"
+                                class="ll-use-from-above-indicator">
+                        <md-tooltip class="tooltip_2" md-direction="top">Has Linked to Selection filter</md-tooltip>
+                    </ng-md-icon>
+                    <span ng-bind="item.name"></span>
                 </div>
+
                 <div>
-                    <md-button class="md-button ll-delete-btn" ng-click="vm.renameLayout(item, $event)">
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.renameLayout($event, item, $index)">
                         <md-tooltip md-direction="top">Rename</md-tooltip>
                         <ng-md-icon icon="mode_edit" size="24"></ng-md-icon>
                     </md-button>
-                    <md-button class="md-button ll-delete-btn" ng-click="vm.setAsDefault(item, $event)">
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.setAsDefault($event, item, $index)">
                         <md-tooltip md-direction="top">Set as default</md-tooltip>
                         <ng-md-icon ng-hide="vm.isDefaultLayout(item)" icon="star_border" size="24"></ng-md-icon>
                         <ng-md-icon ng-hide="!vm.isDefaultLayout(item)" icon="star" size="24"></ng-md-icon>
                     </md-button>
-                    <md-button class="md-button ll-delete-btn" ng-click="vm.deleteItem($event, item, $event)">
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.deleteItem($event, item, $index)">
                         <md-tooltip md-direction="top">Delete</md-tooltip>
                         <ng-md-icon icon="delete" size="24"></ng-md-icon>
                     </md-button>

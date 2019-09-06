@@ -1,4 +1,4 @@
-<md-card ng-class="{'f-disabled': !filter.options.enabled}" class="g-filter-item">
+<md-card ng-class="getClassesForFilter()" class="g-filter-item">
     <!--<md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span
             data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>-->
 
@@ -100,76 +100,85 @@
                             <md-menu-content class="dropdown-buttons-menu" width="3">
                                 <md-button ng-click="changeFilterType('equal')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'equal'"
+                                                ng-show="!showFRCheckMark('equal')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'equal'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('equal')"></ng-md-icon>
                                     Equal
                                 </md-button>
                                 <md-button ng-click="changeFilterType('not_equal')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'not_equal'"
+                                                ng-show="!showFRCheckMark('not_equal')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'not_equal'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('not_equal')"></ng-md-icon>
                                     Not equal
                                 </md-button>
                                 <md-button ng-click="changeFilterType('greater')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'greater'"
+                                                ng-show="!showFRCheckMark('greater')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'greater'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('greater')"></ng-md-icon>
                                     Greater than
                                 </md-button>
                                 <md-button ng-click="changeFilterType('greater_equal')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'greater_equal'"
+                                                ng-show="!showFRCheckMark('greater_equal')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'greater_equal'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('greater_equal')"></ng-md-icon>
                                     Greater or equal to
                                 </md-button>
                                 <md-button ng-click="changeFilterType('less')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'less'"
+                                                ng-show="!showFRCheckMark('less')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'less'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('less')"></ng-md-icon>
                                     Less than
                                 </md-button>
                                 <md-button ng-click="changeFilterType('less_equal')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'less_equal'"
+                                                ng-show="!showFRCheckMark('less_equal')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'less_equal'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('less_equal')"></ng-md-icon>
                                     Less or equal to
                                 </md-button>
                                 <md-button ng-click="changeFilterType('from_to')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'from_to'"
+                                                ng-show="!showFRCheckMark('from_to')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'from_to'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('from_to')"></ng-md-icon>
                                     From ... to ... (incl)
                                 </md-button>
                                 <md-button ng-click="changeFilterType('empty')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'empty'"
+                                                ng-show="!showFRCheckMark('empty')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'empty'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('empty')"></ng-md-icon>
                                     Empty cells
                                 </md-button>
                                 <md-button ng-click="changeFilterType('date_tree')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'date_tree'"
+                                                ng-show="!showFRCheckMark('date_tree')"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'date_tree'"></ng-md-icon>
+                                                ng-show="showFRCheckMark('date_tree')"></ng-md-icon>
                                     Date tree
                                 </md-button>
+
+                                <md-menu-item ng-if="!isRootEntityViewer">
+                                    <use-from-above-button item="filter.options.use_from_above"
+                                                           data="{attributes: attributesFromAbove, valueType: filter.value_type}"
+                                                           filter-type="filter.options.filter_type"
+                                                           update-filter-fn="filterSettingsChange()"
+                                                           class="rv-filter-link-to-above-btn"></use-from-above-button>
+                                </md-menu-item>
+
                             </md-menu-content>
                         </md-menu>
                     </md-menu-item>
@@ -198,12 +207,6 @@
                             <ng-md-icon icon="visibility_off"></ng-md-icon>
                             <span>Remove</span>
                         </md-button>
-                    </md-menu-item>
-
-                    <md-menu-item ng-if="!isRootEntityViewer">
-                        <use-from-above-button item="filter.options.use_from_above"
-                                               data="{attributes: attributesFromAbove}"
-                                               class="rv-filter-link-to-above-btn"></use-from-above-button>
                     </md-menu-item>
 
                 </md-menu-content>

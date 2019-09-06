@@ -264,6 +264,8 @@
                             attrsList = attrsList.concat(vm.strategy3cashAttrs);
                             attrsList = attrsList.concat(vm.strategy3positionAttrs);
 
+                            vm.allAttributesList = attrsList;
+
                             syncAttrs();
 
                             vm.readyStatus.content = true;

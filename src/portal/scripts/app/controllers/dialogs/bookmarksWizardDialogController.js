@@ -201,7 +201,7 @@
 
 
             var promisesDel = [];
-            console.log("bookmarks delete deleteNodes", vm.deletedNodes);
+
             vm.deletedNodes.forEach(function (itemId) {
                 promisesDel.push(bookmarkService.deleteByKey(itemId))
 

@@ -244,7 +244,8 @@
 
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="isRootEntityViewer">
                 <md-menu class="full-width" layout="row">
-                    <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                    <md-button class="md-raised clear-all full-width md-button md-ink-ripple"
+                               type="button"
                                ng-click="openActions($mdOpenMenu, $event)">
                         Split Panel
                     </md-button>
@@ -312,6 +313,13 @@
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
+            </div>
+
+            <div ng-if="entityType !== 'complex-transaction' && entityType !== 'transaction-type'"
+                 layout="row"
+                 class="filters-control-btn s-f-expanded-btns layout-row">
+                <md-button class="md-raised md-button full-width"
+                           ng-click="openInputFormEditor($event)">Edit form</md-button>
             </div>
 
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
@@ -481,7 +489,7 @@
                     </md-menu>
                 </div>
 
-                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="isRootEntityViewer">
+                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" ng-if="isRootEntityViewer">
                     <md-menu class="full-width" layout="row">
                         <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
                                    ng-click="openActions($mdOpenMenu, $event)">

@@ -44,6 +44,18 @@
             vm.reportSettings.percentage_format_id = 0;
         };
 
+        vm.onRoundingChange = function () {
+            if (vm.reportSettings.round_format_id !== 0) {
+                vm.reportSettings.percentage_format_id = 0;
+            }
+        };
+
+        vm.onPercentageChange = function () {
+            if (vm.reportSettings.percentage_format_id !== 0) {
+                vm.reportSettings.round_format_id = 0
+            };
+        };
+
         /*vm.selectZeroFormat = function (type) {
 
             if (vm.reportSettings.zero_format_id === type) {
@@ -105,7 +117,7 @@
         };*/
 
         vm.cancel = function () {
-            $mdDialog.hide();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.save = function () {

@@ -451,7 +451,7 @@
     var setDefaultObjects = function (entityViewerDataService, entityViewerEventService, requestParameters, page) {
 
         var obj;
-        var step = requestParameters.pagination.items_per_page;
+        var step = requestParameters.pagination.page_size;
         var event = requestParameters.event;
         var pageAsIndex = parseInt(page, 10) - 1;
         var i;
@@ -514,7 +514,7 @@
     var setDefaultGroups = function (entityViewerDataService, entityViewerEventService, requestParameters, page) {
 
         var obj;
-        var step = requestParameters.pagination.items_per_page;
+        var step = requestParameters.pagination.page_size;
         var event = requestParameters.event;
         var pageAsIndex = parseInt(page, 10) - 1;
         var i;
@@ -599,7 +599,7 @@
         var offset = Math.floor(offsetPx / rowHeight);
 
         var pagination = evDataService.getPagination();
-        var step = pagination.items_per_page;
+        var step = pagination.page_size;
 
         var maxPage = Math.ceil(group.count / step);
 

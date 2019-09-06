@@ -31,7 +31,6 @@
             reportAttrs['counterparties.counterparty'] = data[5].results;
             reportAttrs['transactions.complextransaction'] = data[6].results;
             reportAttrs['transactions.transactiontype'] = data[7].results;
-            console.log("ttype dynamicAttributesForReports", reportAttrs);
 
             return reportAttrs;
 

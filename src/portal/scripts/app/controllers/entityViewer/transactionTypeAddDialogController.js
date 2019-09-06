@@ -846,28 +846,6 @@
 
         };
 
-        vm.loadRelation = function (entity) {
-
-            //console.log('entity', entity);
-
-            return new Promise(function (resolve, reject) {
-                if (!vm.relationItems[entity]) {
-                    entityResolverService.getList(entity).then(function (data) {
-
-                        if (data.hasOwnProperty('results')) {
-                            vm.relationItems[entity] = data.results;
-                        } else {
-                            vm.relationItems[entity] = data;
-                        }
-
-                        resolve(vm.relationItems[entity]);
-                    })
-                } else {
-                    resolve(vm.relationItems[entity]);
-                }
-            })
-        };
-
         vm.toggleQuery = function () {
             vm.queryStatus = !vm.queryStatus;
             vm.query = {};
@@ -892,8 +870,8 @@
             vm.inputsFunctions = vm.entity.inputs.map(function (input) {
 
                 return {
-                    "name": "Input: " + input.name + " (" + input.verbose_name + ")",
-                    "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
+                    "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                    "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
                     "groups": "input",
                     "func": input.name
                 }
@@ -996,7 +974,7 @@
             vm.newItem.pricing_policy = null;
             vm.newItem.value = null;
             vm.newItem.value_expr = null;
-        }
+        };
 
         // Transaction Type Input Controller end
 
@@ -1218,20 +1196,24 @@
         vm.findInputs = function (entity) {
 
             var content_type = '';
-            var result = [];
+            var result;
 
-            vm.contentTypes.forEach(function (contentTypeItem) {
-                if (contentTypeItem.entity === entity) {
-                    content_type = contentTypeItem.key
-                }
-            });
+            for (var i = 0; i < vm.contentTypes.length; i++) {
+                if (vm.contentTypes[i].entity === entity) {
+                    content_type = vm.contentTypes[i].key;
+                    break;
+                };
+            };
 
-            vm.entity.inputs.forEach(function (input) {
+            result = vm.entity.inputs.filter(function (input) {
+
                 if (input.content_type === content_type) {
-                    result.push(input);
-                }
+                    return true;
+                };
+
+                return false;
             });
-            // console.log("ttype input find input function", entity, vm.contentTypes, vm.entity.inputs);
+
             return result;
 
         };
@@ -1554,15 +1536,24 @@
             })
         };
 
-        vm.getNameByContentType = function (contentType) {
-            var typeName = '';
-            vm.contentTypes.forEach(function (cType) {
-                if (cType.key === contentType) {
-                    typeName = cType.name;
-                };
-            });
+        vm.getNameByValueType = function (value) {
+            console.log("valueTYpe value ", value);
+            for (var i = 0; i < vm.valueTypes.length; i++) {
+                if (vm.valueTypes[i].value === value) {
+                    return vm.valueTypes[i].display_name;
+                }
+            }
 
-            return typeName;
+        };
+
+        vm.getNameByContentType = function (contentType) {
+
+            for (var i = 0; i < vm.contentTypes.length; i++) {
+                if (vm.contentTypes[i].key === contentType) {
+                    return vm.contentTypes[i].name;
+                };
+            };
+
         };
 
         // Transaction type actions controller end
