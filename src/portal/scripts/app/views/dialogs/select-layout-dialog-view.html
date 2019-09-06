@@ -6,7 +6,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content class="m-t-16" style="min-width: 350px">
+    <md-dialog-content class="m-t-16 p-16" style="min-width: 350px">
 
         <div data-ng-if="vm.readyStatus.content" ng-class="{'bookmarks-layout-without-fold': vm.noFolding}">
 
@@ -43,9 +43,18 @@
                                 <div data-ng-repeat="item in group.content | filter: {name: layoutSearchTerm}"
                                      class="bookmarks-layout-row"
                                      ng-class="{ 'selected-bookmark-layout': vm.isSelectedLayout(item.id)}">
+
+                                    <ng-md-icon ng-if="item.hasUseFromAboveFilter"
+                                                icon="flag"
+                                                size="17"
+                                                class="bookmarks-use-from-above-indicator">
+                                        <md-tooltip class="tooltip_2" md-direction="top">Has Linked to Selection filter</md-tooltip>
+                                    </ng-md-icon>
+
                                     <div data-ng-click="vm.selectLayout(item)">
                                         <span data-ng-bind="item.name"></span>
                                     </div>
+
                                 </div>
                             </div>
 

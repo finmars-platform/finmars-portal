@@ -57,7 +57,7 @@
 
                 vm.readyStatus = true;
                 $scope.$apply();
-                console.log("bookmarks wizard readyStatus", vm.readyStatus);
+
             });
 
         // } else {

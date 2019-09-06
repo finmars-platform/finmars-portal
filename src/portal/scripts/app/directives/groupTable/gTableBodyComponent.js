@@ -42,7 +42,7 @@
                 var contentWrapElem = scope.contentWrapElement;
 
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
-                console.log("bookmarks toggleBookmarksBtn", toggleBookmarksBtn);
+
                 var elements = {
                     viewportElem: viewportElem,
                     contentElem: contentElem,
@@ -54,6 +54,8 @@
 
                 var isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+
+                var activeLayoutConfigIsSet = false;
 
                 function renderReportViewer() {
 
@@ -328,6 +330,11 @@
                     }
                     updateTableContent();
 
+                    if (!activeLayoutConfigIsSet) {
+                        activeLayoutConfigIsSet = true;
+                        scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
+                    };
+
                 });
 
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
@@ -416,7 +423,7 @@
                     }
 
                     toggleBookmarksBtn.addEventListener('click', function () {
-                        console.log("bookmarks bookmark panel toggled!");
+
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
                         var headerToolbar = document.querySelector('md-toolbar.header');

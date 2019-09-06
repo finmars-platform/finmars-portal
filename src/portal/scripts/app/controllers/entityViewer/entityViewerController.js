@@ -273,7 +273,7 @@
                         console.log('vm', vm);
                         evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                         $scope.$apply();
-                        vm.entityViewerDataService.setActiveLayoutConfiguration();
+                        //vm.entityViewerDataService.setActiveLayoutConfiguration();
 
                     } else {
 
@@ -289,7 +289,7 @@
                             console.log('vm', vm);
                             evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                             $scope.$apply();
-                            vm.entityViewerDataService.setActiveLayoutConfiguration();
+                            //vm.entityViewerDataService.setActiveLayoutConfiguration();
 
                         });
 

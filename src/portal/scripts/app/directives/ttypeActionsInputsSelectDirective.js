@@ -22,6 +22,7 @@
                 }
 
                 elem[0].title = scope.labelTitle;
+
                 scope.inputs = scope.findInputs();
 
             }

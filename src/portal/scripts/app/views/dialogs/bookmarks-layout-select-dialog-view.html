@@ -14,7 +14,7 @@
                     <h3 data-ng-bind="group.name"></h3>
                     <div data-ng-repeat="item in group.content"
                          class="bookmarks-layout-row"
-                         ng-class="{ 'selected-bookmark-layout': vm.isSelectedLayout(item.id)}">
+                         ng-class="{ 'selected-bookmark-layout': vm.isSelectedLayout(item.id)}" data-test="test">
                         <div data-ng-click="vm.selectLayout(item)">
                             <span data-ng-bind="item.name"></span>
                         </div>

@@ -19,9 +19,12 @@
         var vm = this;
 
         vm.readyStatus = {items: false};
+        var layoutsList = []; // list of layouts without properties added for rendering
         var selectedLayout = null;
+
         var entityViewerDataService = options.entityViewerDataService;
         var entityViewerEventService = options.entityViewerEventService;
+
         var isRootEntityViewer = entityViewerDataService.isRootEntityViewer();
         var splitPanelLayoutId = null;
 
@@ -37,6 +40,25 @@
 
             uiService.getListLayout(options.entityType).then(function (data) {
                 vm.items = data.results;
+                layoutsList = data.results;
+
+                vm.items.forEach(function (item) {
+
+                    if (Array.isArray(item.data.filters)) {
+                        var f;
+                        for (f = 0; f < item.data.filters.length; f++) {
+                            var filter = item.data.filters[f];
+
+                            if (filter.options.hasOwnProperty('use_from_above')) {
+                                item.hasUseFromAboveFilter = true;
+                                break;
+                            };
+
+                        };
+                    };
+
+                });
+
                 vm.readyStatus.items = true;
                 $scope.$apply();
             });
@@ -45,9 +67,11 @@
 
         vm.getList();
 
-        vm.renameLayout = function (layout, $event) {
+        vm.renameLayout = function ($event, layout, index) {
 
             $event.stopPropagation();
+
+            var layoutData = layoutsList[index];
 
             $mdDialog.show({
                 controller: 'UiLayoutSaveAsDialogController as vm',
@@ -58,7 +82,7 @@
                 clickOutsideToClose: false,
                 locals: {
                     options: {
-                        layoutName: layout.name
+                        layoutName: layoutData.name
                     }
                 }
 
@@ -66,12 +90,14 @@
 
                 if (res.status === 'agree') {
 
+                    layoutData.name = res.data.name;
                     layout.name = res.data.name;
-                    uiService.updateListLayout(layout.id, layout).then(function () {
+
+                    uiService.updateListLayout(layoutData.id, layoutData).then(function () {
                         if (isRootEntityViewer) {
-                            middlewareService.setNewEntityViewerLayoutName(layout.name); // Give signal to update active layout name in the toolbar
+                            middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
                         } else {
-                            middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active layout name in the toolbar
+                            middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
                         }
 
                     });
@@ -82,9 +108,9 @@
 
         };
 
-        vm.deleteItem = function (ev, item, $event) {
+        vm.deleteItem = function (ev, item) {
 
-            $event.stopPropagation();
+            ev.stopPropagation();
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -133,31 +159,38 @@
 
         };
 
-        vm.setAsDefault = function (item, $event) {
+        vm.setAsDefault = function ($event, item, index) {
 
             $event.stopPropagation();
 
+            var layoutData = layoutsList[index];
+
             if (isRootEntityViewer) {
-                if (!item.is_default) {
-                    vm.items.forEach(function (layout) {
+                if (!layoutData.is_default) {
+
+                    for (var i = 0; i < vm.items.length; i++) {
+                        var layout = vm.items[i];
 
                         if (layout.is_default) {
+
                             layout.is_default = false;
-                            uiService.updateListLayout(layout.id, layout);
+                            layoutsList[i].is_default = false;
+
+                            uiService.updateListLayout(layoutsList[i].id, layoutsList[i]);
+                            break;
                         }
+                    };
 
-                    });
-
+                    layoutData.is_default = true;
                     item.is_default = true;
-
-                    uiService.updateListLayout(item.id, item);
+                    uiService.updateListLayout(layoutData.id, layoutData);
                 }
 
-            } else if (item.id !== splitPanelLayoutId) {
+            } else if (layoutData.id !== splitPanelLayoutId) {
 
-                entityViewerDataService.setSplitPanelDefaultLayout(item.id);
+                entityViewerDataService.setSplitPanelDefaultLayout(layoutData.id);
                 entityViewerEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-                splitPanelLayoutId = item.id;
+                splitPanelLayoutId = layoutData.id;
 
             }
         };
@@ -202,6 +235,8 @@
 
             if (selectedLayout) {
                 selectedLayout.is_active = true;
+                delete selectedLayout.hasUseFromAboveFilter;
+
                 uiService.updateListLayout(selectedLayout.id, selectedLayout).then(function () {
                     $mdDialog.hide({status: 'agree', data: {layoutName: selectedLayout.name}});
                 });

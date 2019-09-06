@@ -70,45 +70,79 @@
 
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 
+                scope.getClassesForFilter = function () {
+                    var filterClasses = '';
+
+                    if (!scope.filter.options.enabled) {
+                        filterClasses = 'f-disabled ';
+                    }
+
+                    if (!scope.filter.options.is_frontend_filter) {
+                        filterClasses += 'ev-backend-filter ';
+                    }
+
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                        filterClasses += 'link-to-above-filter';
+                    }
+
+                    return filterClasses;
+                };
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
 
-                    switch (scope.filter.options.filter_type) {
-                        case "equal":
-                            filterRegime = "Equal";
-                            break;
-                        case "not_equal":
-                            filterRegime = "Not equal";
-                            break;
-                        case "greater":
-                            filterRegime = "Greater than";
-                            break;
-                        case "greater_equal":
-                            filterRegime = "Greater or equal to";
-                            break;
-                        case "less":
-                            filterRegime = "Less than";
-                            break;
-                        case "less_equal":
-                            filterRegime = "Less or equal to";
-                            break;
-                        case "empty":
-                            filterRegime = "Show empty cells";
-                            break;
-                        /*case "top_n":
-                            filterRegime = "Top N items";
-                            break;
-                        case "bottom_n":
-                            filterRegime = "Bottom N items";
-                            break;*/
-                    }
+                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+
+                        filterRegime = "Linked to Selection";
+
+                    } else {
+
+                        switch (scope.filter.options.filter_type) {
+                            case "equal":
+                                filterRegime = "Equal";
+                                break;
+                            case "not_equal":
+                                filterRegime = "Not equal";
+                                break;
+                            case "greater":
+                                filterRegime = "Greater than";
+                                break;
+                            case "greater_equal":
+                                filterRegime = "Greater or equal to";
+                                break;
+                            case "less":
+                                filterRegime = "Less than";
+                                break;
+                            case "less_equal":
+                                filterRegime = "Less or equal to";
+                                break;
+                            case "empty":
+                                filterRegime = "Show empty cells";
+                                break;
+                            /*case "top_n":
+                                filterRegime = "Top N items";
+                                break;
+                            case "bottom_n":
+                                filterRegime = "Bottom N items";
+                                break;*/
+                        }
+                    };
 
                     return filterRegime;
 
                 };
 
+                scope.showFRCheckMark = function (filterRegime) {
+                    if (scope.filter.options.filter_type === filterRegime &&
+                        !scope.filter.options.use_from_above) {
 
+                        return true;
+
+                    };
+
+                    return false;
+                };
 
                 scope.filterSettingsChange = function () {
                     // console.log("filter filterSettingsChange", scope.filter.options);
@@ -128,6 +162,8 @@
                 };
 
                 scope.changeFilterType = function (filterType) {
+
+                    delete scope.filter.options.use_from_above;
                     scope.filter.options.filter_type = filterType;
 
                     if (filterType === 'from_to') {
@@ -144,6 +180,11 @@
 
                     }
 
+                    scope.filterSettingsChange();
+                };
+
+                scope.toggleFrontendFilter = function () {
+                    scope.filter.options.is_frontend_filter = !scope.filter.options.is_frontend_filter;
                     scope.filterSettingsChange();
                 };
 
@@ -188,7 +229,7 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 };
 
-                scope.updateFilters = function(){
+                scope.updateFilters = function() {
 
                     var filters = scope.evDataService.getFilters();
 
@@ -205,19 +246,39 @@
                 };
 
 
+                scope.noDataForLinkingTo = true;
+                var columns = scope.evDataService.getColumns();
+
+                for (var c = 0; c < columns.length; c++) {
+                    if (columns[c].key === scope.filter.options.use_from_above) {
+                        scope.noDataForLinkingTo = false;
+                        break;
+                    };
+                };
+
                 scope.initSplitPanelMode = function () {
 
                     if (!scope.isRootEntityViewer) {
 
                         scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
-                            if (['multiselector', 'date_tree', 'from_to'].indexOf(scope.filter.options.filter_type) === -1) {
+                            scope.noDataForLinkingTo = true;
+                            var columns = scope.evDataService.getColumns();
+                            var key = scope.filter.options.use_from_above;
+
+                            for (var c = 0; c < columns.length; c++) {
+                                if (columns[c].key === key) {
+                                    scope.noDataForLinkingTo = false;
+                                    break;
+                                };
+                            };
+
+                            if (scope.filter.options.hasOwnProperty('use_from_above') && !scope.noDataForLinkingTo) {
 
                                 var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
 
                                 scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
 
-                                var key = scope.filter.options.use_from_above;
                                 var value = activeObjectFromAbove[key];
 
                                 scope.filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
@@ -226,11 +287,17 @@
 
                                 scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                            }
+                            };
 
-                        })
+                        });
 
-                    }
+                    } else {
+
+                        if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                            scope.noDataForLinkingTo = true;
+                        };
+
+                    };
 
                 };
 

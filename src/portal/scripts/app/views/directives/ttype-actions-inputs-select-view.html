@@ -1,6 +1,6 @@
 <md-input-container>
     <label>{{labelTitle}}</label>
-    <md-select data-ng-model="model">
+    <md-select data-ng-model="model" md-on-open="inputs = findInputs()">
         <md-option data-ng-repeat="inputItem in inputs"
                    ng-value="inputItem.name">
             {{inputItem.name}}

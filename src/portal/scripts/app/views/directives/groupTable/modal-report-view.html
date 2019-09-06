@@ -675,6 +675,54 @@
 
                     </md-content>
                 </md-tab>
+
+                <md-tab label="All">
+                    <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="allAttributesSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
+                        <div class="g-th-checkbox-row">
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
+                        </div>
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.allAttributesList | filter: {name: allAttributesSearchTerms}" layout="row">
+                            <div class="view-constructor-checkboxes-container"
+                                 layout="row"
+                                 layout-align="start center">
+                                <md-checkbox ng-model="item.columns"
+                                             aria-label="Columns"
+                                             aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.portfolioAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups"
+                                             aria-label="Groups"
+                                             aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.portfolioAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters"
+                                             aria-label="Filters"
+                                             aria="filters"
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.portfolioAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
+                                </md-card>
+                            </div>
+                        </div>
+
+                    </md-content>
+                </md-tab>
+
             </md-tabs>
         </div>
         <div data-ng-if="!vm.readyStatus.content" class="dialog-loader">
