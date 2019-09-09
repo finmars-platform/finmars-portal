@@ -1,5 +1,130 @@
-<div>
+<div class="dashboard">
 
-    <h1>Dashboard</h1>
+    <div data-ng-if="vm.readyStatus.data">
+
+        <md-button class="md-raised md-primary" ui-sref="app.dashboard-layout-manager">Dashboard Layout Manager
+        </md-button>
+
+        <div data-ng-if="vm.layout">
+
+            <md-tabs md-border-bottom md-dynamic-height>
+                <md-tab data-ng-repeat="tab in vm.layout.data.tabs">
+                    <md-tab-label>
+                        <span>
+                            {{tab.name}}
+                        </span>
+                    </md-tab-label>
+                    <md-tab-body>
+
+                        <div class="dashboard-rows-holder" data-ng-repeat="row in tab.layout.rows">
+
+                            <div class="dashboard-row">
+
+                                <div data-ng-repeat="item in row.columns" class="dashboard-cell">
+
+                                    <div data-ng-if="item.cell_type == 'empty'">
+                                        Empty Here
+                                    </div>
+
+                                    <div data-ng-if="item.cell_type == 'component'">
+
+                                        <div data-ng-if="item.data.type == 'control'">
+                                            <dashboard-control
+                                                    tab-number="tab.tab_number"
+                                                    row-number="row.row_number"
+                                                    column-number="item.column_number"
+                                                    item="item"
+                                                    dashboard-data-service="vm.dashboardDataService"
+                                                    dashboard-event-service="vm.dashboardEventService"
+                                            ></dashboard-control>
+                                        </div>
+
+                                        <div data-ng-if="item.data.type == 'button_set'">
+                                            <dashboard-button-set
+                                                    tab-number="tab.tab_number"
+                                                    row-number="row.row_number"
+                                                    column-number="item.column_number"
+                                                    item="item"
+                                                    dashboard-data-service="vm.dashboardDataService"
+                                                    dashboard-event-service="vm.dashboardEventService"
+                                            ></dashboard-button-set>
+                                        </div>
+
+                                        <div data-ng-if="item.data.type == 'input_form'">
+                                            <dashboard-input-form
+                                                    tab-number="tab.tab_number"
+                                                    row-number="row.row_number"
+                                                    column-number="item.column_number"
+                                                    item="item"
+                                                    dashboard-data-service="vm.dashboardDataService"
+                                                    dashboard-event-service="vm.dashboardEventService"
+                                            ></dashboard-input-form>
+                                        </div>
+
+                                        <div data-ng-if="item.data.type == 'report_viewer'">
+                                            <dashboard-report-viewer
+                                                    tab-number="tab.tab_number"
+                                                    row-number="row.row_number"
+                                                    column-number="item.column_number"
+                                                    item="item"
+                                                    dashboard-data-service="vm.dashboardDataService"
+                                                    dashboard-event-service="vm.dashboardEventService"
+                                            ></dashboard-report-viewer>
+                                        </div>
+
+                                        <div data-ng-if="item.data.type == 'report_viewer_split_panel'">
+                                            <dashboard-report-viewer-split-panel
+                                                    tab-number="tab.tab_number"
+                                                    row-number="row.row_number"
+                                                    column-number="item.column_number"
+                                                    item="item"
+                                                    dashboard-data-service="vm.dashboardDataService"
+                                                    dashboard-event-service="vm.dashboardEventService"
+                                            ></dashboard-report-viewer-split-panel>
+                                        </div>
+
+                                        <div data-ng-if="item.data.type == 'entity_viewer'">
+                                            <dashboard-entity-viewer
+                                                    tab-number="tab.tab_number"
+                                                    row-number="row.row_number"
+                                                    column-number="item.column_number"
+                                                    item="item"
+                                                    dashboard-data-service="vm.dashboardDataService"
+                                                    dashboard-event-service="vm.dashboardEventService"
+                                            ></dashboard-entity-viewer>
+                                        </div>
+
+                                        <div data-ng-if="item.data.type == 'entity_viewer_split_panel'">
+                                            <dashboard-entity-viewer-split-panel
+                                                    tab-number="tab.tab_number"
+                                                    row-number="row.row_number"
+                                                    column-number="item.column_number"
+                                                    item="item"
+                                                    dashboard-data-service="vm.dashboardDataService"
+                                                    dashboard-event-service="vm.dashboardEventService"
+                                            ></dashboard-entity-viewer-split-panel>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </md-tab-body>
+                </md-tab>
+            </md-tabs>
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+            <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+        </div>
+    </div>
 
 </div>

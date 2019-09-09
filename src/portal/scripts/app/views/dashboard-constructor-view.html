@@ -1,5 +1,234 @@
-<div>
+<div class="dashboard-constructor">
+    <div data-ng-if="vm.readyStatus.data" class="dashboard-constructor-main p-8">
 
-    <h1>Dashboard Constructor</h1>
+        <div class="p-8">
 
+            <md-input-container style="width: 200px;">
+                <label for="">Dashboard Layout Name</label>
+                <input type="text" data-ng-model="vm.layout.name">
+            </md-input-container>
+
+        </div>
+
+        <div class="position-relative">
+
+            <div class="dashboard-constructor-tabs-holder" data-add-tab-ec data-tabs="vm.layout.data.tabs">
+
+                <md-tabs md-border-bottom md-dynamic-height>
+                    <md-tab data-ng-repeat="tab in vm.layout.data.tabs">
+                        <md-tab-label>
+                            <div data-ng-if="!tab.editState" data-ng-click="">
+                                <span class="ec-tab-item-name">{{tab.name}}</span>
+                                <md-button class="ec-tab-btn"
+                                           data-ng-click="vm.toggleEditTab(tab)">
+                                    <ng-md-icon icon="edit"></ng-md-icon>
+                                </md-button>
+                                <md-button class="ec-tab-btn"
+                                           data-ng-click="vm.deleteTab(tab)">
+                                    <ng-md-icon icon="delete"></ng-md-icon>
+                                </md-button>
+                            </div>
+                            <div data-ng-if="tab.editState">
+                                <md-input-container class="ec-tab-item-edit">
+                                    <label>Tab name</label>
+                                    <input ng-model="tab.captionName">
+                                </md-input-container>
+                                <md-button class="ec-tab-btn"
+                                           data-ng-click="vm.saveEditedTab(tab)">
+                                    <ng-md-icon icon="save"></ng-md-icon>
+                                </md-button>
+                                <md-button class="ec-tab-btn"
+                                           data-ng-click="vm.toggleEditTab(tab, 'back', $index)">
+                                    <ng-md-icon icon="cancel"></ng-md-icon>
+                                </md-button>
+                            </div>
+                        </md-tab-label>
+                        <md-tab-body>
+                            <div class="ec-md-content ec-layout-tab">
+
+                                <div class="dashboard-layout">
+                                    <div layout="column" data-ng-repeat="row in tab.layout.rows">
+
+                                        <div layout="row" class="dashboard-constructor-row">
+
+                                            <div data-ng-repeat="item in row.columns"
+                                                 class="dashboard-constructor-cell"
+                                                 data-tab="{{tab.tab_number}}"
+                                                 data-row="{{row.row_number}}"
+                                                 data-column="{{item.column_number}}"
+                                                 data-cell-type="{{item.cell_type}}">
+
+                                                <div data-ng-if="item.cell_type === 'empty'"
+                                                     class="width-100 height-100">
+
+                                                    <div class="dashboard-constructor-empty-cell">
+
+                                                        <ng-md-icon icon="add_circle"></ng-md-icon>
+
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div data-ng-if="item.cell_type === 'component'">
+
+                                                    <div data-ng-show="!item.editMode">
+                                                        <md-card class="ec-attr-card">
+                                                            <div layout="row">
+                                                                <p class="name-holder" flex="60">
+                                                                    <b><span data-ng-bind="item.data.name"></span></b> (<span
+                                                                        data-ng-bind="vm.getVerboseType(item.data)"></span>)
+                                                                </p>
+                                                                <div class="options-holder" flex="40">
+                                                                    <md-button aria-label="delete attribute"
+                                                                               data-ng-click="vm.deleteField(item,  tab.tab_number, row.row_number, item.column_number)">
+                                                                        <ng-md-icon icon="delete"></ng-md-icon>
+                                                                    </md-button>
+                                                                    <md-button aria-label="edit attribute"
+                                                                               data-ng-click="vm.toggleFieldEditMode(item)">
+                                                                        <ng-md-icon icon="mode_edit"></ng-md-icon>
+                                                                    </md-button>
+                                                                </div>
+                                                            </div>
+                                                        </md-card>
+                                                    </div>
+                                                    <div data-ng-if="item.editMode">
+                                                        <md-card class="ec-attr-card {{item.editMode ? 'active' : ''}}">
+
+                                                            <md-input-container
+                                                                    class="md-block no-error-spacer ec-attr-row"
+                                                                    flex-gt-sm
+                                                                    aria-label="select with filter">
+                                                                <label>Element width</label>
+                                                                <md-select ng-model="item.colspan"
+                                                                           md-container-class="common-select-container"
+                                                                           md-on-close="searchTerm = ''"
+                                                                           ng-change="changeFieldColspan(item.colspan)">
+                                                                    <div class="select-options-holder">
+                                                                        <md-option
+                                                                                data-ng-repeat="colspan in getCols()"
+                                                                                value="{{colspan}}">
+                                                                            {{colspan}} column(s)
+                                                                        </md-option>
+                                                                    </div>
+                                                                </md-select>
+                                                            </md-input-container>
+
+                                                            <md-input-container
+                                                                    class="md-block no-error-spacer ec-attr-row"
+                                                                    flex-gt-sm
+                                                                    aria-label="select with filter">
+                                                                <label>Element height</label>
+                                                                <md-select ng-model="item.rowspan"
+                                                                           md-container-class="common-select-container"
+                                                                           md-on-close="searchTerm = ''"
+                                                                           ng-change="changeFieldColspan(item.colspan)">
+                                                                    <div class="select-options-holder">
+                                                                        <md-option
+                                                                                data-ng-repeat="colspan in getCols()"
+                                                                                value="{{colspan}}">
+                                                                            {{colspan}} column(s)
+                                                                        </md-option>
+                                                                    </div>
+                                                                </md-select>
+                                                            </md-input-container>
+
+                                                            <md-input-container
+                                                                    class="md-block no-error-spacer ec-attr-row"
+                                                                    data-ng-if="item.attribute.value_type != 'decoration'">
+                                                                <label>Custom label</label>
+                                                                <input data-ng-model="item.options.fieldName">
+                                                            </md-input-container>
+
+                                                            <md-divider></md-divider>
+                                                            <div layout="row" layout-align="space-between center"
+                                                                 class="constructor-card-actions">
+                                                                <md-button aria-label="cancel"
+                                                                           data-ng-click="vm.cancelFieldEdit(item)">
+                                                                    Cancel
+                                                                </md-button>
+                                                                <md-button class="ec-field-btn"
+                                                                           aria-label="save layout"
+                                                                           data-ng-click="vm.saveField(item)">
+                                                                    <span>Ok</span>
+                                                                </md-button>
+                                                            </div>
+                                                        </md-card>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+                                            <md-button class="md-button dashboard-manage-row-btn"
+                                                       ng-click="vm.insertRow(tab, row)" style="right: 55px">
+                                                +
+                                                <md-tooltip class="tooltip_1" md-direction="top">Insert row below
+                                                </md-tooltip>
+                                            </md-button>
+                                            <md-button ng-if="tab.layout.rows > row"
+                                                       class="md-button dashboard-manage-row-btn"
+                                                       ng-click="vm.deleteRow(tab, row)"
+                                                       style="right: 10px;"
+                                                       ng-disabled="!vm.isRowEmpty(row)">
+                                                -
+                                                <md-tooltip class="tooltip_1" md-direction="top"
+                                                            ng-hide="!vm.isRowEmpty(row)">Remove row
+                                                </md-tooltip>
+                                                <md-tooltip class="tooltip_1" md-direction="top"
+                                                            ng-hide="vm.isRowEmpty(row)">Empty row before removing it
+                                                </md-tooltip>
+                                            </md-button>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </md-tab-body>
+                    </md-tab>
+                </md-tabs>
+
+            </div>
+
+            <div class="dashboard-constructor-sidebar p-8">
+
+                <p>
+                    <b>Drag fields from here</b>
+                </p>
+
+                <div data-ng-repeat="item in vm.availableComponentsTypes track by item.id"
+                     class="dashboard-constructor-draggable-card">
+
+                    <md-card class="p-l-16" data-index="{{$index}}" data-component-id="{{item.id}}">
+                        <p><b data-ng-bind="item.name"></b>: <span data-ng-bind="vm.getVerboseType(item)"></span></p>
+                    </md-card>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div layout="row" layout-align="space-between center">
+
+            <div style="padding-right: 10px">
+
+                <md-button ng-click="vm.goToDashboard($event)" class="md-raised">
+                    Go to Dashboard
+                </md-button>
+                <md-button ng-click="vm.saveLayout($event)" ng-class="{'disabled-btn': !vm.layout.name}"
+                           class="md-raised">
+                    Save
+                </md-button>
+            </div>
+        </div>
+
+    </div>
+    <div data-ng-if="!vm.readyStatus.data">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+            <md-progress-circular md-mode="indeterminate" md-diameter="120"></md-progress-circular>
+        </div>
+    </div>
 </div>
