@@ -70,14 +70,26 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 app.factory('pickmeup', ['$window', function ($window) {
     if ($window.pickmeup) {
         return $window.pickmeup;
-    };
+    }
+    ;
 }]);
 
 // Dashboard
 
-app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
-app.controller('DashboardConstructorController', ['$scope', '$mdDialog', require('./app/controllers/dashboardConstructorController')]);
 
+app.controller('DashboardLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/dashboardLayoutManagerController')]);
+app.controller('DashboardConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dashboardConstructorController')]);
+
+
+app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
+
+app.directive('dashboardButtonSet', [require('./app/directives/dashboard/dashboardButtonSetDirective')]);
+app.directive('dashboardControl', [require('./app/directives/dashboard/dashboardControlDirective')]);
+app.directive('dashboardEntityViewer', [require('./app/directives/dashboard/dashboardEntityViewerDirective')]);
+app.directive('dashboardEntityViewerSplitPanel', [require('./app/directives/dashboard/dashboardEntityViewerSplitPanelDirective')]);
+app.directive('dashboardInputForm', [require('./app/directives/dashboard/dashboardInputFormDirective')]);
+app.directive('dashboardReportViewer', [require('./app/directives/dashboard/dashboardReportViewerDirective')]);
+app.directive('dashboardReportViewerSplitPanel', [require('./app/directives/dashboard/dashboardReportViewerSplitPanelDirective')]);
 
 // Common
 
@@ -358,7 +370,6 @@ app.controller('ReferenceTableEditDialogController', ['$scope', '$mdDialog', 'da
 app.controller('ReferenceTableRenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/refereneTableRenameDialogController')]);
 app.controller('ReferenceTableImportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/referenceTableImportDialogController')]);
 app.controller('ReferenceTableExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/referenceTableExportDialogController')]);
-
 
 
 app.controller('FormsDataConstructor', ['$scope', '$mdDialog', require('./app/controllers/pages/formsDataConstructorController')]);

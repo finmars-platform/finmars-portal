@@ -402,7 +402,6 @@
         })
     };
 
-
     var getConfigurationExportLayoutList = function () {
 
         return xhrService.fetch(baseUrl + 'ui/configuration-export-layout/',
@@ -462,7 +461,6 @@
         })
     };
 
-
     var getTransactionFieldList = function (options) {
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/transaction-user-field/', options),
@@ -505,7 +503,6 @@
                 body: JSON.stringify(data)
             })
     };
-
 
     var getInstrumentFieldList = function (options) {
 
@@ -550,6 +547,106 @@
             })
     };
 
+    var getDashboardLayout = function (entity, options) {
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/dashboard-layout/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getDashboardLayoutByKey = function (id) {
+        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getActiveDashboardLayout = function () {
+
+        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/?is_active=2',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getDefaultDashboardLayout = function () {
+
+        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/?is_default=2',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createDashboardLayout = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateDashboardLayout = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteDashboardLayoutByKey = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/dashboard-layout/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -591,7 +688,15 @@
 
         getInstrumentFieldList: getInstrumentFieldList,
         createInstrumentField: createInstrumentField,
-        updateInstrumentField: updateInstrumentField
+        updateInstrumentField: updateInstrumentField,
+
+        getDashboardLayout: getDashboardLayout,
+        getDashboardLayoutByKey: getDashboardLayoutByKey,
+        getActiveDashboardLayout: getActiveDashboardLayout,
+        getDefaultDashboardLayout: getDefaultDashboardLayout,
+        createDashboardLayout: createDashboardLayout,
+        updateDashboardLayout: updateDashboardLayout,
+        deleteDashboardLayoutByKey: deleteDashboardLayoutByKey
 
 
     }

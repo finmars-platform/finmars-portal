@@ -125,6 +125,36 @@
         return uiRepository.updateInstrumentField(id, data);
     };
 
+
+    var getDashboardLayout = function (options) {
+        return uiRepository.getDashboardLayout(options);
+    };
+
+    var getActiveDashboardLayout = function () {
+        return uiRepository.getActiveDashboardLayout()
+    };
+
+    var getDefaultDashboardLayout = function () {
+        return uiRepository.getDefaultDashboardLayout()
+    };
+
+    var getDashboardLayoutByKey = function (key) {
+        return uiRepository.getDashboardLayoutByKey(key);
+    };
+
+    var createDashboardLayout = function (data) {
+
+        return uiRepository.createDashboardLayout(data);
+    };
+
+    var updateDashboardLayout = function (id, data) {
+        return uiRepository.updateDashboardLayout(id, data)
+    };
+
+    var deleteDashboardLayoutByKey = function (id) {
+        return uiRepository.deleteDashboardLayoutByKey(id);
+    };
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -159,7 +189,16 @@
 
         getInstrumentFieldList: getInstrumentFieldList,
         createInstrumentField: createInstrumentField,
-        updateInstrumentField: updateInstrumentField
+        updateInstrumentField: updateInstrumentField,
+
+
+        getDashboardLayout: getDashboardLayout,
+        getDashboardLayoutByKey: getDashboardLayoutByKey,
+        getActiveDashboardLayout: getActiveDashboardLayout,
+        getDefaultDashboardLayout: getDefaultDashboardLayout,
+        createDashboardLayout: createDashboardLayout,
+        updateDashboardLayout: updateDashboardLayout,
+        deleteDashboardLayoutByKey: deleteDashboardLayoutByKey
     }
 
 }());
