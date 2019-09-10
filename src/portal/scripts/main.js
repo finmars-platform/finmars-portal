@@ -289,7 +289,7 @@ app.controller('SettingsGeneralSimpleEntityImportController', ['$scope', '$mdDia
 
 app.controller('SettingGeneralConfigurationPreviewFileDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralConfigurationPreviewFileDialogController')]);
 app.controller('SettingGeneralConfigurationPreviewFileErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralConfigurationPreviewFileErrorsDialogController')]);
-app.controller('SettingGeneralConfigurationExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralConfigurationExportFileDialogController')]);
+//app.controller('SettingGeneralConfigurationExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralConfigurationExportFileDialogController')]);
 app.controller('SettingsGeneralConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralConfigurationController')]);
 app.controller('SettingsGeneralInitConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInitConfigurationController')]);
 

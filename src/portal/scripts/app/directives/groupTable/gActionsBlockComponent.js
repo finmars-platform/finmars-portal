@@ -20,6 +20,7 @@
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
 
+    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
 
@@ -545,19 +546,38 @@
 
                     var areReportOptionsTheSame = function () {
 
-                        var originalReportOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportOptions);
+                        var originalReportOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportOptions, currentReportLayoutOptions);
+
+                        var originReportLayoutOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportLayoutOptions);
+
+                        if (originReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+                            delete originalReportOptions.pl_first_date;
+                        }
+
+                        if (originReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+                            delete originalReportOptions.report_date;
+                        }
 
                         delete originalReportOptions.task_id;
                         delete originalReportOptions.recieved_at;
                         delete originalReportOptions.task_status;
 
+
                         var currentReportOptions = metaHelper.recursiveDeepCopy(scope.evDataService.getReportOptions());
+
+                        var currentReportLayoutOptions = metaHelper.recursiveDeepCopy(scope.evDataService.getReportLayoutOptions());
+
+                        if (currentReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+                            delete currentReportOptions.pl_first_date;
+                        }
+
+                        if (currentReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+                            delete currentReportOptions.report_date;
+                        }
 
                         delete currentReportOptions.task_id;
                         delete currentReportOptions.recieved_at;
                         delete currentReportOptions.task_status;
-                        delete currentReportOptions.custom_fields;
-                        delete currentReportOptions.custom_fields_object;
                         delete currentReportOptions.items;
                         delete currentReportOptions.item_complex_transactions;
                         delete currentReportOptions.item_counterparties;
@@ -573,7 +593,15 @@
                         delete currentReportOptions.item_currencies;
                         delete currentReportOptions.item_accounts;
 
-                        return isLayoutTheSame(originalReportOptions, currentReportOptions);
+                        if (isLayoutTheSame(originalReportOptions, currentReportOptions) &&
+                            isLayoutTheSame(originReportLayoutOptions, currentReportLayoutOptions)) {
+
+                            return true;
+
+                        } else {
+                            return false;
+                        };
+
                     };
 
                     var groupsChangeEventIndex = scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
@@ -678,32 +706,11 @@
 
                         var roChangeEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 
-                            var originReportLayoutOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportLayoutOptions);
-
-                            if (originReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
-                                delete activeLayoutConfig.data.reportOptions.pl_first_date;
-                            }
-
-                            if (originReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
-                                delete activeLayoutConfig.data.reportOptions.report_date;
-                            }
-
-
-                            var currentReportLayoutOptions = metaHelper.recursiveDeepCopy(scope.evDataService.getReportLayoutOptions());
-
-                            if (currentReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
-                                delete activeLayoutConfig.data.reportOptions.pl_first_date;
-                            }
-
-                            if (currentReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
-                                delete activeLayoutConfig.data.reportOptions.report_date;
-                            }
-
-                            if (!areReportOptionsTheSame() ||
-                                !isLayoutTheSame(originReportLayoutOptions, currentReportLayoutOptions)) {
+                            /*if (!areReportOptionsTheSame() ||
+                                !isLayoutTheSame(originReportLayoutOptions, currentReportLayoutOptions)) {*/
+                            if (!areReportOptionsTheSame()) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                                // scope.$apply();
                             }
 
                         });
@@ -924,7 +931,7 @@
                                 page: 1
                             };
 
-                            var getPricingPolicy = function () {
+                            /*var getPricingPolicy = function () {
 
                                 pricingPolicyService.getList(optionsForDataRequest).then(function (data) {
 
@@ -949,9 +956,20 @@
 
                                 });
 
-                            };
+                            };*/
 
-                            currencyService.getList(optionsForDataRequest).then(function (data) {
+                            ecosystemDefaultService.getList().then(function(data) {
+
+                                console.log('default values data', data);
+                                var defaultValues = data.results[0];
+                                reportOptions.pricing_policy = defaultValues.pricing_policy;
+                                reportOptions.report_currency = defaultValues.currency;
+
+                                finishCreatingNewReportLayout();
+
+                            });
+
+                            /*currencyService.getList(optionsForDataRequest).then(function (data) {
 
                                 var currencies = data.results;
 
@@ -971,7 +989,7 @@
 
                                 getPricingPolicy();
 
-                            });
+                            });*/
 
                         } else { // For transaction report
 
@@ -1042,13 +1060,14 @@
 
                                 }
 
-                            } else if ('do_not_save_layout') {
+                            } else if (res.status === 'do_not_save_layout') {
                                 createNewLayoutMethod();
                             }
 
                         });
 
                     } else {
+                        console.log("create new layout3");
                         createNewLayoutMethod();
                     }
                 };

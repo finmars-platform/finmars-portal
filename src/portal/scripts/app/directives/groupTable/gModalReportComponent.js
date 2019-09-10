@@ -32,6 +32,8 @@
         vm.accountDynamicAttrs = [];
         vm.portfolioDynamicAttrs = [];
 
+        vm.cardsDividedIntoTabs = false;
+
         var columns = entityViewerDataService.getColumns();
         var filters = entityViewerDataService.getFilters();
         var grouping = entityViewerDataService.getGroups();
@@ -51,6 +53,8 @@
             vm.allocationAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
 
             vm.instrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
+
+            vm.linkedInstrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
 
             vm.accountAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
 
@@ -86,6 +90,16 @@
 
                     });
 
+                    vm.linkedInstrumentAttrs = vm.linkedInstrumentAttrs.map(function (entityAttr) {
+
+                        if (entityAttr.key === 'linked_instrument.' + field.key) {
+                            entityAttr.name = 'Linked Instrument. ' + field.name;
+                        };
+
+                        return entityAttr;
+
+                    });
+
 
                 });
 
@@ -107,6 +121,7 @@
                         vm.accountDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account', 'Account');
                         vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
                         vm.allocationDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation', 'Allocation');
+                        vm.linkedInstrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
 
                         attrsList = attrsList.concat(vm.balanceAttrs);
                         attrsList = attrsList.concat(vm.allocationAttrs);
@@ -118,6 +133,9 @@
 
                         attrsList = attrsList.concat(vm.instrumentAttrs);
                         attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
+
+                        attrsList = attrsList.concat(vm.linkedInstrumentAttrs);
+                        attrsList = attrsList.concat(vm.linkedInstrumentDynamicAttrs);
 
                         attrsList = attrsList.concat(vm.accountAttrs);
                         attrsList = attrsList.concat(vm.accountDynamicAttrs);
@@ -181,6 +199,9 @@
 
             syncTypeAttrs(vm.instrumentAttrs);
             syncTypeAttrs(vm.instrumentDynamicAttrs);
+
+            syncTypeAttrs(vm.linkedInstrumentAttrs);
+            syncTypeAttrs(vm.linkedInstrumentDynamicAttrs);
 
             syncTypeAttrs(vm.accountAttrs);
             syncTypeAttrs(vm.accountDynamicAttrs);
@@ -365,7 +386,7 @@
 
         };*/
 
-        var dragAndDrop = {
+        var viewConstructorDnD = {
 
             init: function () {
                 this.dragula();
@@ -637,13 +658,13 @@
 
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
-            dragAndDrop.destroy();
+            viewConstructorDnD.destroy();
             $mdDialog.cancel();
         };
 
         vm.initDnd = function () {
             setTimeout(function () {
-                dragAndDrop.init();
+                viewConstructorDnD.init();
             }, 500);
         };
 

@@ -13,6 +13,14 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
+
+        if (!options) {
+            options = {
+                page: 1,
+                pageSize: 200
+            };
+        }
+
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'users/ecosystem-default/', options),
             {
                 method: 'GET',
