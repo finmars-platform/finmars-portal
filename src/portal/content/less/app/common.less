@@ -500,6 +500,12 @@ md-input-container.no-input-arrows {
     -webkit-appearance: textfield;
     -moz-appearance: textfield;
     appearance: textfield;
+
+    &::-webkit-inner-spin-button {
+      display: none;
+      -webkit-appearance: none;
+      margin: 0;
+    }
   }
 }
 
@@ -507,4 +513,10 @@ input.no-input-arrows[type="number"] {
   -webkit-appearance: textfield;
   -moz-appearance: textfield;
   appearance: textfield;
+
+  &::-webkit-inner-spin-button {
+    display: none;
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }

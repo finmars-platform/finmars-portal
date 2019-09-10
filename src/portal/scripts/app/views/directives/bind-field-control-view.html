@@ -1,4 +1,4 @@
-<div ng-class="{'disabled-field': isNotEditableField()}">
+<div ng-class="{'disabled-field': isDisabled}">
     <div data-ng-if="fieldType['display_name'] === 'Number'" class="bind-field-number-field-container">
 
         <md-input-container class="md-block no-error-spacer">
@@ -7,12 +7,14 @@
                    type="number"
                    data-ng-if="!item.options.onlyPositive"
                    class="no-input-arrows"
+                   ng-disabled="isNotEditableField()"
                    style="{{styleForInputsWithButtons()}}">
             <input data-ng-model="entity[getModelKey()]"
                    type="number"
                    min="0"
                    data-ng-if="item.options.onlyPositive"
                    class="no-input-arrows"
+                   ng-disabled="isNotEditableField()"
                    style="{{styleForInputsWithButtons()}}">
 
             <div class="bind-field-buttons-block">
@@ -53,10 +55,10 @@
             <md-input-container class="md-block no-error-spacer textarea-bind-field">
                 <label data-ng-bind="getName()"></label>
                 <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}"
-                          ng-class="{'disabled-btn': isDisabled}"
                           data-ng-model="entity[getModelKey()]"
                           cols="30"
                           rows="{{item.options.rowCount}}"
+                          ng-disabled="isNotEditableField()"
                           style="{{inputBackgroundColor()}}"></textarea>
 
             </md-input-container>
@@ -68,8 +70,8 @@
                     {{entity[getModelKey()] != '' ? 'md-input-has-value' : ''}}">
                 <label data-ng-bind="getName()"></label>
                 <input type="text"
-                       ng-class="{'disabled-btn': isDisabled}"
                        data-ng-model="entity[getModelKey()]"
+                       ng-disabled="isNotEditableField()"
                        style="{{styleForInputsWithButtons()}}">
 
                 <!--<md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
@@ -106,14 +108,14 @@
             <label data-ng-bind="getName()"></label>
             <input data-ng-model="entity[getModelKey()]"
                    data-float-numbers
-                   ng-class="{'disabled-btn': isDisabled}"
                    data-ng-if="!item.options.onlyPositive"
+                   ng-disabled="isNotEditableField()"
                    style="{{styleForInputsWithButtons()}}">
             <input data-ng-model="entity[getModelKey()]"
                    data-float-numbers
                    data-only-positive="true"
-                   ng-class="{'disabled-btn': isDisabled}"
                    data-ng-if="item.options.onlyPositive"
+                   ng-disabled="isNotEditableField()"
                    style="{{styleForInputsWithButtons()}}">
 
             <div class="bind-field-buttons-block">
@@ -234,13 +236,13 @@
                 <label data-ng-bind="getName()"></label>
 
                 <md-select data-ng-model="entity[getModelKey()]"
-                           ng-class="{'disabled-btn': isDisabled}"
                            data-classifier-modal-resolver
                            data-classifier-attr="item"
                            data-classifier-value="entity[getModelKey()]"
                            data-ng-change="changeClassifier()"
                            md-container-class="h-classifier-select"
-                           data-entity-type="entityType">
+                           data-entity-type="entityType"
+                           ng-disabled="isNotEditableField()">
 
                     <md-option ng-value="node.id" selected="selected">
                         {{node.name}}

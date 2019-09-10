@@ -5,10 +5,7 @@
       "ui.editlayout",
       "ui.listlayout",
       "ui.reportlayout",
-      "ui.bookmark",
-      "reports.balancereportcustomfield",
-      "reports.plreportcustomfield",
-      "reports.transactionreportcustomfield"
+      "ui.bookmark"
     ],
     "firstLevelGroup": "User Interface",
     "firstElementExist": false,
@@ -171,8 +168,31 @@
   },
   {
     "name": "Custom Columns for Layouts",
-    "entities": [],
-    "firstElementExist": false
+    "entities": [
+      "reports.balancereportcustomfield",
+      "reports.plreportcustomfield",
+      "reports.transactionreportcustomfield"],
+    "firstLevelGroup": "User Interface",
+    "firstElementExist": false,
+    "subGroups": {
+      "ui.reportlayout": [
+        {
+          "content_type": "reports.balancereport",
+          "name": "Balance Reports",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "reports.plreport",
+          "name": "P&L Reports",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "reports.transactionreport",
+          "name": "Transaction Reports",
+          "firstElementExist": false
+        }
+      ]
+    }
   },
   {
     "name": "Transaction Types",
@@ -240,14 +260,21 @@
     "firstElementExist": false
   },
   {
-    "name": "Configuration Elements",
-    "entities": [],
-    "firstLevelGroup": "Mapping Tables",
-    "firstElementExist": false
-  },
-  {
     "name": "System Elements",
-    "entities": [],
+    "entities": [
+      "integrations.portfoliomapping",
+      "integrations.currencymapping",
+      "integrations.accountmapping",
+      "integrations.instrumentmapping",
+      "integrations.counterpartymapping",
+      "integrations.responsiblemapping",
+      "integrations.strategy1mapping",
+      "integrations.periodicitymapping",
+      "integrations.dailypricingmodelmapping",
+      "integrations.paymentsizedetailmapping",
+      "integrations.accrualcalculationmodelmapping",
+      "integrations.pricedownloadschememapping"
+    ],
     "firstLevelGroup": "Mapping Tables",
     "firstElementExist": false
   }

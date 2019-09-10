@@ -166,12 +166,14 @@
 
             if (!sideMenuSettingsMenuOpened) {
 
-
                 $('.side-menu-settings-menu').addClass('settings-menu-opened');
                 $('.sidenav-settings-toggle-btn').addClass('settings-menu-opened');
 
                 setTimeout(function () {
                     $('.side-menu-settings-menu').addClass('overflow-visible');
+
+                    window.addEventListener('click', vm.settingsSideMenuOnClickOutside);
+                    window.addEventListener('contextmenu', vm.settingsSideMenuOnClickOutside);
                 }, 250);
 
             } else {
@@ -180,9 +182,36 @@
                 $('.side-menu-settings-menu').removeClass('overflow-visible');
                 $('.side-menu-settings-menu').removeClass('settings-menu-opened');
 
+                window.removeEventListener('click', vm.settingsSideMenuOnClickOutside);
+                window.removeEventListener('contextmenu', vm.settingsSideMenuOnClickOutside);
+
             }
 
             sideMenuSettingsMenuOpened = !sideMenuSettingsMenuOpened;
+        };
+
+        vm.settingsSideMenuOnClickOutside = function (event) {
+
+            var clickedOutside = true;
+            var elem = event.target;
+
+            for (var i = 0; i < 15; i++) {
+
+                if (elem.classList.contains('side-menu-settings-menu')) {
+                    clickedOutside = false;
+                    break;
+                } else if (elem.tagName === 'BODY') {
+                    break;
+                } else {
+                    elem = elem.parentNode;
+                };
+
+            };
+
+            if (clickedOutside) {
+                vm.toggleSettingsSideMenu();
+            };
+
         };
 
         metaService.getMenu().then(function (data) {

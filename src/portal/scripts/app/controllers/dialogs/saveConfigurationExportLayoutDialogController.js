@@ -23,7 +23,7 @@
 
             setTimeout(function () {
                 $mdDialog.hide({status: 'agree'});
-            }, 100)
+            }, 100);
 
         };
 
@@ -36,12 +36,12 @@
             if (vm.layout.id) {
                 uiRepository.updateConfigurationExportLayout(vm.layout.id, vm.layout).then(function () {
                     $mdDialog.hide({status: 'agree'});
-                })
+                });
             } else {
                 uiRepository.createConfigurationExportLayout(vm.layout).then(function () {
                     $mdDialog.hide({status: 'agree'});
-                })
-            }
+                });
+            };
 
         };
 
@@ -54,7 +54,9 @@
             }, function (rej) {
                 $mdDialog.hide();
             });
+
         };
+
     }
 
 }());

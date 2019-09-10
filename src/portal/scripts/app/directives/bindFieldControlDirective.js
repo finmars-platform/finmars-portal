@@ -29,13 +29,15 @@
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
-                scope.isDisabled = false;
+                scope.isRecalculate = false;
 
                 scope.isNotEditableField = function () {
-                    // console.log('scope.item', scope.item);
-                    if (scope.item) {
-                        return scope.item.editable === false
-                    }
+                    console.log('editable entityType', scope.entityType);
+                    if (scope.entityType === 'transaction-type' || scope.entityType === 'complex-transaction') {
+                        return !scope.item.editable;
+                    };
+
+                    return true;
                 };
 
                 if (scope.item) {
@@ -43,7 +45,7 @@
                     scope.attribute = scope.item;
 
                     if (scope.attribute && scope.attribute.can_recalculate) {
-                        scope.isDisabled = true;
+                        scope.isRecalculate = true;
                     }
 
                     var i;
