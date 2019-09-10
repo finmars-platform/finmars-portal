@@ -245,24 +245,26 @@
 
             var result = [];
 
-            vm.data.functions.forEach(function (funcGroup) {
+            if (vm.data) {
+                vm.data.functions.forEach(function (funcGroup) {
 
-                funcGroup.map(function (item) {
+                    funcGroup.map(function (item) {
 
-                    if (item.func.indexOf('[') !== -1) {
+                        if (item.func.indexOf('[') !== -1) {
 
-                        var func = item.func.split('[').join('').split(']').join('')
+                            var func = item.func.split('[').join('').split(']').join('')
 
-                        result.push(func)
+                            result.push(func)
 
-                    } else {
-                        result.push(item.func)
-                    }
+                        } else {
+                            result.push(item.func)
+                        }
 
+
+                    });
 
                 });
-
-            });
+            }
 
             result.push('custom_fields');
             result.push('this');
@@ -570,7 +572,7 @@
                 type: ''
             };
 
-            var previous_token = null
+            var previous_token = null;
 
             while (processing) {
 
@@ -741,7 +743,9 @@
 
                 vm.status = 'error';
 
-                vm.htmlExpression = vm.getHtmlExpression(vm.item.expression);
+                if (vm.item.expression) {
+                    vm.htmlExpression = vm.getHtmlExpression(vm.item.expression);
+                }
 
                 vm.showValidation = true;
 
