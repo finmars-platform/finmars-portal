@@ -27,12 +27,23 @@
         return attributeTypeRepository.deleteByKey(entity, id);
     };
 
+    var recalculateAttributes = function (entity, id) {
+        return attributeTypeRepository.recalculateAttributes(entity, id);
+    };
+
+    var getRecalculateAttributeCount = function (entity, id) {
+        return attributeTypeRepository.getRecalculateAttributeCount(entity, id);
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        recalculateAttributes: recalculateAttributes,
+        getRecalculateAttributeCount: getRecalculateAttributeCount
     }
 
 }());

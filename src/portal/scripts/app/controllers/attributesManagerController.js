@@ -104,7 +104,7 @@
             });
         };
 
-        vm.openClassifierMapping = function (item, $event) {
+        vm.openClassifierMapping = function ($event, item) {
             console.log("import classifier item", item);
             $mdDialog.show({
                 controller: 'EntityTypeClassifierMappingDialogController as vm',
@@ -124,7 +124,7 @@
 
         };
 
-        vm.importClassifiers = function (item, $event) {
+        vm.importClassifiers = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'ClassifierImportDialogController as vm',
@@ -145,7 +145,7 @@
 
         };
 
-        vm.exportClassifiers = function (item, $event) {
+        vm.exportClassifiers = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'ClassifierExportDialogController as vm',
@@ -166,7 +166,7 @@
 
         };
 
-        vm.editAttr = function (item, ev) {
+        vm.editAttr = function (ev, item) {
             $mdDialog.show({
                 controller: 'AttributesManagerEditDialogController as vm',
                 templateUrl: 'views/attribute-manager-dialog-view.html',
@@ -228,7 +228,7 @@
             $state.go('app.data-constructor', entityAddress);
         };
 
-        vm.deleteAttr = function (item, ev) {
+        vm.deleteAttr = function (ev, item) {
 
             var description = 'Are you sure to delete attribute ' + item.name + ' ?';
 
@@ -274,6 +274,59 @@
                 }
 
             });
+        };
+
+        vm.recalculateAttributes = function ($event, item) {
+
+            console.log('attributes recalculate')
+
+            attributeTypeService.getRecalculateAttributeCount(vm.entityType, item.id).then(function (data) {
+
+                var description = 'Are you sure you want to recalculate ' + data.count + ' objects?';
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: description
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                }).then(function (res) {
+                    console.log('res', res);
+                    if (res.status === 'agree') {
+
+                        attributeTypeService.recalculateAttributes(vm.entityType, item.id).then(function (value) {
+
+                            $mdDialog.show({
+                                controller: 'InfoDialogController as vm',
+                                templateUrl: 'views/info-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: $event,
+                                clickOutsideToClose: false,
+                                locals: {
+                                    info: {
+                                        title: 'Success',
+                                        description: "Recalculation is finished"
+                                    }
+                                }
+                            })
+
+                        })
+
+                    }
+                })
+
+            })
+
         };
 
         vm.init = function () {

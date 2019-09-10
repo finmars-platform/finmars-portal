@@ -27,10 +27,18 @@
         });
 
         $stateProvider.state('app.dashboard-constructor', {
-            url: '/dashboard-constructor',
+            url: '/dashboard-constructor/:id',
             templateUrl: 'views/dashboard-constructor-view.html',
             controller: 'DashboardConstructorController as vm'
         });
+
+        $stateProvider.state('app.dashboard-layout-manager', {
+            url: '/dashboard-layouts',
+            templateUrl: 'views/dashboard-layout-manager-view.html',
+            controller: 'DashboardLayoutManagerController as vm'
+        });
+
+
 
         $stateProvider.state('app.home', {
             url: '/',
