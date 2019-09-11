@@ -46,8 +46,12 @@
                         <md-tab-body>
                             <div class="ec-md-content ec-layout-tab">
 
-                                <div class="dashboard-layout">
-                                    <div layout="column" data-ng-repeat="row in tab.layout.rows">
+                                <div class="dashboard-layout"
+                                     dashboard-constructor-grid-aligner
+                                     dashboard-constructor-data-service="vm.dashboardConstructorDataService"
+                                     dashboard-constructor-event-service="vm.dashboardConstructorEventService"
+                                     tab-number="tab.tab_number">
+                                        <div layout="column" data-ng-repeat="row in tab.layout.rows" post-ng-repeat post-ng-repeat-callback="vm.sentGridIsRenderedSignal()">
 
                                         <div layout="row" class="dashboard-constructor-row">
 
@@ -72,89 +76,16 @@
 
                                                 <div data-ng-if="item.cell_type === 'component'">
 
-                                                    <div data-ng-show="!item.editMode">
-                                                        <md-card class="ec-attr-card">
-                                                            <div layout="row">
-                                                                <p class="name-holder" flex="60">
-                                                                    <b><span data-ng-bind="item.data.name"></span></b> (<span
-                                                                        data-ng-bind="vm.getVerboseType(item.data)"></span>)
-                                                                </p>
-                                                                <div class="options-holder" flex="40">
-                                                                    <md-button aria-label="delete attribute"
-                                                                               data-ng-click="vm.deleteField(item,  tab.tab_number, row.row_number, item.column_number)">
-                                                                        <ng-md-icon icon="delete"></ng-md-icon>
-                                                                    </md-button>
-                                                                    <md-button aria-label="edit attribute"
-                                                                               data-ng-click="vm.toggleFieldEditMode(item)">
-                                                                        <ng-md-icon icon="mode_edit"></ng-md-icon>
-                                                                    </md-button>
-                                                                </div>
-                                                            </div>
-                                                        </md-card>
-                                                    </div>
-                                                    <div data-ng-if="item.editMode">
-                                                        <md-card class="ec-attr-card {{item.editMode ? 'active' : ''}}">
+                                                    <dashboard-constructor-field
 
-                                                            <md-input-container
-                                                                    class="md-block no-error-spacer ec-attr-row"
-                                                                    flex-gt-sm
-                                                                    aria-label="select with filter">
-                                                                <label>Element width</label>
-                                                                <md-select ng-model="item.colspan"
-                                                                           md-container-class="common-select-container"
-                                                                           md-on-close="searchTerm = ''"
-                                                                           ng-change="changeFieldColspan(item.colspan)">
-                                                                    <div class="select-options-holder">
-                                                                        <md-option
-                                                                                data-ng-repeat="colspan in getCols()"
-                                                                                value="{{colspan}}">
-                                                                            {{colspan}} column(s)
-                                                                        </md-option>
-                                                                    </div>
-                                                                </md-select>
-                                                            </md-input-container>
+                                                            tab-number="tab.tab_number"
+                                                            row-number="row.row_number"
+                                                            column-number="item.column_number"
+                                                            item="item"
+                                                            dashboard-constructor-data-service="vm.dashboardConstructorDataService"
+                                                            dashboard-constructor-event-service="vm.dashboardConstructorEventService"
 
-                                                            <md-input-container
-                                                                    class="md-block no-error-spacer ec-attr-row"
-                                                                    flex-gt-sm
-                                                                    aria-label="select with filter">
-                                                                <label>Element height</label>
-                                                                <md-select ng-model="item.rowspan"
-                                                                           md-container-class="common-select-container"
-                                                                           md-on-close="searchTerm = ''"
-                                                                           ng-change="changeFieldColspan(item.colspan)">
-                                                                    <div class="select-options-holder">
-                                                                        <md-option
-                                                                                data-ng-repeat="colspan in getCols()"
-                                                                                value="{{colspan}}">
-                                                                            {{colspan}} column(s)
-                                                                        </md-option>
-                                                                    </div>
-                                                                </md-select>
-                                                            </md-input-container>
-
-                                                            <md-input-container
-                                                                    class="md-block no-error-spacer ec-attr-row"
-                                                                    data-ng-if="item.attribute.value_type != 'decoration'">
-                                                                <label>Custom label</label>
-                                                                <input data-ng-model="item.options.fieldName">
-                                                            </md-input-container>
-
-                                                            <md-divider></md-divider>
-                                                            <div layout="row" layout-align="space-between center"
-                                                                 class="constructor-card-actions">
-                                                                <md-button aria-label="cancel"
-                                                                           data-ng-click="vm.cancelFieldEdit(item)">
-                                                                    Cancel
-                                                                </md-button>
-                                                                <md-button class="ec-field-btn"
-                                                                           aria-label="save layout"
-                                                                           data-ng-click="vm.saveField(item)">
-                                                                    <span>Ok</span>
-                                                                </md-button>
-                                                            </div>
-                                                        </md-card>
-                                                    </div>
+                                                    ></dashboard-constructor-field>
 
                                                 </div>
 
@@ -188,11 +119,57 @@
                             </div>
                         </md-tab-body>
                     </md-tab>
+
                 </md-tabs>
 
             </div>
 
             <div class="dashboard-constructor-sidebar p-8">
+                <md-menu>
+                    <md-button class="md-raised md-primary"
+                               ng-click="$mdOpenMenu($event)">
+                        Add New Component
+                    </md-button>
+                    <md-menu-content width="3">
+                        <md-menu-item>
+                            <md-button ng-click="vm.addControlComponent($event)" class="g-settings-option-btn">
+                                <span>Add Control</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.addButtonSetComponent($event)" class="g-settings-option-btn">
+                                <span>Add Button set</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.addInputFormComponent($event)" class="g-settings-option-btn">
+                                <span>Add Input Form</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.addReportViewerComponent($event)" class="g-settings-option-btn">
+                                <span>Report Viewer</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.addReportViewerSplitPanelComponent($event)"
+                                       class="g-settings-option-btn">
+                                <span>Report Viewer Split Panel</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.addEntityViewerComponent($event)" class="g-settings-option-btn">
+                                <span>Entity Viewer</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.addEntityViewerSplitPanelComponent($event)"
+                                       class="g-settings-option-btn">
+                                <span>Entity Viewer Split Panel</span>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
 
                 <p>
                     <b>Drag fields from here</b>
@@ -201,8 +178,22 @@
                 <div data-ng-repeat="item in vm.availableComponentsTypes track by item.id"
                      class="dashboard-constructor-draggable-card">
 
-                    <md-card class="p-l-16" data-index="{{$index}}" data-component-id="{{item.id}}">
+                    <md-card class="p-l-16" data-index="{{$index}}" data-component-id="{{item.id}}" layout="row">
+
                         <p><b data-ng-bind="item.name"></b>: <span data-ng-bind="vm.getVerboseType(item)"></span></p>
+
+                        <div class="options-holder" flex="40">
+                            <md-button class="md-button"
+                                       aria-label="delete attribute"
+                                       data-ng-click="vm.deleteComponentType($event, item)">
+                                <ng-md-icon icon="delete"></ng-md-icon>
+                            </md-button>
+                            <md-button class="md-button"
+                                       aria-label="edit attribute" data-ng-click="vm.editComponentType($event, item)">
+                                <ng-md-icon icon="mode_edit"></ng-md-icon>
+                            </md-button>
+                        </div>
+
                     </md-card>
 
                 </div>

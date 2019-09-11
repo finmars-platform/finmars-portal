@@ -2,6 +2,8 @@
 
     'use strict';
 
+    var entityResolverService = require('../../services/entityResolverService');
+
     module.exports = function () {
         return {
             restriction: 'E',
@@ -16,7 +18,72 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Control Component')
+                console.log('Dashboard Control Component');
+
+                scope.fields = [];
+                scope.entityType = null;
+
+                scope.getEntityTypeByContentType = function (contentType) {
+
+                    if (contentType === 'instruments.instrument') {
+                        return 'instrument'
+                    }
+
+                    if (contentType === 'portfolios.portfolio') {
+                        return 'portfolio'
+                    }
+
+                    if (contentType === 'accounts.account') {
+                        return 'account'
+                    }
+
+                    if (contentType === 'currencies.currency') {
+                        return 'currency'
+                    }
+
+                };
+
+                scope.getData = function () {
+
+                    entityResolverService.getList(scope.entityType).then(function (data) {
+
+                        scope.fields = data.results;
+
+                        scope.$apply(function () {
+
+                            setTimeout(function () {
+                                $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                    ev.stopPropagation();
+                                });
+                            }, 100);
+                        });
+
+                    });
+                };
+
+
+                scope.valueChanged = function () {
+
+                    console.log('valueChanged', scope.item.data.store);
+
+                    scope.dashboardDataService.updateComponentOutput(scope.item.data.id, scope.item.data.store);
+                    scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id)
+
+                };
+
+                scope.init = function () {
+
+                    scope.entityType = scope.getEntityTypeByContentType(scope.item.data.settings.content_type);
+
+                    if (!scope.item.data.store) {
+                        scope.item.data.store = {} // "store" - property for all dashboard data related properties
+                    }
+
+
+                };
+
+                scope.init();
+
 
             }
         }

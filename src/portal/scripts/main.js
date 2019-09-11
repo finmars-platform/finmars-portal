@@ -71,17 +71,29 @@ app.factory('pickmeup', ['$window', function ($window) {
     if ($window.pickmeup) {
         return $window.pickmeup;
     }
-    ;
 }]);
 
 // Dashboard
 
 
 app.controller('DashboardLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/dashboardLayoutManagerController')]);
+
 app.controller('DashboardConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dashboardConstructorController')]);
 
+app.controller('DashboardConstructorControlComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorControlComponentDialogController')]);
+app.controller('DashboardConstructorReportViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerComponentDialogController')]);
+app.controller('DashboardConstructorReportViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerSplitPanelComponentDialogController')]);
+app.controller('DashboardConstructorEntityViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerComponentDialogController')]);
+app.controller('DashboardConstructorEntityViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerSplitPanelComponentDialogController')]);
+app.controller('DashboardConstructorButtonSetComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorButtonSetComponentDialogController')]);
+app.controller('DashboardConstructorInputFormComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorInputFormComponentDialogController')]);
+
+app.directive('dashboardConstructorField', [require('./app/directives/dashboardConstructorFieldDirective')]);
+app.directive('dashboardConstructorGridAligner', [require('./app/directives/dashboardConstructorGridAlignerDirective')]);
 
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
+
+app.directive('dashboardGridAligner', [require('./app/directives/dashboard/dashboardGridAlignerDirective')]);
 
 app.directive('dashboardButtonSet', [require('./app/directives/dashboard/dashboardButtonSetDirective')]);
 app.directive('dashboardControl', [require('./app/directives/dashboard/dashboardControlDirective')]);
@@ -453,6 +465,8 @@ app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);
 app.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
 app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
+
+app.directive('posNgRepeat', ['$mdDialog', require('./app/directives/posNgRepeatDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('trustAsUrl', ['$sce', require('./app/filters/trustAsUrlFilter')]);

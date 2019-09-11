@@ -16,7 +16,12 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Report Viewer Component')
+                console.log('Dashboard Report Viewer Component', scope.item);
+
+                scope.vm = {
+                    entityType: 'balance-report',
+                    startupSettings: scope.item.data.settings
+                };
 
             }
         }

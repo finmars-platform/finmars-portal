@@ -1,0 +1,85 @@
+<div>
+    <div data-ng-show="!item.editMode">
+        <md-card class="ec-attr-card">
+            <div layout="row">
+                <p class="name-holder" flex="60">
+                    <b><span data-ng-bind="item.data.name"></span></b> (<span
+                        data-ng-bind="getVerboseType()"></span>)
+                </p>
+                <div class="options-holder" flex="40">
+                    <md-button aria-label="delete attribute"
+                               data-ng-click="deleteField()">
+                        <ng-md-icon icon="delete"></ng-md-icon>
+                    </md-button>
+                    <md-button aria-label="edit attribute"
+                               data-ng-click="toggleFieldEditMode()">
+                        <ng-md-icon icon="mode_edit"></ng-md-icon>
+                    </md-button>
+                </div>
+            </div>
+        </md-card>
+    </div>
+    <div data-ng-if="item.editMode">
+        <md-card class="ec-attr-card {{item.editMode ? 'active' : ''}}">
+
+            <md-input-container
+                    class="md-block no-error-spacer ec-attr-row"
+                    flex-gt-sm
+                    aria-label="select with filter">
+                <label>Element width</label>
+                <md-select ng-model="item.colspan"
+                           md-container-class="common-select-container"
+                           md-on-close="searchTerm = ''"
+                           ng-change="changeFieldColspan()">
+                    <div class="select-options-holder">
+                        <md-option
+                                data-ng-repeat="colspan in colspanList"
+                                ng-value="colspan">
+                            {{colspan}} column(s)
+                        </md-option>
+                    </div>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container
+                    class="md-block no-error-spacer ec-attr-row"
+                    flex-gt-sm
+                    aria-label="select with filter">
+                <label>Element height</label>
+                <md-select ng-model="item.rowspan"
+                           md-container-class="common-select-container"
+                           md-on-close="searchTerm = ''"
+                           ng-change="changeFieldRowspan()">
+                    <div class="select-options-holder">
+                        <md-option
+                                data-ng-repeat="rowspan in rowspanList"
+                                ng-value="rowspan">
+                            {{rowspan}} row(s)
+                        </md-option>
+                    </div>
+                </md-select>
+            </md-input-container>
+
+            <!--<md-input-container-->
+                    <!--class="md-block no-error-spacer ec-attr-row"-->
+                    <!--data-ng-if="item.attribute.value_type != 'decoration'">-->
+                <!--<label>Custom label</label>-->
+                <!--<input data-ng-model="item.options.fieldName">-->
+            <!--</md-input-container>-->
+
+            <md-divider></md-divider>
+            <div layout="row" layout-align="space-between center"
+                 class="constructor-card-actions">
+                <md-button aria-label="cancel"
+                           data-ng-click="cancelFieldEdit()">
+                    Cancel
+                </md-button>
+                <md-button class="ec-field-btn"
+                           aria-label="save layout"
+                           data-ng-click="saveField()">
+                    <span>Ok</span>
+                </md-button>
+            </div>
+        </md-card>
+    </div>
+</div>
