@@ -11,7 +11,8 @@
         return {
             scope: {
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                spExchangeService: '='
             },
             restrict: 'AE',
             template: '<div class="split-panel-controller-container"></div>',
@@ -45,7 +46,8 @@
                         '$mdDialog': $mdDialog,
                         '$transitions': $transitions,
                         'parentEntityViewerDataService': scope.evDataService,
-                        'parentEntityViewerEventService': scope.evEventService
+                        'parentEntityViewerEventService': scope.evEventService,
+                        'splitPanelExchangeService': scope.spExchangeService
                     });
 
                     container.html(tpl);

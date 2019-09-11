@@ -62,7 +62,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide({status: 'cancel'});
+            $mdDialog.hide({status: 'disagree'});
         };
     }
 

@@ -31,6 +31,8 @@
         vm.attrs = [];
         vm.entityAttrs = [];
 
+        vm.cardsDividedIntoTabs = false;
+
         var columns = entityViewerDataService.getColumns();
         var currentColumnsWidth = columns.length;
         var filters = entityViewerDataService.getFilters();
@@ -292,7 +294,7 @@
         };
 
 
-        var dragAndDrop = {
+        var viewConstructorDnD = {
 
             init: function () {
                 this.dragula();
@@ -548,13 +550,13 @@
         };
 
         setTimeout(function () {
-            dragAndDrop.init()
+            viewConstructorDnD.init()
         }, 500);
 
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
 
-            dragAndDrop.destroy();
+            viewConstructorDnD.destroy();
 
             $mdDialog.cancel();
         };

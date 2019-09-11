@@ -364,18 +364,26 @@
             }
         };
 
+        var groupsPropertyNames = ["items", "dataSettings", "downloadSchemes", "systemElements"];
+
         vm.toggleSelectAll = function () {
 
             vm.selectAllState = !vm.selectAllState;
 
-            vm.items.forEach(function (item) {
-                item.someChildsActive = false;
-                item.active = vm.selectAllState;
-                item.content.forEach(function (child) {
-                    child.active = vm.selectAllState;
-                })
+            groupsPropertyNames.forEach(function (groupProperty) {
 
-            })
+                vm[groupProperty].forEach(function (item) {
+                    item.someChildsActive = false;
+                    item.active = vm.selectAllState;
+
+
+                    item.content.forEach(function (child) {
+                        child.active = vm.selectAllState;
+                    })
+
+                });
+
+            });
 
         };
 
@@ -383,19 +391,23 @@
 
             var active = true;
 
-            vm.items.forEach(function (item) {
+            groupsPropertyNames.forEach(function (groupProperty) {
 
-                if (!item.active) {
-                    active = false;
-                }
+                vm[groupProperty].forEach(function (item) {
 
-                item.content.forEach(function (child) {
-
-                    if (!child.active) {
+                    if (!item.active) {
                         active = false;
                     }
 
-                })
+                    item.content.forEach(function (child) {
+
+                        if (!child.active) {
+                            active = false;
+                        }
+
+                    })
+
+                });
 
             });
 
@@ -403,7 +415,7 @@
 
         };
 
-        vm.toggleActiveForChilds = function (item) {
+        vm.toggleActiveForChildren = function (item) {
 
             item.active = !item.active;
             item.someChildsActive = false;
@@ -480,7 +492,7 @@
 
         // MAPPINGS START HERE
 
-        vm.selectAllMappingsState = false;
+        /*vm.selectAllMappingsState = false;
 
         vm.toggleSelectMappingsAll = function () {
 
@@ -532,7 +544,7 @@
 
             vm.checkSelectMappingsAll();
 
-        };
+        };*/
 
         vm.getMappingsEntityName = function (item) {
 
@@ -540,7 +552,7 @@
 
         };
 
-        vm.updateActiveMappingsForParent = function (child, parent) {
+        /*vm.updateActiveMappingsForParent = function (child, parent) {
 
             child.active = !child.active;
 
@@ -569,6 +581,84 @@
 
             vm.checkSelectMappingsAll();
 
+        };*/
+
+        var mappingGroups = [
+            {
+                entities: [
+                    "integrations.portfoliomapping",
+                    "integrations.currencymapping",
+                    "integrations.accountmapping",
+                    "integrations.instrumentmapping",
+                    "integrations.counterpartymapping",
+                    "integrations.responsiblemapping",
+                    "integrations.strategy1mapping",
+                    "integrations.periodicitymapping",
+                    "integrations.dailypricingmodelmapping",
+                    "integrations.paymentsizedetailmapping",
+                    "integrations.accrualcalculationmodelmapping"
+                ],
+                groupKey: "systemElements"
+            },
+            {
+                entities: [
+                    "integrations.accounttypemapping",
+                    "integrations.instrumenttypemapping",
+                    "integrations.pricingpolicymapping"
+                ],
+                groupKey: "dataSettings"
+            },
+            {
+                entities: ["integrations.pricedownloadschememapping"],
+                groupKey: "downloadSchemes"
+            }
+        ];
+
+        vm.dataSettings = [];
+        vm.downloadSchemes = [];
+        vm.systemElements = [];
+
+        var separateMappingsIntoGroups = function (mItems) {
+
+            vm.dataSettings = [];
+            vm.downloadSchemes = [];
+            vm.systemElements = [];
+
+            mItems.forEach(function (parent) {
+
+                parent.content = parent.content.filter(function (child) {
+
+                    if (child.hasOwnProperty('user_code') && child.user_code === '-') {
+                        return false
+                    }
+
+                    if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                        return false
+                    }
+
+                    return true;
+
+                });
+
+                for (var i = 0; i < mappingGroups.length; i++) {
+
+                    if (mappingGroups[i].entities.indexOf(parent.entity) !== -1) {
+                        vm[mappingGroups[i].groupKey].push(parent);
+                        break;
+                    };
+
+                    if (i === mappingGroups.length - 1) {
+                        vm.systemElements.push(parent);
+                    };
+                };
+
+            });
+        };
+
+        var assembleMappingsIntoArray = function () {
+            var mappings = [].concat(vm.dataSettings, vm.downloadSchemes, vm.systemElements);
+
+            return mappings;
         };
 
         vm.agree = function ($event) {
@@ -599,6 +689,9 @@
 
             });
 
+            var mappingItems = assembleMappingsIntoArray();
+            mappingItems = JSON.parse(angular.toJson(mappingItems));
+
             try {
 
                 var timeout = setInterval(function () {
@@ -610,7 +703,7 @@
 
                 configurationImportService.importConfiguration(vm.items, vm.settings).then(function (configurationData) {
 
-                    mappingsImportService.importMappings(vm.mappingItems, vm.settings).then(function (mappingsData) {
+                    mappingsImportService.importMappings(mappingItems, vm.settings).then(function (mappingsData) {
 
                         clearInterval(timeout);
 
@@ -759,7 +852,7 @@
             vm.sections = vm.file.body;
 
             vm.items = [];
-            vm.mappingItems = [];
+            var mappingItems = [];
 
             vm.sections.forEach(function (item) {
 
@@ -768,13 +861,12 @@
                 }
 
                 if (item.section_name === 'mappings') {
-                    vm.mappingItems = item.items;
+                    mappingItems = item.items;
                 }
 
             });
 
-
-            console.log("vm.mappingItems", vm.mappingItems);
+            console.log("mappingItems", mappingItems);
             console.log("vm.items", vm.items);
 
             vm.items.forEach(function (item) {
@@ -790,6 +882,7 @@
             vm.checkForDuplicates();
 
             sortItems();
+            separateMappingsIntoGroups(mappingItems);
 
         };
 

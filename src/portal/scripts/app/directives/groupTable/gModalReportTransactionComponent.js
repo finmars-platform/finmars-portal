@@ -39,6 +39,8 @@
         vm.accountDynamicAttrs = [];
         vm.portfolioDynamicAttrs = [];
 
+        vm.cardsDividedIntoTabs = false;
+
         var columns = entityViewerDataService.getColumns();
         var filters = entityViewerDataService.getFilters();
         var grouping = entityViewerDataService.getGroups();
@@ -504,11 +506,11 @@
 
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
-            dragAndDrop.destroy();
+            viewConstructorDnD.destroy();
             $mdDialog.cancel();
         };
 
-        var dragAndDrop = {
+        var viewConstructorDnD = {
 
             init: function () {
                 this.dragula();
@@ -795,7 +797,7 @@
 
         vm.initDnD = function () {
             setTimeout(function () {
-                dragAndDrop.init()
+                viewConstructorDnD.init()
             }, 500);
         };
 
