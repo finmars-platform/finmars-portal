@@ -43,7 +43,7 @@
                       'text-warning-red': item.is_duplicate && vm.settings.mode == 'overwrite',
                       'text-warning-blue': item.is_duplicate && vm.settings.mode == 'skip'}">
                 <md-checkbox data-ng-checked="item.active"
-                             data-ng-click="vm.toggleActiveForChilds(item)"
+                             data-ng-click="vm.toggleActiveForChildren(item)"
                              data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
                              aria-label="checkbox">
                 </md-checkbox>
@@ -109,11 +109,11 @@
 
         </div>
 
-        <div data-ng-if="vm.mappingItems.length">
+        <div data-ng-if="vm.dataSettings.length > 0 && vm.downloadSchemes.length > 0 && vm.systemElements.length > 0">
 
             <h2>Mappings</h2>
 
-            <div>
+            <!--<div>
 
                 <md-checkbox data-ng-checked="vm.selectAllMappingsState"
                              data-ng-click="vm.toggleSelectMappingsAll()"
@@ -122,9 +122,9 @@
 
                 <b>Select all</b>
 
-            </div>
+            </div>-->
 
-            <div data-ng-repeat="item in vm.mappingItems">
+            <!--<div data-ng-repeat="item in vm.mappingItems">
 
                 <div class="cie-entity-holder">
                     <md-checkbox data-ng-checked="item.active"
@@ -153,6 +153,107 @@
                 </div>
 
 
+            </div>-->
+            <div ng-if="vm.dataSettings.length > 0">
+
+                <h2 class="cie-entities-group-h2">Data Settings</h2>
+
+                <div data-ng-repeat="item in vm.dataSettings"
+                     class="cie-mapping-group-item">
+
+                    <div class="cie-entity-holder">
+                        <md-checkbox data-ng-checked="item.active"
+                                     data-ng-click="vm.toggleActiveForChildren(item)"
+                                     data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
+                                     aria-label="checkbox">
+                        </md-checkbox>
+                        <span data-ng-bind="vm.getMappingsEntityName(item)"></span>
+                        ({{item.count}})
+                        <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
+                                data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
+                        </md-button>
+                    </div>
+
+
+                    <div data-ng-show="item.displayItems" style="padding-left: 20px; position: relative;">
+                        <div data-ng-repeat="child in item.content">
+                            <md-checkbox data-ng-checked="child.active"
+                                         data-ng-click="vm.updateActiveForParent(child, item)"
+                                         aria-label="checkbox">
+                            </md-checkbox>
+                            {{child.value}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div ng-if="vm.downloadSchemes.length > 0">
+
+                <h2 class="cie-entities-group-h2">Schemes: Download</h2>
+
+                <div data-ng-repeat="item in vm.downloadSchemes"
+                     class="cie-mapping-group-item">
+
+                    <div class="cie-entity-holder">
+                        <md-checkbox data-ng-checked="item.active"
+                                     data-ng-click="vm.toggleActiveForChildren(item)"
+                                     data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
+                                     aria-label="checkbox">
+                        </md-checkbox>
+                        <span data-ng-bind="vm.getMappingsEntityName(item)"></span>
+                        ({{item.count}})
+                        <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
+                                data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
+                        </md-button>
+                    </div>
+
+
+                    <div data-ng-show="item.displayItems" style="padding-left: 20px; position: relative;">
+                        <div data-ng-repeat="child in item.content">
+                            <md-checkbox data-ng-checked="child.active"
+                                         data-ng-click="vm.updateActiveForParent(child, item)"
+                                         aria-label="checkbox">
+                            </md-checkbox>
+                            {{child.value}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div ng-if="vm.systemElements.length > 0">
+
+                <h2 class="cie-entities-group-h2">System Elements</h2>
+
+                <div data-ng-repeat="item in vm.systemElements"
+                     class="cie-mapping-group-item">
+
+                    <div class="cie-entity-holder">
+                        <md-checkbox data-ng-checked="item.active"
+                                     data-ng-click="vm.toggleActiveForChildren(item)"
+                                     data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
+                                     aria-label="checkbox">
+                        </md-checkbox>
+                        <span data-ng-bind="vm.getMappingsEntityName(item)"></span>
+                        ({{item.count}})
+                        <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
+                                data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
+                        </md-button>
+                    </div>
+
+
+                    <div data-ng-show="item.displayItems" style="padding-left: 20px; position: relative;">
+                        <div data-ng-repeat="child in item.content">
+                            <md-checkbox data-ng-checked="child.active"
+                                         data-ng-click="vm.updateActiveForParent(child, item)"
+                                         aria-label="checkbox">
+                            </md-checkbox>
+                            {{child.value}}
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
 

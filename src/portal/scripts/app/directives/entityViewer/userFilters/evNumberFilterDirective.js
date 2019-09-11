@@ -246,7 +246,7 @@
                 };
 
 
-                scope.noDataForLinkingTo = true;
+                /*scope.noDataForLinkingTo = true;
                 var columns = scope.evDataService.getColumns();
 
                 for (var c = 0; c < columns.length; c++) {
@@ -254,7 +254,7 @@
                         scope.noDataForLinkingTo = false;
                         break;
                     };
-                };
+                };*/
 
                 scope.initSplitPanelMode = function () {
 
@@ -262,7 +262,8 @@
 
                         scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
-                            scope.noDataForLinkingTo = true;
+                            var key = scope.filter.options.use_from_above;
+                            /*scope.noDataForLinkingTo = true;
                             var columns = scope.evDataService.getColumns();
                             var key = scope.filter.options.use_from_above;
 
@@ -271,7 +272,7 @@
                                     scope.noDataForLinkingTo = false;
                                     break;
                                 };
-                            };
+                            };*/
 
                             if (scope.filter.options.hasOwnProperty('use_from_above') && !scope.noDataForLinkingTo) {
 

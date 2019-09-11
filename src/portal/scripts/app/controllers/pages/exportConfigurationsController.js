@@ -132,7 +132,7 @@
             });
         };
 
-        vm.groupByProperty = function (elements, propertyToGroupBy) { // add headers to groups of layouts
+        vm.groupByProperty = function (elements, propertyToGroupBy) { // add headers to groups of layouts based on property
 
             var hasFirstElement = [];
 
@@ -391,6 +391,67 @@
 
         };
 
+        var syncItemsWithLayout = function (itemType, entityItem) {
+
+            var layoutData = vm.activeLayout.data[itemType][entityItem.entity];
+
+            if (layoutData && layoutData.length > 0) {
+
+                entityItem.content.forEach(function (childItem) {
+
+                    var searchItem = vm.getECProperties(childItem);
+
+                    // console.log('searchItem', searchItem);
+
+                    layoutData.forEach(function (layoutDataItem) {
+
+                        // console.log('layoutDataItem', layoutDataItem);
+
+                        if (layoutDataItem) {
+
+                            var active = true;
+
+                            Object.keys(searchItem).forEach(function (key) {
+
+                                if (layoutDataItem[key] !== searchItem[key]) {
+                                    active = false;
+                                }
+
+                            });
+
+                            if (active) {
+                                childItem.active = true;
+                                entityItem.someChildsActive = true;
+                            }
+
+                        }
+
+                    });
+
+                });
+
+
+                entityItem.active = true;
+                entityItem.content.forEach(function (item) {
+
+                    if (!item.active) {
+                        entityItem.active = false;
+                    };
+
+                });
+
+            }
+
+        };
+
+        var syncConfigItemsWithLayout = function (cItem) {
+            syncItemsWithLayout('statuses', cItem);
+        };
+
+        var syncMappingItemsWithLayout = function (mItem) {
+            syncItemsWithLayout('mappingsStatuses', mItem);
+        };
+
         vm.syncWithLayout = function () {
 
             vm.layouts.forEach(function (item) {
@@ -404,63 +465,19 @@
             vm.filename = vm.activeLayout.data.filename;
 
             if (!vm.activeLayout.data.statuses) {
-                vm.activeLayout.data.statuses = {}
-            }
+                vm.activeLayout.data.statuses = {};
+            };
 
-            vm.items.forEach(function (entityItem) {
+            vm.items.forEach(syncConfigItemsWithLayout);
 
-                var layoutData = vm.activeLayout.data.statuses[entityItem.entity];
+            if (!vm.activeLayout.data.mappingsStatuses) {
+                vm.activeLayout.data.mappingsStatuses = {};
+            };
 
-                if (layoutData && layoutData.length > 0) {
-
-
-                    entityItem.content.forEach(function (childItem) {
-
-                        var searchItem = vm.getECProperties(childItem);
-
-                        // console.log('searchItem', searchItem);
-
-                        layoutData.forEach(function (layoutDataItem) {
-
-                            // console.log('layoutDataItem', layoutDataItem);
-
-
-                            if (layoutDataItem) {
-
-                                var active = true;
-
-                                Object.keys(searchItem).forEach(function (key) {
-
-                                    if (layoutDataItem[key] !== searchItem[key]) {
-                                        active = false;
-                                    }
-
-                                });
-
-                                if (active) {
-                                    childItem.active = true;
-                                    entityItem.someChildsActive = true;
-                                }
-
-                            }
-
-                        })
-
-
-                    });
-
-
-                    entityItem.active = true;
-                    entityItem.content.forEach(function (item) {
-
-                        if (!item.active) {
-                            entityItem.active = false;
-                        }
-                    })
-
-                }
-
-            });
+            // syncing mappings with layout
+            vm.dataSettings.forEach(syncMappingItemsWithLayout);
+            vm.downloadSchemes.forEach(syncMappingItemsWithLayout);
+            vm.systemElements.forEach(syncMappingItemsWithLayout);
 
             vm.checkSelectAll();
 
@@ -468,10 +485,9 @@
 
         vm.updateLayout = function ($event) {
 
-
             if (!vm.activeLayout.data.statuses) {
-                vm.activeLayout.data.statuses = {}
-            }
+                vm.activeLayout.data.statuses = {};
+            };
 
             vm.activeLayout.data.filename = vm.filename;
 
@@ -487,14 +503,39 @@
 
                         if (result || typeof result === "string") {
                             vm.activeLayout.data.statuses[item.entity].push(result);
-                        }
+                        };
                     }
 
                 });
 
             });
 
-            console.log('vm.activeLayout', vm.activeLayout);
+            var mappingsItems = assembleMappingsIntoArray();
+
+            if (!vm.activeLayout.data.mappingsStatuses) {
+                vm.activeLayout.data.mappingsStatuses = {};
+            };
+
+            mappingsItems.forEach(function (item) {
+
+                vm.activeLayout.data.mappingsStatuses[item.entity] = [];
+
+                item.content.forEach(function (child) {
+
+                    if (child.active) {
+
+                        var result = vm.getECProperties(child);
+
+                        if (result || typeof result === "string") {
+                            vm.activeLayout.data.mappingsStatuses[item.entity].push(result);
+                        };
+                    }
+
+                });
+
+            });
+
+            console.log('vm.activeLayout ', vm.activeLayout);
 
             $mdDialog.show({
                 controller: 'SaveConfigurationExportLayoutDialogController as vm',
@@ -519,11 +560,28 @@
 
         };
 
+        var groupsPropertyNames = ["items", "dataSettings", "downloadSchemes", "systemElements"];
+
         vm.toggleSelectAll = function () {
 
             vm.selectAllState = !vm.selectAllState;
 
-            vm.items.forEach(function (item) {
+            groupsPropertyNames.forEach(function (groupProperty) {
+
+                vm[groupProperty].forEach(function (item) {
+                    item.someChildsActive = false;
+                    item.active = vm.selectAllState;
+
+
+                    item.content.forEach(function (child) {
+                        child.active = vm.selectAllState;
+                    })
+
+                });
+
+            });
+
+            /*vm.items.forEach(function (item) {
                 item.someChildsActive = false;
                 item.active = vm.selectAllState;
 
@@ -532,7 +590,7 @@
                     child.active = vm.selectAllState;
                 })
 
-            })
+            });*/
 
         };
 
@@ -540,7 +598,27 @@
 
             var active = true;
 
-            vm.items.forEach(function (item) {
+            groupsPropertyNames.forEach(function (groupProperty) {
+
+                vm[groupProperty].forEach(function (item) {
+
+                    if (!item.active) {
+                        active = false;
+                    }
+
+                    item.content.forEach(function (child) {
+
+                        if (!child.active) {
+                            active = false;
+                        }
+
+                    })
+
+                });
+
+            });
+
+            /*vm.items.forEach(function (item) {
 
                 if (!item.active) {
                     active = false;
@@ -554,7 +632,7 @@
 
                 })
 
-            });
+            });*/
 
             vm.selectAllState = active;
 
@@ -704,7 +782,7 @@
             }
         };
 
-        vm.toggleActiveForChilds = function (item) {
+        vm.toggleActiveForChildren = function (item) {
 
             item.active = !item.active;
             item.someChildsActive = false;
@@ -780,7 +858,7 @@
             var results = [];
 
             if (items) {
-                results = JSON.parse(JSON.stringify(items));
+                results = JSON.parse(angular.toJson(items));
 
                 // removing properties created for data rendering
 
@@ -807,7 +885,7 @@
 
         vm.convertToExportStructure = function(items) {
 
-            var results = []
+            var results = [];
 
             items.forEach(function (item) {
 
@@ -840,8 +918,11 @@
 
         vm.export = function () {
 
+            var mappingsItems = assembleMappingsIntoArray();
+
+            mappingsItems = JSON.parse(angular.toJson(mappingsItems));
+
             var configurationItems = vm.cleanItemsBeforeExport(vm.items);
-            var mappingsItems = vm.cleanItemsBeforeExport(vm.mappingItems);
 
             var configurationResults = vm.convertToExportStructure(configurationItems);
             var mappingsResults = vm.convertToExportStructure(mappingsItems);
@@ -856,15 +937,15 @@
                 vm.file.body.push({
                     section_name: 'configuration',
                     items: configurationResults
-                })
-            }
+                });
+            };
 
             if(mappingsResults.length) {
                 vm.file.body.push({
                     section_name: 'mappings',
                     items: mappingsResults
-                })
-            }
+                });
+            };
 
             var resultFile = JSON.stringify(vm.file);
 
@@ -885,58 +966,125 @@
 
         // Mapping Section Start
 
+        var mappingGroups = [
+            {
+                entities: [
+                    "integrations.portfoliomapping",
+                    "integrations.currencymapping",
+                    "integrations.accountmapping",
+                    "integrations.instrumentmapping",
+                    "integrations.counterpartymapping",
+                    "integrations.responsiblemapping",
+                    "integrations.strategy1mapping",
+                    "integrations.periodicitymapping",
+                    "integrations.dailypricingmodelmapping",
+                    "integrations.paymentsizedetailmapping",
+                    "integrations.accrualcalculationmodelmapping"
+                ],
+                groupKey: "systemElements"
+            },
+            {
+                entities: [
+                    "integrations.accounttypemapping",
+                    "integrations.instrumenttypemapping",
+                    "integrations.pricingpolicymapping"
+                ],
+                groupKey: "dataSettings"
+            },
+            {
+                entities: ["integrations.pricedownloadschememapping"],
+                groupKey: "downloadSchemes"
+            }
+        ];
+
+        vm.dataSettings = [];
+        vm.downloadSchemes = [];
+        vm.systemElements = [];
+
+        var separateMappingsIntoGroups = function (mItems) {
+
+            vm.dataSettings = [];
+            vm.downloadSchemes = [];
+            vm.systemElements = [];
+
+            mItems.forEach(function (parent) {
+
+                parent.content = parent.content.filter(function (child) {
+
+                    if (child.hasOwnProperty('user_code') && child.user_code === '-') {
+                        return false
+                    }
+
+                    if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                        return false
+                    }
+
+                    return true;
+
+                });
+
+                for (var i = 0; i < mappingGroups.length; i++) {
+
+                    if (mappingGroups[i].entities.indexOf(parent.entity) !== -1) {
+                        vm[mappingGroups[i].groupKey].push(parent);
+                        break;
+                    };
+
+                    if (i === mappingGroups.length - 1) {
+                        vm.systemElements.push(parent);
+                    };
+                };
+
+            });
+        };
+
+        var assembleMappingsIntoArray = function () {
+            var mappings = [].concat(vm.dataSettings, vm.downloadSchemes, vm.systemElements);
+
+            return mappings;
+        };
+
         vm.getMappingFile = function () {
 
-            configurationService.getMappingData().then(function (data) {
+            return new Promise(function (resolve, reject) {
+                configurationService.getMappingData().then(function (data) {
 
-                console.log('configurationService.getConfigurationData', data);
+                    console.log('configurationService.getConfigurationData', data);
 
-                vm.file = data;
+                    vm.file = data;
 
-                vm.mappingItems = data.body;
+                    var mappingItems = data.body;
 
-                vm.mappingItems = vm.mappingItems.filter(function (item) {
+                    mappingItems = mappingItems.filter(function (item) {
 
-                    return [
-                        'integrations.portfoliomapping',
-                        'integrations.currencymapping',
-                        'integrations.accountmapping',
-                        'integrations.instrumentmapping',
-                        'integrations.counterpartymapping',
-                        'integrations.responsiblemapping',
-                        'integrations.strategy1mapping',
-                        'integrations.strategy2mapping',
-                        'integrations.strategy3mapping'].indexOf(item.entity) === -1
+                        return [
+                            'integrations.portfoliomapping',
+                            'integrations.currencymapping',
+                            'integrations.accountmapping',
+                            'integrations.instrumentmapping',
+                            'integrations.counterpartymapping',
+                            'integrations.responsiblemapping',
+                            'integrations.strategy1mapping',
+                            'integrations.strategy2mapping',
+                            'integrations.strategy3mapping'].indexOf(item.entity) === -1
 
+                    });
+
+                    separateMappingsIntoGroups(mappingItems);
+
+                    vm.readyStatus.content = true;
+
+                    $scope.$apply();
+                    resolve(true);
+
+                }).catch(function (error) {
+                    reject(error);
                 });
-
-                vm.mappingItems.forEach(function (parent) {
-
-                    parent.content = parent.content.filter(function (child) {
-
-                        if (child.hasOwnProperty('user_code') && child.user_code === '-') {
-                            return false
-                        }
-
-                        if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
-                            return false
-                        }
-
-                        return true;
-
-                    })
-
-                });
-
-                vm.readyStatus.content = true;
-
-                $scope.$apply();
-
             });
 
         };
 
-        vm.toggleSelectAllMappings = function () {
+        /*vm.toggleSelectAllMappings = function () {
 
             vm.selectAllStateMappings = !vm.selectAllStateMappings;
 
@@ -951,7 +1099,7 @@
 
             })
 
-        };
+        };*/
 
         vm.getMappingsEntityName = function (item) {
 
@@ -959,49 +1107,19 @@
 
         };
 
-        var configsToMappingsEntityMatches = {
-            "integrations.accounttypemapping": "obj_attrs.accounttypeattributetype",
-            "integrations.instrumenttypemapping": "obj_attrs.instrumentattributetype",
-            "integrations.pricingpolicymapping": "instruments.pricingpolicy",
-            "integrations.pricedownloadschememapping": "integrations.pricedownloadscheme"
-        };
-
-        var alginMappingsWithCorrespondingConfigs = function () {
-
-            var mappingGroups = document.querySelectorAll(".cie-mapping-group-item");
-            var configGroups = document.querySelectorAll(".cie-configuration-group-item");
-
-            var m,c;
-            for (m = 0; m < mappingGroups.length; m++) {
-                var mItem = mappingGroups[m];
-                var configEntity = configsToMappingsEntityMatches[mItem.dataset.groupEntity];
-
-                for (c = 0; c < configGroups.length; c++) {
-                    var cItem = configGroups[c];
-
-                    if (cItem.dataset.groupEntity === configEntity) {
-
-                        var mappingTopOffset = cItem.offsetTop - mItem.offsetTop;
-                        mItem.style.top = mappingTopOffset + "px";
-
-                    };
-                };
-
-            };
-
-        };
-
         // Mapping Section End
 
         vm.init = function () {
 
-            vm.getFile().then(function () {
+            /*vm.getFile().then(function () {
                 vm.getConfigurationExportLayouts();
+            });*/
+            var getConfigsPromise = vm.getFile();
+            var getMappingsPromise = vm.getMappingFile();
 
-                alginMappingsWithCorrespondingConfigs();
+            Promise.all([getConfigsPromise, getMappingsPromise]).then(function () {
+                vm.getConfigurationExportLayouts();
             });
-
-            vm.getMappingFile();
 
         };
 

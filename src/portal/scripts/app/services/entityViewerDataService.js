@@ -782,6 +782,7 @@
 
                     listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
                     listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
+                    listLayout.data.rootGroupOptions = metaHelper.recursiveDeepCopy(getRootGroupOptions());
 
                     if (getExportOptions()) {
                         listLayout.data.export = metaHelper.recursiveDeepCopy(getExportOptions());
