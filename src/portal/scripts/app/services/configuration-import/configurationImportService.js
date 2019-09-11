@@ -2338,17 +2338,21 @@
 
                 } else if (settings.mode === 'overwrite') {
 
-                    overwriteEntities(items, settings, cacheContainer, errors).then(function () {
+                    createEntities(items, settings, cacheContainer, errors).then(function () {
 
-                        console.log('Overwrite items success');
+                        overwriteEntities(items, settings, cacheContainer, errors).then(function () {
 
-                        console.log('Finish import success');
+                            console.log('Overwrite items success');
 
-                        console.log('Error', errors);
+                            console.log('Finish import success');
 
-                        resolve({
-                            errors: errors
+                            console.log('Error', errors);
+
+                            resolve({
+                                errors: errors
+                            })
                         })
+
                     })
 
                 } else {

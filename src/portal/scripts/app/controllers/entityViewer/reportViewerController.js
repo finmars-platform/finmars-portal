@@ -392,7 +392,7 @@
                                 strategy3: null
                             };
 
-                            if(activeObject['position_size']) {
+                            if (activeObject['position_size']) {
                                 contextData.position = activeObject['position_size'];
                             }
 
@@ -516,26 +516,9 @@
 
             };
 
+            vm.setLayout = function (layout) {
 
-            vm.getView = function () {
-
-                console.log('here?');
-
-                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
-
-                vm.listViewIsReady = false;
-
-                vm.entityViewerDataService = new EntityViewerDataService();
-                vm.entityViewerEventService = new EntityViewerEventService();
-                vm.splitPanelExchangeService = new SplitPanelExchangeService();
-
-                vm.entityType = $scope.$parent.vm.entityType;
-                vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
-                vm.entityViewerDataService.setRootEntityViewer(true);
-
-                vm.setEventListeners();
-
-                var setLayout = function (layout) {
+                return new Promise(function (resolve, reject) {
 
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
@@ -578,6 +561,8 @@
 
                                 vm.listViewIsReady = true;
 
+                                resolve();
+
                                 rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                                 $scope.$apply();
@@ -591,6 +576,8 @@
 
                             vm.listViewIsReady = true;
 
+                            resolve();
+
                             rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                             $scope.$apply();
@@ -603,6 +590,8 @@
 
                         vm.listViewIsReady = true;
 
+                        resolve();
+
                         rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                         $scope.$apply();
@@ -612,33 +601,88 @@
 
                     }
 
-                };
+                })
 
-                uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
+            };
 
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+            vm.getView = function () {
 
-                        var activeLayout = activeLayoutData.results[0];
-                        activeLayout.is_active = false;
-                        uiService.updateListLayout(activeLayout.id, activeLayout);
+                console.log('here?');
 
-                        setLayout(activeLayout);
+                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
-                    } else {
+                vm.listViewIsReady = false;
 
-                        uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-                            var defaultLayout = null;
-                            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-                                defaultLayout = defaultLayoutData.results[0];
-                            }
+                vm.entityViewerDataService = new EntityViewerDataService();
+                vm.entityViewerEventService = new EntityViewerEventService();
+                vm.splitPanelExchangeService = new SplitPanelExchangeService();
 
-                            setLayout(defaultLayout);
+                vm.setEventListeners();
 
-                        });
+                if ($scope.$parent.vm.startupSettings) {
+                    console.log('$scope.$parent.vm.startupSettings', $scope.$parent.vm.startupSettings);
 
-                    }
+                    var startupSettings = $scope.$parent.vm.startupSettings;
 
-                });
+                    vm.entityType = startupSettings.entityType;
+
+                    vm.entityViewerDataService.setEntityType(startupSettings.entityType);
+                    vm.entityViewerDataService.setRootEntityViewer(true);
+
+                    var layoutId = startupSettings.layout;
+
+                    uiService.getListLayoutByKey(layoutId).then(function (data) {
+
+                        vm.setLayout(data).then(function () {
+
+                            var evComponents = vm.entityViewerDataService.getComponents();
+
+                            Object.keys(startupSettings.components).forEach(function (key) {
+
+                                evComponents[key] = startupSettings.components[key]
+
+                            });
+
+                            vm.entityViewerDataService.setComponents(evComponents);
+
+                        })
+
+                    })
+
+                } else {
+
+                    vm.deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
+
+                    vm.entityType = $scope.$parent.vm.entityType;
+                    vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                    vm.entityViewerDataService.setRootEntityViewer(true);
+
+                    uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
+
+                        if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+
+                            var activeLayout = activeLayoutData.results[0];
+                            activeLayout.is_active = false;
+                            uiService.updateListLayout(activeLayout.id, activeLayout);
+
+                            vm.setLayout(activeLayout);
+
+                        } else {
+
+                            uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
+                                var defaultLayout = null;
+                                if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+                                    defaultLayout = defaultLayoutData.results[0];
+                                }
+
+                                vm.setLayout(defaultLayout);
+
+                            });
+
+                        }
+
+                    });
+                }
 
             };
 
@@ -667,7 +711,7 @@
                     if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-                        var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
+                        var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
 
                         var spChangedLayout = false;
                         var additions = vm.entityViewerDataService.getAdditions();
@@ -675,7 +719,7 @@
                             spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
                         };
 
-                        var layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true);
+                        var layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
 
                         if (!layoutIsUnchanged || spChangedLayout) {
 
@@ -724,42 +768,47 @@
 
                                         var saveLayoutChanges = new Promise (function (saveLayoutRes, saveLayoutRej) {
 
-                                            delete currentLayoutConfig.data.reportOptions.task_id;
+                                            if (layoutCurrentConfig.hasOwnProperty('id')) {
 
-                                            if (currentLayoutConfig.hasOwnProperty('id')) {
-
-                                                uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function () {
+                                                uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
                                                     saveLayoutRes(true);
                                                 });
 
                                             } else {
 
                                                 if (res.data && res.data.layoutName) {
-                                                    currentLayoutConfig.name = res.data.layoutName;
+                                                    layoutCurrentConfig.name = res.data.layoutName;
                                                 }
 
                                                 uiService.getDefaultListLayout(vm.entityType).then(function (data) {
 
-                                                    var activeLayout = data.results[0];
-                                                    activeLayout.is_default = false;
-                                                    currentLayoutConfig.is_default = true;
+                                                    layoutCurrentConfig.is_default = true;
 
-                                                    uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+                                                    if (data.count > 0 && data.results) {
+                                                        var activeLayout = data.results[0];
+                                                        activeLayout.is_default = false;
 
-                                                        uiService.createListLayout(vm.entityType, currentLayoutConfig).then(function () {
-                                                            saveLayoutRes(true);
+                                                        uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+
+                                                            uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                                saveLayoutRes(true);
+                                                            });
+
                                                         });
 
-                                                    });
+                                                    } else {
+                                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                            saveLayoutRes(true);
+                                                        });
+                                                    }
 
                                                 });
 
                                             };
 
+                                            layoutsSavePromises.push(saveLayoutChanges);
+
                                         });
-
-                                        layoutsSavePromises.push(saveLayoutChanges);
-
                                     };
 
                                     Promise.all(layoutsSavePromises).then(function () {
@@ -774,15 +823,15 @@
 
                                     reject(false);
 
-                                };
+                                }
 
                             }).catch(function () {
-                                reject();
+                                reject(false);
                             });
 
                         } else {
                             resolve(true);
-                        };
+                        }
 
                     } else {
                         removeTransitionWatcher();
@@ -793,7 +842,6 @@
 
             };
 
-            var deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
 
             /*var doOnMasterUserSelect = function () {
                 deregisterOnBeforeTransitionHook();
@@ -803,7 +851,9 @@
             middlewareService.setWarningOfLayoutChangesLossFn(doOnMasterUserSelect);*/
 
             var removeTransitionWatcher = function () {
-                deregisterOnBeforeTransitionHook();
+                if (vm.deregisterOnBeforeTransitionHook) {
+                    vm.deregisterOnBeforeTransitionHook();
+                }
                 window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
             };
 
@@ -823,7 +873,7 @@
                 if (!layoutIsUnchanged || spChangedLayout) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
-                };
+                }
 
             };
 
