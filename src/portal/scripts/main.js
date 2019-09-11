@@ -466,7 +466,7 @@ app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTabl
 app.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
 app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
 
-app.directive('posNgRepeat', ['$mdDialog', require('./app/directives/posNgRepeatDirective')]);
+app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('trustAsUrl', ['$sce', require('./app/filters/trustAsUrlFilter')]);

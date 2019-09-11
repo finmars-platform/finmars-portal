@@ -43,6 +43,54 @@
 
                     console.log('tabHeight ', tabHeight);
 
+                    scope.cellHeight = Math.floor(tabHeight / scope.columnsTotal)
+
+                };
+
+                scope.resizeGridCells = function () {
+
+                    var layout = scope.dashboardConstructorDataService.getData();
+
+                    var tab = layout.data.tabs[scope.tabNumber];
+
+                    var elements = elem.find('.dashboard-constructor-cell');
+                    var domElem;
+                    var layoutElem;
+
+                    var rowNumber;
+                    var columnNumber;
+
+                    for (var i = 0; i < elements.length; i = i + 1) {
+
+                        domElem = elements[i];
+
+                        rowNumber  = parseInt(domElem.dataset.row, 10)
+                        columnNumber  = parseInt(domElem.dataset.column, 10);
+
+                        console.log('tab.layout.rows', tab.layout.rows);
+                        console.log('tab.layout.rows[rowNumber]', tab.layout.rows[rowNumber]);
+
+                        layoutElem = tab.layout.rows[rowNumber].columns[columnNumber];
+
+                        if (layoutElem.cell_type === 'empty') {
+                            if (layoutElem.is_hidden) {
+                                domElem.style.dispaly = 'none';
+                            } else {
+                                domElem.style.width = (layoutElem.colspan * scope.cellWidth) + 'px';
+                                domElem.style.height = (layoutElem.rowspan * scope.cellHeight) + 'px';
+                            }
+                        }
+
+                        if (layoutElem.cell_type === 'component') {
+
+                            domElem.style.width = (layoutElem.colspan * scope.cellWidth) + 'px';
+                            domElem.style.height = (layoutElem.rowspan * scope.cellHeight) + 'px';
+
+                        }
+
+                    }
+
+
                 };
 
                 scope.init = function () {
@@ -53,8 +101,10 @@
 
                         var tab = layout.data.tabs[scope.tabNumber];
 
-                        scope.rowsTotal = tab.rows_count;
-                        scope.columnsTotal = tab.columns_count;
+                        console.log('tab', tab);
+
+                        scope.rowsTotal = tab.layout.rows_count;
+                        scope.columnsTotal = tab.layout.columns_count;
 
                         console.log('scope.rowsTotal', scope.rowsTotal);
                         console.log('scope.columnsTotal', scope.columnsTotal);
@@ -62,8 +112,10 @@
                         scope.calculateSingleCellHeight();
                         scope.calculateSingleCellWidth();
 
-                        console.log('scope.cellWidth', scope.cellWidth);
+                        scope.resizeGridCells();
+
                         console.log('scope.cellHeight', scope.cellHeight);
+                        console.log('scope.cellWidth', scope.cellWidth);
 
                     });
 

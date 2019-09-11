@@ -14,9 +14,7 @@
             },
             link: function (scope, elem, attr) {
 
-                if (scope.$last) {
-
-                    console.log('here?', scope);
+                if (scope.$parent.$last) {
 
                     scope.postNgRepeatCallback();
                 }
