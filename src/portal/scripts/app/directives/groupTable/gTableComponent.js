@@ -15,7 +15,8 @@
             templateUrl: 'views/directives/groupTable/group-table-shell-view.html',
             scope: {
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                spExchangeService: '='
             },
             link: function (scope, elem, attrs) {
 

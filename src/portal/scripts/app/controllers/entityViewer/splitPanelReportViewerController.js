@@ -18,7 +18,7 @@
         var expressionService = require('../../services/expression.service');
         var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService) {
+        module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
             var vm = this;
 
@@ -212,6 +212,19 @@
 
             };*/
 
+            var getLayoutChanges = function () {
+                var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
+                var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
+
+                if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
+                    return currentLayoutConfig;
+                };
+
+                return false
+            };
+
+            splitPanelExchangeService.setSplitPanelLayoutChangesCheckFn(getLayoutChanges);
+
             vm.getView = function () {
 
                 // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
@@ -293,7 +306,7 @@
 
                                 $scope.$apply();
 
-                                vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+                                //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
                             });
 
@@ -306,7 +319,7 @@
 
                             $scope.$apply();
 
-                            vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+                            //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
                         }
                     // < Check if there is need to solve report datepicker expression >
@@ -318,7 +331,7 @@
 
                         $scope.$apply();
 
-                        vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+                        //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
 
                     }
@@ -337,16 +350,6 @@
                         setLayout(activeLayout);
 
                     } else {
-
-                        /*uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-                            var defaultLayout = null;
-                            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-                                defaultLayout = defaultLayoutData.results[0];
-                            }
-
-                            setLayout(defaultLayout);
-
-                        });*/
 
                         if (defaultLayoutId) {
 
