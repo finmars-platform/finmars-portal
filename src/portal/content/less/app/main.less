@@ -2403,4 +2403,14 @@ button.md-button.toggle-calculator-block-btn {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
+  label {
+    pointer-events: none;
+  }
+
+  md-input-container {
+    label:not(.md-no-float):not(.md-container-ignore) {
+      pointer-events: none;
+    };
+  };
 }

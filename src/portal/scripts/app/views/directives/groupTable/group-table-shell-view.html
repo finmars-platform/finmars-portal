@@ -96,19 +96,22 @@
         <div class="g-additions-workarea"
              data-ng-if="additions.type === 'balance-report'">
             <group-split-panel-report-binder ev-data-service="evDataService"
-                                             ev-event-service="evEventService"></group-split-panel-report-binder>
+                                             ev-event-service="evEventService"
+                                             sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
         </div>
 
         <div class="g-additions-workarea"
              data-ng-if="additions.type === 'pl-report'">
             <group-split-panel-report-binder ev-data-service="evDataService"
-                                             ev-event-service="evEventService"></group-split-panel-report-binder>
+                                             ev-event-service="evEventService"
+                                             sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
         </div>
 
         <div class="g-additions-workarea"
              data-ng-if="additions.type === 'transaction-report'">
             <group-split-panel-report-binder ev-data-service="evDataService"
-                                             ev-event-service="evEventService"></group-split-panel-report-binder>
+                                             ev-event-service="evEventService"
+                                             sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
         </div>
     </div>
     <div group-layout-resizer ev-data-service="evDataService"

@@ -1,4 +1,4 @@
-<div ng-class="{'disabled-field': isDisabled}">
+<div ng-class="{'disabled-field': isNotEditableField()}">
     <div data-ng-if="fieldType['display_name'] === 'Number'" class="bind-field-number-field-container">
 
         <md-input-container class="md-block no-error-spacer">
@@ -7,14 +7,12 @@
                    type="number"
                    data-ng-if="!item.options.onlyPositive"
                    class="no-input-arrows"
-                   ng-disabled="isNotEditableField()"
                    style="{{styleForInputsWithButtons()}}">
             <input data-ng-model="entity[getModelKey()]"
                    type="number"
                    min="0"
                    data-ng-if="item.options.onlyPositive"
                    class="no-input-arrows"
-                   ng-disabled="isNotEditableField()"
                    style="{{styleForInputsWithButtons()}}">
 
             <div class="bind-field-buttons-block">
@@ -38,16 +36,6 @@
 
         </md-input-container>
 
-        <!--<div data-ng-if="item.buttons.length" class="bind-field-number-btn">
-            <md-button data-ng-repeat="button in item.buttons"
-                       class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
-                       data-ng-click="button.action(item)">
-                {{button.caption}}
-                <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
-                </md-tooltip>
-            </md-button>
-        </div>-->
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'String'">
@@ -58,7 +46,6 @@
                           data-ng-model="entity[getModelKey()]"
                           cols="30"
                           rows="{{item.options.rowCount}}"
-                          ng-disabled="isNotEditableField()"
                           style="{{inputBackgroundColor()}}"></textarea>
 
             </md-input-container>
@@ -71,13 +58,7 @@
                 <label data-ng-bind="getName()"></label>
                 <input type="text"
                        data-ng-model="entity[getModelKey()]"
-                       ng-disabled="isNotEditableField()"
                        style="{{styleForInputsWithButtons()}}">
-
-                <!--<md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
-                           data-ng-click="copyFromField(item.options.copyFrom)">
-                    <ng-md-icon icon="content_copy"></ng-md-icon>
-                </md-button>-->
 
                 <div class="bind-field-buttons-block">
 
@@ -109,13 +90,11 @@
             <input data-ng-model="entity[getModelKey()]"
                    data-float-numbers
                    data-ng-if="!item.options.onlyPositive"
-                   ng-disabled="isNotEditableField()"
                    style="{{styleForInputsWithButtons()}}">
             <input data-ng-model="entity[getModelKey()]"
                    data-float-numbers
                    data-only-positive="true"
                    data-ng-if="item.options.onlyPositive"
-                   ng-disabled="isNotEditableField()"
                    style="{{styleForInputsWithButtons()}}">
 
             <div class="bind-field-buttons-block">
@@ -139,16 +118,6 @@
 
         </md-input-container>
 
-        <!--<div data-ng-if="item.buttons.length">
-            <md-button data-ng-repeat="button in item.buttons"
-                       class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
-                       data-ng-click="button.action(item)">
-                {{button.caption}}
-                <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="bottom">{{button.tooltip}}
-                </md-tooltip>
-            </md-button>
-        </div>-->
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'Field'">
@@ -177,7 +146,8 @@
                                data-options="options"></ev-field-resolver>
         </div>
     </div>
-    <div data-ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
+
+    <div ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
 
         <md-input-container class="field-date-pick-holder no-error-spacer md-block">
             <label data-ng-bind="getName()"></label>
@@ -211,25 +181,16 @@
 
             </div>
 
-            <!--<div data-ng-if="item.buttons.length">
-                <md-button data-ng-repeat="button in item.buttons"
-                           class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
-                           data-ng-click="button.action(item)">
-                    {{button.caption}}
-                    <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                    <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="bottom">{{button.tooltip}}
-                    </md-tooltip>
-                </md-button>
-            </div>-->
-
         </md-input-container>
     </div>
+
     <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
         <md-checkbox class="checkbox-bind-field" data-ng-model="entity[getModelKey()]"
                      aria-label="checkbox">
             <label data-ng-bind="getName()"></label>
         </md-checkbox>
     </div>
+
     <div data-ng-if="fieldType['display_name'] === 'Classifier'">
         <div data-ng-if="readyStatus.classifier">
             <md-input-container class="md-block">
@@ -241,8 +202,7 @@
                            data-classifier-value="entity[getModelKey()]"
                            data-ng-change="changeClassifier()"
                            md-container-class="h-classifier-select"
-                           data-entity-type="entityType"
-                           ng-disabled="isNotEditableField()">
+                           data-entity-type="entityType">
 
                     <md-option ng-value="node.id" selected="selected">
                         {{node.name}}
