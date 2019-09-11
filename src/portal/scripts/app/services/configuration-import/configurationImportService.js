@@ -932,6 +932,46 @@
 
                             }));
                             break;
+                        case 'obj_attrs.portfolioattributetype':
+                            resolve(createAttributeTypeIfNotExists('portfolios.portfolio', item, errors));
+                            break;
+                        case 'obj_attrs.accountattributetype':
+                            resolve(createAttributeTypeIfNotExists('accounts.account', item, errors));
+                            break;
+                        case 'obj_attrs.accounttypeattributetype':
+                            resolve(createAttributeTypeIfNotExists('accounts.accounttype', item, errors));
+                            break;
+                        case 'obj_attrs.responsibleattributetype':
+                            resolve(createAttributeTypeIfNotExists('counterparties.responsible', item, errors));
+                            break;
+                        case 'obj_attrs.counterpartyattributetype':
+                            resolve(createAttributeTypeIfNotExists('counterparties.counterparty', item, errors));
+                            break;
+                        case 'obj_attrs.instrumentattributetype':
+                            resolve(createAttributeTypeIfNotExists('instruments.instrument', item, errors));
+                            break;
+                        case 'obj_attrs.instrumenttypeattributetype':
+                            resolve(createAttributeTypeIfNotExists('instruments.instrumenttype', item, errors));
+                            break;
+                        case 'obj_attrs.transactiontypeattributetype':
+                            resolve(createAttributeTypeIfNotExists('transactions.transactiontype', item, errors));
+                            break;
+                        case 'obj_attrs.strategy1attributetype':
+                            resolve(createAttributeTypeIfNotExists('strategies.strategy1', item, errors));
+                            break;
+                        case 'obj_attrs.strategy2attributetype':
+                            resolve(createAttributeTypeIfNotExists('strategies.strategy2', item, errors));
+                            break;
+                        case 'obj_attrs.strategy3attributetype':
+                            resolve(createAttributeTypeIfNotExists('strategies.strategy3', item, errors));
+                            break;
+                        case 'obj_attrs.currencyattributetype':
+                            resolve(createAttributeTypeIfNotExists('currencies.currency', item, errors));
+                            break;
+                        default:
+                            console.log('No logic for overwrite -  entity', contentType);
+                            resolve()
+                            break;
 
                     }
 
@@ -1014,20 +1054,44 @@
 
         return new Promise(function (resolve, reject) {
 
-            var overwriteEntities = items.filter(function (item) {
-                return ['instruments.instrumenttype', 'transactions.transactiontype', 'ui.listlayout', 'ui.reportlayout',
-                    'accounts.accounttype', 'currencies.currency', 'instruments.pricingpolicy',
-                    'csv_import.csvimportscheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
-                    'integrations.complextransactionimportscheme', 'complex_import.compleximportscheme',
-                    'reports.balancereportcustomfield', 'reports.plreportcustomfield', 'reports.transactionreportcustomfield',
-                    'ui.instrumentuserfieldmodel', 'ui.transactionuserfieldmodel', 'reference_tables.referencetable'].indexOf(item.entity) !== -1;
+            // var overwriteEntities = items.filter(function (item) {
+            //     return ['instruments.instrumenttype', 'transactions.transactiontype', 'ui.listlayout', 'ui.reportlayout',
+            //         'accounts.accounttype', 'currencies.currency', 'instruments.pricingpolicy',
+            //         'csv_import.csvimportscheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
+            //         'integrations.complextransactionimportscheme', 'complex_import.compleximportscheme',
+            //         'reports.balancereportcustomfield', 'reports.plreportcustomfield', 'reports.transactionreportcustomfield',
+            //         'ui.instrumentuserfieldmodel', 'ui.transactionuserfieldmodel', 'reference_tables.referencetable'].indexOf(item.entity) !== -1;
+            // });
+
+            var attributeTypes = items.filter(function (item) {
+                return item.entity === 'obj_attrs.portfolioattributetype' ||
+                    item.entity === 'obj_attrs.accountattributetype' ||
+                    item.entity === 'obj_attrs.instrumentattributetype' ||
+                    item.entity === 'obj_attrs.accounttypeattributetype' ||
+                    item.entity === 'obj_attrs.instrumenttypeattributetype' ||
+                    item.entity === 'obj_attrs.responsibleattributetype' ||
+                    item.entity === 'obj_attrs.counterpartyattributetype'
             });
 
-            overwriteEntityItems(overwriteEntities, cacheContainer, errors).then(function (data) {
+            var otherEntities = items.filter(function (item) {
+                return item.entity !== 'obj_attrs.portfolioattributetype' &&
+                    item.entity !== 'obj_attrs.accountattributetype' &&
+                    item.entity !== 'obj_attrs.instrumentattributetype' &&
+                    item.entity !== 'obj_attrs.accounttypeattributetype' &&
+                    item.entity !== 'obj_attrs.instrumenttypeattributetype' &&
+                    item.entity !== 'obj_attrs.responsibleattributetype' &&
+                    item.entity !== 'obj_attrs.counterpartyattributetype'
+            });
+
+            overwriteEntityItems(attributeTypes, cacheContainer, errors).then(function (data) {
 
                 console.log("Overwrite success", data);
 
-                resolve(data);
+                overwriteEntityItems(otherEntities, cacheContainer, errors).then(function (data) {
+
+                    resolve(data);
+
+                })
 
             }).catch(function (reason) {
 
@@ -2338,21 +2402,17 @@
 
                 } else if (settings.mode === 'overwrite') {
 
-                    createEntities(items, settings, cacheContainer, errors).then(function () {
+                    overwriteEntities(items, settings, cacheContainer, errors).then(function () {
 
-                        overwriteEntities(items, settings, cacheContainer, errors).then(function () {
+                        console.log('Overwrite items success');
 
-                            console.log('Overwrite items success');
+                        console.log('Finish import success');
 
-                            console.log('Finish import success');
+                        console.log('Error', errors);
 
-                            console.log('Error', errors);
-
-                            resolve({
-                                errors: errors
-                            })
+                        resolve({
+                            errors: errors
                         })
-
                     })
 
                 } else {
