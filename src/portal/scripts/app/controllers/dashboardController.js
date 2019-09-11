@@ -31,6 +31,8 @@
                     vm.layout = data.results[0];
                 }
 
+                console.log('vm.layout', vm.layout);
+
                 vm.readyStatus.data = true;
 
                 $scope.$apply();

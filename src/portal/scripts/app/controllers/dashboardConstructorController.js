@@ -8,8 +8,10 @@
     var uiService = require('../services/uiService');
     var md5Helper = require('../helpers/md5.helper');
 
-    var DashboardConstructorDataService = require('../services/dashboard-constructor/dashboardConstructorDataService')
-    var DashboardConstructorEventService = require('../services/dashboard-constructor/dashboardConstructorEventService')
+    var DashboardConstructorDataService = require('../services/dashboard-constructor/dashboardConstructorDataService');
+    var DashboardConstructorEventService = require('../services/dashboard-constructor/dashboardConstructorEventService');
+
+    var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents');
 
     module.exports = function ($scope, $stateParams, $state, $mdDialog) {
 
@@ -33,40 +35,7 @@
                     data: []
                 },
                 tabs: [],
-                components_types: [
-                    {
-                        name: 'Report Component',
-                        type: 'report_viewer',
-                        id: '001',
-                        settings: {}
-                    },
-                    {
-                        name: 'Date Control 1',
-                        type: 'control',
-                        id: '123',
-                        settings: {
-                            value_type: 40
-                        }
-                    },
-                    {
-                        name: 'Currency Control 2',
-                        type: 'control',
-                        id: '456',
-                        settings: {
-                            value_type: 100,
-                            content_type: 'currencies.currency'
-                        }
-                    },
-                    {
-                        name: 'Portfolio Control 2',
-                        type: 'control',
-                        id: '789',
-                        settings: {
-                            value_type: 100,
-                            content_type: 'portfolios.portfolio'
-                        }
-                    }
-                ]
+                components_types: []
             }
         };
 
@@ -87,7 +56,7 @@
             }
 
             vm.updateTabNumbers();
-            vm.updateAvailableComponentsTypes();
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
         };
 
@@ -135,8 +104,7 @@
             vm.layout.data.tabs.push(tab);
 
             vm.updateTabNumbers();
-            vm.updateAvailableComponentsTypes();
-            vm.updateDrakeContainers();
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
         };
 
@@ -331,7 +299,7 @@
 
                                 });
 
-                                vm.updateAvailableComponentsTypes();
+                                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
                                 $scope.$apply();
 
@@ -473,7 +441,7 @@
 
             });
 
-            vm.updateDrakeContainers();
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
         };
 
@@ -525,6 +493,8 @@
             uiService.getDashboardLayoutByKey(vm.layout.id).then(function (data) {
 
                 vm.layout = data;
+
+                vm.dashboardConstructorDataService.setData(vm.layout);
 
                 vm.updateAvailableComponentsTypes();
 
@@ -599,161 +569,392 @@
 
         };
 
-        vm.toggleFieldEditMode = function (item) {
 
-            vm.layout.data.tabs = vm.layout.data.tabs.map(function (tab) {
+        // Components Types Section Start
 
-                tab.layout.rows = tab.layout.rows.map(function (row) {
+        vm.addControlComponent = function ($event) {
 
-                    row.columns = row.columns.map(function (item) {
-
-                        item.editMode = false;
-
-                        return item
-                    });
-
-                    return row
-
-                });
-
-                return tab
-            });
-
-            item.editMode = true;
-
-        };
-
-        vm.cancelFieldEdit = function (item) {
-
-        };
-
-        vm.saveField = function (item) {
-
-            var i;
-            for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
-
-                if (scope.tab.layout.fields[i].row === scope.item.row &&
-                    scope.tab.layout.fields[i].column === scope.item.column) {
-
-                    scope.tab.layout.fields[i].attribute_class = 'userInput';
-
-                    if (scope.item.attribute.hasOwnProperty('id')) {
-                        scope.tab.layout.fields[i].attribute_class = 'attr';
-                        scope.tab.layout.fields[i].id = scope.item.attribute.id;
-                    }
-
-                    if (entityAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
-                        scope.tab.layout.fields[i].attribute_class = 'entityAttr';
-                    }
-
-                    if (layoutAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
-                        scope.tab.layout.fields[i].attribute_class = 'decorationAttr';
-                    }
-
-                    if (scope.item.options) {
-                        scope.tab.layout.fields[i].options = scope.item.options;
-                    }
-
-
-                    scope.tab.layout.fields[i].name = scope.item.attribute.name;
-                    scope.tab.layout.fields[i].type = 'field';
-                    scope.tab.layout.fields[i].colspan = scope.item.colspan;
-                    scope.tab.layout.fields[i].attribute = scope.item.attribute;
-
-                    if (scope.item.editable) { // its important
-                        scope.tab.layout.fields[i].editable = true
-                    } else {
-                        scope.tab.layout.fields[i].editable = false
-                    }
-
-                    if (scope.fieldUsesBackgroundColor) {
-                        scope.tab.layout.fields[i].backgroundColor = scope.fieldBackgroundColor;
-                    } else {
-                        scope.tab.layout.fields[i].backgroundColor = null;
-                    }
-
-                    if (scope.tab.layout.fields[i].row === scope.tab.layout.rows) {
-                        addRow();
-                    }
+            $mdDialog.show({
+                controller: 'DashboardConstructorControlComponentDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: null,
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
                 }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+
+        };
+
+        vm.addButtonSetComponent = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorButtonSetComponentDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-button-set-component-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: null,
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
+                }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+
+        };
+
+        vm.addInputFormComponent = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorInputFormComponentDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: null,
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
+                }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+
+        };
+
+        vm.addReportViewerComponent = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorReportViewerComponentDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: null,
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
+                }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+
+        };
+
+        vm.addReportViewerSplitPanelComponent = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: null,
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
+                }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+
+        };
+
+        vm.addEntityViewerComponent = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorEntityViewerComponentDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-component-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: null,
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
+                }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+
+        };
+
+        vm.addEntityViewerSplitPanelComponent = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorEntityViewerSplitPanelComponentDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-split-panel-component-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: null,
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
+                }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+
+        };
+
+        vm.editComponentType = function ($event, item) {
+
+            if (item.type === 'control') {
+
+                $mdDialog.show({
+                    controller: 'DashboardConstructorControlComponentDialogController as vm',
+                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        item: JSON.parse(JSON.stringify(item)),
+                        dataService: vm.dashboardConstructorDataService,
+                        eventService: vm.dashboardConstructorEventService
+                    }
+                }).then(function (value) {
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                })
+
             }
 
-            scope.item.editMode = false;
+            if (item.type === 'report_viewer') {
 
-            scope.$parent.vm.createFieldsTree();
-            scope.$parent.vm.syncItems();
+                $mdDialog.show({
+                    controller: 'DashboardConstructorReportViewerComponentDialogController as vm',
+                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        item: JSON.parse(JSON.stringify(item)),
+                        dataService: vm.dashboardConstructorDataService,
+                        eventService: vm.dashboardConstructorEventService
+                    }
+                }).then(function (value) {
 
-        };
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
-        vm.getCols = function () {
+                })
 
-            var colsLeft = [1];
-            var row = scope.tabFieldsTree[scope.row];
-            var columnsInTotal = scope.tab.layout.columns;
-
-            var i;
-            var c = 1;
-            for (i = scope.column + 1; i <= columnsInTotal; i++) {
-
-                if (row[i].type !== 'empty') {
-                    break;
-                } else {
-                    c = c + 1;
-                    colsLeft.push(c);
-                }
             }
 
-            return colsLeft;
+            if (item.type === 'report_viewer_split_panel') {
+
+                $mdDialog.show({
+                    controller: 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm',
+                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        item: JSON.parse(JSON.stringify(item)),
+                        dataService: vm.dashboardConstructorDataService,
+                        eventService: vm.dashboardConstructorEventService
+                    }
+                }).then(function (value) {
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                })
+
+            }
+
+            if (item.type === 'entity_viewer') {
+
+                $mdDialog.show({
+                    controller: 'DashboardConstructorEntityViewerComponentDialogController as vm',
+                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-component-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        item: JSON.parse(JSON.stringify(item)),
+                        dataService: vm.dashboardConstructorDataService,
+                        eventService: vm.dashboardConstructorEventService
+                    }
+                }).then(function (value) {
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                })
+
+            }
+
+            if (item.type === 'entity_viewer_split_panel') {
+
+                $mdDialog.show({
+                    controller: 'DashboardConstructorEntityViewerSplitPanelComponentDialogController as vm',
+                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-split-panel-component-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        item: JSON.parse(JSON.stringify(item)),
+                        dataService: vm.dashboardConstructorDataService,
+                        eventService: vm.dashboardConstructorEventService
+                    }
+                }).then(function (value) {
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                })
+
+            }
+
+            if (item.type === 'button_set') {
+
+                $mdDialog.show({
+                    controller: 'DashboardConstructorButtonSetComponentDialogController as vm',
+                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-button-set-component-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        item: JSON.parse(JSON.stringify(item)),
+                        dataService: vm.dashboardConstructorDataService,
+                        eventService: vm.dashboardConstructorEventService
+                    }
+                }).then(function (value) {
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                })
+
+            }
+
+            if (item.type === 'input_form') {
+
+                $mdDialog.show({
+                    controller: 'DashboardConstructorInputFormComponentDialogController as vm',
+                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        item: JSON.parse(JSON.stringify(item)),
+                        dataService: vm.dashboardConstructorDataService,
+                        eventService: vm.dashboardConstructorEventService
+                    }
+                }).then(function (value) {
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                })
+
+            }
 
         };
 
-        vm.deleteField = function (item, tab_number, row_number, column_number) {
+        vm.deleteComponentType = function ($event, item) {
 
-            console.log('item', item);
-            console.log('tab_number', tab_number);
-            console.log('row_number', row_number);
-            console.log('column_number', column_number);
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                targetEvent: $event,
+                autoWrap: true,
+                skipHide: true,
+                preserveScope: true,
+                multiple: true,
+                locals: {
+                    warning: {
+                        title: 'Warning!',
+                        description: 'Are you sure you want to delete Component ' + item.name + '?'
+                    }
+                }
+            }).then(function (res) {
 
-            vm.layout.data.tabs = vm.layout.data.tabs.map(function (tab) {
+                if (res.status === 'agree') {
 
-                if (tab.tab_number === tab_number) {
+                    var componentTypes = vm.dashboardConstructorDataService.getComponentsTypes();
 
-                    tab.layout.rows = tab.layout.rows.map(function (row) {
+                    componentTypes = componentTypes.filter(function (componentType) {
 
-                        if (row.row_number === row_number) {
-
-                            row.columns = row.columns.map(function (item) {
-
-                                if (item.column_number === column_number) {
-
-                                    var result = {
-                                        column_number: column_number,
-                                        cell_type: 'empty',
-                                        data: {},
-                                        options: {}
-                                    };
-
-                                    return result
-
-                                }
-
-                                return item
-                            });
-
-                        }
-
-                        return row
+                        return componentType.id !== item.id
 
                     });
 
+                    vm.dashboardConstructorDataService.setComponentsTypes(componentTypes);
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
                 }
 
-                return tab
+            })
 
-            });
+        };
 
-            vm.updateAvailableComponentsTypes();
-            vm.updateDrakeContainers();
+            vm.sentGridIsRenderedSignal = function () {
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.GRID_RENDERED);
+        };
+
+
+        // Components Types Section End
+
+        vm.initEventListeners = function () {
+
+            vm.dashboardConstructorEventService.addEventListener(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR, function () {
+
+                console.log('here?');
+
+                vm.layout = vm.dashboardConstructorDataService.getData();
+
+                vm.updateAvailableComponentsTypes();
+                vm.updateDrakeContainers();
+
+            })
 
         };
 
@@ -761,6 +962,8 @@
 
             vm.dashboardConstructorDataService = new DashboardConstructorDataService();
             vm.dashboardConstructorEventService = new DashboardConstructorEventService();
+
+            vm.initEventListeners();
 
             if ($stateParams.id && $stateParams.id !== 'new') {
 
@@ -770,6 +973,8 @@
 
             } else {
 
+                vm.dashboardConstructorDataService.setData(vm.layout);
+
                 vm.readyStatus.data = true;
 
                 setTimeout(function () {
@@ -777,6 +982,8 @@
                 }, 500);
 
                 console.log('vm.layout', vm.layout)
+
+
             }
 
         };

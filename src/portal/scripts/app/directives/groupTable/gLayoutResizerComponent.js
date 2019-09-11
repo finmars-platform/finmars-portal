@@ -22,24 +22,16 @@
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                    // workAreaElem.width(elem.parents('.entity-viewer-holder').width() - $(elem).parents('.g-wrapper').find('.g-filter-sidebar.main-sidebar').width());
-                    var width = document.body.clientWidth - $(document).find(".sidenav-wrapper") - interfaceLayout.filterArea.width;
+                    var width = elem.parents(".report-viewer-holder").width() - interfaceLayout.filterArea.width;
+
+                    console.log('width width!', width);
+
                     workAreaElem.width(width);
                     var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
                     elem.find('.g-scroll-wrapper').width(wrapperWidth);
                     elem.find('.g-scrollable-area').width(wrapperWidth);
 
                 }
-
-                /*function resizeSidebarHeight() {
-
-                    var workAreaHeight = elem.parents('.g-wrapper').find('.g-workarea-wrap').height();
-
-                    var upperFilterSidebar = elem.parents('.g-wrapper').find('.g-filter-sidebar');
-
-                    upperFilterSidebar.height(workAreaHeight);
-
-                }*/
 
                 var init = function () {
 
