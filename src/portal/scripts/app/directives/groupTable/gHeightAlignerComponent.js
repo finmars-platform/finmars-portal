@@ -21,7 +21,8 @@
 
                 var lastMouseMoveEvent = null;
 
-                var contentWrapElem = $('.g-content-wrap').first();
+                // var contentWrapElem = $('.g-content-wrap').first();
+                var contentWrapElem = $('.g-rootentity-content-wrap').first();
 
                 function activateHeightSlider() {
 

@@ -20,7 +20,8 @@
 
                 function resizeWorkarea() {
 
-                    var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap').first();
+                    // var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap').first();
+                    var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap');
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
