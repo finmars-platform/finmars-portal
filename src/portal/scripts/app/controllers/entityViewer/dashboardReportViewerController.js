@@ -81,6 +81,8 @@
 
                         vm.grandTotalValue = root.subtotal[column_key];
 
+                        $scope.$apply();
+
 
                     })
 
