@@ -33,6 +33,8 @@
 
                 console.log('vm.layout', vm.layout);
 
+                vm.dashboardDataService.setData(vm.layout);
+
                 vm.readyStatus.data = true;
 
                 $scope.$apply();

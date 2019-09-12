@@ -91,20 +91,25 @@
                                         filterArgument = new Date(filterArgument[0]).toDateString();
                                         break;
                                     case 'from_to':
-                                        valueFromTable = new Date(item[keyProperty]);
+                                        valueFromTable = new Date(valueFromTable);
                                         filterArgument.min_value = new Date(filterArgument.min_value);
                                         filterArgument.max_value = new Date(filterArgument.max_value);
                                         break;
                                     case 'date_tree':
-                                        valueFromTable = new Date(item[keyProperty]);
+                                        valueFromTable = new Date(valueFromTable);
                                         // filterArgument is array of strings
                                         break;
                                     default:
-                                        valueFromTable = new Date(item[keyProperty]);
+                                        valueFromTable = new Date(valueFromTable);
                                         filterArgument = new Date(filterArgument[0]);
                                         break;
                                 }
 
+                            }
+
+                            if(valueType === 100) {
+                                valueFromTable = valueFromTable;
+                                filterArgument = filterArgument[0];
                             }
 
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);

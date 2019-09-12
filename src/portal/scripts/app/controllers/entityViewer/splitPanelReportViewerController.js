@@ -234,6 +234,8 @@
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
 
+                console.log('scope, ', $scope);
+
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(false);

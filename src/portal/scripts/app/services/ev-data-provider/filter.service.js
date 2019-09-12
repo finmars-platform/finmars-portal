@@ -26,7 +26,7 @@
 
         var filteredOutGroupsIds = [];
         var match;
-        console.log("ev filters flatList, regularFilters", flatList, regularFilters);
+
         return flatList.filter(function (flItem) {
 
             match = true;
@@ -74,16 +74,15 @@
                         var valueFromTable;
 
                         // Check is it a dynamic attribute
-                        console.log("ev filter keyproperty1", keyProperty, keyProperty.indexOf("attributes."));
                         if (keyProperty.indexOf("attributes.") === 0) {
 
                             var dynamicAttrKey = keyProperty.slice(11);
-                            console.log("ev filter dynamicAttrKey", dynamicAttrKey);
+
                             for (var da = 0; da < flItem.attributes.length; da++) {
                                 var dynamicAttributeData = flItem.attributes[da];
 
                                 if (dynamicAttributeData.attribute_type_object.user_code === dynamicAttrKey) {
-                                    console.log("ev filter dynamicAttributeData", dynamicAttributeData, dynamicAttributeData.attribute_type_object.value_type);
+
                                     if (dynamicAttributeData.attribute_type_object.value_type === 30) {
 
                                         if (dynamicAttributeData.classifier_object) {
@@ -145,7 +144,6 @@
                                     valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
 
                                 };
-                                console.log("ev filter valueFromTable", valueFromTable);
 
                                 if (valueType === 10 ||
                                     valueType === 30 ||
@@ -186,7 +184,7 @@
                                             filterArgument = new Date(filterArgument[0]).toDateString();
                                             break;
                                         case 'from_to':
-                                            valueFromTable = new Date(item[keyProperty]);
+                                            valueFromTable = new Date(valueFromTable);
                                             filterArgument.min_value = new Date(filterArgument.min_value);
                                             filterArgument.max_value = new Date(filterArgument.max_value);
                                             break;

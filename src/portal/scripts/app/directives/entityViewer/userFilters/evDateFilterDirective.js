@@ -255,7 +255,7 @@
                         filterEnabled = scope.filter.options.enabled;
 
                         if (scope.filter.options.is_frontend_filter) {
-                            console.log("ev filter date applyFilter", scope.filter);
+
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         };

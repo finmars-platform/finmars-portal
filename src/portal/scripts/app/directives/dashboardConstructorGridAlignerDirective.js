@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents')
+    var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents');
 
     module.exports = function () {
         return {
@@ -17,11 +17,8 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Constructor Grid Aligner');
-
                 scope.columnsTotal = 1;
                 scope.rowsTotal = 1;
-
 
                 scope.cellWidth = 0;
                 scope.cellHeight = 0;
@@ -30,10 +27,7 @@
 
                     var tabWidth = elem.width();
 
-                    console.log('tabWidth ', tabWidth);
-
-                    scope.cellWidth = Math.floor(tabWidth / scope.rowsTotal)
-
+                    scope.cellWidth = Math.floor(tabWidth / scope.columnsTotal)
 
                 };
 
@@ -41,32 +35,95 @@
 
                     var tabHeight = elem.height();
 
-                    console.log('tabHeight ', tabHeight);
+                    console.log('tabHeight', tabHeight);
+
+                    scope.cellHeight = Math.floor(tabHeight / scope.rowsTotal)
+
+                };
+
+                scope.resizeGridCells = function () {
+
+                    var layout = scope.dashboardConstructorDataService.getData();
+
+                    var tab = layout.data.tabs[scope.tabNumber];
+
+                    var elements = elem.find('.dashboard-constructor-cell');
+                    var domElem;
+                    var layoutElem;
+
+                    var rowNumber;
+                    var columnNumber;
+
+
+                    for (var i = 0; i < elements.length; i = i + 1) {
+
+                        domElem = elements[i];
+
+                        rowNumber = parseInt(domElem.dataset.row, 10);
+                        columnNumber = parseInt(domElem.dataset.column, 10);
+
+                        layoutElem = tab.layout.rows[rowNumber].columns[columnNumber];
+
+                        if (layoutElem.cell_type === 'empty') {
+
+                            if (layoutElem.is_hidden) {
+                                domElem.style.display = 'none';
+                            } else {
+                                domElem.style.display = 'block';
+                            }
+
+                        }
+
+                        if (layoutElem.cell_type === 'component') {
+
+                            // nothing here yet
+                        }
+
+                        domElem.style.width = (layoutElem.colspan * scope.cellWidth) + 'px';
+                        domElem.style.height = (layoutElem.rowspan * scope.cellHeight) + 'px';
+
+                        domElem.style.position = 'absolute';
+                        domElem.style.top = (rowNumber * scope.cellHeight) + 'px';
+                        domElem.style.left = (columnNumber * scope.cellWidth) + 'px';
+
+                    }
+
+
+                };
+
+                scope.resize = function(){
+
+                    var layout = scope.dashboardConstructorDataService.getData();
+
+                    var tab = layout.data.tabs[scope.tabNumber];
+
+                    scope.rowsTotal = tab.layout.rows_count;
+                    scope.columnsTotal = tab.layout.columns_count;
+
+                    scope.calculateSingleCellHeight();
+                    scope.calculateSingleCellWidth();
+
+                    console.log('cellHeight', scope.cellHeight);
+
+                    scope.resizeGridCells();
 
                 };
 
                 scope.init = function () {
 
-                    scope.dashboardConstructorEventService.addEventListener(dashboardConstructorEvents.GRID_RENDERED, function () {
+                    scope.dashboardConstructorEventService.addEventListener(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE, function () {
 
-                        var layout = scope.dashboardConstructorDataService.getData();
+                        setTimeout(function () {
 
-                        var tab = layout.data.tabs[scope.tabNumber];
+                            scope.resize()
 
-                        scope.rowsTotal = tab.rows_count;
-                        scope.columnsTotal = tab.columns_count;
-
-                        console.log('scope.rowsTotal', scope.rowsTotal);
-                        console.log('scope.columnsTotal', scope.columnsTotal);
-
-                        scope.calculateSingleCellHeight();
-                        scope.calculateSingleCellWidth();
-
-                        console.log('scope.cellWidth', scope.cellWidth);
-                        console.log('scope.cellHeight', scope.cellHeight);
+                        }, 0)
 
                     });
 
+                    $(window).on('resize', function () {
+                        scope.resize();
+                    })
 
                 };
 

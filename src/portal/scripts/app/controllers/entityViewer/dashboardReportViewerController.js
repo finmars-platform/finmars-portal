@@ -1,0 +1,353 @@
+/**
+ /**
+ * Created by szhitenev on 05.05.2016.
+ */
+(function () {
+
+        'use strict';
+
+        var uiService = require('../../services/uiService');
+        var evEvents = require('../../services/entityViewerEvents');
+        var evHelperService = require('../../services/entityViewerHelperService');
+
+        var priceHistoryService = require('../../services/priceHistoryService');
+        var currencyHistoryService = require('../../services/currencyHistoryService');
+
+        var EntityViewerDataService = require('../../services/entityViewerDataService');
+        var EntityViewerEventService = require('../../services/entityViewerEventService');
+        var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
+
+        var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
+
+        var expressionService = require('../../services/expression.service');
+        var middlewareService = require('../../services/middlewareService');
+
+        module.exports = function ($scope, $mdDialog, $transitions) {
+
+            var vm = this;
+
+            vm.listViewIsReady = false;
+
+            vm.startupSettings = null;
+            vm.dashboardDataService = null;
+            vm.dashboardEventService = null;
+            vm.componentType = null;
+
+
+            vm.setEventListeners = function () {
+
+                vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
+
+                    rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                });
+
+                vm.entityViewerEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
+
+                    rvDataProviderService.sortObjects(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                });
+
+                vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
+
+                    rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                });
+
+            };
+
+            vm.setLayout = function (layout) {
+
+                return new Promise(function (resolve, reject) {
+
+                    vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+
+                    var reportOptions = vm.entityViewerDataService.getReportOptions();
+                    var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
+
+                    // Check if there is need to solve report datepicker expression
+                    if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
+
+                        var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
+                        var reportLastDatepickerExpression = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
+
+                        if (reportFirstDatepickerExpression || reportLastDatepickerExpression) {
+
+                            var datepickerExpressionsToSolve = [];
+
+                            if (reportFirstDatepickerExpression) {
+
+                                var solveFirstExpression = function () {
+                                    return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
+                                        reportOptions.pl_first_date = data.result;
+                                    });
+                                };
+
+                                datepickerExpressionsToSolve.push(solveFirstExpression());
+                            }
+
+                            if (reportLastDatepickerExpression) {
+
+                                var solveLastExpression = function () {
+                                    return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
+                                        reportOptions.report_date = data.result;
+                                    });
+                                };
+
+                                datepickerExpressionsToSolve.push(solveLastExpression());
+                            }
+
+                            Promise.all(datepickerExpressionsToSolve).then(function () {
+
+                                resolve();
+
+                            });
+
+
+                        } else {
+
+                            resolve();
+                        }
+
+                    } else {
+
+                        resolve();
+
+                    }
+
+
+                })
+
+            };
+
+            vm.initDashboardExchange = function () {
+
+                if (vm.startupSettings.linked_components) {
+
+                    console.log('vm.startupSettings.linked_components', vm.startupSettings.linked_components);
+
+
+                    if (vm.startupSettings.linked_components.hasOwnProperty('active_object')) {
+
+                        var componentId = vm.startupSettings.linked_components.active_object;
+
+                        vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + componentId, function () {
+
+                            var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+
+                            if (vm.componentType.data.type === 'report_viewer_split_panel') {
+
+                                vm.entityViewerDataService.setActiveObject(componentOutput);
+                                vm.entityViewerDataService.setActiveObjectFromAbove(componentOutput);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE)
+
+                            }
+
+                        })
+
+                    }
+
+
+                    if (vm.startupSettings.linked_components.hasOwnProperty('report_settings')) {
+
+                        Object.keys(vm.startupSettings.linked_components.report_settings).forEach(function (property) {
+
+                            var componentId = vm.startupSettings.linked_components.report_settings[property];
+
+                            vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + componentId, function () {
+
+                                var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+
+                                var reportOptions = vm.entityViewerDataService.getReportOptions();
+
+                                console.log('componentOutput', componentOutput);
+
+                                reportOptions[property] = componentOutput.value;
+
+                                vm.entityViewerDataService.setReportOptions(reportOptions);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
+
+                            })
+
+                        })
+
+                    }
+
+                    if (vm.startupSettings.linked_components.hasOwnProperty('filter_links')) {
+
+                        vm.startupSettings.linked_components.filter_links.forEach(function (filter_link) {
+
+                            vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + filter_link.component_id, function () {
+
+                                var filters = vm.entityViewerDataService.getFilters();
+
+                                var componentOutput = vm.dashboardDataService.getComponentOutput(filter_link.component_id);
+
+                                console.log('filters', filters);
+                                console.log('componentOutput', componentOutput);
+
+                                var linkedFilter = filters.find(function (item) {
+                                    return item.type === 'filter_link' && item.component_id === filter_link.component_id
+                                });
+
+                                if (linkedFilter) {
+
+                                    linkedFilter.options.filter_values = [componentOutput.value];
+
+                                    filters = filters.map(function (item) {
+
+                                        if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
+                                            return linkedFilter
+                                        }
+
+                                        return item
+                                    })
+
+                                } else {
+
+                                    if (filter_link.value_type === 100) {
+
+                                        linkedFilter = {
+                                            type: 'filter_link',
+                                            component_id: filter_link.component_id,
+                                            key: filter_link.key,
+                                            name: filter_link.key,
+                                            value_type: filter_link.value_type,
+                                            options: {
+                                                enabled: true,
+                                                exclude_empty_cells: true,
+                                                filter_type: 'equal',
+                                                filter_values: [componentOutput.value]
+                                            }
+                                        };
+
+                                    } else {
+
+                                        linkedFilter = {
+                                            type: 'filter_link',
+                                            component_id: filter_link.component_id,
+                                            key: filter_link.key,
+                                            name: filter_link.key,
+                                            value_type: filter_link.value_type,
+                                            options: {
+                                                enabled: true,
+                                                exclude_empty_cells: true,
+                                                filter_type: 'contain',
+                                                filter_values: [componentOutput.value.toString()]
+                                            }
+                                        };
+
+                                    }
+
+                                    filters.push(linkedFilter)
+                                }
+
+
+                                vm.entityViewerDataService.setFilters(filters);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+
+                            })
+                        })
+
+                    }
+
+
+                }
+
+                if (vm.componentType.data.type === 'report_viewer') {
+
+                    vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                        var activeObject = vm.entityViewerDataService.getActiveObject();
+
+                        console.log('clik report viewer active object', activeObject);
+
+                        vm.dashboardDataService.setComponentOutput(vm.componentType.data.id, activeObject);
+                        vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentType.data.id)
+
+                    });
+
+                }
+
+
+            };
+
+            vm.getView = function () {
+
+                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+
+                vm.listViewIsReady = false;
+
+                vm.entityViewerDataService = new EntityViewerDataService();
+                vm.entityViewerEventService = new EntityViewerEventService();
+                vm.splitPanelExchangeService = new SplitPanelExchangeService();
+
+                vm.setEventListeners();
+
+                console.log('$scope.$parent.vm.startupSettings', $scope.$parent.vm.startupSettings);
+
+                vm.startupSettings = $scope.$parent.vm.startupSettings;
+                vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
+                vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
+                vm.componentType = $scope.$parent.vm.componentType;
+
+                vm.entityType = vm.startupSettings.entityType;
+
+                vm.entityViewerDataService.setEntityType(vm.startupSettings.entityType);
+                vm.entityViewerDataService.setRootEntityViewer(true);
+
+                var layoutId = vm.startupSettings.layout;
+
+
+                uiService.getListLayoutByKey(layoutId).then(function (data) {
+
+                    vm.setLayout(data).then(function () {
+
+                        vm.listViewIsReady = true;
+
+                        if (vm.componentType.data.type === 'report_viewer') {
+
+                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                        }
+
+                        $scope.$apply();
+
+                        var evComponents = vm.entityViewerDataService.getComponents();
+
+                        Object.keys(vm.startupSettings.components).forEach(function (key) {
+
+                            evComponents[key] = vm.startupSettings.components[key]
+
+                        });
+
+                        // console.log('evComponents', evComponents);
+
+                        vm.entityViewerDataService.setComponents(evComponents);
+
+                        vm.initDashboardExchange();
+
+                        vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                    })
+
+                })
+
+            };
+
+            vm.init = function () {
+
+                vm.getView();
+
+            };
+
+            vm.init();
+
+        }
+
+    }()
+);

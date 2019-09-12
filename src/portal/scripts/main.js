@@ -103,6 +103,9 @@ app.directive('dashboardInputForm', [require('./app/directives/dashboard/dashboa
 app.directive('dashboardReportViewer', [require('./app/directives/dashboard/dashboardReportViewerDirective')]);
 app.directive('dashboardReportViewerSplitPanel', [require('./app/directives/dashboard/dashboardReportViewerSplitPanelDirective')]);
 
+app.controller('DashboardReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
+
+
 // Common
 
 app.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
@@ -466,7 +469,7 @@ app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTabl
 app.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
 app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
 
-app.directive('posNgRepeat', ['$mdDialog', require('./app/directives/posNgRepeatDirective')]);
+app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('trustAsUrl', ['$sce', require('./app/filters/trustAsUrlFilter')]);

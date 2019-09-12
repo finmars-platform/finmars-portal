@@ -88,8 +88,6 @@
 			delete layoutCurrentConfig.data.reportOptions.task_id;
 			delete layoutCurrentConfig.data.reportOptions.recieved_at;
 			delete layoutCurrentConfig.data.reportOptions.task_status;
-			/*delete layoutCurrentConfig.data.reportOptions.custom_fields;
-			delete layoutCurrentConfig.data.reportOptions.custom_fields_object;*/
 
             if (layoutCurrentConfig.data.hasOwnProperty('reportLayoutOptions') && layoutCurrentConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
 

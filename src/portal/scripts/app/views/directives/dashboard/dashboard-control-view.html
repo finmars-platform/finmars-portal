@@ -27,14 +27,14 @@
 
         <md-input-container class="field-date-pick-holder no-error-spacer md-block">
             <label data-ng-bind="item.data.name"></label>
-            <zh-date-picker callback-method="valueChanged()" data-date-value="item.data.store.value"></zh-date-picker>
+            <zh-date-picker data-date-value="item.data.store.value" callback-method="valueChanged()"></zh-date-picker>
         </md-input-container>
 
     </div>
 
     <div data-ng-if="item.data.settings.value_type == 100">
 
-        <div data-ng-if="item.data.settings.content_type == 'currencies.currency'">
+        <div data-ng-if="item.data.settings.content_type == 'currencies.currency' || item.data.settings.content_type == 'instruments.pricingpolicy'">
 
             <md-input-container class="md-block no-error-spacer">
                 <label data-ng-bind="item.data.name"></label>
@@ -62,10 +62,10 @@
 
         </div>
 
-        <div data-ng-if="item.data.settings.content_type != 'currencies.currency'">
+        <div data-ng-if="item.data.settings.content_type != 'currencies.currency' && item.data.settings.content_type != 'instruments.pricingpolicy'">
 
             <entity-search-select item="item.data.store.value" label="item.data.name"
-                                  entity-type="entityType"></entity-search-select>
+                                  entity-type="entityType" data-callback="valueChanged()"></entity-search-select>
 
         </div>
 
