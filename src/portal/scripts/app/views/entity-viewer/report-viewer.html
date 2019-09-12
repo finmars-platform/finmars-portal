@@ -1,16 +1,14 @@
-<div data-ng-controller="ReportViewerController as vm" class="report-viewer-holder">
-    <div>
-        <div data-ng-if="vm.listViewIsReady" class="g-group-table-holder">
-            <group-table
-                    ev-data-service="vm.entityViewerDataService"
-                    ev-event-service="vm.entityViewerEventService"
-                    sp-exchange-service="vm.splitPanelExchangeService"
-            ></group-table>
-        </div>
-        <div data-ng-if="!vm.listViewIsReady">
-            <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
-                <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
-            </div>
+<div data-ng-controller="ReportViewerController as vm" class="report-viewer-holder height-100">
+    <div data-ng-if="vm.listViewIsReady" class="g-group-table-holder height-100">
+        <group-table class="height-100 display-block"
+                     ev-data-service="vm.entityViewerDataService"
+                     ev-event-service="vm.entityViewerEventService"
+                     sp-exchange-service="vm.splitPanelExchangeService"
+        ></group-table>
+    </div>
+    <div data-ng-if="!vm.listViewIsReady">
+        <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
         </div>
     </div>
 </div>

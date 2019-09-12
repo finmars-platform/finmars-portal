@@ -922,6 +922,8 @@
             setListLayout(listLayout);
 
             listLayout.data.components = {
+                columnArea: true,
+                viewer: true,
                 sidebar: true,
                 groupingArea: true,
                 columnAreaHeader: true,

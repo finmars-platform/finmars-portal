@@ -325,9 +325,13 @@
 
                         });
 
+                        // console.log('evComponents', evComponents);
+
                         vm.entityViewerDataService.setComponents(evComponents);
 
                         vm.initDashboardExchange();
+
+                        vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                     })
 

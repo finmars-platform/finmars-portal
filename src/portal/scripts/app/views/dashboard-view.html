@@ -37,7 +37,7 @@
                                         &nbsp;
                                     </div>
 
-                                    <div data-ng-if="item.cell_type == 'component'">
+                                    <div data-ng-if="item.cell_type == 'component'" class="height-100">
 
                                         <div data-ng-if="item.data.type == 'control'">
                                             <dashboard-control
@@ -72,7 +72,7 @@
                                             ></dashboard-input-form>
                                         </div>
 
-                                        <div data-ng-if="item.data.type == 'report_viewer'">
+                                        <div data-ng-if="item.data.type == 'report_viewer'" class="height-100">
                                             <dashboard-report-viewer
                                                     tab-number="tab.tab_number"
                                                     row-number="row.row_number"
@@ -83,7 +83,7 @@
                                             ></dashboard-report-viewer>
                                         </div>
 
-                                        <div data-ng-if="item.data.type == 'report_viewer_split_panel'">
+                                        <div data-ng-if="item.data.type == 'report_viewer_split_panel'" class="height-100">
                                             <dashboard-report-viewer-split-panel
                                                     tab-number="tab.tab_number"
                                                     row-number="row.row_number"
@@ -94,7 +94,7 @@
                                             ></dashboard-report-viewer-split-panel>
                                         </div>
 
-                                        <div data-ng-if="item.data.type == 'entity_viewer'">
+                                        <div data-ng-if="item.data.type == 'entity_viewer'" class="height-100">
                                             <dashboard-entity-viewer
                                                     tab-number="tab.tab_number"
                                                     row-number="row.row_number"
@@ -105,7 +105,7 @@
                                             ></dashboard-entity-viewer>
                                         </div>
 
-                                        <div data-ng-if="item.data.type == 'entity_viewer_split_panel'">
+                                        <div data-ng-if="item.data.type == 'entity_viewer_split_panel'" class="height-100">
                                             <dashboard-entity-viewer-split-panel
                                                     tab-number="tab.tab_number"
                                                     row-number="row.row_number"
