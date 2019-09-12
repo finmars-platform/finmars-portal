@@ -22,6 +22,8 @@
         var expressionService = require('../../services/expression.service');
         var middlewareService = require('../../services/middlewareService');
 
+        var rvDataHelper = require('../../helpers/rv-data.helper');
+
         module.exports = function ($scope, $mdDialog, $transitions) {
 
             var vm = this;
@@ -33,6 +35,8 @@
             vm.dashboardEventService = null;
             vm.componentType = null;
 
+            vm.isGrandTotal = false;
+            vm.grandTotalProcessing = true;
 
             vm.setEventListeners = function () {
 
@@ -53,6 +57,34 @@
                     rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                 });
+
+                if (vm.isGrandTotal) {
+
+                    console.log("heeree?");
+
+                    vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        vm.grandTotalProcessing = false;
+
+                        console.log('Grand Total Status: Data is Loaded')
+
+                        var rootGroup = vm.entityViewerDataService.getRootGroup();
+
+                        var flatList = rvDataHelper.getFlatStructure(vm.entityViewerDataService);
+
+                        console.log('Grand Total Status: rootGroup', rootGroup);
+                        console.log('Grand Total Status: flatList', flatList);
+
+                        var root = flatList[0];
+
+                        var column_key = vm.componentType.data.settings.grand_total_column;
+
+                        vm.grandTotalValue = root.subtotal[column_key];
+
+
+                    })
+
+                }
 
             };
 
@@ -286,14 +318,21 @@
                 vm.entityViewerEventService = new EntityViewerEventService();
                 vm.splitPanelExchangeService = new SplitPanelExchangeService();
 
-                vm.setEventListeners();
 
                 console.log('$scope.$parent.vm.startupSettings', $scope.$parent.vm.startupSettings);
+                console.log('$scope.$parent.vm.componentType', $scope.$parent.vm.componentType);
 
                 vm.startupSettings = $scope.$parent.vm.startupSettings;
                 vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
                 vm.componentType = $scope.$parent.vm.componentType;
+
+                if (vm.componentType.data.type === 'report_viewer_grand_total') {
+                    vm.isGrandTotal = true;
+                }
+
+
+                vm.setEventListeners();
 
                 vm.entityType = vm.startupSettings.entityType;
 
@@ -309,7 +348,7 @@
 
                         vm.listViewIsReady = true;
 
-                        if (vm.componentType.data.type === 'report_viewer') {
+                        if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_grand_total') {
 
                             rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 

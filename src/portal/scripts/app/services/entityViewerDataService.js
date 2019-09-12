@@ -445,6 +445,14 @@
             return data.data;
         }
 
+        function getRootGroup() {
+
+            var rootHash = stringHelper.toHash('root');
+
+            return data.data[rootHash];
+
+        }
+
         function getGroup(hashId) {
             return data.data[hashId];
         }
@@ -803,7 +811,8 @@
                     delete listLayout.data.reportOptions.item_currencies;
                     delete listLayout.data.reportOptions.item_accounts;
 
-                };
+                }
+                ;
 
                 data.activeLayoutConfiguration = listLayout;
 
@@ -1023,6 +1032,7 @@
             resetData: resetData,
             getData: getData,
             getDataAsList: getDataAsList,
+            getRootGroup: getRootGroup,
 
             setObject: setObject,
             getObject: getObject,

@@ -704,6 +704,29 @@
 
         };
 
+        vm.addReportViewerGrandTotalComponent = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: null,
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
+                }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+
+        };
+
         vm.addEntityViewerComponent = function ($event) {
 
             $mdDialog.show({
@@ -803,6 +826,29 @@
                 $mdDialog.show({
                     controller: 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm',
                     templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        item: JSON.parse(JSON.stringify(item)),
+                        dataService: vm.dashboardConstructorDataService,
+                        eventService: vm.dashboardConstructorEventService
+                    }
+                }).then(function (value) {
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                })
+
+            }
+
+            if (item.type === 'report_viewer_grand_total') {
+
+                $mdDialog.show({
+                    controller: 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm',
+                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html',
                     targetEvent: $event,
                     multiple: true,
                     preserveScope: true,
