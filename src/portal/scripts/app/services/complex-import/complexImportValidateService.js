@@ -168,17 +168,22 @@
 
             }
 
-            if (res.data.hasOwnProperty('stats') && res.data.stats.length) {
+            if (res.data.hasOwnProperty('stats')) {
 
-                var errors = res.data.stats.filter(function (item) {
-                    return item.level === 'error';
-                });
+                if (res.data.stats) {
 
-                if (errors.length) {
+                    var errors = res.data.stats.filter(function (item) {
+                        return item.level === 'error';
+                    });
 
-                    result.errors[index] = errors
+                    if (errors.length) {
+
+                        result.errors[index] = errors
+
+                    }
 
                 }
+
             }
 
             result.import_results.push(res.data);

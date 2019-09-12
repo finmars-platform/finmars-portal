@@ -96,7 +96,9 @@
             $scope.$apply();
         });
 
-        transactionTypeService.getList().then(function (data) {
+        transactionTypeService.getList({
+            pageSize: 1000
+        }).then(function (data) {
             vm.transactionTypes = data.results;
             vm.readyStatus.transactionTypes = true;
             $scope.$apply();
