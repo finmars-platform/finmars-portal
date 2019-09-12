@@ -27,6 +27,8 @@
                 scope.activeObjectsCount = scope.evDataService.getActiveObjectsCount();
                 scope.isReport = metaService.isReport(scope.entityType);
 
+                console.log('scope.components', scope.components);
+
                 var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
                 scope.groupingAndColumnAreaCollapsed = interfaceLayout.groupingArea.collapsed;

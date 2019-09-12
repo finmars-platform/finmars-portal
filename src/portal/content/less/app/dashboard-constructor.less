@@ -19,12 +19,13 @@
 
   .dashboard-constructor-draggable-card {
     cursor: pointer;
+    position: relative;
   }
 
   .dashboard-constructor-cell {
 
     display: block;
-    float: left;
+    box-sizing: border-box;
     padding: 10px;
 
   }
@@ -88,7 +89,67 @@
     padding: 6px 8px;
     text-align: center;
     fill: #898989;
+
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+
+    position: relative;
+
+    ng-md-icon {
+      top: 50%;
+      position: absolute;
+      margin-top: -12px;
+      left: 50%;
+      margin-left: -12px;
+    }
   }
 
 
 }
+
+.dashboard-field-card {
+  margin: 0;
+  padding: 10px;
+  fill: #898989;
+
+  .dashboard-field-card-options {
+
+    min-width: 80px;
+
+    float: left;
+
+    button {
+      float: right;
+      line-height: 1;
+      padding: 0;
+      margin-right: 0;
+      margin-left: 0;
+      min-width: 36px;
+    }
+  }
+
+  .name-holder {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    white-space: pre;
+
+    float: left;
+
+    display: inline-block;
+  }
+
+  &.active {
+    background: #f3d074;
+    box-shadow: 0 0 30px rgba(255, 187, 0, .5);
+    padding-top: 2em;
+    z-index: 100;
+    position: relative;
+
+    min-height: 100%;
+    min-width: 100%;
+  }
+}
+
+

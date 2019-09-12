@@ -24,8 +24,6 @@
 
                     var width = elem.parents(".report-viewer-holder").width() - interfaceLayout.filterArea.width;
 
-                    console.log('width width!', width);
-
                     workAreaElem.width(width);
                     var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
                     elem.find('.g-scroll-wrapper').width(wrapperWidth);

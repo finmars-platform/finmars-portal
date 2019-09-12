@@ -107,6 +107,11 @@
 
                             }
 
+                            if(valueType === 100) {
+                                valueFromTable = valueFromTable;
+                                filterArgument = filterArgument[0];
+                            }
+
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
                             if (!match) {

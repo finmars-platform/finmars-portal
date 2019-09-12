@@ -13,7 +13,8 @@
                 label: '=',
                 item: '=',
                 inputText: '<',
-                entityType: '='
+                entityType: '=',
+                callback: '&'
             },
             link: function (scope, elem, attrs) {
 
@@ -42,17 +43,25 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
+
                             scope.item = res.data.item.id;
                             scope.inputText = res.data.item.name;
 
                             console.log('res', res);
 
+                            setTimeout(function () {
+
+                                scope.callback();
+
+                                scope.$apply();
+
+                            }, 0)
+
+
                         }
                     });
 
                 });
-
-
 
 
             }

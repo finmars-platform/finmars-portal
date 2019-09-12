@@ -55,7 +55,13 @@
                 }
             }
 
-            vm.updateTabNumbers();
+            vm.layout.data.tabs = vm.layout.data.tabs.map(function (tab, index) {
+                tab.tab_number = index;
+
+                return tab
+            });
+
+
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
         };
@@ -91,6 +97,8 @@
                     tab.layout.rows[r].columns[c] = {
                         column_number: c,
                         cell_type: 'empty',
+                        colspan: 1,
+                        rowspan: 1,
                         data: {}
                     }
 
@@ -103,9 +111,13 @@
 
             vm.layout.data.tabs.push(tab);
 
-            vm.updateTabNumbers();
-            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            vm.dashboardConstructorDataService.setData(vm.layout);
 
+
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            setTimeout(function () {
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+            }, 0)
         };
 
         vm.toggleEditTab = function (tab, action, $index) {
@@ -165,6 +177,8 @@
                     }
                 });
             }
+
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
         };
 
         vm.getVerboseType = function (item) {
@@ -390,15 +404,6 @@
 
         };
 
-        vm.updateTabNumbers = function () {
-
-            vm.layout.data.tabs = vm.layout.data.tabs.map(function (tab, index) {
-                tab.tab_number = index;
-
-                return tab
-            })
-
-        };
 
         vm.isRowEmpty = function (row) {
 
@@ -418,7 +423,9 @@
 
         vm.deleteRow = function (tab, row) {
 
-            vm.layout.data.tabs = vm.layout.data.tabs.map(function (layoutTab) {
+            var layout = vm.dashboardConstructorDataService.getData();
+
+            layout.data.tabs = layout.data.tabs.map(function (layoutTab) {
 
                 if (tab.id === layoutTab.id) {
 
@@ -441,13 +448,18 @@
 
             });
 
+            vm.dashboardConstructorDataService.setData(layout);
+
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
         };
 
         vm.insertRow = function (tab, row) {
 
-            vm.layout.data.tabs = vm.layout.data.tabs.map(function (layoutTab) {
+            var layout = vm.dashboardConstructorDataService.getData();
+
+            layout.data.tabs = layout.data.tabs.map(function (layoutTab) {
 
                 if (tab.id === layoutTab.id) {
 
@@ -474,7 +486,7 @@
                         return row
                     });
 
-                    layoutTab.layout.row_number = layoutTab.layout.rows.length;
+                    layoutTab.layout.rows_count = layoutTab.layout.rows.length;
 
                 }
 
@@ -482,7 +494,10 @@
 
             });
 
+            vm.dashboardConstructorDataService.setData(layout);
+
             vm.updateDrakeContainers();
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
         };
 
@@ -499,6 +514,8 @@
                 vm.updateAvailableComponentsTypes();
 
                 vm.readyStatus.data = true;
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE)
 
                 console.log('vm.layout', vm.layout);
 
@@ -936,11 +953,6 @@
 
         };
 
-            vm.sentGridIsRenderedSignal = function () {
-            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.GRID_RENDERED);
-        };
-
-
         // Components Types Section End
 
         vm.initEventListeners = function () {
@@ -977,6 +989,8 @@
 
                 vm.readyStatus.data = true;
 
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE)
+
                 setTimeout(function () {
                     vm.initDragAndDrop();
                 }, 500);
@@ -985,6 +999,8 @@
 
 
             }
+
+
 
         };
 

@@ -18,8 +18,6 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Control Component');
-
                 scope.fields = [];
                 scope.entityType = null;
 
@@ -39,6 +37,10 @@
 
                     if (contentType === 'currencies.currency') {
                         return 'currency'
+                    }
+
+                    if (contentType === 'instruments.pricingpolicy') {
+                        return 'pricing-policy'
                     }
 
                 };
@@ -65,8 +67,9 @@
                 scope.valueChanged = function () {
 
                     console.log('valueChanged', scope.item.data.store);
+                    console.log('valueChanged.value', scope.item.data.store.value);
 
-                    scope.dashboardDataService.updateComponentOutput(scope.item.data.id, scope.item.data.store);
+                    scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store);
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id)
 
                 };
