@@ -2,9 +2,6 @@
 
     <div data-ng-if="vm.readyStatus.data" class="height-100">
 
-        <md-button class="md-raised md-primary" ui-sref="app.dashboard-layout-manager">Dashboard Layout Manager
-        </md-button>
-
         <div data-ng-if="vm.layout" class="height-100">
 
             <md-tabs md-border-bottom md-dynamic-height class="height-100">
@@ -91,6 +88,17 @@
                                                     dashboard-data-service="vm.dashboardDataService"
                                                     dashboard-event-service="vm.dashboardEventService"
                                             ></dashboard-report-viewer-split-panel>
+                                        </div>
+
+                                        <div data-ng-if="item.data.type == 'report_viewer_grand_total'" class="height-100">
+                                            <dashboard-report-viewer-grand-total
+                                                    tab-number="tab.tab_number"
+                                                    row-number="row.row_number"
+                                                    column-number="item.column_number"
+                                                    item="item"
+                                                    dashboard-data-service="vm.dashboardDataService"
+                                                    dashboard-event-service="vm.dashboardEventService"
+                                            ></dashboard-report-viewer-grand-total>
                                         </div>
 
                                         <div data-ng-if="item.data.type == 'entity_viewer'" class="height-100">

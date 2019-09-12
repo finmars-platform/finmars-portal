@@ -1,11 +1,30 @@
 <div data-ng-controller="DashboardReportViewerController as vm" class="report-viewer-holder height-100">
     <div class="height-100">
         <div data-ng-if="vm.listViewIsReady" class="g-group-table-holder height-100">
-            <group-table class="height-100 display-block"
-                    ev-data-service="vm.entityViewerDataService"
-                    ev-event-service="vm.entityViewerEventService"
-                    sp-exchange-service="vm.splitPanelExchangeService"
-            ></group-table>
+
+            <div data-ng-if="!vm.isGrandTotal">
+                <group-table class="height-100 display-block"
+                             ev-data-service="vm.entityViewerDataService"
+                             ev-event-service="vm.entityViewerEventService"
+                             sp-exchange-service="vm.splitPanelExchangeService"
+                ></group-table>
+            </div>
+
+            <div>
+
+                <div class="grand-total-title">{{vm.componentType.data.name}}</div>
+
+                <div data-ng-if="vm.grandTotalProcessing" class="text-center">
+                    <i>Calculating</i>
+                </div>
+                <div data-ng-if="!vm.grandTotalProcessing">
+                    <div class="grand-total-value">{{vm.grandTotalValue}}</div>
+                </div>
+
+
+            </div>
+
+
         </div>
         <div data-ng-if="!vm.listViewIsReady">
             <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
