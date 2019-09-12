@@ -11,6 +11,10 @@
 
         var vm = this;
 
+        vm.newFilter = {};
+
+        vm.filterLinks = [];
+
         if (item) {
             vm.item = item;
         } else {
@@ -28,10 +32,53 @@
                         layoutManager: false,
                         sidebar: false,
                         splitPanel: false
+                    },
+                    linked_components: {
+                        report_settings: {},
+                        filter_links: []
                     }
                 }
             }
         }
+
+
+        vm.updateFilterLink = function (item) {
+
+            // ?
+
+        };
+
+        vm.deleteFilterLink = function (item, $index) {
+
+            vm.item.settings.linked_components.filter_links = vm.item.settings.linked_components.filter_links.filter(function (item, index) {
+
+                return $index !== index;
+
+            });
+
+        };
+
+        vm.getComponentTypesByValueType = function (value_type) {
+
+            value_type = parseInt(value_type, 10);
+
+            return vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' && componentType.settings.value_type === value_type
+            });
+
+        };
+
+        vm.addFilterLink = function () {
+
+            if(!vm.item.settings.linked_components.filter_links) {
+                vm.item.settings.linked_components.filter_links = [];
+            }
+
+            vm.item.settings.linked_components.filter_links.push(vm.newFilter);
+
+            vm.newFilter = {};
+
+        };
 
         vm.componentsTypes = [];
 
@@ -56,6 +103,10 @@
         };
 
         vm.agree = function () {
+
+            if(!vm.item.settings.linked_components.filter_links) {
+                vm.item.settings.linked_components.filter_links = [];
+            }
 
             if (vm.item.id) {
 
@@ -88,6 +139,26 @@
             console.log('dataService', dataService);
 
             vm.componentsTypes = dataService.getComponentsTypes();
+
+            console.log('vm.componentsTypes', vm.componentsTypes);
+
+            vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control';
+            });
+
+            vm.dateControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' && componentType.settings.value_type === 40
+            });
+
+            vm.currencyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' && componentType.settings.value_type === 100 && componentType.settings.content_type === 'currencies.currency'
+            });
+
+            vm.pricingPolicyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' && componentType.settings.value_type === 100 && componentType.settings.content_type === 'instruments.pricingpolicy'
+            });
+
+            console.log('vm', vm);
 
             if (vm.item.id) {
 

@@ -103,6 +103,9 @@ app.directive('dashboardInputForm', [require('./app/directives/dashboard/dashboa
 app.directive('dashboardReportViewer', [require('./app/directives/dashboard/dashboardReportViewerDirective')]);
 app.directive('dashboardReportViewerSplitPanel', [require('./app/directives/dashboard/dashboardReportViewerSplitPanelDirective')]);
 
+app.controller('DashboardReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
+
+
 // Common
 
 app.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);

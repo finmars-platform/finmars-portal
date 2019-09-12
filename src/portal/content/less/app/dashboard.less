@@ -9,8 +9,30 @@
   }
 
   .dashboard-cell {
-    float: left;
+
     padding: 10px;
+
+    box-sizing: border-box;
+
+    &.bordered::after {
+
+      content: '';
+
+      position: absolute;
+      display: block;
+      z-index: -1;
+
+      border: 1px solid #ddd;
+
+      width: calc(100% - 8px);
+      height: calc(100% - 8px);
+
+      top: 2px;
+      left: 2px;
+
+
+    }
+
   }
 
 }
