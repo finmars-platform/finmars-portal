@@ -335,6 +335,7 @@
 
             configurationImportSyncService.syncItem(item, contentType, cacheContainer).then(function (value) {
 
+                console.log('Overwrite contentType', contentType);
                 console.log('Overwrite item', item);
 
                 try {
@@ -387,16 +388,63 @@
 
                                             item.id = result.id;
 
-                                            resolveLocal(complexImportSchemeService.update(item.id, item))
+                                            complexImportSchemeService.update(item.id, item).then(function (value1) {
+
+                                                resolveLocal()
+
+                                            }).catch(function (reason) {
+
+                                                errors.push({
+                                                    content_type: contentType,
+                                                    item: item,
+                                                    error: {
+                                                        message: "Can't update Complex Import Scheme "
+                                                    },
+                                                    mode: 'overwrite'
+                                                });
+
+                                                resolveLocal(reason);
+                                            });
+
+
 
                                         } else {
 
-                                            resolveLocal(complexImportSchemeService.create(item));
+                                            complexImportSchemeService.create(item).then(function(){
+                                                resolveLocal();
+                                            }).catch(function (reason) {
+
+                                                errors.push({
+                                                    content_type: contentType,
+                                                    item: item,
+                                                    error: {
+                                                        message: "Can't create Complex Import Scheme "
+                                                    },
+                                                    mode: 'overwrite'
+                                                });
+
+                                                resolveLocal(reason);
+                                            });
+
                                         }
 
                                     } else {
 
-                                        resolveLocal(complexImportSchemeService.create(item));
+                                        complexImportSchemeService.create(item).then(function(){
+                                            resolveLocal();
+                                        }).catch(function (reason) {
+
+                                            errors.push({
+                                                content_type: contentType,
+                                                item: item,
+                                                error: {
+                                                    message: "Can't create Complex Import Scheme "
+                                                },
+                                                mode: 'overwrite'
+                                            });
+
+                                            resolveLocal(reason);
+                                        });
                                     }
 
                                 })
@@ -583,17 +631,63 @@
 
                                             item.id = result.id;
 
-                                            resolveLocal(transactionSchemeService.update(item.id, item))
+                                            transactionSchemeService.update(item.id, item).then(function (value1) {
+                                                resolveLocal()
+                                            }).catch(function (reason) {
+
+                                                errors.push({
+                                                    content_type: contentType,
+                                                    item: item,
+                                                    error: {
+                                                        message: "Can't create Transaction Import Scheme "
+                                                    },
+                                                    mode: 'overwrite'
+                                                });
+
+                                                resolveLocal(reason);
+                                            });
+
+
 
                                         } else {
 
-                                            resolveLocal(transactionSchemeService.create(item))
+                                            transactionSchemeService.create(item).then(function(){
+                                                resolveLocal()
+                                            }).catch(function (reason) {
+
+                                                errors.push({
+                                                    content_type: contentType,
+                                                    item: item,
+                                                    error: {
+                                                        message: "Can't create Transaction Import Scheme "
+                                                    },
+                                                    mode: 'overwrite'
+                                                });
+
+                                                resolveLocal(reason);
+                                            });
+
+
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(transactionSchemeService.create(item))
+                                        transactionSchemeService.create(item).then(function(){
+                                            resolveLocal()
+                                        }).catch(function (reason) {
+
+                                            errors.push({
+                                                content_type: contentType,
+                                                item: item,
+                                                error: {
+                                                    message: "Can't create Transaction Import Scheme "
+                                                },
+                                                mode: 'overwrite'
+                                            });
+
+                                            resolveLocal(reason);
+                                        });
 
                                     }
 
@@ -1085,9 +1179,11 @@
 
             overwriteEntityItems(attributeTypes, cacheContainer, errors).then(function (data) {
 
-                console.log("Overwrite success", data);
+                console.log("Overwrite (create attributes if not exists)", data);
 
                 overwriteEntityItems(otherEntities, cacheContainer, errors).then(function (data) {
+
+                    console.log("Overwrite success", data);
 
                     resolve(data);
 
