@@ -33,7 +33,7 @@
 
                 scope.isNotEditableField = function () {
                     console.log('editable entityType', scope.entityType, scope.item);
-                    if (scope.entityType === 'transaction-type' || scope.entityType === 'complex-transaction') {
+                    if (scope.entityType === 'complex-transaction') {
 
                         if (scope.item.can_recalculate || !scope.item.editable) {
                             return true;

@@ -399,7 +399,8 @@
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        }
+                        };
+
                         if (target === document.querySelector('#groupsbag') ||
                             target === document.querySelector('.g-groups-holder')) {
 
@@ -429,8 +430,10 @@
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        }
+                        };
+
                         if (target === document.querySelector('#filtersbag .drop-new-filter') ||
                             target === document.querySelector('.g-filters-holder')) {
 
@@ -444,18 +447,8 @@
                                         filters.splice(index, 0, attrsList[a]);
                                     }
 
-                                    //columns.push(attrsList[a]);
                                 }
 
-                                /*if (attrsList[a].name === name) {
-
-                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
-                                        filters.push(attrsList[a]);
-                                    } else {
-                                        filters.splice(index, 0, attrsList[a]);
-                                    }
-
-                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
@@ -515,9 +508,10 @@
 
                 var i;
                 var itemsElem = document.querySelectorAll('#dialogbag .g-modal-draggable-card');
+
                 for (i = 0; i < itemsElem.length; i = i + 1) {
                     items.push(itemsElem[i]);
-                }
+                };
 
                 this.dragula = dragula(items,
                     {
@@ -549,9 +543,11 @@
             }
         };
 
-        setTimeout(function () {
-            viewConstructorDnD.init()
-        }, 500);
+        vm.initDnd = function () {
+            setTimeout(function () {
+                viewConstructorDnD.init();
+            }, 500);
+        };
 
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');

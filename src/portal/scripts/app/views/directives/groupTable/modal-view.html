@@ -16,7 +16,7 @@
 
             <div ng-show="vm.cardsDividedIntoTabs">
 
-                <md-tabs md-dynamic-height md-border-bottom id="dialogbag">
+                <md-tabs md-dynamic-height md-border-bottom id="dialogbag" ng-init="vm.initDnd()">
 
                     <md-tab label="System">
                         <md-content class="md-padding">
