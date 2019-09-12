@@ -558,6 +558,7 @@
         rvScrollManager.setViewportElem(elements.viewportElem);
         rvScrollManager.setContentElem(elements.contentElem);
         rvScrollManager.setContentWrapElem(elements.contentWrapElem);
+        rvScrollManager.setRootEntityContentWrapElem(elements.rootEntityContentWrapElem);
 
         var isRootEntityViewer = evDataService.isRootEntityViewer();
 
@@ -566,7 +567,11 @@
 
         var contentWrapElemHeight = rvScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = rvScrollManager.getContentWrapElemWidth();
-        var viewportTop
+
+        var rootEntityContentWrapElemHeight = rvScrollManager.getRootEntityContentWrapElemHeight();
+        var rootEntityContentWrapElemWidth = rvScrollManager.getRootEntityContentWrapElemWidth();
+
+        var viewportTop;
         var viewportWidth;
         // var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height);
         var viewportHeight;
@@ -582,30 +587,33 @@
 
         // console.log('viewportWidth', viewportWidth);
 
+        console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
+
         viewportTop = interfaceLayout.progressBar.height;
 
-        // console.log('viewportTop', viewportTop)
-        // console.log('components', components)
-        // console.log('interfaceLayout', interfaceLayout)
-
-        if (components.groupingArea) {
-            viewportTop = viewportTop + interfaceLayout.groupingArea.height
-        }
-
-        if (components.columnArea) {
-            viewportTop = viewportTop + interfaceLayout.columnArea.height
-        }
-
-        // console.log('contentWrapElemHeight', contentWrapElemHeight);
-        // console.log('viewportTop', viewportTop);
-
         if (isRootEntityViewer) {
+
+            if (components.groupingArea) {
+                viewportTop = viewportTop + interfaceLayout.groupingArea.height
+            }
+
+            if (components.columnArea) {
+                viewportTop = viewportTop + interfaceLayout.columnArea.height
+            }
+
+            console.log('rootviewer', viewportTop);
 
             viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
 
         } else {
 
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+            if (components.columnArea) {
+                viewportTop = viewportTop + interfaceLayout.columnArea.height
+            }
+
+            console.log('rootviewer split', viewportTop);
+
+            viewportHeight = Math.floor(rootEntityContentWrapElemHeight - viewportTop);
 
         }
 
