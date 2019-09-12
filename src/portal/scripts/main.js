@@ -43,9 +43,13 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
     document.title = metaService.getCurrentLocation($state);
 
-    window.addEventListener('error', function (e) {
-        toastr.error(e.error);
-    });
+    if ('__PROJECT_ENV__' === 'development') {
+
+        window.addEventListener('error', function (e) {
+            toastr.error(e.error);
+        });
+
+    }
 
     $transitions.onSuccess({}, function (trans) {
 
