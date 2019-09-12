@@ -186,7 +186,7 @@
 
                     }
 
-                    scope.filterSettingsChange();
+                    scope.filterSettingsChanged();
                 };
 
                 scope.showFRCheckMark = function (filterRegime) {
@@ -215,7 +215,7 @@
 
                     };
 
-                    scope.filterSettingsChange();
+                    scope.filterSettingsChanged();
 
                 };
 
@@ -255,7 +255,7 @@
                         filterEnabled = scope.filter.options.enabled;
 
                         if (scope.filter.options.is_frontend_filter) {
-
+                            console.log("ev filter date applyFilter", scope.filter);
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         };
@@ -264,8 +264,8 @@
 
                 };
 
-                scope.filterSettingsChange = function () {
-                    //console.log("filter filterSettingsChange", scope.filter.options.filter_values);
+                scope.filterSettingsChanged = function () {
+                    //console.log("filter filterSettingsChanged", scope.filter.options.filter_values);
 
                     if (scope.filter.options.filter_type === 'date_tree') {
                         scope.filter.options.filter_values = convertDatesTreeToFlatList();

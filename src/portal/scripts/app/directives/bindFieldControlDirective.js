@@ -32,12 +32,16 @@
                 scope.isRecalculate = false;
 
                 scope.isNotEditableField = function () {
-                    console.log('editable entityType', scope.entityType);
+                    console.log('editable entityType', scope.entityType, scope.item);
                     if (scope.entityType === 'transaction-type' || scope.entityType === 'complex-transaction') {
-                        return !scope.item.editable;
+
+                        if (scope.item.can_recalculate && !scope.item.editable) {
+                            return true;
+                        };
+
                     };
 
-                    return true;
+                    return false;
                 };
 
                 if (scope.item) {

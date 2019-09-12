@@ -118,6 +118,7 @@
 
                         if (excludeEmptyCells) { // if user choose to hide empty cells
                             match = false;
+                            break;
                         } else {
                             match = true;
                         }

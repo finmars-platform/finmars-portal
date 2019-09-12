@@ -755,8 +755,7 @@
 
                         vm.save();
 
-                    }
-                    ;
+                    };
 
                 });
 
@@ -1228,6 +1227,7 @@
                 value_type: vm.newItem.value_type,
                 content_type: vm.newItem.content_type,
                 is_fill_from_context: vm.newItem.is_fill_from_context,
+                reference_table: vm.newItem.reference_table,
                 account: vm.newItem.account,
                 instrument_type: vm.newItem.instrument_type,
                 instrument: vm.newItem.instrument,
@@ -1246,6 +1246,7 @@
                 value_expr: vm.newItem.value_expr
             });
 
+            originalEntityInputs = JSON.parse(JSON.stringify(originalEntity.inputs));
             vm.save(originalEntity, true);
 
             vm.newItem.name = null;
@@ -1253,6 +1254,7 @@
             vm.newItem.value_type = null;
             vm.newItem.content_type = null;
             vm.newItem.is_fill_from_context = false;
+            vm.newItem.reference_table = null;
             vm.newItem.account = null;
             vm.newItem.instrument_type = null;
             vm.newItem.instrument = null;
@@ -1277,7 +1279,6 @@
         // Transaction Type Input Controller end
 
         // Transaction type Actions controller start
-
 
         vm.relationItems = {};
 
