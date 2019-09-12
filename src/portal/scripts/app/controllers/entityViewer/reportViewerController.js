@@ -842,14 +842,6 @@
 
             };
 
-
-            /*var doOnMasterUserSelect = function () {
-                deregisterOnBeforeTransitionHook();
-                return warnOnMasterUserChange();
-            };
-
-            middlewareService.setWarningOfLayoutChangesLossFn(doOnMasterUserSelect);*/
-
             var removeTransitionWatcher = function () {
                 if (vm.deregisterOnBeforeTransitionHook) {
                     vm.deregisterOnBeforeTransitionHook();
