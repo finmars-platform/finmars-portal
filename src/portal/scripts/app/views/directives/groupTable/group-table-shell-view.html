@@ -2,118 +2,127 @@
 
     <div class="g-content-wrap height-100">
 
-        <div class="g-workarea-wrap" ng-if="contentWrapElem">
-            <div class="g-workarea main-area"
-                 ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
-                 ev-data-service="evDataService"
-                 ev-event-service="evEventService">
-                <div class="g-grouping-section" data-ng-if="components.groupingArea">
-                    <group-grouping ev-data-service="evDataService"
-                                    ev-event-service="evEventService"
-                                    content-wrap-element="contentWrapElem"></group-grouping>
-                </div>
-                <div class="g-table-section">
-                    <div>
-                        <div class="g-table-wrap">
+        <div class="g-rootentity-content-wrap height-100">
 
-                            <div class="g-column-area-wrap">
-                                <group-columns ev-data-service="evDataService"
-                                               ev-event-service="evEventService"
-                                               content-wrap-element="contentWrapElem"
-                                ></group-columns>
+            <div class="g-workarea-wrap" ng-if="contentWrapElem && rootEntityContentWrapElem">
+                <div class="g-workarea main-area"
+                     ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
+                     ev-data-service="evDataService"
+                     ev-event-service="evEventService">
+                    <div class="g-grouping-section" data-ng-if="components.groupingArea">
+                        <group-grouping ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        content-wrap-element="contentWrapElem"></group-grouping>
+                    </div>
+                    <div class="g-table-section">
+                        <div>
+                            <div class="g-table-wrap">
 
-                                <md-button class="toggle-group-column-area-btn" ng-click="toggleGroupAndColumnArea()">
-                                    <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"
-                                                icon="keyboard_arrow_up"></ng-md-icon>
-                                    <ng-md-icon ng-hide="!groupingAndColumnAreaCollapsed"
-                                                icon="keyboard_arrow_down"></ng-md-icon>
-                                </md-button>
+                                <div class="g-column-area-wrap">
+                                    <group-columns ev-data-service="evDataService"
+                                                   ev-event-service="evEventService"
+                                                   content-wrap-element="contentWrapElem"
+                                    ></group-columns>
+
+                                    <md-button class="toggle-group-column-area-btn"
+                                               ng-click="toggleGroupAndColumnArea()">
+                                        <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"
+                                                    icon="keyboard_arrow_up"></ng-md-icon>
+                                        <ng-md-icon ng-hide="!groupingAndColumnAreaCollapsed"
+                                                    icon="keyboard_arrow_down"></ng-md-icon>
+                                    </md-button>
+                                </div>
+
+                                <group-table-body class="group-table-body"
+                                                  ev-data-service="evDataService"
+                                                  ev-event-service="evEventService"
+                                                  content-wrap-element="contentWrapElem"
+                                                  root-entity-content-wrap-element="rootEntityContentWrapElem"
+                                ></group-table-body>
+
+                                <div grouping-and-column-area-drag-and-drop
+                                     ev-data-service="evDataService"
+                                     ev-event-service="evEventService"
+                                     content-wrap-element="contentWrapElem"
+                                ></div>
+
+
                             </div>
-
-                            <group-table-body class="group-table-body"
-                                              ev-data-service="evDataService"
-                                              ev-event-service="evEventService"
-                                              content-wrap-element="contentWrapElem"
-                            ></group-table-body>
-
-                            <div grouping-and-column-area-drag-and-drop
-                                 ev-data-service="evDataService"
-                                 ev-event-service="evEventService"
-                                 content-wrap-element="contentWrapElem"></div>
-
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar">
-            <div>
-                <div class="g-filter" id="filtersbag">
-                    <group-sidebar-filter ev-data-service="evDataService"
-                                          ev-event-service="evEventService"></group-sidebar-filter>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="g-additions" data-ng-if="isRootEntityViewer && additions.isOpen">
-
-        <div group-height-aligner
-             ev-data-service="evDataService"
-             ev-event-service="evEventService"></div>
-
-        <div class="g-height-slider"></div>
-
-        <div class="g-additions-data-editor min-height" data-ng-if="additions.type === 'editor'">
-
-            <div data-ng-if="activeObjectsCount > 1">
-                <div class="g-additions-editor-caption">
-                    Too many rows selected
-                </div>
-            </div>
-
-            <div data-ng-if="activeObjectsCount <= 1">
-
-                <div data-ng-show="!activeObject">
-                    <div class="g-additions-editor-caption">
-                        Select row to start
+            <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar">
+                <div>
+                    <div class="g-filter" id="filtersbag">
+                        <group-sidebar-filter ev-data-service="evDataService"
+                                              ev-event-service="evEventService"></group-sidebar-filter>
                     </div>
                 </div>
-                <div data-ng-show="activeObject" class="min-height">
-                    <group-editor-binder ev-data-service="evDataService"
-                                         ev-event-service="evEventService"></group-editor-binder>
-                </div>
-
             </div>
 
-
-        </div>
-        <div class="g-additions-workarea" data-ng-if="additions.type === 'permission-editor'">
-            <div data-ng-include="'views/entity-viewer/permission-editor-view.html'" class="min-height"></div>
-        </div>
-        <div class="g-additions-workarea"
-             data-ng-if="additions.type === 'balance-report'">
-            <group-split-panel-report-binder ev-data-service="evDataService"
-                                             ev-event-service="evEventService"
-                                             sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
         </div>
 
-        <div class="g-additions-workarea"
-             data-ng-if="additions.type === 'pl-report'">
-            <group-split-panel-report-binder ev-data-service="evDataService"
-                                             ev-event-service="evEventService"
-                                             sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
-        </div>
+        <div class="g-additions" data-ng-if="isRootEntityViewer && additions.isOpen">
 
-        <div class="g-additions-workarea"
-             data-ng-if="additions.type === 'transaction-report'">
-            <group-split-panel-report-binder ev-data-service="evDataService"
-                                             ev-event-service="evEventService"
-                                             sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
+            <div group-height-aligner
+                 ev-data-service="evDataService"
+                 ev-event-service="evEventService"></div>
+
+            <div class="g-height-slider"></div>
+
+            <div class="g-additions-data-editor min-height" data-ng-if="additions.type === 'editor'">
+
+                <div data-ng-if="activeObjectsCount > 1">
+                    <div class="g-additions-editor-caption">
+                        Too many rows selected
+                    </div>
+                </div>
+
+                <div data-ng-if="activeObjectsCount <= 1">
+
+                    <div data-ng-show="!activeObject">
+                        <div class="g-additions-editor-caption">
+                            Select row to start
+                        </div>
+                    </div>
+                    <div data-ng-show="activeObject" class="min-height">
+                        <group-editor-binder ev-data-service="evDataService"
+                                             ev-event-service="evEventService"></group-editor-binder>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="g-additions-workarea" data-ng-if="additions.type === 'permission-editor'">
+                <div data-ng-include="'views/entity-viewer/permission-editor-view.html'" class="min-height"></div>
+            </div>
+            <div class="g-additions-workarea"
+                 data-ng-if="additions.type === 'balance-report'">
+                <group-split-panel-report-binder ev-data-service="evDataService"
+                                                 ev-event-service="evEventService"
+                                                 sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
+            </div>
+
+            <div class="g-additions-workarea"
+                 data-ng-if="additions.type === 'pl-report'">
+                <group-split-panel-report-binder ev-data-service="evDataService"
+                                                 ev-event-service="evEventService"
+                                                 sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
+            </div>
+
+            <div class="g-additions-workarea"
+                 data-ng-if="additions.type === 'transaction-report'">
+                <group-split-panel-report-binder ev-data-service="evDataService"
+                                                 ev-event-service="evEventService"
+                                                 sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
+            </div>
         </div>
+        <div group-layout-resizer ev-data-service="evDataService"
+             ev-event-service="evEventService"></div>
+
     </div>
-    <div group-layout-resizer ev-data-service="evDataService"
-         ev-event-service="evEventService"></div>
+
 </div>

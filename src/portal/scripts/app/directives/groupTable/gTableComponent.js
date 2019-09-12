@@ -38,10 +38,18 @@
 
                 scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
 
-                if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
-                    var splitPanelHeight = elem.parents(".g-additions").height();
-                    scope.contentWrapElem.style.height = splitPanelHeight + 'px';
-                }
+                console.log(elem[0].querySelector('.g-rootentity-content-wrap'))
+
+                scope.rootEntityContentWrapElem = elem[0].querySelector('.g-rootentity-content-wrap');
+
+                console.log('table scope', scope);
+
+
+                // if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
+                //     var splitPanelHeight = elem.parents(".g-additions").height();
+                //     // scope.contentWrapElem.style.height = splitPanelHeight + 'px';
+                //     scope.rootEntityContentWrapElem.style.height = splitPanelHeight + 'px';
+                // }
 
                 console.log('scope.additions', scope.additions);
 

@@ -24,7 +24,8 @@
             scope: {
                 evDataService: '=',
                 evEventService: '=',
-                contentWrapElement: '='
+                contentWrapElement: '=',
+                rootEntityContentWrapElement: '='
             },
             template: '<div>' +
                 '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
@@ -40,13 +41,17 @@
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
                 var contentWrapElem = scope.contentWrapElement;
+                var rootEntityContentWrapElem = scope.rootEntityContentWrapElement;
+
+                console.log('table body scope', scope);
 
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
 
                 var elements = {
                     viewportElem: viewportElem,
                     contentElem: contentElem,
-                    contentWrapElem: contentWrapElem
+                    contentWrapElem: contentWrapElem,
+                    rootEntityContentWrapElem: rootEntityContentWrapElem
                 };
 
                 var projection;
