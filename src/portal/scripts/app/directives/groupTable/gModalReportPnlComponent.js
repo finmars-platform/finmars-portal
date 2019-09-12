@@ -39,7 +39,7 @@
         vm.accountDynamicAttrs = [];
         vm.portfolioDynamicAttrs = [];
 
-        vm.cardsDividedIntoTabs = false;
+        vm.cardsDividedIntoTabs = true;
 
         var columns = entityViewerDataService.getColumns();
         var filters = entityViewerDataService.getFilters();

@@ -9,31 +9,73 @@
 
             var cellValue = '';
 
-            if (item.hasOwnProperty(key)) {
+            if (item.hasOwnProperty('attributes') && key.indexOf("attributes.") === 0) { // if field is a dynamic attribute
 
-                var fieldObjKey = key + '_object';
+                var dynamicAttrKey = key.slice(11);
 
-                if (item.hasOwnProperty(fieldObjKey)) {
+                for (var da = 0; da < item.attributes.length; da++) {
+                    var dynamicAttributeData = item.attributes[da];
 
-                    cellValue = item[fieldObjKey].name;
+                    if (dynamicAttributeData.attribute_type_object.user_code === dynamicAttrKey) {
 
-                    if (item[fieldObjKey].display_name) {
+                        if (dynamicAttributeData.attribute_type_object.value_type === 30) {
 
-                        cellValue = item[fieldObjKey].display_name;
+                            if (dynamicAttributeData.classifier_object) {
+                                cellValue = dynamicAttributeData.classifier_object.name;
+                            } else {
+                                cellValue = '';
+                            };
+
+                            break;
+
+                        } else {
+
+                            switch (dynamicAttributeData.attribute_type_object.value_type) {
+                                case 10:
+                                    cellValue = dynamicAttributeData.value_string;
+                                    break;
+                                case 40:
+                                    cellValue = dynamicAttributeData.value_date;
+                                    break;
+                            };
+
+                            break;
+
+                        };
+
+                    }
+
+                };
+
+            } else {
+
+                if (item.hasOwnProperty(key)) {
+
+                    var fieldObjKey = key + '_object';
+
+                    if (item.hasOwnProperty(fieldObjKey)) { // if field is a relation field
+
+                        cellValue = item[fieldObjKey].name;
+
+                        if (item[fieldObjKey].display_name) {
+
+                            cellValue = item[fieldObjKey].display_name;
+
+                        };
+
+                    } else {
+
+                        cellValue = item[key];
 
                     };
 
-                } else {
-
-                    cellValue = item[key];
-
                 };
 
-                if (result.indexOf(cellValue) === -1) {
+            };
 
-                    result.push(cellValue);
+            if (cellValue && result.indexOf(cellValue) === -1) {
 
-                };
+                result.push(cellValue);
 
             };
 

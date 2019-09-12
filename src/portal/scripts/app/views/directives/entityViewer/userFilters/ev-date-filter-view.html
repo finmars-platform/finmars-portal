@@ -29,12 +29,12 @@
 
                     <!--<input type="number"
                            data-ng-model="filter.options.filter_values[0]"
-                           data-ng-change="filterSettingsChange(filter.options.filter_values[0])"
+                           data-ng-change="filterSettingsChanged(filter.options.filter_values[0])"
                            data-ng-model-options="{debounce: 1000}"
                            aria-label="rv number filter single input">-->
                     <zh-date-picker data-date-value="filter.options.filter_values[0]"
                                     data-position="left"
-                                    data-callback-method="filterSettingsChange(filter.options.filter_values[0])"></zh-date-picker>
+                                    data-callback-method="filterSettingsChanged(filter.options.filter_values[0])"></zh-date-picker>
                 </md-input-container>
             </div>
 
@@ -51,7 +51,7 @@
 
                     <zh-date-picker data-date-value="filter.options.filter_values.min_value"
                                     data-position="left"
-                                    data-callback-method="filterSettingsChange(filter.options.filter_values.min_value)"></zh-date-picker>
+                                    data-callback-method="filterSettingsChanged(filter.options.filter_values.min_value)"></zh-date-picker>
                 </md-input-container>
             </div>
 
@@ -63,7 +63,7 @@
 
                     <zh-date-picker data-date-value="filter.options.filter_values.max_value"
                                     data-position="left"
-                                    data-callback-method="filterSettingsChange(filter.options.filter_values.max_value)"></zh-date-picker>
+                                    data-callback-method="filterSettingsChanged(filter.options.filter_values.max_value)"></zh-date-picker>
                 </md-input-container>
             </div>
 
@@ -77,7 +77,7 @@
                              dates-list="columnRowsContent"
                              dates-tree="filter.options.dates_tree"
                              nothing-selected-text="Off"
-                             callback-method="filterSettingsChange(filter.options.filter_values)"></date-tree-input>
+                             callback-method="filterSettingsChanged(filter.options.filter_values)"></date-tree-input>
             
         </div>
 
@@ -176,7 +176,7 @@
                                     <use-from-above-button item="filter.options.use_from_above"
                                                            data="{attributes: attributesFromAbove, valueType: filter.value_type}"
                                                            filter-type="filter.options.filter_type"
-                                                           update-filter-fn="filterSettingsChange()"
+                                                           update-filter-fn="filterSettingsChanged()"
                                                            class="rv-filter-link-to-above-btn"></use-from-above-button>
                                 </md-menu-item>
                             </md-menu-content>
@@ -184,7 +184,7 @@
                     </md-menu-item>
 
                     <md-menu-item>
-                        <md-checkbox ng-checked="filter.options.is_frontend_filter"
+                        <md-checkbox ng-checked="!filter.options.is_frontend_filter"
                                      ng-click="toggleFrontendFilter()"
                                      class="md-primary g-filter-options-checkbox"
                                      aria-label="toggle filtering on frontend">
@@ -194,7 +194,7 @@
 
                     <md-menu-item>
                         <md-checkbox ng-model="filter.options.exclude_empty_cells"
-                                     ng-change="filterSettingsChange()"
+                                     ng-change="filterSettingsChanged()"
                                      class="md-primary g-filter-options-checkbox"
                                      aria-label="hide rows with empty cells checkbox">
                             Exclude cells with no value

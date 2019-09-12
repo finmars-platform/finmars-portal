@@ -31,7 +31,7 @@
         vm.attrs = [];
         vm.entityAttrs = [];
 
-        vm.cardsDividedIntoTabs = false;
+        vm.cardsDividedIntoTabs = true;
 
         var columns = entityViewerDataService.getColumns();
         var currentColumnsWidth = columns.length;
