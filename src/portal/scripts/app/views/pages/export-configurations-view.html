@@ -22,7 +22,7 @@
                     <div class="width-30">
                         <md-button class="md-raised"
                                    ng-class="{'m-l-0': !vm.layouts.length}"
-                                   ng-click="vm.updateLayout()">Manage Configuration Export Settings
+                                   ng-click="vm.updateLayout()">Save Export Settings
                         </md-button>
                     </div>
                 </div>
@@ -40,15 +40,6 @@
             </div>
         </div>
 
-        <div layout="row">
-            <div>
-                <md-input-container class="export-configuration-file-name-input">
-                    <label>Exported Configuration File Name</label>
-                    <input type="text" data-ng-model="vm.filename">
-                </md-input-container>
-            </div>
-        </div>
-
         <div layout="row" class="m-b-24 m-t-16">
             <div>
                 <div><label for="">Notes</label></div>
@@ -59,11 +50,20 @@
                           rows="5">
                 </textarea>
             </div>
+        </div>
+
+        <div layout="row" class="m-b-35">
+            <div>
+                <md-button class="md-button md-raised md-primary export-configuration-export-btn"
+                           ng-click="vm.export()">Export To File
+                </md-button>
+            </div>
 
             <div>
-                <md-button class="md-button md-raised export-configuration-export-btn"
-                           ng-click="vm.export()">Export Configuration
-                </md-button>
+                <md-input-container class="export-configuration-file-name-input">
+                    <label>File Name</label>
+                    <input type="text" data-ng-model="vm.filename">
+                </md-input-container>
             </div>
         </div>
 
