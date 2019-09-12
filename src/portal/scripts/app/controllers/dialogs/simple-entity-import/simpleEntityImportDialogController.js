@@ -388,7 +388,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.import = function ($event) {

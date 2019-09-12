@@ -62,7 +62,7 @@
         ];
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.fitLayoutOnAPage = function () {
@@ -170,7 +170,7 @@
 
                     downloadFileHelper.downloadFile(blob, "application/pdf", "report.pdf");
 
-                    $mdDialog.cancel();
+                    $mdDialog.hide();
 
                 })
 

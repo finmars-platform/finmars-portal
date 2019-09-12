@@ -21,7 +21,7 @@
         vm.readyStatus = {content: false};
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.setDownloadLink = function () {
@@ -52,7 +52,7 @@
                     link.download = 'classifiers.csv';
                 }
 
-                $mdDialog.cancel();
+                $mdDialog.hide();
             })
 
         };

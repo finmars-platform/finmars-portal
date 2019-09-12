@@ -407,10 +407,9 @@
                                             });
 
 
-
                                         } else {
 
-                                            complexImportSchemeService.create(item).then(function(){
+                                            complexImportSchemeService.create(item).then(function () {
                                                 resolveLocal();
                                             }).catch(function (reason) {
 
@@ -430,7 +429,7 @@
 
                                     } else {
 
-                                        complexImportSchemeService.create(item).then(function(){
+                                        complexImportSchemeService.create(item).then(function () {
                                             resolveLocal();
                                         }).catch(function (reason) {
 
@@ -648,10 +647,9 @@
                                             });
 
 
-
                                         } else {
 
-                                            transactionSchemeService.create(item).then(function(){
+                                            transactionSchemeService.create(item).then(function () {
                                                 resolveLocal()
                                             }).catch(function (reason) {
 
@@ -668,12 +666,11 @@
                                             });
 
 
-
                                         }
 
                                     } else {
 
-                                        transactionSchemeService.create(item).then(function(){
+                                        transactionSchemeService.create(item).then(function () {
                                             resolveLocal()
                                         }).catch(function (reason) {
 
@@ -1148,14 +1145,17 @@
 
         return new Promise(function (resolve, reject) {
 
-            // var overwriteEntities = items.filter(function (item) {
-            //     return ['instruments.instrumenttype', 'transactions.transactiontype', 'ui.listlayout', 'ui.reportlayout',
-            //         'accounts.accounttype', 'currencies.currency', 'instruments.pricingpolicy',
-            //         'csv_import.csvimportscheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
-            //         'integrations.complextransactionimportscheme', 'complex_import.compleximportscheme',
-            //         'reports.balancereportcustomfield', 'reports.plreportcustomfield', 'reports.transactionreportcustomfield',
-            //         'ui.instrumentuserfieldmodel', 'ui.transactionuserfieldmodel', 'reference_tables.referencetable'].indexOf(item.entity) !== -1;
-            // });
+            var instrumentTypes = items.filter(function (item) {
+                return item.entity === 'instruments.instrumenttype';
+            });
+
+            var transactionTypeGroups = items.filter(function (item) {
+                return item.entity === 'transactions.transactiontypegroup';
+            });
+
+            var transactionTypes = items.filter(function (item) {
+                return item.entity === 'transactions.transactiontype';
+            });
 
             var attributeTypes = items.filter(function (item) {
                 return item.entity === 'obj_attrs.portfolioattributetype' ||
@@ -1174,26 +1174,57 @@
                     item.entity !== 'obj_attrs.accounttypeattributetype' &&
                     item.entity !== 'obj_attrs.instrumenttypeattributetype' &&
                     item.entity !== 'obj_attrs.responsibleattributetype' &&
-                    item.entity !== 'obj_attrs.counterpartyattributetype'
+                    item.entity !== 'obj_attrs.counterpartyattributetype' &&
+                    item.entity !== 'complex_import.compleximportscheme' &&
+                    item.entity !== 'instruments.instrumenttype' &&
+                    item.entity !== 'transactions.transactiontypegroup' &&
+                    item.entity !== 'transactions.transactiontype'
             });
 
-            overwriteEntityItems(attributeTypes, cacheContainer, errors).then(function (data) {
+            var complexImportSchemes = items.filter(function (item) {
+                return item.entity === 'complex_import.compleximportscheme';
+            });
 
-                console.log("Overwrite (create attributes if not exists)", data);
+            overwriteEntityItems(instrumentTypes, cacheContainer, errors).then(function (data) {
 
-                overwriteEntityItems(otherEntities, cacheContainer, errors).then(function (data) {
+                console.log("Overwrite Instrument Types", data);
 
-                    console.log("Overwrite success", data);
+                overwriteEntityItems(transactionTypeGroups, cacheContainer, errors).then(function (data) {
 
-                    resolve(data);
+                    console.log("Overwrite Transaction Types Groups", data);
+
+                    overwriteEntityItems(transactionTypes, cacheContainer, errors).then(function (data) {
+
+                        console.log("Overwrite Transaction Types", data);
+
+                        overwriteEntityItems(attributeTypes, cacheContainer, errors).then(function (data) {
+
+                            console.log("Overwrite (create attributes if not exists)", data);
+
+                            overwriteEntityItems(otherEntities, cacheContainer, errors).then(function (data) {
+
+                                console.log("Overwrite Other Entities success", data);
+
+                                overwriteEntityItems(complexImportSchemes, cacheContainer, errors).then(function (data) {
+
+                                    console.log("Overwrite Complex Import Scheme success", data);
+
+                                    resolve(data);
+
+                                }).catch(function (reason) {
+
+                                    console.log('Overwrite importConfiguration.reason', reason);
+
+                                    reject(reason);
+                                })
+
+                            })
+                        })
+
+                    })
 
                 })
 
-            }).catch(function (reason) {
-
-                console.log('Overwrite importConfiguration.reason', reason);
-
-                reject(reason);
             })
 
 

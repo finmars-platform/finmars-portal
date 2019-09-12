@@ -29,7 +29,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.selectRow = function (item) {
