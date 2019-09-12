@@ -371,7 +371,7 @@
 
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         var viewConstructorDnD = {

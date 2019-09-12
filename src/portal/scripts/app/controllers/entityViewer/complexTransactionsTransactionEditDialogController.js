@@ -26,7 +26,7 @@
 
         vm.cancel = function () {
 
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.checkVisibility = function () {

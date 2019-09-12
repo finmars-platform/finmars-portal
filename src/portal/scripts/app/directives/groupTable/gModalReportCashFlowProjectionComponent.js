@@ -833,7 +833,7 @@
             $('body').removeClass('drag-dialog');
 
             dragAndDrop.destroy();
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         var addColumn = function () {

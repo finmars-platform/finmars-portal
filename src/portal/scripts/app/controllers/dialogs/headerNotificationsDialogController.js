@@ -10,7 +10,7 @@
 		logService.controller('EventScheduleConfigDialogController', 'initialized');
 
 		vm.cancel = function () {
-			$mdDialog.cancel();
+			$mdDialog.hide();
 		}
 	}
 }());

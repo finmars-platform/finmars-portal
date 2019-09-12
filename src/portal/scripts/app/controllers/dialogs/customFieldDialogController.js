@@ -125,7 +125,7 @@
 
         // This controller could be also opened as a dialog
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.init = function () {
