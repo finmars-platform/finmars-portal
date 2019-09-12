@@ -56,7 +56,7 @@
                     if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportFirstDatepicker')) {
                         scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {};
                     }
-                    scope.reportOptions.testField = true;
+
                     scope.datepickerFromDisplayOptions = {
                         position: 'left',
                         labelName: 'Date from (excl)'
@@ -490,18 +490,9 @@
 
                     syncFilters();
 
-                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                        /*if (scope.isReport) {
+                    /*scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                            var testKeyData = userFilterService.getDataByKey(scope.evDataService, 'instrument.maturity_date');
-                            var testKeyData1 = userFilterService.getDataByKey(scope.evDataService, 'portfolio.name');
-
-                            console.log('testKeyData', testKeyData);
-                            console.log('testKeyData1', testKeyData1);
-
-                        }*/
-
-                    });
+                    });*/
 
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 

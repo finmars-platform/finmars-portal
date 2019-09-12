@@ -71,7 +71,54 @@
 
                     if (keyProperty !== 'ordering') {
 
-                        if (item.hasOwnProperty(keyProperty) && item[keyProperty]) { // check if cell used to filter row is not empty
+                        var valueFromTable;
+
+                        // Check is it a dynamic attribute
+                        if (keyProperty.indexOf("attributes.") === 0) {
+
+                            var dynamicAttrKey = keyProperty.slice(11);
+
+                            for (var da = 0; da < flItem.attributes.length; da++) {
+                                var dynamicAttributeData = flItem.attributes[da];
+
+                                if (dynamicAttributeData.attribute_type_object.user_code === dynamicAttrKey) {
+
+                                    if (dynamicAttributeData.attribute_type_object.value_type === 30) {
+
+                                        if (dynamicAttributeData.classifier_object) {
+                                            valueFromTable = JSON.parse(JSON.stringify(dynamicAttributeData.classifier_object.name));
+                                        } else {
+                                            valueFromTable = '';
+                                        };
+
+                                        break;
+
+                                    } else {
+
+                                        switch (valueType) {
+                                            case 10:
+                                                valueFromTable = JSON.parse(JSON.stringify(dynamicAttributeData.value_string));
+                                                break;
+                                            case 20:
+                                                valueFromTable = JSON.parse(JSON.stringify(dynamicAttributeData.value_float));
+                                                break;
+                                            case 40:
+                                                valueFromTable = JSON.parse(JSON.stringify(dynamicAttributeData.value_date));
+                                                break;
+                                        };
+
+                                        break;
+
+                                    };
+
+                                };
+
+                            };
+
+                        };
+                        // < Check is it a dynamic attribute >
+
+                        if ((item.hasOwnProperty(keyProperty) && item[keyProperty]) || valueFromTable) { // check if cell that is used to filter row is not empty
 
                             if (filterType === 'empty') { // prevent pass of cells with values
                                 match = false;
@@ -81,9 +128,8 @@
                             if (checkForEmptyRegularFilter(filterValue, filterType)) {
 
                                 var filterArgument = JSON.parse(JSON.stringify(filterValue));
-                                var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
 
-                                if (valueType === 'field' && flItem.___type !== 'group') {
+                                if (valueType === 'field' && flItem.___type !== 'group') { // Find value for relation field
 
                                     var relationFieldData = item[keyProperty + '_object'];
 
@@ -92,6 +138,10 @@
                                     } else {
                                         valueFromTable = JSON.parse(JSON.stringify(relationFieldData.name));
                                     };
+
+                                } else if (!valueFromTable) {
+
+                                    valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
 
                                 };
 
@@ -134,16 +184,16 @@
                                             filterArgument = new Date(filterArgument[0]).toDateString();
                                             break;
                                         case 'from_to':
-                                            valueFromTable = new Date(item[keyProperty]);
+                                            valueFromTable = new Date(valueFromTable);
                                             filterArgument.min_value = new Date(filterArgument.min_value);
                                             filterArgument.max_value = new Date(filterArgument.max_value);
                                             break;
                                         case 'date_tree':
-                                            valueFromTable = new Date(item[keyProperty]);
+                                            valueFromTable = new Date(valueFromTable);
                                             // filterArgument is array of strings
                                             break;
                                         default:
-                                            valueFromTable = new Date(item[keyProperty]);
+                                            valueFromTable = new Date(valueFromTable);
                                             filterArgument = new Date(filterArgument[0]);
                                             break;
                                     }
@@ -162,6 +212,7 @@
 
                             if (excludeEmptyCells && flItem.___type !== 'group') { // if user choose to hide empty cells
                                 match = false;
+                                break;
                             } else {
                                 match = true;
                             }
@@ -213,6 +264,7 @@
                 break;
 
             case 'greater':
+
                 if (valueToFilter > filterBy) {
                     return true;
                 }

@@ -15,7 +15,7 @@
         <md-checkbox ng-model="filter.options.enabled"
                      aria-label="filters"
                      class="md-primary table-filter-activity-checkbox"
-                     ng-change="filterSettingsChange()"
+                     ng-change="filterSettingsChanged()"
                      flex="15"></md-checkbox>
 
         <div ng-if="filter.options.filter_type !== 'from_to'" flex="70">
@@ -28,7 +28,7 @@
 
                     <input type="number"
                            data-ng-model="filter.options.filter_values[0]"
-                           data-ng-change="filterSettingsChange(filter.options.filter_values[0])"
+                           data-ng-change="filterSettingsChanged(filter.options.filter_values[0])"
                            data-ng-model-options="{debounce: 1000}"
                            class="no-input-arrows"
                            aria-label="rv number filter single input">
@@ -48,7 +48,7 @@
 
                 <input type="number"
                        data-ng-model="filter.options.filter_values.min_value"
-                       data-ng-change="filterSettingsChange(filter.options.filter_values.min_value)"
+                       data-ng-change="filterSettingsChanged(filter.options.filter_values.min_value)"
                        data-ng-model-options="{debounce: 1000}"
                        class="no-input-arrows"
                        aria-label="rv number filter single input">
@@ -61,7 +61,7 @@
 
                 <input type="number"
                        data-ng-model="filter.options.filter_values.max_value"
-                       data-ng-change="filterSettingsChange(filter.options.filter_values.max_value)"
+                       data-ng-change="filterSettingsChanged(filter.options.filter_values.max_value)"
                        data-ng-model-options="{debounce: 1000}"
                        class="no-input-arrows"
                        aria-label="rv number filter single input">
@@ -155,7 +155,7 @@
                                     <use-from-above-button item="filter.options.use_from_above"
                                                            data="{attributes: attributesFromAbove, valueType: filter.value_type}"
                                                            filter-type="filter.options.filter_type"
-                                                           update-filter-fn="filterSettingsChange()"
+                                                           update-filter-fn="filterSettingsChanged()"
                                                            class="rv-filter-link-to-above-btn"></use-from-above-button>
                                 </md-menu-item>
                                 <!--<md-button ng-click="changeFilterType('top_n')">
@@ -180,7 +180,7 @@
 
                     <md-menu-item>
                         <md-checkbox ng-checked="!filter.options.is_frontend_filter"
-                                     ng-click="filterSettingsChange()"
+                                     ng-click="toggleFrontendFilter()"
                                      class="md-primary g-filter-options-checkbox"
                                      aria-label="toggle filtering on frontend">
                             Database Filter
@@ -189,7 +189,7 @@
 
                     <md-menu-item>
                         <md-checkbox ng-model="filter.options.exclude_empty_cells"
-                                     ng-change="filterSettingsChange()"
+                                     ng-change="filterSettingsChanged()"
                                      class="md-primary g-filter-options-checkbox"
                                      aria-label="hide rows with empty cells checkbox">
                             Exclude cells with no value

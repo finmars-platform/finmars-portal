@@ -26,19 +26,12 @@
 
                 scope.filterValue = undefined;
                 scope.filterSelectOptions = [];
-                scope.columnRowsContent = [];
                 scope.nItemsValue = null;
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.attributesFromAbove = [];
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
-                    var columnRowsContent  = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
-
-                    scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
-                        return cRowsContent;
-                    });
 
                     if(!scope.isRootEntityViewer) {
                         scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
@@ -144,8 +137,8 @@
                     return false;
                 };
 
-                scope.filterSettingsChange = function () {
-                    // console.log("filter filterSettingsChange", scope.filter.options);
+                scope.filterSettingsChanged = function () {
+                    // console.log("filter filterSettingsChanged", scope.filter.options);
 
                     if (scope.filter.options.enabled || filterEnabled) {
 
@@ -180,12 +173,12 @@
 
                     }
 
-                    scope.filterSettingsChange();
+                    scope.filterSettingsChanged();
                 };
 
                 scope.toggleFrontendFilter = function () {
                     scope.filter.options.is_frontend_filter = !scope.filter.options.is_frontend_filter;
-                    scope.filterSettingsChange();
+                    scope.filterSettingsChanged();
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
