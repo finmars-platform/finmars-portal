@@ -562,23 +562,52 @@
         var isRootEntityViewer = evDataService.isRootEntityViewer();
 
         var interfaceLayout = evDataService.getInterfaceLayout();
+        var components = evDataService.getComponents();
 
         var contentWrapElemHeight = rvScrollManager.getContentWrapElemHeight();
-        var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-        var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
+        var contentWrapElemWidth = rvScrollManager.getContentWrapElemWidth();
+        var viewportTop
+        var viewportWidth;
         // var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height);
         var viewportHeight;
 
-        if (!isRootEntityViewer) {
+        // console.log('calculateScroll components', components);
+        // console.log('calculateScroll contentWrapElemWidth', contentWrapElemWidth);
 
-            viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+        if (components.sidebar) {
+            viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
+        } else {
+            viewportWidth = contentWrapElemWidth
+        }
+
+        // console.log('viewportWidth', viewportWidth);
+
+        viewportTop = interfaceLayout.progressBar.height;
+
+        // console.log('viewportTop', viewportTop)
+        // console.log('components', components)
+        // console.log('interfaceLayout', interfaceLayout)
+
+        if (components.groupingArea) {
+            viewportTop = viewportTop + interfaceLayout.groupingArea.height
+        }
+
+        if (components.columnArea) {
+            viewportTop = viewportTop + interfaceLayout.columnArea.height
+        }
+
+        // console.log('contentWrapElemHeight', contentWrapElemHeight);
+        // console.log('viewportTop', viewportTop);
+
+        if (isRootEntityViewer) {
+
+            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
 
         } else {
 
-            var viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
+            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
-        };
+        }
 
         // console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);
