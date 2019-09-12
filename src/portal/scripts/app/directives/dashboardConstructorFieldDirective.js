@@ -187,33 +187,7 @@
 
                 };
 
-
-                scope.changeFieldColspan = function () {
-
-                    var layout = scope.dashboardConstructorDataService.getData();
-                    var tab;
-                    var row;
-                    var item;
-
-                    tab = layout.data.tabs[scope.tabNumber];
-                    row = tab.layout.rows[scope.rowNumber];
-
-                    for (var c = scope.columnNumber + 1; c < scope.columnNumber + (scope.item.colspan - 1); c = c + 1) {
-
-                        item = row.columns[c];
-                        item.is_hidden = true;
-                        item.hidden_by = {
-                            row_number: scope.rowNumber,
-                            column_number: scope.columnNumber
-                        }
-
-                    }
-
-                    scope.dashboardConstructorDataService.setData(layout)
-
-                };
-
-                scope.changeFieldRowspan = function () {
+                scope.changeSpan = function () {
 
                     var layout = scope.dashboardConstructorDataService.getData();
                     var tab;
@@ -222,15 +196,19 @@
 
                     tab = layout.data.tabs[scope.tabNumber];
 
-                    for (var r = scope.rowNumber + 1; r < scope.rowNumber + (scope.item.rowspan - 1); r = r + 1) {
+                    for (var r = scope.rowNumber; r < scope.rowNumber + scope.item.rowspan; r = r + 1) {
 
                         row = tab.layout.rows[r];
-                        item = row.columns[scope.columnNumber];
 
-                        item.is_hidden = true;
-                        item.hidden_by = {
-                            row_number: scope.rowNumber,
-                            column_number: scope.columnNumber
+                        for (var c = scope.columnNumber; c < scope.columnNumber + scope.item.colspan; c = c + 1) {
+
+                            item = row.columns[c];
+                            item.is_hidden = true;
+                            item.hidden_by = {
+                                row_number: scope.rowNumber,
+                                column_number: scope.columnNumber
+                            }
+
                         }
 
                     }
@@ -239,9 +217,48 @@
 
                 };
 
-                scope.saveField = function (item) {
+                scope.saveField = function () {
 
                     scope.item.editMode = false;
+
+                    console.log('saveField scope.item', scope.item);
+
+                    var layout = scope.dashboardConstructorDataService.getData();
+
+                    layout.data.tabs = layout.data.tabs.map(function (tab) {
+
+                        if (tab.tab_number === scope.tabNumber) {
+
+                            tab.layout.rows = tab.layout.rows.map(function (row) {
+
+                                if (row.row_number === scope.rowNumber) {
+
+                                    row.columns = row.columns.map(function (item) {
+
+                                        if (item.column_number === scope.columnNumber) {
+
+                                            return scope.item
+
+                                        }
+
+                                        return item
+                                    });
+
+                                }
+
+                                return row
+
+                            });
+
+                        }
+
+                        return tab
+
+                    });
+
+                    scope.dashboardConstructorDataService.setData(layout);
+
+                    scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
                 };
 
@@ -252,6 +269,33 @@
                     console.log('scope.column_number', scope.columnNumber);
 
                     var layout = scope.dashboardConstructorDataService.getData();
+
+                    // set hidden empty cells to visible start
+
+                    var tab;
+                    var row;
+                    var item;
+
+                    tab = layout.data.tabs[scope.tabNumber];
+
+                    for (var r = scope.rowNumber; r < scope.rowNumber + scope.item.rowspan; r = r + 1) {
+
+                        row = tab.layout.rows[r];
+
+                        for (var c = scope.columnNumber; c < scope.columnNumber + scope.item.colspan; c = c + 1) {
+
+                            item = row.columns[c];
+                            delete item.is_hidden;
+                            delete item.hidden_by;
+
+                        }
+
+                    }
+
+                    console.log('tab', tab);
+
+                    // set hidden empty cells to visible end
+
 
                     layout.data.tabs = layout.data.tabs.map(function (tab) {
 
@@ -268,6 +312,8 @@
                                             return {
                                                 column_number: scope.columnNumber,
                                                 cell_type: 'empty',
+                                                colspan: 1,
+                                                rowspan: 1,
                                                 data: {},
                                                 options: {}
                                             };
@@ -291,13 +337,12 @@
 
                     scope.dashboardConstructorDataService.setData(layout);
 
-                    scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+                    scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+                    scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
                 };
 
-
                 scope.init = function () {
-
 
                 };
 

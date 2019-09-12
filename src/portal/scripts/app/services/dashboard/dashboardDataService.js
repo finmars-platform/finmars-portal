@@ -2,20 +2,44 @@
 
     module.exports = function () {
 
-        var data = {
-            components: {}
+        var layoutData = { // basically its layout that we store on backend
+            name: '',
+            data: {}
         };
 
-        function updateComponentOutput(componentId, output) {
-            data.components[componentId] = output
+
+        function setData(data) {
+            layoutData = data
+        }
+
+        function getData() {
+            return layoutData
+        }
+
+        function setComponentOutput(componentId, data) {
+
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            layoutData.data.components[componentId] = data
         }
 
         function getComponentOutput(componentId) {
-            return data.components[componentId]
+
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            return layoutData.data.components[componentId]
         }
 
         return {
-            updateComponentOutput: updateComponentOutput,
+
+            setData: setData,
+            getData: getData,
+
+            setComponentOutput: setComponentOutput,
             getComponentOutput: getComponentOutput
         }
 

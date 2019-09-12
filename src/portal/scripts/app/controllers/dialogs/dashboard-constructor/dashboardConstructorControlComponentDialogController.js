@@ -40,6 +40,10 @@
             {
                 name: 'Currency',
                 key: 'currencies.currency'
+            },
+            {
+                name: 'Pricing Policy',
+                key: 'instruments.pricingpolicy'
             }
         ];
 
@@ -51,6 +55,8 @@
         };
 
         vm.agree = function () {
+
+            vm.item.settings.value_type = parseInt(vm.item.settings.value_type, 10);
 
             if (vm.item.id) {
 

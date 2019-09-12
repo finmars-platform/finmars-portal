@@ -46,73 +46,72 @@
                         <md-tab-body>
                             <div class="ec-md-content ec-layout-tab">
 
-                                <div class="dashboard-layout"
+                                <div class="dashboard-layout position-relative"
+                                     style="height: 480px"
                                      dashboard-constructor-grid-aligner
                                      dashboard-constructor-data-service="vm.dashboardConstructorDataService"
                                      dashboard-constructor-event-service="vm.dashboardConstructorEventService"
                                      tab-number="tab.tab_number">
-                                        <div layout="column" data-ng-repeat="row in tab.layout.rows" post-ng-repeat post-ng-repeat-callback="vm.sentGridIsRenderedSignal()">
 
-                                        <div layout="row" class="dashboard-constructor-row">
+                                    <div layout="column" data-ng-repeat="row in tab.layout.rows">
 
-                                            <div data-ng-repeat="item in row.columns"
-                                                 class="dashboard-constructor-cell"
-                                                 data-tab="{{tab.tab_number}}"
-                                                 data-row="{{row.row_number}}"
-                                                 data-column="{{item.column_number}}"
-                                                 data-cell-type="{{item.cell_type}}">
+                                        <div data-ng-repeat="item in row.columns"
+                                             class="dashboard-constructor-cell"
+                                             data-tab="{{tab.tab_number}}"
+                                             data-row="{{row.row_number}}"
+                                             data-column="{{item.column_number}}"
+                                             data-cell-type="{{item.cell_type}}">
 
-                                                <div data-ng-if="item.cell_type === 'empty'"
-                                                     class="width-100 height-100">
+                                            <div data-ng-if="item.cell_type === 'empty'"
+                                                 class="width-100 height-100">
 
-                                                    <div class="dashboard-constructor-empty-cell">
+                                                <div class="dashboard-constructor-empty-cell"s>
 
-                                                        <ng-md-icon icon="add_circle"></ng-md-icon>
-
-                                                    </div>
-
-
-                                                </div>
-
-                                                <div data-ng-if="item.cell_type === 'component'">
-
-                                                    <dashboard-constructor-field
-
-                                                            tab-number="tab.tab_number"
-                                                            row-number="row.row_number"
-                                                            column-number="item.column_number"
-                                                            item="item"
-                                                            dashboard-constructor-data-service="vm.dashboardConstructorDataService"
-                                                            dashboard-constructor-event-service="vm.dashboardConstructorEventService"
-
-                                                    ></dashboard-constructor-field>
+                                                    <ng-md-icon icon="add_circle"></ng-md-icon>
 
                                                 </div>
 
 
                                             </div>
 
-                                            <md-button class="md-button dashboard-manage-row-btn"
-                                                       ng-click="vm.insertRow(tab, row)" style="right: 55px">
-                                                +
-                                                <md-tooltip class="tooltip_1" md-direction="top">Insert row below
-                                                </md-tooltip>
-                                            </md-button>
-                                            <md-button ng-if="tab.layout.rows > row"
-                                                       class="md-button dashboard-manage-row-btn"
-                                                       ng-click="vm.deleteRow(tab, row)"
-                                                       style="right: 10px;"
-                                                       ng-disabled="!vm.isRowEmpty(row)">
-                                                -
-                                                <md-tooltip class="tooltip_1" md-direction="top"
-                                                            ng-hide="!vm.isRowEmpty(row)">Remove row
-                                                </md-tooltip>
-                                                <md-tooltip class="tooltip_1" md-direction="top"
-                                                            ng-hide="vm.isRowEmpty(row)">Empty row before removing it
-                                                </md-tooltip>
-                                            </md-button>
+                                            <div data-ng-if="item.cell_type === 'component'" class="width-100 height-100">
+
+                                                <dashboard-constructor-field
+                                                        class="width-100 height-100"
+
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-constructor-data-service="vm.dashboardConstructorDataService"
+                                                        dashboard-constructor-event-service="vm.dashboardConstructorEventService"
+
+                                                ></dashboard-constructor-field>
+
+                                            </div>
+
 
                                         </div>
+
+                                        <!--<md-button class="md-button dashboard-manage-row-btn"-->
+                                                   <!--ng-click="vm.insertRow(tab, row)" style="right: 55px">-->
+                                            <!--+-->
+                                            <!--<md-tooltip class="tooltip_1" md-direction="top">Insert row below-->
+                                            <!--</md-tooltip>-->
+                                        <!--</md-button>-->
+                                        <!--<md-button ng-if="tab.layout.rows > row"-->
+                                                   <!--class="md-button dashboard-manage-row-btn"-->
+                                                   <!--ng-click="vm.deleteRow(tab, row)"-->
+                                                   <!--style="right: 10px;"-->
+                                                   <!--ng-disabled="!vm.isRowEmpty(row)">-->
+                                            <!-- - -->
+                                            <!--<md-tooltip class="tooltip_1" md-direction="top"-->
+                                                        <!--ng-hide="!vm.isRowEmpty(row)">Remove row-->
+                                            <!--</md-tooltip>-->
+                                            <!--<md-tooltip class="tooltip_1" md-direction="top"-->
+                                                        <!--ng-hide="vm.isRowEmpty(row)">Empty row before removing it-->
+                                            <!--</md-tooltip>-->
+                                        <!--</md-button>-->
 
                                     </div>
                                 </div>
@@ -175,20 +174,19 @@
                     <b>Drag fields from here</b>
                 </p>
 
-                <div data-ng-repeat="item in vm.availableComponentsTypes track by item.id"
-                     class="dashboard-constructor-draggable-card">
+                <div class="dashboard-constructor-draggable-card" data-ng-repeat="item in vm.availableComponentsTypes track by item.id" style="padding: 10px">
 
-                    <md-card class="p-l-16" data-index="{{$index}}" data-component-id="{{item.id}}" layout="row">
+                    <md-card class=" dashboard-field-card" class="p-l-16" data-index="{{$index}}" data-component-id="{{item.id}}" layout="row">
 
-                        <p><b data-ng-bind="item.name"></b>: <span data-ng-bind="vm.getVerboseType(item)"></span></p>
+                        <p class="name-holder"><b data-ng-bind="item.name"></b>: <span data-ng-bind="vm.getVerboseType(item)"></span></p>
 
-                        <div class="options-holder" flex="40">
-                            <md-button class="md-button"
+                        <div class="dashboard-field-card-options">
+                            <md-button class=""
                                        aria-label="delete attribute"
                                        data-ng-click="vm.deleteComponentType($event, item)">
                                 <ng-md-icon icon="delete"></ng-md-icon>
                             </md-button>
-                            <md-button class="md-button"
+                            <md-button class=""
                                        aria-label="edit attribute" data-ng-click="vm.editComponentType($event, item)">
                                 <ng-md-icon icon="mode_edit"></ng-md-icon>
                             </md-button>

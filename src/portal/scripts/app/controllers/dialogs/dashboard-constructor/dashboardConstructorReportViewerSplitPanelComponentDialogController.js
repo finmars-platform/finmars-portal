@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var uiService = require('../../../services/uiService');
+
     module.exports = function ($scope, $mdDialog, item, dataService, eventService) {
 
         var vm = this;
@@ -17,16 +19,40 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
-
+                    components: {
+                        addEntityBtn: false,
+                        autoReportRequest: false,
+                        columnAreaHeader: true,
+                        fieldManagerBtn: false,
+                        groupingArea: false,
+                        layoutManager: false,
+                        sidebar: false,
+                        splitPanel: false
+                    },
+                    linked_components: {}
                 }
             }
         }
 
         vm.componentsTypes = [];
 
+        vm.layouts = [];
+
         vm.cancel = function () {
 
             $mdDialog.hide();
+
+        };
+
+        vm.getLayouts = function () {
+
+            uiService.getListLayout(vm.item.settings.entityType).then(function (data) {
+
+                vm.layouts = data.results;
+
+                $scope.$apply();
+
+            })
 
         };
 
@@ -62,7 +88,18 @@
 
             console.log('dataService', dataService);
 
-            vm.componentsTypes = dataService.getComponentsTypes()
+            vm.componentsTypes = dataService.getComponentsTypes();
+
+            vm.reportViewerComponentTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'report_viewer'
+            });
+
+            console.log('vm', vm);
+
+            if (vm.item.id) {
+
+                vm.getLayouts();
+            }
 
         };
 

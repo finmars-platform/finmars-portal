@@ -16,7 +16,15 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Report Viewer Split Panel Component')
+                console.log('Dashboard Report Viewer Split Panel Component', scope)
+
+                scope.vm = {
+                    componentType: scope.item,
+                    entityType: scope.item.data.settings.entityType,
+                    startupSettings: scope.item.data.settings,
+                    dashboardDataService: scope.dashboardDataService,
+                    dashboardEventService: scope.dashboardEventService
+                };
 
             }
         }

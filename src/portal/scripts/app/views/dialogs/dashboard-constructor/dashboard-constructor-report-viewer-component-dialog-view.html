@@ -17,12 +17,12 @@
 
             </div>
 
-            <div>
+            <div class="m-t-16 m-b-16">
 
                 <md-input-container style="width: 200px;">
                     <label for="">Report Type</label>
                     <md-select data-ng-model="vm.item.settings.entityType"
-                               data-ng-change="vm.item.settings.layout = null">
+                               data-ng-change="vm.item.settings.layout = null;vm.item.settings.linked_components= {}">
                         <md-option value="balance-report">Balance Report</md-option>
                         <md-option value="pl-report">P&L Report</md-option>
                         <md-option value="transaction-report">Transaction Report</md-option>
@@ -30,7 +30,7 @@
                 </md-input-container>
 
             </div>
-            <div>
+            <div class="m-t-16 m-b-16">
 
                 <md-input-container style="width: 200px;">
                     <label for="">Layout</label>
@@ -38,7 +38,7 @@
                                ng-class="{'disabled-btn': !vm.item.settings.entityType}"
                                md-on-open="vm.getLayouts()">
                         <md-option
-                                data-ng-repeat="layout in vm.layouts | orderBy:'-name' as results track by layout.id "
+                                data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
                                 ng-value="layout.id">
                             {{layout.name}}
                         </md-option>
@@ -46,6 +46,218 @@
                 </md-input-container>
 
             </div>
+
+            <h4>Linked Components</h4>
+
+            <div data-ng-if="vm.item.settings.entityType == 'balance-report'">
+
+                <div class="m-t-16 m-b-16">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Report Date</label>
+                        <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
+                            <md-option
+                                    data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
+                                    ng-value="componentType.id">{{componentType.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                </div>
+
+            </div>
+
+            <div data-ng-if="vm.item.settings.entityType == 'pl-report'">
+
+                <div class="m-t-16 m-b-16">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Date From</label>
+                        <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
+                            <md-option
+                                    data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
+                                    ng-value="componentType.id">{{componentType.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                </div>
+
+                <div class="m-t-16 m-b-16">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Date To</label>
+                        <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pl_first_date">
+                            <md-option
+                                    data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
+                                    ng-value="componentType.id">{{componentType.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                </div>
+
+            </div>
+
+            <div data-ng-if="vm.item.settings.entityType == 'transaction-report'">
+
+                <div class="m-t-16 m-b-16">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Date From</label>
+                        <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pl_first_date">
+                            <md-option
+                                    data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
+                                    ng-value="componentType.id">{{componentType.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                </div>
+
+                <div class="m-t-16 m-b-16">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Date To</label>
+                        <md-select data-ng-model="vm.item.settings.linked_components.report_settings.end_date">
+                            <md-option
+                                    data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
+                                    ng-value="componentType.id">{{componentType.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                </div>
+
+            </div>
+
+            <div class="m-t-16 m-b-16">
+
+                <md-input-container style="width: 200px;">
+                    <label for="">Currency</label>
+                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_currency">
+                        <md-option
+                                data-ng-repeat="componentType in vm.currencyControlComponentsTypes | orderBy:'-name' track by componentType.id "
+                                ng-value="componentType.id">{{componentType.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
+            <div class="m-t-16 m-b-16">
+
+                <md-input-container style="width: 200px;">
+                    <label for="">Pricing Policy</label>
+                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pricing_policy">
+                        <md-option
+                                data-ng-repeat="componentType in vm.pricingPolicyControlComponentsTypes | orderBy:'-name' track by componentType.id "
+                                ng-value="componentType.id">{{componentType.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
+            <h4>Linked Filters (As when row is selected)</h4>
+
+            <div>
+
+                <div data-ng-repeat="filterLink in vm.item.settings.linked_components.filter_links track by $index"
+                     layout="row">
+
+                    <div layout="row">
+
+                        <md-input-container style="width: 200px;">
+                            <label for="">Reference Name</label>
+                            <input type="text" data-ng-model="filterLink.key">
+                        </md-input-container>
+
+                        <md-input-container class="md-block">
+                            <label>Value Type</label>
+                            <md-select data-ng-model="filterLink.value_type"
+                                       data-ng-change="filterLink.componentId = null">
+                                <md-option ng-value="10">Text</md-option>
+                                <md-option ng-value="20">Number</md-option>
+                                <md-option ng-value="40">Date</md-option>
+                                <md-option ng-value="100">Relation</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container style="width: 200px;">
+                            <label for="">Control Component</label>
+                            <md-select data-ng-model="filterLink.component_id" ng-class="{'disabled-btn': !filterLink.value_type}">
+                                <md-option
+                                        data-ng-repeat="componentType in vm.getComponentTypesByValueType(filterLink.value_type) | orderBy:'-name' track by componentType.id "
+                                        ng-value="componentType.id">{{componentType.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+
+
+                    </div>
+
+                    <div layout="row">
+
+                        <!--<md-button class="md-raised"-->
+                                   <!--ng-class="{'disabled-btn': !filterLink.componentId || !filterLink.key}"-->
+                                   <!--ng-click="vm.updateFilterLink(filterLink)"-->
+                                   <!--style="margin-right:20px;">-->
+                            <!--Update-->
+                        <!--</md-button>-->
+
+                        <md-button class="md-raised md-warn m-t-0" ng-click="vm.deleteFilterLink(filterLink, $index)">
+                            Delete
+                        </md-button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <div class="m-t-16">
+
+                <div layout="row">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Reference Name</label>
+                        <input type="text" data-ng-model="vm.newFilter.key">
+                    </md-input-container>
+
+                    <md-input-container class="md-block">
+                        <label>Value Type</label>
+                        <md-select data-ng-model="vm.newFilter.value_type"
+                                   data-ng-change="vm.newFilter.componentId = null">
+                            <md-option ng-value="10">Text</md-option>
+                            <md-option ng-value="20">Number</md-option>
+                            <md-option ng-value="40">Date</md-option>
+                            <md-option ng-value="100">Relation</md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Control Component</label>
+                        <md-select data-ng-model="vm.newFilter.component_id" ng-class="{'disabled-btn': !vm.newFilter.value_type}" >
+                            <md-option
+                                    data-ng-repeat="componentType in vm.getComponentTypesByValueType(vm.newFilter.value_type) | orderBy:'-name' track by componentType.id "
+                                    ng-value="componentType.id">{{componentType.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-button class="md-raised md-primary"
+                               ng-class="{'disabled-btn': !vm.newFilter.component_id || !vm.newFilter.key}"
+                               ng-click="vm.addFilterLink()" style="margin-right:20px;">
+                        Add Filter Link
+                    </md-button>
+
+                </div>
+
+
+            </div>
+
 
         </div>
     </md-dialog-content>

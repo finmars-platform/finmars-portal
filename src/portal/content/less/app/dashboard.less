@@ -1,5 +1,19 @@
 .dashboard {
 
+  md-tabs-content-wrapper {
+    height: 100%;
+
+    md-tab-content {
+      height: 100%;
+    }
+
+    md-tab-content>div {
+
+      height: 100%;
+
+    }
+  }
+
   .dashboard-row {
     &:after {
       content: '';
@@ -9,8 +23,32 @@
   }
 
   .dashboard-cell {
-    float: left;
+
     padding: 10px;
+
+    box-sizing: border-box;
+
+    overflow: auto;
+
+    &.bordered::after {
+
+      content: '';
+
+      position: absolute;
+      display: block;
+      z-index: -1;
+
+      border: 1px solid #ddd;
+
+      width: calc(100% - 8px);
+      height: calc(100% - 8px);
+
+      top: 2px;
+      left: 2px;
+
+
+    }
+
   }
 
 }
