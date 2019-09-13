@@ -44,9 +44,25 @@
 
         };
 
+        vm.getContentTypeByEntityType = function () {
+
+            if (vm.item.settings.entity_type === 'balance-report') {
+                return 'reports.balancereport'
+            }
+
+            if (vm.item.settings.entity_type === 'pl-report') {
+                return 'reports.plreport'
+            }
+
+            if (vm.item.settings.entity_type === 'transaction-report') {
+                return 'reports.transactionreport'
+            }
+
+        };
+
         vm.getLayouts = function () {
 
-            uiService.getListLayout(vm.item.settings.entityType).then(function (data) {
+            uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
 
                 vm.layouts = data.results;
 
@@ -57,6 +73,19 @@
         };
 
         vm.agree = function () {
+
+            var layoutName;
+
+            vm.layouts.forEach(function (layout) {
+
+                if(layout.id === vm.item.settings.layout) {
+                    layoutName = layout.name
+                }
+
+            });
+
+            vm.item.settings.layout_name = layoutName;
+            vm.item.settings.content_type = vm.getContentTypeByEntityType();
 
             if (vm.item.id) {
 

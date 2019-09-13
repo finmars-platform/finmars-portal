@@ -39,44 +39,6 @@
         }
 
 
-        vm.updateFilterLink = function (item) {
-
-            // ?
-
-        };
-
-        vm.deleteFilterLink = function (item, $index) {
-
-            vm.item.settings.linked_components.filter_links = vm.item.settings.linked_components.filter_links.filter(function (item, index) {
-
-                return $index !== index;
-
-            });
-
-        };
-
-        vm.getComponentTypesByValueType = function (value_type) {
-
-            value_type = parseInt(value_type, 10);
-
-            return vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' && componentType.settings.value_type === value_type
-            });
-
-        };
-
-        vm.addFilterLink = function () {
-
-            if(!vm.item.settings.linked_components.filter_links) {
-                vm.item.settings.linked_components.filter_links = [];
-            }
-
-            vm.item.settings.linked_components.filter_links.push(vm.newFilter);
-
-            vm.newFilter = {};
-
-        };
-
         vm.componentsTypes = [];
 
         vm.layouts = [];
@@ -87,9 +49,25 @@
 
         };
 
+        vm.getContentTypeByEntityType = function () {
+
+            if (vm.item.settings.entity_type === 'balance-report') {
+                return 'reports.balancereport'
+            }
+
+            if (vm.item.settings.entity_type === 'pl-report') {
+                return 'reports.plreport'
+            }
+
+            if (vm.item.settings.entity_type === 'transaction-report') {
+                return 'reports.transactionreport'
+            }
+
+        };
+
         vm.getLayouts = function () {
 
-            uiService.getListLayout(vm.item.settings.entityType).then(function (data) {
+            uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
 
                 vm.layouts = data.results;
 
@@ -101,9 +79,18 @@
 
         vm.agree = function () {
 
-            if(!vm.item.settings.linked_components.filter_links) {
-                vm.item.settings.linked_components.filter_links = [];
-            }
+            var layoutName;
+
+            vm.layouts.forEach(function (layout) {
+
+                if(layout.id === vm.item.settings.layout) {
+                    layoutName = layout.name
+                }
+
+            });
+
+            vm.item.settings.layout_name = layoutName;
+            vm.item.settings.content_type = vm.getContentTypeByEntityType();
 
             if (vm.item.id) {
 
@@ -136,24 +123,6 @@
             console.log('dataService', dataService);
 
             vm.componentsTypes = dataService.getComponentsTypes();
-
-            console.log('vm.componentsTypes', vm.componentsTypes);
-
-            vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control';
-            });
-
-            vm.dateControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' && componentType.settings.value_type === 40
-            });
-
-            vm.currencyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' && componentType.settings.value_type === 100 && componentType.settings.content_type === 'currencies.currency'
-            });
-
-            vm.pricingPolicyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' && componentType.settings.value_type === 100 && componentType.settings.content_type === 'instruments.pricingpolicy'
-            });
 
             console.log('vm', vm);
 

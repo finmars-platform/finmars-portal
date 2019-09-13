@@ -324,6 +324,7 @@
                 console.log('$scope.$parent.vm.startupSettings', $scope.$parent.vm.startupSettings);
                 console.log('$scope.$parent.vm.componentType', $scope.$parent.vm.componentType);
 
+                vm.entityType = $scope.$parent.vm.entityType;
                 vm.startupSettings = $scope.$parent.vm.startupSettings;
                 vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
@@ -333,12 +334,9 @@
                     vm.isGrandTotal = true;
                 }
 
-
                 vm.setEventListeners();
 
-                vm.entityType = vm.startupSettings.entityType;
-
-                vm.entityViewerDataService.setEntityType(vm.startupSettings.entityType);
+                vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 
                 var layoutId = vm.startupSettings.layout;
