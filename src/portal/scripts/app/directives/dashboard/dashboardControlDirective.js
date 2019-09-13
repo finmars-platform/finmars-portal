@@ -77,7 +77,7 @@
                 scope.clearValue = function () {
 
                     scope.item.data.store.value = null;
-                    item.data.store.name = '';
+                    scope.item.data.store.name = '';
                     scope.valueChanged()
 
                 };
