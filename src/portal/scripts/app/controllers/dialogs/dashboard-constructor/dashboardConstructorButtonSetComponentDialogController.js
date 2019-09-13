@@ -63,6 +63,46 @@
             {
                 name: 'Pricing Policies',
                 link: 'app.data.pricing-policy'
+            },
+            {
+                name: 'User Attributes',
+                link: 'app.settings.entities-custom-attributes'
+            },
+            {
+                name: 'Forms',
+                link: 'app.settings.forms'
+            },
+            {
+                name: 'Price Schemes',
+                link: 'app.settings.price-download-scheme'
+            },
+            {
+                name: 'Instrument Schemes',
+                link: 'app.settings.instrument-import'
+            },
+            {
+                name: 'Automated Price Schedule',
+                link: 'app.settings.automated-uploads-history'
+            },
+            {
+                name: 'Data Import',
+                link: 'app.settings.simple-entity-import'
+            },
+            {
+                name: 'Transactions Import',
+                link: 'app.settings.transaction-import'
+            },
+            {
+                name: 'Complex Import',
+                link: 'app.settings.complex-import'
+            },
+            {
+                name: 'Import Configuration',
+                link: 'app.settings.import-configuration'
+            },
+            {
+                name: 'Export Configuration',
+                link: 'app.settings.export-configuration'
             }
 
         ];
