@@ -17,7 +17,7 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
-
+                    buttons: []
                 }
             }
         }
@@ -29,6 +29,35 @@
             $mdDialog.hide();
 
         };
+
+        vm.addNewButton = function () {
+
+            vm.item.settings.buttons.push(vm.newButton);
+            vm.newButton = {}
+
+        };
+
+        vm.deleteButton = function ($event, button, $index) {
+
+            vm.item.settings.buttons = vm.item.settings.buttons.filter(function (item, index) {
+
+                return $index !== index;
+
+            });
+
+        };
+
+        vm.links = [
+            {
+                name: 'Account Types',
+                link: 'app.data.account-type'
+            },
+            {
+                name: 'Instrument Types',
+                link: 'app.data.instrument-type'
+            }
+
+        ];
 
         vm.agree = function () {
 
