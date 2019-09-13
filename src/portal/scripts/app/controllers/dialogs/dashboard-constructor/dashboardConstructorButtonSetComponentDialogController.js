@@ -68,6 +68,33 @@
                 name: 'User Attributes',
                 link: 'app.settings.entities-custom-attributes'
             },
+
+
+            {
+                name: 'Data Import (from file)',
+                link: 'app.import.simple-entity'
+            },
+            {
+                name: 'Transactions Import (from file)',
+                link: 'app.import.transaction'
+            },
+            {
+                name: 'Data and Transactions Import (from file)',
+                link: 'app.import.complex-import'
+            },
+            {
+                name: 'Instrument Import (from provider)',
+                link: 'app.import.instrument'
+            },
+            {
+                name: 'Prices/FX (from provider)',
+                link: 'app.import.prices'
+            },
+            {
+                name: 'Mapping Tables',
+                link: 'app.import.mapping-tables'
+            },
+
             {
                 name: 'Forms',
                 link: 'app.settings.forms'
@@ -81,19 +108,19 @@
                 link: 'app.settings.instrument-import'
             },
             {
-                name: 'Automated Price Schedule',
+                name: 'Automated Price Schedule Settings',
                 link: 'app.settings.automated-uploads-history'
             },
             {
-                name: 'Data Import',
+                name: 'Data Import Schemes',
                 link: 'app.settings.simple-entity-import'
             },
             {
-                name: 'Transactions Import',
+                name: 'Transactions Import Schemes',
                 link: 'app.settings.transaction-import'
             },
             {
-                name: 'Complex Import',
+                name: 'Complex Import Schemes',
                 link: 'app.settings.complex-import'
             },
             {
@@ -104,6 +131,8 @@
                 name: 'Export Configuration',
                 link: 'app.settings.export-configuration'
             }
+
+
 
         ];
 
