@@ -107,7 +107,10 @@
 
             var items = item.data.body;
 
-            configurationImportService.importConfiguration(items).then(function () {
+            console.log('vm.applyItem', items);
+            vm.settings = {mode: 'skip'};
+
+            configurationImportService.importConfiguration(items, vm.settings).then(function () {
 
                 $state.go('app.home');
             })
