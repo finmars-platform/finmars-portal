@@ -105,7 +105,7 @@
 
                     <md-input-container style="width: 200px;">
                         <label for="">Date From</label>
-                        <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pl_first_date">
+                        <md-select data-ng-model="vm.item.settings.linked_components.report_settings.begin_date">
                             <md-option
                                     data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
                                     ng-value="componentType.id">{{componentType.name}}
