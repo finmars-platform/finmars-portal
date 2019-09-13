@@ -55,6 +55,14 @@
             {
                 name: 'Instrument Types',
                 link: 'app.data.instrument-type'
+            },
+            {
+                name: 'Transaction Types',
+                link: 'app.data.transaction-type'
+            },
+            {
+                name: 'Pricing Policies',
+                link: 'app.data.pricing-policy'
             }
 
         ];
