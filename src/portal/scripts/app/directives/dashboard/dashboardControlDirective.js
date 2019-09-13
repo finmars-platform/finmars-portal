@@ -74,6 +74,14 @@
 
                 };
 
+                scope.clearValue = function () {
+
+                    scope.item.data.store.value = null;
+                    item.data.store.name = '';
+                    scope.valueChanged()
+
+                };
+
                 scope.init = function () {
 
                     scope.entityType = scope.getEntityTypeByContentType(scope.item.data.settings.content_type);

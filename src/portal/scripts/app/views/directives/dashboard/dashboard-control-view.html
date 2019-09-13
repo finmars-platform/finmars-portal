@@ -64,13 +64,13 @@
 
         <div data-ng-if="item.data.settings.content_type != 'currencies.currency' && item.data.settings.content_type != 'instruments.pricingpolicy'">
 
-            <entity-search-select item="item.data.store.value" label="item.data.name"
+            <entity-search-select item="item.data.store.value" label="item.data.name" input-text="item.data.store.name"
                                   entity-type="entityType" data-callback="valueChanged()"></entity-search-select>
 
         </div>
 
         <div>
-            <md-button data-ng-click="item.data.store.value = null; valueChanged()">Clear</md-button>
+            <md-button data-ng-click="clearValue()">Clear</md-button>
         </div>
 
     </div>
