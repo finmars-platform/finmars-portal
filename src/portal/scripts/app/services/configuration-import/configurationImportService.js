@@ -776,6 +776,46 @@
 
                             }));
                             break;
+                        case 'ui.dashboardlayout':
+                            resolve(new Promise(function (resolve, reject) {
+
+                                uiRepository.getDashboardLayout({
+                                    filters: {
+                                        name: item.name
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.name === item.name) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolve(uiRepository.updateDashboardLayout(item.id, item));
+
+                                        } else {
+                                            resolve(uiRepository.createDashboardLayout(item));
+                                        }
+                                    } else {
+
+                                        resolve(uiRepository.createDashboardLayout(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
                         case 'reports.balancereportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 
@@ -1178,11 +1218,25 @@
                     item.entity !== 'complex_import.compleximportscheme' &&
                     item.entity !== 'instruments.instrumenttype' &&
                     item.entity !== 'transactions.transactiontypegroup' &&
-                    item.entity !== 'transactions.transactiontype'
+                    item.entity !== 'transactions.transactiontype' &&
+                    item.entity !== 'ui.editlayout' &&
+                    item.entity !== 'ui.listlayout' &&
+                    item.entity !== 'ui.reportlayout'
             });
 
             var complexImportSchemes = items.filter(function (item) {
                 return item.entity === 'complex_import.compleximportscheme';
+            });
+
+            var layoutEntities = items.filter(function (item) {
+                return item.entity === 'ui.editlayout' ||
+                    item.entity === 'ui.listlayout' ||
+                    item.entity === 'ui.reportlayout'
+            });
+
+            var dashboardLayoutEntities = items.filter(function (item) {
+                return item.entity === 'ui.dashboardlayout'
+
             });
 
             overwriteEntityItems(instrumentTypes, cacheContainer, errors).then(function (data) {
@@ -1205,17 +1259,28 @@
 
                                 console.log("Overwrite Other Entities success", data);
 
-                                overwriteEntityItems(complexImportSchemes, cacheContainer, errors).then(function (data) {
+                                overwriteEntityItems(layoutEntities, cacheContainer, errors).then(function (data) {
 
-                                    console.log("Overwrite Complex Import Scheme success", data);
+                                    console.log("Overwrite Layouts success", data);
 
-                                    resolve(data);
+                                    overwriteEntityItems(dashboardLayoutEntities, cacheContainer, errors).then(function (data) {
 
-                                }).catch(function (reason) {
+                                        console.log("Overwrite Dashboard Layouts success", data);
 
-                                    console.log('Overwrite importConfiguration.reason', reason);
+                                        overwriteEntityItems(complexImportSchemes, cacheContainer, errors).then(function (data) {
 
-                                    reject(reason);
+                                            console.log("Overwrite Complex Import Scheme success", data);
+
+                                            resolve(data);
+
+                                        }).catch(function (reason) {
+
+                                            console.log('Overwrite importConfiguration.reason', reason);
+
+                                            reject(reason);
+                                        })
+                                    })
+
                                 })
 
                             })
@@ -1469,6 +1534,60 @@
                                     } else {
 
                                         resolveLocal(uiRepository.createListLayout(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'ui.dashboardlayout':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                uiRepository.getDashboardLayout({
+                                    filters: {
+                                        name: item.name
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.name === item.name) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    content_type: 'ui.dashboardlayout',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Dashboard Layout already exists: name ' + item.name
+                                                    },
+                                                    mode: 'skip'
+                                                });
+
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(uiRepository.createDashboardLayout(item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(uiRepository.createDashboardLayout(item));
 
                                     }
 
@@ -2401,6 +2520,7 @@
                     item.entity !== 'ui.editlayout' &&
                     item.entity !== 'ui.listlayout' &&
                     item.entity !== 'ui.reportlayout' &&
+                    item.entity !== 'ui.dashboardlayout' &&
                     item.entity !== 'ui.bookmark' &&
                     item.entity !== 'complex_import.compleximportscheme' &&
                     item.entity !== 'obj_attrs.portfolioattributetype' &&
@@ -2416,6 +2536,11 @@
                 return item.entity === 'ui.editlayout' ||
                     item.entity === 'ui.listlayout' ||
                     item.entity === 'ui.reportlayout'
+            });
+
+            var dashboardLayoutEntities = items.filter(function (item) {
+                return item.entity === 'ui.dashboardlayout'
+
             });
 
             var bookmarks = items.filter(function (item) {
@@ -2459,17 +2584,22 @@
 
                                             console.log("Layout import success", data);
 
-                                            createEntityItems(bookmarks, settings, cacheContainer, errors).then(function (data) {
+                                            createEntityItems(dashboardLayoutEntities, settings, cacheContainer, errors).then(function (data) {
 
-                                                console.log("Bookmark import success", data);
+                                                console.log("Dashboard Layout import success", data);
 
-                                                resolve(data);
+                                                createEntityItems(bookmarks, settings, cacheContainer, errors).then(function (data) {
 
-                                            }).catch(function (reason) {
+                                                    console.log("Bookmark import success", data);
 
-                                                console.log('importConfiguration.reason', reason);
+                                                    resolve(data);
 
-                                                reject(reason);
+                                                }).catch(function (reason) {
+
+                                                    console.log('importConfiguration.reason', reason);
+
+                                                    reject(reason);
+                                                })
                                             })
 
                                         })

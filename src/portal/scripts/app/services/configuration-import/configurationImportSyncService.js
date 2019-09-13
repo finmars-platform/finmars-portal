@@ -145,6 +145,19 @@
 
     };
 
+    var syncDashboardLayout = function (item, cacheContainer, errors) {
+
+        var errorOptions = {
+            item: item,
+            content_type: 'ui.dashboardlayout'
+        };
+
+        return new Promise(function (resolve, reject) {
+            resolve(configurationImportMapService.mapDashboardLayout(item, cacheContainer, errors, errorOptions));
+        })
+
+    };
+
     var syncReportLayout = function (item, cacheContainer, errors) {
 
         var errorOptions = {
@@ -474,6 +487,9 @@
                         break;
                     case 'ui.listlayout':
                         resolve(syncListLayout(item, cacheContainer, errors));
+                        break;
+                    case 'ui.dashboardlayout':
+                        resolve(syncDashboardLayout(item, cacheContainer, errors));
                         break;
                     case 'ui.reportlayout':
                         resolve(syncReportLayout(item, cacheContainer, errors));

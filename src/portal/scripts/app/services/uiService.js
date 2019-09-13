@@ -32,6 +32,10 @@
         return uiRepository.getListLayout(entity, options);
     };
 
+    var getListLayoutDefault = function (options) {
+        return uiRepository.getListLayoutDefault(options);
+    };
+
     var getListLayoutByKey = function (key) {
         return uiRepository.getListLayoutByKey(key);
     };
@@ -167,6 +171,7 @@
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
         getListLayout: getListLayout,
+        getListLayoutDefault: getListLayoutDefault,
         getListLayoutByKey: getListLayoutByKey,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
