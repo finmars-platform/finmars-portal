@@ -11,28 +11,25 @@
 
         var vm = this;
 
+        vm.newFilter = {};
+
+        vm.filterLinks = [];
+
         if (item) {
             vm.item = item;
         } else {
             vm.item = {
-                type: 'report_viewer_split_panel',
+                type: 'report_viewer_matrix',
                 id: null, // should be generated before create
                 name: '',
                 settings: {
-                    components: {
-                        addEntityBtn: false,
-                        autoReportRequest: false,
-                        columnAreaHeader: true,
-                        fieldManagerBtn: false,
-                        groupingArea: false,
-                        layoutManager: false,
-                        sidebar: false,
-                        splitPanel: false
-                    },
-                    linked_components: {}
+                    abscissa: '',
+                    ordinate: '',
+                    value_key: ''
                 }
             }
         }
+
 
         vm.componentsTypes = [];
 
@@ -78,7 +75,7 @@
 
             vm.layouts.forEach(function (layout) {
 
-                if(layout.id === vm.item.settings.layout) {
+                if (layout.id === vm.item.settings.layout) {
                     layoutName = layout.name
                 }
 
@@ -118,10 +115,6 @@
             console.log('dataService', dataService);
 
             vm.componentsTypes = dataService.getComponentsTypes();
-
-            vm.reportViewerComponentTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'report_viewer' || componentType.type === 'report_viewer_matrix'
-            });
 
             console.log('vm', vm);
 

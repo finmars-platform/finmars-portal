@@ -34,8 +34,8 @@
             vm.dashboardDataService = null;
             vm.dashboardEventService = null;
             vm.componentType = null;
+            vm.matrixSettings = null;
 
-            vm.isGrandTotal = false;
             vm.grandTotalProcessing = true;
 
             vm.setEventListeners = function () {
@@ -58,9 +58,8 @@
 
                 });
 
-                if (vm.isGrandTotal) {
+                if (vm.componentType.data.type === 'report_viewer_grand_total') {
 
-                    console.log("heeree?");
 
                     vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
@@ -292,7 +291,7 @@
 
                 }
 
-                if (vm.componentType.data.type === 'report_viewer') {
+                if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_matrix') {
 
                     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
@@ -330,10 +329,6 @@
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
                 vm.componentType = $scope.$parent.vm.componentType;
 
-                if (vm.componentType.data.type === 'report_viewer_grand_total') {
-                    vm.isGrandTotal = true;
-                }
-
                 vm.setEventListeners();
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
@@ -341,6 +336,13 @@
 
                 var layoutId = vm.startupSettings.layout;
 
+                if (vm.componentType.data.type === 'report_viewer_matrix') {
+                    vm.matrixSettings = {
+                        abscissa: vm.componentType.data.settings.abscissa,
+                        ordinate: vm.componentType.data.settings.ordinate,
+                        value_key: vm.componentType.data.settings.value_key
+                    };
+                }
 
                 uiService.getListLayoutByKey(layoutId).then(function (data) {
 
@@ -348,7 +350,9 @@
 
                         vm.listViewIsReady = true;
 
-                        if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_grand_total') {
+                        if (vm.componentType.data.type === 'report_viewer' ||
+                            vm.componentType.data.type === 'report_viewer_grand_total' ||
+                            vm.componentType.data.type === 'report_viewer_matrix') {
 
                             rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
