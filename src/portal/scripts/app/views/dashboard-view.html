@@ -107,6 +107,20 @@
                                             ></dashboard-report-viewer-grand-total>
                                         </div>
 
+
+                                        <div data-ng-if="item.data.type == 'report_viewer_matrix'"
+                                             class="height-100">
+                                            <dashboard-report-viewer-matrix
+                                                    class="height-100 display-block"
+                                                    tab-number="tab.tab_number"
+                                                    row-number="row.row_number"
+                                                    column-number="item.column_number"
+                                                    item="item"
+                                                    dashboard-data-service="vm.dashboardDataService"
+                                                    dashboard-event-service="vm.dashboardEventService"
+                                            ></dashboard-report-viewer-matrix>
+                                        </div>
+
                                         <div data-ng-if="item.data.type == 'entity_viewer'" class="height-100">
                                             <dashboard-entity-viewer
                                                     tab-number="tab.tab_number"

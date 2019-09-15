@@ -1,0 +1,79 @@
+<div class="report-viewer-matrix">
+    <div data-ng-if="!processing" class="report-viewer-matrix-holder">
+
+        <div class="report-viewer-matrix-row">
+
+            <div class="report-viewer-matrix-cell report-viewer-matrix-column-header-cell report-viewer-empty-header-cell"
+                 title="-">
+                -
+            </div>
+
+            <div class="report-viewer-matrix-cell report-viewer-matrix-column-header-cell"
+                 data-ng-class="{'active': activeItem == 'column_total:' + $index}" title="{{column}}"
+                 data-ng-click="singleColumnTotalClick($event, $index)"
+                 data-ng-repeat="column in columns track by $index">
+                {{column}}
+            </div>
+
+            <div class="report-viewer-matrix-cell report-viewer-matrix-column-header-cell" title="TOTAL"
+                 data-ng-class="{'active': activeItem == 'columns_total'}"
+                 data-ng-click="columnsTotalClick($event)">
+                TOTAL
+            </div>
+
+
+        </div>
+
+        <div data-ng-repeat="row in matrix track by row.index" class="report-viewer-matrix-row">
+
+            <div class="report-viewer-matrix-cell report-viewer-matrix-row-header-cell" title="{{row.row_name}}"
+                 data-ng-click="singleRowTotalClick($event, row.index)"
+                 data-ng-class="{'active': activeItem == 'row_total:' + row.index}">
+                {{row.row_name}}
+            </div>
+
+            <div class="report-viewer-matrix-cell" data-ng-repeat="item in row.items track by item.index"
+                 title="{{item.data.value}}" data-ng-click="cellClick($event, row.index, item.index)"
+                 data-ng-class="{'active': activeItem == 'cell:' + row.index + ':' + item.index}">
+
+                {{item.data.value}}
+
+            </div>
+
+            <div class="report-viewer-matrix-cell report-viewer-cell-border-left" title="{{totals.rows[row.index].total}}"
+                 data-ng-click="singleRowTotalClick($event, row.index)"
+                 data-ng-class="{'active': activeItem == 'row_total:' + row.index}">
+                {{totals.rows[row.index].total}}
+            </div>
+
+        </div>
+
+        <div class="report-viewer-matrix-row report-viewer-matrix-bottom-row">
+
+            <div class="report-viewer-matrix-cell report-viewer-matrix-row-header-cell" title="TOTAL"
+                 data-ng-click="rowsTotalClick($event)" data-ng-class="{'active': activeItem == 'rows_total'}">
+                TOTAL
+            </div>
+
+            <div data-ng-repeat="item in totals.columns track by $index" class="report-viewer-matrix-cell"
+                 title="{{item.total}}" data-ng-click="singleColumnTotalClick($event, $index)"
+                 data-ng-class="{'active': activeItem == 'column_total:' + $index}">
+                {{item.total}}
+            </div>
+
+            <div class="report-viewer-matrix-cell report-viewer-cell-border-left" title="{{totals.total}}" data-ng-click="totalClick($event)"
+                 data-ng-class="{'active': activeItem == 'total'}">
+                {{totals.total}}
+            </div>
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="processing">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="loader-center-64">
+            <md-progress-circular md-mode="indeterminate" md-diameter="64"></md-progress-circular>
+        </div>
+    </div>
+
+</div>
