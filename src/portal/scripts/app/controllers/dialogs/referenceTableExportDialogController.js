@@ -20,7 +20,7 @@
         vm.readyStatus = {content: false};
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.setDownloadLink = function () {
@@ -47,7 +47,7 @@
                     link.download = 'Reference Table ' + vm.item.name + '.csv';
                 }
 
-                $mdDialog.cancel();
+                $mdDialog.hide();
             })
 
         };

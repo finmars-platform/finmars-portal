@@ -218,7 +218,7 @@
         vm.initTransitionListener = function(){
 
             $transitions.onStart({}, function () {
-                $mdDialog.cancel();
+                $mdDialog.hide();
             });
 
             $transitions.onFinish({}, function (transition) {

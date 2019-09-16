@@ -70,7 +70,7 @@
 
         vm.addFilterLink = function () {
 
-            if(!vm.item.settings.linked_components.filter_links) {
+            if (!vm.item.settings.linked_components.filter_links) {
                 vm.item.settings.linked_components.filter_links = [];
             }
 
@@ -92,7 +92,7 @@
 
         vm.getLayouts = function () {
 
-            uiService.getListLayout(vm.item.settings.entityType).then(function (data) {
+            uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
 
                 vm.layouts = data.results;
 
@@ -102,11 +102,40 @@
 
         };
 
+        vm.getContentTypeByEntityType = function () {
+
+            if (vm.item.settings.entity_type === 'balance-report') {
+                return 'reports.balancereport'
+            }
+
+            if (vm.item.settings.entity_type === 'pl-report') {
+                return 'reports.plreport'
+            }
+
+            if (vm.item.settings.entity_type === 'transaction-report') {
+                return 'reports.transactionreport'
+            }
+
+        };
+
         vm.agree = function () {
 
-            if(!vm.item.settings.linked_components.filter_links) {
+            if (!vm.item.settings.linked_components.filter_links) {
                 vm.item.settings.linked_components.filter_links = [];
             }
+
+            var layoutName;
+
+            vm.layouts.forEach(function (layout) {
+
+                if (layout.id === vm.item.settings.layout) {
+                    layoutName = layout.name
+                }
+
+            });
+
+            vm.item.settings.layout_name = layoutName;
+            vm.item.settings.content_type = vm.getContentTypeByEntityType();
 
             if (vm.item.id) {
 

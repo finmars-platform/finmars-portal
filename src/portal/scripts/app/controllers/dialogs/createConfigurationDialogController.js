@@ -12,7 +12,7 @@
         var vm = this;
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.configurationFileIsAvailable = function () {

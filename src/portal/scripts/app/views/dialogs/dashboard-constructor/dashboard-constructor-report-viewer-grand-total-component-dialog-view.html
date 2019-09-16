@@ -1,0 +1,61 @@
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>New Report Viewer Grand Total Component</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="p-24">
+
+            <md-input-container style="width: 200px;">
+                <label for="">Name</label>
+                <input type="text" data-ng-model="vm.item.name">
+            </md-input-container>
+
+            <div class="m-t-16 m-b-16">
+
+                <md-input-container style="width: 200px;">
+                    <label for="">Report Type</label>
+                    <md-select data-ng-model="vm.item.settings.entity_type"
+                               data-ng-change="vm.item.settings.layout = null;vm.item.settings.linked_components= {}">
+                        <md-option value="balance-report">Balance Report</md-option>
+                        <md-option value="pl-report">P&L Report</md-option>
+                        <md-option value="transaction-report">Transaction Report</md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+            <div class="m-t-16 m-b-16">
+
+                <md-input-container style="width: 200px;">
+                    <label for="">Layout</label>
+                    <md-select data-ng-model="vm.item.settings.layout"
+                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
+                               md-on-open="vm.getLayouts()">
+                        <md-option
+                                data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
+                                ng-value="layout.id">
+                            {{layout.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
+            <md-input-container style="width: 200px;">
+                <label for="">Column Reference Name</label>
+                <input type="text" data-ng-model="vm.item.settings.grand_total_column">
+            </md-input-container>
+
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()" style="margin-right:20px;">
+            Cancel
+        </md-button>
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            OK
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

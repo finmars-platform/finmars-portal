@@ -17,7 +17,7 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
-
+                    buttons: []
                 }
             }
         }
@@ -29,6 +29,112 @@
             $mdDialog.hide();
 
         };
+
+        vm.addNewButton = function () {
+
+            vm.item.settings.buttons.push(vm.newButton);
+            vm.newButton = {}
+
+        };
+
+        vm.deleteButton = function ($event, button, $index) {
+
+            vm.item.settings.buttons = vm.item.settings.buttons.filter(function (item, index) {
+
+                return $index !== index;
+
+            });
+
+        };
+
+        vm.links = [
+            {
+                name: 'Account Types',
+                link: 'app.data.account-type'
+            },
+            {
+                name: 'Instrument Types',
+                link: 'app.data.instrument-type'
+            },
+            {
+                name: 'Transaction Types',
+                link: 'app.data.transaction-type'
+            },
+            {
+                name: 'Pricing Policies',
+                link: 'app.data.pricing-policy'
+            },
+            {
+                name: 'User Attributes',
+                link: 'app.settings.entities-custom-attributes'
+            },
+
+
+            {
+                name: 'Data Import (from file)',
+                link: 'app.import.simple-entity'
+            },
+            {
+                name: 'Transactions Import (from file)',
+                link: 'app.import.transaction'
+            },
+            {
+                name: 'Data and Transactions Import (from file)',
+                link: 'app.import.complex-import'
+            },
+            {
+                name: 'Instrument Import (from provider)',
+                link: 'app.import.instrument'
+            },
+            {
+                name: 'Prices/FX (from provider)',
+                link: 'app.import.prices'
+            },
+            {
+                name: 'Mapping Tables',
+                link: 'app.import.mapping-tables'
+            },
+
+            {
+                name: 'Forms',
+                link: 'app.settings.forms'
+            },
+            {
+                name: 'Price Schemes',
+                link: 'app.settings.price-download-scheme'
+            },
+            {
+                name: 'Instrument Schemes',
+                link: 'app.settings.instrument-import'
+            },
+            {
+                name: 'Automated Price Schedule Settings',
+                link: 'app.settings.automated-uploads-history'
+            },
+            {
+                name: 'Data Import Schemes',
+                link: 'app.settings.simple-entity-import'
+            },
+            {
+                name: 'Transactions Import Schemes',
+                link: 'app.settings.transaction-import'
+            },
+            {
+                name: 'Complex Import Schemes',
+                link: 'app.settings.complex-import'
+            },
+            {
+                name: 'Import Configuration',
+                link: 'app.settings.import-configuration'
+            },
+            {
+                name: 'Export Configuration',
+                link: 'app.settings.export-configuration'
+            }
+
+
+
+        ];
 
         vm.agree = function () {
 

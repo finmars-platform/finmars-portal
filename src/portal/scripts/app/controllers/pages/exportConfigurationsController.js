@@ -224,7 +224,8 @@
                             case "accounts.account":
                                 daContentType = "Account";
                                 break;
-                        };
+                        }
+                        ;
 
                         var daName = attr.name;
                         var usagesCount = 0;
@@ -436,7 +437,8 @@
 
                     if (!item.active) {
                         entityItem.active = false;
-                    };
+                    }
+                    ;
 
                 });
 
@@ -466,13 +468,15 @@
 
             if (!vm.activeLayout.data.statuses) {
                 vm.activeLayout.data.statuses = {};
-            };
+            }
+            ;
 
             vm.items.forEach(syncConfigItemsWithLayout);
 
             if (!vm.activeLayout.data.mappingsStatuses) {
                 vm.activeLayout.data.mappingsStatuses = {};
-            };
+            }
+            ;
 
             // syncing mappings with layout
             vm.dataSettings.forEach(syncMappingItemsWithLayout);
@@ -487,7 +491,8 @@
 
             if (!vm.activeLayout.data.statuses) {
                 vm.activeLayout.data.statuses = {};
-            };
+            }
+            ;
 
             vm.activeLayout.data.filename = vm.filename;
 
@@ -503,7 +508,8 @@
 
                         if (result || typeof result === "string") {
                             vm.activeLayout.data.statuses[item.entity].push(result);
-                        };
+                        }
+                        ;
                     }
 
                 });
@@ -514,7 +520,8 @@
 
             if (!vm.activeLayout.data.mappingsStatuses) {
                 vm.activeLayout.data.mappingsStatuses = {};
-            };
+            }
+            ;
 
             mappingsItems.forEach(function (item) {
 
@@ -528,7 +535,8 @@
 
                         if (result || typeof result === "string") {
                             vm.activeLayout.data.mappingsStatuses[item.entity].push(result);
-                        };
+                        }
+                        ;
                     }
 
                 });
@@ -554,7 +562,8 @@
 
                 if (res.status === 'agree') {
                     vm.getConfigurationExportLayouts();
-                };
+                }
+                ;
 
             })
 
@@ -661,6 +670,8 @@
                     return "Entity viewer layouts";
                 case 'ui.reportlayout':
                     return "Report builder layouts";
+                case 'ui.dashboardlayout':
+                    return "Dashboard layouts";
                 case 'ui.bookmark':
                     return "Bookmarks";
                 case 'reference_tables.referencetable':
@@ -853,7 +864,7 @@
 
         };
 
-        vm.cleanItemsBeforeExport = function(items){
+        vm.cleanItemsBeforeExport = function (items) {
 
             var results = [];
 
@@ -883,7 +894,7 @@
 
         };
 
-        vm.convertToExportStructure = function(items) {
+        vm.convertToExportStructure = function (items) {
 
             var results = [];
 
@@ -933,19 +944,21 @@
             vm.file.notes = vm.activeLayout.data.notes;
             vm.file.body = [];
 
-            if(configurationResults.length) {
+            if (configurationResults.length) {
                 vm.file.body.push({
                     section_name: 'configuration',
                     items: configurationResults
                 });
-            };
+            }
+            ;
 
-            if(mappingsResults.length) {
+            if (mappingsResults.length) {
                 vm.file.body.push({
                     section_name: 'mappings',
                     items: mappingsResults
                 });
-            };
+            }
+            ;
 
             var resultFile = JSON.stringify(vm.file);
 
@@ -1028,12 +1041,15 @@
                     if (mappingGroups[i].entities.indexOf(parent.entity) !== -1) {
                         vm[mappingGroups[i].groupKey].push(parent);
                         break;
-                    };
+                    }
+                    ;
 
                     if (i === mappingGroups.length - 1) {
                         vm.systemElements.push(parent);
-                    };
-                };
+                    }
+                    ;
+                }
+                ;
 
             });
         };

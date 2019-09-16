@@ -1,0 +1,75 @@
+.report-viewer-matrix {
+
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+
+  .report-viewer-matrix-holder {
+    display: block;
+  }
+
+  .report-viewer-matrix-row {
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
+
+  .report-viewer-matrix-column-header-cell {
+    background: #ddd;
+    text-align: center;
+    //padding-top: 4px;
+  }
+
+  .report-viewer-matrix-row-header-cell {
+    background: #ddd;
+    text-align: left;
+  }
+
+  .report-viewer-matrix-bottom-row {
+    border-top: 1px solid #ddd;
+  }
+
+  .report-viewer-cell-border-left {
+    border-left: 1px solid #ddd;
+  }
+
+  .report-viewer-matrix-cell {
+    float: left;
+    //padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    //line-height: 1.5;
+
+    cursor: pointer;
+
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.active {
+      color: #fff;
+      background: #363636;
+
+      &:hover {
+        background: #363636;
+        opacity: .9;
+      }
+    }
+
+    &:hover {
+      background: #aaa;
+    }
+  }
+
+  .report-viewer-empty-header-cell {
+    cursor: default;
+    background: #ccc;
+
+    &:hover {
+      background: #ccc;
+    }
+  }
+
+}

@@ -243,6 +243,8 @@
                     return "Entity viewer layouts";
                 case 'ui.reportlayout':
                     return "Report builder layouts";
+                case 'ui.dashboardlayout':
+                    return "Dashboard layouts";
                 case 'ui.bookmark':
                     return "Bookmarks";
                 case 'reference_tables.referencetable':
@@ -776,7 +778,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.checkForDuplicates = function () {
