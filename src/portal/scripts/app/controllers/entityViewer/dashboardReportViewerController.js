@@ -360,17 +360,20 @@
 
                         $scope.$apply();
 
-                        var evComponents = vm.entityViewerDataService.getComponents();
+                        if (vm.componentType.data.type === 'report_viewer') {
 
-                        Object.keys(vm.startupSettings.components).forEach(function (key) {
+                            var evComponents = vm.entityViewerDataService.getComponents();
 
-                            evComponents[key] = vm.startupSettings.components[key]
+                            Object.keys(vm.startupSettings.components).forEach(function (key) {
 
-                        });
+                                evComponents[key] = vm.startupSettings.components[key]
 
-                        // console.log('evComponents', evComponents);
+                            });
 
-                        vm.entityViewerDataService.setComponents(evComponents);
+                            // console.log('evComponents', evComponents);
+
+                            vm.entityViewerDataService.setComponents(evComponents);
+                        }
 
                         vm.initDashboardExchange();
 
