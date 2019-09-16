@@ -19,6 +19,7 @@
         var rootEntityContentWrapElem;
         var rootEntityContentWrapElemHeight;
         var rootEntityContentWrapElemWidth;
+        var rootEntityContentWrapElemPaddingTop;
 
         function setViewportElem(elem) {
             viewportElem = elem
@@ -108,41 +109,6 @@
             return contentWrapElemWidth;
         }
 
-        // Root content Wrap
-
-        function setRootEntityContentWrapElem(elem) {
-
-            // console.log('setContentWrapElem elem.clientWidth', elem.clientWidth);
-
-            rootEntityContentWrapElem = elem;
-            rootEntityContentWrapElemHeight = elem.clientHeight;
-            rootEntityContentWrapElemWidth = elem.clientWidth;
-        }
-
-        function getRootEntityContentWrapElem() {
-            return rootEntityContentWrapElem;
-        }
-
-        function setRootEntityContentWrapElemHeight(height) {
-
-            rootEntityContentWrapElemHeight = height;
-            rootEntityContentWrapElem.style.height = height + 'px';
-        }
-
-        function getRootEntityContentWrapElemHeight() {
-            return rootEntityContentWrapElemHeight;
-        }
-
-        function setRootEntityContentWrapElemWidth(width) {
-
-            rootEntityContentWrapElemWidth = width;
-            rootEntityContentWrapElem.style.width = width + 'px';
-        }
-
-        function getRootEntityContentWrapElemWidth() {
-            return rootEntityContentWrapElemWidth;
-        }
-
 
         return {
 
@@ -178,18 +144,7 @@
             getContentWrapElemHeight: getContentWrapElemHeight,
 
             setContentWrapElemWidth: setContentWrapElemWidth,
-            getContentWrapElemWidth: getContentWrapElemWidth,
-
-            // root content wrap elem
-
-            setRootEntityContentWrapElem: setRootEntityContentWrapElem,
-            getRootEntityContentWrapElem: getRootEntityContentWrapElem,
-
-            setRootEntityContentWrapElemHeight: setRootEntityContentWrapElemHeight,
-            getRootEntityContentWrapElemHeight: getRootEntityContentWrapElemHeight,
-
-            setRootEntityContentWrapElemWidth: setRootEntityContentWrapElemWidth,
-            getRootEntityContentWrapElemWidth: getRootEntityContentWrapElemWidth
+            getContentWrapElemWidth: getContentWrapElemWidth
 
         }
 

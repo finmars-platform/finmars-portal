@@ -41,7 +41,7 @@
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
                 var contentWrapElem = scope.contentWrapElement;
-                var rootEntityContentWrapElem = scope.rootEntityContentWrapElement;
+
 
                 console.log('table body scope', scope);
 
@@ -51,7 +51,7 @@
                     viewportElem: viewportElem,
                     contentElem: contentElem,
                     contentWrapElem: contentWrapElem,
-                    rootEntityContentWrapElem: rootEntityContentWrapElem
+                    //rootEntityContentWrapElem: rootEntityContentWrapElem
                 };
 
                 var projection;
@@ -142,7 +142,6 @@
 
                     scope.evDataService.setUnfilteredFlatList(flatList);
 
-                    var groups = scope.evDataService.getGroups();
                     var filters = scope.evDataService.getFilters();
 
                     var frontEndFilters = [];

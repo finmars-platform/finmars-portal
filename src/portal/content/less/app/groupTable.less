@@ -13,6 +13,23 @@
     }
   }
 
+  .g-delete-card-area {
+    position: relative;
+    top: 5px;
+    right: 15px;
+    border: 1px dotted #575757;
+
+    &.active {
+      box-shadow: 0 0 6px #363636 inset;
+      background: rgba(0, 0, 0, .3);
+      fill: #363636;
+    };
+
+    ng-md-icon {
+      fill: #575757;
+    };
+  };
+
   .grouping-area-settings-container {
     position: absolute;
     right: 0;
@@ -39,6 +56,8 @@
       right: 0;
     }
   }
+
+
 
   .g-content-wrap {
     position: relative;

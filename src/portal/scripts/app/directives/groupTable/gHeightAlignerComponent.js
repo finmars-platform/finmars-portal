@@ -21,8 +21,7 @@
 
                 var lastMouseMoveEvent = null;
 
-                // var contentWrapElem = $('.g-content-wrap').first();
-                var contentWrapElem = $('.g-rootentity-content-wrap').first();
+                var contentWrapElem = $('.g-content-wrap').first();
 
                 function activateHeightSlider() {
 
@@ -126,7 +125,6 @@
 
                     setSplitHeights()
                 });
-
 
                 /*var redrawTableCallbackIndex = scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
