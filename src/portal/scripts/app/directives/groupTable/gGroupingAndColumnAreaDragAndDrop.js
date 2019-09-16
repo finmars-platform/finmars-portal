@@ -63,14 +63,20 @@
                         });
 
                         this.dragula.on('over', function (elem, container, source) {
-
                             areaItemsChanged = false;
                             $(container).addClass('active');
-                            $(container).on('mouseleave', function () {
-                                $(this).removeClass('active');
-                            })
-
                         });
+
+                        this.dragula.on('out', function (elem, container, source) {
+                            $(container).removeClass('active');
+                        });
+
+                        this.dragula.on('shadow', function (elem, container) { // used to prevent showing shadow of card in deletion area
+                            if ($(container).attr('id') === 'gc-delete-area') {
+                                elem.remove();
+                            }
+                        });
+
                         this.dragula.on('drop', function (elem, target, source, nextSibling) {
 
                             $(target).removeClass('active');
@@ -79,6 +85,7 @@
                             var columnsBag = scope.contentWrapElement.querySelector('#columnsbag');
                             var groupsHolder = scope.contentWrapElement.querySelector('.g-groups-holder');
                             var groupsBag = scope.contentWrapElement.querySelector('#groupsbag');
+                            var deleteArea = scope.contentWrapElement.querySelector('#gc-delete-area');
                             var groups = scope.evDataService.getGroups();
                             var columns = scope.evDataService.getColumns();
 
@@ -188,6 +195,29 @@
                                     }
 
                                 // < If column's cards order changed >
+
+                                // If column needs to be deleted
+                                } else if (target === deleteArea) {
+
+                                    var identifier = elem.dataset.columnKey;
+                                    for (var c = 0; 0 < columns.length; c++) {
+
+                                        if (columns[c].key === identifier) {
+                                            columns.splice(c, 1);
+                                            break;
+                                        };
+
+                                    };
+
+                                    drake.remove();
+
+                                    areaItemsChanged = true;
+                                    scope.evDataService.setColumns(columns);
+
+                                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                    // < If column needs to be deleted >
                                 } else {
                                     drake.cancel();
                                 }
@@ -311,8 +341,31 @@
 
                                     }
 
-                                }
                                 // < If group's cards order changed >
+
+                                // If group needs to be deleted
+                                } else if (target === deleteArea) {
+
+                                    var identifier = elem.dataset.groupKey;
+                                    for (var g = 0; 0 < groups.length; g++) {
+
+                                        if (groups[g].key === identifier) {
+                                            groups.splice(g, 1);
+                                            break;
+                                        };
+
+                                    };
+
+                                    drake.remove();
+
+                                    areaItemsChanged = true;
+                                    scope.evDataService.setGroups(groups);
+
+                                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                    // < If group needs to be deleted >
+                                }
 
                             // < Methods for group's cards dragging >
                             }
@@ -334,7 +387,8 @@
                             scope.contentWrapElement.querySelector('.g-columns-holder'),
                             scope.contentWrapElement.querySelector('#columnsbag'),
                             scope.contentWrapElement.querySelector('.g-groups-holder'),
-                            scope.contentWrapElement.querySelector('#groupsbag')
+                            scope.contentWrapElement.querySelector('#groupsbag'),
+                            scope.contentWrapElement.querySelector('#gc-delete-area')
                         ];
 
                         this.dragula = dragula(items, {

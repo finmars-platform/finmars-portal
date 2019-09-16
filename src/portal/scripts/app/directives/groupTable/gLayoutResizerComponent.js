@@ -18,7 +18,7 @@
 
                 scope.components = null;
 
-                function resizeWorkarea() {
+                /*function resizeWorkarea() {
 
                     // var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap').first();
                     var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap');
@@ -26,11 +26,16 @@
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
                     var width;
+                    var viewerHolder = elem.parents(".entity-viewer-holder");
+
+                    if (viewerHolder.length === 0) {
+                        viewerHolder = elem.parents(".report-viewer-holder");
+                    };
 
                     if (scope.components.sidebar) {
-                        width = elem.parents(".report-viewer-holder").width() - interfaceLayout.filterArea.width;
+                        width = viewerHolder.width() - interfaceLayout.filterArea.width;
                     } else {
-                        width = elem.parents(".report-viewer-holder").width()
+                        width = viewerHolder.width()
                     }
 
                     workAreaElem.width(width);
@@ -38,7 +43,22 @@
                     elem.find('.g-scroll-wrapper').width(wrapperWidth);
                     elem.find('.g-scrollable-area').width(wrapperWidth);
 
-                }
+                }*/
+
+                function resizeWorkarea() {
+
+                    var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap');
+                    console.log("resize workAreaElem", workAreaElem);
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                    var width = document.body.clientWidth - $(document).find(".sidenav-wrapper").width() - interfaceLayout.filterArea.width;
+                    console.log("resize width", width);
+                    workAreaElem.width(width);
+                    var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
+                    elem.find('.g-scroll-wrapper').width(wrapperWidth);
+                    elem.find('.g-scrollable-area').width(wrapperWidth);
+
+                };
 
                 var init = function () {
 

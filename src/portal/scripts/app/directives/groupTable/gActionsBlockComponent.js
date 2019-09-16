@@ -546,7 +546,7 @@
 
                     var areReportOptionsTheSame = function () {
 
-                        var originalReportOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportOptions, currentReportLayoutOptions);
+                        var originalReportOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportOptions);
 
                         var originReportLayoutOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportLayoutOptions);
 
