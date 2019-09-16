@@ -16,7 +16,7 @@
         vm.layout_name = vm.data.layout_name;
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.agree = function () {

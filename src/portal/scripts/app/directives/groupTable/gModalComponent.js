@@ -552,7 +552,8 @@
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
             viewConstructorDnD.destroy();
-            $mdDialog.cancel();
+
+            $mdDialog.hide();
         };
 
         vm.MABtnVisibility = function (entityType) {

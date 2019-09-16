@@ -105,9 +105,40 @@
 
         vm.applyItem = function ($event, item) {
 
-            var items = item.data.body;
+            var sections = item.data.body;
 
-            configurationImportService.importConfiguration(items).then(function () {
+            console.log('vm.applyItem', items);
+            var settings = {mode: 'skip'};
+
+            var items = [];
+            // var mappingItems = [];
+
+            sections.forEach(function (item) {
+
+                if (item.section_name === 'configuration') {
+                    items = item.items;
+                }
+
+                // if (item.section_name === 'mappings') {
+                //     mappingItems = item.items;
+                // }
+
+            });
+
+            // console.log("mappingItems", mappingItems);
+            console.log("items", items);
+
+            // vm.items.forEach(function (item) {
+            //
+            //     item.active = false;
+            //
+            //     item.content.forEach(function (child) {
+            //         child.active = false;
+            //     });
+            //
+            // });
+
+            configurationImportService.importConfiguration(items, settings).then(function () {
 
                 $state.go('app.home');
             })

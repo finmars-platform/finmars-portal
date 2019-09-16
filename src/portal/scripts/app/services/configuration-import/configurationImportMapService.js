@@ -13,6 +13,8 @@
 
     var attributeTypeService = require('../../services/attributeTypeService');
 
+    var uiService = require('../../services/uiService');
+
     var get_input_prop_by_content_type = function (model) {
 
         if (model === 'account') {
@@ -1179,6 +1181,151 @@
 
     };
 
+    var mapDashboardComponentType = function (componentType, errors, errorOptions, missedComponentTypesIds) {
+
+        console.log("mapDashboardComponentType componentType", componentType);
+
+        return new Promise(function (resolve, reject) {
+
+            uiService.getListLayoutDefault({
+                filters: {
+                    content_type: componentType.settings.content_type,
+                    name: componentType.settings.layout_name
+                }
+            }).then(function (data) {
+
+                console.log('mapDashboardComponentType data', data);
+
+                if (data.results.length) {
+
+                    var resultItem;
+
+                    data.results.forEach(function (result) {
+
+                        if (result.name === componentType.settings.layout_name) {
+                            resultItem = result;
+                        }
+
+                    });
+
+                    console.log('mapDashboardComponentType resultItem', resultItem);
+
+                    if (resultItem) {
+
+                        componentType.settings.layout = resultItem.id;
+
+                        console.log('mapDashboardComponentType layout find componentType', componentType);
+
+                        resolve();
+
+                    } else {
+
+
+                        errors.push({
+                            item: errorOptions.item,
+                            content_type: errorOptions.content_type,
+                            error: {
+                                message: 'Component Type [' + componentType.name + '] Missing Layout Option: ' + componentType.settings.layout_name
+                            },
+                            mode: 'The related Component Type Layout Option is set to null'
+
+                        });
+
+                        componentType.settings.layout = null;
+                        componentType.settings.layout_name = null;
+
+                        missedComponentTypesIds.push(componentType.id);
+
+                        resolve();
+                    }
+
+                } else {
+
+                    errors.push({
+                        item: errorOptions.item,
+                        content_type: errorOptions.content_type,
+                        error: {
+                            message: 'Component Type [' + componentType.name + '] Missing Layout Option: ' + componentType.settings.layout_name
+                        },
+                        mode: 'The related Component Type Layout Option is set to null'
+
+                    });
+
+                    componentType.settings.layout = null;
+                    componentType.settings.layout_name = null;
+
+                    missedComponentTypesIds.push(componentType.id);
+
+                    resolve();
+                }
+
+            })
+
+        })
+
+    };
+
+    var mapDashboardLayout = function (layout, cacheContainer, errors, errorOptions) {
+
+        return new Promise(function (resolve, reject) {
+
+            if (layout.data) {
+
+                var promises = [];
+                var missedComponentTypesIds = [];
+
+                if (layout.data.components_types) {
+
+                    layout.data.components_types.forEach(function (componentType) {
+
+                        if (componentType.settings.hasOwnProperty('layout_name')) {
+
+                            promises.push(mapDashboardComponentType(componentType, errors, errorOptions, missedComponentTypesIds))
+
+                        }
+
+                    });
+
+                }
+
+                layout.data.tabs.forEach(function (tab) {
+
+                    tab.layout.rows.forEach(function (row) {
+
+                        row.columns.forEach(function (item) {
+
+                            if (item.cell_type === 'component') {
+
+                                if (item.data.settings.hasOwnProperty('layout_name')) {
+
+                                    promises.push(mapDashboardComponentType(item.data, errors, errorOptions, missedComponentTypesIds))
+
+                                }
+
+                            }
+
+                        })
+
+                    })
+
+                });
+
+                Promise.all(promises).then(function (data) {
+
+                    resolve(layout)
+
+                }).catch(function () {
+
+
+                })
+
+            } else {
+                resolve(layout)
+            }
+
+        })
+    };
+
     module.exports = {
         mapTransactionTypeInputsRelations: mapTransactionTypeInputsRelations,
         mapTransactionTypeActionsRelations: mapTransactionTypeActionsRelations,
@@ -1186,7 +1333,8 @@
         mapReportOptions: mapReportOptions,
         mapFieldsInInstrumentType: mapFieldsInInstrumentType,
         mapEditLayout: mapEditLayout,
-        mapListLayout: mapListLayout
+        mapListLayout: mapListLayout,
+        mapDashboardLayout: mapDashboardLayout
     }
 
 }());

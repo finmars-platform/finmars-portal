@@ -104,7 +104,7 @@
         });
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.agree = function ($event) {

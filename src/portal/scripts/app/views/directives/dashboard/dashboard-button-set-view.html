@@ -1,5 +1,17 @@
 <div>
 
-    Dashboard Button Set Component Here
+    <div data-ng-repeat="row in grid">
+
+        <div layout="row">
+
+            <div data-ng-repeat="column in row.columns">
+
+                <md-button ui-sref="{{column.link}}" class="md-raised md-primary">{{column.name}}</md-button>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>

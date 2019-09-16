@@ -24,7 +24,7 @@
 
                     var additions = scope.evDataService.getAdditions();
 
-                    console.log('create report Controller');
+                    console.log('create report Controller', additions);
 
                     var editorTemplateUrl;
                     var tpl;

@@ -17,7 +17,7 @@
 
                 <md-input-container style="width: 200px;">
                     <label for="">Report Type</label>
-                    <md-select data-ng-model="vm.item.settings.entityType"
+                    <md-select data-ng-model="vm.item.settings.entity_type"
                                data-ng-change="vm.item.settings.layout = null;vm.item.settings.linked_components= {}">
                         <md-option value="balance-report">Balance Report</md-option>
                         <md-option value="pl-report">P&L Report</md-option>
@@ -31,7 +31,7 @@
                 <md-input-container style="width: 200px;">
                     <label for="">Layout</label>
                     <md-select data-ng-model="vm.item.settings.layout"
-                               ng-class="{'disabled-btn': !vm.item.settings.entityType}"
+                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
                                md-on-open="vm.getLayouts()">
                         <md-option
                                 data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
