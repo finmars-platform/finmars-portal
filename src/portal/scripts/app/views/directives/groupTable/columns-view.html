@@ -22,7 +22,9 @@
                 <!--<div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">-->
                 <div class="g-columns-holder">
                     <!--<div data-ng-init="initDragula()" class="g-columns-holder">-->
-                    <md-card class="g-cell g-column" data-ng-repeat="column in columns track by column.key" on-finish-render
+                    <md-card class="g-cell g-column"
+                             data-ng-repeat="column in columns track by column.key"
+                             on-finish-render
                              data-ng-style="column.style"
                              data-callback="triggerResizeTableHeadColumns()"
                              data-column-key="{{column.key}}"

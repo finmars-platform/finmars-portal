@@ -451,7 +451,7 @@
                 scope.openReportSettings = function ($event) {
 
                     var reportOptions = scope.evDataService.getReportOptions();
-
+                    console.log("settings reportOptions for settings", reportOptions);
                     $mdDialog.show({
                         controller: 'GReportSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
@@ -552,10 +552,12 @@
 
                         if (originReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
                             delete originalReportOptions.pl_first_date;
+                            delete originalReportOptions.begin_date;
                         }
 
                         if (originReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
                             delete originalReportOptions.report_date;
+                            delete originalReportOptions.end_date;
                         }
 
                         delete originalReportOptions.task_id;
@@ -569,10 +571,12 @@
 
                         if (currentReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
                             delete currentReportOptions.pl_first_date;
+                            delete currentReportOptions.begin_date;
                         }
 
                         if (currentReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
                             delete currentReportOptions.report_date;
+                            delete currentReportOptions.end_date;
                         }
 
                         delete currentReportOptions.task_id;
@@ -802,12 +806,12 @@
 
                         if (res.status === 'agree') {
 
-                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
                             if (scope.isRootEntityViewer) {
                                 middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                             } else {
                                 middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                             }
+                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
                         }
 
@@ -995,7 +999,7 @@
 
                             reportOptions.date_field = null;
 
-                            reportOptions.pl_first_date = todaysDate;
+                            reportOptions.begin_date = todaysDate;
 
                             reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {
                                 datepickerMode: 'datepicker'
@@ -1087,11 +1091,11 @@
                         templateUrl: 'views/save-layout-dialog-view.html',
                         targetEvent: $event,
                         clickOutsideToClose: false
-                    }).then(function () {
+                    })/*.then(function () {
 
                         scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
-                    });
+                    });*/
 
                     // middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
                 };
@@ -1129,7 +1133,7 @@
                                         middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active split panel layout name in the toolbar
                                     }
 
-                                    scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                                    //scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
                                     scope.evDataService.setListLayout(listLayout);
                                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
