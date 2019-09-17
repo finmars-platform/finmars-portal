@@ -45,24 +45,24 @@
             <div class="side-menu-main-buttons">
                 <ul class="side-menu" data-ng-if="vm.readyStatus.access">
 
-                    <!--<li>-->
-                        <!--<md-button ui-sref-active="active"-->
-                                   <!--class="sidemenu-btn"-->
-                                   <!--ui-sref="app.dashboard">-->
-                        <!--<span class="side-nav-icon">-->
-                            <!--<ng-md-icon icon="dashboard" size="24"></ng-md-icon>-->
-                        <!--</span>-->
-                            <!--<span class="side-nav-title">Dashboard</span>-->
-                            <!--&lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
-                        <!--</md-button>-->
-                    <!--</li>-->
+                    <li>
+                        <md-button ui-sref-active="active"
+                                   class="sidemenu-btn"
+                                   ui-sref="app.dashboard">
+                        <span class="side-nav-icon">
+                            <ng-md-icon icon="dashboard" size="24"></ng-md-icon>
+                        </span>
+                            <span class="side-nav-title">Dashboard</span>
+                            <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                        </md-button>
+                    </li>
 
                     <li>
                         <md-button ui-sref-active="active"
                                    class="sidemenu-btn"
                                    ui-sref="app.home">
                         <span class="side-nav-icon">
-                            <ng-md-icon icon="dashboard" size="24"></ng-md-icon>
+                            <ng-md-icon icon="home" size="24"></ng-md-icon>
                         </span>
                             <span class="side-nav-title">Homepage</span>
                             <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
@@ -493,8 +493,8 @@
                         <ul class="side-menu">
                             <li data-ng-if="vm.accessTable.report_dashboard">
                                 <md-button class="sidemenu-btn"
-                                           ui-sref="app.dashboard">
-                                    <span class="side-nav-title">Dashboard</span>
+                                           ui-sref="app.dashboard-layout-manager">
+                                    <span class="side-nav-title">Dashboard Layouts</span>
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>

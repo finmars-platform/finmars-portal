@@ -18,6 +18,9 @@
             var entityType = evDataService.getEntityType();
             var reportOptions = evDataService.getReportOptions();
 
+            console.log('requestData.entityType', entityType);
+            console.log('requestData.reportOptions', reportOptions);
+
             entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
 
                 // console.log('requestData.data', data);
@@ -34,7 +37,7 @@
 
                         setTimeout(function () {
                             resolve(requestData(evDataService));
-                        }, 1000)
+                        }, 500)
 
                     } else {
 
@@ -145,7 +148,7 @@
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts;
 
-        // reportOptions.task_id = null;
+        reportOptions.task_id = null;
 
         entityViewerDataService.setReportOptions(reportOptions);
 
