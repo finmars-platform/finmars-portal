@@ -56,7 +56,7 @@
                                             aria-label="system attributes for filters">
                                     </md-checkbox>
                                 </div>
-                                <div class="g-modal-draggable-card" >
+                                <div class="g-modal-draggable-card vcDraggableCard" >
                                     <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">{{item.name}}</md-card>
                                 </div>
                             </div>
@@ -97,10 +97,157 @@
                                                  aria-label="user attributes for filters">
                                     </md-checkbox>
                                 </div>
-                                <div class="g-modal-draggable-card">
+                                <div class="g-modal-draggable-card vcDraggableCard">
                                     <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">{{item.name}}</md-card>
                                 </div>
                             </div>
+                        </md-content>
+                    </md-tab>
+
+                    <md-tab label="Selected">
+                        <md-content class="md-padding">
+
+                            <div class="vcSelectedGroups">
+                                <div layout="row" class="view-constructor-attributes-separator">
+                                    <p>Groups</p>
+                                </div>
+
+                                <!--<input type="text"
+                                       ng-model="selectedAttrSearchTerms"
+                                       placeholder="Search for a ..."
+                                       class="view-constructor-card-search">-->
+
+                                <div class="g-th-checkbox-row">
+                                    <span class="g-meta-circle red">C</span>
+                                    <span class="g-meta-circle green">G</span>
+                                    <span class="g-meta-circle blue">F</span>
+                                </div>
+
+                                <div class="g-checkbox-row"
+                                     data-ng-repeat="item in vm.selectedGroups track by item.key"
+                                     layout="row">
+                                    <div class="view-constructor-checkboxes-container"
+                                         layout="row"
+                                         layout-align="start center">
+                                        <md-checkbox ng-model="item.columns"
+                                                     aria="columns"
+                                                     data-ng-change="vm.updateAttrs()"
+                                                     aria-label="user attributes for columns">
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="item.groups"
+                                                     aria="groups"
+                                                     class="md-g-green"
+                                                     data-ng-change="vm.updateAttrs()"
+                                                     aria-label="user attributes for groups">
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="item.filters" aria="filters"
+                                                     class="md-primary" data-ng-change="vm.updateAttrs()"
+                                                     aria-label="user attributes for filters">
+                                        </md-checkbox>
+                                    </div>
+
+                                    <div class="g-modal-draggable-card vcSelectedGroupsDraggableCard">
+                                        <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                            {{item.name}}
+                                        </md-card>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="vcSelectedColumns">
+                                <div layout="row" class="view-constructor-attributes-separator">
+                                    <p>Columns</p>
+                                </div>
+
+                                <!--<input type="text"
+                                       ng-model="selectedAttrSearchTerms"
+                                       placeholder="Search for a ..."
+                                       class="view-constructor-card-search">-->
+
+                                <div class="g-th-checkbox-row">
+                                    <span class="g-meta-circle red">C</span>
+                                    <span class="g-meta-circle green">G</span>
+                                    <span class="g-meta-circle blue">F</span>
+                                </div>
+
+                                <div class="g-checkbox-row"
+                                     data-ng-repeat="item in vm.selectedColumns track by item.key"
+                                     layout="row">
+                                    <div class="view-constructor-checkboxes-container"
+                                         layout="row"
+                                         layout-align="start center">
+                                        <md-checkbox ng-model="item.columns"
+                                                     aria="columns"
+                                                     data-ng-change="vm.updateAttrs()"
+                                                     aria-label="user attributes for columns">
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="item.groups"
+                                                     aria="groups"
+                                                     class="md-g-green"
+                                                     data-ng-change="vm.updateAttrs()"
+                                                     aria-label="user attributes for groups">
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="item.filters" aria="filters"
+                                                     class="md-primary" data-ng-change="vm.updateAttrs()"
+                                                     aria-label="user attributes for filters">
+                                        </md-checkbox>
+                                    </div>
+
+                                    <div class="g-modal-draggable-card vcSelectedColumnsDraggableCard">
+                                        <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                            {{item.name}}
+                                        </md-card>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="vcSelectedFilters">
+                                <div layout="row" class="view-constructor-attributes-separator">
+                                    <p>Filters</p>
+                                </div>
+
+                                <!--<input type="text"
+                                       ng-model="selectedAttrSearchTerms"
+                                       placeholder="Search for a ..."
+                                       class="view-constructor-card-search">-->
+
+                                <div class="g-th-checkbox-row">
+                                    <span class="g-meta-circle red">C</span>
+                                    <span class="g-meta-circle green">G</span>
+                                    <span class="g-meta-circle blue">F</span>
+                                </div>
+
+                                <div class="g-checkbox-row"
+                                     data-ng-repeat="item in vm.selectedFilters track by item.key"
+                                     layout="row">
+                                    <div class="view-constructor-checkboxes-container"
+                                         layout="row"
+                                         layout-align="start center">
+                                        <md-checkbox ng-model="item.columns"
+                                                     aria="columns"
+                                                     data-ng-change="vm.updateAttrs()"
+                                                     aria-label="user attributes for columns">
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="item.groups"
+                                                     aria="groups"
+                                                     class="md-g-green"
+                                                     data-ng-change="vm.updateAttrs()"
+                                                     aria-label="user attributes for groups">
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="item.filters" aria="filters"
+                                                     class="md-primary" data-ng-change="vm.updateAttrs()"
+                                                     aria-label="user attributes for filters">
+                                        </md-checkbox>
+                                    </div>
+
+                                    <div class="g-modal-draggable-card vcSelectedFiltersDraggableCard">
+                                        <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                            {{item.name}}
+                                        </md-card>
+                                    </div>
+                                </div>
+                            </div>
+
                         </md-content>
                     </md-tab>
 
@@ -146,7 +293,8 @@
                                 aria-label="system attributes for filters">
                         </md-checkbox>
                     </div>
-                    <div class="g-modal-draggable-card" >
+
+                    <div class="g-modal-draggable-card vcDraggableCard" >
                         <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">{{item.name}}</md-card>
                     </div>
                 </div>

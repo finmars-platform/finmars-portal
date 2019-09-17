@@ -77,10 +77,12 @@
 
                 if (activeLayoutConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
                     delete activeLayoutConfig.data.reportOptions.pl_first_date;
+                    delete activeLayoutConfig.data.reportOptions.begin_date;
                 }
 
                 if (activeLayoutConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
                     delete activeLayoutConfig.data.reportOptions.report_date;
+                    delete activeLayoutConfig.data.reportOptions.end_date;
                 }
 
             }
@@ -93,10 +95,11 @@
 
                 if (layoutCurrentConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
                     delete layoutCurrentConfig.data.reportOptions.pl_first_date;
+                    delete layoutCurrentConfig.data.reportOptions.begin_date;
                 }
 
                 if (layoutCurrentConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
-                    delete layoutCurrentConfig.data.reportOptions.report_date;
+                    delete layoutCurrentConfig.data.reportOptions.end_date;
                 }
 
             }

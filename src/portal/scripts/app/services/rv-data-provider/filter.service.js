@@ -23,7 +23,7 @@
     };
 
     var filterTableRows = function (items, regularFilters) {
-
+        console.log("rv filter items, regularFIlters", items, regularFilters);
         var match;
 
         return items.filter(function (item, tableRowIndex) {
@@ -140,16 +140,16 @@
     };
 
     var filterValueFromTable = function (valueToFilter, filterBy, operationType) {
-
+        console.log("rv filter filterValueFromTable", valueToFilter, filterBy);
         switch (operationType) {
 
-            case 'contain':
+            case 'contains':
                 if (valueToFilter.indexOf(filterBy) !== -1) {
                     return true;
                 }
                 break;
 
-            case 'does_not_contain':
+            case 'does_not_contains':
                 if (valueToFilter.indexOf(filterBy) === -1) {
                     return true;
                 }
