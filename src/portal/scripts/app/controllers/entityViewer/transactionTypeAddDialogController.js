@@ -736,7 +736,7 @@
             currency: null,
             counterparty: null,
             is_fill_from_context: false,
-            reference_table: false,
+            reference_table: null,
             responsible: null,
             portfolio: null,
             strategy1: null,
