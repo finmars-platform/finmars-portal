@@ -35,7 +35,7 @@
                     console.log('editable entityType', scope.entityType, scope.item);
                     if (scope.entityType === 'complex-transaction') {
 
-                        if (scope.item.can_recalculate || !scope.item.editable) {
+                        if (scope.item.can_recalculate || scope.item.editable == false) {
                             return true;
                         };
 
