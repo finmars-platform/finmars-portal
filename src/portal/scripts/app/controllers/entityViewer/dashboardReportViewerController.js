@@ -346,9 +346,11 @@
 
                 uiService.getListLayoutByKey(layoutId).then(function (data) {
 
+                    vm.layout = data;
+
                     vm.setLayout(data).then(function () {
 
-                        vm.listViewIsReady = true;
+
 
                         if (vm.componentType.data.type === 'report_viewer' ||
                             vm.componentType.data.type === 'report_viewer_grand_total' ||
@@ -358,7 +360,7 @@
 
                         }
 
-                        $scope.$apply();
+
 
                         if (vm.componentType.data.type === 'report_viewer') {
 
@@ -370,8 +372,6 @@
 
                             });
 
-                            // console.log('evComponents', evComponents);
-
                             vm.entityViewerDataService.setComponents(evComponents);
                         }
 
@@ -381,7 +381,7 @@
                                 type: vm.entityType
                             };
 
-                            entityViewerDataService.setAdditions(additions)
+                            vm.entityViewerDataService.setAdditions(additions)
 
 
                         }
@@ -389,6 +389,10 @@
                         vm.initDashboardExchange();
 
                         vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                        vm.listViewIsReady = true;
+
+                        $scope.$apply();
 
                     })
 
