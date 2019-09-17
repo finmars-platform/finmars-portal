@@ -143,13 +143,13 @@
 
         switch (operationType) {
 
-            case 'contain':
+            case 'contains':
                 if (valueToFilter.indexOf(filterBy) !== -1) {
                     return true;
                 }
                 break;
 
-            case 'does_not_contain':
+            case 'does_not_contains':
                 if (valueToFilter.indexOf(filterBy) === -1) {
                     return true;
                 }

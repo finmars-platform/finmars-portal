@@ -266,7 +266,7 @@
                                             options: {
                                                 enabled: true,
                                                 exclude_empty_cells: true,
-                                                filter_type: 'contain',
+                                                filter_type: 'contains',
                                                 filter_values: [componentOutput.value.toString()]
                                             }
                                         };
@@ -373,6 +373,17 @@
                             // console.log('evComponents', evComponents);
 
                             vm.entityViewerDataService.setComponents(evComponents);
+                        }
+
+                        if (vm.componentType.data.type === 'report_viewer_split_panel') {
+
+                            var additions = {
+                                type: vm.entityType
+                            };
+
+                            entityViewerDataService.setAdditions(additions)
+
+
                         }
 
                         vm.initDashboardExchange();
