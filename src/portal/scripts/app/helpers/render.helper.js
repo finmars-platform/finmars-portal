@@ -209,6 +209,8 @@
 
     };
 
+
+
     var formatValue = function (obj, column) {
 
         var value = obj[column.key];

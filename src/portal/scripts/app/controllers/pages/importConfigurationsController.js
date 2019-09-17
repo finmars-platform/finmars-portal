@@ -19,9 +19,12 @@
 
             return new Promise(function (resolve, reject) {
 
-                var ext = file.name.split('.')[1];
+                if (file.name && file.name.indexOf('.fcfg') === file.name.length - '.fcfg'.length) {
 
-                if (ext !== 'fcfg') {
+                    resolve(true);
+
+                } else {
+
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -44,9 +47,6 @@
                         reject('wrong file extension');
 
                     });
-
-                } else {
-                    resolve(true);
                 }
 
             })

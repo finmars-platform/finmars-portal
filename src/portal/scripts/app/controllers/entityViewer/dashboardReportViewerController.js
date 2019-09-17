@@ -266,7 +266,7 @@
                                             options: {
                                                 enabled: true,
                                                 exclude_empty_cells: true,
-                                                filter_type: 'contain',
+                                                filter_type: 'contains',
                                                 filter_values: [componentOutput.value.toString()]
                                             }
                                         };
@@ -346,9 +346,11 @@
 
                 uiService.getListLayoutByKey(layoutId).then(function (data) {
 
+                    vm.layout = data;
+
                     vm.setLayout(data).then(function () {
 
-                        vm.listViewIsReady = true;
+
 
                         if (vm.componentType.data.type === 'report_viewer' ||
                             vm.componentType.data.type === 'report_viewer_grand_total' ||
@@ -358,23 +360,39 @@
 
                         }
 
-                        $scope.$apply();
 
-                        var evComponents = vm.entityViewerDataService.getComponents();
 
-                        Object.keys(vm.startupSettings.components).forEach(function (key) {
+                        if (vm.componentType.data.type === 'report_viewer') {
 
-                            evComponents[key] = vm.startupSettings.components[key]
+                            var evComponents = vm.entityViewerDataService.getComponents();
 
-                        });
+                            Object.keys(vm.startupSettings.components).forEach(function (key) {
 
-                        // console.log('evComponents', evComponents);
+                                evComponents[key] = vm.startupSettings.components[key]
 
-                        vm.entityViewerDataService.setComponents(evComponents);
+                            });
+
+                            vm.entityViewerDataService.setComponents(evComponents);
+                        }
+
+                        if (vm.componentType.data.type === 'report_viewer_split_panel') {
+
+                            var additions = {
+                                type: vm.entityType
+                            };
+
+                            vm.entityViewerDataService.setAdditions(additions)
+
+
+                        }
 
                         vm.initDashboardExchange();
 
                         vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                        vm.listViewIsReady = true;
+
+                        $scope.$apply();
 
                     })
 
