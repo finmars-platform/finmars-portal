@@ -18,6 +18,9 @@
             var entityType = evDataService.getEntityType();
             var reportOptions = evDataService.getReportOptions();
 
+            console.log('requestData.entityType', entityType);
+            console.log('requestData.reportOptions', reportOptions);
+
             entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
 
                 // console.log('requestData.data', data);
