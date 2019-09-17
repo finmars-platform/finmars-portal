@@ -34,7 +34,7 @@
 
                         setTimeout(function () {
                             resolve(requestData(evDataService));
-                        }, 1000)
+                        }, 500)
 
                     } else {
 
@@ -145,7 +145,7 @@
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts;
 
-        // reportOptions.task_id = null;
+        reportOptions.task_id = null;
 
         entityViewerDataService.setReportOptions(reportOptions);
 
