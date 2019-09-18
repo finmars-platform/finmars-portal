@@ -378,7 +378,7 @@
                                 scope.$apply();
                             }
 
-                        })
+                        });
                     },
 
                     dragulaInit: function () {
