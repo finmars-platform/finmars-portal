@@ -18,7 +18,7 @@
 
                 scope.components = null;
 
-                /*function resizeWorkarea() {
+                function resizeWorkarea() {
 
                     // var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap').first();
                     var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap');
@@ -30,7 +30,10 @@
 
                     if (viewerHolder.length === 0) {
                         viewerHolder = elem.parents(".report-viewer-holder");
-                    };
+                    }
+
+                    console.log('interfaceLayout', interfaceLayout);
+                    console.log('viewerHolder.width()', viewerHolder.width());
 
                     if (scope.components.sidebar) {
                         width = viewerHolder.width() - interfaceLayout.filterArea.width;
@@ -43,22 +46,22 @@
                     elem.find('.g-scroll-wrapper').width(wrapperWidth);
                     elem.find('.g-scrollable-area').width(wrapperWidth);
 
-                }*/
+                }
 
-                function resizeWorkarea() {
-
-                    var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap');
-                    console.log("resize workAreaElem", workAreaElem);
-                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-                    var width = document.body.clientWidth - $(document).find(".sidenav-wrapper").width() - interfaceLayout.filterArea.width;
-                    console.log("resize width", width);
-                    workAreaElem.width(width);
-                    var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
-                    elem.find('.g-scroll-wrapper').width(wrapperWidth);
-                    elem.find('.g-scrollable-area').width(wrapperWidth);
-
-                };
+                // function resizeWorkarea() {
+                //
+                //     var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap');
+                //     console.log("resize workAreaElem", workAreaElem);
+                //     var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                //
+                //     var width = document.body.clientWidth - $(document).find(".sidenav-wrapper").width() - interfaceLayout.filterArea.width;
+                //     console.log("resize width", width);
+                //     workAreaElem.width(width);
+                //     var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
+                //     elem.find('.g-scroll-wrapper').width(wrapperWidth);
+                //     elem.find('.g-scrollable-area').width(wrapperWidth);
+                //
+                // };
 
                 var init = function () {
 
