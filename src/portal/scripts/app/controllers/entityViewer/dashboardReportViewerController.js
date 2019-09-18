@@ -168,11 +168,15 @@
 
                             var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
+                            console.log('COMPONENT_VALUE_CHANGED_' + componentId, componentOutput);
+
                             if (vm.componentType.data.type === 'report_viewer_split_panel') {
 
                                 vm.entityViewerDataService.setActiveObject(componentOutput);
                                 vm.entityViewerDataService.setActiveObjectFromAbove(componentOutput);
+
                                 vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE)
+                                vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
                             }
 
@@ -297,7 +301,7 @@
 
                         var activeObject = vm.entityViewerDataService.getActiveObject();
 
-                        console.log('clik report viewer active object', activeObject);
+                        console.log('click report viewer active object', activeObject);
 
                         vm.dashboardDataService.setComponentOutput(vm.componentType.data.id, activeObject);
                         vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentType.data.id)
@@ -334,6 +338,10 @@
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 
+                if (vm.componentType.data.type === 'report_viewer_split_panel') {
+                    vm.entityViewerDataService.setUseFromAbove(true);
+                }
+
                 var layoutId = vm.startupSettings.layout;
 
                 if (vm.componentType.data.type === 'report_viewer_matrix') {
@@ -352,13 +360,13 @@
 
 
 
-                        if (vm.componentType.data.type === 'report_viewer' ||
-                            vm.componentType.data.type === 'report_viewer_grand_total' ||
-                            vm.componentType.data.type === 'report_viewer_matrix') {
+                        // if (vm.componentType.data.type === 'report_viewer' ||
+                        //     vm.componentType.data.type === 'report_viewer_grand_total' ||
+                        //     vm.componentType.data.type === 'report_viewer_matrix') {
 
                             rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
-                        }
+                        // }
 
 
 
@@ -375,16 +383,16 @@
                             vm.entityViewerDataService.setComponents(evComponents);
                         }
 
-                        if (vm.componentType.data.type === 'report_viewer_split_panel') {
-
-                            var additions = {
-                                type: vm.entityType
-                            };
-
-                            vm.entityViewerDataService.setAdditions(additions)
-
-
-                        }
+                        // if (vm.componentType.data.type === 'report_viewer_split_panel') {
+                        //
+                        //     var additions = {
+                        //         type: vm.entityType
+                        //     };
+                        //
+                        //     vm.entityViewerDataService.setAdditions(additions)
+                        //
+                        //
+                        // }
 
                         vm.initDashboardExchange();
 

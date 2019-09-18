@@ -10,6 +10,14 @@
                 ></group-table>
             </div>
 
+            <div data-ng-if="vm.componentType.data.type === 'report_viewer_split_panel'">
+                <group-table class="height-100 display-block"
+                             ev-data-service="vm.entityViewerDataService"
+                             ev-event-service="vm.entityViewerEventService"
+                             sp-exchange-service="vm.splitPanelExchangeService"
+                ></group-table>
+            </div>
+
             <div data-ng-if="vm.componentType.data.type === 'report_viewer_grand_total'">
 
                 <div class="grand-total-title">{{vm.componentType.data.name}}</div>
