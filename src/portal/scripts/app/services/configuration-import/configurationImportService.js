@@ -779,7 +779,7 @@
                         case 'ui.dashboardlayout':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getDashboardLayout({
+                                uiRepository.getDashboardLayoutList({
                                     filters: {
                                         name: item.name
                                     }
@@ -1544,7 +1544,7 @@
                         case 'ui.dashboardlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getDashboardLayout({
+                                uiRepository.getDashboardLayoutList({
                                     filters: {
                                         name: item.name
                                     }

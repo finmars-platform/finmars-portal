@@ -547,7 +547,7 @@
             })
     };
 
-    var getDashboardLayout = function (entity, options) {
+    var getDashboardLayoutList = function (entity, options) {
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/dashboard-layout/', options),
             {
@@ -690,7 +690,7 @@
         createInstrumentField: createInstrumentField,
         updateInstrumentField: updateInstrumentField,
 
-        getDashboardLayout: getDashboardLayout,
+        getDashboardLayoutList: getDashboardLayoutList,
         getDashboardLayoutByKey: getDashboardLayoutByKey,
         getActiveDashboardLayout: getActiveDashboardLayout,
         getDefaultDashboardLayout: getDefaultDashboardLayout,
