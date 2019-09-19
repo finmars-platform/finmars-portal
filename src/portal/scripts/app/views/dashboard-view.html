@@ -10,14 +10,16 @@
 
             <div class="dashboard-tabs-control-panel">
 
-                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}" data-ng-click="vm.refreshActiveTab($event)">
+                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
+                           data-ng-click="vm.refreshActiveTab($event)">
                     <ng-md-icon icon="refresh"
                                 size="20"
                                 style="fill: #777777">
                         <md-tooltip class="tooltip_1" md-direction="bottom">Refresh Active Tab</md-tooltip>
                     </ng-md-icon>
                 </md-button>
-                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}" data-ng-click="vm.refreshAll($event)">
+                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
+                           data-ng-click="vm.refreshAll($event)">
                     <ng-md-icon icon="loop"
                                 size="20"
                                 style="fill: #777777">
@@ -48,9 +50,9 @@
                             </md-button>
                         </md-menu-item>
                         <!--<md-menu-item>-->
-                            <!--<md-button ng-click="saveAsLayoutList($event)" class="g-settings-option-btn">-->
-                                <!--<span>Save as</span>-->
-                            <!--</md-button>-->
+                        <!--<md-button ng-click="saveAsLayoutList($event)" class="g-settings-option-btn">-->
+                        <!--<span>Save as</span>-->
+                        <!--</md-button>-->
                         <!--</md-menu-item>-->
                     </md-menu-content>
                 </md-menu>
@@ -206,6 +208,22 @@
 
 
             </md-tabs>
+
+        </div>
+
+        <div data-ng-if="!vm.layout">
+
+            <div class="dashboard-no-layout-box">
+
+                <h2>No Default Layout Found</h2>
+
+                Please,
+                <md-button class="md-raised md-primary" data-ui-sref="app.dashboard-constructor({id: 'new'})">Create new Layout
+                </md-button>
+                 or select
+                <md-button class="md-raised" ng-click="vm.openLayoutList($event)">Default Layout</md-button>
+
+            </div>
 
         </div>
 
