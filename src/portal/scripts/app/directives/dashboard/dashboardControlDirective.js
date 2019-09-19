@@ -4,6 +4,8 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
+    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+
     module.exports = function () {
         return {
             restriction: 'E',
@@ -70,7 +72,12 @@
                     console.log('valueChanged.value', scope.item.data.store.value);
 
                     scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store);
-                    scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id)
+                    scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
+
+                    if(scope.item.data.settings.auto_refresh) {
+                        vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
+                    }
+
 
                 };
 
