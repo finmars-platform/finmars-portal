@@ -18,7 +18,7 @@
 
         var vm = this;
 
-        console.log('reportOptions', reportOptions);
+        // console.log('reportOptions', reportOptions);
 
         vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
 

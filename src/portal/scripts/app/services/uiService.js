@@ -130,8 +130,8 @@
     };
 
 
-    var getDashboardLayout = function (options) {
-        return uiRepository.getDashboardLayout(options);
+    var getDashboardLayoutList = function (options) {
+        return uiRepository.getDashboardLayoutList(options);
     };
 
     var getActiveDashboardLayout = function () {
@@ -197,7 +197,7 @@
         updateInstrumentField: updateInstrumentField,
 
 
-        getDashboardLayout: getDashboardLayout,
+        getDashboardLayoutList: getDashboardLayoutList,
         getDashboardLayoutByKey: getDashboardLayoutByKey,
         getActiveDashboardLayout: getActiveDashboardLayout,
         getDefaultDashboardLayout: getDefaultDashboardLayout,

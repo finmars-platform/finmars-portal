@@ -1,0 +1,62 @@
+<md-dialog aria-label="" ng-cloak class="list-layouts-dialog draggable-dialog" style="width: 50%" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2>Layouts</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+
+        <div data-ng-if="vm.readyStatus.items">
+            <div data-ng-repeat="item in vm.items"
+                 class="ll-layout-item"
+                 layout="row"
+                 layout-align="space-between center"
+                 style="padding: 10px"
+                 ng-click="vm.selectLayout(item, $event)">
+<!--                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">-->
+                <div layout="row" class="ll-name">
+                    <ng-md-icon ng-if="item.hasUseFromAboveFilter"
+                                icon="flag"
+                                size="17"
+                                class="ll-use-from-above-indicator">
+                        <md-tooltip class="tooltip_2" md-direction="top">Has Linked to Selection filter</md-tooltip>
+                    </ng-md-icon>
+                    <span ng-bind="item.name"></span>
+                </div>
+
+                <div>
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.renameLayout($event, item, $index)">
+                        <md-tooltip md-direction="top">Rename</md-tooltip>
+                        <ng-md-icon icon="mode_edit" size="24"></ng-md-icon>
+                    </md-button>
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.setAsDefault($event, item, $index)">
+                        <md-tooltip md-direction="top">Set as default</md-tooltip>
+                        <ng-md-icon ng-hide="vm.isDefaultLayout(item)" icon="star_border" size="24"></ng-md-icon>
+                        <ng-md-icon ng-hide="!vm.isDefaultLayout(item)" icon="star" size="24"></ng-md-icon>
+                    </md-button>
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.deleteItem($event, item, $index)">
+                        <md-tooltip md-direction="top">Delete</md-tooltip>
+                        <ng-md-icon icon="delete" size="24"></ng-md-icon>
+                    </md-button>
+                </div>
+            </div>
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.items" class="dialog-loader">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="end center">
+        <md-button ng-click="vm.cancel()">
+            Close
+        </md-button>
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            Open
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

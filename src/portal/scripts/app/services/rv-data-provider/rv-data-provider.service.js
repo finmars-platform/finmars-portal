@@ -18,8 +18,8 @@
             var entityType = evDataService.getEntityType();
             var reportOptions = evDataService.getReportOptions();
 
-            console.log('requestData.entityType', entityType);
-            console.log('requestData.reportOptions', reportOptions);
+            // console.log('requestData.entityType', entityType);
+            // console.log('requestData.reportOptions', reportOptions);
 
             entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
 
@@ -162,7 +162,7 @@
 
             reportOptions.recieved_at = new Date().getTime();
 
-            console.log('reportOptions', reportOptions);
+            // console.log('reportOptions', reportOptions);
 
             if (reportOptions.items && reportOptions.items.length) {
 
