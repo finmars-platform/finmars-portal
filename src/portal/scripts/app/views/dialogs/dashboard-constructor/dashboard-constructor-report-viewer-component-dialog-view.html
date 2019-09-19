@@ -17,35 +17,37 @@
 
             </div>
 
-            <div class="m-t-16 m-b-16">
+            <md-input-container style="width: 200px; height: 58px">
+                <label for="">Report Type</label>
+                <md-select data-ng-model="vm.item.settings.entity_type"
+                           data-ng-change="vm.item.settings.layout = null;vm.item.settings.linked_components= {}">
+                    <md-option value="balance-report">Balance Report</md-option>
+                    <md-option value="pl-report">P&L Report</md-option>
+                    <md-option value="transaction-report">Transaction Report</md-option>
+                </md-select>
+            </md-input-container>
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Report Type</label>
-                    <md-select data-ng-model="vm.item.settings.entity_type"
-                               data-ng-change="vm.item.settings.layout = null;vm.item.settings.linked_components= {}">
-                        <md-option value="balance-report">Balance Report</md-option>
-                        <md-option value="pl-report">P&L Report</md-option>
-                        <md-option value="transaction-report">Transaction Report</md-option>
-                    </md-select>
-                </md-input-container>
+            <md-input-container style="width: 200px; height: 58px">
+                <label for="">Layout</label>
+                <md-select data-ng-model="vm.item.settings.layout"
+                           ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
+                           md-on-open="vm.getLayouts()">
+                    <md-option
+                            data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
+                            ng-value="layout.id">
+                        {{layout.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
 
-            </div>
-            <div class="m-t-16 m-b-16">
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Layout</label>
-                    <md-select data-ng-model="vm.item.settings.layout"
-                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
-                               md-on-open="vm.getLayouts()">
-                        <md-option
-                                data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
-                                ng-value="layout.id">
-                            {{layout.name}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>
+            <md-input-container style="height: 58px">
 
-            </div>
+                <md-checkbox data-ng-model="vm.item.settings.auto_refresh" aria-label="member permission">Trigger
+                    Refresh on Value Change
+                </md-checkbox>
+
+            </md-input-container>
 
             <h4>Linked Components</h4>
 
@@ -186,7 +188,8 @@
 
                         <md-input-container style="width: 200px;">
                             <label for="">Control Component</label>
-                            <md-select data-ng-model="filterLink.component_id" ng-class="{'disabled-btn': !filterLink.value_type}">
+                            <md-select data-ng-model="filterLink.component_id"
+                                       ng-class="{'disabled-btn': !filterLink.value_type}">
                                 <md-option
                                         data-ng-repeat="componentType in vm.getComponentTypesByValueType(filterLink.value_type) | orderBy:'-name' track by componentType.id "
                                         ng-value="componentType.id">{{componentType.name}}
@@ -200,10 +203,10 @@
                     <div layout="row">
 
                         <!--<md-button class="md-raised"-->
-                                   <!--ng-class="{'disabled-btn': !filterLink.componentId || !filterLink.key}"-->
-                                   <!--ng-click="vm.updateFilterLink(filterLink)"-->
-                                   <!--style="margin-right:20px;">-->
-                            <!--Update-->
+                        <!--ng-class="{'disabled-btn': !filterLink.componentId || !filterLink.key}"-->
+                        <!--ng-click="vm.updateFilterLink(filterLink)"-->
+                        <!--style="margin-right:20px;">-->
+                        <!--Update-->
                         <!--</md-button>-->
 
                         <md-button class="md-raised md-warn m-t-0" ng-click="vm.deleteFilterLink(filterLink, $index)">
@@ -239,7 +242,8 @@
 
                     <md-input-container style="width: 200px;">
                         <label for="">Control Component</label>
-                        <md-select data-ng-model="vm.newFilter.component_id" ng-class="{'disabled-btn': !vm.newFilter.value_type}" >
+                        <md-select data-ng-model="vm.newFilter.component_id"
+                                   ng-class="{'disabled-btn': !vm.newFilter.value_type}">
                             <md-option
                                     data-ng-repeat="componentType in vm.getComponentTypesByValueType(vm.newFilter.value_type) | orderBy:'-name' track by componentType.id "
                                     ng-value="componentType.id">{{componentType.name}}

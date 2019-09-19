@@ -1,4 +1,4 @@
-<div class="g-wrapper">
+<div class="g-wrapper" data-ng-class="{'g-root-wrapper': isRootEntityViewer}">
 
     <div class="g-content-wrap">
 
@@ -48,6 +48,24 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="g-dashboard-filter-holder">
+
+            <md-button class="toggle-dashboard-filter-btn"
+                       ng-click="toggleDashboardFilter()">
+                <ng-md-icon ng-hide="dashboardFilterCollapsed"
+                            icon="keyboard_arrow_left"></ng-md-icon>
+                <ng-md-icon ng-hide="!dashboardFilterCollapsed"
+                            icon="keyboard_arrow_right"></ng-md-icon>
+            </md-button>
+
+            <div class="g-dashboard-filter">
+
+                <group-dashboard-filter ev-data-service="evDataService" data-ng-show="!dashboardFilterCollapsed"
+                                        ev-event-service="evEventService"></group-dashboard-filter>
+            </div>
+
         </div>
 
         <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar">

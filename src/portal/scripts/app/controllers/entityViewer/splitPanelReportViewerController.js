@@ -239,6 +239,7 @@
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
+                vm.entityViewerDataService.setUseFromAbove(true);
 
                 console.log('here? 1231232', vm.entityViewerDataService.isRootEntityViewer());
 

@@ -29,6 +29,7 @@
                 scope.showSelectMenu = false;
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                scope.useFromAbove = scope.evDataService.getUseFromAbove();
                 scope.attributesFromAbove = [];
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -240,7 +241,7 @@
 
                 scope.initSplitPanelMode = function () {
 
-                    if (!scope.isRootEntityViewer) {
+                    if (scope.useFromAbove) {
 
                         scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 

@@ -159,6 +159,14 @@
             return data.rootEntityViewer;
         }
 
+        function setUseFromAbove(useFromAbove) {
+            data.useFromAbove = useFromAbove;
+        }
+
+        function getUseFromAbove() {
+            return data.useFromAbove;
+        }
+
         function setSplitPanelStatus(status) {
             data.isSplitPanelActive = status;
         }
@@ -1120,7 +1128,10 @@
             getActiveObjectsCount: getActiveObjectsCount,
 
             setLastActivatedRow: setLastActivatedRow,
-            getLastActivatedRow: getLastActivatedRow
+            getLastActivatedRow: getLastActivatedRow,
+
+            setUseFromAbove: setUseFromAbove,
+            getUseFromAbove: getUseFromAbove
 
         }
     }

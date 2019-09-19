@@ -32,6 +32,7 @@
                 var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
                 scope.groupingAndColumnAreaCollapsed = interfaceLayout.groupingArea.collapsed;
+                scope.dashboardFilterCollapsed = true;
 
                 scope.splitPanelIsActive = scope.evDataService.isSplitPanelActive();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
@@ -78,6 +79,10 @@
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                };
+
+                scope.toggleDashboardFilter = function(){
+                    scope.dashboardFilterCollapsed = !scope.dashboardFilterCollapsed
                 };
 
                 scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {

@@ -194,11 +194,11 @@
                         scope.matrixSettings.abscissa,
                         scope.matrixSettings.value_key);
 
-                    console.log('scope.matrix', scope.matrix);
+                    // console.log('scope.matrix', scope.matrix);
 
                     scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix);
 
-                    console.log('scope.totals', scope.totals);
+                    // console.log('scope.totals', scope.totals);
 
                 };
 
