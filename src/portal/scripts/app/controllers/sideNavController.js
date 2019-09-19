@@ -330,7 +330,7 @@
 
             uiService.getPortalInterfaceAccess().then(function (data) {
 
-                console.log('vm.getInterfaceAccess', data);
+                // console.log('vm.getInterfaceAccess', data);
 
                 vm.interfaceAccess = data;
 

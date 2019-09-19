@@ -24,6 +24,9 @@
 
         var rvDataHelper = require('../../helpers/rv-data.helper');
 
+        var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+        var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses')
+
         module.exports = function ($scope, $mdDialog, $transitions) {
 
             var vm = this;
@@ -58,6 +61,20 @@
 
                 });
 
+                vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+
+                    vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.PROCESSING)
+                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
+
+                });
+
+                vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                    vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.ACTIVE)
+                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
+
+                });
+
                 if (vm.componentType.data.type === 'report_viewer_grand_total') {
 
 
@@ -86,6 +103,30 @@
                     })
 
                 }
+
+            };
+
+            vm.setDashboardEventListeners = function () {
+
+                vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
+
+                    vm.getView();
+
+                });
+
+                vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ACTIVE_TAB, function () {
+
+                    var activeTab = vm.dashboardDataService.getActiveTab();
+
+                    console.log('activeTab', activeTab.tab_number);
+                    console.log('$scope.$parent.vm.tabNumber', $scope.$parent.vm.tabNumber);
+
+                    if (activeTab.tab_number === $scope.$parent.vm.tabNumber) {
+
+                        vm.getView();
+                    }
+
+                })
 
             };
 
@@ -334,6 +375,7 @@
                 vm.componentType = $scope.$parent.vm.componentType;
 
                 vm.setEventListeners();
+                vm.setDashboardEventListeners();
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
@@ -359,18 +401,16 @@
                     vm.setLayout(data).then(function () {
 
 
-
                         // if (vm.componentType.data.type === 'report_viewer' ||
                         //     vm.componentType.data.type === 'report_viewer_grand_total' ||
                         //     vm.componentType.data.type === 'report_viewer_matrix') {
 
-                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                        rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                         // }
 
 
-
-                        if (vm.componentType.data.type === 'report_viewer') {
+                        if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_split_panel') {
 
                             var evComponents = vm.entityViewerDataService.getComponents();
 

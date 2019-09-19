@@ -19,6 +19,9 @@
                 console.log('Dashboard Report Viewer Component', scope);
 
                 scope.vm = {
+                    tabNumber: scope.tabNumber,
+                    rowNumber: scope.rowNumber,
+                    columnNumber: scope.columnNumber,
                     componentType: scope.item,
                     entityType: scope.item.data.settings.entity_type,
                     startupSettings: scope.item.data.settings,

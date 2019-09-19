@@ -16,7 +16,7 @@
 
         vm.getData = function () {
 
-            uiService.getDashboardLayout().then(function (data) {
+            uiService.getDashboardLayoutList().then(function (data) {
 
                 vm.items = data.results;
 

@@ -2,14 +2,63 @@
 
     <div data-ng-if="vm.readyStatus.data" class="height-100">
 
-        <div data-ng-if="vm.layout" class="height-100">
+        <div data-ng-if="vm.layout" class="dashboard-tabs-holder height-100">
 
             <!--<div>-->
-                <!--Dashboard Layout: {{vm.layout.name}}-->
+            <!--Dashboard Layout: {{vm.layout.name}}-->
             <!--</div>-->
 
-            <md-tabs md-border-bottom md-dynamic-height class="height-100">
-                <md-tab data-ng-repeat="tab in vm.layout.data.tabs">
+            <div class="dashboard-tabs-control-panel">
+
+                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}" data-ng-click="vm.refreshActiveTab($event)">
+                    <ng-md-icon icon="refresh"
+                                size="20"
+                                style="fill: #777777">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Refresh Active Tab</md-tooltip>
+                    </ng-md-icon>
+                </md-button>
+                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}" data-ng-click="vm.refreshAll($event)">
+                    <ng-md-icon icon="loop"
+                                size="20"
+                                style="fill: #777777">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Refresh All Tabs</md-tooltip>
+                    </ng-md-icon>
+                </md-button>
+                <md-menu class="full-width dashboard-control-menu" layout="row">
+                    <md-button class="dashboard-control-button" ng-click="$mdOpenMenu($event)" type="button">
+                        <ng-md-icon icon="list"
+                                    size="20"
+                                    style="fill: #777777">
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Layouts</md-tooltip>
+                        </ng-md-icon>
+
+                    </md-button>
+
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button ng-click="vm.openLayoutList($event)" class="g-settings-option-btn">
+                                <span>Open layout</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.saveLayoutList($event)"
+                                       class="g-settings-option-btn"
+                                       ng-disabled="isNewLayout">
+                                <span>Save</span>
+                            </md-button>
+                        </md-menu-item>
+                        <!--<md-menu-item>-->
+                            <!--<md-button ng-click="saveAsLayoutList($event)" class="g-settings-option-btn">-->
+                                <!--<span>Save as</span>-->
+                            <!--</md-button>-->
+                        <!--</md-menu-item>-->
+                    </md-menu-content>
+                </md-menu>
+
+            </div>
+
+            <md-tabs md-border-bottom md-dynamic-height class="dashboard-tabs height-100">
+                <md-tab data-ng-repeat="tab in vm.layout.data.tabs" md-on-select="vm.setActiveTab(tab)">
                     <md-tab-label>
                         <span>
                             {{tab.name}}
@@ -154,6 +203,8 @@
 
                     </md-tab-body>
                 </md-tab>
+
+
             </md-tabs>
 
         </div>
