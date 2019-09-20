@@ -730,6 +730,8 @@
                             };
 
                             // < dragged to filters >
+                        } else if (target.classList.contains('vcSelectedGroups')) {
+                            drake.cancel()
                         };
 
                         // < dragging from groups >
@@ -762,6 +764,8 @@
                             };
 
                             // < dragged to filters >
+                        } else if (target.classList.contains('vcSelectedColumns')) {
+                            drake.cancel()
                         };
                         // < dragging from columns >
 
@@ -792,6 +796,8 @@
                             };
                             // < dragged to columns >
 
+                        } else if (target.classList.contains('vcSelectedFilters')) {
+                            drake.cancel()
                         };
 
                     };
