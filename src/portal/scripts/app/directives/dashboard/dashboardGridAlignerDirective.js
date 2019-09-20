@@ -26,7 +26,7 @@
 
                     var tabWidth = elem.width();
 
-                    scope.cellWidth = Math.floor(tabWidth / scope.rowsTotal)
+                    scope.cellWidth = Math.floor(tabWidth / scope.columnsTotal)
 
                 };
 
