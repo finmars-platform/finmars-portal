@@ -104,6 +104,28 @@
 
                 }
 
+                if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_matrix') {
+
+                    vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                        var activeObject = vm.entityViewerDataService.getActiveObject();
+
+                        console.log('click report viewer active object', activeObject);
+
+                        vm.dashboardDataService.setComponentOutput(vm.componentType.data.id, activeObject);
+
+                        vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentType.data.id)
+
+                        if(vm.componentType.data.settings.auto_refresh) {
+
+                            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
+
+                        }
+
+                    });
+
+                }
+
             };
 
             vm.setLayout = function (layout) {
@@ -399,6 +421,8 @@
             vm.initDashboardExchange = function () {
 
                 // vm.oldEventExchanges()
+
+
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
 
