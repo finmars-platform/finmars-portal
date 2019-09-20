@@ -25,7 +25,7 @@
                 evDataService: '=',
                 evEventService: '=',
                 contentWrapElement: '=',
-                rootEntityContentWrapElement: '='
+                rootWrapElement: '='
             },
             template: '<div>' +
                 '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
@@ -40,7 +40,9 @@
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
-                var rootWrapElem = $(elem).parents('.g-root-wrapper'); // its a common element for both report viewer / split panel
+                var rootWrapElem = scope.rootWrapElement
+
+                console.log('teeest', $(elem).parents('.app-md-content'));
 
                 console.log('rootWrapElem', rootWrapElem);
 
