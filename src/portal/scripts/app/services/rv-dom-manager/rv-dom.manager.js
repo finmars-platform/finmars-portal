@@ -571,7 +571,6 @@
         var rootEntityContentWrapElemHeight = rvScrollManager.getRootWrapElemHeight();
         //var rootEntityContentWrapElemWidth = rvScrollManager.getRootEntityContentWrapElemWidth();
 
-        console.log('rootEntityContentWrapElemHeight', rootEntityContentWrapElemHeight);
 
         var viewportTop;
         var viewportWidth;
@@ -589,8 +588,6 @@
 
         // console.log('viewportWidth', viewportWidth);
 
-        console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
-
         viewportTop = interfaceLayout.progressBar.height;
 
         if (isRootEntityViewer) {
@@ -603,7 +600,10 @@
                 viewportTop = viewportTop + interfaceLayout.columnArea.height
             }
 
-            console.log('rootviewer', viewportTop);
+            console.log('contentWrapElemHeight', contentWrapElemHeight);
+            console.log('viewportTop', viewportTop);
+            console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
+
 
             viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
 
