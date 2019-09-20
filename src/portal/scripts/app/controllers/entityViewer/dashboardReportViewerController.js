@@ -307,18 +307,22 @@
 
                         var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                        var reportOptions = vm.entityViewerDataService.getReportOptions();
+                        if (componentOutput) {
 
-                        console.log('reportOptions', reportOptions);
-                        console.log('componentOutput', componentOutput);
+                            var reportOptions = vm.entityViewerDataService.getReportOptions();
 
-                        if (reportOptions[property] !== componentOutput.value) {
+                            console.log('reportOptions', reportOptions);
+                            console.log('componentOutput', componentOutput);
 
-                            reportOptions[property] = componentOutput.value;
+                            if (reportOptions[property] !== componentOutput.value) {
 
-                            vm.entityViewerDataService.setReportOptions(reportOptions);
+                                reportOptions[property] = componentOutput.value;
 
-                            vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
+                                vm.entityViewerDataService.setReportOptions(reportOptions);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
+
+                            }
 
                         }
 
