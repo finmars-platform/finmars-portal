@@ -40,6 +40,10 @@
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
+                var rootWrapElem = $(elem).parents('.g-root-wrapper'); // its a common element for both report viewer / split panel
+
+                console.log('rootWrapElem', rootWrapElem);
+
                 var contentWrapElem = scope.contentWrapElement;
 
 
@@ -51,6 +55,7 @@
                     viewportElem: viewportElem,
                     contentElem: contentElem,
                     contentWrapElem: contentWrapElem,
+                    rootWrapElem: rootWrapElem,
                     //rootEntityContentWrapElem: rootEntityContentWrapElem
                 };
 

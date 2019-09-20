@@ -7,7 +7,7 @@
 
     var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents')
 
-    module.exports = function () {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'E',
             scope: {
@@ -29,6 +29,14 @@
 
                     if (scope.item.data.type === 'report_viewer_split_panel') {
                         return 'Report Viewer Split Panel'
+                    }
+
+                    if (scope.item.data.type === 'report_viewer_grand_total') {
+                        return 'Report Viewer Grand Total'
+                    }
+
+                    if (scope.item.data.type === 'report_viewer_matrix') {
+                        return 'Report Viewer Matrix'
                     }
 
                     if (scope.item.data.type === 'entity_viewer') {
@@ -187,6 +195,42 @@
 
                 };
 
+                scope.clearElemSpans = function(){
+
+                    var layout = scope.dashboardConstructorDataService.getData();
+
+                    var tab = layout.data.tabs[scope.tabNumber];
+                    var row;
+                    var item;
+
+                    for (var r = 0; r < tab.layout.rows.length; r = r + 1) {
+
+                        row = tab.layout.rows[r];
+
+                        for (var c = scope.columnNumber; c < row.columns.length; c = c + 1) {
+
+                            item = row.columns[c];
+
+                            if(item.is_hidden === true) {
+
+                                if(item.hidden_by.row_number === scope.rowNumber &&
+                                    item.hidden_by.column_number === scope.columnNumber) {
+
+                                    delete item.is_hidden
+                                    delete item.hidden_by
+
+                                }
+
+
+
+                            }
+
+                        }
+
+                    }
+
+                };
+
                 scope.changeSpan = function () {
 
                     var layout = scope.dashboardConstructorDataService.getData();
@@ -194,7 +238,10 @@
                     var row;
                     var item;
 
+                    scope.clearElemSpans();
+
                     tab = layout.data.tabs[scope.tabNumber];
+
 
                     for (var r = scope.rowNumber; r < scope.rowNumber + scope.item.rowspan; r = r + 1) {
 
@@ -339,6 +386,247 @@
 
                     scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
                     scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+
+                };
+
+                scope.syncWithComponentType = function(){
+
+                    var layout = scope.dashboardConstructorDataService.getData();
+
+                    scope.item.data = layout.data.components_types.find(function (item) {
+
+                        return item.id === scope.item.data.id
+
+                    });
+
+                };
+
+                scope.editComponentType = function ($event, item) {
+
+                    if (item.type === 'control') {
+
+                        $mdDialog.show({
+                            controller: 'DashboardConstructorControlComponentDialogController as vm',
+                            templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html',
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                item: JSON.parse(JSON.stringify(item)),
+                                dataService: scope.dashboardConstructorDataService,
+                                eventService: scope.dashboardConstructorEventService
+                            }
+                        }).then(function (value) {
+
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                        })
+
+                    }
+
+                    if (item.type === 'report_viewer') {
+
+                        $mdDialog.show({
+                            controller: 'DashboardConstructorReportViewerComponentDialogController as vm',
+                            templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html',
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                item: JSON.parse(JSON.stringify(item)),
+                                dataService: scope.dashboardConstructorDataService,
+                                eventService: scope.dashboardConstructorEventService
+                            }
+                        }).then(function (value) {
+
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                        })
+
+                    }
+
+                    if (item.type === 'report_viewer_split_panel') {
+
+                        $mdDialog.show({
+                            controller: 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm',
+                            templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html',
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                item: JSON.parse(JSON.stringify(item)),
+                                dataService: scope.dashboardConstructorDataService,
+                                eventService: scope.dashboardConstructorEventService
+                            }
+                        }).then(function (value) {
+
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                        })
+
+                    }
+
+                    if (item.type === 'report_viewer_grand_total') {
+
+                        $mdDialog.show({
+                            controller: 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm',
+                            templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html',
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                item: JSON.parse(JSON.stringify(item)),
+                                dataService: scope.dashboardConstructorDataService,
+                                eventService: scope.dashboardConstructorEventService
+                            }
+                        }).then(function (value) {
+
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                        })
+
+                    }
+
+                    if (item.type === 'report_viewer_matrix') {
+
+                        $mdDialog.show({
+                            controller: 'DashboardConstructorReportViewerMatrixComponentDialogController as vm',
+                            templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-matrix-component-dialog-view.html',
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                item: JSON.parse(JSON.stringify(item)),
+                                dataService: scope.dashboardConstructorDataService,
+                                eventService: scope.dashboardConstructorEventService
+                            }
+                        }).then(function (value) {
+
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                        });
+
+                    }
+
+                    if (item.type === 'entity_viewer') {
+
+                        $mdDialog.show({
+                            controller: 'DashboardConstructorEntityViewerComponentDialogController as vm',
+                            templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-component-dialog-view.html',
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                item: JSON.parse(JSON.stringify(item)),
+                                dataService: scope.dashboardConstructorDataService,
+                                eventService: scope.dashboardConstructorEventService
+                            }
+                        }).then(function (value) {
+
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                        })
+
+                    }
+
+                    if (item.type === 'entity_viewer_split_panel') {
+
+                        $mdDialog.show({
+                            controller: 'DashboardConstructorEntityViewerSplitPanelComponentDialogController as vm',
+                            templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-split-panel-component-dialog-view.html',
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                item: JSON.parse(JSON.stringify(item)),
+                                dataService: scope.dashboardConstructorDataService,
+                                eventService: scope.dashboardConstructorEventService
+                            }
+                        }).then(function (value) {
+
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                        })
+
+                    }
+
+                    if (item.type === 'button_set') {
+
+                        $mdDialog.show({
+                            controller: 'DashboardConstructorButtonSetComponentDialogController as vm',
+                            templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-button-set-component-dialog-view.html',
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                item: JSON.parse(JSON.stringify(item)),
+                                dataService: scope.dashboardConstructorDataService,
+                                eventService: scope.dashboardConstructorEventService
+                            }
+                        }).then(function (value) {
+
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                        })
+
+                    }
+
+                    if (item.type === 'input_form') {
+
+                        $mdDialog.show({
+                            controller: 'DashboardConstructorInputFormComponentDialogController as vm',
+                            templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html',
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                item: JSON.parse(JSON.stringify(item)),
+                                dataService: scope.dashboardConstructorDataService,
+                                eventService: scope.dashboardConstructorEventService
+                            }
+                        }).then(function (value) {
+
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                        })
+
+                    }
 
                 };
 
