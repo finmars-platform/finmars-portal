@@ -82,8 +82,8 @@
                 }
             };
 
-            var columns_count = 6;
-            var rows_count = 6;
+            var columns_count = 10;
+            var rows_count = 10;
 
             for (var r = 0; r < rows_count; r = r + 1) {
 
@@ -189,6 +189,14 @@
 
             if (item.type === 'report_viewer_split_panel') {
                 return 'Report Viewer Split Panel'
+            }
+
+            if (item.type === 'report_viewer_grand_total') {
+                return 'Report Viewer Grand Total'
+            }
+
+            if (item.type === 'report_viewer_matrix') {
+                return 'Report Viewer Matrix'
             }
 
             if (item.type === 'entity_viewer') {
@@ -404,6 +412,41 @@
 
         };
 
+        vm.isRowAddable = function (tab, row) {
+
+            var row_number = row.row_number;
+
+            var result = true;
+            var layout_row;
+            var item;
+
+            for (var r = 0; r < tab.layout.rows.length; r = r + 1) {
+
+                layout_row = tab.layout.rows[r];
+
+                if (layout_row.row_number <= row_number) {
+
+                    for (var i = 0; i < layout_row.columns.length; i = i + 1) {
+
+                        item = layout_row.columns[i];
+
+                        if (layout_row.row_number + item.rowspan - 1 > row_number) {
+
+                            result = false;
+                            break;
+
+                        }
+                    }
+                }
+
+                if (!result) {
+                    break;
+                }
+
+            }
+
+            return result
+        };
 
         vm.isRowEmpty = function (row) {
 
@@ -412,6 +455,10 @@
             row.columns.forEach(function (column) {
 
                 if (column.cell_type !== 'empty') {
+                    result = false;
+                }
+
+                if (column.is_hidden === true) {
                     result = false;
                 }
 
@@ -431,12 +478,15 @@
 
                     tab.layout.rows = tab.layout.rows.filter(function (tabRow) {
 
-                        if (row.row_number === tabRow.row_number) {
-                            return false
-                        }
+                        return row.row_number !== tabRow.row_number
 
-                        return true
+                    });
 
+                    tab.layout.rows = tab.layout.rows.map(function (row, index) {
+
+                        row.row_number = index;
+
+                        return row
                     });
 
                     tab.layout.rows_count = tab.layout.rows.length
@@ -473,6 +523,8 @@
                         newRow.columns[c] = {
                             column_number: c,
                             cell_type: 'empty',
+                            colspan: 1,
+                            rowspan: 1,
                             data: {}
                         }
                     }
@@ -585,7 +637,6 @@
             }
 
         };
-
 
         // Components Types Section Start
 

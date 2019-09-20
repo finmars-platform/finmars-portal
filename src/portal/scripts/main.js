@@ -97,7 +97,7 @@ app.controller('DashboardConstructorEntityViewerComponentDialogController', ['$s
 app.controller('DashboardConstructorEntityViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerSplitPanelComponentDialogController')]);
 
 
-app.directive('dashboardConstructorField', [require('./app/directives/dashboardConstructorFieldDirective')]);
+app.directive('dashboardConstructorField', ['$mdDialog', require('./app/directives/dashboardConstructorFieldDirective')]);
 app.directive('dashboardConstructorGridAligner', [require('./app/directives/dashboardConstructorGridAlignerDirective')]);
 
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);

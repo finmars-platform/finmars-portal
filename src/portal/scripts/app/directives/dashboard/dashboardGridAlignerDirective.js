@@ -34,8 +34,9 @@
 
                     var tabHeight = elem.height();
 
-                    scope.cellHeight = Math.floor(tabHeight / scope.columnsTotal)
+                    // scope.cellHeight = Math.floor(tabHeight / scope.columnsTotal)
 
+                    scope.cellHeight = 50; // Let it be fixed value
                 };
 
                 scope.resizeGridCells = function () {
