@@ -37,19 +37,26 @@
                 scope.splitPanelIsActive = scope.evDataService.isSplitPanelActive();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
-                scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
+                setTimeout(function () {
 
-                console.log(elem[0].querySelector('.g-rootentity-content-wrap'))
+                    // wait until ng-class (.g-root-wrapper) will be applied
 
-                scope.rootEntityContentWrapElem = elem[0].querySelector('.g-rootentity-content-wrap');
+                    scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
 
-                console.log('table scope', scope);
+                    if (scope.isRootEntityViewer) {
+                        scope.rootWrapElem = elem[0].querySelector('.g-root-wrapper');
+                    } else {
+                        scope.rootWrapElem = $(elem).parents('.g-root-wrapper');
+                    }
 
+                    if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
+                        var splitPanelHeight = elem.parents(".g-additions").height();
+                        scope.contentWrapElem.style.height = splitPanelHeight + 'px';
+                    }
 
-                if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
-                    var splitPanelHeight = elem.parents(".g-additions").height();
-                    scope.contentWrapElem.style.height = splitPanelHeight + 'px';
-                }
+                    scope.$apply();
+
+                }, 0);
 
                 console.log('scope.additions', scope.additions);
 
@@ -81,7 +88,7 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
                 };
 
-                scope.toggleDashboardFilter = function(){
+                scope.toggleDashboardFilter = function () {
                     scope.dashboardFilterCollapsed = !scope.dashboardFilterCollapsed
                 };
 

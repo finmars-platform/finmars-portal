@@ -1,4 +1,4 @@
-<div class="height-100 width-100">
+<div class="height-100 width-100 dashboard-constructor-field-holder">
 
     <md-card data-ng-show="!item.editMode" class="dashboard-field-card height-100 width-100">
         <div layout="row">
@@ -9,17 +9,22 @@
             <div class="dashboard-field-card-options">
                 <md-button aria-label="delete attribute" class=""
                            data-ng-click="deleteField()">
-                    <ng-md-icon icon="delete"></ng-md-icon>
+                    <ng-md-icon icon="delete"  size="14"></ng-md-icon>
                 </md-button>
                 <md-button aria-label="edit attribute" class=""
                            data-ng-click="toggleFieldEditMode()">
-                    <ng-md-icon icon="mode_edit"></ng-md-icon>
+                    <ng-md-icon icon="mode_edit" size="14"></ng-md-icon>
                 </md-button>
             </div>
         </div>
     </md-card>
 
     <md-card data-ng-if="item.editMode" class="dashboard-field-card {{item.editMode ? 'active' : ''}}">
+
+        <md-button class="md-raised edit-component-type-button" data-ng-click="editComponentType($event, item.data)">
+            b><span data-ng-bind="item.data.name"></span></b> (<span
+                data-ng-bind="getVerboseType()"></span>)
+        </md-button>
 
         <md-input-container
                 class="md-block no-error-spacer ec-attr-row"

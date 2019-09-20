@@ -25,7 +25,7 @@
                 evDataService: '=',
                 evEventService: '=',
                 contentWrapElement: '=',
-                rootEntityContentWrapElement: '='
+                rootWrapElement: '='
             },
             template: '<div>' +
                 '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
@@ -40,6 +40,12 @@
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
+                var rootWrapElem = scope.rootWrapElement
+
+                console.log('teeest', $(elem).parents('.app-md-content'));
+
+                console.log('rootWrapElem', rootWrapElem);
+
                 var contentWrapElem = scope.contentWrapElement;
 
 
@@ -51,6 +57,7 @@
                     viewportElem: viewportElem,
                     contentElem: contentElem,
                     contentWrapElem: contentWrapElem,
+                    rootWrapElem: rootWrapElem,
                     //rootEntityContentWrapElem: rootEntityContentWrapElem
                 };
 
