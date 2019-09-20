@@ -553,12 +553,12 @@
 
     };
 
-    /*var calculateScroll = function (elements, evDataService) {
+    var calculateScroll = function (elements, evDataService) {
 
         rvScrollManager.setViewportElem(elements.viewportElem);
         rvScrollManager.setContentElem(elements.contentElem);
         rvScrollManager.setContentWrapElem(elements.contentWrapElem);
-        rvScrollManager.setRootEntityContentWrapElem(elements.rootEntityContentWrapElem);
+        rvScrollManager.setRootWrapElem(elements.rootWrapElem);
 
         var isRootEntityViewer = evDataService.isRootEntityViewer();
 
@@ -568,8 +568,9 @@
         var contentWrapElemHeight = rvScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = rvScrollManager.getContentWrapElemWidth();
 
-        var rootEntityContentWrapElemHeight = rvScrollManager.getRootEntityContentWrapElemHeight();
+        var rootEntityContentWrapElemHeight = rvScrollManager.getRootWrapElemHeight();
         //var rootEntityContentWrapElemWidth = rvScrollManager.getRootEntityContentWrapElemWidth();
+
 
         var viewportTop;
         var viewportWidth;
@@ -587,8 +588,6 @@
 
         // console.log('viewportWidth', viewportWidth);
 
-        console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
-
         viewportTop = interfaceLayout.progressBar.height;
 
         if (isRootEntityViewer) {
@@ -601,9 +600,13 @@
                 viewportTop = viewportTop + interfaceLayout.columnArea.height
             }
 
-            console.log('rootviewer', viewportTop);
+            console.log('contentWrapElemHeight', contentWrapElemHeight);
+            console.log('viewportTop', viewportTop);
+            console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
 
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
+
+            // viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
+            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
         } else {
 
@@ -628,54 +631,54 @@
         var paddingTop = calculatePaddingTop(evDataService);
         var totalHeight = calculateTotalHeight(evDataService);
 
-        rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
-        //rvScrollManager.setContentElemPaddingTop(paddingTop);
-
-    };*/
-
-    var calculateScroll = function (elements, evDataService) {
-
-        rvScrollManager.setViewportElem(elements.viewportElem);
-        rvScrollManager.setContentElem(elements.contentElem);
-        rvScrollManager.setContentWrapElem(elements.contentWrapElem);
-
-        var isRootEntityViewer = evDataService.isRootEntityViewer();
-
-        var interfaceLayout = evDataService.getInterfaceLayout();
-
-        var contentWrapElemHeight = rvScrollManager.getContentWrapElemHeight();
-
-        var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-        var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
-
-        var viewportHeight;
-
-        if (isRootEntityViewer) {
-
-            viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
-
-        } else {
-
-            viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
-
-        };
-
-        // console.log('calculateScroll.viewportHeight', viewportHeight);
-        // console.log('calculateScroll.viewportWidth', viewportWidth);
-
-        rvScrollManager.setViewportHeight(viewportHeight);
-        if (viewportWidth) {
-            rvScrollManager.setViewportWidth(viewportWidth);
-        }
-
-        var paddingTop = calculatePaddingTop(evDataService);
-        var totalHeight = calculateTotalHeight(evDataService);
-
-        rvScrollManager.setContentElemHeight(totalHeight);
+        // rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
         rvScrollManager.setContentElemPaddingTop(paddingTop);
 
     };
+
+    // var calculateScroll = function (elements, evDataService) {
+    //
+    //     rvScrollManager.setViewportElem(elements.viewportElem);
+    //     rvScrollManager.setContentElem(elements.contentElem);
+    //     rvScrollManager.setContentWrapElem(elements.contentWrapElem);
+    //
+    //     var isRootEntityViewer = evDataService.isRootEntityViewer();
+    //
+    //     var interfaceLayout = evDataService.getInterfaceLayout();
+    //
+    //     var contentWrapElemHeight = rvScrollManager.getContentWrapElemHeight();
+    //
+    //     var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+    //     var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
+    //
+    //     var viewportHeight;
+    //
+    //     if (isRootEntityViewer) {
+    //
+    //         viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
+    //
+    //     } else {
+    //
+    //         viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+    //         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+    //
+    //     };
+    //
+    //     // console.log('calculateScroll.viewportHeight', viewportHeight);
+    //     // console.log('calculateScroll.viewportWidth', viewportWidth);
+    //
+    //     rvScrollManager.setViewportHeight(viewportHeight);
+    //     if (viewportWidth) {
+    //         rvScrollManager.setViewportWidth(viewportWidth);
+    //     }
+    //
+    //     var paddingTop = calculatePaddingTop(evDataService);
+    //     var totalHeight = calculateTotalHeight(evDataService);
+    //
+    //     rvScrollManager.setContentElemHeight(totalHeight);
+    //     rvScrollManager.setContentElemPaddingTop(paddingTop);
+    //
+    // };
 
 
     var clearDropdowns = function () {

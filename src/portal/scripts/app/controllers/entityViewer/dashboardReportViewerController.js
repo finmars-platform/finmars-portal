@@ -104,6 +104,28 @@
 
                 }
 
+                if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_matrix') {
+
+                    vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                        var activeObject = vm.entityViewerDataService.getActiveObject();
+
+                        console.log('click report viewer active object', activeObject);
+
+                        vm.dashboardDataService.setComponentOutput(vm.componentType.data.id, activeObject);
+
+                        vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentType.data.id)
+
+                        if (vm.componentType.data.settings.auto_refresh) {
+
+                            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
+
+                        }
+
+                    });
+
+                }
+
             };
 
             vm.setLayout = function (layout) {
@@ -179,67 +201,71 @@
                 console.log('filters', filters);
                 console.log('componentOutput', componentOutput);
 
-                var linkedFilter = filters.find(function (item) {
-                    return item.type === 'filter_link' && item.component_id === filter_link.component_id
-                });
+                if (componentOutput) {
 
-                if (linkedFilter) {
+                    var linkedFilter = filters.find(function (item) {
+                        return item.type === 'filter_link' && item.component_id === filter_link.component_id
+                    });
 
-                    linkedFilter.options.filter_values = [componentOutput.value];
+                    if (linkedFilter) {
 
-                    filters = filters.map(function (item) {
+                        linkedFilter.options.filter_values = [componentOutput.value];
 
-                        if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
-                            return linkedFilter
-                        }
+                        filters = filters.map(function (item) {
 
-                        return item
-                    })
-
-                } else {
-
-                    if (filter_link.value_type === 100) {
-
-                        linkedFilter = {
-                            type: 'filter_link',
-                            component_id: filter_link.component_id,
-                            key: filter_link.key,
-                            name: filter_link.key,
-                            value_type: filter_link.value_type,
-                            options: {
-                                enabled: true,
-                                exclude_empty_cells: true,
-                                filter_type: 'equal',
-                                filter_values: [componentOutput.value]
+                            if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
+                                return linkedFilter
                             }
-                        };
+
+                            return item
+                        })
 
                     } else {
 
-                        linkedFilter = {
-                            type: 'filter_link',
-                            component_id: filter_link.component_id,
-                            key: filter_link.key,
-                            name: filter_link.key,
-                            value_type: filter_link.value_type,
-                            options: {
-                                enabled: true,
-                                exclude_empty_cells: true,
-                                filter_type: 'contains',
-                                filter_values: [componentOutput.value.toString()]
-                            }
-                        };
+                        if (filter_link.value_type === 100) {
 
+                            linkedFilter = {
+                                type: 'filter_link',
+                                component_id: filter_link.component_id,
+                                key: filter_link.key,
+                                name: filter_link.key,
+                                value_type: filter_link.value_type,
+                                options: {
+                                    enabled: true,
+                                    exclude_empty_cells: true,
+                                    filter_type: 'equal',
+                                    filter_values: [componentOutput.value]
+                                }
+                            };
+
+                        } else {
+
+                            linkedFilter = {
+                                type: 'filter_link',
+                                component_id: filter_link.component_id,
+                                key: filter_link.key,
+                                name: filter_link.key,
+                                value_type: filter_link.value_type,
+                                options: {
+                                    enabled: true,
+                                    exclude_empty_cells: true,
+                                    filter_type: 'contains',
+                                    filter_values: [componentOutput.value.toString()]
+                                }
+                            };
+
+                        }
+
+                        filters.push(linkedFilter)
                     }
 
-                    filters.push(linkedFilter)
+
+                    vm.entityViewerDataService.setFilters(filters);
+
+                    vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
                 }
-
-
-                vm.entityViewerDataService.setFilters(filters);
-
-                vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
             };
 
@@ -249,7 +275,7 @@
 
                 console.log('COMPONENT_VALUE_CHANGED_' + componentId, componentOutput);
 
-                if (vm.componentType.data.type === 'report_viewer_split_panel') {
+                if (vm.componentType.data.type === 'report_viewer_split_panel' && componentOutput) {
 
                     vm.entityViewerDataService.setActiveObject(componentOutput);
                     vm.entityViewerDataService.setActiveObjectFromAbove(componentOutput);
@@ -281,18 +307,22 @@
 
                         var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                        var reportOptions = vm.entityViewerDataService.getReportOptions();
+                        if (componentOutput) {
 
-                        console.log('reportOptions', reportOptions);
-                        console.log('componentOutput', componentOutput);
+                            var reportOptions = vm.entityViewerDataService.getReportOptions();
 
-                        if (reportOptions[property] !== componentOutput.value) {
+                            console.log('reportOptions', reportOptions);
+                            console.log('componentOutput', componentOutput);
 
-                            reportOptions[property] = componentOutput.value;
+                            if (reportOptions[property] !== componentOutput.value) {
 
-                            vm.entityViewerDataService.setReportOptions(reportOptions);
+                                reportOptions[property] = componentOutput.value;
 
-                            vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
+                                vm.entityViewerDataService.setReportOptions(reportOptions);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
+
+                            }
 
                         }
 
@@ -399,6 +429,7 @@
             vm.initDashboardExchange = function () {
 
                 // vm.oldEventExchanges()
+
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
 

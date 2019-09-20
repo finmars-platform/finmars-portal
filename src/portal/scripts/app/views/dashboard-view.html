@@ -137,6 +137,7 @@
                                         <div data-ng-if="item.data.type == 'report_viewer_split_panel'"
                                              class="height-100">
                                             <dashboard-report-viewer-split-panel
+                                                    class="height-100 display-block"
                                                     tab-number="tab.tab_number"
                                                     row-number="row.row_number"
                                                     column-number="item.column_number"
@@ -149,6 +150,7 @@
                                         <div data-ng-if="item.data.type == 'report_viewer_grand_total'"
                                              class="height-100">
                                             <dashboard-report-viewer-grand-total
+                                                    class="height-100 display-block"
                                                     tab-number="tab.tab_number"
                                                     row-number="row.row_number"
                                                     column-number="item.column_number"
@@ -212,6 +214,8 @@
                                 </div>
 
                             </div>
+
+                            <div class="dashboard-empty-space"></div>
 
                         </div>
 

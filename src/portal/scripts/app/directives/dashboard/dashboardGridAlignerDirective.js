@@ -26,7 +26,7 @@
 
                     var tabWidth = elem.width();
 
-                    scope.cellWidth = Math.floor(tabWidth / scope.rowsTotal)
+                    scope.cellWidth = Math.floor(tabWidth / scope.columnsTotal)
 
                 };
 
@@ -34,8 +34,9 @@
 
                     var tabHeight = elem.height();
 
-                    scope.cellHeight = Math.floor(tabHeight / scope.columnsTotal)
+                    // scope.cellHeight = Math.floor(tabHeight / scope.columnsTotal)
 
+                    scope.cellHeight = 50; // Let it be fixed value
                 };
 
                 scope.resizeGridCells = function () {
@@ -45,6 +46,7 @@
                     var tab = layout.data.tabs[scope.tabNumber];
 
                     var elements = elem.find('.dashboard-cell');
+                    var emptySpace = elem.find('.dashboard-empty-space')[0];
                     var domElem;
                     var layoutElem;
 
@@ -85,6 +87,14 @@
                         domElem.style.top = (rowNumber * scope.cellHeight) + 'px';
                         domElem.style.left = (columnNumber * scope.cellWidth) + 'px';
 
+                    }
+
+                    if (emptySpace) {
+                        emptySpace.style.position = 'absolute';
+                        emptySpace.style.top = scope.rowsTotal * scope.cellHeight + 'px';
+                        emptySpace.style.left = 0;
+                        emptySpace.style.height = '200px';
+                        emptySpace.style.width = '100%';
                     }
 
 

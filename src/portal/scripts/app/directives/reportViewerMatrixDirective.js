@@ -29,6 +29,9 @@
                     var elemWidth = elem.width();
                     var elemHeight = elem.height();
 
+                    console.log('elemHeight', elemHeight);
+                    console.log('elemWidth', elemWidth);
+
                     var rowsCount = scope.rows.length + 2; // header / footer rows
                     var columnsCount = scope.columns.length + 2; // first empty cell and last "Total" cell
 
@@ -43,6 +46,9 @@
 
                     var cellWidth = Math.floor(elemWidth / columnsCount);
                     var cellHeight = Math.floor(elemHeight / rowsCount);
+
+                    // cellHeight = cellHeight - 2; // 1px for border top / border bottom
+                    // cellWidth = cellWidth - 2; // 1px for border left / border right
 
                     var items = elem.querySelectorAll('.report-viewer-matrix-cell');
 
