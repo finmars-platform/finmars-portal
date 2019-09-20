@@ -43,7 +43,6 @@
                 var groupTypes = entityViewerDataService.getGroups();
 
                 items = filterService.filterTableRows(items, regularFilters);
-                console.log("rv filter objects.service items", JSON.parse(JSON.stringify(items)));
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 

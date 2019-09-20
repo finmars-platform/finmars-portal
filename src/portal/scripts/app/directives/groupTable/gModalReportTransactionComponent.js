@@ -43,7 +43,7 @@
 
         var columns = entityViewerDataService.getColumns();
         var filters = entityViewerDataService.getFilters();
-        var grouping = entityViewerDataService.getGroups();
+        var groups = entityViewerDataService.getGroups();
 
         var attrsList = [];
 
@@ -392,7 +392,7 @@
 
                 });
 
-                grouping.forEach(function (item) {
+                groups.forEach(function (item) {
 
                     if (attrs[i].entity === item.entity) {
 
@@ -434,16 +434,16 @@
                 }
 
 
-                /////// GROUPING
+                /////// groups
 
-                for (g = 0; g < grouping.length; g = g + 1) {
+                for (g = 0; g < groups.length; g = g + 1) {
 
-                    if (attr.entity === grouping[g].entity) {
+                    if (attr.entity === groups[g].entity) {
 
-                        if (attr.key === grouping[g].key) {
+                        if (attr.key === groups[g].key) {
                             groupExist = true;
                             if (attr.groups === false) {
-                                grouping.splice(g, 1);
+                                groups.splice(g, 1);
                                 g = g - 1;
                             }
                             break;
@@ -478,7 +478,7 @@
                 }
 
                 if (!groupExist && attr.groups === true) {
-                    grouping.push(attr);
+                    groups.push(attr);
                 }
 
                 if (!filterExist && attr.filters === true) {
@@ -488,7 +488,7 @@
             });
 
             entityViewerDataService.setColumns(columns);
-            entityViewerDataService.setGroups(grouping);
+            entityViewerDataService.setGroups(groups);
             entityViewerDataService.setFilters(filters);
 
         }
@@ -691,8 +691,8 @@
                     /*if (target === document.querySelector('#groupsbag') ||
                         target === document.querySelector('.g-groups-holder')) {*/
                     if (target === document.querySelector('#groupsbag')) {
-                        for (i = 0; i < grouping.length; i = i + 1) {
-                            if (grouping[i].key === identifier) {
+                        for (i = 0; i < groups.length; i = i + 1) {
+                            if (groups[i].key === identifier) {
                                 exist = true;
                                 groupExist = true;
                             }
@@ -766,11 +766,11 @@
                                 if (attrsList[a].key === identifier) {
 
                                     /*if (target === document.querySelector('#groupsbag')) {
-                                        grouping.push(attrsList[a]);
+                                        groups.push(attrsList[a]);
                                     } else {
-                                        grouping.splice(index, 0, attrsList[a]);
+                                        groups.splice(index, 0, attrsList[a]);
                                     }*/
-                                    grouping.push(attrsList[a]);
+                                    groups.push(attrsList[a]);
 
                                     //columns.push(attrsList[a]);
                                 }
@@ -826,7 +826,7 @@
                         if (columnExist) {
                             errorMessage = 'There is already such column in Column Area';
                         } else if (groupExist) {
-                            errorMessage = 'There is already such group in Grouping Area';
+                            errorMessage = 'There is already such group in groups Area';
                         } else if (filterExist) {
                             errorMessage = 'There is already such filter in Filter Area';
                         }
@@ -874,7 +874,7 @@
                 ];
 
                 var i;
-                var itemsElem = document.querySelectorAll('#dialogbag .g-modal-draggable-card');
+                var itemsElem = document.querySelectorAll('#dialogbag .vcDraggableCard');
                 for (i = 0; i < itemsElem.length; i = i + 1) {
                     items.push(itemsElem[i]);
                 }
@@ -949,6 +949,8 @@
                             };
 
                             // < dragged to filters >
+                        } else if (target.classList.contains('vcSelectedGroups')) {
+                            drake.cancel()
                         };
 
                         // < dragging from groups >
@@ -981,6 +983,8 @@
                             };
 
                             // < dragged to filters >
+                        } else if (target.classList.contains('vcSelectedColumns')) {
+                            drake.cancel()
                         };
                         // < dragging from columns >
 
@@ -1011,6 +1015,8 @@
                             };
                             // < dragged to columns >
 
+                        } else if (target.classList.contains('vcSelectedFilters')) {
+                            drake.cancel()
                         };
 
                     };
@@ -1086,7 +1092,7 @@
 
             entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-                grouping = entityViewerDataService.getGroups();
+                groups = entityViewerDataService.getGroups();
                 syncAttrs();
                 getSelectedAttrs();
 

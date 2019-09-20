@@ -23,7 +23,7 @@
     };
 
     var filterTableRows = function (items, regularFilters) {
-        console.log("rv filter items, regularFIlters", items, regularFilters);
+
         var match;
 
         return items.filter(function (item, tableRowIndex) {
@@ -140,7 +140,7 @@
     };
 
     var filterValueFromTable = function (valueToFilter, filterBy, operationType) {
-        console.log("rv filter filterValueFromTable", valueToFilter, filterBy);
+
         switch (operationType) {
 
             case 'contains':
