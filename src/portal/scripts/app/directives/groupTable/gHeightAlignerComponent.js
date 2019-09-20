@@ -25,6 +25,8 @@
 
                 function activateHeightSlider() {
 
+                    console.log('activateHeightSlider');
+
                     var splitPanelResizer = $('.g-height-slider')
 
                     $(splitPanelResizer).bind('mousedown', function (e) {

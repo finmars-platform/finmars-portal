@@ -605,7 +605,8 @@
             console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
 
 
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
+            // viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
+            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
         } else {
 
