@@ -42,6 +42,7 @@
                     // wait until ng-class (.g-root-wrapper) will be applied
 
                     scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
+                    scope.workareaWrapElem = elem[0].querySelector('.g-workarea-wrap');
 
                     if (scope.isRootEntityViewer) {
                         scope.rootWrapElem = elem[0].querySelector('.g-root-wrapper');

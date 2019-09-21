@@ -1,5 +1,18 @@
 .dashboard {
 
+  overflow: hidden;
+  position: relative;
+
+  .dashboard-loader {
+    position: absolute;
+    margin-top: -48px;
+    margin-left: -48px;
+    top: 50%;
+    left: 50%;
+  }
+
+
+
   .dashboard-layout {
     overflow: auto;
   }
@@ -13,6 +26,7 @@
 
     md-tab-content > div {
 
+      //overflow: auto;
       height: 100%;
 
     }

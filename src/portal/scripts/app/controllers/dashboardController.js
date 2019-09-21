@@ -106,12 +106,24 @@
             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ACTIVE_TAB)
             vm.processing = true;
 
+            var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
+
+            if( !Object.keys(statusesObject).length) {
+                vm.processing = false;
+            }
+
         };
 
         vm.refreshAll = function () {
 
             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
             vm.processing = true;
+
+            var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
+
+            if( !Object.keys(statusesObject).length) {
+                vm.processing = false;
+            }
 
         };
 
