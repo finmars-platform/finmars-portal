@@ -2,8 +2,8 @@
 
     <div class="g-content-wrap">
 
-        <div class="g-workarea-wrap" ng-if="contentWrapElem">
-            <div class="g-workarea main-area"
+        <div class="g-workarea-wrap" >
+            <div class="g-workarea main-area" ng-if="contentWrapElem"
                  ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
@@ -137,7 +137,11 @@
                                              sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
         </div>
     </div>
-    <div group-layout-resizer ev-data-service="evDataService"
-         ev-event-service="evEventService"></div>
+    <div ng-if="contentWrapElem">
 
+        <div group-layout-resizer ev-data-service="evDataService"
+             workarea-wrap-element="workareaWrapElem"
+             ev-event-service="evEventService"></div>
+
+    </div>
 </div>
