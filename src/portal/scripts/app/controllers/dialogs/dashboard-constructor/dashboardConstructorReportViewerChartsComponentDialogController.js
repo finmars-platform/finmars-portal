@@ -21,8 +21,7 @@
                 name: '',
                 settings: {
                     abscissa: '',
-                    ordinate: '',
-                    value_key: ''
+                    ordinate: ''
                 }
             }
         }

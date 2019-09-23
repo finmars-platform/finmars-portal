@@ -491,7 +491,15 @@
                         ordinate: vm.componentType.data.settings.ordinate,
                         value_key: vm.componentType.data.settings.value_key
                     };
-                }
+                };
+
+                if (vm.componentType.data.type === 'report_viewer_charts') {
+                    vm.rvChartsSettings = {
+                        abscissa: vm.componentType.data.settings.abscissa,
+                        ordinate: vm.componentType.data.settings.ordinate,
+                        value_key: vm.componentType.data.settings.value_key
+                    };
+                };
 
                 uiService.getListLayoutByKey(layoutId).then(function (data) {
 
