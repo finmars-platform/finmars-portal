@@ -17,7 +17,7 @@
 
             vm.readyStatus.masterUsers = false;
 
-            usersService.getMasterList().then(function (data) {
+            usersService.getMasterListLight().then(function (data) {
                 vm.masters = data.results;
                 vm.readyStatus.masterUsers = true;
                 $scope.$apply();

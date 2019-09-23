@@ -85,6 +85,19 @@
         })
     };
 
+    var getMasterListLight = function () {
+        return window.fetch(baseUrl + 'users/master-user-light/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        })
+    };
+
     var getMasterByKey = function (id) {
         return window.fetch(baseUrl + 'users/master-user/' + id, {
             method: 'GET',
@@ -188,6 +201,7 @@
         update: update,
 
         createMasterUser: createMasterUser,
+        getMasterListLight: getMasterListLight,
         getMasterList: getMasterList,
         getMasterByKey: getMasterByKey,
         updateMaster: updateMaster,

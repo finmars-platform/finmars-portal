@@ -88,6 +88,10 @@
         return usersRepository.getMemberList();
     };
 
+    var getMasterListLight = function () {
+        return usersRepository.getMasterListLight();
+    };
+
     var getMemberByKey = function (id) {
         return usersRepository.getMemberByKey(id)
     };
@@ -135,6 +139,7 @@
         getCurrentMasterUser: getCurrentMasterUser,
         createMasterUser: createMasterUser,
         getMasterList: getMasterList,
+        getMasterListLight: getMasterListLight,
         getMasterByKey: getMasterByKey,
         updateMaster: updateMaster,
         patchMaster: patchMaster,

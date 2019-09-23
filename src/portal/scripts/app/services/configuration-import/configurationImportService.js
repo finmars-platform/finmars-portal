@@ -734,6 +734,51 @@
 
                             }));
                             break;
+                        case 'ui.editlayout':
+                            resolve(new Promise(function (resolve, reject) {
+
+                                var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
+
+                                uiRepository.getEditLayout(entityType).then(function (data) {
+
+                                    if (data.results.length) {
+                                        uiRepository.updateEditLayout(data.results[0].id, item).then(function (item) {
+                                            resolve({})
+                                        }).catch(function (reason) {
+
+                                            errors.push({
+                                                content_type: entity,
+                                                item: item,
+                                                error: {
+                                                    message: "Can't update Edit Layout Form"
+                                                },
+                                                mode: 'overwrite'
+                                            });
+
+                                            resolve(reason);
+                                        })
+                                    } else {
+                                        uiRepository.createEditLayout(item).then(function (item) {
+                                            resolve({})
+                                        }).catch(function (reason) {
+
+                                            errors.push({
+                                                content_type: entity,
+                                                item: item,
+                                                error: {
+                                                    message: "Can't update Edit Layout Form"
+                                                },
+                                                mode: 'overwrite'
+                                            });
+
+                                            resolve(reason);
+                                        })
+                                    }
+
+                                });
+
+                            }));
+                            break;
                         case 'ui.reportlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
