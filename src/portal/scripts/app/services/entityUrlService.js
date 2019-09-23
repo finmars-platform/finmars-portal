@@ -32,7 +32,8 @@
             case 'transaction':
                 return 'transactions/transaction';
             case 'transaction-type':
-                return 'transactions/transaction-type';
+                // return 'transactions/transaction-type';
+                return 'transactions/transaction-type-light';
             case 'transaction-type-group':
                 return 'transactions/transaction-type-group';
             case 'complex-transaction':

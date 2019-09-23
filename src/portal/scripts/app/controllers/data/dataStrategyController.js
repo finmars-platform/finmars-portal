@@ -28,17 +28,23 @@
 
         vm.entityViewer = {extraFeatures: []};
 
-        strategyService.getList(vm.strategyNumber).then(function(data){
-            vm.entityRaw = data.results;
-            vm.readyStatus.content = true;
-            $scope.$apply();
-        });
+        // strategyService.getList(vm.strategyNumber).then(function(data){
+        //     vm.entityRaw = data.results;
+        //     vm.readyStatus.content = true;
+        //     $scope.$apply();
+        // });
 
         vm.getList = function(options){
             return strategyService.getList(vm.strategyNumber, options).then(function(data){
                 return data;
             })
-        }
+        };
+
+        vm.init = function(){
+            vm.readyStatus.content = true
+        };
+
+        vm.init()
 
     }
 

@@ -21,17 +21,23 @@
 
         vm.entityViewer = {extraFeatures: []};
 
-        transactionTypeService.getList().then(function(data){
-            vm.entityRaw = data.results;
-            vm.readyStatus.content = true;
-            $scope.$apply();
-        });
+        // transactionTypeService.getListLight().then(function(data){
+        //     vm.entityRaw = data.results;
+        //     vm.readyStatus.content = true;
+        //     $scope.$apply();
+        // });
 
         vm.getList = function(options){
-            return transactionTypeService.getList(options).then(function(data){
+            return transactionTypeService.getListLight(options).then(function(data){
                 return data;
             })
-        }
+        };
+
+        vm.init = function(){
+            vm.readyStatus.content = true
+        };
+
+        vm.init()
 
     }
 

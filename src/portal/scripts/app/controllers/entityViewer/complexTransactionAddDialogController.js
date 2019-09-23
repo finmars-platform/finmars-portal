@@ -869,7 +869,8 @@
                 pageSize: 1000
             };
 
-            transactionTypeService.getList(options).then(function (data) {
+            // transactionTypeService.getList(options).then(function (data) {
+            transactionTypeService.getListLight(options).then(function (data) {
 
                 vm.transactionGroups = getGroupsFromItems(data.results);
 
