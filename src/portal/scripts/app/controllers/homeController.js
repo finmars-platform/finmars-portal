@@ -18,7 +18,7 @@
 
         vm.getMasterUsersList = function () {
 
-            return usersService.getMasterList().then(function (data) {
+            return usersService.getMasterListLight().then(function (data) {
 
                 vm.masters = data.results;
 
