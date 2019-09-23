@@ -33,17 +33,23 @@
             autoReportRequest: false
         };
 
-        auditService.getList({filters: {'content_type': 'transactions.transaction'}}).then(function (data) {
-            vm.entityRaw = data;
-            vm.readyStatus.content = true;
-            $scope.$apply();
-        });
+        // auditService.getList({filters: {'content_type': 'transactions.transaction'}}).then(function (data) {
+        //     vm.entityRaw = data;
+        //     vm.readyStatus.content = true;
+        //     $scope.$apply();
+        // });
 
         vm.getList = function (options) {
             return auditService.getList(options).then(function (data) {
                 return data;
             })
-        }
+        };
+
+        vm.init = function(){
+            vm.readyStatus.content = true
+        };
+
+        vm.init()
 
     }
 

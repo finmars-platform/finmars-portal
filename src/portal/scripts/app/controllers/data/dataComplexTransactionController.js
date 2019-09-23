@@ -21,17 +21,23 @@
 
         vm.entityViewer = {extraFeatures: []};
 
-        complexTransactionService.getList().then(function(data){
-            vm.entityRaw = data.results;
-            vm.readyStatus.content = true;
-            $scope.$apply();
-        });
+        // complexTransactionService.getList().then(function(data){
+        //     vm.entityRaw = data.results;
+        //     vm.readyStatus.content = true;
+        //     $scope.$apply();
+        // });
 
         vm.getList = function(options){
             return complexTransactionService.getList(options).then(function(data){
                 return data;
             })
-        }
+        };
+
+        vm.init = function(){
+            vm.readyStatus.content = true
+        };
+
+        vm.init()
 
     }
 

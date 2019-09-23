@@ -21,17 +21,23 @@
 
         vm.entityViewer = {extraFeatures: []};
 
-        instrumentTypeService.getList().then(function (data) {
-            vm.entityRaw = data.results;
-            vm.readyStatus.content = true;
-            $scope.$apply();
-        });
+        // instrumentTypeService.getList().then(function (data) {
+        //     vm.entityRaw = data.results;
+        //     vm.readyStatus.content = true;
+        //     $scope.$apply();
+        // });
 
         vm.getList = function (options) {
             return instrumentTypeService.getList(options).then(function (data) {
                 return data;
             })
-        }
+        };
+
+        vm.init = function(){
+            vm.readyStatus.content = true
+        };
+
+        vm.init()
 
     }
 
