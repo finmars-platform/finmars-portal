@@ -465,7 +465,7 @@
             calculateSubtotals(evDataService);
 
             data = JSON.parse(JSON.stringify(evDataService.getData()));
-
+            console.log("d3 service data1", data);
             data = insertSubtotalsToResults(data, evDataService);
 
             console.timeEnd("Calculating subtotals");
@@ -480,6 +480,7 @@
 
         } else {
             data = JSON.parse(JSON.stringify(evDataService.getData()));
+            console.log("d3 service data2", data);
         }
 
         // console.log('data?', data);
@@ -563,9 +564,31 @@
 
     };
 
+    var getFlatListFieldUniqueValues = function (flatList, key) {
+
+        var result = [];
+
+        flatList.forEach(function (item) {
+
+            if (flatList.hasOwnProperty(key)) {
+
+                if (result.indexOf(item[key]) === -1) {
+                    if (item[key]) {
+                        result.push(item[key])
+                    }
+                }
+
+            }
+
+        });
+
+        return result;
+    };
+
     module.exports = {
         syncLevelFold: syncLevelFold,
-        getFlatStructure: getFlatStructure
+        getFlatStructure: getFlatStructure,
+        getFlatListFieldUniqueValues: getFlatListFieldUniqueValues
     }
 
 

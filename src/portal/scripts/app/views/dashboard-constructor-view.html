@@ -48,12 +48,9 @@
                                  dashboard-constructor-grid-aligner
                                  dashboard-constructor-data-service="vm.dashboardConstructorDataService"
                                  dashboard-constructor-event-service="vm.dashboardConstructorEventService"
-                                 tab-number="tab.tab_number"
-                            >
+                                 tab-number="tab.tab_number">
 
-                                <div class="dashboard-layout position-relative"
-
-                                >
+                                <div class="dashboard-layout position-relative">
 
                                     <div layout="column" data-ng-repeat="row in tab.layout.rows">
 
@@ -68,11 +65,8 @@
                                                  class="width-100 height-100">
 
                                                 <div class="dashboard-constructor-empty-cell">
-
                                                     <ng-md-icon icon="add_circle"></ng-md-icon>
-
                                                 </div>
-
 
                                             </div>
 
@@ -81,7 +75,6 @@
 
                                                 <dashboard-constructor-field
                                                         class="width-100 height-100"
-
                                                         tab-number="tab.tab_number"
                                                         row-number="row.row_number"
                                                         column-number="item.column_number"
@@ -187,6 +180,12 @@
                             <md-button ng-click="vm.addReportViewerMatrixComponent($event)"
                                        class="g-settings-option-btn">
                                 <span>Report Viewer Matrix</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.addReportViewerChartsComponent($event)"
+                                       class="g-settings-option-btn">
+                                <span>Report Viewer Charts</span>
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
