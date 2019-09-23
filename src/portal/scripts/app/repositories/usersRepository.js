@@ -169,6 +169,17 @@
         })
     };
 
+    var getMasterListLight = function () {
+        return xhrService.fetch(baseUrl + 'users/master-user-light/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+    };
+
     var getMasterList = function () {
         return xhrService.fetch(baseUrl + 'users/master-user/', {
             method: 'GET',
@@ -348,6 +359,7 @@
         getCurrentMasterUser: getCurrentMasterUser,
         createMasterUser: createMasterUser,
         getMasterList: getMasterList,
+        getMasterListLight: getMasterListLight,
         getMasterByKey: getMasterByKey,
         updateMaster: updateMaster,
         patchMaster: patchMaster,

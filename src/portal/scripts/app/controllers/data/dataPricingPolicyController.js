@@ -22,17 +22,23 @@
 
         vm.entityViewer = {extraFeatures: []};
 
-        pricingPolicyService.getList().then(function (data) {
-            vm.entityRaw = data.results;
-            vm.readyStatus.content = true;
-            $scope.$apply();
-        });
+        // pricingPolicyService.getList().then(function (data) {
+        //     vm.entityRaw = data.results;
+        //     vm.readyStatus.content = true;
+        //     $scope.$apply();
+        // });
 
         vm.getList = function (options) {
             return pricingPolicyService.getList(options).then(function (data) {
                 return data;
             })
-        }
+        };
+
+        vm.init = function(){
+            vm.readyStatus.content = true
+        };
+
+        vm.init()
 
     }
 

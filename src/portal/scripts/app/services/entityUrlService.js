@@ -32,11 +32,13 @@
             case 'transaction':
                 return 'transactions/transaction';
             case 'transaction-type':
-                return 'transactions/transaction-type';
+                // return 'transactions/transaction-type';
+                return 'transactions/transaction-type-light';
             case 'transaction-type-group':
                 return 'transactions/transaction-type-group';
             case 'complex-transaction':
-                return 'transactions/complex-transaction';
+                // return 'transactions/complex-transaction';
+                return 'transactions/complex-transaction-light';
             case 'currency':
                 return 'currencies/currency';
             case 'currency-history':

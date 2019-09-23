@@ -27,18 +27,24 @@
 
         vm.entityViewer = {extraFeatures: []};
 
-        strategyGroupService.getList(vm.strategyNumber).then(function(data){
-            vm.entityRaw = data.results;
-            vm.readyStatus.content = true;
-            console.log('vm.entityRaw', vm.entityRaw);
-            $scope.$apply();
-        });
+        // strategyGroupService.getList(vm.strategyNumber).then(function(data){
+        //     vm.entityRaw = data.results;
+        //     vm.readyStatus.content = true;
+        //     console.log('vm.entityRaw', vm.entityRaw);
+        //     $scope.$apply();
+        // });
 
         vm.getList = function(options){
             return strategyGroupService.getList(vm.strategyNumber, options).then(function(data){
                 return data;
             })
-        }
+        };
+
+        vm.init = function(){
+            vm.readyStatus.content = true
+        };
+
+        vm.init()
 
     }
 

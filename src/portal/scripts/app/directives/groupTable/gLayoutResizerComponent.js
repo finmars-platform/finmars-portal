@@ -12,7 +12,8 @@
             restrict: 'A',
             scope: {
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                workareaWrapElement: '='
             },
             link: function (scope, elem, attr) {
 
@@ -21,7 +22,8 @@
                 function resizeWorkarea() {
 
                     // var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap').first();
-                    var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap');
+                    // var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap');
+                    // var workAreaElem = scope.rootWrapElement
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
@@ -32,16 +34,23 @@
                         viewerHolder = elem.parents(".report-viewer-holder");
                     }
 
-                    console.log('interfaceLayout', interfaceLayout);
-                    console.log('viewerHolder.width()', viewerHolder.width());
+
+                    var viewerHolderWidth = viewerHolder.width();
+
+                    console.log('viewerHolderWidth', viewerHolderWidth);
+                    console.log('interfaceLayout.filterArea.width', interfaceLayout.filterArea.width);
+                    console.log('scope.components', scope.components);
 
                     if (scope.components.sidebar) {
-                        width = viewerHolder.width() - interfaceLayout.filterArea.width;
+                        width = viewerHolderWidth - interfaceLayout.filterArea.width;
                     } else {
-                        width = viewerHolder.width()
+                        width = viewerHolderWidth
                     }
 
-                    workAreaElem.width(width);
+                    console.log('width', width);
+                    console.log('workareaWrapElement', scope.workareaWrapElement);
+
+                    $(scope.workareaWrapElement).width(width);
                     var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
                     elem.find('.g-scroll-wrapper').width(wrapperWidth);
                     elem.find('.g-scrollable-area').width(wrapperWidth);

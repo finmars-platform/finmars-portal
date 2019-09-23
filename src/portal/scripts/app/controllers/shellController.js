@@ -70,7 +70,8 @@
 
             vm.readyStatus.masters = false;
 
-            return usersService.getMasterList().then(function (data) {
+            // return usersService.getMasterList().then(function (data) {
+            return usersService.getMasterListLight().then(function (data) {
                 vm.masters = data.results;
                 vm.readyStatus.masters = true;
                 vm.updateCurrentMasterUser();
