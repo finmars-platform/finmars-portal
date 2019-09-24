@@ -1231,6 +1231,8 @@
 
                         });
 
+                        console.log('mapDashboardComponentType errors', errors);
+
                         componentType.settings.layout = null;
                         componentType.settings.layout_name = null;
 
@@ -1250,6 +1252,8 @@
                         mode: 'The related Component Type Layout Option is set to null'
 
                     });
+
+                    console.log('mapDashboardComponentType errors', errors);
 
                     componentType.settings.layout = null;
                     componentType.settings.layout_name = null;

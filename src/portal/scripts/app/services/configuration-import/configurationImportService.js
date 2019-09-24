@@ -333,7 +333,7 @@
 
         return new Promise(function (resolve, reject) {
 
-            configurationImportSyncService.syncItem(item, contentType, cacheContainer).then(function (value) {
+            configurationImportSyncService.syncItem(item, contentType, cacheContainer, errors).then(function (value) {
 
                 console.log('Overwrite contentType', contentType);
                 console.log('Overwrite item', item);
