@@ -467,6 +467,7 @@
 
             errors = errors || [];
 
+            console.log('errors', errors);
             console.log('syncItem', entity);
 
             try {
