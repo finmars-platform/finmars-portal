@@ -7,7 +7,7 @@
 
     var uiService = require('../../../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService) {
+    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
         var vm = this;
 
@@ -166,6 +166,8 @@
         vm.init = function () {
 
             console.log('dataService', dataService);
+
+            console.log('attributeDataService', attributeDataService);
 
             vm.componentsTypes = dataService.getComponentsTypes();
 
