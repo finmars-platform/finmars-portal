@@ -146,8 +146,8 @@
             .pipe(replace(/__PROJECT_ENV__/g, PROJECT_ENV))
             .pipe(replace(/__LOGIN__/g, credentials[PROJECT_ENV].login))
             .pipe(replace(/__PASS__/g, credentials[PROJECT_ENV].pass))
-            // .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
-            .pipe(uglify()) // if you need to debug minified build locally
+            .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
+            // .pipe(uglify()) // if you need to debug minified build locally
             .pipe(rename({basename: 'main', suffix: '.min'}))
             .on('error', function (error) {
                 console.error('\nError on JS minification: \n', error.toString());
