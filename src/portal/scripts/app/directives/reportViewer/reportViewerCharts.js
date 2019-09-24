@@ -146,13 +146,13 @@
 
                     var xAxis = function (g) {
                         g
-                            .attr("transform", `translate(0,${componentHeight - chartMargin.bottom})`)
+                            .attr("transform", 'translate(0,${componentHeight - chartMargin.bottom})')
                             .call(d3.axisBottom(xScale).tickSizeOuter(0))
                     };
 
                     var yAxis = function (g) {
                         g
-                            .attr("transform", `translate(${chartMargin.left},0)`)
+                            .attr("transform", 'translate(${chartMargin.left},0)')
                             .call(leftAxis)
                             .call(function (g) {g.select(".domain").remove()});
                     };
