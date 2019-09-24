@@ -16,7 +16,8 @@
                 columnNumber: '=',
                 item: '=',
                 dashboardConstructorDataService: '=',
-                dashboardConstructorEventService: '='
+                dashboardConstructorEventService: '=',
+                attributeDataService: '='
             },
             templateUrl: 'views/directives/dashboard-constructor-field-view.html',
             link: function (scope, elem, attr) {
@@ -408,7 +409,8 @@
                     var locals = {
                         item: JSON.parse(JSON.stringify(item)),
                         dataService: scope.dashboardConstructorDataService,
-                        eventService: scope.dashboardConstructorEventService
+                        eventService: scope.dashboardConstructorEventService,
+                        attributeDataService: scope.attributeDataService
                     };
 
                     switch (item.type) {

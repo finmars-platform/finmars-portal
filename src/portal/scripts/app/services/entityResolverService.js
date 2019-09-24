@@ -64,7 +64,8 @@
             case 'instrument-type':
                 return instrumentTypeService.getList(options);
             case 'transaction-type':
-                return transactionTypeService.getList(options);
+                // return transactionTypeService.getList(options);
+                return transactionTypeService.getListLight(options);
             case 'periodicity':
                 return instrumentPeriodicityService.getList(options);
             case 'accrual-calculation-model':

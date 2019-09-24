@@ -7,7 +7,7 @@
 
     var uiService = require('../../../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService) {
+    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
         var vm = this;
 

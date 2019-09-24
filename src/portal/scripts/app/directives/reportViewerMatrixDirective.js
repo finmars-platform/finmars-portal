@@ -100,11 +100,13 @@
 
                     scope.activeItem = 'columns_total';
 
-                    var activeObject = scope.evDataService.getActiveObject();
+                    // var activeObject = scope.evDataService.getActiveObject();
+                    //
+                    // delete activeObject[scope.matrixSettings.abscissa];
+                    //
+                    // console.log('activeObject', activeObject);
 
-                    delete activeObject[scope.matrixSettings.abscissa];
-
-                    console.log('activeObject', activeObject);
+                    var activeObject = {};
 
                     scope.evDataService.setActiveObject(activeObject);
                     scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
@@ -117,11 +119,13 @@
 
                     scope.activeItem = 'rows_total';
 
-                    var activeObject = scope.evDataService.getActiveObject();
+                    // var activeObject = scope.evDataService.getActiveObject();
+                    //
+                    // delete activeObject[scope.matrixSettings.ordinate];
+                    //
+                    // console.log('activeObject', activeObject);
 
-                    delete activeObject[scope.matrixSettings.ordinate];
-
-                    console.log('activeObject', activeObject);
+                    var activeObject = {};
 
                     scope.evDataService.setActiveObject(activeObject);
                     scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
