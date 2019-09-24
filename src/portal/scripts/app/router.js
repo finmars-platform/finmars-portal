@@ -64,15 +64,6 @@
             controller: 'DeveloperPanelController as vm'
         });
 
-        $stateProvider.state('app.data-constructor', {
-            url: '/layout/:entityType/:instanceId?from=',
-            templateUrl: 'views/entity-data-constructor-view.html',
-            controller: 'EntityDataConstructorController as vm',
-            params: {
-                instanceId: null
-            }
-        });
-
         $stateProvider.state('app.not-found', {
             url: '/layout-not-found',
             templateUrl: 'views/not-found-page-view.html',

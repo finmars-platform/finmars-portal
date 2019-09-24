@@ -5,7 +5,7 @@
 
     <div data-ng-if="isReport" layout="column">
 
-        <div data-ng-if="entityType == 'balance-report' || entityType == 'pl-report'">
+        <div data-ng-if="entityType === 'balance-report' || entityType === 'pl-report'">
             <md-card class="g-sidebar-report-card">
 
                 <md-card-content>
@@ -110,7 +110,7 @@
 
             </md-card>
         </div>
-        <div data-ng-if="entityType == 'transaction-report'">
+        <div data-ng-if="entityType === 'transaction-report'">
             <md-card class="g-sidebar-report-card">
 
                 <md-card-content>
@@ -145,16 +145,6 @@
 
                             </md-select>
                         </md-input-container>
-
-                        <!--<div>-->
-                            <!--<complex-zh-date-picker data-date="reportOptions.pl_first_date"-->
-                                                    <!--data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"-->
-                                                    <!--data-display-options="datepickerFromDisplayOptions"-->
-                                                    <!--data-callback-method="updateReportOptions()"-->
-                                                    <!--ev-data-service="evDataService"-->
-                                                    <!--ev-event-service="evEventService">-->
-                            <!--</complex-zh-date-picker>-->
-                        <!--</div>-->
 
                         <div>
                             <complex-zh-date-picker data-date="reportOptions.begin_date"

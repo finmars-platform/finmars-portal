@@ -47,6 +47,7 @@
             'node_modules/jstree/dist/jstree.js',
             'node_modules/toastr/build/toastr.min.js',
             'node_modules/mdPickers/dist/mdPickers.js',
+            'node_modules/d3/dist/d3.js',
             'src/core/datepicker/pickmeup.js'
         ];
 
@@ -214,7 +215,8 @@
             'node_modules/fancy-logger/dist/js/fancy-logger.js',
             'node_modules/jstree/dist/jstree.js',
             'node_modules/toastr/build/toastr.min.js',
-            'src/core/datepicker/pickmeup.js'
+            'src/core/datepicker/pickmeup.js',
+            'node_modules/d3/dist/d3.js'
         ];
 
         return gulp.src(pathToJS)

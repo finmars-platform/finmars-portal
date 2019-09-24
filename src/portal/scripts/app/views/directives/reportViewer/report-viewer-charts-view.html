@@ -1,0 +1,13 @@
+<div class="report-viewer-charts">
+
+    <div class="height-100" data-ng-show="readyStatus">
+        <div class="report-viewer-chart-holder"></div>
+    </div>
+
+    <div data-ng-if="!readyStatus">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="loader-center-64">
+            <md-progress-circular md-mode="indeterminate" md-diameter="64"></md-progress-circular>
+        </div>
+    </div>
+
+</div>
