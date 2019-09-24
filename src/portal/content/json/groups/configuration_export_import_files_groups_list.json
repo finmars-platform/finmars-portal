@@ -5,6 +5,7 @@
       "ui.editlayout",
       "ui.listlayout",
       "ui.reportlayout",
+      "ui.dashboardlayout",
       "ui.bookmark"
     ],
     "firstLevelGroup": "User Interface",
