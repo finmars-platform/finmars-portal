@@ -105,15 +105,19 @@
                     chartHolderElem.style.width = componentWidth + 'px';
 
                     var xScale = d3.scaleBand()
-                        .domain(chartData.map(d => d.name))
+                        .domain(chartData.map(function (d) {
+                            return d.name;
+                        }))
                         .range([chartMargin.left, componentWidth - chartMargin.right])
                         .padding(0.1);
 
                     var yScale = d3.scaleLinear()
-                        .domain([0, d3.max(chartData, d => d.number)])
+                        .domain([d3.min(chartData, function (d) {return d.number}), d3.max(chartData, function (d) {return d.number})])
                         .range([componentHeight - chartMargin.bottom, chartMargin.top]);
 
-                    var leftAxis = d3.axisLeft(yScale);
+                    var yAxisScale = d3.scaleLinear()
+                        .domain([d3.min(chartData, function (d) {return d.number}), d3.max(chartData, function (d) {return d.number})])
+                        .range([componentHeight  - chartMargin.bottom - yScale(d3.min(chartData, function (d) {return d.number})), chartMargin.top]);
 
                     // check if ticks are located too close to each other
                     var chartHeight = componentHeight - chartMargin.bottom - chartMargin.top;
@@ -123,12 +127,22 @@
                     if (ticksNumber && ticksNumber > 0) {
                         if (Math.floor(chartHeight / ticksNumber) < 15) { // if tick height less that 15 pixels
 
-                            var halfOfTicks = Math.floor(ticksNumber / 2);
-                            leftAxis = leftAxis.ticks(halfOfTicks);
+                            /*var halfOfTicks = Math.floor(ticksNumber / 2);
+                            leftAxis = leftAxis.ticks(halfOfTicks);*/
+
+                            componentHeight = ticksNumber * 15 + chartMargin.top + chartMargin.bottom;
+                            console.log("d3 service something1", ticksNumber, componentHeight);
+                            chartHolderElem.style.height = componentHeight + 'px';
+
+                            yScale = d3.scaleLinear()
+                                .domain([d3.min(chartData, function (d) {return d.number}), d3.max(chartData, function (d) {return d.number})])
+                                .range([componentHeight - chartMargin.bottom, chartMargin.top])
 
                         };
                     };
                     // < check if ticks are located too close to each other >
+
+                    var leftAxis = d3.axisLeft(yScale);
 
                     var xAxis = function (g) {
                         g
@@ -140,7 +154,13 @@
                         g
                             .attr("transform", `translate(${chartMargin.left},0)`)
                             .call(leftAxis)
-                            .call(g => g.select(".domain").remove())
+                            .call(function (g) {g.select(".domain").remove()});
+                    };
+
+                    var getBarHeight = function (d) {
+                        //console.log("d3 service getBarHeight", d, yScale(0), Math.max(0, yScale(d.number)));
+                        var barHeight = yScale(0) - Math.max(0, yScale(d.number));
+                        return barHeight;
                     };
 
                     var svg = d3.create("svg")
@@ -151,9 +171,9 @@
                         .selectAll("rect")
                         .data(chartData)
                         .join("rect")
-                        .attr("x", d => xScale(d.name))
-                        .attr("y", d => yScale(d.number))
-                        .attr("height", d => yScale(0) - yScale(d.number))
+                        .attr("x", function (d) {xScale(d.name)})
+                        .attr("y", function (d) {return yScale(d.number)})
+                        .attr("height", getBarHeight)
                         .attr("width", xScale.bandwidth());
 
                     svg.append("g")
