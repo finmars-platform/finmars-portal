@@ -20,46 +20,45 @@
             },
             templateUrl: 'views/directives/dashboard-constructor-field-view.html',
             link: function (scope, elem, attr) {
-
+                console.log("d3 service dashboard field", scope.item);
                 scope.getVerboseType = function () {
 
-                    if (scope.item.data.type === 'report_viewer') {
-                        return 'Report Viewer'
+                    var verboseType = 'Unknown';
+
+                    switch (scope.item.data.type) {
+                        case 'report_viewer':
+                            verboseType = 'Report Viewer';
+                            break;
+                        case 'report_viewer_split_panel':
+                            verboseType = 'Report Viewer Split Panel';
+                            break;
+                        case 'report_viewer_grand_total':
+                            verboseType = 'Report Viewer Grand Total';
+                            break;
+                        case 'report_viewer_charts':
+                            verboseType = 'Report Viewer Charts';
+                            break;
+                        case 'report_viewer_matrix':
+                            verboseType = 'Report Viewer Matrix';
+                            break;
+                        case 'entity_viewer':
+                            verboseType = 'Entity Viewer';
+                            break;
+                        case 'entity_viewer_split_panel':
+                            verboseType = 'Entity Viewer Split Panel';
+                            break;
+                        case 'input_form':
+                            verboseType = 'Input Form';
+                            break;
+                        case 'control':
+                            verboseType = 'Control';
+                            break;
+                        case 'button_set':
+                            verboseType = 'Button Set';
+                            break;
                     }
 
-                    if (scope.item.data.type === 'report_viewer_split_panel') {
-                        return 'Report Viewer Split Panel'
-                    }
-
-                    if (scope.item.data.type === 'report_viewer_grand_total') {
-                        return 'Report Viewer Grand Total'
-                    }
-
-                    if (scope.item.data.type === 'report_viewer_matrix') {
-                        return 'Report Viewer Matrix'
-                    }
-
-                    if (scope.item.data.type === 'entity_viewer') {
-                        return 'Entity Viewer'
-                    }
-
-                    if (scope.item.data.type === 'entity_viewer_split_panel') {
-                        return 'Entity Viewer Split Panel'
-                    }
-
-                    if (scope.item.data.type === 'input_form') {
-                        return 'Input Form'
-                    }
-
-                    if (scope.item.data.type === 'control') {
-                        return 'Control'
-                    }
-
-                    if (scope.item.data.type === 'button_set') {
-                        return 'Button Set'
-                    }
-
-                    return 'Unknown'
+                    return verboseType;
 
                 };
 

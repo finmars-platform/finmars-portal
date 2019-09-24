@@ -8,13 +8,15 @@
     <md-dialog-content>
         <div class="p-24">
 
-            <md-input-container style="width: 200px;">
-                <label for="">Name</label>
-                <input type="text" data-ng-model="vm.item.name">
-            </md-input-container>
+            <div layout="row">
+                <md-input-container style="width: 200px;">
+                    <label for="">Name</label>
+                    <input type="text" data-ng-model="vm.item.name">
+                </md-input-container>
+            </div>
 
-            <div class="m-t-16 m-b-16">
 
+            <div class="m-t-16 m-b-16" layout="row">
                 <md-input-container style="width: 200px;">
                     <label for="">Report Type</label>
                     <md-select data-ng-model="vm.item.settings.entity_type"
@@ -24,10 +26,9 @@
                         <md-option value="transaction-report">Transaction Report</md-option>
                     </md-select>
                 </md-input-container>
-
             </div>
-            <div class="m-t-16 m-b-16">
 
+            <div class="m-t-16 m-b-16" layout="row">
                 <md-input-container style="width: 200px;">
                     <label for="">Layout</label>
                     <md-select data-ng-model="vm.item.settings.layout"
@@ -40,18 +41,35 @@
                         </md-option>
                     </md-select>
                 </md-input-container>
-
             </div>
 
-            <md-input-container style="width: 200px;">
-                <label for="">Reference Name (Abscissa)</label>
-                <input type="text" data-ng-model="vm.item.settings.abscissa">
-            </md-input-container>
+            <div layout="row">
+                <md-input-container style="width: 200px;">
+                    <label for="">Reference Name (Abscissa)</label>
+                    <input type="text" data-ng-model="vm.item.settings.abscissa">
+                </md-input-container>
 
-            <md-input-container style="width: 200px;">
-                <label for="">Reference Name (Ordinate)</label>
-                <input type="text" data-ng-model="vm.item.settings.ordinate">
-            </md-input-container>
+                <md-input-container style="width: 200px;">
+                    <label for="">Reference Name (Ordinate)</label>
+                    <input type="text" data-ng-model="vm.item.settings.ordinate">
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container style="width: 200px;">
+                    <label for="">Chart bar minimal width (in pixels)</label>
+                    <input class="no-input-arrows"
+                           type="number"
+                           data-ng-model="vm.item.settings.min_bar_width">
+                </md-input-container>
+
+                <md-input-container style="width: 200px;">
+                    <label for="">Chart bar maximal width (in pixels)</label>
+                    <input class="no-input-arrows"
+                           type="number"
+                           data-ng-model="vm.item.settings.max_bar_width">
+                </md-input-container>
+            </div>
 
         </div>
     </md-dialog-content>

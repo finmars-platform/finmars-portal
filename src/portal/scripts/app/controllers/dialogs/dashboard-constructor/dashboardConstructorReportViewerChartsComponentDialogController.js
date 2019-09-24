@@ -21,7 +21,9 @@
                 name: '',
                 settings: {
                     abscissa: '',
-                    ordinate: ''
+                    ordinate: '',
+                    min_bar_width: 50,
+                    max_bar_width: 90
                 }
             }
         }

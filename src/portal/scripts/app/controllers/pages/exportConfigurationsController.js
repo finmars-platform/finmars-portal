@@ -105,6 +105,7 @@
                                                         }
 
                                                     });
+
                                                 } else if (parent.entity === "transactions.transactiontype") {
 
                                                     vm.groupByProperty(parent.content, '___group__user_code');
@@ -224,8 +225,7 @@
                             case "accounts.account":
                                 daContentType = "Account";
                                 break;
-                        }
-                        ;
+                        };
 
                         var daName = attr.name;
                         var usagesCount = 0;
@@ -468,15 +468,13 @@
 
             if (!vm.activeLayout.data.statuses) {
                 vm.activeLayout.data.statuses = {};
-            }
-            ;
+            };
 
             vm.items.forEach(syncConfigItemsWithLayout);
 
             if (!vm.activeLayout.data.mappingsStatuses) {
                 vm.activeLayout.data.mappingsStatuses = {};
-            }
-            ;
+            };
 
             // syncing mappings with layout
             vm.dataSettings.forEach(syncMappingItemsWithLayout);
@@ -609,21 +607,23 @@
 
             groupsPropertyNames.forEach(function (groupProperty) {
 
-                vm[groupProperty].forEach(function (item) {
+                if (vm[groupProperty]) {
+                    vm[groupProperty].forEach(function (item) {
 
-                    if (!item.active) {
-                        active = false;
-                    }
-
-                    item.content.forEach(function (child) {
-
-                        if (!child.active) {
+                        if (!item.active) {
                             active = false;
                         }
 
-                    })
+                        item.content.forEach(function (child) {
 
-                });
+                            if (!child.active) {
+                                active = false;
+                            }
+
+                        })
+
+                    });
+                };
 
             });
 
@@ -1026,11 +1026,11 @@
 
                     if (child.hasOwnProperty('user_code') && child.user_code === '-') {
                         return false
-                    }
+                    };
 
                     if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
                         return false
-                    }
+                    };
 
                     return true;
 
@@ -1041,15 +1041,12 @@
                     if (mappingGroups[i].entities.indexOf(parent.entity) !== -1) {
                         vm[mappingGroups[i].groupKey].push(parent);
                         break;
-                    }
-                    ;
+                    };
 
                     if (i === mappingGroups.length - 1) {
                         vm.systemElements.push(parent);
-                    }
-                    ;
-                }
-                ;
+                    };
+                };
 
             });
         };
