@@ -69,7 +69,7 @@
 
                         if (nameValue && numberValue) {
                             savedValues.push(nameValue);
-                            chartData.push({name: nameValue, number: numberValue});
+                            chartData.push({name: nameValue, numericValue: numberValue});
                         };
 
                     });
@@ -100,28 +100,29 @@
 
                         };
                     }
-
                     // < check if chart has enough >
+
+                    // declare height here because margin bottom can change higher
+                    var chartHeight = componentHeight - chartMargin.bottom - chartMargin.top;
+
+                    var returnNumericValue = function (d) {
+                        return d.numericValue;
+                    };
+
                     chartHolderElem.style.width = componentWidth + 'px';
 
                     var xScale = d3.scaleBand()
                         .domain(chartData.map(function (d) {
                             return d.name;
                         }))
-                        .range([chartMargin.left, componentWidth - chartMargin.right])
+                        .range([chartMargin.left, chartWidth])
                         .padding(0.1);
 
                     var yScale = d3.scaleLinear()
-                        .domain([d3.min(chartData, function (d) {return d.number}), d3.max(chartData, function (d) {return d.number})])
-                        .range([componentHeight - chartMargin.bottom, chartMargin.top]);
-
-                    var yAxisScale = d3.scaleLinear()
-                        .domain([d3.min(chartData, function (d) {return d.number}), d3.max(chartData, function (d) {return d.number})])
-                        .range([componentHeight  - chartMargin.bottom - yScale(d3.min(chartData, function (d) {return d.number})), chartMargin.top]);
+                            .domain(d3.extent(chartData, returnNumericValue))
+                            .range([chartHeight, chartMargin.top]);
 
                     // check if ticks are located too close to each other
-                    var chartHeight = componentHeight - chartMargin.bottom - chartMargin.top;
-
                     var ticksNumber = yScale.ticks().length;
 
                     if (ticksNumber && ticksNumber > 0) {
@@ -130,13 +131,14 @@
                             /*var halfOfTicks = Math.floor(ticksNumber / 2);
                             leftAxis = leftAxis.ticks(halfOfTicks);*/
 
-                            componentHeight = ticksNumber * 15 + chartMargin.top + chartMargin.bottom;
-                            console.log("d3 service something1", ticksNumber, componentHeight);
+                            chartHeight = ticksNumber * 15;
+                            componentHeight = chartHeight + chartMargin.top + chartMargin.bottom;
+
                             chartHolderElem.style.height = componentHeight + 'px';
 
                             yScale = d3.scaleLinear()
-                                .domain([d3.min(chartData, function (d) {return d.number}), d3.max(chartData, function (d) {return d.number})])
-                                .range([componentHeight - chartMargin.bottom, chartMargin.top])
+                                .domain(d3.extent(chartData, returnNumericValue))
+                                .range([chartHeight, chartMargin.top]);
 
                         };
                     };
@@ -144,23 +146,23 @@
 
                     var leftAxis = d3.axisLeft(yScale);
 
+                    // move abscissa line behind margin
                     var xAxis = function (g) {
                         g
-                            .attr("transform", 'translate(0,${componentHeight - chartMargin.bottom})')
-                            .call(d3.axisBottom(xScale).tickSizeOuter(0))
+                            .attr("transform", "translate(0," + (chartHeight + chartMargin.top) + ")")
+                            .call(d3.axisBottom(xScale).tickSizeOuter(0));
                     };
 
+                    // move ordinate line behind margin
                     var yAxis = function (g) {
                         g
-                            .attr("transform", 'translate(${chartMargin.left},0)')
+                            .attr("transform", "translate(" + chartMargin.left + ",0)")
                             .call(leftAxis)
                             .call(function (g) {g.select(".domain").remove()});
                     };
 
                     var getBarHeight = function (d) {
-                        //console.log("d3 service getBarHeight", d, yScale(0), Math.max(0, yScale(d.number)));
-                        var barHeight = yScale(0) - Math.max(0, yScale(d.number));
-                        return barHeight;
+                        return Math.abs(yScale(0) - yScale(d.numericValue));
                     };
 
                     var svg = d3.create("svg")
@@ -171,8 +173,8 @@
                         .selectAll("rect")
                         .data(chartData)
                         .join("rect")
-                        .attr("x", function (d) {xScale(d.name)})
-                        .attr("y", function (d) {return yScale(d.number)})
+                        .attr("x", function (d) {return xScale(d.name)})
+                        .attr("y", function (d) {return yScale(Math.max(0, d.numericValue))})
                         .attr("height", getBarHeight)
                         .attr("width", xScale.bandwidth());
 
