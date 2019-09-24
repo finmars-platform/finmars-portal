@@ -11,6 +11,8 @@
     var DashboardConstructorDataService = require('../services/dashboard-constructor/dashboardConstructorDataService');
     var DashboardConstructorEventService = require('../services/dashboard-constructor/dashboardConstructorEventService');
 
+    var AttributeDataService = require('../services/attributeDataService');
+
     var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents');
 
     module.exports = function ($scope, $stateParams, $state, $mdDialog) {
@@ -652,7 +654,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -675,7 +678,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -698,7 +702,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -721,7 +726,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -744,7 +750,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -767,7 +774,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -790,7 +798,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -836,7 +845,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -859,7 +869,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -881,7 +892,8 @@
                 locals: {
                     item: JSON.parse(JSON.stringify(item)),
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -898,7 +910,8 @@
             var locals = {
                 item: JSON.parse(JSON.stringify(item)),
                 dataService: vm.dashboardConstructorDataService,
-                eventService: vm.dashboardConstructorEventService
+                eventService: vm.dashboardConstructorEventService,
+                attributeDataService: vm.attributeDataService
             };
 
             switch (item.type) {
@@ -1022,6 +1035,8 @@
 
             vm.dashboardConstructorDataService = new DashboardConstructorDataService();
             vm.dashboardConstructorEventService = new DashboardConstructorEventService();
+
+            vm.attributeDataService = new AttributeDataService();
 
             vm.initEventListeners();
 

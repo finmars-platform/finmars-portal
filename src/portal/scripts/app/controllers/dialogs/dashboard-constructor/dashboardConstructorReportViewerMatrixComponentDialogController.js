@@ -7,7 +7,7 @@
 
     var uiService = require('../../../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService) {
+    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
         var vm = this;
 
@@ -57,6 +57,19 @@
 
         };
 
+        vm.reportTypeChange = function(){
+
+            vm.item.settings.layout = null;
+            vm.item.settings.linked_components= {};
+
+            vm.item.settings.abscissa = null;
+            vm.item.settings.ordinate = null;
+            vm.item.settings.value_key = null;
+
+            vm.getAttributes();
+
+        };
+
         vm.getLayouts = function () {
 
             uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
@@ -66,6 +79,16 @@
                 $scope.$apply();
 
             })
+
+        };
+
+        vm.getAttributes = function(){
+
+            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
+
+            vm.numericAttributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type).filter(function (item) {
+                return item.value_type === 20;
+            });
 
         };
 
@@ -114,6 +137,10 @@
 
             console.log('dataService', dataService);
 
+            console.log('attributeDataService', attributeDataService);
+
+
+
             vm.componentsTypes = dataService.getComponentsTypes();
 
             console.log('vm', vm);
@@ -121,6 +148,7 @@
             if (vm.item.id) {
 
                 vm.getLayouts();
+                vm.getAttributes();
             }
 
         };
