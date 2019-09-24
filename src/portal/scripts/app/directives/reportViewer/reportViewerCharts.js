@@ -28,7 +28,9 @@
 
                 var componentHeight = mainElem.clientHeight;
                 var componentWidth = mainElem.offsetWidth;
-                console.log("d3 service sizes", mainElem, componentHeight, componentWidth);
+                var barsMinWidth = scope.rvChartsSettings.min_bar_width;
+                var barsMaxWidth = scope.rvChartsSettings.max_bar_width;
+
                 var chartMargin = {
                     top: 20,
                     right: 0,
@@ -78,6 +80,30 @@
 
                 var drawBarsChart = function () {
 
+                    var chartWidth = componentWidth - chartMargin.right - chartMargin.left;
+
+                    // check if chart has enough width
+                    if (chartData.length > 0 && barsMinWidth && barsMaxWidth) {
+                        var barWidth = chartWidth / chartData.length;
+
+                        if (barWidth < barsMinWidth) {
+
+                            var newChartWidth = (barsMinWidth + 7) * chartData.length; // adding 7 to take into account paddings between bars
+                            componentWidth = newChartWidth + chartMargin.right + chartMargin.left;
+                            chartMargin.bottom = 40;
+
+                        } else if (barWidth > barsMaxWidth) {
+
+                            var newChartWidth = barsMaxWidth * chartData.length; // adding 7 to take into account paddings between bars
+                            componentWidth = newChartWidth + chartMargin.right + chartMargin.left;
+                            chartMargin.bottom = 40;
+
+                        };
+                    }
+
+                    // < check if chart has enough >
+                    chartHolderElem.style.width = componentWidth + 'px';
+
                     var xScale = d3.scaleBand()
                         .domain(chartData.map(d => d.name))
                         .range([chartMargin.left, componentWidth - chartMargin.right])
@@ -91,13 +117,16 @@
 
                     // check if ticks are located too close to each other
                     var chartHeight = componentHeight - chartMargin.bottom - chartMargin.top;
+
                     var ticksNumber = yScale.ticks().length;
-                    //console.log("d3 service tick size", chartHeight, ticksNumber, Math.floor(chartHeight / ticksNumber));
-                    if (Math.floor(chartHeight / ticksNumber) < 15) {
 
-                        var halfOfTicks = Math.floor(ticksNumber / 2);
-                        leftAxis = leftAxis.ticks(halfOfTicks);
+                    if (ticksNumber && ticksNumber > 0) {
+                        if (Math.floor(chartHeight / ticksNumber) < 15) { // if tick height less that 15 pixels
 
+                            var halfOfTicks = Math.floor(ticksNumber / 2);
+                            leftAxis = leftAxis.ticks(halfOfTicks);
+
+                        };
                     };
                     // < check if ticks are located too close to each other >
 

@@ -71,7 +71,8 @@
                                         parent.order__ = g; // Set a group order position
 
                                         // Divide children into subgroups
-                                        if (parent.entity === "ui.listlayout" || parent.entity === "ui.reportlayout") {
+                                        if (parent.entity === "ui.listlayout" ||
+                                            parent.entity === "ui.reportlayout") {
                                             var subGroupsList = groups[g].subGroups[parent.entity];
 
                                             var children = parent.content;
@@ -93,6 +94,11 @@
                                                 }
 
                                             });
+
+                                        } else if (parent.entity === "transactions.transactiontype") {
+
+                                            vm.groupByProperty(parent.content, '___group__user_code');
+
                                         }
                                         // < Divide children into subgroups >
 
@@ -105,6 +111,31 @@
                 });
 
                 findDynamicAttributesInLayouts();
+
+            });
+
+        };
+
+        vm.groupByProperty = function (elements, propertyToGroupBy) { // add headers to groups of layouts based on property
+
+            var hasFirstElement = [];
+
+            elements.forEach(function (element) {
+
+                if (element.hasOwnProperty(propertyToGroupBy)) {
+                    var valueToGroupBy = element[propertyToGroupBy];
+
+                    if (valueToGroupBy === "-") {
+                        valueToGroupBy = "Transaction types without group";
+                    }
+
+                    if (hasFirstElement.indexOf(valueToGroupBy) === -1) {
+                        element.first_item__ = valueToGroupBy;
+                        hasFirstElement.push(valueToGroupBy);
+                    }
+
+                    element.order__ = valueToGroupBy;
+                }
 
             });
 
@@ -655,6 +686,7 @@
                 };
 
             });
+
         };
 
         var assembleMappingsIntoArray = function () {
@@ -869,7 +901,7 @@
             });
 
             console.log("mappingItems", mappingItems);
-            console.log("vm.items", vm.items);
+            console.log("vm.items", JSON.parse(JSON.stringify(vm.items)));
 
             vm.items.forEach(function (item) {
 
