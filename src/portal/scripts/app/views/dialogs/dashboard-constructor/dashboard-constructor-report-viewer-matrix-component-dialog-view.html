@@ -18,7 +18,7 @@
                 <md-input-container style="width: 200px;">
                     <label for="">Report Type</label>
                     <md-select data-ng-model="vm.item.settings.entity_type"
-                               data-ng-change="vm.item.settings.layout = null;vm.item.settings.linked_components= {}">
+                               data-ng-change="vm.reportTypeChange()">
                         <md-option value="balance-report">Balance Report</md-option>
                         <md-option value="pl-report">P&L Report</md-option>
                         <md-option value="transaction-report">Transaction Report</md-option>
