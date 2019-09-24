@@ -43,9 +43,6 @@
                 var groupTypes = entityViewerDataService.getGroups();
 
                 items = filterService.filterTableRows(items, regularFilters);
-                /*items = filterService.filterByRegularFilters(items, regularFilters);
-
-                // console.log('regular filters length', items.length);*/
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
@@ -72,7 +69,7 @@
     };
 
     module.exports = {
-            getList: getList
+        getList: getList
     }
 
 }());

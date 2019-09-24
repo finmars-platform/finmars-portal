@@ -381,8 +381,7 @@
                             case "transaction-report":
                                 entityType = type;
                                 break;
-                        }
-                        ;
+                        };
 
                         if (entityType) {
 
@@ -411,16 +410,14 @@
                                         additions.layoutId = res.data.listLayoutId;
                                     } else {
                                         delete additions.layoutId;
-                                    }
-                                    ;
+                                    };
 
                                     scope.evDataService.setSplitPanelStatus(true);
                                     scope.evDataService.setAdditions(additions);
                                     scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
                                     scope.currentAdditions = scope.evDataService.getAdditions();
 
-                                }
-                                ;
+                                };
 
                             });
 
@@ -440,6 +437,7 @@
                         }
 
 
+
                     }
 
                 };
@@ -453,7 +451,7 @@
                 scope.openReportSettings = function ($event) {
 
                     var reportOptions = scope.evDataService.getReportOptions();
-
+                    console.log("settings reportOptions for settings", reportOptions);
                     $mdDialog.show({
                         controller: 'GReportSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
@@ -520,17 +518,13 @@
 
                 var didLayoutChanged = function () {
 
-                    var changedEntityViewerParts = {}; // Will be needed to check if changes have been reset by user.
-
                     var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
 
-                    var dleEventIndex = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                        activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
-                    });
-
-                    console.log('didLayoutChanged', activeLayoutConfig);
-
                     if (activeLayoutConfig && activeLayoutConfig.data) {
+
+                        var dleEventIndex = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                            activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
+                        });
 
                         var isLayoutTheSame = function (data1, data2) {
 
@@ -546,8 +540,7 @@
 
                                 return true;
 
-                            }
-                            ;
+                            };
 
                         };
 
@@ -559,10 +552,12 @@
 
                             if (originReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
                                 delete originalReportOptions.pl_first_date;
+                                delete originalReportOptions.begin_date;
                             }
 
                             if (originReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
                                 delete originalReportOptions.report_date;
+                                delete originalReportOptions.end_date;
                             }
 
                             delete originalReportOptions.task_id;
@@ -576,10 +571,12 @@
 
                             if (currentReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
                                 delete currentReportOptions.pl_first_date;
+                                delete currentReportOptions.begin_date;
                             }
 
                             if (currentReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
                                 delete currentReportOptions.report_date;
+                                delete currentReportOptions.end_date;
                             }
 
                             delete currentReportOptions.task_id;
@@ -607,8 +604,7 @@
 
                             } else {
                                 return false;
-                            }
-                            ;
+                            };
 
                         };
 
@@ -620,8 +616,7 @@
                             if (!isLayoutTheSame(currentGroups, originalGroups)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -633,8 +628,7 @@
                             if (!isLayoutTheSame(currentColumns, originalColumns)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -646,8 +640,7 @@
                             if (!isLayoutTheSame(currentColumns, originalColumns)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -660,8 +653,7 @@
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
                                 scope.$apply();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -673,8 +665,7 @@
                             if (!isLayoutTheSame(currentFilters, originalFilters)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -686,8 +677,7 @@
                             if (!isLayoutTheSame(originAdditions, currentAdditions)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -699,8 +689,7 @@
                             if (!isLayoutTheSame(originInterfaceLayout, currentInterfaceLayout)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -713,8 +702,7 @@
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
                                 scope.$apply();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -749,8 +737,7 @@
                                     scope.layoutChanged = true;
                                     removeChangesTrackingEventListeners();
 
-                                }
-                                ;
+                                };
 
                             });
 
@@ -766,8 +753,7 @@
 
                             });
 
-                        }
-                        ;
+                        };
 
                         var changesTrackingEvents = {
                             GROUPS_CHANGE: groupsChangeEventIndex,
@@ -796,11 +782,10 @@
                                     scope.evEventService.removeEventListener(evEvents[telName], changesTrackingEvents[telName]);
 
                                 }
-                            }
-                            ;
+                            };
                         };
-
                     }
+
                 };
 
                 scope.openLayoutList = function ($event) {
@@ -822,12 +807,12 @@
 
                         if (res.status === 'agree') {
 
-                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
                             if (scope.isRootEntityViewer) {
                                 middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                             } else {
                                 middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                             }
+                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
                         }
 
@@ -978,7 +963,7 @@
 
                             };*/
 
-                            ecosystemDefaultService.getList().then(function (data) {
+                            ecosystemDefaultService.getList().then(function(data) {
 
                                 console.log('default values data', data);
                                 var defaultValues = data.results[0];
@@ -1015,7 +1000,7 @@
 
                             reportOptions.date_field = null;
 
-                            reportOptions.pl_first_date = todaysDate;
+                            reportOptions.begin_date = todaysDate;
 
                             reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {
                                 datepickerMode: 'datepicker'
@@ -1100,19 +1085,18 @@
                         uiService.updateListLayout(listLayout.id, listLayout).then(function () {
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
                         });
-                    }
-                    ;
+                    };
 
                     $mdDialog.show({
                         controller: 'SaveLayoutDialogController as vm',
                         templateUrl: 'views/save-layout-dialog-view.html',
                         targetEvent: $event,
                         clickOutsideToClose: false
-                    }).then(function () {
+                    })/*.then(function () {
 
                         scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
-                    });
+                    });*/
 
                     // middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
                 };
@@ -1150,7 +1134,7 @@
                                         middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active split panel layout name in the toolbar
                                     }
 
-                                    scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                                    //scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
                                     scope.evDataService.setListLayout(listLayout);
                                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});

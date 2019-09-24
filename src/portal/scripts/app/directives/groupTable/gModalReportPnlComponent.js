@@ -43,7 +43,7 @@
 
         var columns = entityViewerDataService.getColumns();
         var filters = entityViewerDataService.getFilters();
-        var grouping = entityViewerDataService.getGroups();
+        var groups = entityViewerDataService.getGroups();
 
         var attrsList = [];
 
@@ -158,6 +158,7 @@
                         vm.allAttributesList = attrsList;
 
                         syncAttrs();
+                        getSelectedAttrs();
 
                         vm.readyStatus.content = true;
                         $scope.$apply();
@@ -232,7 +233,7 @@
                 attrs[i].filters = false;
                 attrs[i].groups = false;
 
-                columns.forEach(function (item) {
+                columns.map(function (item) {
 
                     if (attrs[i].entity === item.entity) {
 
@@ -244,7 +245,7 @@
 
                 });
 
-                filters.forEach(function (item) {
+                filters.map(function (item) {
 
                     if (attrs[i].entity === item.entity) {
 
@@ -256,7 +257,7 @@
 
                 });
 
-                grouping.forEach(function (item) {
+                groups.map(function (item) {
 
                     if (attrs[i].entity === item.entity) {
 
@@ -290,6 +291,7 @@
                                 columns.splice(c, 1);
                                 c = c - 1;
                             }
+                            break;
                         }
 
                     }
@@ -297,18 +299,19 @@
                 }
 
 
-                /////// GROUPING
+                /////// groups
 
-                for (g = 0; g < grouping.length; g = g + 1) {
+                for (g = 0; g < groups.length; g = g + 1) {
 
-                    if (attr.entity === grouping[g].entity) {
+                    if (attr.entity === groups[g].entity) {
 
-                        if (attr.key === grouping[g].key) {
+                        if (attr.key === groups[g].key) {
                             groupExist = true;
                             if (attr.groups === false) {
-                                grouping.splice(g, 1);
+                                groups.splice(g, 1);
                                 g = g - 1;
                             }
+                            break;
                         }
 
                     }
@@ -328,6 +331,7 @@
                                 filters.splice(f, 1);
                                 f = f - 1;
                             }
+                            break;
                         }
 
                     }
@@ -339,7 +343,7 @@
                 }
 
                 if (!groupExist && attr.groups === true) {
-                    grouping.push(attr);
+                    groups.push(attr);
                 }
 
                 if (!filterExist && attr.filters === true) {
@@ -349,7 +353,7 @@
             });
 
             entityViewerDataService.setColumns(columns);
-            entityViewerDataService.setGroups(grouping);
+            entityViewerDataService.setGroups(groups);
             entityViewerDataService.setFilters(filters);
 
         }
@@ -369,9 +373,104 @@
 
         };
 
+        var getSelectedAttrs = function () {
+
+            vm.selectedGroups = [];
+            vm.selectedColumns = [];
+            vm.selectedFilters = [];
+
+            separateSelectedAttrs(vm.balanceAttrs, 'balanceAttrs');
+            separateSelectedAttrs(vm.balancePerformanceAttrs, 'balancePerformanceAttrs');
+            separateSelectedAttrs(vm.balanceMismatchAttrs, 'balanceMismatchAttrs');
+            separateSelectedAttrs(vm.custom, 'custom');
+            separateSelectedAttrs(vm.allocationAttrs, 'allocationAttrs');
+            separateSelectedAttrs(vm.allocationDynamicAttrs, 'allocationDynamicAttrs');
+
+            separateSelectedAttrs(vm.instrumentAttrs, 'instrumentAttrs');
+            separateSelectedAttrs(vm.instrumentDynamicAttrs, 'instrumentDynamicAttrs');
+
+            separateSelectedAttrs(vm.linkedInstrumentAttrs, 'linkedInstrumentAttrs');
+            separateSelectedAttrs(vm.linkedInstrumentDynamicAttrs, 'linkedInstrumentDynamicAttrs');
+
+            separateSelectedAttrs(vm.accountAttrs, 'accountAttrs');
+            separateSelectedAttrs(vm.accountDynamicAttrs, 'accountDynamicAttrs');
+
+            separateSelectedAttrs(vm.portfolioAttrs, 'portfolioAttrs');
+            separateSelectedAttrs(vm.portfolioDynamicAttrs, 'portfolioDynamicAttrs');
+
+            separateSelectedAttrs(vm.strategy1attrs, 'strategy1attrs');
+            separateSelectedAttrs(vm.strategy2attrs, 'strategy2attrs');
+            separateSelectedAttrs(vm.strategy3attrs, 'strategy3attrs');
+
+        };
+
+        var separateSelectedAttrs = function (attributes, attrsVmKey) {
+
+            var selectedGroups = [];
+            var selectedColumns = [];
+            var selectedFilters = [];
+
+            for (var i = 0; i < attributes.length; i++) {
+                var attribute = JSON.parse(angular.toJson(attributes[i]));
+                attribute.attrsVmKey = attrsVmKey;
+
+                // attrsVmKey used in vm.updateAttrs and selectedDnD
+                if (attribute.groups) {
+                    selectedGroups.push(attribute);
+                } else if (attribute.columns) {
+                    selectedColumns.push(attribute);
+                } else if (attribute.filters) {
+                    selectedFilters.push(attribute);
+                };
+
+            };
+
+            // putting selected attributes in the same order as in the table
+
+            var groupSelectedGroups = function (insideTable, selectedAttrs, vmKey) {
+
+                var a;
+                for (a = 0; a < insideTable.length; a++) {
+                    var attr = insideTable[a];
+
+                    for (var i = 0; i < selectedAttrs.length; i++) {
+                        var sAttr = selectedAttrs[i];
+
+                        if (sAttr.key === attr.key) {
+                            vm[vmKey].push(sAttr);
+                            break;
+                        };
+                    };
+
+                };
+
+            };
+
+            groupSelectedGroups(groups, selectedGroups, 'selectedGroups');
+            groupSelectedGroups(columns, selectedColumns, 'selectedColumns');
+            groupSelectedGroups(filters, selectedFilters, 'selectedFilters');
+
+        };
+
+        vm.onSelectedAttrsChange = function (attributesList, selectedAttr) {
+
+            for (var i = 0; i < attributesList.length; i++) {
+                if (attributesList[i].key === selectedAttr.key) {
+                    attributesList[i].groups = selectedAttr.groups;
+                    attributesList[i].columns = selectedAttr.columns;
+                    attributesList[i].filters = selectedAttr.filters;
+                    break;
+                };
+            };
+
+            vm.updateAttrs(attributesList);
+
+        };
+
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
             viewConstructorDnD.destroy();
+            selectedDnD.destroy();
             $mdDialog.hide();
         };
 
@@ -430,8 +529,8 @@
                     /*if (target === document.querySelector('#groupsbag') ||
                         target === document.querySelector('.g-groups-holder')) {*/
                     if (target === document.querySelector('#groupsbag')) {
-                        for (i = 0; i < grouping.length; i = i + 1) {
-                            if (grouping[i].key === identifier) {
+                        for (i = 0; i < groups.length; i = i + 1) {
+                            if (groups[i].key === identifier) {
                                 exist = true;
                                 groupExist = true;
                             }
@@ -506,12 +605,12 @@
                                 if (attrsList[a].key === identifier) {
 
                                     /*if (target === document.querySelector('#groupsbag')) {
-                                        grouping.push(attrsList[a]);
+                                        groups.push(attrsList[a]);
                                     } else {
-                                        grouping.splice(index, 0, attrsList[a]);
+                                        groups.splice(index, 0, attrsList[a]);
                                     }*/
 
-                                    grouping.push(attrsList[a]);
+                                    groups.push(attrsList[a]);
 
                                     //columns.push(attrsList[a]);
                                 }
@@ -567,7 +666,7 @@
                         if (columnExist) {
                             errorMessage = 'There is already such column in Column Area';
                         } else if (groupExist) {
-                            errorMessage = 'There is already such group in Grouping Area';
+                            errorMessage = 'There is already such group in groups Area';
                         } else if (filterExist) {
                             errorMessage = 'There is already such filter in Filter Area';
                         }
@@ -619,7 +718,7 @@
                 ];
 
                 var i;
-                var itemsElem = document.querySelectorAll('#dialogbag .g-modal-draggable-card');
+                var itemsElem = document.querySelectorAll('#dialogbag .vcDraggableCard');
                 for (i = 0; i < itemsElem.length; i = i + 1) {
                     items.push(itemsElem[i]);
                 }
@@ -638,12 +737,165 @@
                         },
                         copy: true
                     });
+            },
+
+            destroy: function () {
+                this.dragula.destroy();
+            }
+        };
+
+        var selectedDnD = {
+
+            init: function () {
+                this.selectedDragulaInit();
+                this.eventListeners();
+            },
+
+            eventListeners: function () {
+
+                var attributeChanged = false;
+                var drake = this.dragula;
+
+                drake.on('drop', function (elem, target, source, nextSibling) {
+
+                    var attributeKey = elem.dataset.attributeKey;
+                    var attrsVmKey = elem.dataset.vmKey;
+
+                    // dragging from groups
+                    if (source.classList.contains('vcSelectedGroups')) {
+
+                        // dragged to columns
+                        if (target.classList.contains('vcSelectedColumns')) {
+
+                            attributeChanged = false;
+
+                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                                if (vm[attrsVmKey][i].key === attributeKey) {
+                                    vm[attrsVmKey][i].groups = false;
+                                    attributeChanged = true;
+                                    break;
+                                };
+                            };
+                            // < dragged to columns >
+
+                            // dragged to filters
+                        } else if (target.classList.contains('vcSelectedFilters')) {
+
+                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                                if (vm[attrsVmKey][i].key === attributeKey) {
+                                    vm[attrsVmKey][i].groups = false;
+                                    vm[attrsVmKey][i].columns = false;
+                                    vm[attrsVmKey][i].filters = true;
+                                    attributeChanged = true;
+                                    break;
+                                };
+                            };
+
+                            // < dragged to filters >
+                        } else if (target.classList.contains('vcSelectedGroups')) {
+                            drake.cancel()
+                        };
+
+                        // < dragging from groups >
+
+                        // dragging from columns
+                    } else if (source.classList.contains('vcSelectedColumns')) {
+
+                        // dragged to groups
+                        if (target.classList.contains('vcSelectedGroups')) {
+
+                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                                if (vm[attrsVmKey][i].key === attributeKey) {
+                                    vm[attrsVmKey][i].groups = true;
+                                    attributeChanged = true;
+                                    break;
+                                };
+                            };
+                            // < dragged to groups >
+
+                            // dragged to filters
+                        } else if (target.classList.contains('vcSelectedFilters')) {
+
+                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                                if (vm[attrsVmKey][i].key === attributeKey) {
+                                    vm[attrsVmKey][i].columns = false;
+                                    vm[attrsVmKey][i].filters = true;
+                                    attributeChanged = true;
+                                    break;
+                                };
+                            };
+
+                            // < dragged to filters >
+                        } else if (target.classList.contains('vcSelectedColumns')) {
+                            drake.cancel()
+                        };
+                        // < dragging from columns >
+
+                        // dragging from filters
+                    } else if (source.classList.contains('vcSelectedFilters')) {
+
+                        // dragged to groups
+                        if (target.classList.contains('vcSelectedGroups')) {
+
+                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                                if (vm[attrsVmKey][i].key === attributeKey) {
+                                    vm[attrsVmKey][i].groups = true;
+                                    attributeChanged = true;
+                                    break;
+                                };
+                            };
+                            // < dragged to columns >
+
+                            // dragged to columns
+                        } else if (target.classList.contains('vcSelectedColumns')) {
+
+                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                                if (vm[attrsVmKey][i].key === attributeKey) {
+                                    vm[attrsVmKey][i].columns = true;
+                                    attributeChanged = true;
+                                    break;
+                                };
+                            };
+                            // < dragged to columns >
+
+                        } else if (target.classList.contains('vcSelectedFilters')) {
+                            drake.cancel()
+                        };
+
+                    };
+                    // < dragging from filters >
+
+                    if (attributeChanged) {
+                        $(elem).remove();
+                        vm.updateAttrs(vm[attrsVmKey]);
+                    };
+
+                });
+
+            },
+
+            selectedDragulaInit: function () {
+
+                var items = [
+                    document.querySelector('.vcSelectedGroups'),
+                    document.querySelector('.vcSelectedColumns'),
+                    document.querySelector('.vcSelectedFilters')
+                ];
+
+                this.dragula = dragula(items, {
+                    revertOnSpill: true
+                });
+            },
+
+            destroy: function () {
+                this.dragula.destroy();
             }
         };
 
         vm.initDnd = function () {
             setTimeout(function () {
                 viewConstructorDnD.init();
+                selectedDnD.init();
             }, 500);
         };
 
@@ -657,13 +909,15 @@
 
                 columns = entityViewerDataService.getColumns();
                 syncAttrs();
+                getSelectedAttrs();
 
             });
 
             entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-                grouping = entityViewerDataService.getGroups();
+                groups = entityViewerDataService.getGroups();
                 syncAttrs();
+                getSelectedAttrs();
 
             });
 
@@ -671,6 +925,7 @@
 
                 filters = entityViewerDataService.getFilters();
                 syncAttrs();
+                getSelectedAttrs();
 
             });
 

@@ -13,8 +13,6 @@
 
     var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents');
 
-    var AttributeDataService = require('../services/attributeDataService');
-
     module.exports = function ($scope, $stateParams, $state, $mdDialog) {
 
         var vm = this;
@@ -185,43 +183,42 @@
 
         vm.getVerboseType = function (item) {
 
-            if (item.type === 'report_viewer') {
-                return 'Report Viewer'
+            var verboseName = 'Unknown';
+
+            switch (item.type) {
+                case 'report_viewer':
+                    verboseName = 'Report Viewer';
+                    break;
+                case 'report_viewer_split_panel':
+                    verboseName = 'Report Viewer Split Panel';
+                    break;
+                case 'report_viewer_grand_total':
+                    verboseName = 'Report Viewer Grand Total';
+                    break;
+                case 'report_viewer_charts':
+                    verboseName = 'Report Viewer Charts';
+                    break;
+                case 'report_viewer_matrix':
+                    verboseName = 'Report Viewer Matrix';
+                    break;
+                case 'entity_viewer':
+                    verboseName = 'Entity Viewer';
+                    break;
+                case 'entity_viewer_split_panel':
+                    verboseName = 'Entity Viewer Split Panel';
+                    break;
+                case 'input_form':
+                    verboseName = 'Input Form';
+                    break;
+                case 'control':
+                    verboseName = 'Control';
+                    break;
+                case 'button_set':
+                    verboseName = 'Button Set';
+                    break;
             }
 
-            if (item.type === 'report_viewer_split_panel') {
-                return 'Report Viewer Split Panel'
-            }
-
-            if (item.type === 'report_viewer_grand_total') {
-                return 'Report Viewer Grand Total'
-            }
-
-            if (item.type === 'report_viewer_matrix') {
-                return 'Report Viewer Matrix'
-            }
-
-            if (item.type === 'entity_viewer') {
-                return 'Entity Viewer'
-            }
-
-            if (item.type === 'entity_viewer_split_panel') {
-                return 'Entity Viewer Split Panel'
-            }
-
-            if (item.type === 'input_form') {
-                return 'Input Form'
-            }
-
-            if (item.type === 'control') {
-                return 'Control'
-            }
-
-            if (item.type === 'button_set') {
-                return 'Button Set'
-            }
-
-            return 'Unknown'
+            return verboseName;
 
         };
 
@@ -655,8 +652,7 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    eventService: vm.dashboardConstructorEventService
                 }
             }).then(function (value) {
 
@@ -679,8 +675,7 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    eventService: vm.dashboardConstructorEventService
                 }
             }).then(function (value) {
 
@@ -703,8 +698,7 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    eventService: vm.dashboardConstructorEventService
                 }
             }).then(function (value) {
 
@@ -727,8 +721,7 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    eventService: vm.dashboardConstructorEventService
                 }
             }).then(function (value) {
 
@@ -751,8 +744,7 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    eventService: vm.dashboardConstructorEventService
                 }
             }).then(function (value) {
 
@@ -775,8 +767,7 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    eventService: vm.dashboardConstructorEventService
                 }
             }).then(function (value) {
 
@@ -799,8 +790,30 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    eventService: vm.dashboardConstructorEventService
+                }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+
+        };
+
+        vm.addReportViewerChartsComponent = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorReportViewerChartsComponentDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-charts-component-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: null,
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
                 }
             }).then(function (value) {
 
@@ -823,8 +836,7 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    eventService: vm.dashboardConstructorEventService
                 }
             }).then(function (value) {
 
@@ -847,8 +859,7 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    eventService: vm.dashboardConstructorEventService
                 }
             }).then(function (value) {
 
@@ -858,223 +869,97 @@
 
         };
 
+        var openDashboardComponentEditor = function ($event, contrName, templateUrl, locals) {
+            $mdDialog.show({
+                controller: contrName,
+                templateUrl: templateUrl,
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: JSON.parse(JSON.stringify(item)),
+                    dataService: vm.dashboardConstructorDataService,
+                    eventService: vm.dashboardConstructorEventService
+                }
+            }).then(function (value) {
+
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+            })
+        };
+
         vm.editComponentType = function ($event, item) {
 
-            if (item.type === 'control') {
+            var contrName = '';
+            var templateUrl = '';
 
+            var locals = {
+                item: JSON.parse(JSON.stringify(item)),
+                dataService: vm.dashboardConstructorDataService,
+                eventService: vm.dashboardConstructorEventService
+            };
+
+            switch (item.type) {
+                case 'control':
+                    contrName = 'DashboardConstructorControlComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html';
+                    break;
+                case 'report_viewer':
+                    contrName = 'DashboardConstructorReportViewerComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html';
+                    break;
+                case 'report_viewer_split_panel':
+                    contrName = 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html';
+                    break;
+                case 'report_viewer_grand_total':
+                    contrName = 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html';
+                    break;
+                case 'report_viewer_charts':
+                    contrName = 'DashboardConstructorReportViewerChartsComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-charts-component-dialog-view.html';
+                    break;
+                case 'report_viewer_matrix':
+                    contrName = 'DashboardConstructorReportViewerMatrixComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-matrix-component-dialog-view.html';
+                    break;
+                case 'entity_viewer':
+                    contrName = 'DashboardConstructorEntityViewerComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-component-dialog-view.html';
+                    break;
+                case 'entity_viewer_split_panel':
+                    contrName = 'DashboardConstructorEntityViewerSplitPanelComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-split-panel-component-dialog-view.html';
+                    break;
+                case 'button_set':
+                    contrName = 'DashboardConstructorButtonSetComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-button-set-component-dialog-view.html';
+                    break;
+                case 'input_form':
+                    contrName = 'DashboardConstructorInputFormComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html';
+                    break;
+            };
+
+            if (contrName && templateUrl) {
                 $mdDialog.show({
-                    controller: 'DashboardConstructorControlComponentDialogController as vm',
-                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html',
+                    controller: contrName,
+                    templateUrl: templateUrl,
                     targetEvent: $event,
                     multiple: true,
                     preserveScope: true,
                     autoWrap: true,
                     skipHide: true,
-                    locals: {
-                        item: JSON.parse(JSON.stringify(item)),
-                        dataService: vm.dashboardConstructorDataService,
-                        eventService: vm.dashboardConstructorEventService,
-                        attributeDataService: vm.attributeDataService
-                    }
-                }).then(function (value) {
-
-                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-
-                })
-
-            }
-
-            if (item.type === 'report_viewer') {
-
-                $mdDialog.show({
-                    controller: 'DashboardConstructorReportViewerComponentDialogController as vm',
-                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html',
-                    targetEvent: $event,
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        item: JSON.parse(JSON.stringify(item)),
-                        dataService: vm.dashboardConstructorDataService,
-                        eventService: vm.dashboardConstructorEventService,
-                        attributeDataService: vm.attributeDataService
-                    }
-                }).then(function (value) {
-
-                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-
-                })
-
-            }
-
-            if (item.type === 'report_viewer_split_panel') {
-
-                $mdDialog.show({
-                    controller: 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm',
-                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html',
-                    targetEvent: $event,
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        item: JSON.parse(JSON.stringify(item)),
-                        dataService: vm.dashboardConstructorDataService,
-                        eventService: vm.dashboardConstructorEventService,
-                        attributeDataService: vm.attributeDataService
-                    }
-                }).then(function (value) {
-
-                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-
-                })
-
-            }
-
-            if (item.type === 'report_viewer_grand_total') {
-
-                $mdDialog.show({
-                    controller: 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm',
-                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html',
-                    targetEvent: $event,
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        item: JSON.parse(JSON.stringify(item)),
-                        dataService: vm.dashboardConstructorDataService,
-                        eventService: vm.dashboardConstructorEventService,
-                        attributeDataService: vm.attributeDataService
-                    }
-                }).then(function (value) {
-
-                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-
-                })
-
-            }
-
-            if (item.type === 'report_viewer_matrix') {
-
-                $mdDialog.show({
-                    controller: 'DashboardConstructorReportViewerMatrixComponentDialogController as vm',
-                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-matrix-component-dialog-view.html',
-                    targetEvent: $event,
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        item: JSON.parse(JSON.stringify(item)),
-                        dataService: vm.dashboardConstructorDataService,
-                        eventService: vm.dashboardConstructorEventService,
-                        attributeDataService: vm.attributeDataService
-                    }
+                    locals: locals
                 }).then(function (value) {
 
                     vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
                 });
-
-            }
-
-            if (item.type === 'entity_viewer') {
-
-                $mdDialog.show({
-                    controller: 'DashboardConstructorEntityViewerComponentDialogController as vm',
-                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-component-dialog-view.html',
-                    targetEvent: $event,
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        item: JSON.parse(JSON.stringify(item)),
-                        dataService: vm.dashboardConstructorDataService,
-                        eventService: vm.dashboardConstructorEventService,
-                        attributeDataService: vm.attributeDataService
-                    }
-                }).then(function (value) {
-
-                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-
-                })
-
-            }
-
-            if (item.type === 'entity_viewer_split_panel') {
-
-                $mdDialog.show({
-                    controller: 'DashboardConstructorEntityViewerSplitPanelComponentDialogController as vm',
-                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-split-panel-component-dialog-view.html',
-                    targetEvent: $event,
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        item: JSON.parse(JSON.stringify(item)),
-                        dataService: vm.dashboardConstructorDataService,
-                        eventService: vm.dashboardConstructorEventService,
-                        attributeDataService: vm.attributeDataService
-                    }
-                }).then(function (value) {
-
-                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-
-                })
-
-            }
-
-            if (item.type === 'button_set') {
-
-                $mdDialog.show({
-                    controller: 'DashboardConstructorButtonSetComponentDialogController as vm',
-                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-button-set-component-dialog-view.html',
-                    targetEvent: $event,
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        item: JSON.parse(JSON.stringify(item)),
-                        dataService: vm.dashboardConstructorDataService,
-                        eventService: vm.dashboardConstructorEventService,
-                        attributeDataService: vm.attributeDataService
-                    }
-                }).then(function (value) {
-
-                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-
-                })
-
-            }
-
-            if (item.type === 'input_form') {
-
-                $mdDialog.show({
-                    controller: 'DashboardConstructorInputFormComponentDialogController as vm',
-                    templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html',
-                    targetEvent: $event,
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        item: JSON.parse(JSON.stringify(item)),
-                        dataService: vm.dashboardConstructorDataService,
-                        eventService: vm.dashboardConstructorEventService,
-                        attributeDataService: vm.attributeDataService
-                    }
-                }).then(function (value) {
-
-                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-
-                })
-
-            }
+            };
 
         };
 
@@ -1137,8 +1022,6 @@
 
             vm.dashboardConstructorDataService = new DashboardConstructorDataService();
             vm.dashboardConstructorEventService = new DashboardConstructorEventService();
-
-            vm.attributeDataService = new AttributeDataService();
 
             vm.initEventListeners();
 
