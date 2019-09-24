@@ -88,7 +88,7 @@
 
             vm.numericAttributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type).filter(function (item) {
                 return item.value_type === 20;
-            })
+            });
 
         };
 
