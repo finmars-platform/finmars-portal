@@ -25,6 +25,8 @@
 
         var rvDataHelper = require('../../helpers/rv-data.helper');
 
+        var renderHelper = require('../../helpers/render.helper');
+
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses')
 
@@ -99,7 +101,35 @@
 
                         var column_key = vm.componentType.data.settings.grand_total_column;
 
-                        vm.grandTotalValue = root.subtotal[column_key];
+                        var val = root.subtotal[column_key];
+
+                        vm.grandTotalNegative = false;
+
+                        if (vm.componentType.data.settings.number_format) {
+
+                            if (vm.componentType.data.settings.number_format.negative_color_format_id === 1) {
+
+                                if (val % 1 === 0) { // check whether number is float or integer
+                                    if (parseInt(val) < 0) {
+                                        vm.grandTotalNegative = true
+                                    }
+                                } else {
+                                    if (parseFloat(val) < 0) {
+                                        vm.grandTotalNegative = true
+                                    }
+                                }
+                            }
+
+                            vm.grandTotalValue = renderHelper.formatValue({
+                                value: val
+                            }, {
+                                key: 'value',
+                                report_settings: vm.componentType.data.settings.number_format
+                            });
+
+                        } else {
+                            vm.grandTotalValue = val
+                        }
 
                         $scope.$apply();
 
@@ -458,7 +488,7 @@
 
             };
 
-            vm.downloadAttributes = function(){
+            vm.downloadAttributes = function () {
 
                 var promises = [];
 
@@ -531,11 +561,13 @@
 
                 if (vm.componentType.data.type === 'report_viewer_matrix') {
                     vm.matrixSettings = {
+                        number_format: vm.componentType.data.settings.number_format,
                         abscissa: vm.componentType.data.settings.abscissa,
                         ordinate: vm.componentType.data.settings.ordinate,
                         value_key: vm.componentType.data.settings.value_key
                     };
-                };
+                }
+                ;
 
                 if (vm.componentType.data.type === 'report_viewer_charts') {
                     vm.rvChartsSettings = {
@@ -544,7 +576,8 @@
                         min_bar_width: vm.componentType.data.settings.min_bar_width,
                         max_bar_width: vm.componentType.data.settings.max_bar_width
                     };
-                };
+                }
+                ;
 
                 uiService.getListLayoutByKey(layoutId).then(function (data) {
 

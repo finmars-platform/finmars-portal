@@ -3,6 +3,7 @@
     'use strict';
 
     var rvDataHelper = require('../helpers/rv-data.helper');
+    var renderHelper = require('../helpers/render.helper');
     var reportViewerMatrixHelper = require('../helpers/report-viewer-matrix.helper');
 
     var evEvents = require('../services/entityViewerEvents')
@@ -42,7 +43,7 @@
                     // console.log('columnsCount', columnsCount);
 
                     var minWidth = 100;
-                    var minHeight = 24;
+                    var minHeight = 20;
 
                     var cellWidth = Math.floor(elemWidth / columnsCount);
                     var cellHeight = Math.floor(elemHeight / rowsCount);
@@ -91,6 +92,46 @@
 
                     scope.evDataService.setActiveObject(activeObject);
                     scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                };
+
+                scope.checkNegative = function(val) {
+
+                    if (scope.matrixSettings.number_format) {
+
+                        if (scope.matrixSettings.number_format.negative_color_format_id === 1) {
+
+                            if (val % 1 === 0) { // check whether number is float or integer
+                                if (parseInt(val) < 0) {
+                                   return true
+                                }
+                            } else {
+                                if (parseFloat(val) < 0) {
+                                    return true
+                                }
+                            }
+                        }
+
+                    }
+
+                    return false
+
+                };
+
+                scope.formatValue = function(val) {
+
+                    if (scope.matrixSettings.number_format) {
+
+                        return renderHelper.formatValue({
+                            value: val
+                        }, {
+                            key: 'value',
+                            report_settings: scope.matrixSettings.number_format
+                        });
+
+                    } else {
+                        return val
+                    }
 
                 };
 
