@@ -351,14 +351,23 @@
 
         }
 
+        // TODO come up with more efficient way of returning new copy of data
+
         function getEntityAttributesByEntityType(entityType) {
-            return entityAttributesData[entityType]
+
+            if (entityAttributesData[entityType]) {
+
+                return JSON.parse(JSON.stringify(entityAttributesData[entityType]))
+
+            }
+
+            return []
         }
 
         function getCustomFieldsByEntityType(entityType) {
 
             if (customFieldsData.hasOwnProperty(entityType)) {
-                return customFieldsData[entityType];
+                return JSON.parse(JSON.stringify(customFieldsData[entityType]));
             }
 
             return []
@@ -367,7 +376,7 @@
         function getDynamicAttributesByEntityType(entityType) {
 
             if (dynamicAttributesData.hasOwnProperty(entityType)) {
-                return dynamicAttributesData[entityType];
+                return JSON.parse(JSON.stringify(dynamicAttributesData[entityType]));
             }
 
             return []
