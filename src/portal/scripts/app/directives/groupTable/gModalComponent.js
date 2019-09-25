@@ -14,7 +14,7 @@
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
-    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
+    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService) {
 
         logService.controller('gModalController', 'initialized');
 
@@ -72,7 +72,11 @@
 
         vm.getAttributes = function () {
 
-            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+            vm.entityAttrs = attributeDataService.getEntityAttributesByEntityType(vm.entityType);
+
+            console.log('attrs from attribute data service', vm.entityAttrs);
+
             console.log("strategies view constructor attrs", vm.entityType, JSON.parse(JSON.stringify(vm.entityAttrs)));
             vm.entityAttrs.forEach(function (item) {
                 if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
@@ -81,49 +85,60 @@
                 item.entity = vm.entityType;
             });
 
-            vm.getUserFields().then(function (data) { // only for Complex Transaction & Transaction types
+            var instrumentUserFields = attributeDataService.getInstrumentUserFields();
+            var transactionUserFields = attributeDataService.getTransactionUserFields();
 
-                data.results.forEach(function (field) {
+            instrumentUserFields.forEach(function (field) {
 
-                    vm.entityAttrs.forEach(function (entityAttr) {
+                vm.entityAttrs.forEach(function (entityAttr) {
 
-                        if (entityAttr.key === field.key) {
-                            entityAttr.name = field.name;
-                        }
+                    if (entityAttr.key === field.key) {
+                        entityAttr.name = field.name;
+                    }
 
-                    })
-
-                });
-
-                attributeTypeService.getList(vm.entityType).then(function (data) {
-
-                    vm.attrs = data.results.map(function (attribute) {
-
-                        var result = {};
-
-                        result.attribute_type = Object.assign({}, attribute);
-                        result.value_type = attribute.value_type;
-                        result.content_type = vm.contentType;
-                        result.key = 'attributes.' + attribute.user_code;
-                        result.name = attribute.name;
-
-                        return result
-
-                    });
-
-                    attrsList = attrsList.concat(vm.entityAttrs);
-                    attrsList = attrsList.concat(vm.attrs);
-
-                    vm.allAttributesList = attrsList;
-
-                    syncAttrs();
-                    getSelectedAttrs();
-
-                    vm.readyStatus.content = true;
-                    $scope.$apply();
                 })
 
             });
+
+            transactionUserFields.forEach(function (field) {
+
+                vm.entityAttrs.forEach(function (entityAttr) {
+
+                    if (entityAttr.key === field.key) {
+                        entityAttr.name = field.name;
+                    }
+
+                })
+
+            });
+
+            vm.attrs = attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
+
+            console.log('vm.attrs', vm.attrs);
+
+            vm.attrs = vm.attrs.map(function (attribute) {
+
+                var result = {};
+
+                result.attribute_type = Object.assign({}, attribute);
+                result.value_type = attribute.value_type;
+                result.content_type = vm.contentType;
+                result.key = 'attributes.' + attribute.user_code;
+                result.name = attribute.name;
+
+                return result
+
+            });
+
+            attrsList = attrsList.concat(vm.entityAttrs);
+            attrsList = attrsList.concat(vm.attrs);
+
+            vm.allAttributesList = attrsList;
+
+            syncAttrs();
+            getSelectedAttrs();
+
+            vm.readyStatus.content = true;
 
         };
 
