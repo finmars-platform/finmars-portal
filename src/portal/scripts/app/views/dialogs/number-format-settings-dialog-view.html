@@ -1,0 +1,126 @@
+<md-dialog class="draggable-dialog column-nrs-dialog" drag-dialog aria-label="column numbers rendering settings dialog">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2 data-ng-if="vm.title">Number formatting for: {{vm.title}}</h2>
+            <h2 data-ng-if="!vm.title">Number formatting settings</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="p-16">
+
+        <div layout="row">
+            <fieldset class="column-nrs-checkboxes-field">
+                <legend>Zero</legend>
+
+                <div layout="column">
+                    <md-radio-group ng-model="vm.settings.zero_format_id">
+
+                        <md-radio-button ng-value="0">0</md-radio-button>
+                        <md-radio-button ng-value="1">-</md-radio-button>
+                        <md-radio-button ng-value="2">(empty)</md-radio-button>
+
+                    </md-radio-group>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="column-nrs-checkboxes-field">
+                <legend>Negative</legend>
+
+                <div layout="row">
+
+                    <div layout="column" class="p-r-16">
+
+                            <md-radio-group ng-model="vm.settings.negative_format_id">
+                            <md-radio-button ng-value="0">Minus</md-radio-button>
+                            <md-radio-button ng-value="1">Bracket</md-radio-button>
+                        </md-radio-group>
+
+                    </div>
+
+                    <div layout="column">
+
+                        <md-radio-group ng-model="vm.settings.negative_color_format_id">
+                            <md-radio-button ng-value="0">Black</md-radio-button>
+                            <md-radio-button ng-value="1">Red</md-radio-button>
+                        </md-radio-group>
+
+                    </div>
+
+                </div>
+
+            </fieldset>
+        </div>
+
+        <div layout="row">
+            <fieldset class="column-nrs-checkboxes-field">
+                <legend>Rounding</legend>
+
+                <div layout="column">
+                    <md-radio-group ng-model="vm.settings.round_format_id"
+                                    ng-change="vm.onRoundingChange()">
+
+                        <md-radio-button ng-value="0" style="margin-bottom: 28px;">no rounding</md-radio-button>
+
+                        <md-radio-button ng-value="1">0</md-radio-button>
+                        <md-radio-button ng-value="2">0.0</md-radio-button>
+                        <md-radio-button ng-value="3">0.00</md-radio-button>
+                        <md-radio-button ng-value="4">0.000</md-radio-button>
+
+                    </md-radio-group>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="column-nrs-checkboxes-field">
+                <legend>Thousands separation</legend>
+
+                <div layout="column">
+
+                    <md-radio-group ng-model="vm.settings.thousands_separator_format_id">
+
+                        <md-radio-button ng-value="0">no separation</md-radio-button>
+                        <md-radio-button ng-value="1">space</md-radio-button>
+                        <md-radio-button ng-value="2">apostrophe</md-radio-button>
+
+                    </md-radio-group>
+
+                </div>
+
+            </fieldset>
+        </div>
+
+        <div layout="row">
+
+            <fieldset class="column-nrs-checkboxes-field">
+                <legend>Percentage</legend>
+
+                <div layout="column">
+
+                    <md-radio-group ng-model="vm.settings.percentage_format_id"
+                                    ng-change="vm.onPercentageChange()">
+
+                        <md-radio-button ng-value="0">n.a.</md-radio-button>
+                        <md-radio-button ng-value="1">0%</md-radio-button>
+                        <md-radio-button ng-value="2">0.0%</md-radio-button>
+                        <md-radio-button ng-value="3">0.00%</md-radio-button>
+                        <md-radio-button ng-value="4">0 bps</md-radio-button>
+                        <md-radio-button ng-value="5">0.0 bps</md-radio-button>
+
+                    </md-radio-group>
+
+                </div>
+
+            </fieldset>
+        </div>
+
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" layout-align="space-between center">
+        <md-button class="md-raised" ng-click="vm.cancel()">CANCEL</md-button>
+        <md-button class="md-raised" ng-click="vm.save()">OK</md-button>
+    </md-dialog-actions>
+</md-dialog>
