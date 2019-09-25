@@ -956,7 +956,8 @@
                     contrName = 'DashboardConstructorInputFormComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html';
                     break;
-            };
+            }
+            ;
 
             if (contrName && templateUrl) {
                 $mdDialog.show({
@@ -973,7 +974,8 @@
                     vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
                 });
-            };
+            }
+            ;
 
         };
 
@@ -1032,7 +1034,7 @@
 
         };
 
-        vm.downloadAttributes = function(){
+        vm.downloadAttributes = function () {
 
             var promises = [];
 
@@ -1048,6 +1050,20 @@
             promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
             promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
 
+            var idAttribute = {
+                "key": "id",
+                "name": "Id",
+                "value_type": 20
+            };
+
+            vm.attributeDataService.appendEntityAttribute('portfolio', Object.assign({}, idAttribute));
+            vm.attributeDataService.appendEntityAttribute('account', Object.assign({}, idAttribute));
+            vm.attributeDataService.appendEntityAttribute('currency', Object.assign({}, idAttribute));
+            vm.attributeDataService.appendEntityAttribute('instrument', Object.assign({}, idAttribute));
+            vm.attributeDataService.appendEntityAttribute('responsible', Object.assign({}, idAttribute));
+            vm.attributeDataService.appendEntityAttribute('counterparty', Object.assign({}, idAttribute));
+            vm.attributeDataService.appendEntityAttribute('transaction-type', Object.assign({}, idAttribute));
+            vm.attributeDataService.appendEntityAttribute('complex-transaction', Object.assign({}, idAttribute));
 
             Promise.all(promises).then(function (data) {
 

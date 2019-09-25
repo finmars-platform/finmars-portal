@@ -4,9 +4,9 @@
 
         <div data-ng-if="vm.layout" class="dashboard-tabs-holder height-100">
 
-            <!--<div>-->
-            <!--Dashboard Layout: {{vm.layout.name}}-->
-            <!--</div>-->
+            <div>
+            Dashboard Layout: {{vm.layout.name}}
+            </div>
 
             <div class="dashboard-tabs-control-panel">
 
@@ -39,21 +39,14 @@
                     <md-menu-content width="4">
                         <md-menu-item>
                             <md-button ng-click="vm.openLayoutList($event)" class="g-settings-option-btn">
-                                <span>Open layout</span>
+                                <span>Open Layout Manager</span>
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="vm.saveLayoutList($event)"
-                                       class="g-settings-option-btn"
-                                       ng-disabled="isNewLayout">
-                                <span>Save</span>
+                            <md-button data-ui-sref="app.dashboard-constructor({id: vm.layout.id})" class="g-settings-option-btn">
+                                <span>Edit Layout</span>
                             </md-button>
                         </md-menu-item>
-                        <!--<md-menu-item>-->
-                        <!--<md-button ng-click="saveAsLayoutList($event)" class="g-settings-option-btn">-->
-                        <!--<span>Save as</span>-->
-                        <!--</md-button>-->
-                        <!--</md-menu-item>-->
                     </md-menu-content>
                 </md-menu>
 
