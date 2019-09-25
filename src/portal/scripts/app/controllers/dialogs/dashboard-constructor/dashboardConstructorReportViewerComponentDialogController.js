@@ -90,6 +90,23 @@
 
         };
 
+        vm.reportTypeChange = function(){
+
+            vm.item.settings.layout = null;
+            vm.item.settings.linked_components= {};
+
+
+            vm.getAttributes();
+
+        };
+
+
+        vm.getAttributes = function(){
+
+            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
+
+        };
+
         vm.getLayouts = function () {
 
             uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
@@ -194,6 +211,7 @@
             if (vm.item.id) {
 
                 vm.getLayouts();
+                vm.getAttributes();
             }
 
         };

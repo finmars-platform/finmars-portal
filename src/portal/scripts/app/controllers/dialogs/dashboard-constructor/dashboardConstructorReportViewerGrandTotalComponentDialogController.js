@@ -65,6 +65,17 @@
 
         };
 
+        vm.reportTypeChange = function(){
+
+            vm.item.settings.layout = null;
+            vm.item.settings.linked_components= {};
+
+            vm.item.settings.grand_total_column = null;
+
+            vm.getAttributes();
+
+        };
+
         vm.getLayouts = function () {
 
             uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
@@ -74,6 +85,12 @@
                 $scope.$apply();
 
             })
+
+        };
+
+        vm.getAttributes = function(){
+
+            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
 
         };
 
@@ -129,6 +146,7 @@
             if (vm.item.id) {
 
                 vm.getLayouts();
+                vm.getAttributes();
             }
 
         };

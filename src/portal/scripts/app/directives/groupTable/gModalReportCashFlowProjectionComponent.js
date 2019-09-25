@@ -17,7 +17,7 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
+    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService) {
 
         logService.controller('gModalController', 'initialized');
 

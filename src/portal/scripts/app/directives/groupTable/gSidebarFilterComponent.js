@@ -20,6 +20,7 @@
         return {
             restrict: 'AE',
             scope: {
+                attributeDataService: '=',
                 evDataService: '=',
                 evEventService: '='
             },
