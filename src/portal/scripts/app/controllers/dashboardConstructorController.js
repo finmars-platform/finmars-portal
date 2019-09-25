@@ -20,7 +20,8 @@
         var vm = this;
 
         vm.readyStatus = {
-            data: false
+            data: false,
+            attributes: false
         };
 
         vm.dashboardConstructorDataService = null;
@@ -1031,12 +1032,40 @@
 
         };
 
+        vm.downloadAttributes = function(){
+
+            var promises = [];
+
+            promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
+            promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
+            promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
+
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('account'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
+
+
+            Promise.all(promises).then(function (data) {
+
+                vm.readyStatus.attributes = true;
+                $scope.$apply();
+
+            })
+
+        };
+
         vm.init = function () {
 
             vm.dashboardConstructorDataService = new DashboardConstructorDataService();
             vm.dashboardConstructorEventService = new DashboardConstructorEventService();
 
             vm.attributeDataService = new AttributeDataService();
+
+            vm.downloadAttributes();
 
             vm.initEventListeners();
 

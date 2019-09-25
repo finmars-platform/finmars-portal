@@ -30,6 +30,7 @@
         return {
             restrict: 'AE',
             scope: {
+                attributeDataService: '=',
                 evDataService: '=',
                 evEventService: '='
             },
@@ -87,6 +88,7 @@
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
+                                attributeDataService: scope.attributeDataService,
                                 entityViewerDataService: scope.evDataService,
                                 entityViewerEventService: scope.evEventService
                             }
@@ -100,6 +102,7 @@
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
+                                attributeDataService: scope.attributeDataService,
                                 entityViewerDataService: scope.evDataService,
                                 entityViewerEventService: scope.evEventService
                             }

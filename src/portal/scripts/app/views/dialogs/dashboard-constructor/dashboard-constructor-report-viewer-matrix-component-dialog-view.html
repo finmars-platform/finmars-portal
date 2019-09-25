@@ -60,9 +60,9 @@
                                        ng-keydown="$event.stopPropagation()">
                             </md-select-header>
                             <md-option
-                                    data-ng-repeat="layout in vm.attributes | orderBy:'-name' | filter:{name: abscissaSearchTerm} track by layout.key "
-                                    ng-value="layout.key">
-                                {{layout.name}}
+                                    data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: abscissaSearchTerm} track by attribute.key "
+                                    ng-value="attribute.key">
+                                {{attribute.name}}
                             </md-option>
                         </md-select>
                     </md-input-container>
@@ -84,9 +84,9 @@
                                        ng-keydown="$event.stopPropagation()">
                             </md-select-header>
                             <md-option
-                                    data-ng-repeat="layout in vm.attributes | orderBy:'-name' | filter:{name: ordinateSearchTerm} track by layout.key "
-                                    ng-value="layout.key">
-                                {{layout.name}}
+                                    data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: ordinateSearchTerm} track by attribute.key "
+                                    ng-value="attribute.key">
+                                {{attribute.name}}
                             </md-option>
                         </md-select>
                     </md-input-container>
@@ -108,9 +108,9 @@
                                        ng-keydown="$event.stopPropagation()">
                             </md-select-header>
                             <md-option
-                                    data-ng-repeat="layout in vm.numericAttributes | orderBy:'-name' | filter:{name: valueSearchTerm} track by layout.key "
-                                    ng-value="layout.key">
-                                {{layout.name}}
+                                    data-ng-repeat="attribute in vm.numericAttributes | orderBy:'-name' | filter:{name: valueSearchTerm} track by attribute.key "
+                                    ng-value="attribute.key">
+                                {{attribute.name}}
                             </md-option>
                         </md-select>
                     </md-input-container>

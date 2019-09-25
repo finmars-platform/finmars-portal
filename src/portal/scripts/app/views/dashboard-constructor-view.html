@@ -1,5 +1,5 @@
 <div class="dashboard-constructor">
-    <div data-ng-if="vm.readyStatus.data" class="dashboard-constructor-main p-8">
+    <div data-ng-if="vm.readyStatus.data && vm.readyStatus.attributes" class="dashboard-constructor-main p-8">
 
         <div class="p-8">
 
@@ -252,7 +252,7 @@
         </div>
 
     </div>
-    <div data-ng-if="!vm.readyStatus.data">
+    <div data-ng-if="!vm.readyStatus.data || !vm.readyStatus.attributes">
         <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
             <md-progress-circular md-mode="indeterminate" md-diameter="120"></md-progress-circular>
         </div>

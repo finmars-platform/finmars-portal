@@ -9,6 +9,10 @@
     var metaContentTypesService = require('./metaContentTypesService');
     var rvAttributesHelper = require('../helpers/rvAttributesHelper');
 
+    var customFieldService = require('./reports/customFieldService');
+    var attributeTypeService = require('./attributeTypeService');
+    var uiService = require('./uiService');
+
     module.exports = function () {
 
         var reportsEntityTypes = ['balance-report', 'pl-report', 'transaction-report'];
@@ -58,6 +62,9 @@
 
         var dynamicAttributesData = {};
 
+        var instrumentUserFieldsData = [];
+        var transactionUserFieldsData = [];
+
         function _getBalanceReportAttributes() {
 
             var result = [];
@@ -91,6 +98,8 @@
                 customItem.key = 'custom_fields.' + customItem.user_code;
                 customItem.name = 'Custom Field. ' + customItem.name;
 
+                return customItem
+
             });
 
             var portfolioDynamicAttrs = getDynamicAttributesByEntityType('portfolio');
@@ -104,8 +113,6 @@
             var instrumentDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
             var allocationDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(allocationDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             var linkedInstrumentDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(linkedInstrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
-
-            console.log('balanceAttrs', balanceAttrs);
 
             result = result.concat(balanceAttrs);
             result = result.concat(balanceMismatchAttrs);
@@ -135,7 +142,72 @@
 
             var result = [];
 
-            return result;
+            var balanceAttrs = rvAttributesHelper.getAllAttributesAsFlatList('reports.plreport', '', 'Balance', {maxDepth: 1});
+
+            var balanceMismatchAttrs = rvAttributesHelper.getAllAttributesAsFlatList('reports.plreportmismatch', '', 'Mismatch', {maxDepth: 1});
+
+            var balancePerformanceAttrs = rvAttributesHelper.getAllAttributesAsFlatList('reports.plreportperfomance', '', 'Perfomance', {maxDepth: 1});
+
+            var allocationAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
+
+            var instrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
+
+            var linkedInstrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
+
+            var accountAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
+
+            var portfolioAttrs = rvAttributesHelper.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
+
+            var strategy1attrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1', 'Strategy 1', {maxDepth: 1});
+
+            var strategy2attrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2', 'Strategy 2', {maxDepth: 1});
+
+            var strategy3attrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
+
+            var custom = getCustomFieldsByEntityType('pl-report').map(function (customItem) {
+
+                customItem.custom_field = Object.assign({}, customItem);
+
+                customItem.key = 'custom_fields.' + customItem.user_code;
+                customItem.name = 'Custom Field. ' + customItem.name;
+
+                return customItem
+
+            });
+
+            var portfolioDynamicAttrs = getDynamicAttributesByEntityType('portfolio');
+            var accountDynamicAttrs = getDynamicAttributesByEntityType('account');
+            var instrumentDynamicAttrs = getDynamicAttributesByEntityType('instrument');
+            var allocationDynamicAttrs = getDynamicAttributesByEntityType('instrument');
+            var linkedInstrumentDynamicAttrs = getDynamicAttributesByEntityType('instrument');
+
+            var portfolioDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
+            var accountDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account', 'Account');
+            var instrumentDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
+            var allocationDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(allocationDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
+            var linkedInstrumentDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(linkedInstrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
+
+            result = result.concat(balanceAttrs);
+            result = result.concat(balanceMismatchAttrs);
+            result = result.concat(balancePerformanceAttrs);
+            result = result.concat(allocationAttrs);
+            result = result.concat(instrumentAttrs);
+            result = result.concat(linkedInstrumentAttrs);
+            result = result.concat(accountAttrs);
+            result = result.concat(portfolioAttrs);
+            result = result.concat(strategy1attrs);
+            result = result.concat(strategy2attrs);
+            result = result.concat(strategy3attrs);
+
+            result = result.concat(custom);
+
+            result = result.concat(portfolioDynamicAttrsFormatted);
+            result = result.concat(accountDynamicAttrsFormatted);
+            result = result.concat(instrumentDynamicAttrsFormatted);
+            result = result.concat(allocationDynamicAttrsFormatted);
+            result = result.concat(linkedInstrumentDynamicAttrsFormatted);
+
+            return result
 
         }
 
@@ -143,7 +215,140 @@
 
             var result = [];
 
-            return result;
+            var transactionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
+
+            var complexTransactionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
+
+            var portfolioAttrs = rvAttributesHelper.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
+
+            var instrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
+
+            var responsibleAttrs = rvAttributesHelper.getAllAttributesAsFlatList('counterparties.responsible', 'responsible', 'Responsible', {maxDepth: 1});
+
+            var counterpartyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('counterparties.counterparty', 'counterparty', 'Counterparty', {maxDepth: 1});
+
+            // instruments
+
+            var linkedInstrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
+
+            var allocationBalanceAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation Balance', {maxDepth: 1});
+
+            var allocationPlAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation_pl', 'Allocation P&L', {maxDepth: 1});
+
+            // currencies
+
+            var transactionCurrencyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('currencies.currency', 'transaction_currency', 'Transaction currency', {maxDepth: 1});
+
+            var settlementCurrencyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('currencies.currency', 'settlement_currency', 'Settlement currency', {maxDepth: 1});
+
+            // accounts
+
+            var accountPositionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account_position', 'Account Position', {maxDepth: 1});
+
+            var accountCashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account_cash', 'Account Cash', {maxDepth: 1});
+
+            var accountInterimAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account_interim', 'Account Interim', {maxDepth: 1});
+
+            // strategies
+
+            var strategy1cashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_cash', 'Strategy 1 Cash', {maxDepth: 1});
+
+            var strategy1positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_position', 'Strategy 1 Position', {maxDepth: 1});
+
+            var strategy2cashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_cash', 'Strategy 2 Cash', {maxDepth: 1});
+
+            var strategy2positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_position', 'Strategy 2 Position', {maxDepth: 1});
+
+            var strategy3cashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_cash', 'Strategy 3 Cash', {maxDepth: 1});
+
+            var strategy3positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_position', 'Strategy 3 Position', {maxDepth: 1});
+
+
+            var custom = getCustomFieldsByEntityType('transaction-report').map(function (customItem) {
+
+                customItem.custom_field = Object.assign({}, customItem);
+
+                customItem.key = 'custom_fields.' + customItem.user_code;
+                customItem.name = 'Custom Field. ' + customItem.name;
+
+                return customItem
+
+            });
+
+
+            var portfolioDynamicAttrs = getDynamicAttributesByEntityType('portfolio');
+            var complexTransactionDynamicAttrs = getDynamicAttributesByEntityType('complex-transaction');
+            var transactionTypeDynamicAttrs = getDynamicAttributesByEntityType('transaction-type');
+            var responsibleDynamicAttrs = getDynamicAttributesByEntityType('responsible');
+            var counterpartyDynamicAttrs = getDynamicAttributesByEntityType('counterparty');
+
+            var instrumentDynamicAttrs = getDynamicAttributesByEntityType('instrument');
+            var linkedInstrumentDynamicAttrs = getDynamicAttributesByEntityType('instrument');
+            var allocationBalanceDynamicAttrs = getDynamicAttributesByEntityType('instrument');
+            var allocationPlDnymaicAttrs = getDynamicAttributesByEntityType('instrument');
+
+            var accountPositionDynamicAttrs = getDynamicAttributesByEntityType('account');
+            var accountCashDynamicAttrs = getDynamicAttributesByEntityType('account');
+            var accountInterimDynamicAttrs = getDynamicAttributesByEntityType('account');
+
+            var portfolioDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
+            var complexTransactionDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(complexTransactionDynamicAttrs, 'transactions.complextransaction', 'complex_transaction', 'Complex Transaction');
+            var transactionTypeDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(transactionTypeDynamicAttrs, 'transactions.transactiontype', 'transaction_type', 'Transaction Type');
+            var responsibleDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(responsibleDynamicAttrs, 'counterparties.responsible', 'responsible', 'Responsible');
+            var counterpartyDynmicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(counterpartyDynamicAttrs, 'counterparties.counterparty', 'counterparty', 'Counterparty');
+
+            var instrumentDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
+            var linkedInstrumentDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(linkedInstrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
+            var allocationBalanceDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(allocationBalanceDynamicAttrs, 'instruments.instrument', 'allocation_balance', 'Allocation Balance');
+            var allocationPlDnymaicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(allocationPlDnymaicAttrs, 'instruments.instrument', 'allocation_pl', 'Allocation PL');
+
+            var accountPositionDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(accountPositionDynamicAttrs, 'accounts.account', 'account_position', 'Account Position');
+            var accountCashDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(accountCashDynamicAttrs, 'accounts.account', 'account_cash', 'Account Cash');
+            var accountInterimDynamicAttrsFormatted = rvAttributesHelper.formatAttributeTypes(accountInterimDynamicAttrs, 'accounts.account', 'account_interim', 'Account Interim');
+
+            result = result.concat(transactionAttrs);
+            result = result.concat(complexTransactionAttrs);
+            result = result.concat(portfolioAttrs);
+            result = result.concat(instrumentAttrs);
+            result = result.concat(responsibleAttrs);
+            result = result.concat(counterpartyAttrs);
+
+            result = result.concat(linkedInstrumentAttrs);
+            result = result.concat(allocationBalanceAttrs);
+            result = result.concat(allocationPlAttrs);
+
+            result = result.concat(transactionCurrencyAttrs);
+            result = result.concat(settlementCurrencyAttrs);
+
+            result = result.concat(accountPositionAttrs);
+            result = result.concat(accountCashAttrs);
+            result = result.concat(accountInterimAttrs);
+
+            result = result.concat(strategy1cashAttrs);
+            result = result.concat(strategy1positionAttrs);
+            result = result.concat(strategy2cashAttrs);
+            result = result.concat(strategy2positionAttrs);
+            result = result.concat(strategy3cashAttrs);
+            result = result.concat(strategy3positionAttrs);
+
+            result = result.concat(custom);
+
+            result = result.concat(portfolioDynamicAttrsFormatted);
+            result = result.concat(complexTransactionDynamicAttrsFormatted);
+            result = result.concat(transactionTypeDynamicAttrsFormatted);
+            result = result.concat(responsibleDynamicAttrsFormatted);
+            result = result.concat(counterpartyDynmicAttrsFormatted);
+
+            result = result.concat(instrumentDynamicAttrsFormatted);
+            result = result.concat(linkedInstrumentDynamicAttrsFormatted);
+            result = result.concat(allocationBalanceDynamicAttrsFormatted);
+            result = result.concat(allocationPlDnymaicAttrsFormatted);
+
+            result = result.concat(accountPositionDynamicAttrsFormatted);
+            result = result.concat(accountCashDynamicAttrsFormatted);
+            result = result.concat(accountInterimDynamicAttrsFormatted);
+
+            return result
 
         }
 
@@ -215,13 +420,67 @@
             return result;
         }
 
+        function getInstrumentUserFields() {
+
+            if (instrumentUserFieldsData){
+                return instrumentUserFieldsData
+            }
+
+            return []
+
+        }
+
+        function getTransactionUserFields() {
+
+            if (transactionUserFieldsData){
+                return transactionUserFieldsData
+            }
+
+            return []
+
+        }
+
         function downloadAllAttributesByEntityType(entityType) {
 
             return new Promise(function (resolve, reject) {
 
                 var result = [];
 
-                resolve(result);
+                var promises = [];
+
+
+                if (reportsEntityTypes.indexOf(entityType) === -1) {
+
+                    promises.push(downloadDynamicAttributesByEntityType(entityType))
+
+                } else {
+
+                    promises.push(downloadCustomFieldsByEntityType(entityType));
+                    promises.push(downloadDynamicAttributesByEntityType('portfolio'));
+                    promises.push(downloadDynamicAttributesByEntityType('account'));
+                    promises.push(downloadDynamicAttributesByEntityType('instrument'));
+
+                    if(entityType === 'transaction-report') {
+
+                        promises.push(downloadDynamicAttributesByEntityType('responsible'));
+                        promises.push(downloadDynamicAttributesByEntityType('counterparty'));
+                        promises.push(downloadDynamicAttributesByEntityType('transaction-type'));
+                        promises.push(downloadDynamicAttributesByEntityType('complex-transaction'));
+
+                    }
+
+
+                }
+
+                Promise.all(promises).then(function (data) {
+
+                    result = data;
+
+                    resolve(result);
+
+                })
+
+
 
             })
 
@@ -233,7 +492,17 @@
 
                 var result = [];
 
-                resolve(result)
+                customFieldService.getList(entityType).then(function (data) {
+
+                    result = data.results;
+
+                    customFieldsData[entityType] = result;
+
+                    resolve(result)
+
+                });
+
+
 
             })
 
@@ -244,22 +513,83 @@
 
                 var result = [];
 
-                resolve(result)
+                attributeTypeService.getList(entityType).then(function (data) {
+
+                    result = data.results;
+
+                    dynamicAttributesData[entityType] = result;
+
+                    resolve(result)
+
+                });
+
+
             })
+        }
+
+        function downloadInstrumentUserFields() {
+
+            return new Promise(function (resolve, reject) {
+
+                var result = [];
+
+                uiService.getInstrumentFieldList().then(function (data) {
+
+                    result = data.results;
+
+                    instrumentUserFieldsData = result;
+
+                    resolve(result)
+
+                });
+
+
+
+            })
+
+        }
+
+        function downloadTransactionUserFields() {
+
+            return new Promise(function (resolve, reject) {
+
+                var result = [];
+
+                uiService.getTransactionFieldList().then(function (data) {
+
+                    result = data.results;
+
+                    transactionUserFieldsData = result;
+
+                    resolve(result)
+
+                });
+
+
+
+            })
+
         }
 
         return {
 
-            // Remember! Download Custom Fields and Dynamic Attributes before .get() them
+            // Remember! Download Custom Fields and Dynamic Attributes and User Fields before .get() them
 
             downloadAllAttributesByEntityType: downloadAllAttributesByEntityType,
 
             downloadCustomFieldsByEntityType: downloadCustomFieldsByEntityType,
             downloadDynamicAttributesByEntityType: downloadDynamicAttributesByEntityType,
 
+            downloadInstrumentUserFields: downloadInstrumentUserFields,
+            downloadTransactionUserFields: downloadTransactionUserFields,
+
             // Get method belows
 
             getAllAttributesByEntityType: getAllAttributesByEntityType,
+
+
+            getInstrumentUserFields: getInstrumentUserFields,
+            getTransactionUserFields: getTransactionUserFields,
 
             getEntityAttributesByEntityType: getEntityAttributesByEntityType,
             getCustomFieldsByEntityType: getCustomFieldsByEntityType,

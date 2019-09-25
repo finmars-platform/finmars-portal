@@ -17,7 +17,7 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var rvAttributesHelper = require('../../helpers/rvAttributesHelper');
 
-    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
+    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService) {
 
         var vm = this;
         vm.readyStatus = {content: false};
@@ -66,102 +66,98 @@
 
             vm.strategy3attrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
 
-            uiService.getInstrumentFieldList().then(function (instrumentData) {
+            var instrumentUserFields = attributeDataService.getInstrumentUserFields();
 
-                instrumentData.results.forEach(function (field) {
+            instrumentUserFields.forEach(function (field) {
 
-                    vm.instrumentAttrs = vm.instrumentAttrs.map(function (entityAttr, index) {
+                vm.instrumentAttrs = vm.instrumentAttrs.map(function (entityAttr, index) {
 
-                        if (entityAttr.key === 'instrument.' + field.key) {
-                            entityAttr.name = 'Instrument. ' + field.name;
-                        }
+                    if (entityAttr.key === 'instrument.' + field.key) {
+                        entityAttr.name = 'Instrument. ' + field.name;
+                    }
 
-                        return entityAttr;
-
-                    });
-
-                    vm.allocationAttrs = vm.allocationAttrs.map(function (entityAttr, index) {
-
-                        if (entityAttr.key === 'allocation.' + field.key) {
-                            entityAttr.name = 'Allocation. ' + field.name;
-                        }
-
-                        return entityAttr;
-
-                    });
-
-                    vm.linkedInstrumentAttrs = vm.linkedInstrumentAttrs.map(function (entityAttr) {
-
-                        if (entityAttr.key === 'linked_instrument.' + field.key) {
-                            entityAttr.name = 'Linked Instrument. ' + field.name;
-                        };
-
-                        return entityAttr;
-
-                    });
-
+                    return entityAttr;
 
                 });
 
-                customFieldService.getList(vm.entityType).then(function (data) {
-                    vm.custom = data.results;
+                vm.allocationAttrs = vm.allocationAttrs.map(function (entityAttr, index) {
 
-                    vm.custom.forEach(function (customItem) {
+                    if (entityAttr.key === 'allocation.' + field.key) {
+                        entityAttr.name = 'Allocation. ' + field.name;
+                    }
 
-                        customItem.custom_field = Object.assign({}, customItem);
+                    return entityAttr;
 
-                        customItem.key = 'custom_fields.' + customItem.user_code;
-                        customItem.name = 'Custom Field. ' + customItem.name;
-
-                    });
-
-                    dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
-
-                        vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
-                        vm.accountDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account', 'Account');
-                        vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
-                        vm.allocationDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation', 'Allocation');
-                        vm.linkedInstrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
-
-                        attrsList = attrsList.concat(vm.balanceAttrs);
-                        attrsList = attrsList.concat(vm.allocationAttrs);
-                        attrsList = attrsList.concat(vm.allocationDynamicAttrs);
-
-                        attrsList = attrsList.concat(vm.balancePerformanceAttrs);
-                        attrsList = attrsList.concat(vm.balanceMismatchAttrs);
-                        attrsList = attrsList.concat(vm.custom);
-
-                        attrsList = attrsList.concat(vm.instrumentAttrs);
-                        attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
-
-                        attrsList = attrsList.concat(vm.linkedInstrumentAttrs);
-                        attrsList = attrsList.concat(vm.linkedInstrumentDynamicAttrs);
-
-                        attrsList = attrsList.concat(vm.accountAttrs);
-                        attrsList = attrsList.concat(vm.accountDynamicAttrs);
-
-                        attrsList = attrsList.concat(vm.portfolioAttrs);
-                        attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
-
-                        attrsList = attrsList.concat(vm.strategy1attrs);
-                        attrsList = attrsList.concat(vm.strategy2attrs);
-                        attrsList = attrsList.concat(vm.strategy3attrs);
-
-                        vm.allAttributesList = attrsList;
-
-                        syncAttrs();
-                        getSelectedAttrs();
-
-                        vm.readyStatus.content = true;
-                        $scope.$apply();
-                    });
                 });
 
-            })
+                vm.linkedInstrumentAttrs = vm.linkedInstrumentAttrs.map(function (entityAttr) {
+
+                    if (entityAttr.key === 'linked_instrument.' + field.key) {
+                        entityAttr.name = 'Linked Instrument. ' + field.name;
+                    }
+
+                    return entityAttr;
+
+                });
+
+
+            });
+
+            vm.custom = attributeDataService.getCustomFieldsByEntityType(vm.entityType);
+
+            vm.custom = vm.custom.map(function (customItem) {
+
+                customItem.custom_field = Object.assign({}, customItem);
+
+                customItem.key = 'custom_fields.' + customItem.user_code;
+                customItem.name = 'Custom Field. ' + customItem.name;
+
+                return customItem
+
+            });
+
+            var portfolioDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('portfolio');
+            var accountDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('account');
+            var instrumentDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('instrument');
+
+            vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
+            vm.accountDynamicAttrs = rvAttributesHelper.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account', 'Account');
+            vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
+            vm.allocationDynamicAttrs = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
+            vm.linkedInstrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
+
+            attrsList = attrsList.concat(vm.balanceAttrs);
+            attrsList = attrsList.concat(vm.allocationAttrs);
+            attrsList = attrsList.concat(vm.allocationDynamicAttrs);
+
+            attrsList = attrsList.concat(vm.balancePerformanceAttrs);
+            attrsList = attrsList.concat(vm.balanceMismatchAttrs);
+            attrsList = attrsList.concat(vm.custom);
+
+            attrsList = attrsList.concat(vm.instrumentAttrs);
+            attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
+
+            attrsList = attrsList.concat(vm.linkedInstrumentAttrs);
+            attrsList = attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+
+            attrsList = attrsList.concat(vm.accountAttrs);
+            attrsList = attrsList.concat(vm.accountDynamicAttrs);
+
+            attrsList = attrsList.concat(vm.portfolioAttrs);
+            attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
+
+            attrsList = attrsList.concat(vm.strategy1attrs);
+            attrsList = attrsList.concat(vm.strategy2attrs);
+            attrsList = attrsList.concat(vm.strategy3attrs);
+
+            vm.allAttributesList = attrsList;
+
+            syncAttrs();
+            getSelectedAttrs();
+
+            vm.readyStatus.content = true;
 
         };
-
-        vm.getAttributes();
 
         vm.checkAreaAccessibility = function (item, type) {
             if (type === 'group') {
@@ -849,6 +845,8 @@
         };
 
         var init = function () {
+
+            vm.getAttributes();
 
             entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
