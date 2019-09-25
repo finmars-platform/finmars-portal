@@ -957,7 +957,7 @@
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html';
                     break;
             }
-            ;
+
 
             if (contrName && templateUrl) {
                 $mdDialog.show({
@@ -975,7 +975,7 @@
 
                 });
             }
-            ;
+
 
         };
 
