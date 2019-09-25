@@ -45,16 +45,18 @@
             "strategy-1-group": require('../models/strategy1groupPropsModel').getAttributes(),
             "strategy-2-group": require('../models/strategy2groupPropsModel').getAttributes(),
             "strategy-3-group": require('../models/strategy3groupPropsModel').getAttributes(),
+            "complex-transaction": require('../models/complexTransactionPropsModel').getAttributes(),
+            "instrument-scheme": require('../models/instrumentSchemePropsModel').getAttributes(),
+
             "balance-report": require('../models/balanceReportPropsModel').getAttributes(),
-            'report-addon-performance': require('../models/reportAddonPerformancePropsModel').getAttributes(),
-            'report-addon-performance-pnl': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
-            'report-mismatch': require('../models/reportMismatchPropsModel').getAttributes(),
+            'balance-report-perfomance': require('../models/reportAddonPerformancePropsModel').getAttributes(),
+            'balance-report-mismatch': require('../models/reportMismatchPropsModel').getAttributes(),
             "pl-report": require('../models/pnlReportPropsModel').getAttributes(),
+            'pl-report-perfomance': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
+            'pl-report-mismatch': require('../models/reportMismatchPnlPropsModel').getAttributes(),
             "transaction-report": require('../models/transactionReportPropsModel').getAttributes(),
             "cash-flow-projection-report": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
             "performance-report": require('../models/performanceReportPropsModel').getAttributes(),
-            "complex-transaction": require('../models/complexTransactionPropsModel').getAttributes(),
-            "instrument-scheme": require('../models/instrumentSchemePropsModel').getAttributes()
         };
 
         var customFieldsData = {};
