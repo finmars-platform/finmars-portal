@@ -723,8 +723,26 @@
 
             });
 
+
+
             var mappingItems = assembleMappingsIntoArray();
             mappingItems = JSON.parse(angular.toJson(mappingItems));
+
+            mappingItems.forEach(function (entityItem) {
+
+                if (entityItem.active) {
+
+                    entityItem.content.forEach(function (item) {
+
+                        if (item.active) {
+
+                            vm.activeItemTotal = vm.activeItemTotal + 1;
+                        }
+                    })
+
+                }
+
+            });
 
             try {
 
