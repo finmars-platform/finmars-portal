@@ -14,11 +14,8 @@
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var customFieldService = require('../../services/reports/customFieldService');
-    var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
 
     var evDataHelper = require('../../helpers/ev-data.helper');
-
-    var rvAttributesHelper = require('../../helpers/rvAttributesHelper');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService) {
 
@@ -53,53 +50,53 @@
 
             //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
-            vm.transactionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
+            vm.transactionAttrs = attributeDataService.getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
 
-            vm.complexTransactionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
+            vm.complexTransactionAttrs = attributeDataService.getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
 
-            vm.portfolioAttrs = rvAttributesHelper.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
+            vm.portfolioAttrs = attributeDataService.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
 
-            vm.instrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
+            vm.instrumentAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
 
-            vm.responsibleAttrs = rvAttributesHelper.getAllAttributesAsFlatList('counterparties.responsible', 'responsible', 'Responsible', {maxDepth: 1});
+            vm.responsibleAttrs = attributeDataService.getAllAttributesAsFlatList('counterparties.responsible', 'responsible', 'Responsible', {maxDepth: 1});
 
-            vm.counterpartyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('counterparties.counterparty', 'counterparty', 'Counterparty', {maxDepth: 1});
+            vm.counterpartyAttrs = attributeDataService.getAllAttributesAsFlatList('counterparties.counterparty', 'counterparty', 'Counterparty', {maxDepth: 1});
 
             // instruments
 
-            vm.linkedInstrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
+            vm.linkedInstrumentAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
 
-            vm.allocationBalanceAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation Balance', {maxDepth: 1});
+            vm.allocationBalanceAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation Balance', {maxDepth: 1});
 
-            vm.allocationPlAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation_pl', 'Allocation P&L', {maxDepth: 1});
+            vm.allocationPlAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'allocation_pl', 'Allocation P&L', {maxDepth: 1});
 
             // currencies
 
-            vm.transactionCurrencyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('currencies.currency', 'transaction_currency', 'Transaction currency', {maxDepth: 1});
+            vm.transactionCurrencyAttrs = attributeDataService.getAllAttributesAsFlatList('currencies.currency', 'transaction_currency', 'Transaction currency', {maxDepth: 1});
 
-            vm.settlementCurrencyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('currencies.currency', 'settlement_currency', 'Settlement currency', {maxDepth: 1});
+            vm.settlementCurrencyAttrs = attributeDataService.getAllAttributesAsFlatList('currencies.currency', 'settlement_currency', 'Settlement currency', {maxDepth: 1});
 
             // accounts
 
-            vm.accountPositionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account_position', 'Account Position', {maxDepth: 1});
+            vm.accountPositionAttrs = attributeDataService.getAllAttributesAsFlatList('accounts.account', 'account_position', 'Account Position', {maxDepth: 1});
 
-            vm.accountCashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account_cash', 'Account Cash', {maxDepth: 1});
+            vm.accountCashAttrs = attributeDataService.getAllAttributesAsFlatList('accounts.account', 'account_cash', 'Account Cash', {maxDepth: 1});
 
-            vm.accountInterimAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account_interim', 'Account Interim', {maxDepth: 1});
+            vm.accountInterimAttrs = attributeDataService.getAllAttributesAsFlatList('accounts.account', 'account_interim', 'Account Interim', {maxDepth: 1});
 
             // strategies
 
-            vm.strategy1cashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_cash', 'Strategy 1 Cash', {maxDepth: 1});
+            vm.strategy1cashAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_cash', 'Strategy 1 Cash', {maxDepth: 1});
 
-            vm.strategy1positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_position', 'Strategy 1 Position', {maxDepth: 1});
+            vm.strategy1positionAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_position', 'Strategy 1 Position', {maxDepth: 1});
 
-            vm.strategy2cashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_cash', 'Strategy 2 Cash', {maxDepth: 1});
+            vm.strategy2cashAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_cash', 'Strategy 2 Cash', {maxDepth: 1});
 
-            vm.strategy2positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_position', 'Strategy 2 Position', {maxDepth: 1});
+            vm.strategy2positionAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_position', 'Strategy 2 Position', {maxDepth: 1});
 
-            vm.strategy3cashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_cash', 'Strategy 3 Cash', {maxDepth: 1});
+            vm.strategy3cashAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_cash', 'Strategy 3 Cash', {maxDepth: 1});
 
-            vm.strategy3positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_position', 'Strategy 3 Position', {maxDepth: 1});
+            vm.strategy3positionAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_position', 'Strategy 3 Position', {maxDepth: 1});
 
             var transactionUserFields = attributeDataService.getTransactionUserFields();
 
@@ -209,20 +206,20 @@
             var accountDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('account');
 
 
-            vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
-            vm.complexTransactionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(complexTransactionDynamicAttrs, 'transactions.complextransaction', 'complex_transaction', 'Complex Transaction');
-            vm.transactionTypeDynamicAttrs = rvAttributesHelper.formatAttributeTypes(transactionTypeDynamicAttrs, 'transactions.transactiontype', 'transaction_type', 'Transaction Type');
-            vm.responsibleDynamicAttrs = rvAttributesHelper.formatAttributeTypes(responsibleDynamicAttrs, 'counterparties.responsible', 'responsible', 'Responsible');
-            vm.counterpartyDynmicAttrs = rvAttributesHelper.formatAttributeTypes(counterpartyDynamicAttrs, 'counterparties.counterparty', 'counterparty', 'Counterparty');
+            vm.portfolioDynamicAttrs = attributeDataService.formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
+            vm.complexTransactionDynamicAttrs = attributeDataService.formatAttributeTypes(complexTransactionDynamicAttrs, 'transactions.complextransaction', 'complex_transaction', 'Complex Transaction');
+            vm.transactionTypeDynamicAttrs = attributeDataService.formatAttributeTypes(transactionTypeDynamicAttrs, 'transactions.transactiontype', 'transaction_type', 'Transaction Type');
+            vm.responsibleDynamicAttrs = attributeDataService.formatAttributeTypes(responsibleDynamicAttrs, 'counterparties.responsible', 'responsible', 'Responsible');
+            vm.counterpartyDynmicAttrs = attributeDataService.formatAttributeTypes(counterpartyDynamicAttrs, 'counterparties.counterparty', 'counterparty', 'Counterparty');
 
-            vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
-            vm.linkedInstrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
-            vm.allocationBalanceDynamicAttrs = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation_balance', 'Allocation Balance');
-            vm.allocationPlDnymaicAttrs = rvAttributesHelper.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation_pl', 'Allocation PL');
+            vm.instrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
+            vm.linkedInstrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
+            vm.allocationBalanceDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation_balance', 'Allocation Balance');
+            vm.allocationPlDnymaicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation_pl', 'Allocation PL');
 
-            vm.accountPositionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account_position', 'Account Position');
-            vm.accountCashDynamicAttrs = rvAttributesHelper.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account_cash', 'Account Cash');
-            vm.accountInterimDynamicAttrs = rvAttributesHelper.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account_interim', 'Account Interim');
+            vm.accountPositionDynamicAttrs = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account_position', 'Account Position');
+            vm.accountCashDynamicAttrs = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account_cash', 'Account Cash');
+            vm.accountInterimDynamicAttrs = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account_interim', 'Account Interim');
 
             //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
