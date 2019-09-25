@@ -16,6 +16,7 @@
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
+        var AttributeDataService = require('../../services/attributeDataService');
 
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
@@ -26,7 +27,10 @@
 
             var vm = this;
 
-            vm.listViewIsReady = false;
+            vm.readyStatus = {
+                attributes: false,
+                layout: false
+            };
 
             var doNotCheckLayoutChanges = false;
 
@@ -516,6 +520,43 @@
 
             };
 
+            vm.downloadAttributes = function(){
+
+                var promises = [];
+
+                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
+                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
+                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
+
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('account'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
+
+                if (vm.entityType === 'balance-report') {
+                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                }
+
+                if (vm.entityType === 'pl-report') {
+                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                }
+
+                if (vm.entityType === 'transaction-report') {
+                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                    promises.push(vm.attributeDataService.downloadTransactionUserFields());
+                }
+
+                Promise.all(promises).then(function (data) {
+
+                    vm.readyStatus.attributes = true;
+                    $scope.$apply();
+
+                })
+
+            };
 
             vm.getView = function () {
 
@@ -523,16 +564,18 @@
 
                 middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
-                vm.listViewIsReady = false;
+                vm.readyStatus.layout = false;
 
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
                 vm.splitPanelExchangeService = new SplitPanelExchangeService();
+                vm.attributeDataService = new AttributeDataService();
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 
+                vm.downloadAttributes();
                 vm.setEventListeners();
 
                 var setLayout = function (layout) {
@@ -576,7 +619,7 @@
 
                             Promise.all(datepickerExpressionsToSolve).then(function () {
 
-                                vm.listViewIsReady = true;
+                                vm.readyStatus.layout = true;
 
                                 rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
@@ -589,7 +632,7 @@
 
                         } else {
 
-                            vm.listViewIsReady = true;
+                            vm.readyStatus.layout = true;
 
                             rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
@@ -601,7 +644,7 @@
                         // < Check if there is need to solve report datepicker expression >
                     } else {
 
-                        vm.listViewIsReady = true;
+                        vm.readyStatus.layout = true;
 
                         rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
@@ -655,6 +698,7 @@
                 });
 
                 vm.getView();
+
 
             };
 

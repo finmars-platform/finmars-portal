@@ -14,6 +14,7 @@
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
+        var AttributeDataService = require('../../services/attributeDataService');
 
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
         var middlewareService = require('../../services/middlewareService');
@@ -23,6 +24,11 @@
             var vm = this;
 
             var doNotCheckLayoutChanges = false;
+
+            vm.readyStatus = {
+                attributes: false,
+                layout: false
+            };
 
             var setEventListeners = function () {
 
@@ -169,7 +175,6 @@
                                     if (res && res.res === 'agree') {
 
 
-
                                         var objects = vm.entityViewerDataService.getObjects();
 
                                         objects.forEach(function (obj) {
@@ -246,16 +251,19 @@
 
                 middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
-                vm.listViewIsReady = false;
+                vm.readyStatus.layout = false;
 
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
                 vm.splitPanelExchangeService = new SplitPanelExchangeService();
+                vm.attributeDataService = new AttributeDataService();
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.contentType = $scope.$parent.vm.contentType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
+
+                vm.downloadAttributes();
 
                 vm.entityViewerDataService.setRootEntityViewer(true);
 
@@ -271,7 +279,7 @@
                         uiService.updateListLayout(activeLayout.id, activeLayout);
 
                         vm.entityViewerDataService.setLayoutCurrentConfiguration(activeLayout, uiService, false);
-                        vm.listViewIsReady = true;
+                        vm.readyStatus.layout = true;
                         console.log('vm', vm);
                         evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                         $scope.$apply();
@@ -287,7 +295,7 @@
                             }
 
                             vm.entityViewerDataService.setLayoutCurrentConfiguration(defaultLayout, uiService, false);
-                            vm.listViewIsReady = true;
+                            vm.readyStatus.layout = true;
                             console.log('vm', vm);
                             evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                             $scope.$apply();
@@ -298,6 +306,33 @@
                     }
 
                 });
+
+            };
+
+            vm.downloadAttributes = function () {
+
+                var promises = [];
+
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType(vm.entityType));
+
+                if (vm.entityType === 'instrument') {
+                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                }
+
+                if (vm.entityType === 'complex-transaction') {
+                    promises.push(vm.attributeDataService.downloadTransactionUserFields());
+                }
+
+                if (vm.entityType === 'transaction-type') {
+                    promises.push(vm.attributeDataService.downloadTransactionUserFields());
+                }
+
+                Promise.all(promises).then(function (data) {
+
+                    vm.readyStatus.attributes = true;
+                    $scope.$apply();
+
+                })
 
             };
 
@@ -318,6 +353,7 @@
                 });
 
                 vm.getView();
+
 
             };
 
@@ -361,7 +397,8 @@
                         var additions = vm.entityViewerDataService.getAdditions();
                         if (additions.isOpen) {
                             spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
-                        };
+                        }
+                        ;
 
                         var layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
 
@@ -389,7 +426,7 @@
                                     // if split panel layout changed, save it
                                     if (spChangedLayout) {
 
-                                        var saveSPLayoutChanges = new Promise (function (spLayoutSaveRes, spLayoutSaveRej) {
+                                        var saveSPLayoutChanges = new Promise(function (spLayoutSaveRes, spLayoutSaveRej) {
 
                                             if (spChangedLayout.hasOwnProperty('id')) {
                                                 uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
@@ -405,12 +442,13 @@
 
                                         layoutsSavePromises.push(saveSPLayoutChanges);
 
-                                    };
+                                    }
+                                    ;
                                     // < if split panel layout changed, save it >
 
                                     if (!layoutIsUnchanged) {
 
-                                        var saveLayoutChanges = new Promise (function (saveLayoutRes, saveLayoutRej) {
+                                        var saveLayoutChanges = new Promise(function (saveLayoutRes, saveLayoutRej) {
 
                                             if (layoutCurrentConfig.hasOwnProperty('id')) {
 
@@ -448,12 +486,14 @@
 
                                                 });
 
-                                            };
+                                            }
+                                            ;
 
                                             layoutsSavePromises.push(saveLayoutChanges);
 
                                         });
-                                    };
+                                    }
+                                    ;
 
                                     Promise.all(layoutsSavePromises).then(function () {
                                         resolve(true);
@@ -480,7 +520,8 @@
                     } else {
                         removeTransitionWatcher();
                         resolve(true);
-                    };
+                    }
+                    ;
 
                 });
 
@@ -504,12 +545,14 @@
                 var additions = vm.entityViewerDataService.getAdditions();
                 if (additions.isOpen) {
                     spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
-                };
+                }
+                ;
 
                 if (!layoutIsUnchanged || spChangedLayout) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
-                };
+                }
+                ;
 
             };
 

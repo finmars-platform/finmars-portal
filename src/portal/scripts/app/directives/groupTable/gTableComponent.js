@@ -14,6 +14,7 @@
             restrict: 'AE',
             templateUrl: 'views/directives/groupTable/group-table-shell-view.html',
             scope: {
+                attributeDataService: '=',
                 evDataService: '=',
                 evEventService: '=',
                 spExchangeService: '='

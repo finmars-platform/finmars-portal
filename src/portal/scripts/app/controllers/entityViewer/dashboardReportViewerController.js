@@ -16,6 +16,7 @@
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
+        var AttributeDataService = require('../../services/attributeDataService');
 
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
@@ -31,7 +32,10 @@
 
             var vm = this;
 
-            vm.listViewIsReady = false;
+            vm.readyStatus = {
+                attributes: false,
+                layout: false
+            };
 
             vm.startupSettings = null;
             vm.dashboardDataService = null;
@@ -424,7 +428,7 @@
                 //
                 // }
 
-            }
+            };
 
             vm.initDashboardExchange = function () {
 
@@ -454,15 +458,54 @@
 
             };
 
+            vm.downloadAttributes = function(){
+
+                var promises = [];
+
+                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
+                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
+                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
+
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('account'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
+                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
+
+                if (vm.entityType === 'balance-report') {
+                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                }
+
+                if (vm.entityType === 'pl-report') {
+                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                }
+
+                if (vm.entityType === 'transaction-report') {
+                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                    promises.push(vm.attributeDataService.downloadTransactionUserFields());
+                }
+
+                Promise.all(promises).then(function (data) {
+
+                    vm.readyStatus.attributes = true;
+                    $scope.$apply();
+
+                })
+
+            };
+
             vm.getView = function () {
 
                 middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
-                vm.listViewIsReady = false;
+                vm.readyStatus.layout = false;
 
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
                 vm.splitPanelExchangeService = new SplitPanelExchangeService();
+                vm.attributeDataService = new AttributeDataService();
 
 
                 console.log('$scope.$parent.vm.startupSettings', $scope.$parent.vm.startupSettings);
@@ -474,6 +517,7 @@
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
                 vm.componentType = $scope.$parent.vm.componentType;
 
+                vm.downloadAttributes();
                 vm.setEventListeners();
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
@@ -546,7 +590,7 @@
 
                         vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                        vm.listViewIsReady = true;
+                        vm.readyStatus.layout = true;
 
                         $scope.$apply();
 
