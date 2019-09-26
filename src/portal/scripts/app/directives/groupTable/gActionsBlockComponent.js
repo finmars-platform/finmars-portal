@@ -384,7 +384,8 @@
                             case "transaction-report":
                                 entityType = type;
                                 break;
-                        };
+                        }
+                        ;
 
                         if (entityType) {
 
@@ -413,14 +414,16 @@
                                         additions.layoutId = res.data.listLayoutId;
                                     } else {
                                         delete additions.layoutId;
-                                    };
+                                    }
+                                    ;
 
                                     scope.evDataService.setSplitPanelStatus(true);
                                     scope.evDataService.setAdditions(additions);
                                     scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
                                     scope.currentAdditions = scope.evDataService.getAdditions();
 
-                                };
+                                }
+                                ;
 
                             });
 
@@ -438,7 +441,6 @@
                             scope.currentAdditions = scope.evDataService.getAdditions();
 
                         }
-
 
 
                     }
@@ -543,7 +545,8 @@
 
                                 return true;
 
-                            };
+                            }
+                            ;
 
                         };
 
@@ -607,7 +610,8 @@
 
                             } else {
                                 return false;
-                            };
+                            }
+                            ;
 
                         };
 
@@ -619,7 +623,8 @@
                             if (!isLayoutTheSame(currentGroups, originalGroups)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
+                            ;
 
                         });
 
@@ -631,7 +636,8 @@
                             if (!isLayoutTheSame(currentColumns, originalColumns)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
+                            ;
 
                         });
 
@@ -643,7 +649,8 @@
                             if (!isLayoutTheSame(currentColumns, originalColumns)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
+                            ;
 
                         });
 
@@ -656,7 +663,8 @@
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
                                 scope.$apply();
-                            };
+                            }
+                            ;
 
                         });
 
@@ -668,7 +676,8 @@
                             if (!isLayoutTheSame(currentFilters, originalFilters)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
+                            ;
 
                         });
 
@@ -680,7 +689,8 @@
                             if (!isLayoutTheSame(originAdditions, currentAdditions)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
+                            ;
 
                         });
 
@@ -692,7 +702,8 @@
                             if (!isLayoutTheSame(originInterfaceLayout, currentInterfaceLayout)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
+                            ;
 
                         });
 
@@ -705,7 +716,8 @@
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
                                 scope.$apply();
-                            };
+                            }
+                            ;
 
                         });
 
@@ -740,7 +752,8 @@
                                     scope.layoutChanged = true;
                                     removeChangesTrackingEventListeners();
 
-                                };
+                                }
+                                ;
 
                             });
 
@@ -756,7 +769,8 @@
 
                             });
 
-                        };
+                        }
+                        ;
 
                         var changesTrackingEvents = {
                             GROUPS_CHANGE: groupsChangeEventIndex,
@@ -785,7 +799,8 @@
                                     scope.evEventService.removeEventListener(evEvents[telName], changesTrackingEvents[telName]);
 
                                 }
-                            };
+                            }
+                            ;
                         };
                     }
 
@@ -966,7 +981,7 @@
 
                             };*/
 
-                            ecosystemDefaultService.getList().then(function(data) {
+                            ecosystemDefaultService.getList().then(function (data) {
 
                                 console.log('default values data', data);
                                 var defaultValues = data.results[0];
@@ -1088,7 +1103,8 @@
                         uiService.updateListLayout(listLayout.id, listLayout).then(function () {
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
                         });
-                    };
+                    }
+                    ;
 
                     $mdDialog.show({
                         controller: 'SaveLayoutDialogController as vm',
@@ -1252,6 +1268,65 @@
                             }
                         }
                     })
+
+                };
+
+                scope.toggleMatrix = function ($event) {
+
+                    var viewType = scope.evDataService.getViewType();
+                    var newViewType;
+
+                    if (viewType === 'matrix') {
+                        newViewType = 'report_viewer'
+                    } else {
+                        newViewType = 'matrix'
+                    }
+
+                    if (newViewType === 'matrix') {
+
+                        var settings = scope.evDataService.getViewSettings(newViewType);
+
+                        $mdDialog.show({
+                            controller: 'ReportViewerMatrixSettingsDialogController as vm',
+                            templateUrl: 'views/dialogs/report-viewer-matrix-settings-dialog-view.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                data: {
+                                    attributeDataService: scope.attributeDataService,
+                                    evDataService: scope.evDataService,
+                                    evEventService: scope.evEventService,
+                                    settings: settings
+                                }
+                            }
+                        }).then(function (res) {
+
+                            if (res.status === 'agree') {
+
+                                settings = res.data.settings;
+
+                                scope.evDataService.setViewType(newViewType);
+
+                                scope.evDataService.setViewSettings(newViewType, settings);
+
+                                scope.evEventService.dispatchEvent(evEvents.VIEW_TYPE_CHANGED)
+
+                            }
+
+                        })
+
+                    } else {
+
+                        scope.evDataService.setViewType(newViewType);
+                        scope.evDataService.setViewSettings(newViewType, {});
+
+                        scope.evEventService.dispatchEvent(evEvents.VIEW_TYPE_CHANGED)
+                    }
 
                 };
 

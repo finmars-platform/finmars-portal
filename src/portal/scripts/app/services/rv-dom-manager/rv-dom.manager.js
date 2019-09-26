@@ -634,6 +634,30 @@
         // rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
         rvScrollManager.setContentElemPaddingTop(paddingTop);
 
+
+        var areaWidth = 0;
+        var i;
+        var columnMargins = 16;
+        var dropNewFieldWidth = 400;
+        var columns = evDataService.getColumns();
+
+        for (i = 0; i < columns.length; i = i + 1) {
+
+            var columnWidth = parseInt(columns[i].style.width.split('px')[0], 10);
+
+            areaWidth = areaWidth + columnWidth + columnMargins;
+        }
+
+        var resultWidth = areaWidth + dropNewFieldWidth;
+
+        if (resultWidth < contentWrapElemWidth) {
+            resultWidth = contentWrapElemWidth;
+        }
+
+        console.log('resultWidth', resultWidth);
+
+        rvScrollManager.setContentElemWidth(resultWidth);
+
     };
 
     // var calculateScroll = function (elements, evDataService) {
