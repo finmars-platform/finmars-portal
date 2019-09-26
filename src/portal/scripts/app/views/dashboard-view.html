@@ -160,9 +160,9 @@
                                             ></dashboard-report-viewer-grand-total>
                                         </div>
 
-                                        <div data-ng-if="item.data.type == 'report_viewer_charts'"
+                                        <div data-ng-if="item.data.type == 'report_viewer_bars_chart'"
                                              class="height-100">
-                                            <dashboard-report-viewer-charts
+                                            <dashboard-report-viewer-bars-chart
                                                     class="height-100 display-block"
                                                     tab-number="tab.tab_number"
                                                     row-number="row.row_number"
@@ -170,7 +170,7 @@
                                                     item="item"
                                                     dashboard-data-service="vm.dashboardDataService"
                                                     dashboard-event-service="vm.dashboardEventService"
-                                            ></dashboard-report-viewer-charts>
+                                            ></dashboard-report-viewer-bars-chart>
                                         </div>
 
                                         <div data-ng-if="item.data.type == 'report_viewer_matrix'"

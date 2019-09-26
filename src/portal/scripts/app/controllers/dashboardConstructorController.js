@@ -198,7 +198,8 @@
                 case 'report_viewer_grand_total':
                     verboseName = 'Report Viewer Grand Total';
                     break;
-                case 'report_viewer_charts':
+                case 'report_viewer_bars_chart':
+                case 'report_viewer_pie_chart':
                     verboseName = 'Report Viewer Charts';
                     break;
                 case 'report_viewer_matrix':
@@ -823,7 +824,8 @@
                 locals: {
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService
+                    eventService: vm.dashboardConstructorEventService,
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (value) {
 
@@ -932,7 +934,8 @@
                     contrName = 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html';
                     break;
-                case 'report_viewer_charts':
+                case 'report_viewer_bars_chart':
+                case 'report_viewer_pie_chart':
                     contrName = 'DashboardConstructorReportViewerChartsComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-charts-component-dialog-view.html';
                     break;

@@ -5,7 +5,7 @@
     module.exports = function () {
         return {
             restriction: 'E',
-            templateUrl: 'views/directives/dashboard/dashboard-report-viewer-charts-view.html',
+            templateUrl: 'views/directives/dashboard/dashboard-report-viewer-bars-chart-view.html',
             scope: {
                 tabNumber: '=',
                 rowNumber: '=',

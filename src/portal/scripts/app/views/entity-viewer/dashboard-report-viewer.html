@@ -34,11 +34,11 @@
 
             </div>
 
-            <div ng-if="vm.componentType.data.type === 'report_viewer_charts'" class="height-100">
-                <report-viewer-charts class="height-100 display-block"
+            <div ng-if="vm.componentType.data.type === 'report_viewer_bars_chart'" class="height-100">
+                <report-viewer-bars-chart class="height-100 display-block"
                                       rv-charts-settings="vm.rvChartsSettings"
                                       ev-data-service="vm.entityViewerDataService"
-                                      ev-event-service="vm.entityViewerEventService"></report-viewer-charts>
+                                      ev-event-service="vm.entityViewerEventService"></report-viewer-bars-chart>
             </div>
 
             <div data-ng-if="vm.componentType.data.type === 'report_viewer_matrix'" class="height-100">
