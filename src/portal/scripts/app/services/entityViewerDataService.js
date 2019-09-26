@@ -123,6 +123,9 @@
                 step: 60, // rows to render
                 direction: null
             },
+            viewType: 'report_viewer',
+            viewSettings: {},
+            lastViewSettings: {},
             activeLayoutConfiguration: {},
             interfaceLayout: null,
             requestParameters: {},
@@ -975,6 +978,29 @@
             return splitPanelActiveLayoutId;
         }
 
+        function setViewType(viewType) {
+            return data.viewType = viewType;
+        }
+
+        function getViewType() {
+            return data.viewType
+        }
+
+        function setViewSettings(viewType, settings) {
+
+            data.lastViewSettings[viewType] = JSON.parse(JSON.stringify(data.viewSettings));
+
+            return data.viewSettings[viewType] = settings;
+        }
+
+        function getViewSettings(viewType) {
+            return data.viewSettings[viewType]
+        }
+
+        function getLastViewSettings(viewType) {
+            return data.lastViewSettings[viewType]
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1131,7 +1157,15 @@
             getLastActivatedRow: getLastActivatedRow,
 
             setUseFromAbove: setUseFromAbove,
-            getUseFromAbove: getUseFromAbove
+            getUseFromAbove: getUseFromAbove,
+
+            setViewType: setViewType,
+            getViewType: getViewType,
+
+            setViewSettings: setViewSettings,
+            getViewSettings: getViewSettings,
+
+            getLastViewSettings: getLastViewSettings
 
         }
     }

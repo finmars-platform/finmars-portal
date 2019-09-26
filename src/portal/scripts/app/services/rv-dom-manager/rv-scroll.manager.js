@@ -10,6 +10,7 @@
 
         var contentElem;
         var contentElemHeight;
+        var contentElemWidth;
         var contentElemPaddingTop;
 
         var contentWrapElem;
@@ -64,6 +65,16 @@
 
         function getContentElemHeight() {
             return contentElemHeight;
+        }
+
+        function setContentElemWidth(width) {
+
+            contentElemWidth = width;
+            contentElem.style.width = width + 'px';
+        }
+
+        function getContentElemWidth() {
+            return contentElemWidth;
         }
 
         function setContentElemPaddingTop(padding) {
@@ -170,6 +181,9 @@
 
             setContentElemPaddingTop: setContentElemPaddingTop,
             getContentElemPaddingTop: getContentElemPaddingTop,
+
+            setContentElemWidth: setContentElemWidth,
+            getContentElemWidth: getContentElemWidth,
 
             // content wrap elem
 

@@ -95,7 +95,7 @@
 
                 };
 
-                scope.checkNegative = function(val) {
+                scope.checkNegative = function (val) {
 
                     if (scope.matrixSettings.number_format) {
 
@@ -103,7 +103,7 @@
 
                             if (val % 1 === 0) { // check whether number is float or integer
                                 if (parseInt(val) < 0) {
-                                   return true
+                                    return true
                                 }
                             } else {
                                 if (parseFloat(val) < 0) {
@@ -118,7 +118,7 @@
 
                 };
 
-                scope.formatValue = function(val) {
+                scope.formatValue = function (val) {
 
                     if (scope.matrixSettings.number_format) {
 
@@ -257,6 +257,26 @@
 
                     scope.evDataService.setActiveObject({});
 
+
+                    // If we already have data (e.g. viewType changed) start
+                    var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+
+                    if (flatList.length > 1) {
+
+                        scope.processing = false;
+
+                        scope.createMatrix();
+
+                        setTimeout(function () {
+
+                            scope.$apply();
+
+                            scope.alignGrid();
+                        }, 0)
+                    }
+
+                    // If we already have data (e.g. viewType changed) end
+
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         scope.processing = false;
@@ -268,7 +288,7 @@
                         scope.alignGrid();
 
 
-                    })
+                    });
 
                 };
 
