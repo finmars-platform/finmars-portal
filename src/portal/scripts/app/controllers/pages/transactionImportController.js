@@ -404,11 +404,22 @@
 
                         if (vm.config.error_handling === 'break') {
 
-                            description = '<div>' +
-                                '<div>Rows total: ' + data.total_rows + '</div>' +
-                                '<div>Rows success import: ' + (data.error_row_index - 1) + '</div>' +
-                                '<div>Rows fail import: ' + error_rows.length + '</div>' +
-                                '</div><br/>';
+                            if (data.error_row_index) {
+                                description = '<div>' +
+                                    '<div>Rows total: ' + data.total_rows + '</div>' +
+                                    '<div>Rows success import: ' + (data.error_row_index - 1) + '</div>' +
+                                    '<div>Rows fail import: ' + error_rows.length + '</div>' +
+                                    '</div><br/>';
+                            } else {
+
+                                description = '<div>' +
+                                    '<div>Rows total: ' + data.total_rows + '</div>' +
+                                    '<div>Rows success import: ' + data.total_rows + '</div>' +
+                                    '<div>Rows fail import: ' + error_rows.length + '</div>' +
+                                    '</div><br/>';
+                            }
+
+
 
                         }
 
