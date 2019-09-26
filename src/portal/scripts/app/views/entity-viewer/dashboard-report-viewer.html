@@ -28,7 +28,7 @@
                     <i>Calculating</i>
                 </div>
                 <div data-ng-if="!vm.grandTotalProcessing">
-                    <div class="grand-total-value">{{vm.grandTotalValue}}</div>
+                    <div class="grand-total-value" ng-class="{'negative-red': vm.grandTotalNegative}">{{vm.grandTotalValue}}</div>
                 </div>
 
 

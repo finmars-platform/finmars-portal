@@ -3,6 +3,13 @@
   overflow: hidden;
   position: relative;
 
+  .dashboard-title {
+    padding: 10px;
+    font-size: 20px;
+    height: 48px;
+    box-sizing: border-box;
+  }
+
   .dashboard-loader {
     position: absolute;
     margin-top: -48px;
@@ -50,7 +57,7 @@
 
     &.bordered::after {
 
-      content: '';
+      //content: '';
 
       position: absolute;
       display: block;
@@ -123,12 +130,31 @@
   overflow: auto;
 
   .report-viewer-chart-holder {
-    position: relative;
     height: 100%;
     overflow: hidden;
   }
 
 };
+
+.control-clear-btn {
+  position: absolute;
+  right: 4px;
+  top: 1px;
+  margin: 0;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+  background: #ddd;
+  text-align: center;
+  padding: 0;
+  line-height: 24px;
+  border-radius: 12px;
+  z-index: 1;
+  &:hover {
+    opacity: .8;
+  }
+}
 
 .chart-tooltip1 {
   position: absolute;

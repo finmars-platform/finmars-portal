@@ -121,18 +121,23 @@
                                 if ((filterValues.min_value || filterValues.min_value === 0) &&
                                     (filterValues.max_value || filterValues.max_value === 0)) {
                                     return true;
-                                };
+                                }
+                                ;
 
                             } else if (Array.isArray(filterValues)) {
 
                                 if (filterValues[0] || filterValues[0] === 0) {
                                     return true;
-                                };
+                                }
+                                ;
 
-                            };
-                        };
+                            }
+                            ;
+                        }
+                        ;
 
-                    };
+                    }
+                    ;
 
                     return false;
                 };
@@ -171,13 +176,16 @@
 
                             frontEndFilters.push(filterOptions);
 
-                        };
-                    };
+                        }
+                        ;
+                    }
+                    ;
 
                     if (frontEndFilters.length > 0) {
                         var groups = scope.evDataService.getGroups();
                         flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
-                    };
+                    }
+                    ;
 
 
                     scope.evDataService.setFlatList(flatList);
@@ -344,7 +352,8 @@
                     if (!activeLayoutConfigIsSet) {
                         activeLayoutConfigIsSet = true;
                         scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
-                    };
+                    }
+                    ;
 
                 });
 
@@ -417,6 +426,21 @@
                         scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
                             cellContentOverflow();
                         });
+
+
+                        // If we already have data (e.g. viewType changed)
+                        var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+
+                        if (flatList.length > 1) {
+                            progressBar.style.display = 'none';
+                            if (isReport) {
+                                contentElem.style.opacity = '1';
+                            }
+                            updateTableContent();
+                        }
+
+                        //  If we already have data (e.g. viewType changed) end
+
 
                         /*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
                             cellContentOverflow();

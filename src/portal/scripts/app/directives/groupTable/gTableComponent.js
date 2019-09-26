@@ -28,6 +28,9 @@
                 scope.activeObjectsCount = scope.evDataService.getActiveObjectsCount();
                 scope.isReport = metaService.isReport(scope.entityType);
 
+                scope.viewType = scope.evDataService.getViewType();
+                scope.viewSettings = scope.evDataService.getViewSettings();
+
                 console.log('scope.components', scope.components);
 
                 var interfaceLayout = scope.evDataService.getInterfaceLayout();
@@ -117,6 +120,22 @@
                     scope.activeObject = scope.evDataService.getActiveObject();
 
                 });
+
+                scope.evEventService.addEventListener(evEvents.VIEW_TYPE_CHANGED, function () {
+
+                    scope.viewType = scope.evDataService.getViewType();
+                    scope.viewSettings = scope.evDataService.getViewSettings(scope.viewType);
+
+                    console.log('scope.viewType ', scope.viewType)
+                    console.log('scope.viewSettings', scope.viewSettings)
+
+                });
+
+                scope.init = function () {
+
+                };
+
+                scope.init();
 
             }
         }

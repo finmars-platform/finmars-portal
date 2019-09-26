@@ -6,12 +6,8 @@
     'use strict';
 
     var customFieldService = require('../../services/reports/customFieldService');
-    var rvAttributesHelper = require('../../helpers/rvAttributesHelper');
 
-    var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
-
-
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, data, attributeDataService) {
 
         var vm = this;
 
@@ -130,75 +126,75 @@
                 var result = [];
                 var attrsList = [];
 
-                var balanceAttrs = rvAttributesHelper.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
+                var balanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
 
-                var balanceMismatchAttrs = rvAttributesHelper.getAllAttributesAsFlatList('reports.balancereportmismatch', '', 'Mismatch', {maxDepth: 1});
+                var balanceMismatchAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereportmismatch', '', 'Mismatch', {maxDepth: 1});
 
-                var balancePerformanceAttrs = rvAttributesHelper.getAllAttributesAsFlatList('reports.balancereportperfomance', '', 'Perfomance', {maxDepth: 1});
+                var balancePerformanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereportperfomance', '', 'Perfomance', {maxDepth: 1});
 
-                var allocationAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
+                var allocationAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
 
-                var instrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
+                var instrumentAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
 
-                var accountAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
+                var accountAttrs = attributeDataService.getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
 
-                var portfolioAttrs = rvAttributesHelper.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
+                var portfolioAttrs = attributeDataService.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
 
-                var strategy1attrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1', 'Strategy 1', {maxDepth: 1});
+                var strategy1attrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1', 'Strategy 1', {maxDepth: 1});
 
-                var strategy2attrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2', 'Strategy 2', {maxDepth: 1});
+                var strategy2attrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2', 'Strategy 2', {maxDepth: 1});
 
-                var strategy3attrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
+                var strategy3attrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
 
-                dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
+                var portfolioDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('portfolio');
+                var accountDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('account');
+                var instrumentDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('instrument');
 
-                    var portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
-                    var accountDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account', 'Account');
-                    var instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
-                    var allocationDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation', 'Allocation');
+                var portfolioDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
+                var accountDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account', 'Account');
+                var instrumentDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
+                var allocationDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
 
-                    attrsList = attrsList.concat(balanceAttrs);
-                    attrsList = attrsList.concat(allocationAttrs);
-                    attrsList = attrsList.concat(allocationDynamicAttrs);
+                attrsList = attrsList.concat(balanceAttrs);
+                attrsList = attrsList.concat(allocationAttrs);
+                attrsList = attrsList.concat(allocationDynamicAttrsFormatted);
 
-                    attrsList = attrsList.concat(balancePerformanceAttrs);
-                    attrsList = attrsList.concat(balanceMismatchAttrs);
+                attrsList = attrsList.concat(balancePerformanceAttrs);
+                attrsList = attrsList.concat(balanceMismatchAttrs);
 
-                    attrsList = attrsList.concat(instrumentAttrs);
-                    attrsList = attrsList.concat(instrumentDynamicAttrs);
+                attrsList = attrsList.concat(instrumentAttrs);
+                attrsList = attrsList.concat(instrumentDynamicAttrsFormatted);
 
-                    attrsList = attrsList.concat(accountAttrs);
-                    attrsList = attrsList.concat(accountDynamicAttrs);
+                attrsList = attrsList.concat(accountAttrs);
+                attrsList = attrsList.concat(accountDynamicAttrsFormatted);
 
-                    attrsList = attrsList.concat(portfolioAttrs);
-                    attrsList = attrsList.concat(portfolioDynamicAttrs);
+                attrsList = attrsList.concat(portfolioAttrs);
+                attrsList = attrsList.concat(portfolioDynamicAttrsFormatted);
 
-                    attrsList = attrsList.concat(strategy1attrs);
-                    attrsList = attrsList.concat(strategy2attrs);
-                    attrsList = attrsList.concat(strategy3attrs);
+                attrsList = attrsList.concat(strategy1attrs);
+                attrsList = attrsList.concat(strategy2attrs);
+                attrsList = attrsList.concat(strategy3attrs);
 
-                    var captions = {
-                        10: 'String',
-                        20: 'Number',
-                        30: 'String',
-                        40: 'Date'
-                    };
+                var captions = {
+                    10: 'String',
+                    20: 'Number',
+                    30: 'String',
+                    40: 'Date'
+                };
 
 
-                    result = attrsList.map(function (attr) {
+                result = attrsList.map(function (attr) {
 
-                        return {
-                            "name": "Column: " + attr.name + ' (' + attr.key + ')',
-                            "description": "Column Name: " + attr.name + "\nReference (key ID): " + attr.key + '\nValue Type: ' + captions[attr.value_type],
-                            "groups": "input",
-                            "func": attr.key
-                        }
-
-                    });
-
-                    resolve(result);
+                    return {
+                        "name": "Column: " + attr.name + ' (' + attr.key + ')',
+                        "description": "Column Name: " + attr.name + "\nReference (key ID): " + attr.key + '\nValue Type: ' + captions[attr.value_type],
+                        "groups": "input",
+                        "func": attr.key
+                    }
 
                 });
+
+                resolve(result);
             })
 
         };
@@ -210,143 +206,146 @@
                 var result = [];
                 var attrsList = [];
 
-                var transactionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
+                var transactionAttrs = attributeDataService.getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
 
-                var complexTransactionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
+                var complexTransactionAttrs = attributeDataService.getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
 
-                var portfolioAttrs = rvAttributesHelper.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
+                var portfolioAttrs = attributeDataService.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
 
-                var instrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
+                var instrumentAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
 
-                var responsibleAttrs = rvAttributesHelper.getAllAttributesAsFlatList('counterparties.responsible', 'responsible', 'Responsible', {maxDepth: 1});
+                var responsibleAttrs = attributeDataService.getAllAttributesAsFlatList('counterparties.responsible', 'responsible', 'Responsible', {maxDepth: 1});
 
-                var counterpartyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('counterparties.counterparty', 'counterparty', 'Counterparty', {maxDepth: 1});
+                var counterpartyAttrs = attributeDataService.getAllAttributesAsFlatList('counterparties.counterparty', 'counterparty', 'Counterparty', {maxDepth: 1});
 
 
                 // instruments
 
-                var linkedInstrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
+                var linkedInstrumentAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
 
-                var allocationBalanceAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation balance', {maxDepth: 1});
+                var allocationBalanceAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation balance', {maxDepth: 1});
 
-                var allocationPlAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation_pl', 'Allocation P&L', {maxDepth: 1});
+                var allocationPlAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'allocation_pl', 'Allocation P&L', {maxDepth: 1});
 
                 // currencies
 
-                var transactionCurrencyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('currencies.currency', 'transaction_currency', 'Transaction currency', {maxDepth: 1});
+                var transactionCurrencyAttrs = attributeDataService.getAllAttributesAsFlatList('currencies.currency', 'transaction_currency', 'Transaction currency', {maxDepth: 1});
 
-                var settlementCurrencyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('currencies.currency', 'settlement_currency', 'Settlement currency', {maxDepth: 1});
+                var settlementCurrencyAttrs = attributeDataService.getAllAttributesAsFlatList('currencies.currency', 'settlement_currency', 'Settlement currency', {maxDepth: 1});
 
                 // accounts
 
-                var accountPositionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account_position', 'Account Position', {maxDepth: 1});
+                var accountPositionAttrs = attributeDataService.getAllAttributesAsFlatList('accounts.account', 'account_position', 'Account Position', {maxDepth: 1});
 
-                var accountCashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account_cash', 'Account Cash', {maxDepth: 1});
+                var accountCashAttrs = attributeDataService.getAllAttributesAsFlatList('accounts.account', 'account_cash', 'Account Cash', {maxDepth: 1});
 
-                var accountInterimAttrs = rvAttributesHelper.getAllAttributesAsFlatList('accounts.account', 'account_interim', 'Account Interim', {maxDepth: 1});
+                var accountInterimAttrs = attributeDataService.getAllAttributesAsFlatList('accounts.account', 'account_interim', 'Account Interim', {maxDepth: 1});
 
                 // strategies
 
-                var strategy1cashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_cash', 'Strategy 1 Cash', {maxDepth: 1});
+                var strategy1cashAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_cash', 'Strategy 1 Cash', {maxDepth: 1});
 
-                var strategy1positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_position', 'Strategy 1 Position', {maxDepth: 1});
+                var strategy1positionAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy1', 'strategy1_position', 'Strategy 1 Position', {maxDepth: 1});
 
-                var strategy2cashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_cash', 'Strategy 2 Cash', {maxDepth: 1});
+                var strategy2cashAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_cash', 'Strategy 2 Cash', {maxDepth: 1});
 
-                var strategy2positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_position', 'Strategy 2 Position', {maxDepth: 1});
+                var strategy2positionAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2_position', 'Strategy 2 Position', {maxDepth: 1});
 
-                var strategy3cashAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_cash', 'Strategy 3 Cash', {maxDepth: 1});
+                var strategy3cashAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_cash', 'Strategy 3 Cash', {maxDepth: 1});
 
-                var strategy3positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_position', 'Strategy 3 Position', {maxDepth: 1});
-
-
-                dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
-
-                    var portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
-                    var complexTransactionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['transactions.complextransaction'], 'transactions.complextransaction', 'complex_transaction', 'Complex Transaction');
-                    var responsibleDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.responsible'], 'counterparties.responsible', 'responsible', 'Responsible');
-                    var counterpartyDynmicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.counterparty'], 'counterparties.counterparty', 'counterparty', 'Counterparty');
-
-                    var instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
-                    var linkedInstrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
-                    var allocationBalanceDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation_balance', 'Allocation Balance');
-                    var allocationPlDnymaicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation_pl', 'Allocation PL');
-
-                    var accountPositionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_position', 'Account Position');
-                    var accountCashDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_cash', 'Account Cash');
-                    var accountInterimDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_interim', 'Account Interim');
+                var strategy3positionAttrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_position', 'Strategy 3 Position', {maxDepth: 1});
 
 
-                    attrsList = attrsList.concat(transactionAttrs);
-                    attrsList = attrsList.concat(complexTransactionAttrs);
-                    attrsList = attrsList.concat(portfolioAttrs);
-                    attrsList = attrsList.concat(instrumentAttrs);
-                    attrsList = attrsList.concat(responsibleAttrs);
-                    attrsList = attrsList.concat(counterpartyAttrs);
+                var portfolioDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('portfolio');
+                var accountDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('account');
+                var instrumentDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('instrument');
+                var responsibleDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('responsible');
+                var counterpartyDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('counterparty');
+                var complexTransactionDynamicAttrs = attributeDataService.getDynamicAttributesByEntityType('complex-transaction');
 
-                    attrsList = attrsList.concat(portfolioDynamicAttrs);
-                    attrsList = attrsList.concat(complexTransactionDynamicAttrs);
-                    attrsList = attrsList.concat(responsibleDynamicAttrs);
-                    attrsList = attrsList.concat(counterpartyDynmicAttrs);
+                var portfolioDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
+                var complexTransactionDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(complexTransactionDynamicAttrs, 'transactions.complextransaction', 'complex_transaction', 'Complex Transaction');
+                var responsibleDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(responsibleDynamicAttrs, 'counterparties.responsible', 'responsible', 'Responsible');
+                var counterpartyDynmicAttrsFormatted = attributeDataService.formatAttributeTypes(counterpartyDynamicAttrs, 'counterparties.counterparty', 'counterparty', 'Counterparty');
 
+                var instrumentDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
+                var linkedInstrumentDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
+                var allocationBalanceDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation_balance', 'Allocation Balance');
+                var allocationPlDnymaicAttrsFormatted = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation_pl', 'Allocation PL');
 
-                    // instruments
-
-                    attrsList = attrsList.concat(linkedInstrumentAttrs);
-                    attrsList = attrsList.concat(allocationBalanceAttrs);
-                    attrsList = attrsList.concat(allocationPlAttrs);
-
-                    attrsList = attrsList.concat(instrumentDynamicAttrs);
-                    attrsList = attrsList.concat(linkedInstrumentDynamicAttrs);
-                    attrsList = attrsList.concat(allocationBalanceDynamicAttrs);
-                    attrsList = attrsList.concat(allocationPlDnymaicAttrs);
-
-                    // currencies
-
-                    attrsList = attrsList.concat(transactionCurrencyAttrs);
-                    attrsList = attrsList.concat(settlementCurrencyAttrs);
-
-                    // accounts
-
-                    attrsList = attrsList.concat(accountPositionAttrs);
-                    attrsList = attrsList.concat(accountCashAttrs);
-                    attrsList = attrsList.concat(accountInterimAttrs);
-
-                    attrsList = attrsList.concat(accountPositionDynamicAttrs);
-                    attrsList = attrsList.concat(accountCashDynamicAttrs);
-                    attrsList = attrsList.concat(accountInterimDynamicAttrs);
-
-                    // strategies
-
-                    attrsList = attrsList.concat(strategy1cashAttrs);
-                    attrsList = attrsList.concat(strategy1positionAttrs);
-                    attrsList = attrsList.concat(strategy2cashAttrs);
-                    attrsList = attrsList.concat(strategy2positionAttrs);
-                    attrsList = attrsList.concat(strategy3cashAttrs);
-                    attrsList = attrsList.concat(strategy3positionAttrs);
-
-                    var captions = {
-                        10: 'String',
-                        20: 'Number',
-                        30: 'String',
-                        40: 'Date'
-                    };
+                var accountPositionDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account_position', 'Account Position');
+                var accountCashDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account_cash', 'Account Cash');
+                var accountInterimDynamicAttrsFormatted = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account_interim', 'Account Interim');
 
 
-                    result = attrsList.map(function (attr) {
+                attrsList = attrsList.concat(transactionAttrs);
+                attrsList = attrsList.concat(complexTransactionAttrs);
+                attrsList = attrsList.concat(portfolioAttrs);
+                attrsList = attrsList.concat(instrumentAttrs);
+                attrsList = attrsList.concat(responsibleAttrs);
+                attrsList = attrsList.concat(counterpartyAttrs);
 
-                        return {
-                            "name": "Column: " + attr.name + ' (' + attr.key + ')',
-                            "description": "Column Name: " + attr.name + "\nReference (key ID): " + attr.key + '\nValue Type: ' + captions[attr.value_type],
-                            "groups": "input",
-                            "func": attr.key
-                        }
+                attrsList = attrsList.concat(portfolioDynamicAttrsFormatted);
+                attrsList = attrsList.concat(complexTransactionDynamicAttrsFormatted);
+                attrsList = attrsList.concat(responsibleDynamicAttrsFormatted);
+                attrsList = attrsList.concat(counterpartyDynmicAttrsFormatted);
 
-                    });
 
-                    resolve(result);
+                // instruments
+
+                attrsList = attrsList.concat(linkedInstrumentAttrs);
+                attrsList = attrsList.concat(allocationBalanceAttrs);
+                attrsList = attrsList.concat(allocationPlAttrs);
+
+                attrsList = attrsList.concat(instrumentDynamicAttrsFormatted);
+                attrsList = attrsList.concat(linkedInstrumentDynamicAttrsFormatted);
+                attrsList = attrsList.concat(allocationBalanceDynamicAttrsFormatted);
+                attrsList = attrsList.concat(allocationPlDnymaicAttrsFormatted);
+
+                // currencies
+
+                attrsList = attrsList.concat(transactionCurrencyAttrs);
+                attrsList = attrsList.concat(settlementCurrencyAttrs);
+
+                // accounts
+
+                attrsList = attrsList.concat(accountPositionAttrs);
+                attrsList = attrsList.concat(accountCashAttrs);
+                attrsList = attrsList.concat(accountInterimAttrs);
+
+                attrsList = attrsList.concat(accountPositionDynamicAttrsFormatted);
+                attrsList = attrsList.concat(accountCashDynamicAttrsFormatted);
+                attrsList = attrsList.concat(accountInterimDynamicAttrsFormatted);
+
+                // strategies
+
+                attrsList = attrsList.concat(strategy1cashAttrs);
+                attrsList = attrsList.concat(strategy1positionAttrs);
+                attrsList = attrsList.concat(strategy2cashAttrs);
+                attrsList = attrsList.concat(strategy2positionAttrs);
+                attrsList = attrsList.concat(strategy3cashAttrs);
+                attrsList = attrsList.concat(strategy3positionAttrs);
+
+                var captions = {
+                    10: 'String',
+                    20: 'Number',
+                    30: 'String',
+                    40: 'Date'
+                };
+
+
+                result = attrsList.map(function (attr) {
+
+                    return {
+                        "name": "Column: " + attr.name + ' (' + attr.key + ')',
+                        "description": "Column Name: " + attr.name + "\nReference (key ID): " + attr.key + '\nValue Type: ' + captions[attr.value_type],
+                        "groups": "input",
+                        "func": attr.key
+                    }
 
                 });
+
+                resolve(result);
 
             })
 
@@ -391,6 +390,8 @@
 
 
         vm.init = function () {
+
+
 
             vm.getInputFunctions(vm.entityType).then(function (data) {
 

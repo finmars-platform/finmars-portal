@@ -45,25 +45,33 @@
 
             <div class="m-t-16 m-b-16">
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Attribute</label>
-                    <md-select data-ng-model="vm.item.settings.grand_total_column"
-                               md-on-close="searchTerm = ''"
-                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                        <md-select-header>
-                            <input data-ng-model="searchTerm"
-                                   type="search"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern select-input-filter"
-                                   ng-keydown="$event.stopPropagation()">
-                        </md-select-header>
-                        <md-option
-                                data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: searchTerm} track by attribute.key "
-                                ng-value="attribute.key">
-                            {{attribute.name}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>
+                <div layout="row">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Attribute</label>
+                        <md-select data-ng-model="vm.item.settings.grand_total_column"
+                                   md-on-close="searchTerm = ''"
+                                   ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+                            <md-option
+                                    data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: searchTerm} track by attribute.key "
+                                    ng-value="attribute.key">
+                                {{attribute.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-button class="md-raised md-primary" ng-click="vm.openNumberFormatSettings($event)" style="margin-right:20px;">
+                        Format Settings
+                    </md-button>
+
+                </div>
 
             </div>
 

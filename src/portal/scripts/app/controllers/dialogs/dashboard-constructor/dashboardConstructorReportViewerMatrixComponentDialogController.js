@@ -57,6 +57,32 @@
 
         };
 
+        vm.openNumberFormatSettings = function($event) {
+
+            $mdDialog.show({
+                controller: 'NumberFormatSettingsDialogController as vm',
+                templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    data: {
+                        settings: vm.item.settings.number_format
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.item.settings.number_format = res.data.settings;
+
+                    console.log(res)
+                }
+
+            });
+
+        };
+
         vm.reportTypeChange = function(){
 
             vm.item.settings.layout = null;
@@ -86,7 +112,7 @@
 
             vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
 
-            vm.numericAttributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type).filter(function (item) {
+            vm.numericAttributes = vm.attributes.filter(function (item) {
                 return item.value_type === 20;
             });
 
