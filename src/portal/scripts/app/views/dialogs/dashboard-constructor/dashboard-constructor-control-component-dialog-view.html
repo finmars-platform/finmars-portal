@@ -23,18 +23,34 @@
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block" style="height: 58px" data-ng-if="vm.item.settings.value_type == 100">
-                <label>Content Type</label>
-                <md-select data-ng-model="vm.item.settings.content_type">
-                    <md-option value="{{contentType.key}}" data-ng-repeat="contentType in vm.contentTypes">
-                        {{contentType.name}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
+            <div data-ng-if="vm.item.settings.value_type == 100" layout="row">
+
+                <md-input-container class="md-block" style="height: 58px" >
+                    <label>Content Type</label>
+                    <md-select data-ng-model="vm.item.settings.content_type">
+                        <md-option value="{{contentType.key}}" data-ng-repeat="contentType in vm.contentTypes">
+                            {{contentType.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+                <div>
+
+                    <md-input-container style="height: 58px">
+
+                        <md-checkbox data-ng-model="vm.item.settings.multiple">Multiple Select</md-checkbox>
+
+                    </md-input-container>
+
+                </div>
+
+            </div>
+
+
 
             <md-input-container style="height: 58px">
 
-                <md-checkbox data-ng-model="vm.item.settings.auto_refresh" aria-label="member permission">Trigger Refresh on Value Change</md-checkbox>
+                <md-checkbox data-ng-model="vm.item.settings.auto_refresh">Trigger Refresh on Value Change</md-checkbox>
 
             </md-input-container>
 

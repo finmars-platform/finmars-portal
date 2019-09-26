@@ -40,6 +40,7 @@
                 <label data-ng-bind="item.data.name"></label>
                 <md-select md-on-close="searchTerm = ''"
                            data-ng-change="valueChanged()"
+                           multiple="item.data.settings.multiple"
                            data-ng-model="item.data.store.value"
                            md-on-open="getData()"
                            md-container-class="common-select-container">
@@ -64,8 +65,17 @@
 
         <div data-ng-if="item.data.settings.content_type != 'currencies.currency' && item.data.settings.content_type != 'instruments.pricingpolicy'">
 
-            <entity-search-select item="item.data.store.value" label="item.data.name" input-text="item.data.store.name"
+            <entity-search-select data-ng-if="!item.data.settings.multiple" item="item.data.store.value" label="item.data.name" input-text="item.data.store.name"
                                   entity-type="entityType" data-callback="valueChanged()"></entity-search-select>
+
+            <!--<two-fields-multiselect data-ng-if="item.data.settings.multiple"-->
+                                    <!--selected-items="item.data.store.value"-->
+                                    <!--ng-change="valueChanged()"-->
+                                    <!--get-data-method="vm.getStrategies2(vm.optionsForMultiselect)"-->
+                                    <!--data-title="item.data.store.name"-->
+                                    <!--nothing-selected-text="Off"-->
+                                    <!--name-property="name"-->
+                                    <!--class="table-filter-input-container"></two-fields-multiselect>-->
 
         </div>
 

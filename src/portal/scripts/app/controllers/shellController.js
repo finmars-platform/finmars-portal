@@ -93,8 +93,8 @@
 
         };
 
-        usersService.getList().then(function (data) {
-            vm.user = data.results[0];
+        usersService.getMe().then(function (data) {
+            vm.user = data;
             $scope.$apply();
         });
 
