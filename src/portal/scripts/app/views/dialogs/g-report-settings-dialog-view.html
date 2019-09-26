@@ -443,6 +443,13 @@
                                 </md-checkbox>
                             </md-input-container>
 
+
+                            <md-input-container data-ng-if="vm.entityType == 'pl-report'">
+                                <md-checkbox data-ng-model="vm.reportOptions.allocation_detailing">
+                                    Show allocation details
+                                </md-checkbox>
+                            </md-input-container>
+
                         </div>
 
                         <h2>Market Value/Exposure % calculation grouping</h2>
