@@ -537,7 +537,7 @@
                     };
                 };
 
-                if (vm.componentType.data.type === 'report_viewer_charts') {
+                if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
                         abscissa: vm.componentType.data.settings.abscissa,
                         ordinate: vm.componentType.data.settings.ordinate,

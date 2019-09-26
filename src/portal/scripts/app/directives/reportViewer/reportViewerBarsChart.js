@@ -9,7 +9,7 @@
     module.exports = function (d3) {
         return {
             restriction: 'E',
-            templateUrl: 'views/directives/reportViewer/report-viewer-charts-view.html',
+            templateUrl: 'views/directives/reportViewer/report-viewer-bars-chart-view.html',
             scope: {
                 rvChartsSettings: '=',
                 evDataService: '=',
@@ -20,6 +20,8 @@
                 scope.activeItem = null;
 
                 scope.readyStatus = false;
+
+                scope.showBarTooltip = false;
 
                 var chartData = [];
 
@@ -33,10 +35,11 @@
 
                 var chartMargin = {
                     top: 20,
-                    right: 0,
-                    bottom: 30,
+                    right: 10,
+                    bottom: 60,
                     left: 40
                 };
+                var bandPadding = 0.2;
 
                 var getDataForChartsFromFlatList = function () {
 
@@ -50,27 +53,40 @@
                     var nameKey = scope.rvChartsSettings.abscissa;
                     var numberKey = scope.rvChartsSettings.ordinate;
 
-                    var savedValues = [];
+                    var savedFields = {};
 
                     itemList.forEach(function (item) {
 
                         var nameValue = null;
-                        var numberValue = null;
+                        var numberValue = 0;
 
                         if (item[nameKey]) {
-                            if (savedValues.indexOf(item[nameKey]) === -1) {
-                                nameValue = item[nameKey];
+
+                            nameValue = item[nameKey];
+                            numberValue = item[numberKey] || 0;
+
+                            var savedNames = Object.keys(savedFields);
+
+                            if (savedNames.indexOf(nameValue) === -1) {
+
+                                chartData.push({name: nameValue, numericValue: numberValue});
+                                var dataIndex = chartData.length - 1;
+                                savedFields[nameValue] = dataIndex;
+
+                            } else { // if the field was already saved, add number to it
+
+                                var matchingDataIndex = savedFields[nameValue];
+
+                                chartData[matchingDataIndex].numericValue += numberValue;
+
                             };
                         };
 
-                        if (item[numberKey] || item[numberKey] === 0) {
-                            numberValue = item[numberKey];
-                        };
-
-                        if (nameValue && numberValue) {
-                            savedValues.push(nameValue);
+                        /*if (nameValue && numberValue) {
                             chartData.push({name: nameValue, numericValue: numberValue});
-                        };
+                            var dataIndex = chartData.length - 1;
+                            savedFields[nameValue] = dataIndex;
+                        };*/
 
                     });
 
@@ -78,24 +94,67 @@
 
                 scope.readyStatus = true;
 
+                var formatThousands = d3.format("~s");
+
+                // helping functions
+                var returnNumericValue = function (d) {
+                    return d.numericValue;
+                };
+
+                var wrapWords = function (textElems, width) {
+
+                    textElems.each(function() {
+
+                        var text = d3.select(this),
+                            words = text.text().split(/\s+/).reverse(),
+                            word,
+                            line = [],
+                            lineNumber = 0,
+                            lineHeight = 1.1,
+                            y = text.attr("y"),
+                            dy = parseFloat(text.attr("dy")),
+                            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+
+                        while (word = words.pop()) {
+                            line.push(word);
+                            tspan.text(line.join(" "));
+
+                            if (line.length > 1 && tspan.node().getComputedTextLength() > width) {
+                                line.pop();
+                                tspan.text(line.join(" "));
+                                line = [word];
+                                lineNumber += 1;
+                                var tSpanDY = lineNumber * lineHeight + dy;
+                                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", tSpanDY + "em").text(word);
+                            }
+
+                        }
+
+                    });
+                };
+                // < helping functions >
+
                 var drawBarsChart = function () {
 
                     var chartWidth = componentWidth - chartMargin.right - chartMargin.left;
+                    var barWidth;
+                    var barPaddingInPx;
 
                     // check if chart has enough width
                     if (chartData.length > 0 && barsMinWidth && barsMaxWidth) {
-                        var barWidth = chartWidth / chartData.length;
+                        barPaddingInPx = (chartWidth / chartData.length) * bandPadding;
+                        barWidth = chartWidth / chartData.length - barPaddingInPx;
 
                         if (barWidth < barsMinWidth) {
 
-                            var newChartWidth = (barsMinWidth + 7) * chartData.length; // adding 7 to take into account paddings between bars
-                            componentWidth = newChartWidth + chartMargin.right + chartMargin.left;
+                            chartWidth = (barsMinWidth + barPaddingInPx) * chartData.length;
+                            componentWidth = chartWidth + chartMargin.right + chartMargin.left;
                             chartMargin.bottom = 40;
 
                         } else if (barWidth > barsMaxWidth) {
 
-                            var newChartWidth = barsMaxWidth * chartData.length; // adding 7 to take into account paddings between bars
-                            componentWidth = newChartWidth + chartMargin.right + chartMargin.left;
+                            chartWidth = (barsMaxWidth + barPaddingInPx) * chartData.length;
+                            componentWidth = chartWidth + chartMargin.right + chartMargin.left;
                             chartMargin.bottom = 40;
 
                         };
@@ -105,10 +164,6 @@
                     // declare height here because margin bottom can change higher
                     var chartHeight = componentHeight - chartMargin.bottom - chartMargin.top;
 
-                    var returnNumericValue = function (d) {
-                        return d.numericValue;
-                    };
-
                     chartHolderElem.style.width = componentWidth + 'px';
 
                     var xScale = d3.scaleBand()
@@ -116,7 +171,7 @@
                             return d.name;
                         }))
                         .range([chartMargin.left, chartWidth])
-                        .padding(0.1);
+                        .padding(bandPadding);
 
                     var yScale = d3.scaleLinear()
                             .domain(d3.extent(chartData, returnNumericValue))
@@ -144,7 +199,7 @@
                     };
                     // < check if ticks are located too close to each other >
 
-                    var leftAxis = d3.axisLeft(yScale);
+                    var leftAxis = d3.axisLeft(yScale).tickFormat(formatThousands);
 
                     // move abscissa line behind margin
                     var xAxis = function (g) {
@@ -165,21 +220,58 @@
                         return Math.abs(yScale(0) - yScale(d.numericValue));
                     };
 
-                    var svg = d3.create("svg")
-                        .attr("viewBox", [0, 0, componentWidth, componentHeight]);
+                    var svg = d3.select(".report-viewer-chart-holder")
+                        .append("svg")
+                            .attr("viewBox", [0, 0, chartWidth, componentHeight]);
 
                     svg.append("g")
                         .attr("fill", "steelblue")
                         .selectAll("rect")
                         .data(chartData)
                         .join("rect")
+                        .attr("class", "dashboard-rv-chart-bar")
                         .attr("x", function (d) {return xScale(d.name)})
                         .attr("y", function (d) {return yScale(Math.max(0, d.numericValue))})
                         .attr("height", getBarHeight)
                         .attr("width", xScale.bandwidth());
 
+                    svg.selectAll('rect.dashboard-rv-chart-bar')
+                        .on("mouseover", function () {
+
+                            d3.select(this)
+                                .attr("fill", "#f4af8b");
+
+                            var barTooltipElem = document.createElement("div");
+                            barTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
+                            document.body.appendChild(barTooltipElem);
+
+                            /*d3.select("body")
+                                .append("div")
+                                .attr("class", "chart-tooltip1 dashboard-bar-chart-tooltip");*/
+
+                        })
+                        .on("mousemove", function (d) {
+
+                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+
+                            barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + d.numericValue + ";";
+                            var tElemWidth = barTooltipElem.offsetWidth;
+                            barTooltipElem.style.top = (d3.event.pageY - 10) + "px";
+                            barTooltipElem.style.left = (d3.event.pageX - tElemWidth - 5) + "px"; // subtractions applied to place tooltip to the left of cursor
+
+                        })
+                        .on("mouseout", function () {
+                            d3.select(this)
+                                .attr("fill", "steelblue");
+
+                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+                            document.body.removeChild(barTooltipElem);
+                        });
+
                     svg.append("g")
-                        .call(xAxis);
+                        .call(xAxis)
+                        .selectAll("text")
+                            .call(wrapWords, barWidth);
 
                     svg.append("g")
                         .call(yAxis);

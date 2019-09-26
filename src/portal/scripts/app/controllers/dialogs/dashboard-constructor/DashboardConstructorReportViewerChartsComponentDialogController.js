@@ -4,7 +4,7 @@
 
     var uiService = require('../../../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService) {
+    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
         var vm = this;
 
@@ -16,7 +16,7 @@
             vm.item = item;
         } else {
             vm.item = {
-                type: 'report_viewer_charts',
+                type: null,
                 id: null, // should be generated before create
                 name: '',
                 settings: {
@@ -33,9 +33,25 @@
 
         vm.layouts = [];
 
-        vm.cancel = function () {
+        vm.reportTypeChange = function() {
 
-            $mdDialog.hide();
+            vm.item.settings.layout = null;
+            vm.item.settings.linked_components= {};
+
+            vm.item.settings.abscissa = null;
+            vm.item.settings.ordinate = null;
+
+            vm.getAttributes();
+
+        };
+
+        vm.getAttributes = function(){
+
+            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
+
+            vm.numericAttributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type).filter(function (item) {
+                return item.value_type === 20;
+            });
 
         };
 
@@ -65,6 +81,10 @@
 
             })
 
+        };
+
+        vm.cancel = function () {
+            $mdDialog.hide();
         };
 
         vm.agree = function () {
@@ -115,6 +135,7 @@
             if (vm.item.id) {
 
                 vm.getLayouts();
+                vm.getAttributes();
             }
 
         };
