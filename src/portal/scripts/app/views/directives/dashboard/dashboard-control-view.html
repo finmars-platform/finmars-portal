@@ -32,7 +32,7 @@
 
     </div>
 
-    <div data-ng-if="item.data.settings.value_type == 100">
+    <div data-ng-if="item.data.settings.value_type == 100" class="position-relative">
 
         <div data-ng-if="item.data.settings.content_type == 'currencies.currency' || item.data.settings.content_type == 'instruments.pricingpolicy'">
 
@@ -69,9 +69,9 @@
 
         </div>
 
-        <div>
-            <md-button data-ng-click="clearValue()">Clear</md-button>
-        </div>
+        <md-button class="control-clear-btn" data-ng-click="clearValue()">
+            <ng-md-icon icon="clear" size="12"></ng-md-icon>
+        </md-button>
 
     </div>
 
