@@ -152,22 +152,32 @@
                                 </md-input-container>
 
                                 <md-input-container style="margin-bottom: 20px;">
-                                    <label for="">Account position</label>
-                                    <md-select data-ng-model="vm.accountsPosition">
+                                    <label for="">Account mode</label>
+                                    <md-select data-ng-model="vm.reportOptions.account_mode">
                                         <md-option ng-value="opt.value" ng-repeat="opt in vm.selectOptions">
-                                            {{opt.caption}}
+                                        {{opt.caption}}
                                         </md-option>
                                     </md-select>
                                 </md-input-container>
 
-                                <md-input-container style="margin-bottom: 20px;">
-                                    <label for="">Account cash</label>
-                                    <md-select data-ng-model="vm.accountsCash">
-                                        <md-option ng-value="opt.value" ng-repeat="opt in vm.selectOptions">
-                                            {{opt.caption}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
+
+                                <!--<md-input-container style="margin-bottom: 20px;">-->
+                                    <!--<label for="">Account position</label>-->
+                                    <!--<md-select data-ng-model="vm.accountsPosition">-->
+                                        <!--<md-option ng-value="opt.value" ng-repeat="opt in vm.selectOptions">-->
+                                            <!--{{opt.caption}}-->
+                                        <!--</md-option>-->
+                                    <!--</md-select>-->
+                                <!--</md-input-container>-->
+
+                                <!--<md-input-container style="margin-bottom: 20px;">-->
+                                    <!--<label for="">Account cash</label>-->
+                                    <!--<md-select data-ng-model="vm.accountsCash">-->
+                                        <!--<md-option ng-value="opt.value" ng-repeat="opt in vm.selectOptions">-->
+                                            <!--{{opt.caption}}-->
+                                        <!--</md-option>-->
+                                    <!--</md-select>-->
+                                <!--</md-input-container>-->
 
                             </div>
 
