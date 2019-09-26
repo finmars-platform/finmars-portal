@@ -1266,7 +1266,8 @@
                     item.entity !== 'transactions.transactiontype' &&
                     item.entity !== 'ui.editlayout' &&
                     item.entity !== 'ui.listlayout' &&
-                    item.entity !== 'ui.reportlayout'
+                    item.entity !== 'ui.reportlayout'&&
+                    item.entity !== 'ui.dashboardlayout'
             });
 
             var complexImportSchemes = items.filter(function (item) {
@@ -1274,9 +1275,10 @@
             });
 
             var layoutEntities = items.filter(function (item) {
-                return item.entity === 'ui.editlayout' ||
+                return (item.entity === 'ui.editlayout' ||
                     item.entity === 'ui.listlayout' ||
-                    item.entity === 'ui.reportlayout'
+                    item.entity === 'ui.reportlayout') &&
+                    item.entity !== 'ui.dashboardlayout'
             });
 
             var dashboardLayoutEntities = items.filter(function (item) {
@@ -2578,9 +2580,10 @@
             });
 
             var layoutEntities = items.filter(function (item) {
-                return item.entity === 'ui.editlayout' ||
+                return (item.entity === 'ui.editlayout' ||
                     item.entity === 'ui.listlayout' ||
-                    item.entity === 'ui.reportlayout'
+                    item.entity === 'ui.reportlayout') &&
+                    item.entity !== 'ui.dashboardlayout'
             });
 
             var dashboardLayoutEntities = items.filter(function (item) {

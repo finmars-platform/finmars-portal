@@ -75,7 +75,7 @@
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
 
                     if(scope.item.data.settings.auto_refresh) {
-                        vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
                     }
 
 

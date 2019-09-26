@@ -7,6 +7,9 @@
 
     var customFieldService = require('../../services/reports/customFieldService');
 
+    var AttributeDataService = require('../../services/attributeDataService');
+
+
     module.exports = function ($scope, $stateParams, $mdDialog) {
 
         var vm = this;
@@ -35,7 +38,8 @@
                 locals: {
                     data: {
                         entityType: vm.entityType
-                    }
+                    },
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
@@ -53,8 +57,9 @@
                 locals: {
                     data: {
                         entityType: vm.entityType,
-                        customField: Object.assign({}, item)
-                    }
+                        customField: Object.assign({}, item),
+                    },
+                    attributeDataService: vm.attributeDataService
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
@@ -120,6 +125,8 @@
         };
 
         vm.init = function () {
+
+            vm.attributeDataService = new AttributeDataService();
 
             vm.getList();
 

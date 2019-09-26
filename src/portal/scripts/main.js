@@ -163,6 +163,8 @@ app.controller('CalculatorDialogController', ['$scope', '$mdDialog', 'data', req
 app.controller('EcosystemDefaultSettingsController', ['$scope', '$mdDialog', require('./app/controllers/pages/ecosystemDefaultSettingsController')]);
 
 // Common - unknown
+app.controller('NumberFormatSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/numberFormatSettingsDialogController')]);
+app.controller('ReportViewerMatrixSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/reportViewerMatrixSettingsDialogController')]);
 
 app.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
 app.controller('EntityViewerPermissionEditorController', ['$scope', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
@@ -315,8 +317,8 @@ app.controller('PerformanceReportController', ['$scope', '$stateParams', require
 
 app.controller('CustomFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldDialogController')]);
 app.controller('CustomFieldController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/customFieldController')]);
-app.controller('CustomFieldAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldAddDialogController')]);
-app.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldEditDialogController')]);
+app.controller('CustomFieldAddDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldAddDialogController')]);
+app.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService',  require('./app/controllers/dialogs/customFieldEditDialogController')]);
 
 
 // Settings

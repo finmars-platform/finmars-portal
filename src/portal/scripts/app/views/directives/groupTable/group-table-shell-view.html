@@ -32,11 +32,17 @@
                             </div>
 
                             <group-table-body class="group-table-body"
+                                              data-ng-if="viewType == 'report_viewer'"
                                               ev-data-service="evDataService"
                                               ev-event-service="evEventService"
                                               content-wrap-element="contentWrapElem"
                                               root-wrap-element="rootWrapElem"
                             ></group-table-body>
+
+                            <report-viewer-matrix class="height-100 display-block" data-ng-if="viewType == 'matrix'" style="height: 600px;"
+                                                  matrix-settings="viewSettings"
+                                                  ev-data-service="evDataService"
+                                                  ev-event-service="evEventService"></report-viewer-matrix>
 
                             <div grouping-and-column-area-drag-and-drop
                                  ev-data-service="evDataService"

@@ -238,31 +238,6 @@
                 key: "tags.tag"
             },
             {
-                name: "Balance report",
-                entity: 'balance-report',
-                key: "reports.balancereport"
-            },
-            {
-                name: "P&L report",
-                entity: 'pl-report',
-                key: "reports.plreport"
-            },
-            {
-                name: "Transaction report",
-                entity: 'transaction-report',
-                key: "reports.transactionreport"
-            },
-            {
-                name: "Cash flow projection report",
-                entity: 'cash-flow-projection-report',
-                key: "reports.cashflowreport"
-            },
-            {
-                name: "Performance report",
-                entity: 'performance-report',
-                key: "reports.performancereport"
-            },
-            {
                 name: "Transaction",
                 entity: 'complex-transaction',
                 key: "transactions.complextransaction"
@@ -317,7 +292,52 @@
                 name: 'Simple Entity Import Scheme',
                 entity: 'simple-entity-import-scheme',
                 key: 'csv_import.csvimportscheme'
-            }
+            },
+            {
+                name: "Balance report",
+                entity: 'balance-report',
+                key: "reports.balancereport"
+            },
+            {
+                name: "Balance report Perfomance",
+                entity: 'balance-report-perfomance',
+                key: "reports.balancereportperfomance"
+            },
+            {
+                name: "Balance report Mismatch",
+                entity: 'balance-report-mismatch',
+                key: "reports.balancereportmismatch"
+            },
+            {
+                name: "P&L report",
+                entity: 'pl-report',
+                key: "reports.plreport"
+            },
+            {
+                name: "P&L report Perfomance",
+                entity: 'pl-report-perfomance',
+                key: "reports.plreportperfomance"
+            },
+            {
+                name: "P&L report Mismatch",
+                entity: 'pl-report-mismatch',
+                key: "reports.plreportmismatch"
+            },
+            {
+                name: "Transaction report",
+                entity: 'transaction-report',
+                key: "reports.transactionreport"
+            },
+            {
+                name: "Cash flow projection report",
+                entity: 'cash-flow-projection-report',
+                key: "reports.cashflowreport"
+            },
+            {
+                name: "Performance report",
+                entity: 'performance-report',
+                key: "reports.performancereport"
+            },
         ]
     };
 

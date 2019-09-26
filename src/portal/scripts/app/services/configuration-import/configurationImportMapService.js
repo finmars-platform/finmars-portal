@@ -1208,6 +1208,7 @@
 
                     });
 
+                    console.log('componentType.settings.layout_name', componentType.settings.layout_name);
                     console.log('mapDashboardComponentType resultItem', resultItem);
 
                     if (resultItem) {
