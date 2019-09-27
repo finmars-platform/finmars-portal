@@ -35,11 +35,94 @@
                 fixed_area: {
                     status: 'disabled',
                     position: 'top',
-                    data: []
+                    layout: {
+                        rows_count: null,
+                        columns_count: null,
+                        rows: []
+                    }
                 },
                 tabs: [],
                 components_types: []
             }
+        };
+
+        vm.activateTopPanel = function ($event) {
+
+            vm.layout.data.fixed_area.status = 'active';
+            vm.layout.data.fixed_area.layout = {
+                rows_count: null,
+                columns_count: null,
+                rows: []
+            };
+
+            var columns_count = 10;
+            var rows_count = 1;
+
+            for (var r = 0; r < rows_count; r = r + 1) {
+
+                vm.layout.data.fixed_area.layout.rows[r] = {
+                    row_number: r,
+                    columns: []
+                };
+
+                for (var c = 0; c < columns_count; c = c + 1) {
+
+                    vm.layout.data.fixed_area.layout.rows[r].columns[c] = {
+                        column_number: c,
+                        cell_type: 'empty',
+                        colspan: 1,
+                        rowspan: 1,
+                        data: {}
+                    }
+
+                }
+
+            }
+
+            vm.layout.data.fixed_area.layout.rows_count = rows_count;
+            vm.layout.data.fixed_area.layout.columns_count = columns_count;
+
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            setTimeout(function () {
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+            }, 0)
+
+        };
+
+        vm.deactivateTopPanel = function ($event) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure you want to deactivate Top Panel?"
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.layout.data.fixed_area.status = 'disabled';
+                    vm.layout.data.fixed_area.layout = {
+                        rows_count: null,
+                        columns_count: null,
+                        rows: []
+                    };
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+
+                }
+            })
+
         };
 
         vm.generateId = function (str) {
@@ -290,7 +373,14 @@
 
                                 var data_source = target.parentElement.parentElement; // root of the cell (.dashboard-constructor-cell)
 
-                                var tab_number = parseInt(data_source.dataset.tab, 10);
+                                var tab_number;
+
+                                if (data_source.dataset.tab == 'fixed_area') {
+                                    tab_number = data_source.dataset.tab;
+                                } else {
+                                    tab_number = parseInt(data_source.dataset.tab, 10);
+                                }
+
                                 var row_number = parseInt(data_source.dataset.row, 10);
                                 var column_number = parseInt(data_source.dataset.column, 10);
 
@@ -298,30 +388,53 @@
                                 console.log('row_number', row_number);
                                 console.log('column_number', column_number);
 
-                                vm.layout.data.tabs.forEach(function (tab) {
+                                if (tab_number === 'fixed_area') {
 
-                                    if (tab.tab_number === tab_number) {
+                                    vm.layout.data.fixed_area.layout.rows.forEach(function (row) {
 
-                                        tab.layout.rows.forEach(function (row) {
+                                        row.columns.forEach(function (column) {
 
-                                            row.columns.forEach(function (column) {
+                                            if (column.column_number === column_number && row.row_number === row_number) {
 
-                                                if (column.column_number === column_number && row.row_number === row_number) {
+                                                column.cell_type = 'component';
 
-                                                    column.cell_type = 'component';
+                                                column.data = component
 
-                                                    column.data = component
+                                            }
 
-                                                }
-
-                                            })
+                                        })
 
 
-                                        });
+                                    });
 
-                                    }
+                                } else {
 
-                                });
+                                    vm.layout.data.tabs.forEach(function (tab) {
+
+                                        if (tab.tab_number === tab_number) {
+
+                                            tab.layout.rows.forEach(function (row) {
+
+                                                row.columns.forEach(function (column) {
+
+                                                    if (column.column_number === column_number && row.row_number === row_number) {
+
+                                                        column.cell_type = 'component';
+
+                                                        column.data = component
+
+                                                    }
+
+                                                })
+
+
+                                            });
+
+                                        }
+
+                                    });
+
+                                }
 
                                 vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
@@ -389,6 +502,18 @@
 
             var componentsInUse = [];
 
+            if (vm.layout.data.fixed_area.layout && vm.layout.data.fixed_area.layout.rows) {
+                vm.layout.data.fixed_area.layout.rows.forEach(function (row) {
+                    row.columns.forEach(function (column) {
+
+                        if (column.cell_type === 'component') {
+                            componentsInUse.push(column.data.id)
+                        }
+
+                    })
+                });
+            }
+
             vm.layout.data.tabs.forEach(function (tab) {
 
                 tab.layout.rows.forEach(function (row) {
@@ -411,6 +536,43 @@
                 return componentsInUse.indexOf(component.id) === -1
 
             })
+
+        };
+
+        vm.isRowAddableFixedArea = function (row) {
+
+            var row_number = row.row_number;
+
+            var result = true;
+            var layout_row;
+            var item;
+
+            for (var r = 0; r < vm.layout.data.fixed_area.layout.rows.length; r = r + 1) {
+
+                layout_row = vm.layout.data.fixed_area.layout.rows[r];
+
+                if (layout_row.row_number <= row_number) {
+
+                    for (var i = 0; i < layout_row.columns.length; i = i + 1) {
+
+                        item = layout_row.columns[i];
+
+                        if (layout_row.row_number + item.rowspan - 1 > row_number) {
+
+                            result = false;
+                            break;
+
+                        }
+                    }
+                }
+
+                if (!result) {
+                    break;
+                }
+
+            }
+
+            return result
 
         };
 
@@ -470,6 +632,33 @@
 
         };
 
+        vm.deleteRowFixedArea = function (row) {
+
+            var layout = vm.dashboardConstructorDataService.getData();
+
+            layout.data.fixed_area.layout.rows = layout.data.fixed_area.layout.rows.filter(function (tabRow) {
+
+                return row.row_number !== tabRow.row_number
+
+            });
+
+            layout.data.fixed_area.layout.rows = layout.data.fixed_area.layout.rows.map(function (row, index) {
+
+                row.row_number = index;
+
+                return row
+            });
+
+            layout.data.fixed_area.layout.rows_count = layout.data.fixed_area.layout.rows.length
+
+            vm.dashboardConstructorDataService.setData(layout);
+
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+
+
+        };
+
         vm.deleteRow = function (tab, row) {
 
             var layout = vm.dashboardConstructorDataService.getData();
@@ -506,6 +695,45 @@
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
         };
+
+        vm.insertRowFixedArea = function (row) {
+
+            var layout = vm.dashboardConstructorDataService.getData();
+
+
+            var newRow = {
+                row_number: row.row_number + 1,
+                columns: []
+            };
+
+            for (var c = 0; c < layout.data.fixed_area.layout.columns_count; c = c + 1) {
+
+                newRow.columns[c] = {
+                    column_number: c,
+                    cell_type: 'empty',
+                    colspan: 1,
+                    rowspan: 1,
+                    data: {}
+                }
+            }
+
+            layout.data.fixed_area.layout.rows.splice(newRow.row_number, 0, newRow);
+
+            layout.data.fixed_area.layout.rows = layout.data.fixed_area.layout.rows.map(function (row, index) {
+
+                row.row_number = index;
+
+                return row
+            });
+
+            layout.data.fixed_area.layout.rows_count = layout.data.fixed_area.layout.rows.length;
+
+            vm.dashboardConstructorDataService.setData(layout);
+
+            vm.updateDrakeContainers();
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+
+        }
 
         vm.insertRow = function (tab, row) {
 
