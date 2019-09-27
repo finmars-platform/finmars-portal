@@ -37,6 +37,7 @@
                             verboseType = 'Report Viewer Grand Total';
                             break;
                         case 'report_viewer_bars_chart':
+                        case 'report_viewer_pie_chart':
                             verboseType = 'Report Viewer Charts';
                             break;
                         case 'report_viewer_matrix':
@@ -484,6 +485,7 @@
                             templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html';
                             break;
                         case 'report_viewer_bars_chart':
+                        case 'report_viewer_pie_chart':
                             contrName = 'DashboardConstructorReportViewerChartsComponentDialogController as vm';
                             templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-charts-component-dialog-view.html';
                             break;

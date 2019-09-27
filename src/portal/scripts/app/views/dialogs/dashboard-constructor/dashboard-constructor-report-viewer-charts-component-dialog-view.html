@@ -20,8 +20,9 @@
                     <label for="">Chart Type</label>
                     <div>
                         <md-select data-ng-model="vm.item.type"
-                                   class="m-0"
-                                   md-container-class="common-select-container">
+                                   ng-change="vm.chartTypeChanged()"
+                                   md-container-class="common-select-container"
+                                   class="m-0">
 
                             <div class="select-options-holder">
                                 <md-option value="report_viewer_bars_chart">Chart With Bars</md-option>
@@ -60,80 +61,95 @@
                 </md-input-container>
             </div>
 
-            <div layout="row">
+            <div ng-if="vm.item.type === 'report_viewer_bars_chart'">
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Reference Name (Abscissa)</label>
-                    <md-select ng-model="vm.item.settings.abscissa"
-                               md-container-class="common-select-container"
-                               md-on-close="abscissaSearchTerm = ''"
-                               style="width: 200px">
-                        <div>
-                            <md-select-header>
-                                <input data-ng-model="abscissaSearchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
+                <div layout="row">
 
-                            <div class="select-options-holder">
+                    <md-input-container style="width: 200px;">
+                        <label for="">Reference Name (Abscissa)</label>
+                        <md-select ng-model="vm.item.settings.abscissa"
+                                   md-container-class="common-select-container"
+                                   md-on-close="abscissaSearchTerm = ''"
+                                   style="width: 200px">
+                            <div>
+                                <md-select-header>
+                                    <input data-ng-model="abscissaSearchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter"
+                                           ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
 
-                                <md-option
-                                        data-ng-repeat="attribute in vm.attributes | filter: {name: abscissaSearchTerm}"
-                                        ng-value="attribute.key"
-                                        ng-bind="attribute.name">
-                                </md-option>
+                                <div class="select-options-holder">
 
+                                    <md-option
+                                            data-ng-repeat="attribute in vm.attributes | filter: {name: abscissaSearchTerm}"
+                                            ng-value="attribute.key"
+                                            ng-bind="attribute.name">
+                                    </md-option>
+
+                                </div>
                             </div>
-                        </div>
-                    </md-select>
-                </md-input-container>
+                        </md-select>
+                    </md-input-container>
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Reference Name (Ordinate)</label>
-                    <md-select ng-model="vm.item.settings.ordinate"
-                               md-container-class="common-select-container"
-                               md-on-close="ordinateSearchTerm = ''"
-                               style="width: 200px">
-                        <div>
-                            <md-select-header>
-                                <input data-ng-model="ordinateSearchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
+                    <md-input-container style="width: 200px;">
+                        <label for="">Reference Name (Ordinate)</label>
+                        <md-select ng-model="vm.item.settings.ordinate"
+                                   md-container-class="common-select-container"
+                                   md-on-close="ordinateSearchTerm = ''"
+                                   style="width: 200px">
+                            <div>
+                                <md-select-header>
+                                    <input data-ng-model="ordinateSearchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter"
+                                           ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
 
-                            <div class="select-options-holder">
+                                <div class="select-options-holder">
 
-                                <md-option
-                                        data-ng-repeat="attribute in vm.numericAttributes| filter: {name: ordinateSearchTerm}"
-                                        ng-value="attribute.key"
-                                        ng-bind="attribute.name">
-                                </md-option>
+                                    <md-option
+                                            data-ng-repeat="attribute in vm.numericAttributes| filter: {name: ordinateSearchTerm}"
+                                            ng-value="attribute.key"
+                                            ng-bind="attribute.name">
+                                    </md-option>
 
+                                </div>
                             </div>
-                        </div>
-                    </md-select>
-                </md-input-container>
+                        </md-select>
+                    </md-input-container>
+
+                </div>
+
+                <div layout="row" class="m-t-16 m-b-16">
+                    <md-input-container style="width: 200px;">
+                        <label for="">Chart bar minimal width (in pixels)</label>
+                        <input class="no-input-arrows"
+                               type="number"
+                               data-ng-model="vm.item.settings.min_bar_width">
+                    </md-input-container>
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Chart bar maximal width (in pixels)</label>
+                        <input class="no-input-arrows"
+                               type="number"
+                               data-ng-model="vm.item.settings.max_bar_width">
+                    </md-input-container>
+                </div>
 
             </div>
 
-            <div layout="row" class="m-t-16 m-b-16">
-                <md-input-container style="width: 200px;">
-                    <label for="">Chart bar minimal width (in pixels)</label>
-                    <input class="no-input-arrows"
-                           type="number"
-                           data-ng-model="vm.item.settings.min_bar_width">
-                </md-input-container>
-
-                <md-input-container style="width: 200px;">
-                    <label for="">Chart bar maximal width (in pixels)</label>
-                    <input class="no-input-arrows"
-                           type="number"
-                           data-ng-model="vm.item.settings.max_bar_width">
-                </md-input-container>
+            <div ng-if="vm.item.type === 'report_viewer_pie_chart'">
+                <two-fields-multiselect ng-model="vm.item.settings.fieldsKeys"
+                                        ng-change="vm.fieldsSelected()"
+                                        title="Fields multiselector"
+                                        items="vm.numericAttributesForMultiselect"
+                                        model="vm.item.settings.fieldsKeys"
+                                        nothing-selected-text="Nothing selected"
+                                        name-property="name"
+                                        class="table-filter-input-container"></two-fields-multiselect>
             </div>
 
         </div>

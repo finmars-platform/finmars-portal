@@ -22,6 +22,10 @@
 
                 scope.inputText = '';
 
+                if (!scope.nameProperty) {
+                    scope.nameProperty = 'name';
+                };
+
                 var setInputText = function () {
 
                     var selElemNumber = 0;
