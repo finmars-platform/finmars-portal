@@ -1,5 +1,6 @@
 (function () {
 
+    var rvSubtotalService = require('./rv-subtotal.service');
 
     function getMatrixUniqueValues(itemList, key) {
 
@@ -18,11 +19,35 @@
         return result
     }
 
-    function getMatrix(itemList, rows, columns, rowsKey, columnsKey, valueKey) {
+    function getMatrix(itemList, rows, columns, rowsKey, columnsKey, valueKey, subtotal_formula_id) {
+
+        subtotal_formula_id = subtotal_formula_id || 1;
 
         var result = [];
 
         var data = {};
+        var dataItems = {};
+
+        // itemList.forEach(function (item) {
+        //
+        //     rows.forEach(function (row) {
+        //
+        //         columns.forEach(function (column) {
+        //
+        //             if (!data.hasOwnProperty(row + ':' + column)) {
+        //                 data[row + ':' + column] = 0
+        //             }
+        //
+        //             if (item[columnsKey] === column && item[rowsKey] === row) {
+        //
+        //                 data[row + ':' + column] = data[row + ':' + column] + item[valueKey]
+        //
+        //             }
+        //         })
+        //
+        //     })
+        //
+        // });
 
         itemList.forEach(function (item) {
 
@@ -30,13 +55,13 @@
 
                 columns.forEach(function (column) {
 
-                    if (!data.hasOwnProperty(row + ':' + column)) {
-                        data[row + ':' + column] = 0
+                    if (!dataItems.hasOwnProperty(row + ':' + column)) {
+                        dataItems[row + ':' + column] = []
                     }
 
                     if (item[columnsKey] === column && item[rowsKey] === row) {
 
-                        data[row + ':' + column] = data[row + ':' + column] + item[valueKey]
+                        dataItems[row + ':' + column].push(item)
 
                     }
                 })
@@ -48,6 +73,27 @@
         var pieces;
         var row;
         var column;
+
+        console.log('dataItems', dataItems);
+        console.log('subtotal_formula_id', subtotal_formula_id);
+
+        var columnData;
+        var resultObj;
+
+        Object.keys(dataItems).forEach(function (key) {
+
+            columnData = {
+                key: valueKey,
+                report_settings: {
+                    subtotal_formula_id: subtotal_formula_id
+                }
+            };
+
+            resultObj = rvSubtotalService.calculateColumn(dataItems[key], columnData);
+
+            data[key] = resultObj[valueKey]
+
+        });
 
         console.log('data', data);
 
