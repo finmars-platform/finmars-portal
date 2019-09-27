@@ -258,6 +258,18 @@
 
                         if (filter_link.value_type === 100) {
 
+                            console.log('componentOutput.value', componentOutput.value)
+
+                            var values;
+
+                            if (Array.isArray(componentOutput.value)) {
+                                values = componentOutput.value
+                            } else {
+                                values = [componentOutput.value];
+                            }
+
+                            console.log('values', values);
+
                             linkedFilter = {
                                 type: 'filter_link',
                                 component_id: filter_link.component_id,
@@ -267,8 +279,8 @@
                                 options: {
                                     enabled: true,
                                     exclude_empty_cells: true,
-                                    filter_type: 'equal',
-                                    filter_values: [componentOutput.value]
+                                    filter_type: 'multiselector',
+                                    filter_values: values
                                 }
                             };
 
