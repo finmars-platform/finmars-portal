@@ -566,8 +566,7 @@
                         ordinate: vm.componentType.data.settings.ordinate,
                         value_key: vm.componentType.data.settings.value_key
                     };
-                }
-                ;
+                };
 
                 if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
@@ -576,8 +575,7 @@
                         min_bar_width: vm.componentType.data.settings.min_bar_width,
                         max_bar_width: vm.componentType.data.settings.max_bar_width
                     };
-                }
-                ;
+                };
 
                 uiService.getListLayoutByKey(layoutId).then(function (data) {
 

@@ -31,7 +31,6 @@
                     <div class="grand-total-value" ng-class="{'negative-red': vm.grandTotalNegative}">{{vm.grandTotalValue}}</div>
                 </div>
 
-
             </div>
 
             <div ng-if="vm.componentType.data.type === 'report_viewer_bars_chart'" class="height-100">
@@ -39,6 +38,13 @@
                                       rv-charts-settings="vm.rvChartsSettings"
                                       ev-data-service="vm.entityViewerDataService"
                                       ev-event-service="vm.entityViewerEventService"></report-viewer-bars-chart>
+            </div>
+
+            <div ng-if="vm.componentType.data.type === 'report_viewer_pie_chart'" class="height-100">
+                <report-viewer-pie-chart class="height-100 display-block"
+                                          rv-charts-settings="vm.rvChartsSettings"
+                                          ev-data-service="vm.entityViewerDataService"
+                                          ev-event-service="vm.entityViewerEventService"></report-viewer-pie-chart>
             </div>
 
             <div data-ng-if="vm.componentType.data.type === 'report_viewer_matrix'" class="height-100">
