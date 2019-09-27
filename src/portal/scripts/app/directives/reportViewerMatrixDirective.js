@@ -243,7 +243,8 @@
                         scope.columns,
                         scope.matrixSettings.ordinate,
                         scope.matrixSettings.abscissa,
-                        scope.matrixSettings.value_key);
+                        scope.matrixSettings.value_key,
+                        scope.matrixSettings.subtotal_formula_id);
 
                     // console.log('scope.matrix', scope.matrix);
 

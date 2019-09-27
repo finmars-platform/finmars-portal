@@ -69,29 +69,33 @@
 
                 </div>
 
-                <div class="m-t-16 m-b-16">
+            </div>
 
-                    <md-input-container style="width: 200px;">
-                        <label for="">Ordinate</label>
-                        <md-select data-ng-model="vm.item.settings.ordinate"
-                                   md-on-close="ordinateSearchTerm = ''"
-                                   ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                            <md-select-header>
-                                <input data-ng-model="ordinateSearchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-                            <md-option
-                                    data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: ordinateSearchTerm} track by attribute.key "
-                                    ng-value="attribute.key">
-                                {{attribute.name}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
+            <div class="m-t-16 m-b-16">
 
-                </div>
+                <md-input-container style="width: 200px;">
+                    <label for="">Ordinate</label>
+                    <md-select data-ng-model="vm.item.settings.ordinate"
+                               md-on-close="ordinateSearchTerm = ''"
+                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                        <md-select-header>
+                            <input data-ng-model="ordinateSearchTerm"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+                        <md-option
+                                data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: ordinateSearchTerm} track by attribute.key "
+                                ng-value="attribute.key">
+                            {{attribute.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
+            <div layout="row">
 
                 <div class="m-t-16 m-b-16">
 
@@ -115,11 +119,30 @@
                         </md-select>
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" ng-click="vm.openNumberFormatSettings($event)" style="margin-right:20px;">
-                        Format Settings
-                    </md-button>
+                </div>
+
+                <div class="m-t-16 m-b-16">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Formula</label>
+                        <md-select data-ng-model="vm.item.settings.subtotal_formula_id">
+                            <md-option ng-value="1">SUM</md-option>
+                            <md-option ng-value="2">Weighted Market Value</md-option>
+                            <md-option ng-value="3">Weighted Market Value %</md-option>
+                            <md-option ng-value="4">Weighted Exposure</md-option>
+                            <md-option ng-value="5">Weighted Exposure %</md-option>
+                            <md-option ng-value="6">Avg. Weighted Market Value</md-option>
+                            <md-option ng-value="7">Avg. Weighted Market Value %</md-option>
+                            <md-option ng-value="8">Avg. Weighted Exposure</md-option>
+                            <md-option ng-value="9">Avg. Weighted Exposure %</md-option>
+                        </md-select>
+                    </md-input-container>
 
                 </div>
+
+                <md-button class="md-raised md-primary" ng-click="vm.openNumberFormatSettings($event)" style="margin-right:20px;">
+                    Format Settings
+                </md-button>
 
 
             </div>

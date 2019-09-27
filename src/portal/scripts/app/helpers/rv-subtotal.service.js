@@ -314,8 +314,19 @@
         return result;
     };
 
+    var calculateColumn = function(items, column){
+
+        var result = {};
+
+        result[column.key] = resolveSubtotalFunction(items, column);
+
+        return result;
+
+    };
+
     module.exports = {
-        calculate: calculate
+        calculate: calculate,
+        calculateColumn: calculateColumn
     }
 
 }());
