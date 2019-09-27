@@ -92,8 +92,6 @@
 
                 };
 
-                scope.readyStatus = true;
-
                 var formatThousands = d3.format("~s");
 
                 // helping functions
@@ -149,13 +147,11 @@
 
                             chartWidth = (barsMinWidth + barPaddingInPx) * chartData.length;
                             componentWidth = chartWidth + chartMargin.right + chartMargin.left;
-                            chartMargin.bottom = 40;
 
                         } else if (barWidth > barsMaxWidth) {
 
                             chartWidth = (barsMaxWidth + barPaddingInPx) * chartData.length;
                             componentWidth = chartWidth + chartMargin.right + chartMargin.left;
-                            chartMargin.bottom = 40;
 
                         };
                     }
@@ -222,6 +218,8 @@
 
                     var svg = d3.select(".report-viewer-chart-holder")
                         .append("svg")
+                            .attr("width", componentWidth + "px")
+                            .attr("height", componentHeight + "px")
                             .attr("viewBox", [0, 0, chartWidth, componentHeight]);
 
                     svg.append("g")
@@ -276,7 +274,7 @@
                     svg.append("g")
                         .call(yAxis);
 
-                    chartHolderElem.appendChild(svg.node());
+                    //chartHolderElem.appendChild(svg.node());
 
                 };
 
@@ -286,6 +284,8 @@
 
                         getDataForChartsFromFlatList();
                         drawBarsChart();
+                        scope.readyStatus = true;
+                        scope.$apply();
 
                     });
                 };

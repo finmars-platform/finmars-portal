@@ -12,6 +12,8 @@
 
         vm.filterLinks = [];
 
+        vm.multiselectModalName = 'Fields multiselector';
+
         if (item) {
             vm.item = item;
         } else {
@@ -19,12 +21,7 @@
                 type: null,
                 id: null, // should be generated before create
                 name: '',
-                settings: {
-                    abscissa: '',
-                    ordinate: '',
-                    min_bar_width: 50,
-                    max_bar_width: 90
-                }
+                settings: {}
             }
         }
 
@@ -38,20 +35,52 @@
             vm.item.settings.layout = null;
             vm.item.settings.linked_components= {};
 
-            vm.item.settings.abscissa = null;
-            vm.item.settings.ordinate = null;
+            switch (vm.item.type) {
+                case 'report_viewer_bars_chart':
+                    vm.item.settings.abscissa = null;
+                    vm.item.settings.ordinate = null;
+                    break;
+                case 'report_viewer_pie_chart':
+                    vm.item.settings = {
+                        fieldsKeys: []
+                    };
+                    break;
+            }
 
             vm.getAttributes();
 
         };
 
-        vm.getAttributes = function(){
+        vm.getAttributes = function() {
 
             vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
-
             vm.numericAttributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type).filter(function (item) {
                 return item.value_type === 20;
             });
+
+            vm.numericAttributesForMultiselect = vm.numericAttributes.map(function (item) {
+                return {name: item.name, id: item.key}
+            });
+
+        };
+
+        vm.chartTypeChanged = function () {
+
+            switch (vm.item.type) {
+                case 'report_viewer_bars_chart':
+                    vm.item.settings = {
+                        abscissa: '',
+                        ordinate: '',
+                        min_bar_width: 50,
+                        max_bar_width: 90
+                    };
+                    break;
+                case 'report_viewer_pie_chart':
+                    vm.item.settings = {
+                        fieldsKeys: []
+                    };
+                    break;
+            };
 
         };
 
