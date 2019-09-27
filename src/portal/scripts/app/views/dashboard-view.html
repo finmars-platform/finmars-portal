@@ -52,6 +52,159 @@
 
             </div>
 
+            <div data-ng-if="vm.layout.data.fixed_area.status === 'active'">
+
+                <div class="dashboard-layout position-relative height-100"
+                     dashboard-grid-aligner
+                     dashboard-data-service="vm.dashboardDataService"
+                     dashboard-event-service="vm.dashboardEventService"
+                     tab-number="'fixed_area'">
+
+
+                    <div class="dashboard-rows-holder" data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows">
+
+                        <div data-ng-repeat="item in row.columns"
+                             class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}}"
+                             data-tab="fixed_area"
+                             data-row="{{row.row_number}}"
+                             data-column="{{item.column_number}}"
+                             data-cell-type="{{item.cell_type}}">
+
+                            <div data-ng-if="item.cell_type == 'empty'">
+                                &nbsp;
+                            </div>
+
+                            <div data-ng-if="item.cell_type == 'component'" class="height-100">
+
+                                <div data-ng-if="item.data.type == 'control'">
+                                    <dashboard-control
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-control>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'button_set'">
+                                    <dashboard-button-set
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-button-set>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'input_form'">
+                                    <dashboard-input-form
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-input-form>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'report_viewer'" class="height-100">
+                                    <dashboard-report-viewer
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-report-viewer>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'report_viewer_split_panel'"
+                                     class="height-100">
+                                    <dashboard-report-viewer-split-panel
+                                            class="height-100 display-block"
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-report-viewer-split-panel>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'report_viewer_grand_total'"
+                                     class="height-100">
+                                    <dashboard-report-viewer-grand-total
+                                            class="height-100 display-block"
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-report-viewer-grand-total>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'report_viewer_charts'"
+                                     class="height-100">
+                                    <dashboard-report-viewer-charts
+                                            class="height-100 display-block"
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-report-viewer-charts>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'report_viewer_matrix'"
+                                     class="height-100">
+                                    <dashboard-report-viewer-matrix
+                                            class="height-100 display-block"
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-report-viewer-matrix>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'entity_viewer'" class="height-100">
+                                    <dashboard-entity-viewer
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-entity-viewer>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'entity_viewer_split_panel'"
+                                     class="height-100">
+                                    <dashboard-entity-viewer-split-panel
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-entity-viewer-split-panel>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
             <md-tabs md-border-bottom md-dynamic-height class="dashboard-tabs height-100">
                 <md-tab data-ng-repeat="tab in vm.layout.data.tabs" md-on-select="vm.setActiveTab(tab)">
                     <md-tab-label>

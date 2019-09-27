@@ -43,7 +43,13 @@
 
                     var layout = scope.dashboardDataService.getData();
 
-                    var tab = layout.data.tabs[scope.tabNumber];
+                    var tab;
+
+                    if(scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
 
                     var elements = elem.find('.dashboard-cell');
                     var emptySpace = elem.find('.dashboard-empty-space')[0];
@@ -103,8 +109,13 @@
                 scope.resize = function () {
 
                     var layout = scope.dashboardDataService.getData();
+                    var tab;
 
-                    var tab = layout.data.tabs[scope.tabNumber];
+                    if(scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
 
                     scope.rowsTotal = tab.layout.rows_count;
                     scope.columnsTotal = tab.layout.columns_count;
