@@ -112,8 +112,12 @@
                     var row;
                     var item;
 
-                    tab = layout.data.tabs[scope.tabNumber];
-                    row = tab.layout.rows[scope.rowNumber];
+                    if (scope.tabNumber === 'fixed_area') {
+                        row = layout.data.fixed_area.layout.rows[scope.rowNumber];
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                        row = tab.layout.rows[scope.rowNumber];
+                    }
 
                     for (var c = scope.columnNumber + 1; c < row.columns.length; c = c + 1) {
 
@@ -158,7 +162,11 @@
                     var row;
                     var item;
 
-                    tab = layout.data.tabs[scope.tabNumber];
+                    if (scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
 
                     for (var r = scope.rowNumber + 1; r < tab.layout.rows.length; r = r + 1) {
 
@@ -189,19 +197,26 @@
 
                     }
 
+
                     scope.rowspanList = result.map(function (item, index) {
                         return index + 1
                     });
 
                 };
 
-                scope.clearElemSpans = function(){
+                scope.clearElemSpans = function () {
 
                     var layout = scope.dashboardConstructorDataService.getData();
 
-                    var tab = layout.data.tabs[scope.tabNumber];
+                    var tab;
                     var row;
                     var item;
+
+                    if (scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
 
                     for (var r = 0; r < tab.layout.rows.length; r = r + 1) {
 
@@ -211,16 +226,15 @@
 
                             item = row.columns[c];
 
-                            if(item.is_hidden === true) {
+                            if (item.is_hidden === true) {
 
-                                if(item.hidden_by.row_number === scope.rowNumber &&
+                                if (item.hidden_by.row_number === scope.rowNumber &&
                                     item.hidden_by.column_number === scope.columnNumber) {
 
                                     delete item.is_hidden
                                     delete item.hidden_by
 
                                 }
-
 
 
                             }
@@ -240,8 +254,11 @@
 
                     scope.clearElemSpans();
 
-                    tab = layout.data.tabs[scope.tabNumber];
-
+                    if (scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
 
                     for (var r = scope.rowNumber; r < scope.rowNumber + scope.item.rowspan; r = r + 1) {
 
@@ -323,7 +340,11 @@
                     var row;
                     var item;
 
-                    tab = layout.data.tabs[scope.tabNumber];
+                    if (scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
 
                     for (var r = scope.rowNumber; r < scope.rowNumber + scope.item.rowspan; r = r + 1) {
 
@@ -344,44 +365,76 @@
                     // set hidden empty cells to visible end
 
 
-                    layout.data.tabs = layout.data.tabs.map(function (tab) {
+                    if (scope.tabNumber === 'fixed_area') {
 
-                        if (tab.tab_number === scope.tabNumber) {
+                        layout.data.fixed_area.layout.rows = layout.data.fixed_area.layout.rows.map(function (row) {
 
-                            tab.layout.rows = tab.layout.rows.map(function (row) {
+                            if (row.row_number === scope.rowNumber) {
 
-                                if (row.row_number === scope.rowNumber) {
+                                row.columns = row.columns.map(function (item) {
 
-                                    row.columns = row.columns.map(function (item) {
+                                    if (item.column_number === scope.columnNumber) {
 
-                                        if (item.column_number === scope.columnNumber) {
+                                        return {
+                                            column_number: scope.columnNumber,
+                                            cell_type: 'empty',
+                                            colspan: 1,
+                                            rowspan: 1,
+                                            data: {},
+                                            options: {}
+                                        };
 
-                                            return {
-                                                column_number: scope.columnNumber,
-                                                cell_type: 'empty',
-                                                colspan: 1,
-                                                rowspan: 1,
-                                                data: {},
-                                                options: {}
-                                            };
+                                    }
 
-                                        }
+                                    return item
+                                });
 
-                                        return item
-                                    });
+                            }
 
-                                }
+                            return row
 
-                                return row
+                        });
 
-                            });
+                    } else {
 
-                        }
+                        layout.data.tabs = layout.data.tabs.map(function (tab) {
 
-                        return tab
+                            if (tab.tab_number === scope.tabNumber) {
 
-                    });
+                                tab.layout.rows = tab.layout.rows.map(function (row) {
 
+                                    if (row.row_number === scope.rowNumber) {
+
+                                        row.columns = row.columns.map(function (item) {
+
+                                            if (item.column_number === scope.columnNumber) {
+
+                                                return {
+                                                    column_number: scope.columnNumber,
+                                                    cell_type: 'empty',
+                                                    colspan: 1,
+                                                    rowspan: 1,
+                                                    data: {},
+                                                    options: {}
+                                                };
+
+                                            }
+
+                                            return item
+                                        });
+
+                                    }
+
+                                    return row
+
+                                });
+
+                            }
+
+                            return tab
+
+                        });
+                    }
                     scope.dashboardConstructorDataService.setData(layout);
 
                     scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
@@ -389,7 +442,7 @@
 
                 };
 
-                scope.syncWithComponentType = function(){
+                scope.syncWithComponentType = function () {
 
                     var layout = scope.dashboardConstructorDataService.getData();
 
@@ -454,7 +507,8 @@
                             contrName = 'DashboardConstructorInputFormComponentDialogController as vm';
                             templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html';
                             break;
-                    };
+                    }
+                    ;
 
                     if (contrName && templateUrl) {
                         $mdDialog.show({
@@ -473,7 +527,8 @@
                             scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
                         });
-                    };
+                    }
+                    ;
 
                 };
 

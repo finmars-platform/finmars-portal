@@ -67,7 +67,16 @@
 
                     var layout = scope.dashboardConstructorDataService.getData();
 
-                    var tab = layout.data.tabs[scope.tabNumber];
+                    var tab;
+
+                    if (scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
+
+                    scope.rowsTotal = tab.layout.rows_count;
+                    scope.columnsTotal = tab.layout.columns_count;
 
                     var elements = elem.find('.dashboard-constructor-cell');
                     var domElem;
@@ -143,10 +152,17 @@
 
                     var layout = scope.dashboardConstructorDataService.getData();
 
-                    var tab = layout.data.tabs[scope.tabNumber];
+                    var tab;
+
+                    if (scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
 
                     scope.rowsTotal = tab.layout.rows_count;
                     scope.columnsTotal = tab.layout.columns_count;
+
 
                     scope.calculateSingleCellHeight();
                     scope.calculateSingleCellWidth();
@@ -184,7 +200,6 @@
                         });
 
                         console.log('elem', elem);
-
 
 
                         elem[0].addEventListener("scroll", function (event) {
