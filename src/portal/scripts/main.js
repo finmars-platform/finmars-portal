@@ -121,7 +121,7 @@ app.directive('dashboardReportViewer', [require('./app/directives/dashboard/dash
 app.directive('dashboardReportViewerSplitPanel', [require('./app/directives/dashboard/dashboardReportViewerSplitPanelDirective')]);
 app.directive('dashboardReportViewerGrandTotal', [require('./app/directives/dashboard/dashboardReportViewerGrandTotalDirective')]);
 app.directive('dashboardReportViewerMatrix', [require('./app/directives/dashboard/dashboardReportViewerMatrixDirective')]);
-app.directive('dashboardReportViewerBarsChart', [require('./app/directives/dashboard/dashboardReportViewerBarsChartDirective')]);
+app.directive('dashboardReportViewerCharts', [require('./app/directives/dashboard/dashboardReportViewerChartsDirective')]);
 
 app.controller('DashboardReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
 
