@@ -12,9 +12,9 @@
             case 'accounts':
                 return 'account';
                 break;
-            case 'portfolios':
-                return 'portfolio';
-                break;
+            // case 'portfolios':
+            //     return 'portfolio';
+            //     break;
             case 'responsibles':
                 return 'responsible';
                 break;
