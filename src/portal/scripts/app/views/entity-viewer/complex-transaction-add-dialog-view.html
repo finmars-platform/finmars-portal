@@ -52,13 +52,13 @@
 
                                 <fieldset class="fieldset-event-settings m-b-24" style="border: 0;">
 
-                                    <legend style="color: grey">Filters</legend>
+                                    <legend style="color: grey">Transaction Types Filters</legend>
 
                                     <div layout="row">
                                         <div layout="row" flex="40">
                                             <md-input-container class="width-100">
                                                 <label for="">Portfolio</label>
-                                                <md-select multiple data-ng-model="vm.filters.portfolio"
+                                                <md-select multiple data-ng-model="vm.filters.portfolios"
                                                            data-ng-change="vm.filtersChange()"
                                                            md-on-close="searchTerm = ''">
                                                     <md-select-header>
@@ -78,7 +78,7 @@
                                         <div layout="row" flex="40">
                                             <md-input-container class="width-100">
                                                 <label for="">Instrument Type</label>
-                                                <md-select multiple data-ng-model="vm.filters.instrument_type"
+                                                <md-select multiple data-ng-model="vm.filters.instrument_types"
                                                            data-ng-change="vm.filtersChange()"
                                                            md-on-close="searchTerm = ''">
                                                     <md-select-header>
@@ -99,7 +99,7 @@
                                         <div layout="row" flex="20" layout-align="center start">
                                             <md-button class="md-raised"
                                                        data-ng-click="vm.filters.portfolio = null; vm.filters.instrument_type = null;">
-                                                Clear
+                                                Clear Filters
                                             </md-button>
                                         </div>
                                     </div>
