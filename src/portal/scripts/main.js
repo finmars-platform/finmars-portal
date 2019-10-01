@@ -250,6 +250,7 @@ app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$tra
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
+app.controller('EntityViewerDeleteBulkDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', require('./app/controllers/entityViewer/entityViewerDeleteBulkDialogController')]);
 
 // Transaction type form
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 01.10.2019
+- Delete Methods
+
 ## 11.07.2019
 - Context Data to Book Transaction from Reports
 

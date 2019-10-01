@@ -31,8 +31,6 @@
 
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false, userFields: false};
 
-        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
-
         vm.editLayoutEntityInstanceId = null;
         vm.editLayoutByEntityInsance = false;
 
@@ -306,6 +304,8 @@
                     vm.transactionTypeId = complextTransactionData.transaction_type;
                     vm.editLayoutEntityInstanceId = complextTransactionData.complex_transaction.id;
                     vm.entity = complextTransactionData.complex_transaction;
+
+                    console.log('vm.entity', vm.entity);
 
                     var inputsWithCalculations = complextTransactionData.transaction_type_object.inputs;
 
@@ -618,6 +618,34 @@
 
         };
 
+        vm.delete = function ($event) {
+
+            $mdDialog.show({
+                controller: 'EntityViewerDeleteDialogController as vm',
+                templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                //clickOutsideToClose: false,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    entity: vm.entity,
+                    entityType: vm.entityType
+                }
+            }).then(function (res) {
+
+                console.log('here', res);
+
+                if (res.status === 'agree') {
+                    $mdDialog.hide({res: 'agree', data: {}});
+                }
+
+            })
+
+        };
+
         vm.save = function ($event) {
 
             vm.updateEntityBeforeSave();
@@ -652,8 +680,13 @@
                         var originValues = JSON.parse(JSON.stringify(result.values));
 
                         // entity.transactions = data.transactions;
+
+                        console.log('result', result);
+
                         result.values = data.values;
                         result.complex_transaction = data.complex_transaction; // ?
+                        result.complex_transaction.is_locked = result.is_locked; // ?
+                        result.complex_transaction.is_canceled = result.is_canceled; // ?
 
                         var originValuesKeys = Object.keys(originValues);
                         var defaultValuesKeys = Object.keys(result.values);

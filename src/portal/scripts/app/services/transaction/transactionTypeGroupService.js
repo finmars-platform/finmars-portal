@@ -25,13 +25,18 @@
         return transactionTypeGroupRepository.deleteByKey(id);
     };
 
+    var deleteBulk = function(data){
+        return transactionTypeGroupRepository.deleteBulk(data);
+    };
 
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        deleteBulk: deleteBulk
     }
 
 

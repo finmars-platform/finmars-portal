@@ -3,31 +3,35 @@
  */
 (function () {
 
-    var accountRepository = require('../repositories/accountTypeRepository');
+    var accountTypeRepository = require('../repositories/accountTypeRepository');
 
     var getList = function (options) {
-        return accountRepository.getList(options);
+        return accountTypeRepository.getList(options);
     };
 
     var getByKey = function (id) {
-        return accountRepository.getByKey(id);
+        return accountTypeRepository.getByKey(id);
     };
 
     var create = function(account) {
-        return accountRepository.create(account);
+        return accountTypeRepository.create(account);
     };
 
     var update = function(id, account) {
-        return accountRepository.update(id, account);
+        return accountTypeRepository.update(id, account);
     };
 
     var deleteByKey = function (id) {
-        return accountRepository.deleteByKey(id);
+        return accountTypeRepository.deleteByKey(id);
     };
 
     var updateBulk = function(accountTypes) {
-        return accountRepository.updateBulk(accountTypes);
-    }
+        return accountTypeRepository.updateBulk(accountTypes);
+    };
+
+    var deleteBulk = function(data){
+        return accountTypeRepository.deleteBulk(data);
+    };
 
     module.exports = {
         getList: getList,
@@ -35,7 +39,9 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        updateBulk: updateBulk
+
+        updateBulk: updateBulk,
+        deleteBulk: deleteBulk
     }
 
 

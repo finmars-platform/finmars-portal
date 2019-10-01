@@ -137,6 +137,25 @@
             })
     };
 
+    var deleteBulk = function (data) {
+        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/bulk-delete/',
+            {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(function (data) {
+                return new Promise(function (resolve, reject) {
+                    resolve({status: 'deleted'});
+                });
+            })
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
@@ -147,7 +166,9 @@
         rebookComplexTransaction: rebookComplexTransaction,
 
         initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
-        rebookPendingComplexTransaction: rebookPendingComplexTransaction
+        rebookPendingComplexTransaction: rebookPendingComplexTransaction,
+
+        deleteBulk: deleteBulk
     }
 
 }());

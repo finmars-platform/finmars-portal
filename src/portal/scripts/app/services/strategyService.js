@@ -27,13 +27,19 @@
         return strategyRepository.deleteByKey(strategyNumber, id);
     };
 
+    var deleteBulk = function(strategyNumber, data){
+        return strategyRepository.deleteBulk(strategyNumber, data)
+    };
+
     module.exports = {
 
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        deleteBulk: deleteBulk
 
     }
 

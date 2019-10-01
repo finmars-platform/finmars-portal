@@ -29,13 +29,19 @@
         return responsibleRepository.updateBulk(responsibles);
     };
 
+    var deleteBulk = function(data){
+        return responsibleRepository.deleteBulk(data);
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        updateBulk: updateBulk
+
+        updateBulk: updateBulk,
+        deleteBulk: deleteBulk
     }
 
 

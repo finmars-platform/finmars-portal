@@ -578,13 +578,80 @@
         }
     };
 
+    var deleteBulk = function (entityType, data) {
+        switch (entityType) {
+            case 'portfolio':
+                return portfolioService.deleteBulk(data);
+            case 'currency':
+                return currencyService.deleteBulk(data);
+            case 'account':
+                return accountService.deleteBulk(data);
+            case 'account-type':
+                return accountTypeService.deleteBulk(data);
+            case 'responsible':
+                return responsibleService.deleteBulk(data);
+            case 'responsible-group':
+                return responsibleGroupService.deleteBulk(data);
+            case 'counterparty':
+                return counterpartyService.deleteBulk(data);
+            case 'counterparty-group':
+                return counterpartyGroupService.deleteBulk(data);
+            case 'instrument':
+                return instrumentService.deleteBulk(data);
+            case 'instrument-type':
+                return instrumentTypeService.deleteBulk(data);
+            case 'transaction':
+                return transactionService.deleteBulk(data);
+            case 'complex-transaction':
+                return complexTransactionService.deleteBulk(data);
+            case 'transaction-type':
+                return transactionTypeService.deleteBulk(data);
+            case 'transaction-type-group':
+                return transactionTypeGroupService.deleteBulk(data);
+            case 'price-history':
+                return priceHistoryService.deleteBulk(data);
+            case 'pricing-policy':
+                return pricingPolicyService.deleteBulk(data);
+            case 'currency-history':
+                return currencyHistoryService.deleteBulk(data);
+            case 'strategy-1':
+                return strategyService.deleteBulk(1, data);
+            case 'strategy-2':
+                return strategyService.deleteBulk(2, data);
+            case 'strategy-3':
+                return strategyService.deleteBulk(3, data);
+            case 'strategy-1-group':
+                //return strategyGroupService.deleteBulk(data);
+                break;
+            case 'strategy-2-group':
+                //return strategyGroupService.deleteBulk(data);
+                break;
+            case 'strategy-3-group':
+                //return strategyGroupService.deleteBulk(data);
+                break;
+            case 'strategy-1-subgroup':
+                //return strategySubgroupService.deleteBulk(data);
+                break;
+            case 'strategy-2-subgroup':
+                //return strategySubgroupService.deleteBulk(data);
+                break;
+            case 'strategy-3-subgroup':
+                //return strategySubgroupService.deleteBulk(data);
+                break;
+            case 'tag':
+                //return tagService.deleteBulk(data);
+                break;
+        }
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        updateBulk: updateBulk
+        updateBulk: updateBulk,
+        deleteBulk: deleteBulk
     }
 
 }());
