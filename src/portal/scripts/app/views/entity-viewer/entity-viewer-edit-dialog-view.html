@@ -205,13 +205,20 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
-        <div>
+        <div layout="row">
             <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary">
                Edit Form
             </md-button>
             <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary">
                 Manage attributes
             </md-button>
+
+            <md-button
+                    ng-click="vm.delete($event)"
+                    class="md-raised md-warn">
+                Delete
+            </md-button>
+
         </div>
         <div >
             <md-button class="md-raised m-r-24" ng-click="vm.copy()" ng-disabled="!vm.checkReadyStatus()">

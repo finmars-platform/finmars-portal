@@ -120,7 +120,7 @@
                                     <span>{{tab.name}}</span>
                                 </md-tab-label>
                                 <md-tab-body>
-                                    <md-content class="md-padding p-t-26">
+                                    <md-content class="md-padding p-t-26 " ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
                                         <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
                                              class="entity-editor-row">
                                             <div class="ev-data-field
@@ -338,7 +338,7 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
-        <div>
+        <div layout="row">
             <md-button ng-click="vm.editLayout()"
                        class="md-raised md-primary"
                        ng-disabled="!vm.checkReadyStatus() || !vm.entity.transaction_type">
@@ -347,6 +347,41 @@
             <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Manage attributes
             </md-button>
+
+            <div ng-if="vm.checkReadyStatus()">
+
+                <md-button ng-click="vm.entity.is_locked = true"
+                           ng-if="vm.entity.is_locked == false"
+                           class="md-raised"
+                           ng-disabled="vm.entity.is_canceled == true">
+                    Lock
+                </md-button>
+
+                <md-button
+                        ng-click="vm.entity.is_locked = false"
+                        ng-if="vm.entity.is_locked == true"
+                        class="md-raised"
+                        ng-disabled="vm.entity.is_canceled == true">
+                    Unlock
+                </md-button>
+
+                <!--<md-button ng-click="vm.entity.is_canceled = false"-->
+                           <!--ng-if="vm.entity.is_canceled == true"-->
+                           <!--ng-disabled="vm.entity.is_locked == true"-->
+                           <!--class="md-raised">-->
+                    <!--Ignore-->
+                <!--</md-button>-->
+
+                <!--<md-button-->
+                        <!--ng-click="vm.entity.is_canceled = true"-->
+                        <!--ng-if="vm.entity.is_canceled == false"-->
+                        <!--ng-disabled="vm.entity.is_locked == true"-->
+                        <!--class="md-raised">-->
+                    <!--Activate-->
+                <!--</md-button>-->
+
+            </div>
+
         </div>
         <div>
             <md-button class="md-raised" ng-click="vm.cancel()">

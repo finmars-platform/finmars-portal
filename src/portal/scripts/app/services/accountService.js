@@ -29,6 +29,10 @@
         return accountRepository.updateBulk(accounts);
     };
 
+    var deleteBulk = function(data) {
+        return accountRepository.deleteBulk(data)
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
@@ -36,7 +40,8 @@
         update: update,
         deleteByKey: deleteByKey,
 
-        updateBulk: updateBulk
+        updateBulk: updateBulk,
+        deleteBulk: deleteBulk
     }
 
 

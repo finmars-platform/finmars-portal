@@ -49,6 +49,10 @@
         return transactionTypeRepository.bookPendingComplexTransaction(id, transaction);
     };
 
+    var deleteBulk = function(data){
+        return transactionTypeRepository.deleteBulk(data);
+    };
+
     module.exports = {
         getList: getList,
         getListLight: getListLight,
@@ -56,13 +60,15 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        updateBulk: updateBulk,
 
         initBookComplexTransaction: initBookComplexTransaction,
         bookComplexTransaction: bookComplexTransaction,
 
         initBookPendingComplexTransaction: initBookPendingComplexTransaction,
-        bookPendingComplexTransaction: bookPendingComplexTransaction
+        bookPendingComplexTransaction: bookPendingComplexTransaction,
+
+        updateBulk: updateBulk,
+        deleteBulk: deleteBulk
 
     }
 

@@ -80,6 +80,8 @@
 
                 vm.transactionType = data.transaction_type_object;
 
+                vm.entity = data.complex_transaction;
+
                 vm.specialRulesReady = true;
                 vm.readyStatus.entity = true;
                 vm.readyStatus.permissions = true;
@@ -654,6 +656,9 @@
 
                         var res = Object.assign(data, resultEntity);
 
+                        res.complex_transaction.is_locked = resultEntity.is_locked;
+                        res.complex_transaction.is_canceled = resultEntity.is_canceled;
+
                         transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
                             resolve(data);
                         });
@@ -747,6 +752,9 @@
                     transactionTypeService.initBookPendingComplexTransaction(resultEntity.transaction_type).then(function (data) {
 
                         var res = Object.assign(data, resultEntity);
+
+                        res.complex_transaction.is_locked = resultEntity.is_locked;
+                        res.complex_transaction.is_canceled = resultEntity.is_canceled;
 
                         transactionTypeService.bookPendingComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
                             resolve(data);
@@ -926,6 +934,9 @@
                         });
 
                         delete vm.entity.id;
+
+                        vm.entity.is_locked = false;
+                        vm.entity.is_active = false;
 
                         $scope.$apply();
                     });
