@@ -100,7 +100,7 @@
     var deleteBulk = function (data) {
         return xhrService.fetch(baseUrl + 'accounts/account-type/bulk-delete/',
             {
-                method: 'PATCH',
+                method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
