@@ -215,7 +215,7 @@
 
             <div ng-if="vm.checkReadyStatus()">
 
-                <md-button ng-click="vm.entity.is_locked = true"
+                <md-button ng-click="vm.toggleLockStatus($event)"
                            ng-if="vm.entity.is_locked == false"
                            ng-disabled="vm.entity.is_canceled == true"
                            class="md-raised">
@@ -223,14 +223,14 @@
                 </md-button>
 
                 <md-button
-                        ng-click="vm.entity.is_locked = false"
+                        ng-click="vm.toggleLockStatus($event)"
                         ng-if="vm.entity.is_locked == true"
                         ng-disabled="vm.entity.is_canceled == true"
                         class="md-raised">
                     Unlock
                 </md-button>
 
-                <md-button ng-click="vm.entity.is_canceled = false"
+                <md-button ng-click="vm.toggleCancelStatus($event)"
                            ng-if="vm.entity.is_canceled == true"
                            ng-disabled="vm.entity.is_locked == true"
                            class="md-raised">
@@ -238,7 +238,7 @@
                 </md-button>
 
                 <md-button
-                        ng-click="vm.entity.is_canceled = true"
+                        ng-click="vm.toggleCancelStatus($event)"
                         ng-if="vm.entity.is_canceled == false"
                         ng-disabled="vm.entity.is_locked == true"
                         class="md-raised">

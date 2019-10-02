@@ -618,6 +618,34 @@
 
         };
 
+        vm.toggleLockStatus = function ($event) {
+
+            vm.entity.is_locked = !vm.entity.is_locked;
+
+            complexTransactionService.updateProperties(vm.entity.id, {is_locked: vm.entity.is_locked}).then(function () {
+
+                // console.log('here');
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.toggleCancelStatus = function ($event) {
+
+            vm.entity.is_canceled = !vm.entity.is_canceled;
+
+            complexTransactionService.updateProperties(vm.entity.id, {is_canceled: vm.entity.is_canceled}).then(function () {
+
+                // console.log('here');
+
+                $scope.$apply();
+
+            })
+
+        };
+
         vm.delete = function ($event) {
 
             $mdDialog.show({
