@@ -384,8 +384,7 @@
                             case "transaction-report":
                                 entityType = type;
                                 break;
-                        }
-                        ;
+                        };
 
                         if (entityType) {
 
@@ -414,16 +413,14 @@
                                         additions.layoutId = res.data.listLayoutId;
                                     } else {
                                         delete additions.layoutId;
-                                    }
-                                    ;
+                                    };
 
                                     scope.evDataService.setSplitPanelStatus(true);
                                     scope.evDataService.setAdditions(additions);
                                     scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
                                     scope.currentAdditions = scope.evDataService.getAdditions();
 
-                                }
-                                ;
+                                };
 
                             });
 

@@ -57,8 +57,7 @@
                     viewportElem: viewportElem,
                     contentElem: contentElem,
                     contentWrapElem: contentWrapElem,
-                    rootWrapElem: rootWrapElem,
-                    //rootEntityContentWrapElem: rootEntityContentWrapElem
+                    rootWrapElem: rootWrapElem
                 };
 
                 var projection;
@@ -121,23 +120,18 @@
                                 if ((filterValues.min_value || filterValues.min_value === 0) &&
                                     (filterValues.max_value || filterValues.max_value === 0)) {
                                     return true;
-                                }
-                                ;
+                                };
 
                             } else if (Array.isArray(filterValues)) {
 
                                 if (filterValues[0] || filterValues[0] === 0) {
                                     return true;
-                                }
-                                ;
+                                };
 
-                            }
-                            ;
-                        }
-                        ;
+                            };
+                        };
 
-                    }
-                    ;
+                    };
 
                     return false;
                 };
@@ -176,16 +170,13 @@
 
                             frontEndFilters.push(filterOptions);
 
-                        }
-                        ;
-                    }
-                    ;
+                        };
+                    };
 
                     if (frontEndFilters.length > 0) {
                         var groups = scope.evDataService.getGroups();
                         flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
-                    }
-                    ;
+                    };
 
 
                     scope.evDataService.setFlatList(flatList);
@@ -352,17 +343,16 @@
                     if (!activeLayoutConfigIsSet) {
                         activeLayoutConfigIsSet = true;
                         scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
-                    }
-                    ;
+                    };
 
                 });
 
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
                     if (isReport) {
-                        rvDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
+                        rvDomManager.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
                     } else {
-                        evDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
+                        evDomManager.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
                     }
 
                     updateTableContent();
@@ -372,9 +362,9 @@
                 scope.evEventService.addEventListener(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE, function () {
 
                     if (isReport) {
-                        rvDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
+                        rvDomManager.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
                     } else {
-                        evDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
+                        evDomManager.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
                     }
 
                 });

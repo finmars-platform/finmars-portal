@@ -653,7 +653,12 @@
                         //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
 
-                    }
+                    };
+
+                    var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+                    if (interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+                        vm.entityViewerDataService.setSplitPanelStatus(true);
+                    };
 
                 };
 

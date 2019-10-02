@@ -30,10 +30,20 @@
 
         vm.layouts = [];
 
+        var deleteChartTypeBasedProps = function () {
+            delete vm.item.settings.abscissa;
+            delete vm.item.settings.ordinate;
+            delete vm.item.settings.fieldsKeys;
+            delete vm.item.settings.min_bar_width;
+            delete vm.item.settings.max_bar_width;
+        };
+
         vm.reportTypeChange = function() {
 
             vm.item.settings.layout = null;
             vm.item.settings.linked_components= {};
+
+            deleteChartTypeBasedProps();
 
             switch (vm.item.type) {
                 case 'report_viewer_bars_chart':
@@ -41,9 +51,7 @@
                     vm.item.settings.ordinate = null;
                     break;
                 case 'report_viewer_pie_chart':
-                    vm.item.settings = {
-                        fieldsKeys: []
-                    };
+                    vm.item.settings.fieldsKeys = [];
                     break;
             }
 
@@ -66,6 +74,8 @@
 
         vm.chartTypeChanged = function () {
 
+            deleteChartTypeBasedProps();
+
             switch (vm.item.type) {
                 case 'report_viewer_bars_chart':
                     vm.item.settings = {
@@ -76,9 +86,7 @@
                     };
                     break;
                 case 'report_viewer_pie_chart':
-                    vm.item.settings = {
-                        fieldsKeys: []
-                    };
+                    vm.item.settings.fieldsKeys = [];
                     break;
             };
 
