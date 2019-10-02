@@ -25,7 +25,8 @@
                 settings: {
                     abscissa: '',
                     ordinate: '',
-                    value_key: ''
+                    value_key: '',
+                    subtotal_formula_id: 1
                 }
             }
         }
@@ -132,6 +133,11 @@
 
             vm.item.settings.layout_name = layoutName;
             vm.item.settings.content_type = vm.getContentTypeByEntityType();
+
+
+            if(vm.item.settings.subtotal_formula_id) {
+                vm.item.settings.subtotal_formula_id = parseInt(vm.item.settings.subtotal_formula_id, 10);
+            }
 
             if (vm.item.id) {
 

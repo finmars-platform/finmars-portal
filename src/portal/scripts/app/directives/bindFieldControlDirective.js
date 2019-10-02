@@ -31,17 +31,17 @@
 
                 scope.isRecalculate = false;
 
-                scope.isNotEditableField = function () {
-                    console.log('editable entityType', scope.entityType, scope.item);
-                    if (scope.entityType === 'complex-transaction') {
+                scope.isEditableField = function () {
 
-                        if (scope.item.can_recalculate || scope.item.editable == false) {
-                            return true;
-                        };
+                    if (scope.entityType === 'complex-transaction' && scope.item) {
 
-                    };
+                        if (scope.item.can_recalculate || scope.item.editable === false) {
+                            return false;
+                        }
 
-                    return false;
+                    }
+
+                    return true;
                 };
 
                 if (scope.item) {

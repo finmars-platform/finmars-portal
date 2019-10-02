@@ -25,13 +25,17 @@
         return currencyRepository.deleteByKey(id);
     };
 
+    var deleteBulk = function(data){
+        return currencyRepository.deleteBulk(data);
+    };
 
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        deleteBulk: deleteBulk
     }
 
 

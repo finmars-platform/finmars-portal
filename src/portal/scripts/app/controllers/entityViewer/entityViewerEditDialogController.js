@@ -277,7 +277,7 @@
         vm.bindField = function (tab, field) {
             var i, l, e;
 
-            console.log('field', field);
+            // console.log('field', field);
 
             if (field && field.type === 'field') {
 
@@ -389,7 +389,6 @@
             }
 
 
-
             if (vm.entity.attributes) {
                 var i, a, c;
                 var keys = Object.keys(vm.entity), attrExist;
@@ -487,6 +486,55 @@
                 }
 
             })
+
+        };
+
+        vm.delete = function ($event) {
+
+            $mdDialog.show({
+                controller: 'EntityViewerDeleteDialogController as vm',
+                templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                //clickOutsideToClose: false,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    entity: vm.entity,
+                    entityType: vm.entityType
+                }
+            }).then(function (res) {
+
+                console.log('here', res);
+
+                if (res.status === 'agree') {
+                    $mdDialog.hide({res: 'agree', data: {}});
+                }
+
+            })
+
+        };
+
+        vm.toggleEnableStatus = function ($event) {
+
+            vm.entity.is_enabled = !vm.entity.is_enabled;
+
+
+            entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
+
+                result.is_enabled = vm.entity.is_enabled;
+
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                    console.log('enable/disable toggle success');
+
+                    $scope.$apply();
+
+                });
+            })
+
 
         };
 
