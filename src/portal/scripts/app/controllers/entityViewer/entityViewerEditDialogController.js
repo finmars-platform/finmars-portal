@@ -277,7 +277,7 @@
         vm.bindField = function (tab, field) {
             var i, l, e;
 
-            console.log('field', field);
+            // console.log('field', field);
 
             if (field && field.type === 'field') {
 
@@ -387,7 +387,6 @@
             if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
                 vm.entity.attributes = [];
             }
-
 
 
             if (vm.entity.attributes) {
@@ -515,6 +514,27 @@
                 }
 
             })
+
+        };
+
+        vm.toggleEnableStatus = function ($event) {
+
+            vm.entity.is_enabled = !vm.entity.is_enabled;
+
+
+            entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
+
+                result.is_enabled = vm.entity.is_enabled;
+
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                    console.log('enable/disable toggle success');
+
+                    $scope.$apply();
+
+                });
+            })
+
 
         };
 

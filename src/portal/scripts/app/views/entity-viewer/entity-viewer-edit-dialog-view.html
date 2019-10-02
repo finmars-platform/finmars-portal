@@ -16,7 +16,7 @@
                             <span>{{tab.name}}</span>
                         </md-tab-label>
                         <md-tab-body>
-                            <md-content class="md-padding p-t-26">
+                            <md-content class="md-padding p-t-26" ng-class="{'locked-tab-overlay': !vm.entity.is_enabled}">
                                 <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
                                     <div class="ev-data-field
@@ -35,7 +35,7 @@
                             <span class="grey-tab">{{tab.label}}</span>
                         </md-tab-lable>
                         <md-tab-body>
-                            <md-content class="md-padding p-t-26">
+                            <md-content class="md-padding p-t-26" ng-class="{'locked-tab-overlay': !vm.entity.is_enabled}">
                                 <div data-ng-include="tab.templateUrl"></div>
                             </md-content>
                         </md-tab-body>
@@ -214,6 +214,20 @@
             </md-button>
 
             <md-button
+                    data-ng-if="vm.entity.is_enabled"
+                    ng-click="vm.toggleEnableStatus($event)"
+                    class="md-raised">
+                Disable
+            </md-button>
+
+            <md-button
+                    data-ng-if="!vm.entity.is_enabled"
+                    ng-click="vm.toggleEnableStatus($event)"
+                    class="md-raised">
+                Enable
+            </md-button>
+
+            <md-button
                     ng-click="vm.delete($event)"
                     class="md-raised md-warn">
                 Delete
@@ -221,14 +235,14 @@
 
         </div>
         <div >
-            <md-button class="md-raised m-r-24" ng-click="vm.copy()" ng-disabled="!vm.checkReadyStatus()">
+            <md-button class="md-raised m-r-24" ng-click="vm.copy()" ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled">
                 Make a copy
             </md-button>
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
             <md-button class="md-raised m-r-24"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid}"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled}"
                        ng-click="vm.save()">
                 Save
             </md-button>
