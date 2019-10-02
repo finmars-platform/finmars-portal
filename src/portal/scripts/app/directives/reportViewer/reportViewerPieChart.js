@@ -31,8 +31,7 @@
                 var componentHeight = mainElem.clientHeight;
                 var componentWidth = mainElem.offsetWidth;
 
-                var chartMargin = 40;
-
+                scope.readyStatus = true;
 
                 var getDataForChartsFromFlatList = function () {
 
@@ -43,142 +42,109 @@
                         return item.___type === 'object'
                     });
 
-                    var nameKey = scope.rvChartsSettings.abscissa;
-                    var numberKey = scope.rvChartsSettings.ordinate;
+                    var fieldsKeys = scope.rvChartsSettings.fieldsKeys;
 
-                    var savedFields = {};
+                    var f;
+                    for (f = 0; f < fieldsKeys.length; f++) {
 
-                    itemList.forEach(function (item) {
+                        var fieldData = {};
+                        var key = fieldsKeys[f];
 
-                        var nameValue = null;
-                        var numberValue = 0;
+                        fieldData.name = key;
+                        fieldData.numericValue = 0;
 
-                        if (item[nameKey]) {
+                        var i;
+                        for (i = 0; i < itemList.length; i++) {
+                            var item = itemList[i];
 
-                            nameValue = item[nameKey];
-                            numberValue = item[numberKey] || 0;
-
-                            var savedNames = Object.keys(savedFields);
-
-                            if (savedNames.indexOf(nameValue) === -1) {
-
-                                chartData.push({name: nameValue, numericValue: numberValue});
-                                var dataIndex = chartData.length - 1;
-                                savedFields[nameValue] = dataIndex;
-
-                            } else { // if the field was already saved, add number to it
-
-                                var matchingDataIndex = savedFields[nameValue];
-
-                                chartData[matchingDataIndex].numericValue += numberValue;
-
+                            if (item[key]) {
+                                fieldData.numericValue += item[key];
                             };
                         };
 
-                        /*if (nameValue && numberValue) {
-                            chartData.push({name: nameValue, numericValue: numberValue});
-                            var dataIndex = chartData.length - 1;
-                            savedFields[nameValue] = dataIndex;
-                        };*/
+                        chartData.push(fieldData);
 
-                    });
+                    };
 
-                };
-
-                var formatThousands = d3.format("~s");
-
-                // helping functions
-                var returnNumericValue = function (d) {
-                    return d.numericValue;
                 };
 
                 // < helping functions >
 
-                var drawBarsChart = function () {
+                var drawChart = function () {
 
+                    var radius;
 
-                    var radius = Math.min(componentWidth, componentHeight) / 2 - chartMargin;
+                    if (componentHeight < componentWidth) {
+                        radius = componentHeight / 2;
+                    } else {
+                        radius = componentWidth / 2;
+                    };
 
-                    var svg = d3.select(".report-viewer-chart-holder")
-                        .append("svg")
-                        .attr("width", componentWidth)
-                        .attr("height", componentHeight)
-                        .append("g")
-                        .attr("transform", "translate(" + componentWidth / 2 + "," + componentHeight / 2 + ")");
+                    var svgSize = radius * 2;
 
-// Create dummy data
-                    var data = {a: 9, b: 20, c:30, d:8, e:12, f:3, g:7, h:14}
+                    var getPartColor = d3.scaleOrdinal()
+                        .domain(d3.map(chartData, function (d) {return d.name}))
+                        .range(d3.schemeCategory10);
 
-                    // set the color scale
-                    var color = d3.scaleOrdinal()
-                        .domain(["a", "b", "c", "d", "e", "f", "g", "h"])
-                        .range(d3.schemeDark2);
-
-                    // Compute the position of each group on the pie:
-                    var pie = d3.pie()
-                        .sort(null) // Do not sort group by size
-                        .value(function(d) {return d.numericValue; });
-
-                    var data_ready = pie(d3.entries(data));
-
-                    // The arc generator
                     var arc = d3.arc()
-                        .innerRadius(radius * 0.5)
-                        .outerRadius(radius * 0.8);
+                        .innerRadius(radius * 0.8)
+                        .outerRadius(radius);
 
-                    // Another arc that won't be drawn. Just for labels positioning
-                    var outerArc = d3.arc()
-                        .innerRadius(radius * 0.9)
-                        .outerRadius(radius * 0.9);
-
-                    svg
-                        .selectAll('allSlices')
-                        .data(data_ready)
-                        .enter()
-                        .append('path')
-                        .attr('d', arc)
-                        .attr('fill', function(d){ return(color(d.data.key)) })
-                        .attr("stroke", "white")
-                        .style("stroke-width", "2px")
-                        .style("opacity", 0.7)
-
-// Add the polylines between chart and labels:
-                    svg
-                        .selectAll('allPolylines')
-                        .data(data_ready)
-                        .enter()
-                        .append('polyline')
-                        .attr("stroke", "black")
-                        .style("fill", "none")
-                        .attr("stroke-width", 1)
-                        .attr('points', function(d) {
-                            var posA = arc.centroid(d) // line insertion in the slice
-                            var posB = outerArc.centroid(d) // line break: we use the other arc generator that has been built only for that
-                            var posC = outerArc.centroid(d); // Label position = almost the same as posB
-                            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2 // we need the angle to see if the X position will be at the extreme right or extreme left
-                            posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
-                            return [posA, posB, posC]
-                        })
-
-                    // Add the polylines between chart and labels:
-                    svg
-                        .selectAll('allLabels')
-                        .data(data_ready)
-                        .enter()
-                        .append('text')
-                        .text( function(d) { console.log(d.data.key) ; return d.data.key } )
-                        .attr('transform', function(d) {
-                            var pos = outerArc.centroid(d);
-                            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
-                            pos[0] = radius * 0.99 * (midangle < Math.PI ? 1 : -1);
-                            return 'translate(' + pos + ')';
-                        })
-                        .style('text-anchor', function(d) {
-                            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
-                            return (midangle < Math.PI ? 'start' : 'end')
+                    var pie = d3.pie()
+                        .sort(null)
+                        .value(function (d) {
+                            return d.numericValue;
                         });
 
-                    chartHolderElem.appendChild(svg.node());
+                    var svg = d3.select(chartHolderElem)
+                        .append('svg')
+                            .attr('width', svgSize + 'px')
+                            .attr('height', svgSize + 'px');
+
+                    var chartWrapingG = svg.append('g')
+                        .attr('transform', 'translate(' + radius + ',' + radius + ')');
+
+                    var some = chartWrapingG.selectAll('g')
+                        .data(pie(chartData))
+                        .enter()
+                        .append('g');
+
+                    chartWrapingG.selectAll('g')
+                        .append('path')
+                            .attr('d', arc)
+                            .style("stroke-width", "2px")
+                            .attr('fill', function (d) {
+                                return getPartColor(d.data.name)
+                            });
+
+                    chartWrapingG.selectAll('path')
+                        .on("mouseover", function () {
+
+                            d3.select(this)
+                                .style('opacity', 0.5);
+
+                            var barTooltipElem = document.createElement("div");
+                            barTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
+                            document.body.appendChild(barTooltipElem);
+
+                        })
+                        .on("mousemove", function (d) {
+
+                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+
+                            barTooltipElem.innerText = "Name: " + d.data.name + ";" + "\n" + "Number: " + d.data.numericValue + ";";
+                            var tElemWidth = barTooltipElem.offsetWidth;
+                            barTooltipElem.style.top = (d3.event.pageY - 10) + "px";
+                            barTooltipElem.style.left = (d3.event.pageX - tElemWidth - 5) + "px"; // subtractions applied to place tooltip to the left of cursor
+
+                        })
+                        .on("mouseout", function () {
+                            d3.select(this)
+                                .style('opacity', 1);
+
+                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+                            document.body.removeChild(barTooltipElem);
+                        });
 
                 };
 
@@ -187,7 +153,7 @@
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         getDataForChartsFromFlatList();
-                        drawBarsChart();
+                        drawChart();
                         scope.readyStatus = true;
 
                     });

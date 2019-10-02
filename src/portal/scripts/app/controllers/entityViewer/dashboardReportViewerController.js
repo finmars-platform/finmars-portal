@@ -589,6 +589,12 @@
                     };
                 };
 
+                if (vm.componentType.data.type === 'report_viewer_pie_chart') {
+                    vm.rvChartsSettings = {
+                        fieldsKeys: vm.componentType.data.settings.fieldsKeys
+                    };
+                };
+
                 uiService.getListLayoutByKey(layoutId).then(function (data) {
 
                     vm.layout = data;

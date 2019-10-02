@@ -82,7 +82,7 @@
 
 
         vm.cancel = function () {
-            $mdDialog.hide();
+            $mdDialog.hide({res: 'disagree'});
         };
 
         vm.agree = function () {

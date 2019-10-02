@@ -269,6 +269,22 @@
 
                 setEventListeners();
 
+                var setLayout = function (layoutData) {
+
+                    vm.entityViewerDataService.setLayoutCurrentConfiguration(layoutData, uiService, false);
+                    vm.readyStatus.layout = true;
+                    console.log('vm', vm);
+                    evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                    var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+                    if (interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+                        vm.entityViewerDataService.setSplitPanelStatus(true);
+                    };
+
+                    $scope.$apply();
+
+                };
+
                 uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
 
                     if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
@@ -278,12 +294,7 @@
 
                         uiService.updateListLayout(activeLayout.id, activeLayout);
 
-                        vm.entityViewerDataService.setLayoutCurrentConfiguration(activeLayout, uiService, false);
-                        vm.readyStatus.layout = true;
-                        console.log('vm', vm);
-                        evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                        $scope.$apply();
-                        //vm.entityViewerDataService.setActiveLayoutConfiguration();
+                        setLayout(activeLayout);
 
                     } else {
 
@@ -292,14 +303,9 @@
                             var defaultLayout = null;
                             if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
                                 defaultLayout = defaultLayoutData.results[0];
-                            }
+                            };
 
-                            vm.entityViewerDataService.setLayoutCurrentConfiguration(defaultLayout, uiService, false);
-                            vm.readyStatus.layout = true;
-                            console.log('vm', vm);
-                            evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                            $scope.$apply();
-                            //vm.entityViewerDataService.setActiveLayoutConfiguration();
+                            setLayout(defaultLayout);
 
                         });
 

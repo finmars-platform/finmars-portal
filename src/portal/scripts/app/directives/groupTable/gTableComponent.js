@@ -51,7 +51,8 @@
                     if (scope.isRootEntityViewer) {
                         scope.rootWrapElem = elem[0].querySelector('.g-root-wrapper');
                     } else {
-                        scope.rootWrapElem = $(elem).parents('.g-root-wrapper');
+                        //scope.rootWrapElem = $(elem).parents('.g-root-wrapper');
+                        scope.rootWrapElem = document.querySelector('.g-root-wrapper');
                     }
 
                     if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
