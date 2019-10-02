@@ -9,6 +9,20 @@
     width: 100%;
   }
 
+  .locked-tab-overlay {
+    &:after {
+      content: ' ';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255, .6);
+      z-index: 1;
+    }
+  }
+
 }
 
 .entity-editor-row {

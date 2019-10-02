@@ -25,13 +25,19 @@
         return priceHistoryRepository.deleteByKey(id);
     };
 
+    var deleteBulk = function(data) {
+        return priceHistoryRepository.deleteBulk(data)
+    };
+
 
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        deleteBulk: deleteBulk
     }
 
 

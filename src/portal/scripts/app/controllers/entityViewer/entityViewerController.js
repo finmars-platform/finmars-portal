@@ -65,17 +65,14 @@
                     if (action === 'delete' && activeObject.id) {
 
                         $mdDialog.show({
-                            controller: 'EntityViewerDeleteDialogController as vm',
-                            templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
+                            controller: 'EntityViewerDeleteBulkDialogController as vm',
+                            templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-bulk-dialog-view.html',
                             parent: angular.element(document.body),
                             targetEvent: activeObject.event,
                             //clickOutsideToClose: false,
                             locals: {
-                                entity: {
-                                    id: activeObject.id,
-                                    name: activeObject.name
-                                },
-                                entityType: vm.entityViewerDataService.getEntityType()
+                                evDataService: vm.entityViewerDataService,
+                                evEventService: vm.entityViewerEventService
                             }
                         }).then(function (res) {
 

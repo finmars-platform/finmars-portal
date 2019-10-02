@@ -45,6 +45,10 @@
         return portfolioRepository.updateBulk(portfolios);
     };
 
+    var deleteBulk = function(data){
+        return portfolioRepository.deleteBulk(data);
+    };
+
     module.exports = {
         getClassifierNodeList: getClassifierNodeList,
         getClassifierNodeByKey: getClassifierNodeByKey,
@@ -58,7 +62,8 @@
         update: update,
         deleteByKey: deleteByKey,
 
-        updateBulk: updateBulk
+        updateBulk: updateBulk,
+        deleteBulk: deleteBulk
     }
 
 

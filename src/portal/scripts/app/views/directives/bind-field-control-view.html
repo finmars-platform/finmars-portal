@@ -1,4 +1,4 @@
-<div ng-class="{'disabled-field': isNotEditableField()}">
+<div ng-class="{'disabled-field': !isEditableField()}">
     <div data-ng-if="fieldType['display_name'] === 'Number'" class="bind-field-number-field-container">
 
         <md-input-container class="md-block no-error-spacer">

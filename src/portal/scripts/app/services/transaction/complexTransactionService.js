@@ -21,6 +21,10 @@
         return complexTransactionRepository.update(id, transaction);
     };
 
+    var updateProperties = function (id, transaction) {
+        return complexTransactionRepository.updateProperties(id, transaction)
+    }
+
     var deleteByKey = function (id) {
         return complexTransactionRepository.deleteByKey(id);
     };
@@ -41,17 +45,26 @@
         return complexTransactionRepository.rebookPendingComplexTransaction(id, transaction);
     };
 
+    var deleteBulk = function(data){
+        return complexTransactionRepository.deleteBulk(data);
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
         deleteByKey: deleteByKey,
+
+        updateProperties: updateProperties,
+
         initRebookComplexTransaction: initRebookComplexTransaction,
         rebookComplexTransaction: rebookComplexTransaction,
 
         initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
-        rebookPendingComplexTransaction: rebookPendingComplexTransaction
+        rebookPendingComplexTransaction: rebookPendingComplexTransaction,
+
+        deleteBulk: deleteBulk
     }
 
 

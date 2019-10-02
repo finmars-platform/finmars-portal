@@ -603,7 +603,7 @@
 
                     var popup = document.createElement('div');
 
-                    clearActivated(evDataService);
+                    // clearActivated(evDataService);
 
                     var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 

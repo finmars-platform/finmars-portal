@@ -64,6 +64,20 @@
             })
     };
 
+    var updateProperties = function (id, transaction) {
+        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/update-properties/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(transaction)
+            })
+    };
+
     var deleteByKey = function (id) {
         return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/',
             {
@@ -137,6 +151,25 @@
             })
     };
 
+    var deleteBulk = function (data) {
+        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/bulk-delete/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(function (data) {
+                return new Promise(function (resolve, reject) {
+                    resolve({status: 'deleted'});
+                });
+            })
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
@@ -146,8 +179,12 @@
         initRebookComplexTransaction: initRebookComplexTransaction,
         rebookComplexTransaction: rebookComplexTransaction,
 
+        updateProperties: updateProperties,
+
         initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
-        rebookPendingComplexTransaction: rebookPendingComplexTransaction
+        rebookPendingComplexTransaction: rebookPendingComplexTransaction,
+
+        deleteBulk: deleteBulk
     }
 
 }());

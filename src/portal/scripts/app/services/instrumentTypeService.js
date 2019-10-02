@@ -25,12 +25,19 @@
         return instrumentTypeRepository.deleteByKey(id);
     };
 
+    var deleteBulk = function(data){
+        return instrumentTypeRepository.deleteBulk(data)
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        deleteBulk: deleteBulk
+
     }
 
 

@@ -29,6 +29,10 @@
         return instrumentRepository.updateBulk(instruments);
     };
 
+    var deleteBulk = function(data){
+        return instrumentRepository.deleteBulk(data);
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
@@ -36,7 +40,8 @@
         update: update,
         deleteByKey: deleteByKey,
 
-        updateBulk: updateBulk
+        updateBulk: updateBulk,
+        deleteBulk: deleteBulk
     }
 
 
