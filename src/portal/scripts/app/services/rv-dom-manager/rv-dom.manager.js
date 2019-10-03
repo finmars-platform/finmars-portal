@@ -547,6 +547,7 @@
             //var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;
             var rootWrapElemHeight = rootWrapElem.clientHeight;
             var contentWrapElementHeight = rootWrapElemHeight - interfaceLayout.splitPanel.height;
+
             contentWrapElement.style.height = contentWrapElementHeight + "px";
         } else {
             contentWrapElement.style.height = "";

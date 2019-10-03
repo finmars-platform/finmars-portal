@@ -123,19 +123,52 @@
 
                 </div>
 
-                <div layout="row" class="m-t-16 m-b-16">
-                    <md-input-container style="width: 200px;">
+                <div layout="row" class="m-t-16 m-b-24">
+                    <md-input-container class="dashboard-constructor-field1">
+                        <label for="">Bars Direction</label>
+                        <md-select data-ng-model="vm.item.settings.bars_direction">
+                            <md-option value="bottom-top">Vertical</md-option>
+                            <md-option value="left-right">Horizontal</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+                <h5 style="margin-left: 10px">Bar Width Settings</h5>
+                <div layout="row" class="m-t-16 m-b-24">
+
+                    <md-input-container class="no-error-spacer" style="width: 200px;">
                         <label for="">Chart bar minimal width (in pixels)</label>
                         <input class="no-input-arrows"
                                type="number"
                                data-ng-model="vm.item.settings.min_bar_width">
                     </md-input-container>
 
-                    <md-input-container style="width: 200px;">
+                    <md-input-container class="no-error-spacer" style="width: 200px;">
                         <label for="">Chart bar maximal width (in pixels)</label>
                         <input class="no-input-arrows"
                                type="number"
                                data-ng-model="vm.item.settings.max_bar_width">
+                    </md-input-container>
+                </div>
+
+                <h5 style="margin-left: 10px">Bar Sorting Settings</h5>
+                <md-checkbox data-ng-checked="vm.item.settings.sorting_settings" ng-click="vm.turnOnBarsChartSorting()">Sort bars</md-checkbox>
+                <div layout="row" class="m-t-16 m-b-16">
+
+                    <md-input-container class="dashboard-constructor-field1">
+                        <label for="">Sort By</label>
+                        <md-select data-ng-model="vm.item.settings.sorting_value_type" ng-disabled="!vm.item.settings.sorting_settings">
+                            <md-option value="string">Abscissa</md-option>
+                            <md-option value="number">Ordinate</md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-input-container class="dashboard-constructor-field1">
+                        <label for="">Sort Type</label>
+                        <md-select data-ng-model="vm.item.settings.sorting_type" ng-disabled="!vm.item.settings.sorting_settings">
+                            <md-option value="ascending">Ascending</md-option>
+                            <md-option value="descending">Descending</md-option>
+                        </md-select>
                     </md-input-container>
                 </div>
 
@@ -149,7 +182,7 @@
                                         model="vm.item.settings.fieldsKeys"
                                         nothing-selected-text="Nothing selected"
                                         name-property="name"
-                                        class="table-filter-input-container"></two-fields-multiselect>
+                                        class="table-filter-input-container dashboard-component-constructor-multiselector"></two-fields-multiselect>
             </div>
 
         </div>

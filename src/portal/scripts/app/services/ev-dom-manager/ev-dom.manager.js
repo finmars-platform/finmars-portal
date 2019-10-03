@@ -703,13 +703,15 @@
 
     };
 
-    var calculateContentWrapHeight = function (contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
+    var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
 
         var splitPanelIsActive = evDataService.isSplitPanelActive();
 
         if (splitPanelIsActive) {
             var interfaceLayout = evDataService.getInterfaceLayout();
-            var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;
+            //var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;
+            var rootWrapElemHeight = rootWrapElem.clientHeight;
+            var contentWrapElementHeight = rootWrapElemHeight - interfaceLayout.splitPanel.height;
 
             contentWrapElement.style.height = contentWrapElementHeight + "px";
         } else {
