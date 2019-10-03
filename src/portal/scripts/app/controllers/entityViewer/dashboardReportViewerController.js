@@ -573,6 +573,7 @@
 
                 if (vm.componentType.data.type === 'report_viewer_matrix') {
                     vm.matrixSettings = {
+                        top_left_title: vm.componentType.data.settings.top_left_title,
                         number_format: vm.componentType.data.settings.number_format,
                         abscissa: vm.componentType.data.settings.abscissa,
                         ordinate: vm.componentType.data.settings.ordinate,
