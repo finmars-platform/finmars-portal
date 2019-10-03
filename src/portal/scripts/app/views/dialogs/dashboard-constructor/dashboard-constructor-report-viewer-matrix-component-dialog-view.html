@@ -112,6 +112,7 @@
                                        ng-keydown="$event.stopPropagation()">
                             </md-select-header>
                             <md-option
+                                    data-ng-click="vm.item.settings.top_left_title = attribute.name"
                                     data-ng-repeat="attribute in vm.numericAttributes | orderBy:'-name' | filter:{name: valueSearchTerm} track by attribute.key "
                                     ng-value="attribute.key">
                                 {{attribute.name}}
@@ -144,6 +145,19 @@
                     Format Settings
                 </md-button>
 
+
+            </div>
+
+            <div layout="row">
+
+                <div layout="row">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Matrix Top Left Title</label>
+                        <input type="text" data-ng-model="vm.item.settings.top_left_title">
+                    </md-input-container>
+
+                </div>
 
             </div>
 

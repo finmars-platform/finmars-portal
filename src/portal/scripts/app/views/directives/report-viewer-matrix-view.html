@@ -4,8 +4,9 @@
         <div class="report-viewer-matrix-row">
 
             <div class="report-viewer-matrix-cell report-viewer-matrix-column-header-cell report-viewer-empty-header-cell"
-                 title="-">
-                -
+                 >
+                <span data-ng-if="!top_left_title" title="-">-</span>
+                <span data-ng-if="top_left_title" title="{{top_left_title}}">{{top_left_title}}</span>
             </div>
 
             <div class="report-viewer-matrix-cell report-viewer-matrix-column-header-cell"

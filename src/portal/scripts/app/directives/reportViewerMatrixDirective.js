@@ -258,6 +258,7 @@
 
                     scope.evDataService.setActiveObject({});
 
+                    scope.top_left_title = scope.matrixSettings.top_left_title;
 
                     // If we already have data (e.g. viewType changed) start
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
