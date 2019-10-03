@@ -584,8 +584,11 @@
                     vm.rvChartsSettings = {
                         abscissa: vm.componentType.data.settings.abscissa,
                         ordinate: vm.componentType.data.settings.ordinate,
+                        bars_direction: vm.componentType.data.settings.bars_direction,
                         min_bar_width: vm.componentType.data.settings.min_bar_width,
-                        max_bar_width: vm.componentType.data.settings.max_bar_width
+                        max_bar_width: vm.componentType.data.settings.max_bar_width,
+                        sorting_value_type: vm.componentType.data.settings.sorting_value_type,
+                        sorting_type: vm.componentType.data.settings.sorting_type
                     };
                 };
 

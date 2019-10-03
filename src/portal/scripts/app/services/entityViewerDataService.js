@@ -101,7 +101,7 @@
             },
             allRowsSelected: false,
             rootEntityViewer: false,
-            isSplitPanelActive: false,
+            splitPanelIsActive: false,
             splitPanelDefaultLayoutId: false,
             splitPanelActiveLayoutId: false,
             additions: {},
@@ -171,11 +171,11 @@
         }
 
         function setSplitPanelStatus(status) {
-            data.isSplitPanelActive = status;
+            data.splitPanelIsActive = status;
         }
 
         function isSplitPanelActive() {
-            return data.isSplitPanelActive;
+            return data.splitPanelIsActive;
         }
 
         function setEntityType(entityType) {

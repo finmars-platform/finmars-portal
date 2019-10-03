@@ -23,8 +23,6 @@
 
                 scope.showBarTooltip = false;
 
-                var horizontalColumns = true;
-
                 var chartData = [];
 
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
@@ -36,6 +34,11 @@
                 var barsMaxWidth = scope.rvChartsSettings.max_bar_width;
                 var barWidth; // used for words wrap function
 
+                var barsDirection = scope.rvChartsSettings.bars_direction;
+
+                var sortingType = scope.rvChartsSettings.sorting_type;
+                var sortingValueType = scope.rvChartsSettings.sorting_value_type;
+
                 var chartMargin = {
                     top: 20,
                     right: 10,
@@ -43,10 +46,11 @@
                     left: 40
                 };
 
-                if (horizontalColumns) {
+                if (barsDirection === 'bottom-top') {
                     chartMargin.top = 40;
                     chartMargin.bottom = 20;
-                }
+                };
+
                 var bandPadding = 0.2;
 
                 var getDataForChartsFromFlatList = function () {
@@ -94,6 +98,66 @@
 
                 };
 
+                var sortChartData = function () {
+
+                    if (sortingType) {
+
+                        var sortCDDescending = function (a, b) {
+                            var aData;
+                            var bData;
+
+                            if (sortingValueType === 'number') {
+                                aData = a.numericValue;
+                                bData = b.numericValue;
+                            } else {
+                                aData = a.name.toLowerCase();
+                                bData = b.name.toLowerCase();
+                            }
+
+                            if (aData < bData) {
+                                return -1;
+                            }
+                            if (aData > bData) {
+                                return 1;
+                            }
+                            return 0;
+                        };
+
+                        var sortCDAscending = function (a, b) {
+
+                            var aData;
+                            var bData;
+
+                            if (sortingValueType === 'number') {
+                                aData = a.numericValue;
+                                bData = b.numericValue;
+                            } else {
+                                aData = a.name.toLowerCase();
+                                bData = b.name.toLowerCase();
+                            };
+
+                            if (aData > bData) {
+                                return -1;
+                            }
+                            if (aData < bData) {
+                                return 1;
+                            }
+                            return 0;
+                        };
+
+                        switch (sortingType) {
+                            case 'ascending':
+                                chartData.sort(sortCDAscending);
+                                break;
+                            case 'descending':
+                                chartData.sort(sortCDDescending);
+                                break;
+                        }
+
+                    };
+
+                };
+
                 var formatThousands = d3.format("~s");
 
                 // helping functions
@@ -106,7 +170,7 @@
                 };
 
                 var wrapWords = function (textElems, width) {
-                    console.log("d3 service textElems", textElems);
+
                     textElems.each(function() {
 
                         var text = d3.select(this),
@@ -222,7 +286,14 @@
                     };
 
                     var getBarHeight = function (d) {
-                        return Math.abs(yScale(0) - yScale(d.numericValue));
+                        var calcBarHeight = Math.abs(yScale(0) - yScale(d.numericValue));
+
+                        if (calcBarHeight === 0) {
+                            return calcBarHeight
+                        } else {
+                            return Math.max(2, calcBarHeight);
+                        };
+
                     };
 
                     var svg = d3.select(chartHolderElem)
@@ -310,9 +381,8 @@
                     chartHolderElem.style.height = componentHeight + 'px';
                     var chartWidth = componentWidth - chartMargin.left - chartMargin.right;
 
-                    console.log("d3 service drawHorChart sizes", componentHeight, componentWidth, chartHeight, chartWidth);
                     chartHolderElem.style.width = componentWidth + 'px';
-                    console.log("d3 service xScale data", getMinValueForAxis(), d3.max(chartData, returnNumericValue), chartWidth);
+
                     var xScale = d3.scaleLinear()
                         .domain([getMinValueForAxis(), d3.max(chartData, returnNumericValue)]).nice()
                         .range([chartMargin.left, chartWidth]);
@@ -367,7 +437,14 @@
                     };
 
                     var getBarWidth = function (d) {
-                        return Math.abs(xScale(0) - xScale(d.numericValue));
+                        var calcBarWidth = Math.abs(xScale(0) - xScale(d.numericValue));
+
+                        if (calcBarWidth === 0) {
+                            return calcBarWidth;
+                        } else {
+                            return Math.max(2, calcBarWidth);
+                        };
+
                     };
 
                     var svg = d3.select(chartHolderElem)
@@ -433,7 +510,8 @@
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         getDataForChartsFromFlatList();
-                        if (horizontalColumns) {
+                        sortChartData();
+                        if (barsDirection === 'bottom-top') {
                             drawChartWithHorizontalCols();
                         } else {
                             drawChartWithVerticalCols();

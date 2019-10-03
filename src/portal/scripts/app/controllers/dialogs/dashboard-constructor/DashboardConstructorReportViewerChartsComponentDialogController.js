@@ -25,6 +25,7 @@
             }
         }
 
+        console.log("d3 item", vm.item, item);
 
         vm.componentsTypes = [];
 
@@ -81,8 +82,12 @@
                     vm.item.settings = {
                         abscissa: '',
                         ordinate: '',
+                        bars_direction: 'bottom-up',
                         min_bar_width: 50,
-                        max_bar_width: 90
+                        max_bar_width: 90,
+                        bars_sorting: false,
+                        sorting_value_type: null,
+                        sorting_type: null
                     };
                     break;
                 case 'report_viewer_pie_chart':
@@ -90,6 +95,10 @@
                     break;
             };
 
+        };
+
+        vm.turnOnBarsChartSorting = function () {
+            vm.item.settings.bars_sorting = !vm.item.settings.bars_sorting;
         };
 
         vm.getContentTypeByEntityType = function () {
