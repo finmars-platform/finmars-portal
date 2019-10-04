@@ -1,6 +1,6 @@
 <div>
 
-    <div data-ng-if="vm.readyStatus.masterUsers && vm.readyStatus.invites">
+    <div data-ng-if="vm.readyStatus.masterUsers && vm.readyStatus.invites && vm.readyStatus.ecosystemConfigurations">
 
         <div style="max-width: 960px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">
 
@@ -116,7 +116,7 @@
 
     </div>
 
-    <div data-ng-if="!vm.readyStatus.masterUsers && !vm.readyStatus.invites" class="dialog-loader">
+    <div data-ng-if="!vm.readyStatus.masterUsers || !vm.readyStatus.invites || !vm.ecosystemConfigurations" class="dialog-loader">
         <div layout="row" layout-sm="column" layout-align="space-around">
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
         </div>

@@ -16,7 +16,7 @@
     app.controller('ProfileController', ['$scope', require('./app/controllers/profileController')]);
     app.controller('ProfileSettingsController', ['$scope', require('./app/controllers/profileSettingsController')]);
     app.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', require('./app/controllers/profileDatabasesController')]);
-    app.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createMasterUserDialogController')]);
+    app.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createMasterUserDialogController')]);
 
     app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/createMasterUserDialogController')]);
     app.controller('ProfileInfoDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/infoDialogController')]);
