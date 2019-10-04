@@ -146,10 +146,6 @@
 
         };
 
-        vm.ownSetup = function () {
-            $state.go('app.home');
-        };
-
         vm.init = function () {
 
             vm.getMember();

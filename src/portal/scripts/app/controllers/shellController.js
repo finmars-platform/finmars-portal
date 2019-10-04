@@ -200,6 +200,10 @@
                 return 'setup';
             }
 
+            if($state.current.name.indexOf('app.new-database') !== -1) {
+                return 'new-database';
+            }
+
             return 'portal';
 
         };

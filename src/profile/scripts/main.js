@@ -13,6 +13,7 @@
 
     });
 
+    app.controller('NewDatabaseController', ['$scope', '$state', require('./app/controllers/newDatabaseController')]);
     app.controller('ProfileController', ['$scope', require('./app/controllers/profileController')]);
     app.controller('ProfileSettingsController', ['$scope', require('./app/controllers/profileSettingsController')]);
     app.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', require('./app/controllers/profileDatabasesController')]);
