@@ -68,7 +68,7 @@
 
                         setTimeout(function () {
 
-                            $state.go('app.home');
+                            $state.go('app.home', {}, {reload: true});
 
                         }, 1000) // because its cool
 
