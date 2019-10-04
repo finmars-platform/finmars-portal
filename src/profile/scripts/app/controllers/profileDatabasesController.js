@@ -6,12 +6,27 @@
     'use strict';
 
     var usersService = require('../services/usersService');
+    var systemService = require('../services/systemService');
 
     module.exports = function ($scope, $state, $mdDialog) {
 
         var vm = this;
 
-        vm.readyStatus = {masterUsers: false, invites: false};
+        vm.readyStatus = {masterUsers: false, invites: false, ecosystemConfigurations: false};
+
+        vm.getEcosystemConfigurationList = function(){
+
+            systemService.getEcosystemConfiguration().then(function (data) {
+
+                vm.ecosystemConfigurations = data.results;
+
+                vm.readyStatus.ecosystemConfigurations = true;
+
+                $scope.$apply();
+
+            })
+
+        };
 
         vm.getMasterUsersList = function () {
 
@@ -45,6 +60,11 @@
                 controller: 'CreateMasterUserDialogController as vm',
                 templateUrl: 'views/dialogs/create-master-user-dialog-view.html',
                 parent: angular.element(document.body),
+                locals: {
+                    data: {
+                        ecosystemConfigurations: vm.ecosystemConfigurations
+                    }
+                },
                 targetEvent: $event
             }).then(function (res) {
 
@@ -165,6 +185,7 @@
         vm.init = function () {
             vm.getMasterUsersList();
             vm.getInvites();
+            vm.getEcosystemConfigurationList();
         };
 
         vm.init();
