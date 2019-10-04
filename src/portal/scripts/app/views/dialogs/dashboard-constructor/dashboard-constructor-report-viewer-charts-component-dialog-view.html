@@ -133,6 +133,23 @@
                     </md-input-container>
                 </div>
 
+                <div layout="row" class="m-t-16 m-b-24">
+                    <md-input-container class="dashboard-constructor-field1">
+                        <label for="">Calculation Of Number For Bar</label>
+                        <md-select data-ng-model="vm.item.settings.group_number_calc_formula">
+                            <md-option value="1">Sum</md-option>
+                            <md-option value="2">Weighted Market Value</md-option>
+                            <md-option value="3">Weighted Market Value Percent</md-option>
+                            <md-option value="4">Weighted Exposure</md-option>
+                            <md-option value="5">Weighted Exposure Percent</md-option>
+                            <md-option value="6">Weighted Average Market Value</md-option>
+                            <md-option value="7">Weighted Average Market Value Percent</md-option>
+                            <md-option value="8">Weighted Average Exposure</md-option>
+                            <md-option value="9">Weighted Average Exposure Percent</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
                 <h5 style="margin-left: 10px">Bar Width Settings</h5>
                 <div layout="row" class="m-t-16 m-b-24">
 
@@ -152,12 +169,15 @@
                 </div>
 
                 <h5 style="margin-left: 10px">Bar Sorting Settings</h5>
-                <md-checkbox data-ng-checked="vm.item.settings.sorting_settings" ng-click="vm.turnOnBarsChartSorting()">Sort bars</md-checkbox>
+                <md-checkbox data-ng-checked="vm.item.settings.bars_sorting"
+                             ng-click="vm.turnOnBarsChartSorting()"
+                             style="margin-left: 10px">Sort bars</md-checkbox>
                 <div layout="row" class="m-t-16 m-b-16">
 
                     <md-input-container class="dashboard-constructor-field1">
                         <label for="">Sort By</label>
-                        <md-select data-ng-model="vm.item.settings.sorting_value_type" ng-disabled="!vm.item.settings.sorting_settings">
+                        <md-select data-ng-model="vm.item.settings.sorting_value_type"
+                                   ng-disabled="!vm.item.settings.bars_sorting">
                             <md-option value="string">Abscissa</md-option>
                             <md-option value="number">Ordinate</md-option>
                         </md-select>
@@ -165,7 +185,8 @@
 
                     <md-input-container class="dashboard-constructor-field1">
                         <label for="">Sort Type</label>
-                        <md-select data-ng-model="vm.item.settings.sorting_type" ng-disabled="!vm.item.settings.sorting_settings">
+                        <md-select data-ng-model="vm.item.settings.sorting_type"
+                                   ng-disabled="!vm.item.settings.bars_sorting">
                             <md-option value="ascending">Ascending</md-option>
                             <md-option value="descending">Descending</md-option>
                         </md-select>
@@ -175,14 +196,91 @@
             </div>
 
             <div ng-if="vm.item.type === 'report_viewer_pie_chart'">
-                <two-fields-multiselect ng-model="vm.item.settings.fieldsKeys"
+                <!--<two-fields-multiselect ng-model="vm.item.settings.fieldsKeys"
                                         ng-change="vm.fieldsSelected()"
                                         title="Fields multiselector"
                                         items="vm.numericAttributesForMultiselect"
                                         model="vm.item.settings.fieldsKeys"
                                         nothing-selected-text="Nothing selected"
                                         name-property="name"
-                                        class="table-filter-input-container dashboard-component-constructor-multiselector"></two-fields-multiselect>
+                                        class="table-filter-input-container dashboard-component-constructor-multiselector"></two-fields-multiselect>-->
+                <div layout="row">
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Separate Chart By</label>
+                        <md-select ng-model="vm.item.settings.group_attr"
+                                   md-container-class="common-select-container"
+                                   md-on-close="abscissaSearchTerm = ''"
+                                   style="width: 200px">
+                            <div>
+                                <md-select-header>
+                                    <input data-ng-model="pieChartNameSearchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter"
+                                           ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
+
+                                <div class="select-options-holder">
+
+                                    <md-option
+                                            data-ng-repeat="attribute in vm.attributes | filter: {name: pieChartNameSearchTerm}"
+                                            ng-value="attribute.key"
+                                            ng-bind="attribute.name">
+                                    </md-option>
+
+                                </div>
+                            </div>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-input-container style="width: 200px;">
+                        <label for="">Chart Numeric Value</label>
+                        <md-select ng-model="vm.item.settings.number_attr"
+                                   md-container-class="common-select-container"
+                                   md-on-close="ordinateSearchTerm = ''"
+                                   style="width: 200px">
+                            <div>
+                                <md-select-header>
+                                    <input data-ng-model="pieChartNumberSearchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter"
+                                           ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
+
+                                <div class="select-options-holder">
+
+                                    <md-option
+                                            data-ng-repeat="attribute in vm.numericAttributes| filter: {name: pieChartNumberSearchTerm}"
+                                            ng-value="attribute.key"
+                                            ng-bind="attribute.name">
+                                    </md-option>
+
+                                </div>
+                            </div>
+                        </md-select>
+                    </md-input-container>
+
+                </div>
+
+                <div layout="row" class="m-t-16 m-b-24">
+                    <md-input-container class="dashboard-constructor-field1">
+                        <label for="">Calculation Of Number For Bar</label>
+                        <md-select data-ng-model="vm.item.settings.group_number_calc_formula">
+                            <md-option value="1">Sum</md-option>
+                            <md-option value="2">Weighted Market Value</md-option>
+                            <md-option value="3">Weighted Market Value Percent</md-option>
+                            <md-option value="4">Weighted Exposure</md-option>
+                            <md-option value="5">Weighted Exposure Percent</md-option>
+                            <md-option value="6">Weighted Average Market Value</md-option>
+                            <md-option value="7">Weighted Average Market Value Percent</md-option>
+                            <md-option value="8">Weighted Average Exposure</md-option>
+                            <md-option value="9">Weighted Average Exposure Percent</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
             </div>
 
         </div>

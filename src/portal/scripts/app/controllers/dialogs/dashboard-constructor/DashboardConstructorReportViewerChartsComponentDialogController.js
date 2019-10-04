@@ -34,9 +34,13 @@
         var deleteChartTypeBasedProps = function () {
             delete vm.item.settings.abscissa;
             delete vm.item.settings.ordinate;
-            delete vm.item.settings.fieldsKeys;
             delete vm.item.settings.min_bar_width;
             delete vm.item.settings.max_bar_width;
+
+            // properties for pie chart
+            //delete vm.item.settings.fieldsKeys;
+            delete vm.item.settings.grouping_field;
+            delete vm.item.settings.number_field;
         };
 
         vm.reportTypeChange = function() {
@@ -50,9 +54,13 @@
                 case 'report_viewer_bars_chart':
                     vm.item.settings.abscissa = null;
                     vm.item.settings.ordinate = null;
+                    vm.item.settings.group_number_calc_formula = 1;
                     break;
                 case 'report_viewer_pie_chart':
-                    vm.item.settings.fieldsKeys = [];
+                    //vm.item.settings.fieldsKeys = [];
+                    vm.item.settings.group_attr = '';
+                    vm.item.settings.number_attr = '';
+                    vm.item.settings.group_number_calc_formula = 1;
                     break;
             }
 
@@ -67,9 +75,9 @@
                 return item.value_type === 20;
             });
 
-            vm.numericAttributesForMultiselect = vm.numericAttributes.map(function (item) {
+            /*vm.numericAttributesForMultiselect = vm.numericAttributes.map(function (item) {
                 return {name: item.name, id: item.key}
-            });
+            });*/
 
         };
 
@@ -82,7 +90,8 @@
                     vm.item.settings = {
                         abscissa: '',
                         ordinate: '',
-                        bars_direction: 'bottom-up',
+                        bars_direction: 'bottom-top',
+                        group_number_calc_formula: 1,
                         min_bar_width: 50,
                         max_bar_width: 90,
                         bars_sorting: false,
@@ -91,7 +100,10 @@
                     };
                     break;
                 case 'report_viewer_pie_chart':
-                    vm.item.settings.fieldsKeys = [];
+                    vm.item.settings.group_attr = '';
+                    vm.item.settings.number_attr = '';
+                    vm.item.settings.group_number_calc_formula = 1;
+                    //vm.item.settings.fieldsKeys = [];
                     break;
             };
 

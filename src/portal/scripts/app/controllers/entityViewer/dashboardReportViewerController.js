@@ -585,6 +585,7 @@
                         abscissa: vm.componentType.data.settings.abscissa,
                         ordinate: vm.componentType.data.settings.ordinate,
                         bars_direction: vm.componentType.data.settings.bars_direction,
+                        group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula,
                         min_bar_width: vm.componentType.data.settings.min_bar_width,
                         max_bar_width: vm.componentType.data.settings.max_bar_width,
                         sorting_value_type: vm.componentType.data.settings.sorting_value_type,
@@ -594,7 +595,10 @@
 
                 if (vm.componentType.data.type === 'report_viewer_pie_chart') {
                     vm.rvChartsSettings = {
-                        fieldsKeys: vm.componentType.data.settings.fieldsKeys
+                        //fieldsKeys: vm.componentType.data.settings.fieldsKeys
+                        group_attr: vm.componentType.data.settings.group_attr,
+                        number_attr: vm.componentType.data.settings.number_attr,
+                        group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula
                     };
                 };
 

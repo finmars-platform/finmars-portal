@@ -3,6 +3,7 @@
     'use strict';
 
     var rvDataHelper = require('../../helpers/rv-data.helper');
+    var rvChartsHelper = require('../../helpers/rv-charts.helper');
 
     var evEvents = require('../../services/entityViewerEvents');
 
@@ -31,9 +32,11 @@
                 var componentHeight = mainElem.clientHeight;
                 var componentWidth = mainElem.offsetWidth;
 
-                scope.readyStatus = true;
+                var nameKey = scope.rvChartsSettings.group_attr;
+                var numberKey = scope.rvChartsSettings.number_attr;
+                var fieldValueCalcFormulaId = parseInt(scope.rvChartsSettings.group_number_calc_formula);
 
-                var getDataForChartsFromFlatList = function () {
+                var getDataForCharts = function () {
 
                     chartData = [];
 
@@ -42,7 +45,9 @@
                         return item.___type === 'object'
                     });
 
-                    var fieldsKeys = scope.rvChartsSettings.fieldsKeys;
+                    chartData = rvChartsHelper.getDataForChartsFromFlatList(itemList, nameKey, numberKey, fieldValueCalcFormulaId);
+
+                    /*var fieldsKeys = scope.rvChartsSettings.fieldsKeys;
 
                     var f;
                     for (f = 0; f < fieldsKeys.length; f++) {
@@ -64,7 +69,7 @@
 
                         chartData.push(fieldData);
 
-                    };
+                    };*/
 
                 };
 
@@ -104,7 +109,7 @@
                     var chartWrapingG = svg.append('g')
                         .attr('transform', 'translate(' + radius + ',' + radius + ')');
 
-                    var some = chartWrapingG.selectAll('g')
+                    chartWrapingG.selectAll('g')
                         .data(pie(chartData))
                         .enter()
                         .append('g');
@@ -152,7 +157,7 @@
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                        getDataForChartsFromFlatList();
+                        getDataForCharts();
                         drawChart();
                         scope.readyStatus = true;
 

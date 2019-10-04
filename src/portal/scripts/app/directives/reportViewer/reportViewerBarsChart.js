@@ -3,6 +3,7 @@
     'use strict';
 
     var rvDataHelper = require('../../helpers/rv-data.helper');
+    var rvChartsHelper = require('../../helpers/rv-charts.helper');
 
     var evEvents = require('../../services/entityViewerEvents');
 
@@ -22,9 +23,7 @@
                 scope.readyStatus = false;
 
                 scope.showBarTooltip = false;
-
-                var chartData = [];
-
+                console.log("d3 service settings", scope.rvChartsSettings);
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
                 var chartHolderElem = elem[0].querySelector('.report-viewer-chart-holder');
 
@@ -33,6 +32,13 @@
                 var barsMinWidth = scope.rvChartsSettings.min_bar_width;
                 var barsMaxWidth = scope.rvChartsSettings.max_bar_width;
                 var barWidth; // used for words wrap function
+
+                var nameKey = scope.rvChartsSettings.abscissa;
+                var numberKey = scope.rvChartsSettings.ordinate;
+
+                var chartData = [];
+
+                var fieldValueCalcFormulaId = parseInt(scope.rvChartsSettings.group_number_calc_formula);
 
                 var barsDirection = scope.rvChartsSettings.bars_direction;
 
@@ -53,48 +59,14 @@
 
                 var bandPadding = 0.2;
 
-                var getDataForChartsFromFlatList = function () {
-
-                    chartData = [];
+                var getDataForChart = function () {
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
                     var itemList = flatList.filter(function (item) {
-                        return item.___type === 'object'
+                        return item.___type === 'object';
                     });
 
-                    var nameKey = scope.rvChartsSettings.abscissa;
-                    var numberKey = scope.rvChartsSettings.ordinate;
-
-                    var savedFields = {};
-
-                    itemList.forEach(function (item) {
-
-                        var nameValue = null;
-                        var numberValue = 0;
-
-                        if (item[nameKey]) {
-
-                            nameValue = item[nameKey];
-                            numberValue = item[numberKey] || 0;
-
-                            var savedNames = Object.keys(savedFields);
-
-                            if (savedNames.indexOf(nameValue) === -1) {
-
-                                chartData.push({name: nameValue, numericValue: numberValue});
-                                var dataIndex = chartData.length - 1;
-                                savedFields[nameValue] = dataIndex;
-
-                            } else { // if the field was already saved, add number to it
-
-                                var matchingDataIndex = savedFields[nameValue];
-
-                                chartData[matchingDataIndex].numericValue += numberValue;
-
-                            };
-                        };
-
-                    });
+                    chartData = rvChartsHelper.getDataForChartsFromFlatList(itemList, nameKey, numberKey, fieldValueCalcFormulaId);
 
                 };
 
@@ -509,12 +481,12 @@
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                        getDataForChartsFromFlatList();
+                        getDataForChart();
                         sortChartData();
                         if (barsDirection === 'bottom-top') {
-                            drawChartWithHorizontalCols();
-                        } else {
                             drawChartWithVerticalCols();
+                        } else {
+                            drawChartWithHorizontalCols();
                         };
 
                         scope.readyStatus = true;
