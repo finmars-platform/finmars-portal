@@ -130,6 +130,7 @@
 
         entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
+        var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
         delete reportOptions.items;
         delete reportOptions.custom_fields;
@@ -149,6 +150,10 @@
         delete reportOptions.item_accounts;
 
         reportOptions.task_id = null;
+
+        if(entityType === 'pl-report') {
+            reportOptions.date_field = 'accounting_date';
+        }
 
         entityViewerDataService.setReportOptions(reportOptions);
 
