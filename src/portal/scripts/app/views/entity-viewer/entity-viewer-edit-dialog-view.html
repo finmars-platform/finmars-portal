@@ -214,14 +214,14 @@
             </md-button>
 
             <md-button
-                    data-ng-if="vm.entity.is_enabled"
+                    data-ng-if="vm.entity.is_enabled && vm.entityType != 'price-history' && vm.entityType != 'currency-history'"
                     ng-click="vm.toggleEnableStatus($event)"
                     class="md-raised">
                 Disable
             </md-button>
 
             <md-button
-                    data-ng-if="!vm.entity.is_enabled"
+                    data-ng-if="!vm.entity.is_enabled && vm.entityType != 'price-history' && vm.entityType != 'currency-history'"
                     ng-click="vm.toggleEnableStatus($event)"
                     class="md-raised">
                 Enable
