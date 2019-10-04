@@ -1154,6 +1154,34 @@
             }
         };*/
 
+        vm.delete = function ($event) {
+
+            $mdDialog.show({
+                controller: 'EntityViewerDeleteDialogController as vm',
+                templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                //clickOutsideToClose: false,
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    entity: vm.entity,
+                    entityType: vm.entityType
+                }
+            }).then(function (res) {
+
+                console.log('here', res);
+
+                if (res.status === 'agree') {
+                    $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
+                }
+
+            })
+
+        };
+
         vm.deleteItem = function (item, index) {
 
             vm.entity.inputs.splice(index, 1);
