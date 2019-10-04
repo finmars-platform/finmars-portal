@@ -84,12 +84,12 @@
 
                                 objects.forEach(function (obj) {
 
-                                    if (res.data.id === obj.id) {
+                                    if (res.data.ids.indexOf(obj.id) !== -1) {
 
                                         var parent = vm.entityViewerDataService.getData(obj.___parentId)
 
                                         parent.results = parent.results.filter(function (resultItem) {
-                                            return resultItem.id !== res.data.id
+                                            return res.data.ids.indexOf(resultItem.id) === -1
                                         });
 
                                         vm.entityViewerDataService.setData(parent)

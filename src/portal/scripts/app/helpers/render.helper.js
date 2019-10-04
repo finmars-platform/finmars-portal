@@ -56,7 +56,7 @@
 
         if (column.report_settings) {
 
-            if (value === 0) {
+            if (parseInt(value, 10) === 0) {
 
                 if (column.report_settings.zero_format_id === 0) {
                     return value

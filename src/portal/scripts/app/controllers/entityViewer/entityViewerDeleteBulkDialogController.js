@@ -38,7 +38,7 @@
 
             entityResolverService.deleteBulk(vm.entityType, {ids: ids}).then(function (data) {
 
-                $mdDialog.hide({status: 'agree', data: {}});
+                $mdDialog.hide({status: 'agree', data: {ids: ids}});
 
             });
         };

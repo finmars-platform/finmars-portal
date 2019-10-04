@@ -7,8 +7,9 @@
 
     var usersService = require('../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, data) {
 
+        console.log('data', data);
 
         var vm = this;
 
