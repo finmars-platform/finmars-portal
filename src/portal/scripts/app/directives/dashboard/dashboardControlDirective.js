@@ -5,6 +5,8 @@
     var entityResolverService = require('../../services/entityResolverService');
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
+
 
     module.exports = function () {
         return {
@@ -89,6 +91,21 @@
 
                 };
 
+                scope.initEventListeners = function(){
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                        if(status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        }
+
+                    });
+
+                };
+
                 scope.init = function () {
 
                     scope.entityType = scope.getEntityTypeByContentType(scope.item.data.settings.content_type);
@@ -96,6 +113,14 @@
                     if (!scope.item.data.store) {
                         scope.item.data.store = {} // "store" - property for all dashboard data related properties
                     }
+
+                    console.log('scope.item', scope);
+
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+
+                    scope.initEventListeners()
 
 
                 };

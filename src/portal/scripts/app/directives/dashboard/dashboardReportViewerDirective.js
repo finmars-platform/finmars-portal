@@ -2,6 +2,9 @@
 
     'use strict';
 
+    var dashboardEvents = require('../../services/dashboard/dashboardEvents')
+    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses')
+
     module.exports = function () {
         return {
             restriction: 'E',
@@ -18,6 +21,10 @@
 
                 console.log('Dashboard Report Viewer Component', scope);
 
+                scope.readyStatus = {
+                    data: false
+                };
+
                 scope.vm = {
                     tabNumber: scope.tabNumber,
                     rowNumber: scope.rowNumber,
@@ -29,6 +36,36 @@
                     dashboardEventService: scope.dashboardEventService
                 };
 
+                scope.initEventListeners = function () {
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.vm.componentType.data.id);
+
+                        if (status === dashboardComponentStatuses.START) { // Init calculation of a component
+
+                            scope.readyStatus.data = true;
+
+                            setTimeout(function () {
+                                scope.$apply();
+                            },0)
+
+                        }
+
+                    });
+
+                };
+
+                scope.init = function () {
+
+                    scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
+
+                    scope.initEventListeners();
+
+                };
+
+                scope.init()
 
             }
         }

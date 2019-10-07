@@ -667,7 +667,7 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    $mdDialog.hide({res: 'agree', data: {}});
+                    $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
                 }
 
             })

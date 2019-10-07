@@ -16,7 +16,7 @@
                             <span>{{tab.name}}</span>
                         </md-tab-label>
                         <md-tab-body>
-                            <md-content class="md-padding p-t-26" ng-class="{'locked-tab-overlay': !vm.entity.is_enabled}">
+                            <md-content class="md-padding p-t-26" ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
                                 <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
                                     <div class="ev-data-field
@@ -35,7 +35,7 @@
                             <span class="grey-tab">{{tab.label}}</span>
                         </md-tab-lable>
                         <md-tab-body>
-                            <md-content class="md-padding p-t-26" ng-class="{'locked-tab-overlay': !vm.entity.is_enabled}">
+                            <md-content class="md-padding p-t-26" ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
                                 <div data-ng-include="tab.templateUrl"></div>
                             </md-content>
                         </md-tab-body>
@@ -214,14 +214,14 @@
             </md-button>
 
             <md-button
-                    data-ng-if="vm.entity.is_enabled"
+                    data-ng-if="vm.entity.is_enabled && vm.hasEnabledStatus"
                     ng-click="vm.toggleEnableStatus($event)"
                     class="md-raised">
                 Disable
             </md-button>
 
             <md-button
-                    data-ng-if="!vm.entity.is_enabled"
+                    data-ng-if="!vm.entity.is_enabled && vm.hasEnabledStatus"
                     ng-click="vm.toggleEnableStatus($event)"
                     class="md-raised">
                 Enable

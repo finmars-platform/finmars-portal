@@ -2,6 +2,9 @@
 
     'use strict';
 
+    var dashboardEvents = require('../../services/dashboard/dashboardEvents')
+    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses')
+
     module.exports = function () {
         return {
             restriction: 'E',
@@ -22,7 +25,7 @@
 
                 scope.buttons = scope.item.data.settings.buttons;
 
-                scope.init = function () {
+                scope.getButtonSet = function(){
 
                     scope.rows = scope.item.data.settings.rows;
                     scope.columns = scope.item.data.settings.columns;
@@ -55,6 +58,33 @@
 
 
                 };
+
+                scope.initEventListeners = function(){
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                        if(status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        }
+
+                    });
+
+                };
+
+                scope.init = function () {
+
+                    scope.getButtonSet();
+
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.initEventListeners();
+
+                };
+
 
                 scope.init()
 
