@@ -88,7 +88,7 @@
 
                         vm.grandTotalProcessing = false;
 
-                        console.log('Grand Total Status: Data is Loaded')
+                        console.log('Grand Total Status: Data is Loaded');
 
                         var rootGroup = vm.entityViewerDataService.getRootGroup();
 
@@ -258,7 +258,7 @@
 
                         if (filter_link.value_type === 100) {
 
-                            console.log('componentOutput.value', componentOutput.value)
+                            console.log('componentOutput.value', componentOutput.value);
 
                             var values;
 
@@ -590,8 +590,11 @@
                         min_bar_width: vm.componentType.data.settings.min_bar_width,
                         max_bar_width: vm.componentType.data.settings.max_bar_width,
                         sorting_value_type: vm.componentType.data.settings.sorting_value_type,
-                        sorting_type: vm.componentType.data.settings.sorting_type
+                        sorting_type: vm.componentType.data.settings.sorting_type,
+                        ticks_number: vm.componentType.data.settings.ticks_number,
+                        crop_tick_text: vm.componentType.data.settings.crop_tick_text
                     };
+
                 };
 
                 if (vm.componentType.data.type === 'report_viewer_pie_chart') {
