@@ -67,6 +67,7 @@
 
                         if(status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
                             scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                         }
 
                     });
