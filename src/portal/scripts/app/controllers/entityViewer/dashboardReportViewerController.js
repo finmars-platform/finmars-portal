@@ -77,6 +77,10 @@
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.ACTIVE)
+
+                    // console.log('vm.componentType.ACTIVE');
+                    // console.log('vm.componentType.data', vm.componentType.data);
+
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
 
                 });
