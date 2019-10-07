@@ -32,6 +32,12 @@
 
         vm.entity = {$_isValid: true};
 
+        vm.hasEnabledStatus = true;
+
+        if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
+            vm.hasEnabledStatus = false;
+        }
+
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false, userFields: false};
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
@@ -510,7 +516,7 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    $mdDialog.hide({res: 'agree', data: {}});
+                    $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
                 }
 
             })

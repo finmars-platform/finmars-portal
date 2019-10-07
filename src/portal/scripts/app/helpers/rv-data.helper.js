@@ -465,7 +465,7 @@
             calculateSubtotals(evDataService);
 
             data = JSON.parse(JSON.stringify(evDataService.getData()));
-            console.log("d3 service data1", data);
+            // console.log("d3 service data1", data);
             data = insertSubtotalsToResults(data, evDataService);
 
             console.timeEnd("Calculating subtotals");
@@ -480,7 +480,7 @@
 
         } else {
             data = JSON.parse(JSON.stringify(evDataService.getData()));
-            console.log("d3 service data2", data);
+            // console.log("d3 service data2", data);
         }
 
         // console.log('data?', data);
