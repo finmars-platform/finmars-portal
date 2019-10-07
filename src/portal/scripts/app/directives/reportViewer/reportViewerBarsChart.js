@@ -23,7 +23,7 @@
                 scope.readyStatus = false;
 
                 scope.showBarTooltip = false;
-                console.log("d3 service settings", scope.rvChartsSettings);
+
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
                 var chartHolderElem = elem[0].querySelector('.report-viewer-chart-holder');
 
@@ -33,11 +33,11 @@
                 var barsMaxWidth = scope.rvChartsSettings.max_bar_width;
                 var barWidth; // used for words wrap function
 
+                var ticksNumber = scope.rvChartsSettings.ticks_number;
+                var cropTickText = scope.rvChartsSettings.crop_tick_text;
+
                 var nameKey = scope.rvChartsSettings.abscissa;
                 var numberKey = scope.rvChartsSettings.ordinate;
-
-                var chartData = [];
-
                 var fieldValueCalcFormulaId = parseInt(scope.rvChartsSettings.group_number_calc_formula);
 
                 var barsDirection = scope.rvChartsSettings.bars_direction;
@@ -45,16 +45,20 @@
                 var sortingType = scope.rvChartsSettings.sorting_type;
                 var sortingValueType = scope.rvChartsSettings.sorting_value_type;
 
+
+                var chartData = [];
+
                 var chartMargin = {
-                    top: 20,
-                    right: 10,
-                    bottom: 60,
-                    left: 40
+                    top: 40,
+                    right: 20,
+                    bottom: 20,
+                    left: 60
                 };
 
                 if (barsDirection === 'bottom-top') {
-                    chartMargin.top = 40;
-                    chartMargin.bottom = 20;
+                    chartMargin.top = 30;
+                    chartMargin.bottom = 40;
+                    chartMargin.left = 40;
                 };
 
                 var bandPadding = 0.2;
@@ -130,9 +134,7 @@
 
                 };
 
-                var formatThousands = d3.format("~s");
-
-                // helping functions
+                // functions-helpers
                 var returnNumericValue = function (d) {
                     return d.numericValue;
                 };
@@ -141,7 +143,35 @@
                     return Math.min(0, d3.min(chartData, returnNumericValue));
                 };
 
-                var wrapWords = function (textElems, width) {
+                var cropText = function (textContent) {
+                    if (cropTickText &&
+                        textContent &&
+                        textContent.length > cropTickText) {
+
+                        var croppedString = textContent.slice(0, cropTickText) + '...';
+
+                        return croppedString;
+                    };
+
+                    return textContent;
+                };
+
+                var cropTextInElems = function (textElems) {
+
+                    textElems.each(function () {
+
+                        var textElem = d3.select(this);
+
+                        var textContent = textElem.text();
+
+                        var croppedString = cropText(textContent);
+
+                        textElem.text(croppedString);
+
+                    });
+                };
+
+                var wrapWords = function (textElems, maxWidthForText) {
 
                     textElems.each(function() {
 
@@ -159,7 +189,7 @@
                             line.push(word);
                             tspan.text(line.join(" "));
 
-                            if (line.length > 1 && tspan.node().getComputedTextLength() > width) {
+                            if (line.length > 1 && tspan.node().getComputedTextLength() > maxWidthForText) {
                                 line.pop();
                                 tspan.text(line.join(" "));
                                 line = [word];
@@ -172,9 +202,18 @@
 
                     });
                 };
-
-
                 // < helping functions >
+
+                var formatAxisText = function (textElems, barWidth) {
+                    cropTextInElems(textElems);
+                    //wrapWords(textElems, barWidth);
+                    if (barsDirection === 'bottom-top') {
+                        wrapWords(textElems, barWidth);
+                    }
+
+                };
+
+                var formatThousands = d3.format("~s");
 
                 var drawChartWithVerticalCols = function () {
 
@@ -209,35 +248,43 @@
                         .domain(chartData.map(function (d) {
                             return d.name;
                         }))
-                        .range([chartMargin.left, chartWidth])
+                        .range([chartMargin.left, componentWidth - chartMargin.right])
                         .padding(bandPadding);
 
                     var yScale = d3.scaleLinear()
                             .domain([getMinValueForAxis(), d3.max(chartData, returnNumericValue)]).nice()
-                            .range([chartHeight, chartMargin.top]);
+                            .range([componentHeight - chartMargin.bottom, chartMargin.top]);
 
                     var leftAxis = d3.axisLeft(yScale).tickFormat(formatThousands);  // if we change ticks amount
 
                     // check if ticks are located too close to each other
-                    var ticksNumber = yScale.ticks().length;
-
                     if (ticksNumber && ticksNumber > 0) {
-                        if (Math.floor(chartHeight / ticksNumber) < 15) { // if tick height less that 15 pixels
 
-                            var halfOfTicks = Math.floor(ticksNumber / 2);
-                            leftAxis = leftAxis.ticks(halfOfTicks).tickFormat(formatThousands);
+                        leftAxis = leftAxis.ticks(ticksNumber).tickFormat(formatThousands);
 
-                            /*chartHeight = ticksNumber * 15;
-                            componentHeight = chartHeight + chartMargin.top + chartMargin.bottom;
+                    } else {
 
-                            chartHolderElem.style.height = componentHeight + 'px';
+                        var axisTicksNumber = yScale.ticks().length;
 
-                            yScale = d3.scaleLinear()
-                                .domain([getMinValueForAxis(), d3.max(chartData, returnNumericValue)]).nice()
-                                .range([chartHeight, chartMargin.top]);*/
+                        if (axisTicksNumber && axisTicksNumber > 0) {
+                            if (Math.floor(chartHeight / axisTicksNumber) < 15) { // if tick height less that 15 pixels
 
+                                var newTicksNumber = Math.floor(axisTicksNumber / 2);
+                                leftAxis = leftAxis.ticks(newTicksNumber).tickFormat(formatThousands);
+
+                                /*chartHeight = axisTicksNumber * 15;
+                                componentHeight = chartHeight + chartMargin.top + chartMargin.bottom;
+
+                                chartHolderElem.style.height = componentHeight + 'px';
+
+                                yScale = d3.scaleLinear()
+                                    .domain([getMinValueForAxis(), d3.max(chartData, returnNumericValue)]).nice()
+                                    .range([chartHeight, chartMargin.top]);*/
+
+                            };
                         };
-                    };
+                    }
+
                     // < check if ticks are located too close to each other >
 
                     //var leftAxis = d3.axisLeft(yScale).tickFormat(formatThousands); // if we change chart height
@@ -322,11 +369,37 @@
                     svg.append("g")
                         .call(yAxis);
 
-                    //chartHolderElem.appendChild(svg.node());
-
                 };
 
                 var drawChartWithHorizontalCols = function () {
+
+                    // calculating left margin
+                    var textElem = document.createElement("span");
+                    textElem.style.fontSize = "10px";
+                    mainElem.appendChild(textElem);
+
+                    var longestName = '';
+
+                    for (var i = 0; i < chartData.length; i++) {
+                        var cData = chartData[i];
+
+                        if (cData.name.length > longestName.length) {
+                            longestName = cData.name;
+                        };
+                    };
+
+                    longestName = cropText(longestName);
+
+                    textElem.innerText = longestName;
+
+                    var textWidth = textElem.offsetWidth;
+
+                    if (textWidth > (chartMargin.left - 40)) {
+                        chartMargin.left = textWidth + 40;
+                    }
+
+                    mainElem.removeChild(textElem);
+                    // < calculating left margin >
 
                     var chartHeight = componentHeight - chartMargin.top - chartMargin.bottom;
                     var barPaddingInPx;
@@ -351,34 +424,34 @@
                     // < check if chart has enough >
 
                     chartHolderElem.style.height = componentHeight + 'px';
-                    var chartWidth = componentWidth - chartMargin.left - chartMargin.right;
-
                     chartHolderElem.style.width = componentWidth + 'px';
 
                     var xScale = d3.scaleLinear()
                         .domain([getMinValueForAxis(), d3.max(chartData, returnNumericValue)]).nice()
-                        .range([chartMargin.left, chartWidth]);
+                        .range([chartMargin.left, componentWidth - chartMargin.right]);
 
                     var yScale = d3.scaleBand()
                         .domain(chartData.map(function (d) {
                             return d.name;
                         }))
-                        .range([chartMargin.top, chartHeight])
+                        .range([chartMargin.top, componentHeight - chartMargin.bottom])
                         .padding(bandPadding);
 
 
                     var bottomAxis = d3.axisBottom(xScale).tickFormat(formatThousands);  // if we change ticks amount
 
+                    //var chartWidth = componentWidth - chartMargin.left - chartMargin.right;
+
                     // check if ticks are located too close to each other
-                    var ticksNumber = xScale.ticks().length;
+                    //var axisTicksNumber = xScale.ticks().length;
 
-                    /*if (ticksNumber && ticksNumber > 0) {
-                        if (Math.floor(chartHeight / ticksNumber) < 15) { // if tick height less that 15 pixels
+                    /*if (axisTicksNumber && axisTicksNumber > 0) {
+                        if (Math.floor(chartHeight / axisTicksNumber) < 15) { // if tick height less that 15 pixels
 
-                            var halfOfTicks = Math.floor(ticksNumber / 2);
+                            var halfOfTicks = Math.floor(axisTicksNumber / 2);
                             bottomAxis = bottomAxis.ticks(halfOfTicks).tickFormat(formatThousands);
 
-                            /!*chartHeight = ticksNumber * 15;
+                            /!*chartHeight = axisTicksNumber * 15;
                             componentWidth = chartWidth + chartMargin.left + chartMargin.right;
 
                             chartHolderElem.style.height = componentWidth + 'px';
@@ -404,7 +477,7 @@
                     // move ordinate line behind margin
                     var yAxis = function (g) {
                         g
-                            .attr("transform", "translate(0,0")
+                            .attr("transform", "translate(" + (chartMargin.left - 30) + ",0)") // deducting 30 to move yAxis to the left from xAxis start
                             .call(d3.axisLeft(yScale).tickSizeOuter(0));
                     };
 
@@ -423,7 +496,7 @@
                         .append("svg")
                         .attr("width", componentWidth + "px")
                         .attr("height", componentHeight + "px")
-                        .attr("viewBox", [0, 0, chartWidth, componentHeight]);
+                        .attr("viewBox", [0, 0, componentWidth, componentHeight]);
 
                     svg.append("g")
                         .attr("fill", "steelblue")
@@ -466,14 +539,14 @@
                         });
 
                     svg.append("g")
+                        .attr("class", "bar-chart-axis")
                         .call(xAxis);
 
                     svg.append("g")
+                        .attr("class", "bar-chart-axis")
                         .call(yAxis)
                         .selectAll("text")
-                        .attr("class", "svg-text-to-wrap");
-
-                    //chartHolderElem.appendChild(svg.node());
+                            .attr("class", "svg-text-to-wrap");
 
                 };
 
@@ -493,7 +566,7 @@
                         scope.$apply();
                         d3.select(chartHolderElem)
                             .selectAll('.svg-text-to-wrap')
-                            .call(wrapWords, barWidth);
+                            .call(formatAxisText, barWidth);
 
                     });
                 };

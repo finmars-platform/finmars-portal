@@ -36,11 +36,14 @@
             delete vm.item.settings.ordinate;
             delete vm.item.settings.min_bar_width;
             delete vm.item.settings.max_bar_width;
-
+            delete vm.item.settings.group_number_calc_formula;
+            delete vm.item.settings.sorting_value_type;
+            delete vm.item.settings.sorting_type;
+            delete vm.item.settings.crop_tick_text;
             // properties for pie chart
             //delete vm.item.settings.fieldsKeys;
-            delete vm.item.settings.grouping_field;
-            delete vm.item.settings.number_field;
+            delete vm.item.settings.group_attr;
+            delete vm.item.settings.number_attr;
         };
 
         vm.reportTypeChange = function() {
@@ -55,6 +58,8 @@
                     vm.item.settings.abscissa = null;
                     vm.item.settings.ordinate = null;
                     vm.item.settings.group_number_calc_formula = 1;
+                    vm.item.settings.autocalc_ticks_number = true;
+                    vm.item.settings.bars_sorting = false;
                     break;
                 case 'report_viewer_pie_chart':
                     //vm.item.settings.fieldsKeys = [];
@@ -96,7 +101,9 @@
                         max_bar_width: 90,
                         bars_sorting: false,
                         sorting_value_type: null,
-                        sorting_type: null
+                        sorting_type: null,
+                        autocalc_ticks_number: true,
+                        ticks_number: null
                     };
                     break;
                 case 'report_viewer_pie_chart':
@@ -109,9 +116,9 @@
 
         };
 
-        vm.turnOnBarsChartSorting = function () {
+        /*vm.toggleBarsChartSorting = function () {
             vm.item.settings.bars_sorting = !vm.item.settings.bars_sorting;
-        };
+        };*/
 
         vm.getContentTypeByEntityType = function () {
 
@@ -148,6 +155,15 @@
         vm.agree = function () {
 
             var layoutName;
+
+            if (!vm.item.settings.bars_sorting) {
+                delete vm.item.settings.sorting_value_type;
+                delete vm.item.settings.sorting_type;
+            }
+
+            if (!vm.item.settings.autocalc_ticks_number) {
+                delete vm.item.settings.ticks_number;
+            }
 
             vm.layouts.forEach(function (layout) {
 

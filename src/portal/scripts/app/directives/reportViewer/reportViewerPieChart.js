@@ -75,6 +75,12 @@
 
                 // < helping functions >
 
+                /*var colorsList = [
+                    '#ab3939', '#70ab39', '#ab6039', '#3972ab', '#ab9039', '#a739ab', '#95ab39', '#6739ab', '#39ab99', '#623879',
+                    '#3946ab', '#39ab3d', '#7c39ab', '#5e0c0c', '#3992ab', '#ab3979', '#ab3939', '#60c877', '#3015f7', '#ffcf00',
+                    '#4c334d'
+                ];*/
+
                 var drawChart = function () {
 
                     var radius;
