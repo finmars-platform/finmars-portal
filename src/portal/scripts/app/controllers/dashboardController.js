@@ -176,7 +176,7 @@
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
+                var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
 
                 var nextComponentToStart = null;
 
@@ -195,6 +195,9 @@
                         nextComponentToStart = null;
                         break;
                     }
+
+                    console.log('i ', i);
+                    console.log('keys.length', keys.length);
 
                 }
 
