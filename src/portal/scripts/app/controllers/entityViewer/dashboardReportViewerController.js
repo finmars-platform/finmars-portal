@@ -47,6 +47,9 @@
 
             vm.grandTotalProcessing = true;
 
+            vm.linkedActiveObjects = {}; // If we have several components linked to spit panel;
+
+
             vm.setEventListeners = function () {
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
@@ -384,9 +387,33 @@
 
                 if (vm.startupSettings.linked_components.hasOwnProperty('active_object')) {
 
-                    var componentId = vm.startupSettings.linked_components.active_object;
 
-                    vm.handleDashboardActiveObject(componentId);
+                    if (Array.isArray(vm.startupSettings.linked_components.active_object)) {
+
+                        var lastActiveComponentId;
+
+                        vm.startupSettings.linked_components.active_object.forEach(function (componentId) {
+
+                            var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+
+                            if (vm.linkedActiveObjects[componentId] !== componentOutput) {
+                                lastActiveComponentId = componentId
+                            }
+
+                            vm.linkedActiveObjects[componentId] = componentOutput;
+
+                        });
+
+                        if (lastActiveComponentId) {
+                            vm.handleDashboardActiveObject(lastActiveComponentId);
+                        }
+
+                    } else {
+
+                        var componentId = vm.startupSettings.linked_components.active_object;
+
+                        vm.handleDashboardActiveObject(componentId);
+                    }
 
                 }
 
@@ -584,7 +611,8 @@
                         ordinate: vm.componentType.data.settings.ordinate,
                         value_key: vm.componentType.data.settings.value_key
                     };
-                };
+                }
+                ;
 
                 if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
@@ -597,7 +625,8 @@
                         sorting_value_type: vm.componentType.data.settings.sorting_value_type,
                         sorting_type: vm.componentType.data.settings.sorting_type
                     };
-                };
+                }
+                ;
 
                 if (vm.componentType.data.type === 'report_viewer_pie_chart') {
                     vm.rvChartsSettings = {
@@ -606,7 +635,8 @@
                         number_attr: vm.componentType.data.settings.number_attr,
                         group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula
                     };
-                };
+                }
+                ;
 
                 uiService.getListLayoutByKey(layoutId).then(function (data) {
 
