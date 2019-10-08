@@ -150,7 +150,7 @@
 
                 vm.processing = false;
 
-                console.log('statusesObject', statusesObject);
+                // console.log('statusesObject', statusesObject);
 
                 var processed = false;
 
@@ -196,13 +196,10 @@
                         break;
                     }
 
-                    console.log('i ', i);
-                    console.log('keys.length', keys.length);
-
                 }
 
-                console.log('statusesObject', statusesObject);
-                console.log('nextComponentToStart', nextComponentToStart);
+                // console.log('statusesObject', statusesObject);
+                // console.log('nextComponentToStart', nextComponentToStart);
 
                 if (nextComponentToStart) {
 

@@ -43,15 +43,15 @@
 
             </div>
 
-            <h4>Linked Report Viewer</h4>
+            <h4>Linked Components</h4>
 
             <div>
 
                 <div class="m-t-16 m-b-16" >
 
                     <md-input-container style="width: 200px;">
-                        <label for="">Report Viewer</label>
-                        <md-select data-ng-model="vm.item.settings.linked_components.active_object">
+                        <label for="">Report Viewer / Report Viewer Matrix</label>
+                        <md-select data-ng-model="vm.item.settings.linked_components.active_object" multiple>
                             <md-option
                                     data-ng-repeat="componentType in vm.reportViewerComponentTypes | orderBy:'-name' track by componentType.id "
                                     ng-value="componentType.id">{{componentType.name}}
