@@ -88,31 +88,45 @@
 
         };
 
+        vm.importConfiguration = function(resolve){
+
+            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+
+                vm.importConfig = data;
+
+                $scope.$apply();
+
+                if (vm.importConfig.task_status === 'SUCCESS') {
+
+                    resolve()
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.importConfiguration(resolve);
+                    }, 1000)
+
+                }
+
+            })
+
+        };
+
 
         vm.applyItem = function ($event, item) {
 
-            var sections = item.data.body;
+            vm.importConfig = {
+                data: item.data
+            };
 
-            console.log('vm.applyItem', items);
-            var settings = {mode: 'skip'};
+            new Promise(function (resolve, reject) {
 
-            var items = [];
-            // var mappingItems = [];
+                vm.importConfiguration(resolve)
 
-            sections.forEach(function (item) {
-
-                if (item.section_name === 'configuration') {
-                    items = item.items;
-                }
-
-
-            });
-
-            console.log("items", items);
-
-            backendConfigurationImportService.importConfigurationAsJson(item.data).then(function () {
+            }).then(function (data) {
 
                 $state.go('app.home', {}, {reload: true});
+
             })
 
 
