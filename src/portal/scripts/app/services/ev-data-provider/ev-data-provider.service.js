@@ -385,6 +385,7 @@
 
                         options.page = pageToRequest;
                         options.page_size = itemsPerPage;
+                        options.is_enabled = 'any';
 
                         if (options.groups_types) {
 
@@ -472,6 +473,7 @@
 
                     options.page = pageToRequest;
                     options.page_size = itemsPerPage;
+                    options.is_enabled = 'any';
 
                     if (options.groups_types) {
 
