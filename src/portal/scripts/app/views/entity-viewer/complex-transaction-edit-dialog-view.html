@@ -30,11 +30,11 @@
                                      ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
                                     <div class="ev-data-field {{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
-                                         ng-repeat="field in tab.layout.fields"
+                                         ng-repeat="field in tab.layout.fields track by $index"
                                          flex="{{vm.bindFlex(tab, row, field)}}"
                                          data-ng-if="vm.checkFieldRender(tab, row, field)">
                                         <bind-field-control
-                                                entity-type="vm.entityType" entity="vm.entity" item="vm.bindField(tab, field)"></bind-field-control>
+                                                entity-type="vm.entityType" entity="vm.entity" item="vm.attributesLayout[tab.index][$index]"></bind-field-control>
                                     </div>
                                 </div>
                             </md-content>

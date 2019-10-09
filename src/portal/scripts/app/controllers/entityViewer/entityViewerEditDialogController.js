@@ -54,6 +54,88 @@
 
         vm.dataConstructorData = {entityType: vm.entityType};
 
+        vm.attributesLayout = [];
+
+        vm.generateAttributesFromLayoutFields = function () {
+
+            var tabResult;
+            var fieldResult;
+            var i, l, e;
+
+            vm.tabs.forEach(function (tab) {
+
+                tabResult = [];
+
+                tab.layout.fields.forEach(function (field) {
+
+                    fieldResult = {};
+
+                    if (field && field.type === 'field') {
+
+                        if (field.attribute_class === 'attr') {
+
+                            for (i = 0; i < vm.attrs.length; i = i + 1) {
+
+                                if (field.key) {
+
+                                    if (field.key === vm.attrs[i].user_code) {
+                                        vm.attrs[i].options = field.options;
+                                        fieldResult = vm.attrs[i];
+                                    }
+
+                                } else {
+
+                                    if (field.attribute.user_code) {
+
+                                        if (field.attribute.user_code === vm.attrs[i].user_code) {
+                                            vm.attrs[i].options = field.options;
+                                            fieldResult = vm.attrs[i];
+                                        }
+
+                                    }
+
+                                }
+
+
+                            }
+
+                        } else {
+
+                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                                if (field.name === vm.entityAttrs[e].name) {
+                                    vm.entityAttrs[e].options = field.options;
+                                    fieldResult = vm.entityAttrs[e];
+                                }
+                            }
+
+                            for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                                if (field.name === vm.layoutAttrs[l].name) {
+                                    vm.layoutAttrs[l].options = field.options;
+                                    fieldResult = vm.layoutAttrs[l];
+                                }
+                            }
+
+                        }
+
+                        if (field.backgroundColor) {
+                            fieldResult.backgroundColor = field.backgroundColor;
+                        }
+
+                    }
+
+                    tabResult.push(fieldResult)
+
+
+                });
+
+                vm.attributesLayout.push(tabResult);
+
+            });
+
+            console.log('vm.attributesLayout', vm.attributesLayout);
+
+        };
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -214,15 +296,34 @@
                     vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
                 }
 
-                vm.readyStatus.layout = true;
+                vm.tabs = vm.tabs.map(function (item, index) {
 
-                if (vm.entityType === 'instrument') {
-                    vm.getInstrumentUserFields();
-                } else {
-                    vm.readyStatus.userFields = true;
-                }
+                    item.index = index;
 
-                $scope.$apply();
+                    return item
+
+                });
+
+                vm.getAttributeTypes().then(function () {
+
+                    entityViewerHelperService.transformItem(vm.entity, vm.attrs);
+
+                    vm.generateAttributesFromLayoutFields();
+
+                    vm.readyStatus.layout = true;
+                    vm.readyStatus.attrs = true;
+
+                    if (vm.entityType === 'instrument') {
+                        vm.getInstrumentUserFields();
+                    } else {
+                        vm.readyStatus.userFields = true;
+                    }
+
+                    $scope.$apply();
+
+                });
+
+
             });
 
         };
@@ -234,21 +335,19 @@
 
                     vm.entity = data;
 
-                    entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
-                        vm.entity = transformEntityData[0];
-                        vm.entity.$_isValid = true;
-                        vm.readyStatus.entity = true;
+                    vm.entity.$_isValid = true;
+                    vm.readyStatus.entity = true;
 
-                        vm.readyStatus.permissions = true;
+                    vm.readyStatus.permissions = true;
 
-                        // vm.loadPermissions();
+                    // vm.loadPermissions();
 
-                        vm.getFormLayout();
+                    vm.getFormLayout();
 
-                        // Resolving promise to inform child about end of editor building
-                        res();
+                    // Resolving promise to inform child about end of editor building
+                    res();
 
-                    });
+
                 });
 
             });
@@ -256,9 +355,8 @@
         };
 
         vm.getAttributeTypes = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
-                vm.readyStatus.attrs = true;
             });
         };
 
@@ -278,50 +376,6 @@
             var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
 
-        };
-
-        vm.bindField = function (tab, field) {
-            var i, l, e;
-
-            // console.log('field', field);
-
-            if (field && field.type === 'field') {
-
-                var attributes = {};
-
-                if (field.hasOwnProperty('id') && field.id !== null) {
-                    for (i = 0; i < vm.attrs.length; i = i + 1) {
-                        if (field.id === vm.attrs[i].id) {
-                            vm.attrs[i].options = field.options;
-                            // return vm.attrs[i];
-                            attributes = vm.attrs[i];
-                        }
-                    }
-                } else {
-
-                    for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                        if (field.name === vm.entityAttrs[e].name) {
-                            vm.entityAttrs[e].options = field.options;
-                            // return vm.entityAttrs[e];
-                            attributes = vm.entityAttrs[e];
-                        }
-                    }
-                    for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                        if (field.name === vm.layoutAttrs[l].name) {
-                            vm.layoutAttrs[l].options = field.options;
-                            // return vm.layoutAttrs[l];
-                            attributes = vm.layoutAttrs[l];
-                        }
-                    }
-
-                }
-
-                if (field.backgroundColor) {
-                    attributes.backgroundColor = field.backgroundColor;
-                }
-
-                return attributes;
-            }
         };
 
         vm.checkFieldRender = function (tab, row, field) {
@@ -390,35 +444,28 @@
 
         vm.updateEntityBeforeSave = function () {
 
-            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
-                vm.entity.attributes = [];
-            }
-
-
             if (vm.entity.attributes) {
-                var i, a, c;
-                var keys = Object.keys(vm.entity), attrExist;
-                for (i = 0; i < vm.attrs.length; i = i + 1) {
-                    for (a = 0; a < keys.length; a = a + 1) {
-                        if (vm.attrs[i].name === keys[a]) {
-                            attrExist = false;
-                            for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
-                                if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
-                                    attrExist = true;
-                                    vm.entity.attributes[c] = entityEditorHelper.updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
-                                }
-                            }
-                            if (!attrExist) {
-                                vm.entity.attributes.push(entityEditorHelper.appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
-                            }
-                        }
+
+                vm.entity.attributes.forEach(function (attribute) {
+
+                    var value_type = attribute.attribute_type_object.value_type;
+                    var key = attribute.attribute_type_object.user_code;
+
+                    if (value_type === 10) {
+                        attribute.value_string = vm.entity[key];
                     }
-                }
-            }
+                    if (value_type === 20) {
+                        attribute.value_float = vm.entity[key];
+                    }
+                    if (value_type === 30) {
+                        attribute.classifier = vm.entity[key];
+                    }
+                    if (value_type === 40) {
+                        attribute.value_date = vm.entity[key];
+                    }
 
-            if (vm.entity.attributes) {
-                vm.entity = entityEditorHelper.checkEntityAttrTypes(vm.entity, vm.entityAttrs);
-                vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
+                })
+
             }
 
             if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) === -1) {
@@ -588,7 +635,7 @@
                     vm.readyStatus.layout = false;
 
                     vm.getItem();
-                    vm.getAttributeTypes();
+
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
                     vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
@@ -644,7 +691,6 @@
         vm.init = function () {
 
             vm.getItem();
-            vm.getAttributeTypes();
 
         };
 
