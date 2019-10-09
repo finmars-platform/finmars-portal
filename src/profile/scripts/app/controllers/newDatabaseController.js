@@ -9,8 +9,7 @@
     var usersService = require('../services/usersService');
 
     // TODO resolve service from profile module
-    var configurationImportService = require('../../../../portal/scripts/app/services/configuration-import/configurationImportService');
-
+    var backendConfigurationImportService = require('../services/backendConfigurationImportService')
 
     module.exports = function ($scope, $state) {
 
@@ -111,7 +110,7 @@
 
             console.log("items", items);
 
-            configurationImportService.importConfiguration(items, settings).then(function () {
+            backendConfigurationImportService.importConfigurationAsJson(item.data).then(function () {
 
                 $state.go('app.home', {}, {reload: true});
             })
