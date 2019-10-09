@@ -11,47 +11,47 @@
 
     'use strict';
 
-    var transformItems = function (items, attrs) {
-        return new Promise(function (resolve, reject) {
-            var transformedItems = [];
-            var i, x;
-            //console.log('attrs', attrs);
-            if (items && items.length) {
-                transformedItems = items.map(function (item) {
-                    if (item.attributes) {
-                        for (i = 0; i < attrs.length; i = i + 1) {
-                            for (x = 0; x < item.attributes.length; x = x + 1) {
-                                if (item.attributes[x]['attribute_type'] === attrs[i].id) {
-                                    item.attributes[x]['attribute_name'] = attrs[i].name;
-                                    if (item.attributes[x]['attribute_type_object'].value_type == 30) {
-                                        item[attrs[i].name] = item.attributes[x]['classifier'];
-                                        //console.log('item!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', item);
-                                    } else {
-                                        if (item.attributes[x]['attribute_type_object'].value_type == 40) {
-                                            item[attrs[i].name] = item.attributes[x]['value_date'];
-                                        } else {
-                                            if (item.attributes[x]['attribute_type_object'].value_type == 20) {
-                                                item[attrs[i].name] = item.attributes[x]['value_float'];
-                                            } else {
-                                                item[attrs[i].name] = item.attributes[x]['value_string'];
-                                            }
-                                        }
+    var transformItem = function (item, attrs) {
 
-                                    }
+        if (item.attributes) {
 
-                                }
-                            }
+            var key;
+
+            console.log('transformItem.item', item);
+            console.log('transformItem.attrs', attrs);
+
+            attrs.forEach(function (attributeType) {
+
+                item.attributes.forEach(function (attribute) {
+
+                    if (attributeType.user_code === attribute.attribute_type_object.user_code) {
+
+                        key = attributeType.user_code;
+
+                        if (attributeType.value_type === 10){
+                            item[key] = attribute.value_string
                         }
+
+                        if (attributeType.value_type === 20) {
+                            item[key] = attribute.value_float
+                        }
+
+                        if (attributeType.value_type === 30) {
+                            item[key] = attribute.classifier
+                        }
+
+                        if (attributeType.value_type === 40) {
+                            item[key] = attribute.value_date
+                        }
+
                     }
 
-                    return item;
-                });
-            }
-            ;
-            // console.log('Items transformed', transformedItems);
-            resolve(transformedItems);
+                })
 
-        });
+            });
+
+
+        }
 
     };
 
@@ -87,9 +87,9 @@
 
             }
 
-			delete layoutCurrentConfig.data.reportOptions.task_id;
-			delete layoutCurrentConfig.data.reportOptions.recieved_at;
-			delete layoutCurrentConfig.data.reportOptions.task_status;
+            delete layoutCurrentConfig.data.reportOptions.task_id;
+            delete layoutCurrentConfig.data.reportOptions.recieved_at;
+            delete layoutCurrentConfig.data.reportOptions.task_status;
 
             if (layoutCurrentConfig.data.hasOwnProperty('reportLayoutOptions') && layoutCurrentConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
 
@@ -112,7 +112,7 @@
     };
 
     module.exports = {
-        transformItems: transformItems,
+        transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges
     }
 
