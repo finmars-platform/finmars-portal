@@ -47,6 +47,9 @@
 
             vm.grandTotalProcessing = true;
 
+            vm.linkedActiveObjects = {}; // If we have several components linked to spit panel;
+
+
             vm.setEventListeners = function () {
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
@@ -93,7 +96,7 @@
 
                         vm.grandTotalProcessing = false;
 
-                        console.log('Grand Total Status: Data is Loaded');
+                        console.log('Grand Total Status: Data is Loaded')
 
                         var rootGroup = vm.entityViewerDataService.getRootGroup();
 
@@ -263,7 +266,7 @@
 
                         if (filter_link.value_type === 100) {
 
-                            console.log('componentOutput.value', componentOutput.value);
+                            console.log('componentOutput.value', componentOutput.value)
 
                             var values;
 
@@ -384,9 +387,33 @@
 
                 if (vm.startupSettings.linked_components.hasOwnProperty('active_object')) {
 
-                    var componentId = vm.startupSettings.linked_components.active_object;
 
-                    vm.handleDashboardActiveObject(componentId);
+                    if (Array.isArray(vm.startupSettings.linked_components.active_object)) {
+
+                        var lastActiveComponentId;
+
+                        vm.startupSettings.linked_components.active_object.forEach(function (componentId) {
+
+                            var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+
+                            if (vm.linkedActiveObjects[componentId] !== componentOutput) {
+                                lastActiveComponentId = componentId
+                            }
+
+                            vm.linkedActiveObjects[componentId] = componentOutput;
+
+                        });
+
+                        if (lastActiveComponentId) {
+                            vm.handleDashboardActiveObject(lastActiveComponentId);
+                        }
+
+                    } else {
+
+                        var componentId = vm.startupSettings.linked_components.active_object;
+
+                        vm.handleDashboardActiveObject(componentId);
+                    }
 
                 }
 
@@ -584,7 +611,8 @@
                         ordinate: vm.componentType.data.settings.ordinate,
                         value_key: vm.componentType.data.settings.value_key
                     };
-                };
+                }
+                ;
 
                 if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {

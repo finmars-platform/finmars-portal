@@ -9,8 +9,7 @@
     var usersService = require('../services/usersService');
 
     // TODO resolve service from profile module
-    var configurationImportService = require('../../../../portal/scripts/app/services/configuration-import/configurationImportService');
-
+    var backendConfigurationImportService = require('../services/backendConfigurationImportService')
 
     module.exports = function ($scope, $state) {
 
@@ -89,31 +88,45 @@
 
         };
 
+        vm.importConfiguration = function(resolve){
+
+            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+
+                vm.importConfig = data;
+
+                $scope.$apply();
+
+                if (vm.importConfig.task_status === 'SUCCESS') {
+
+                    resolve()
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.importConfiguration(resolve);
+                    }, 1000)
+
+                }
+
+            })
+
+        };
+
 
         vm.applyItem = function ($event, item) {
 
-            var sections = item.data.body;
+            vm.importConfig = {
+                data: item.data
+            };
 
-            console.log('vm.applyItem', items);
-            var settings = {mode: 'skip'};
+            new Promise(function (resolve, reject) {
 
-            var items = [];
-            // var mappingItems = [];
+                vm.importConfiguration(resolve)
 
-            sections.forEach(function (item) {
-
-                if (item.section_name === 'configuration') {
-                    items = item.items;
-                }
-
-
-            });
-
-            console.log("items", items);
-
-            configurationImportService.importConfiguration(items, settings).then(function () {
+            }).then(function (data) {
 
                 $state.go('app.home', {}, {reload: true});
+
             })
 
 
