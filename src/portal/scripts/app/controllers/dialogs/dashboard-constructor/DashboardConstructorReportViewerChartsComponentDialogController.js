@@ -13,7 +13,7 @@
         vm.filterLinks = [];
 
         vm.multiselectModalName = 'Fields multiselector';
-
+        console.log("column selector item", item);
         if (item) {
             vm.item = item;
         } else {
@@ -24,8 +24,6 @@
                 settings: {}
             }
         }
-
-        console.log("d3 item", vm.item, item);
 
         vm.componentsTypes = [];
 
@@ -44,6 +42,8 @@
             //delete vm.item.settings.fieldsKeys;
             delete vm.item.settings.group_attr;
             delete vm.item.settings.number_attr;
+            delete vm.item.settings.show_legends;
+            delete vm.item.settings.legends_position;
         };
 
         vm.reportTypeChange = function() {
@@ -66,6 +66,8 @@
                     vm.item.settings.group_attr = '';
                     vm.item.settings.number_attr = '';
                     vm.item.settings.group_number_calc_formula = 1;
+                    vm.item.settings.show_legends = false;
+                    vm.item.settings.legends_position = 'right';
                     break;
             }
 
@@ -110,7 +112,8 @@
                     vm.item.settings.group_attr = '';
                     vm.item.settings.number_attr = '';
                     vm.item.settings.group_number_calc_formula = 1;
-                    //vm.item.settings.fieldsKeys = [];
+                    vm.item.settings.show_legends = false;
+                    vm.item.settings.legends_position = 'right';
                     break;
             };
 
@@ -207,7 +210,6 @@
             vm.componentsTypes = dataService.getComponentsTypes();
 
             if (vm.item.id) {
-
                 vm.getLayouts();
                 vm.getAttributes();
             }

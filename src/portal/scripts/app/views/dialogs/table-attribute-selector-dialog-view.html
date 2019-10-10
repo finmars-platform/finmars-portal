@@ -1,0 +1,39 @@
+<md-dialog class="draggable-dialog attr-selector-dialog" aria-label="table attr selector dialog" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2>{{ vm.title }}</h2>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="p-16">
+
+        <div class="attr-selector-btns-holder">
+            <div class="attr-selector-breadcrumbs"><span ng-bind="vm.currentLocation"></span></div>
+
+            <md-button class="md-primary md-raised attr-selector-back-btn"
+                       ng-click="vm.returnToPrevGroup()"
+                       aria-label="return to prev group of attributes">
+                <ng-md-icon icon="chevron_left" size="24"></ng-md-icon>
+            </md-button>
+
+            <div class="attr-selector-btns-container">
+                <div ng-repeat="item in vm.activeGroup.items | orderBy: ['groupName', 'attrName']">
+                    <md-button class="md-raised"
+                               ng-class="{'md-primary': item.groupName}"
+                               ng-click="vm.openGroupOrSelectAttr(item)"
+                               aria-label="open group of attributes">
+                        <span ng-if="item.groupName" ng-bind="item.groupName"></span>
+                        <span ng-if="item.attrName" ng-bind="item.attrName"></span>
+                    </md-button>
+                </div>
+            </div>
+        </div>
+
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
+        <md-button class="md-raised" data-ng-click="vm.agree()">Save</md-button>
+    </md-dialog-actions>
+</md-dialog>

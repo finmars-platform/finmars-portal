@@ -1,6 +1,7 @@
 <md-dialog aria-label="dashboard report viewer charts constructor dialog" class="draggable-dialog width-50" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h2>New Report Viewer Charts Component</h2>
             <span flex></span>
         </div>
@@ -65,7 +66,14 @@
 
                 <div layout="row">
 
-                    <md-input-container style="width: 200px;">
+                    <table-attribute-selector title="Reference Name (Abscissa)"
+                                              dialog-title="Reference Name (Abscissa)"
+                                              available-attrs="vm.attributes"
+                                              item="vm.item.settings.abscissa"
+                                              class="dashboard-constructor-field1"
+                                              style="margin: 0 10px;"></table-attribute-selector>
+
+                    <!--<md-input-container style="width: 200px;">
                         <label for="">Reference Name (Abscissa)</label>
                         <md-select ng-model="vm.item.settings.abscissa"
                                    md-container-class="common-select-container"
@@ -91,9 +99,16 @@
                                 </div>
                             </div>
                         </md-select>
-                    </md-input-container>
+                    </md-input-container>-->
 
-                    <md-input-container style="width: 200px;">
+                    <table-attribute-selector title="Reference Name (Ordinate)"
+                                              dialog-title="Reference Name (Ordinate)"
+                                              available-attrs="vm.numericAttributes"
+                                              item="vm.item.settings.ordinate"
+                                              class="dashboard-constructor-field1"
+                                              style="margin: 0 10px;"></table-attribute-selector>
+
+                    <!--<md-input-container style="width: 200px;">
                         <label for="">Reference Name (Ordinate)</label>
                         <md-select ng-model="vm.item.settings.ordinate"
                                    md-container-class="common-select-container"
@@ -119,7 +134,7 @@
                                 </div>
                             </div>
                         </md-select>
-                    </md-input-container>
+                    </md-input-container>-->
 
                 </div>
 
@@ -225,7 +240,14 @@
                                         class="table-filter-input-container dashboard-component-constructor-multiselector"></two-fields-multiselect>-->
                 <div layout="row">
 
-                    <md-input-container style="width: 200px;">
+                    <table-attribute-selector title="Separate Chart By"
+                                              dialog-title="Separate Chart By"
+                                              item="vm.item.settings.group_attr"
+                                              available-attrs="vm.attributes"
+                                              class="dashboard-constructor-field1"
+                                              style="margin: 0 10px;"></table-attribute-selector>
+
+                    <!--<md-input-container style="width: 200px;">
                         <label for="">Separate Chart By</label>
                         <md-select ng-model="vm.item.settings.group_attr"
                                    md-container-class="common-select-container"
@@ -251,11 +273,18 @@
                                 </div>
                             </div>
                         </md-select>
-                    </md-input-container>
+                    </md-input-container>-->
 
-                    <md-input-container style="width: 200px;">
+                    <table-attribute-selector title="Chart Numeric Value"
+                                              dialog-title="Chart Numeric Value"
+                                              available-attrs="vm.numericAttributes"
+                                              item="vm.item.settings.number_attr"
+                                              class="dashboard-constructor-field1"
+                                              style="margin: 0 10px;"></table-attribute-selector>
+
+                    <!--<md-input-container style="width: 200px;">
                         <label for="">Chart Numeric Value</label>
-                        <md-select ng-model="vm.item.settings.number_attr"
+                        <md-select ng-model=""
                                    md-container-class="common-select-container"
                                    md-on-close="ordinateSearchTerm = ''"
                                    style="width: 200px">
@@ -279,7 +308,7 @@
                                 </div>
                             </div>
                         </md-select>
-                    </md-input-container>
+                    </md-input-container>-->
 
                 </div>
 
@@ -296,6 +325,18 @@
                             <md-option value="7">Weighted Average Market Value Percent</md-option>
                             <md-option value="8">Weighted Average Exposure</md-option>
                             <md-option value="9">Weighted Average Exposure Percent</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+                <md-checkbox data-ng-model="vm.item.settings.show_legends"
+                             style="margin-left: 10px;">Show legends</md-checkbox>
+                <div layout="row">
+                    <md-input-container class="dashboard-constructor-field1">
+                        <label for="">Legends Position</label>
+                        <md-select data-ng-model="vm.item.settings.legends_position" data-ng-disabled="!vm.item.settings.show_legends">
+                            <md-option value="right">To the right of chart</md-option>
+                            <md-option value="bottom">Below chart</md-option>
                         </md-select>
                     </md-input-container>
                 </div>

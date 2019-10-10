@@ -607,7 +607,9 @@
                         //fieldsKeys: vm.componentType.data.settings.fieldsKeys
                         group_attr: vm.componentType.data.settings.group_attr,
                         number_attr: vm.componentType.data.settings.number_attr,
-                        group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula
+                        group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula,
+                        show_legends: vm.componentType.data.settings.show_legends,
+                        legends_position: vm.componentType.data.settings.legends_position
                     };
                 };
 
