@@ -287,30 +287,26 @@
                     };
 
 
-                    entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
-                        vm.entity = transformEntityData[0];
-                        originalEntity = JSON.parse(JSON.stringify(vm.entity));
+                    originalEntity = JSON.parse(JSON.stringify(vm.entity));
 
-                        vm.getTransactionUserFields().then(function () {
+                    vm.getTransactionUserFields().then(function () {
 
-                            vm.readyStatus.entity = true;
+                        vm.readyStatus.entity = true;
 
-                            vm.loadPermissions();
+                        vm.loadPermissions();
 
-                            if (vm.entityType !== 'transaction-type') {
+                        if (vm.entityType !== 'transaction-type') {
 
-                                vm.getLayout();
+                            vm.getLayout();
 
-                                // Resolving promise to inform child about end of editor building
-                                res();
+                            // Resolving promise to inform child about end of editor building
+                            res();
 
-                            } else {
-                                vm.readyStatus.layout = true;
-                                $scope.$apply();
+                        } else {
+                            vm.readyStatus.layout = true;
+                            $scope.$apply();
 
-                            }
-
-                        })
+                        }
 
                     });
 
@@ -755,7 +751,8 @@
 
                         vm.save();
 
-                    };
+                    }
+                    ;
 
                 });
 
@@ -1538,14 +1535,17 @@
                 if (vm.contentTypes[i].entity === entity) {
                     content_type = vm.contentTypes[i].key;
                     break;
-                };
-            };
+                }
+                ;
+            }
+            ;
 
             result = vm.entity.inputs.filter(function (input) {
 
                 if (input.content_type === content_type) {
                     return true;
-                };
+                }
+                ;
 
                 return false;
             });

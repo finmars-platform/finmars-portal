@@ -46,6 +46,97 @@
 
         vm.transactionTypeId = null;
 
+        vm.attributesLayout = [];
+
+        vm.generateAttributesFromLayoutFields = function () {
+
+            var tabResult;
+            var fieldResult;
+            var i, l, e, u;
+
+            vm.tabs.forEach(function (tab) {
+
+                tabResult = [];
+
+                tab.layout.fields.forEach(function (field) {
+
+                    fieldResult = {};
+
+                    if (field && field.type === 'field') {
+
+                        if (field.attribute_class === 'attr') {
+
+                            for (i = 0; i < vm.attrs.length; i = i + 1) {
+
+                                if (field.key) {
+
+                                    if (field.key === vm.attrs[i].user_code) {
+                                        vm.attrs[i].options = field.options;
+                                        fieldResult = vm.attrs[i];
+                                    }
+
+                                } else {
+
+                                    if (field.attribute.user_code) {
+
+                                        if (field.attribute.user_code === vm.attrs[i].user_code) {
+                                            vm.attrs[i].options = field.options;
+                                            fieldResult = vm.attrs[i];
+                                        }
+
+                                    }
+
+                                }
+
+
+                            }
+
+                        } else {
+
+                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                                if (field.name === vm.entityAttrs[e].name) {
+                                    vm.entityAttrs[e].options = field.options;
+                                    fieldResult = vm.entityAttrs[e];
+                                }
+                            }
+
+                            for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                                if (field.name === vm.layoutAttrs[l].name) {
+                                    vm.layoutAttrs[l].options = field.options;
+                                    fieldResult = vm.layoutAttrs[l];
+                                }
+                            }
+
+                            for (u = 0; u < vm.userInputs.length; u = u + 1) {
+                                //console.log('vm.userInputs[u]', vm.userInputs[u]);
+                                if (field.name === vm.userInputs[u].name) {
+                                    vm.userInputs[u].options = field.options;
+                                    // return vm.userInputs[u];
+                                    fieldResult = vm.userInputs[u];
+                                }
+                            }
+
+                        }
+
+                        if (field.backgroundColor) {
+                            fieldResult.backgroundColor = field.backgroundColor;
+                        }
+
+                    }
+
+                    tabResult.push(fieldResult)
+
+
+                });
+
+                vm.attributesLayout.push(tabResult);
+
+            });
+
+            console.log('vm.attributesLayout', vm.attributesLayout);
+
+        };
+
         vm.getContextParameters = function () {
 
             var result = {};
@@ -103,6 +194,16 @@
                         }
                     });
                 });
+
+                vm.tabs = vm.tabs.map(function (item, index) {
+
+                    item.index = index;
+
+                    return item
+
+                });
+
+                vm.generateAttributesFromLayoutFields();
 
 
                 inputsWithCalculations.forEach(function (inputWithCalc) {
@@ -377,6 +478,16 @@
                         });
                     });
 
+                    vm.tabs = vm.tabs.map(function (item, index) {
+
+                        item.index = index;
+
+                        return item
+
+                    });
+
+                    vm.generateAttributesFromLayoutFields();
+
                     inputsWithCalculations.forEach(function (inputWithCalc) {
 
                         vm.userInputs.forEach(function (userInput) {
@@ -433,60 +544,6 @@
             var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
 
-        };
-
-        vm.bindField = function (tab, field) {
-
-            var i, l, e, u;
-            if (field && field.type === 'field') {
-
-                var attributes = {};
-
-                if (field.hasOwnProperty('id') && field.id !== null) {
-                    for (i = 0; i < vm.attrs.length; i = i + 1) {
-                        if (field.id === vm.attrs[i].id) {
-                            vm.attrs[i].options = field.options;
-                            // return vm.attrs[i];
-                            attributes = vm.attrs[i];
-                        }
-                    }
-                } else {
-
-                    for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                        if (field.name === vm.entityAttrs[e].name) {
-                            vm.entityAttrs[e].options = field.options;
-                            // return vm.entityAttrs[e];
-                            attributes = vm.entityAttrs[e];
-                        }
-                    }
-                    for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                        if (field.name === vm.layoutAttrs[l].name) {
-                            vm.layoutAttrs[l].options = field.options;
-                            // return vm.layoutAttrs[l];
-                            attributes = vm.layoutAttrs[l];
-                        }
-                    }
-
-                    //console.log('vm.userInputs', vm.userInputs);
-                    for (u = 0; u < vm.userInputs.length; u = u + 1) {
-                        //console.log('vm.userInputs[u]', vm.userInputs[u]);
-                        if (field.name === vm.userInputs[u].name) {
-                            vm.userInputs[u].options = field.options;
-                            // return vm.userInputs[u];
-                            attributes = vm.userInputs[u];
-                        }
-                    }
-
-                }
-
-                if (field.backgroundColor) {
-                    attributes.backgroundColor = field.backgroundColor;
-                }
-
-                attributes.editable = field.editable;
-
-                return attributes;
-            }
         };
 
         vm.checkFieldRender = function (tab, row, field) {

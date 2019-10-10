@@ -46,6 +46,88 @@
         vm.formIsValid = true;
         vm.range = gridHelperService.range;
 
+        vm.attributesLayout = [];
+
+        vm.generateAttributesFromLayoutFields = function () {
+
+            var tabResult;
+            var fieldResult;
+            var i, l, e;
+
+            vm.tabs.forEach(function (tab) {
+
+                tabResult = [];
+
+                tab.layout.fields.forEach(function (field) {
+
+                    fieldResult = {};
+
+                    if (field && field.type === 'field') {
+
+                        if (field.attribute_class === 'attr') {
+
+                            for (i = 0; i < vm.attrs.length; i = i + 1) {
+
+                                if (field.key) {
+
+                                    if (field.key === vm.attrs[i].user_code) {
+                                        vm.attrs[i].options = field.options;
+                                        fieldResult = vm.attrs[i];
+                                    }
+
+                                } else {
+
+                                    if (field.attribute.user_code) {
+
+                                        if (field.attribute.user_code === vm.attrs[i].user_code) {
+                                            vm.attrs[i].options = field.options;
+                                            fieldResult = vm.attrs[i];
+                                        }
+
+                                    }
+
+                                }
+
+
+                            }
+
+                        } else {
+
+                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                                if (field.name === vm.entityAttrs[e].name) {
+                                    vm.entityAttrs[e].options = field.options;
+                                    fieldResult = vm.entityAttrs[e];
+                                }
+                            }
+
+                            for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                                if (field.name === vm.layoutAttrs[l].name) {
+                                    vm.layoutAttrs[l].options = field.options;
+                                    fieldResult = vm.layoutAttrs[l];
+                                }
+                            }
+
+                        }
+
+                        if (field.backgroundColor) {
+                            fieldResult.backgroundColor = field.backgroundColor;
+                        }
+
+                    }
+
+                    tabResult.push(fieldResult)
+
+
+                });
+
+                vm.attributesLayout.push(tabResult);
+
+            });
+
+            console.log('vm.attributesLayout', vm.attributesLayout);
+
+        };
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -193,28 +275,45 @@
 
         };
 
+
         vm.getFormLayout = function () {
+
             uiService.getEditLayout(vm.entityType).then(function (data) {
+
                 if (data.results.length) {
                     vm.tabs = data.results[0].data;
                 } else {
                     vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
                 }
 
-                $scope.$apply();
+                vm.tabs = vm.tabs.map(function (item, index) {
+
+                    item.index = index;
+
+                    return item
+
+                });
+
+                vm.getAttributeTypes().then(function (value) {
+
+                    entityViewerHelperService.transformItem(vm.entity, vm.attrs);
+
+                    vm.generateAttributesFromLayoutFields();
+
+                    vm.readyStatus.content = true;
+                    vm.readyStatus.entity = true;
+                    vm.readyStatus.permissions = true;
+
+                    $scope.$apply();
+
+                });
+
             });
         };
 
         vm.getAttributeTypes = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
-
+            return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
-                vm.readyStatus.content = true;
-                vm.readyStatus.entity = true;
-                vm.readyStatus.permissions = true;
-
-                $scope.$apply();
-                // vm.loadPermissions();
             });
         };
 
@@ -233,47 +332,6 @@
             var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
 
-        };
-
-        vm.bindField = function (tab, field) {
-            var i, l, e;
-            if (field && field.type === 'field') {
-                var attributes = {};
-
-                if (field.hasOwnProperty('id') && field.id !== null) {
-                    for (i = 0; i < vm.attrs.length; i = i + 1) {
-                        if (field.id === vm.attrs[i].id) {
-                            vm.attrs[i].options = field.options;
-                            // return vm.attrs[i];
-                            attributes = vm.attrs[i];
-                        }
-                    }
-                } else {
-
-                    for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                        if (field.name === vm.entityAttrs[e].name) {
-                            vm.entityAttrs[e].options = field.options;
-                            // return vm.entityAttrs[e];
-                            attributes = vm.entityAttrs[e];
-                        }
-                    }
-
-                    for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                        if (field.name === vm.layoutAttrs[l].name) {
-                            vm.layoutAttrs[l].options = field.options;
-                            // return vm.layoutAttrs[l];
-                            attributes = vm.layoutAttrs[l];
-                        }
-                    }
-
-                }
-
-                if (field.backgroundColor) {
-                    attributes.backgroundColor = field.backgroundColor;
-                }
-
-                return attributes;
-            }
         };
 
         vm.checkFieldRender = function (tab, row, field) {
@@ -325,34 +383,20 @@
 
         vm.updateEntityBeforeSave = function () {
 
+            console.log('updateEntityBeforeSave vm.entity', vm.entity);
+
+
             if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
+
                 vm.entity.attributes = [];
-            }
 
-            if (vm.entity.attributes) {
-                var i, a, c;
-                var keys = Object.keys(vm.entity), attrExist;
-                for (i = 0; i < vm.attrs.length; i = i + 1) {
-                    for (a = 0; a < keys.length; a = a + 1) {
-                        if (vm.attrs[i].name === keys[a]) {
-                            attrExist = false;
-                            for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
-                                if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
-                                    attrExist = true;
-                                    vm.entity.attributes[c] = entityEditorHelper.updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
-                                }
-                            }
-                            if (!attrExist) {
-                                vm.entity.attributes.push(entityEditorHelper.appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
-                            }
-                        }
-                    }
-                }
-            }
+                vm.attrs.forEach(function (attributeType) {
 
-            if (vm.entity.attributes) {
-                vm.entity = entityEditorHelper.checkEntityAttrTypes(vm.entity, vm.entityAttrs);
-                vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
+                    var value = vm.entity[attributeType.user_code];
+
+                    vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
+
+                });
             }
 
             if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) === -1) {
@@ -446,7 +490,7 @@
         vm.init = function () {
 
             vm.getFormLayout();
-            vm.getAttributeTypes();
+
 
         };
 

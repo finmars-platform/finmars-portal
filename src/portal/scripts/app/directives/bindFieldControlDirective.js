@@ -44,27 +44,6 @@
                     return true;
                 };
 
-                if (scope.item) {
-                    scope.fieldType = null;
-                    scope.attribute = scope.item;
-
-                    if (scope.attribute && scope.attribute.can_recalculate) {
-                        scope.isRecalculate = true;
-                    }
-
-                    var i;
-                    for (i = 0; i < choices.length; i = i + 1) {
-                        if (choices[i].value === scope.attribute['value_type']) {
-                            scope.fieldType = choices[i];
-                        }
-                    }
-
-                    if (scope.attribute['value_type'] === 100) {
-                        scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
-                    }
-
-                }
-
                 scope.getName = function () {
 
                     if (scope.item.hasOwnProperty('verbose_name')) {
@@ -133,9 +112,9 @@
                         if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
 
                             if (scope.item.attribute_type_object) {
-                                result = scope.item.attribute_type_object.name
+                                result = scope.item.attribute_type_object.user_code
                             } else {
-                                result = scope.item.name
+                                result = scope.item.user_code
                             }
                         } else {
                             var l, e, u;
@@ -163,23 +142,6 @@
 
                     return result
                 };
-
-                var fieldKey = scope.getModelKey();
-
-                scope.options = {};
-
-                if (fieldKey === 'tags') {
-                    scope.options = {
-                        entityType: scope.entityType
-                    }
-                } else {
-                    if (metaService.getEntitiesWithSimpleFields().indexOf(scope.entityType) !== -1) {
-                        scope.options = {
-                            entityType: scope.entityType,
-                            key: fieldKey
-                        };
-                    }
-                }
 
                 scope.setDateToday = function () {
                     scope.entity[scope.getModelKey()] = moment(new Date()).format('YYYY-MM-DD');
@@ -227,18 +189,6 @@
                     })
                 };
 
-                if (scope.fieldType && scope.fieldType.value === 30) {
-
-                    if (scope.entity) {
-
-                        scope.classifierId = scope.entity[scope.getModelKey()];
-
-                        scope.findNodeItem().then(function () {
-                            scope.$apply();
-                        })
-                    }
-                }
-
                 scope.changeClassifier = function () {
                     if (classifierTree) {
                         console.log('classifier id', scope.entity[scope.getModelKey()]);
@@ -261,7 +211,6 @@
                         scope.fieldType['display_name'] === 'Float') {
                         buttonsCount = 1;
                     }
-                    ;
 
                     if (scope.item.options) { // for date specific buttons
 
@@ -276,29 +225,29 @@
                             });
 
                         }
-                        ;
+
 
                     }
-                    ;
+
 
                     if (scope.item.buttons && scope.item.buttons.length > 0) {
 
                         buttonsCount = buttonsCount + scope.item.buttons.length;
 
                     }
-                    ;
+
 
                     if (buttonsCount > 0) {
                         styleValue = 'padding-right: ' + (buttonsCount * 34) + 'px; ';
                     }
-                    ;
+
 
                     // ----------------------- Background Color -----------------
 
                     if (scope.item.backgroundColor) {
                         styleValue = styleValue + 'background-color: ' + scope.item.backgroundColor + ';';
                     }
-                    ;
+
 
                     return styleValue;
                 };
@@ -391,6 +340,62 @@
                     });
 
                 };
+
+                scope.init = function () {
+
+                    var fieldKey = scope.getModelKey();
+
+                    scope.options = {};
+
+                    if (fieldKey === 'tags') {
+                        scope.options = {
+                            entityType: scope.entityType
+                        }
+                    } else {
+                        if (metaService.getEntitiesWithSimpleFields().indexOf(scope.entityType) !== -1) {
+                            scope.options = {
+                                entityType: scope.entityType,
+                                key: fieldKey
+                            };
+                        }
+                    }
+
+                    if (scope.item) {
+                        scope.fieldType = null;
+                        scope.attribute = scope.item;
+
+                        if (scope.attribute && scope.attribute.can_recalculate) {
+                            scope.isRecalculate = true;
+                        }
+
+                        var i;
+                        for (i = 0; i < choices.length; i = i + 1) {
+                            if (choices[i].value === scope.attribute['value_type']) {
+                                scope.fieldType = choices[i];
+                            }
+                        }
+
+                        if (scope.attribute['value_type'] === 100) {
+                            scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
+                        }
+
+                    }
+
+                    if (scope.fieldType && scope.fieldType.value === 30) {
+
+                        if (scope.entity) {
+
+                            scope.classifierId = scope.entity[scope.getModelKey()];
+
+                            scope.findNodeItem().then(function () {
+                                scope.$apply();
+                            })
+                        }
+                    }
+
+                };
+
+                scope.init()
 
             }
         }
