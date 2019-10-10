@@ -10,7 +10,7 @@
     module.exports = function (d3) {
         return {
             restriction: 'E',
-            templateUrl: 'views/directives/reportViewer/report-viewer-bars-chart-view.html',
+            templateUrl: 'views/directives/reportViewer/report-viewer-pie-chart-view.html',
             scope: {
                 rvChartsSettings: '=',
                 evDataService: '=',
@@ -20,7 +20,10 @@
 
                 scope.activeItem = null;
 
-                scope.readyStatus = false;
+                scope.readyStatuses = {
+                    chartIsReady: false,
+                    legendsAreReady: false
+                };
 
                 scope.showBarTooltip = false;
 
@@ -36,6 +39,16 @@
                 var numberKey = scope.rvChartsSettings.number_attr;
                 var fieldValueCalcFormulaId = parseInt(scope.rvChartsSettings.group_number_calc_formula);
 
+                scope.showLegends = scope.rvChartsSettings.show_legends;
+                var legendsPosition = scope.rvChartsSettings.legends_position;
+
+                scope.pieChartLayout = 'row';
+
+                if (legendsPosition === 'bottom') {
+                    scope.pieChartLayout = 'column';
+                };
+
+
                 var getDataForCharts = function () {
 
                     chartData = [];
@@ -46,7 +59,6 @@
                     });
 
                     chartData = rvChartsHelper.getDataForChartsFromFlatList(itemList, nameKey, numberKey, fieldValueCalcFormulaId);
-
                     /*var fieldsKeys = scope.rvChartsSettings.fieldsKeys;
 
                     var f;
@@ -73,13 +85,59 @@
 
                 };
 
-                // < helping functions >
+                var getDataForLegends = function () {
+
+                    var CDPositiveValuesTotal = 0;
+                    scope.CDWithPositiveValues = chartData.filter(function (CDItem) {
+                        if (CDItem.numericValue > 0) {
+                            CDPositiveValuesTotal += CDItem.numericValue;
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    if (CDPositiveValuesTotal > 0) {
+                        for (var i = 0; i < scope.CDWithPositiveValues.length; i++) {
+                            var chartPart = scope.CDWithPositiveValues[i];
+                            chartPart.percentage = ((chartPart.numericValue / CDPositiveValuesTotal) * 100).toFixed(0);
+                        };
+
+                        scope.CDWithPositiveValues = scope.CDWithPositiveValues.filter(function (chartPart) {
+                            return chartPart.percentage >= 1;
+                        });
+                    };
+
+                };
+
+                scope.getLegendBackgroundColor = function (legendName) {
+                    var backStyle = "";
+                    var backColor = getPartColor(legendName);
+                    if (legendName && backColor) {
+                        backStyle = "background-color: " + backColor;
+                    };
+                    return backStyle;
+                };
+
+                scope.getPieChartGlobalClasses = function () {
+                    var pieChartCompClasses = '';
+                    switch (legendsPosition) {
+                        case 'right':
+                            pieChartCompClasses = "pie-chart-right-legends";
+                            break;
+                        case 'bottom':
+                            pieChartCompClasses = "pie-chart-bottom-legends";
+                            break;
+                    };
+
+                    return pieChartCompClasses;
+                };
 
                 /*var colorsList = [
                     '#ab3939', '#70ab39', '#ab6039', '#3972ab', '#ab9039', '#a739ab', '#95ab39', '#6739ab', '#39ab99', '#623879',
                     '#3946ab', '#39ab3d', '#7c39ab', '#5e0c0c', '#3992ab', '#ab3979', '#ab3939', '#60c877', '#3015f7', '#ffcf00',
                     '#4c334d'
                 ];*/
+                var getPartColor; // need to be outside of draw chart function to use for legends rendering
 
                 var drawChart = function () {
 
@@ -93,7 +151,7 @@
 
                     var svgSize = radius * 2;
 
-                    var getPartColor = d3.scaleOrdinal()
+                    getPartColor = d3.scaleOrdinal()
                         .domain(d3.map(chartData, function (d) {return d.name}))
                         .range(d3.schemeCategory10);
 
@@ -106,6 +164,9 @@
                         .value(function (d) {
                             return d.numericValue;
                         });
+
+                    chartHolderElem.style.minWidth = svgSize + 'px';
+                    chartHolderElem.style.width = svgSize + 'px';
 
                     var svg = d3.select(chartHolderElem)
                         .append('svg')
@@ -165,7 +226,15 @@
 
                         getDataForCharts();
                         drawChart();
-                        scope.readyStatus = true;
+
+                        if (scope.showLegends) {
+                            getDataForLegends();
+                            scope.readyStatuses.legendsAreReady = true;
+                        }
+
+                        scope.readyStatuses.chartIsReady = true;
+
+                        scope.$apply();
 
                     });
                 };

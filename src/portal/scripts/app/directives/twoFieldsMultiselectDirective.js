@@ -55,7 +55,7 @@
 
                     $mdDialog.show({
                         controller: "TwoFieldsMultiselectDialogController as vm",
-                        templateUrl: "views/two-fields-multiselect-dialog-view.html",
+                        templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
                         targetEvent: event,
                         multiple: true,
                         locals: {
