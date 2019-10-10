@@ -21,7 +21,7 @@
 
                 scope.activeItem = null;
 
-                console.log('Report Viewer Matrix Component', scope);
+                // console.log('Report Viewer Matrix Component', scope);
 
                 scope.processing = true;
 
@@ -30,8 +30,8 @@
                     var elemWidth = elem.width();
                     var elemHeight = elem.height();
 
-                    console.log('elemHeight', elemHeight);
-                    console.log('elemWidth', elemWidth);
+                    // console.log('elemHeight', elemHeight);
+                    // console.log('elemWidth', elemWidth);
 
                     var rowsCount = scope.rows.length + 2; // header / footer rows
                     var columnsCount = scope.columns.length + 2; // first empty cell and last "Total" cell
