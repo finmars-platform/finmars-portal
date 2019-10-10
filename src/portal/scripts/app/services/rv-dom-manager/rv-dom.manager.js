@@ -656,7 +656,7 @@
             resultWidth = contentWrapElemWidth;
         }
 
-        console.log('resultWidth', resultWidth);
+        // console.log('resultWidth', resultWidth);
 
         rvScrollManager.setContentElemWidth(resultWidth);
 

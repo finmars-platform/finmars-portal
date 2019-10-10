@@ -175,19 +175,24 @@
                     return (parseFloat(value) * 10000).toFixed(1) + ' bps';
                     break;
 
-            };
+            }
+            ;
 
-        };
+        }
+        ;
 
         return value;
 
     };
 
 
-
     var formatValue = function (obj, column) {
 
         var value = obj[column.key];
+
+        if (value === null || value === undefined) {
+            value = '';
+        }
 
         value = formatPercentage(value, column);
 
@@ -198,6 +203,7 @@
         value = formatZero(value, column);
 
         value = formatNegative(value, column);
+
 
         return value;
 

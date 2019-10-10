@@ -42,14 +42,7 @@
                 var progressBar = elem[0].querySelector('.ev-progressbar');
                 var rootWrapElem = scope.rootWrapElement
 
-                console.log('teeest', $(elem).parents('.app-md-content'));
-
-                console.log('rootWrapElem', rootWrapElem);
-
                 var contentWrapElem = scope.contentWrapElement;
-
-
-                console.log('table body scope', scope);
 
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
 

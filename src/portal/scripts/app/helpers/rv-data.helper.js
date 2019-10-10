@@ -1,12 +1,10 @@
 (function () {
 
-    var stringHelper = require('./stringHelper');
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
-    var metaService = require('../services/metaService');
     var rvSubtotalHelper = require('./rv-subtotal.service');
-    var rvHelper = require('./rv.helper');
     var evDataHelper = require('./ev-data.helper');
+    var metaHelper = require('./meta.helper');
 
     var getGroupsByParent = function (parentId, evDataService) {
 
@@ -450,6 +448,53 @@
 
     };
 
+    var getNewDataInstance = function (evDataService) {
+
+        var sourceData = evDataService.getData();
+        var result = {};
+        var resultObject;
+        var sourceDataObject;
+        var objectPropertyType;
+
+        Object.keys(sourceData).forEach(function (key) {
+
+            result[key] = {};
+
+            sourceDataObject = sourceData[key];
+
+            Object.keys(sourceDataObject).forEach(function (objectKey) {
+
+                resultObject = result[key];
+
+                objectPropertyType = typeof sourceDataObject[objectKey];
+
+                if (['string', 'number', 'boolean', 'undefined'].indexOf(objectPropertyType === -1) || isNaN(sourceDataObject[objectKey]) || sourceDataObject[objectKey] === null) {
+                    resultObject[objectKey] = sourceDataObject[objectKey]
+                } else if (Array.isArray(sourceDataObject[objectKey])) {
+
+                    resultObject[objectKey] = [];
+
+                    sourceDataObject[objectKey].forEach(function (item) {
+                        resultObject[objectKey].push(Object.assign({}, item))
+                    })
+
+                } else if (!Array.isArray(sourceDataObject[objectKey]) && objectPropertyType === 'object') { // if object
+                    resultObject[objectKey] = Object.assign({}, sourceDataObject[objectKey]) // WARNING, Nested objects is not supported
+                }
+
+
+            })
+
+        });
+
+        return result;
+
+
+        // return metaHelper.recursiveDeepCopy(evDataService.getData());
+        // return JSON.parse(JSON.stringify(evDataService.getData()))
+
+    };
+
     var getFlatStructure = function (evDataService) {
 
         var rootGroupOptions = evDataService.getRootGroupOptions();
@@ -464,11 +509,24 @@
 
             calculateSubtotals(evDataService);
 
-            data = JSON.parse(JSON.stringify(evDataService.getData()));
-            // console.log("d3 service data1", data);
+            console.timeEnd("Calculating subtotals");
+
+
+            console.time("Copying data");
+
+            data = getNewDataInstance(evDataService);
+
+            console.log('data', data);
+
+            console.timeEnd("Copying data");
+
+
+            console.time("Inserting subtotals");
+
             data = insertSubtotalsToResults(data, evDataService);
 
-            console.timeEnd("Calculating subtotals");
+            console.timeEnd("Inserting subtotals");
+
 
             console.time("Calculating blankline");
 
