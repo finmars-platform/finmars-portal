@@ -35,7 +35,8 @@
         vm.totalSteps = 2;
 
         vm.interface_level = null;
-        vm.activeConfig = null;
+        // vm.activeConfig = null;
+        vm.activeConfig = 'custom'
 
         vm.finishingSetup = false;
 
@@ -59,7 +60,7 @@
 
             vm.finishingSetup = true;
 
-            usersService.createMasterUser({name: vm.name}).then(function (data) {
+            usersService.createMasterUser({name: vm.name, description: vm.description}).then(function (data) {
 
                 usersService.setMasterUser(data.id).then(function (value) {
 
