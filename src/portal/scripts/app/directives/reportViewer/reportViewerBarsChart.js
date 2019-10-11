@@ -36,8 +36,8 @@
                 var ticksNumber = scope.rvChartsSettings.ticks_number;
                 var cropTickText = scope.rvChartsSettings.crop_tick_text;
 
-                var nameKey = scope.rvChartsSettings.abscissa;
-                var numberKey = scope.rvChartsSettings.ordinate;
+                var nameKey = scope.rvChartsSettings.bar_name_key;
+                var numberKey = scope.rvChartsSettings.bar_number_key;
                 var fieldValueCalcFormulaId = parseInt(scope.rvChartsSettings.group_number_calc_formula);
 
                 var barsDirection = scope.rvChartsSettings.bars_direction;
@@ -62,6 +62,18 @@
                 };
 
                 var bandPadding = 0.2;
+
+
+                var changeActiveObject = function (columnName) {
+
+                    var activeObject = scope.evDataService.getActiveObject();
+
+                    activeObject[nameKey] = columnName;
+
+                    scope.evDataService.setActiveObject(activeObject);
+                    scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                };
 
                 var getDataForChart = function () {
 
@@ -237,9 +249,9 @@
 
                         };
                     }
-                    // < check if chart has enough >
+                    // < check if chart has enough width >
 
-                    // declare height here because margin bottom can change higher
+                    // declare height here because margin bottom can change earlier
                     var chartHeight = componentHeight - chartMargin.bottom - chartMargin.top;
 
                     chartHolderElem.style.width = componentWidth + 'px';
@@ -332,7 +344,11 @@
                             .attr("height", getBarHeight)
                             .attr("width", xScale.bandwidth());
 
+                    // apply events to chart bars
                     svg.selectAll('rect.dashboard-rv-chart-bar')
+                        .on("click", function (d) {
+                            changeActiveObject(d.name);
+                        })
                         .on("mouseover", function () {
 
                             d3.select(this)
@@ -360,6 +376,7 @@
                             var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
                             document.body.removeChild(barTooltipElem);
                         });
+                    // < apply events to chart bars >
 
                     svg.append("g")
                         .call(xAxis)
@@ -510,6 +527,9 @@
                             .attr("width", getBarWidth);
 
                     svg.selectAll('rect.dashboard-rv-chart-bar')
+                        .on("click", function (d) {
+                            changeActiveObject(d.name);
+                        })
                         .on("mouseover", function () {
 
                             d3.select(this)
@@ -551,6 +571,8 @@
                 };
 
                 var init = function () {
+
+                    scope.evDataService.setActiveObject({});
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 

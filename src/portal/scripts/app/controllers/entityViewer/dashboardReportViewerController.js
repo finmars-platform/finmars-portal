@@ -146,7 +146,11 @@
 
                 }
 
-                if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_matrix') {
+                var componentsForLinking = [
+                    'report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'
+                ];
+
+                if (componentsForLinking.indexOf(vm.componentType.data.type) !== -1) {
 
                     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
@@ -334,7 +338,7 @@
                     vm.entityViewerDataService.setActiveObject(componentOutput);
                     vm.entityViewerDataService.setActiveObjectFromAbove(componentOutput);
 
-                    vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE)
+                    vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
                 }
@@ -611,13 +615,12 @@
                         ordinate: vm.componentType.data.settings.ordinate,
                         value_key: vm.componentType.data.settings.value_key
                     };
-                }
-                ;
+                };
 
                 if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
-                        abscissa: vm.componentType.data.settings.abscissa,
-                        ordinate: vm.componentType.data.settings.ordinate,
+                        bar_name_key: vm.componentType.data.settings.bar_name_key,
+                        bar_number_key: vm.componentType.data.settings.bar_number_key,
                         bars_direction: vm.componentType.data.settings.bars_direction,
                         group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula,
                         min_bar_width: vm.componentType.data.settings.min_bar_width,
@@ -627,6 +630,11 @@
                         ticks_number: vm.componentType.data.settings.ticks_number,
                         crop_tick_text: vm.componentType.data.settings.crop_tick_text
                     };
+
+                    if (vm.componentType.data.settings.abscissa || vm.componentType.data.settings.ordinate) {
+                        vm.rvChartsSettings.bar_name_key = vm.componentType.data.settings.abscissa;
+                        vm.rvChartsSettings.bar_number_key = vm.componentType.data.settings.ordinate;
+                    }
 
                 };
 
