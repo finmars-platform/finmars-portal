@@ -40,6 +40,11 @@
 
         vm.finishingSetup = false;
 
+        vm.name = '';
+        vm.description = '';
+
+        vm.nameIsUnique = true;
+
 
         vm.finishStep1 = function () {
 
@@ -54,6 +59,26 @@
             } else {
                 vm.activeConfig = null;
             }
+        };
+
+        vm.checkUniqueness = function(){
+
+            vm.processingCheckName = true;
+
+            usersService.checkMasterUserUniqueness(vm.name).then(function (data) {
+
+                console.log('data', data);
+
+                if(data.hasOwnProperty('unique')) {
+                    vm.nameIsUnique = data.unique
+                }
+
+                vm.processingCheckName = false;
+
+                $scope.$apply();
+
+            })
+
         };
 
         vm.finishSetup = function ($event) {

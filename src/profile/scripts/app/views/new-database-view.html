@@ -14,11 +14,16 @@
 
                 <p class="text-center">Please choose a name for your Database:</p>
 
-                <div class="width-100">
+                <div class="width-100 position-relative">
                     <md-input-container class="width-100">
                         <label>Name</label>
-                        <input type="text" data-ng-model="vm.name">
+                        <input type="text" data-ng-model="vm.name" ng-model-options='{ debounce: 500 }' ng-change='vm.checkUniqueness()'>
                     </md-input-container>
+
+                    <div class="text-warning-red position-absolute" data-ng-if="!vm.nameIsUnique" style="bottom: 0; padding-left: 12px">
+                        This name is already registered, please choose another one
+                    </div>
+
                 </div>
 
                 <div class="width-100">
@@ -41,15 +46,14 @@
                             Back to Profile page
                         </md-button>
 
-                        <md-button class="md-raised md-primary m-0 float-right" data-ng-class="{'disabled-btn': !vm.name}"
+                        <md-button class="md-raised md-primary m-0 float-right"
+                                   data-ng-class="{'disabled-btn': !vm.name || vm.processingCheckName || !vm.nameIsUnique}"
                                    data-ng-click="vm.finishStep1()">
                             Next
                         </md-button>
 
                     </div>
                 </div>
-
-
 
 
             </div>
@@ -154,7 +158,8 @@
 
             <h2 class="m-0 text-center ">Please, wait</h2>
 
-            <p class="text-center  f-s-20" style="height: 25px; width: 100%" data-ng-if="vm.importConfig && vm.importConfig.total_rows">
+            <p class="text-center  f-s-20" style="height: 25px; width: 100%"
+               data-ng-if="vm.importConfig && vm.importConfig.total_rows">
                 {{vm.importConfig.processed_rows}} / {{vm.importConfig.total_rows}}
             </p>
 

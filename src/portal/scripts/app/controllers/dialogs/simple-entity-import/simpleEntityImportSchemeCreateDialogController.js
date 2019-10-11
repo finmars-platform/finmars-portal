@@ -13,17 +13,18 @@
 
     var modelService = require('../../../services/modelService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, data) {
 
         logService.controller('SimpleEntityImportCreateDialogController', 'initialized');
 
         var vm = this;
         vm.entityType = undefined;
-        vm.scheme = {
 
+        console.log('data', data);
+
+        vm.scheme = {
             csv_fields: [],
             entity_fields: []
-
         };
 
         vm.inputsGroup = {
@@ -43,7 +44,7 @@
          */
         vm.getFunctions = function () {
 
-            return vm.scheme.csv_fields.map(function(input){
+            return vm.scheme.csv_fields.map(function (input) {
 
                 return {
                     "name": "Imported: " + input.name + " (column # " + input.column + ")",
@@ -87,7 +88,8 @@
                 });
 
                 vm.dynamicAttrPicked = false;
-            };
+            }
+
         };
 
         vm.getAttrs = function () {
@@ -98,16 +100,17 @@
 
                 vm.dynamicAttributes = data.results;
 
+                vm.readyStatus.attributeTypes = true;
+
                 $scope.$apply();
             });
         };
 
-        vm.readyStatus = {scheme: true, entitySchemeAttributes: false};
+        vm.readyStatus = {scheme: true, attributeTypes: false};
 
         vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport();
 
         vm.scheme.content_type = vm.contentTypes[0].key;
-        vm.getAttrs();
 
         vm.updateEntityFields = function () {
 
@@ -162,7 +165,7 @@
         vm.updateEntityFields();
 
         vm.checkReadyStatus = function () {
-            return vm.readyStatus.scheme;
+            return vm.readyStatus.scheme && vm.readyStatus.attributeTypes;
         };
 
         vm.checkForUsedDynamicAttr = function (attrId) {
@@ -187,7 +190,7 @@
             vm.scheme.csv_fields.push({
                 name: '',
                 column: nextFieldNumber
-            })
+            });
 
             vm.inputsFunctions = vm.getFunctions();
         };
@@ -294,7 +297,8 @@
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";
                     importedColumnsNumberZero = true;
-                };
+                }
+
 
                 if (field.column === null && !importedColumnsNumberEmpty) {
 
@@ -305,7 +309,8 @@
                     }
 
                     importedColumnsNumberEmpty = true;
-                };
+                }
+
 
                 if (!importedColumnsNumberZero &&
                     !importedColumnsNumberEmpty &&
@@ -313,8 +318,10 @@
 
                     warningMessage += '<p>Imported Columns Field # ' + field.column + ' has no F(X) expression</p>';
 
-                };
-            };
+                }
+
+            }
+
 
             if (warningMessage) {
 
@@ -448,7 +455,7 @@
             }
             item.children = item.children.map(setName);
             return item;
-        };
+        }
 
         vm.editTreeAttr = function (attrId, ev) {
 
@@ -461,7 +468,7 @@
                     break;
                 }
 
-            };
+            }
 
             /*classifierObject.id = classifierObject.dynamic_attribute_id;
             delete classifierObject.dynamic_attribute_id;*/
@@ -488,6 +495,18 @@
                 }
             });
         };
+
+        vm.init = function(){
+
+            if (data && data.hasOwnProperty('scheme')) {
+                vm.scheme = data.scheme;
+            }
+
+            vm.getAttrs();
+
+        };
+
+        vm.init();
 
     };
 
