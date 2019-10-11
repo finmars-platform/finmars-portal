@@ -395,6 +395,8 @@ app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirecti
 
 app.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);
 
+app.directive('progressCircular', [require('./app/directives/progressCircularDirective')]);
+
 // Pages
 
 app.controller('DeveloperPanelController', ['$scope', '$mdDialog', require('./app/controllers/pages/developerPanelController')]);
