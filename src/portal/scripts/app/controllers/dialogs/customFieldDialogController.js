@@ -7,6 +7,8 @@
 
     var customFieldService = require('../../services/reports/customFieldService');
 
+    var AttributeDataService = require('../../services/attributeDataService');
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
@@ -14,19 +16,26 @@
         vm.customFields = [];
         vm.entityType = data.entityType;
 
+        vm.readyStatus = {customFields: false, attributes: false};
+
         vm.getList = function () {
+
             customFieldService.getList(vm.entityType).then(function (data) {
 
                 vm.customFields = data.results;
 
                 console.log('vm.customFields', vm.customFields);
 
+                vm.readyStatus.customFields = true;
+
                 $scope.$apply();
 
             });
+
         };
 
         vm.addCustomField = function (ev) {
+
             $mdDialog.show({
                 controller: 'CustomFieldAddDialogController as vm',
                 templateUrl: 'views/dialogs/custom-field-add-dialog-view.html',
@@ -35,20 +44,23 @@
                 locals: {
                     data: {
                         entityType: vm.entityType
-                    }
+                    },
+                    attributeDataService: vm.attributeDataService
                 },
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
                 multiple: true
             }).then(function (res) {
-                if (res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     vm.getList()
                 }
             });
+
         };
 
         vm.editCustomField = function (item, ev) {
+
             $mdDialog.show({
                 controller: 'CustomFieldEditDialogController as vm',
                 templateUrl: 'views/dialogs/custom-field-edit-dialog-view.html',
@@ -58,17 +70,19 @@
                     data: {
                         entityType: vm.entityType,
                         customField: Object.assign({}, item)
-                    }
+                    },
+                    attributeDataService: vm.attributeDataService
                 },
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
                 multiple: true
             }).then(function (res) {
-                if (res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     vm.getList()
                 }
             });
+
         };
 
 
@@ -128,7 +142,49 @@
             $mdDialog.hide();
         };
 
+        vm.downloadAttributes = function(){
+
+            var promises = [];
+
+            promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
+            promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
+            promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
+
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('account'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
+            promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
+
+            if (vm.entityType === 'balance-report') {
+                promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+            }
+
+            if (vm.entityType === 'pl-report') {
+                promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+            }
+
+            if (vm.entityType === 'transaction-report') {
+                promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                promises.push(vm.attributeDataService.downloadTransactionUserFields());
+            }
+
+            Promise.all(promises).then(function (data) {
+
+                vm.readyStatus.attributes = true;
+                $scope.$apply();
+
+            })
+
+        };
+
         vm.init = function () {
+
+            vm.attributeDataService = new AttributeDataService();
+
+            vm.downloadAttributes();
 
             vm.getList();
 
