@@ -125,7 +125,7 @@ app.directive('dashboardReportViewerCharts', [require('./app/directives/dashboar
 
 app.controller('DashboardReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
 
-app.directive('reportViewerMatrix', [require('./app/directives/reportViewerMatrixDirective')]);
+app.directive('reportViewerMatrix', ['$mdDialog', require('./app/directives/reportViewerMatrixDirective')]);
 app.directive('reportViewerBarsChart', ['d3Service', require('./app/directives/reportViewer/reportViewerBarsChart')]);
 app.directive('reportViewerPieChart', ['d3Service', require('./app/directives/reportViewer/reportViewerPieChart')]);
 
