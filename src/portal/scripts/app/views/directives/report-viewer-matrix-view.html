@@ -7,6 +7,153 @@
                  >
                 <span data-ng-if="!top_left_title" title="-">-</span>
                 <span data-ng-if="top_left_title" title="{{top_left_title}}">{{top_left_title}}</span>
+
+                <md-menu>
+                    <md-button class="matrix-settings-button"
+                               ng-click="$mdOpenMenu($event)">
+                        <ng-md-icon icon="settings"></ng-md-icon>
+                    </md-button>
+                    <md-menu-content width="3">
+                        <md-menu-item>
+                            <md-menu >
+
+                                <md-button aria-label="show number formatting menu"
+                                           ng-click="$mdOpenMenu($event)">
+                                    <span>Number Format</span>
+                                </md-button>
+
+                                <md-menu-content width="4">
+
+                                    <md-menu-item>
+                                        <md-button ng-click="setNumberFormatPreset('price')"
+                                                   class="g-settings-option-btn">
+                                            <span>Price (0)</span>
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button ng-click="setNumberFormatPreset('market_value')"
+                                                   class="g-settings-option-btn">
+                                            <span>Market Value (000'000)</span>
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button class="g-settings-option-btn"
+                                                   ng-click="setNumberFormatPreset('amount')">
+                                            <span>Amount (000'000.00)</span>
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button class="g-settings-option-btn"
+                                                   ng-click="setNumberFormatPreset('exposure')">
+                                            <span>Exposure (0.0%)</span>
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button class="g-settings-option-btn"
+                                                   ng-click="setNumberFormatPreset('return')">
+                                            <span>Return (0.00%)</span>
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button class="g-settings-option-btn"
+                                                   ng-click="openNumberFormatSettings($event)">
+                                            <span>Custom</span>
+                                        </md-button>
+                                    </md-menu-item>
+
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="setSubtotalType(1)"
+                                       class="g-settings-option-btn">
+                                <span>Subtotal SUM</span>
+                            </md-button>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-menu md-offset="18px 0">
+                                <md-button aria-label="Open phone interactions menu"
+                                           class=""
+                                           ng-click="$mdOpenMenu($event)">
+                                    <span>Subtotal Weighted</span>
+                                    <ng-md-icon icon="arrow_drop_up"
+                                                class="z-dropdown-icon"></ng-md-icon>
+                                </md-button>
+                                <md-menu-content width="3">
+                                    <md-menu-item>
+                                        <md-button ng-click="setSubtotalType(2)"
+                                                   class="g-settings-option-btn">
+                                            <span>Market Value</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="setSubtotalType(3)"
+                                                   class="g-settings-option-btn">
+                                            <span>Market Value %</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="setSubtotalType(4)"
+                                                   class="g-settings-option-btn">
+                                            <span>Exposure</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="setSubtotalType(5)"
+                                                   class="g-settings-option-btn">
+                                            <span>Exposure %</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-menu>
+                                <md-button aria-label="Open phone interactions menu"
+                                           class=""
+                                           ng-click="$mdOpenMenu($event)">
+                                    <span>Subtotal Avg. Weighted</span>
+                                    <ng-md-icon icon="arrow_drop_up"
+                                                class="z-dropdown-icon"></ng-md-icon>
+                                </md-button>
+                                <md-menu-content width="3">
+                                    <md-menu-item>
+                                        <md-button ng-click="setSubtotalType(6)"
+                                                   class="g-settings-option-btn">
+                                            <span>Market Value</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="setSubtotalType(7)"
+                                                   class="g-settings-option-btn">
+                                            <span>Market Value %</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="setSubtotalType(8)"
+                                                   class="g-settings-option-btn">
+                                            <span>Exposure</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="setSubtotalType(9)"
+                                                   class="g-settings-option-btn">
+                                            <span>Exposure %</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+
             </div>
 
             <div class="report-viewer-matrix-cell report-viewer-matrix-column-header-cell"
@@ -36,7 +183,7 @@
                 {{row.row_name}}
             </div>
 
-            <div class="report-viewer-matrix-cell"
+            <div class="report-viewer-matrix-cell text-{{styles.cell.text_align}}"
                  data-ng-repeat="item in row.items track by item.index"
                  title="{{item.data.value}}"
                  data-ng-click="cellClick($event, row.index, item.index)"
@@ -46,7 +193,7 @@
 
             </div>
 
-            <div class="report-viewer-matrix-cell report-viewer-cell-border-left"
+            <div class="report-viewer-matrix-cell report-viewer-cell-border-left text-{{styles.cell.text_align}}"
                  title="{{totals.rows[row.index].total}}"
                  data-ng-click="singleRowTotalClick($event, row.index)"
                  data-ng-class="{'active': activeItem == 'row_total:' + row.index, 'negative-red': checkNegative(totals.rows[row.index].total)}">
@@ -65,14 +212,14 @@
             </div>
 
             <div data-ng-repeat="item in totals.columns track by $index"
-                 class="report-viewer-matrix-cell"
+                 class="report-viewer-matrix-cell text-{{styles.cell.text_align}}"
                  title="{{item.total}}"
                  data-ng-click="singleColumnTotalClick($event, $index)"
                  data-ng-class="{'active': activeItem == 'column_total:' + $index, 'negative-red': checkNegative(item.total)}">
                 {{formatValue(item.total)}}
             </div>
 
-            <div class="report-viewer-matrix-cell report-viewer-cell-border-left"
+            <div class="report-viewer-matrix-cell report-viewer-cell-border-left text-{{styles.cell.text_align}}"
                  title="{{totals.total}}"
                  data-ng-click="totalClick($event)"
                  data-ng-class="{'active': activeItem == 'total', 'negative-red': checkNegative(totals.total)}">
@@ -85,7 +232,8 @@
 
     <div data-ng-if="processing">
         <div layout="row" layout-sm="column" layout-align="space-around" class="loader-center-64">
-            <md-progress-circular md-mode="indeterminate" md-diameter="64"></md-progress-circular>
+            <!--<md-progress-circular md-mode="indeterminate" md-diameter="64"></md-progress-circular>-->
+            <progress-circular diameter="50"></progress-circular>
         </div>
     </div>
 

@@ -83,36 +83,49 @@
 
     function convertToTree(data, rootGroup) {
 
-        // var _rootGroup = JSON.parse(JSON.stringify(rootGroup));
-        // var _data = JSON.parse(JSON.stringify(data));
-        // var _dataOrderReference = JSON.parse(JSON.stringify(data));
-
-        var _rootGroup = metaHelper.recursiveDeepCopy(rootGroup);
-        var _data = metaHelper.recursiveDeepCopy(data);
-        var _dataOrderReference = metaHelper.recursiveDeepCopy(data);
-
         var list = [];
 
-        _rootGroup.results.forEach(function (item) {
-            if (!_data[item.___id]) {
+        var dataOrderReference = {}; // Only need for keep tracking on original item index
+        var referenceItem;
+
+        Object.keys(data).forEach(function (key) {
+
+            dataOrderReference[key] = {
+                results: []
+            };
+
+            if (data[key].results) {
+                data[key].results.forEach(function (item) {
+
+                    referenceItem = {___id: item.___id};
+
+                    dataOrderReference[key].results.push(referenceItem)
+                })
+            }
+
+
+        });
+
+        rootGroup.results.forEach(function (item) {
+            if (!data[item.___id]) {
 
                 if (item.___type === 'group' || item.___type === 'placeholder_group') {
-                    _data[item.___id] = item;
+                    data[item.___id] = item;
                 }
             }
         });
 
-        var originalKeys = Object.keys(_data);
+        var originalKeys = Object.keys(data);
 
         originalKeys.forEach(function (key) {
 
-            if (_data[key].___type === 'group' || _data[key].___type === 'placeholder_group') {
+            if (data[key].___type === 'group' || data[key].___type === 'placeholder_group') {
 
-                if (_data[key].hasOwnProperty('results')) {
+                if (data[key].hasOwnProperty('results')) {
 
-                    _data[key].results.forEach(function (item) {
-                        if (!_data[item.___id]) {
-                            _data[item.___id] = item;
+                    data[key].results.forEach(function (item) {
+                        if (!data[item.___id]) {
+                            data[item.___id] = item;
                         }
                     });
 
@@ -122,11 +135,11 @@
 
         });
 
-        var extendedKeys = Object.keys(_data);
+        var extendedKeys = Object.keys(data);
 
         extendedKeys.forEach(function (key) {
 
-            list.push(_data[key]);
+            list.push(data[key]);
 
         });
 
@@ -141,7 +154,7 @@
             if (node.___parentId !== null) {
 
                 if (node.___type === 'group' || node.___type === 'placeholder_group') {
-                    insertItemInNode(list, map, node, _dataOrderReference)
+                    insertItemInNode(list, map, node, dataOrderReference)
                 }
 
                 if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'control') {

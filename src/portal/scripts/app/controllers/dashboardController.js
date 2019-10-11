@@ -198,8 +198,8 @@
 
                 }
 
-                // console.log('statusesObject', statusesObject);
-                // console.log('nextComponentToStart', nextComponentToStart);
+                console.log('statusesObject', statusesObject);
+                console.log('nextComponentToStart', nextComponentToStart);
 
                 if (nextComponentToStart) {
 

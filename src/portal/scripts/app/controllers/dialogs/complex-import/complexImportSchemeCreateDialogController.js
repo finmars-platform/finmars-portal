@@ -17,13 +17,14 @@
 
     var modelService = require('../../../services/modelService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, data) {
 
         logService.controller('SimpleEntityImportCreateDialogController', 'initialized');
 
         var vm = this;
+
         vm.scheme = {
-            name: [],
+            scheme_name: [],
             actions: []
         };
 
@@ -126,8 +127,14 @@
         };
 
         vm.init = function () {
+
             vm.getTransactionImportSchemes();
             vm.getCsvImportSchemes();
+
+            if (data && data.hasOwnProperty('scheme')) {
+                vm.scheme = data.scheme;
+            }
+
         };
 
         vm.init();

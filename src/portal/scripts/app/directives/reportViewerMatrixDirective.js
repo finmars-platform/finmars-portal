@@ -6,9 +6,9 @@
     var renderHelper = require('../helpers/render.helper');
     var reportViewerMatrixHelper = require('../helpers/report-viewer-matrix.helper');
 
-    var evEvents = require('../services/entityViewerEvents')
+    var evEvents = require('../services/entityViewerEvents');
 
-    module.exports = function () {
+    module.exports = function ($mdDialog) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/report-viewer-matrix-view.html',
@@ -21,7 +21,7 @@
 
                 scope.activeItem = null;
 
-                console.log('Report Viewer Matrix Component', scope);
+                // console.log('Report Viewer Matrix Component', scope);
 
                 scope.processing = true;
 
@@ -30,8 +30,8 @@
                     var elemWidth = elem.width();
                     var elemHeight = elem.height();
 
-                    console.log('elemHeight', elemHeight);
-                    console.log('elemWidth', elemWidth);
+                    // console.log('elemHeight', elemHeight);
+                    // console.log('elemWidth', elemWidth);
 
                     var rowsCount = scope.rows.length + 2; // header / footer rows
                     var columnsCount = scope.columns.length + 2; // first empty cell and last "Total" cell
@@ -254,11 +254,92 @@
 
                 };
 
+                scope.setNumberFormatPreset = function(preset){
+
+                    switch (preset) {
+
+                        case 'price':
+                            scope.matrixSettings.number_format.zero_format_id = 1;
+                            scope.matrixSettings.number_format.negative_color_format_id = 0;
+                            scope.matrixSettings.number_format.negative_format_id = 0;
+                            break;
+                        case 'market_value':
+                            scope.matrixSettings.number_format.zero_format_id = 1;
+                            scope.matrixSettings.number_format.negative_color_format_id = 1;
+                            scope.matrixSettings.number_format.negative_format_id = 1;
+                            scope.matrixSettings.number_format.thousands_separator_format_id = 2;
+                            break;
+                        case 'amount':
+                            scope.matrixSettings.number_format.zero_format_id = 1;
+                            scope.matrixSettings.number_format.negative_color_format_id = 1;
+                            scope.matrixSettings.number_format.negative_format_id = 0;
+                            scope.matrixSettings.number_format.thousands_separator_format_id = 2;
+                            scope.matrixSettings.number_format.round_format_id = 3;
+                            scope.matrixSettings.number_format.percentage_format_id = 0;
+                            break;
+                        case 'exposure':
+                            scope.matrixSettings.number_format.zero_format_id = 1;
+                            scope.matrixSettings.number_format.negative_color_format_id = 1;
+                            scope.matrixSettings.number_format.negative_format_id = 1;
+                            scope.matrixSettings.number_format.round_format_id = 0;
+                            scope.matrixSettings.number_format.percentage_format_id = 2;
+                            break;
+                        case 'return':
+                            scope.matrixSettings.number_format.zero_format_id = 1;
+                            scope.matrixSettings.number_format.negative_color_format_id = 1;
+                            scope.matrixSettings.number_format.negative_format_id = 0;
+                            scope.matrixSettings.number_format.percentage_format_id = 3;
+                            break;
+                    }
+
+                };
+
+                scope.openNumberFormatSettings = function($event){
+
+                    $mdDialog.show({
+                        controller: 'NumberFormatSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                settings: scope.matrixSettings.number_format
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.matrixSettings.number_format = res.data.settings;
+
+                        }
+
+                    });
+
+                };
+
+                scope.setSubtotalType = function(subtotal_formula_id){
+
+                    scope.matrixSettings.subtotal_formula_id = subtotal_formula_id;
+
+                    scope.createMatrix();
+
+                    setTimeout(function () {
+
+                        scope.$apply();
+
+                        scope.alignGrid();
+                    }, 0)
+
+                };
+
                 scope.init = function () {
 
                     scope.evDataService.setActiveObject({});
 
                     scope.top_left_title = scope.matrixSettings.top_left_title;
+                    scope.styles = scope.matrixSettings.styles;
 
                     // If we already have data (e.g. viewType changed) start
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);

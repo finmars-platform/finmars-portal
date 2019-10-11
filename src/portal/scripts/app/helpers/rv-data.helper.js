@@ -1,12 +1,10 @@
 (function () {
 
-    var stringHelper = require('./stringHelper');
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
-    var metaService = require('../services/metaService');
     var rvSubtotalHelper = require('./rv-subtotal.service');
-    var rvHelper = require('./rv.helper');
     var evDataHelper = require('./ev-data.helper');
+    var metaHelper = require('./meta.helper');
 
     var getGroupsByParent = function (parentId, evDataService) {
 
@@ -450,6 +448,54 @@
 
     };
 
+    var simpleObjectCopy = function (obj) {
+
+        var result = {};
+        var propertyType = {};
+
+        Object.keys(obj).forEach(function (key) {
+
+            propertyType = typeof obj[key];
+
+            if (['string', 'number', 'boolean', 'undefined'].indexOf(propertyType === -1) || isNaN(obj[key]) || obj[key] === null) {
+                result[key] = obj[key]
+            } else if (Array.isArray(obj[key])) {
+
+                result[key] = [];
+
+                obj[key].forEach(function (item) {
+                    result[key].push(Object.assign({}, item))
+                })
+
+            } else if (!Array.isArray(obj[key]) && propertyType === 'object') { // if object
+                result[key] = Object.assign({}, obj[key]) // WARNING, Nested objects is not supported
+            }
+
+
+        });
+
+        return result
+
+    };
+
+    var getNewDataInstance = function (evDataService) {
+
+        var sourceData = evDataService.getData();
+        var result = {};
+        var sourceDataObject;
+
+        Object.keys(sourceData).forEach(function (key) {
+
+            result[key] = simpleObjectCopy(sourceData[key]);
+
+            sourceDataObject = sourceData[key];
+
+        });
+
+        return result;
+
+    };
+
     var getFlatStructure = function (evDataService) {
 
         var rootGroupOptions = evDataService.getRootGroupOptions();
@@ -464,11 +510,25 @@
 
             calculateSubtotals(evDataService);
 
+            console.timeEnd("Calculating subtotals");
+
+
+            console.time("Copying data");
+
+            // data = getNewDataInstance(evDataService);
             data = JSON.parse(JSON.stringify(evDataService.getData()));
-            // console.log("d3 service data1", data);
+
+            console.log('data', data);
+
+            console.timeEnd("Copying data");
+
+
+            console.time("Inserting subtotals");
+
             data = insertSubtotalsToResults(data, evDataService);
 
-            console.timeEnd("Calculating subtotals");
+            console.timeEnd("Inserting subtotals");
+
 
             console.time("Calculating blankline");
 
@@ -479,19 +539,26 @@
             // console.log('data', data);
 
         } else {
-            data = JSON.parse(JSON.stringify(evDataService.getData()));
+            data = getNewDataInstance(evDataService)
+            // data = JSON.parse(JSON.stringify(evDataService.getData()));
             // console.log("d3 service data2", data);
         }
 
-        // console.log('data?', data);
+        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
-        var rootGroup = JSON.parse(JSON.stringify(evDataService.getRootGroupData()));
+        console.time("Converting to tree");
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
 
+        console.timeEnd("Converting to tree");
+
         // console.log('getFlatStructure.tree', tree);
 
+        console.time("Converting tree to list");
+
         var list = utilsHelper.convertTreeToList(tree);
+
+        console.timeEnd("Converting tree to list");
 
         // console.log('getFlatStructure.list', list);
 

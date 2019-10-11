@@ -5,14 +5,10 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
     module.exports = function ($scope, $mdDialog, schemeId) {
-
-        logService.controller('InstrumentDownloadSchemeEditDialogController', 'initialized');
 
         var vm = this;
         vm.scheme = {};
@@ -25,7 +21,7 @@
 
         vm.inputsFunctions = [];
 
-        var getFunctions = function () {
+        vm.getFunctions = function () {
 
             return vm.providerFields.map(function (input) {
 
@@ -56,53 +52,60 @@
             }
         ];
 
+        vm.getScheme = function(){
 
-        transactionSchemeService.getByKey(schemeId).then(function (data) {
-            vm.scheme = data;
+            transactionSchemeService.getByKey(schemeId).then(function (data) {
+                vm.scheme = data;
 
-            if (vm.scheme.inputs.length) {
+                if (vm.scheme.inputs.length) {
 
-                vm.providerFields = [];
+                    vm.providerFields = [];
 
-                vm.scheme.inputs.forEach(function (input) {
-                    vm.providerFields.push(input);
-                })
+                    vm.scheme.inputs.forEach(function (input) {
+                        vm.providerFields.push(input);
+                    });
 
-                vm.providerFields = vm.providerFields.sort(function (a, b) {
-                    if (a.column > b.column) {
-                        return 1;
-                    }
-                    if (a.column < b.column) {
-                        return -1;
-                    }
+                    vm.providerFields = vm.providerFields.sort(function (a, b) {
+                        if (a.column > b.column) {
+                            return 1;
+                        }
+                        if (a.column < b.column) {
+                            return -1;
+                        }
 
-                    return 0;
-                });
+                        return 0;
+                    });
 
-                vm.inputsFunctions = getFunctions();
+                    vm.inputsFunctions = vm.getFunctions();
 
-            }
+                }
 
-            if (vm.scheme.rules.length) {
-                vm.mapFields = [];
+                if (vm.scheme.rules.length) {
+                    vm.mapFields = [];
 
-                vm.scheme.rules.forEach(function (rule) {
-                    vm.mapFields.push(rule);
-                })
+                    vm.scheme.rules.forEach(function (rule) {
+                        vm.mapFields.push(rule);
+                    })
 
-            }
+                }
 
-            vm.readyStatus.scheme = true;
-            $scope.$apply();
-        });
+                vm.readyStatus.scheme = true;
+                $scope.$apply();
+            });
 
-        transactionTypeService.getList({
-            pageSize: 1000
-        }).then(function (data) {
-            vm.transactionTypes = data.results;
-            vm.readyStatus.transactionTypes = true;
-            $scope.$apply();
-        });
+        };
+
+        vm.getTransactionTypes = function () {
+
+            transactionTypeService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+                vm.transactionTypes = data.results;
+                vm.readyStatus.transactionTypes = true;
+                $scope.$apply();
+            });
+
+        };
 
         vm.openInputs = function (item, $event) {
             $mdDialog.show({
@@ -132,6 +135,7 @@
         };
 
         vm.addProviderField = function () {
+
             var fieldsLength = vm.providerFields.length;
             var lastFieldNumber;
             var nextFieldNumber;
@@ -149,6 +153,7 @@
                 name: '',
                 column: nextFieldNumber
             })
+
         };
 
         vm.addMapField = function () {
@@ -163,7 +168,7 @@
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
-                vm.inputsFunctions = getFunctions();
+                vm.inputsFunctions = vm.getFunctions();
             }
 
         };
@@ -189,7 +194,7 @@
                 if (res.status === 'agree') {
 
                     item.name_expr = res.data.item.expression;
-                    vm.inputsFunctions = getFunctions();
+                    vm.inputsFunctions = vm.getFunctions();
 
                 }
 
@@ -227,7 +232,7 @@
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";
                     importedColumnsNumberZero = true;
-                };
+                }
 
                 if (field.column === null && !importedColumnsNumberEmpty) {
 
@@ -238,7 +243,7 @@
                     }
 
                     importedColumnsNumberEmpty = true;
-                };
+                }
 
                 if (!importedColumnsNumberZero &&
                     !importedColumnsNumberEmpty &&
@@ -246,8 +251,8 @@
 
                     warningMessage += '<p>Imported Columns Field # ' + field.column + ' has no F(X) expression</p>';
 
-                };
-            };
+                }
+            }
 
             if (warningMessage) {
 
@@ -304,6 +309,29 @@
             }
         };
 
+        vm.makeCopy = function ($event) {
+
+            var scheme = JSON.parse(JSON.stringify(vm.scheme));
+
+            delete scheme.id;
+            scheme["scheme_name"] = scheme["scheme_name"] + '_copy';
+
+            $mdDialog.show({
+                controller: 'TransactionImportSchemeAddDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        scheme: scheme
+                    }
+                }
+            });
+
+            $mdDialog.hide({status: 'disagree'});
+
+        };
+
         vm.openMapping = function ($event, item) {
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
@@ -339,6 +367,15 @@
             })
 
         };
+
+        vm.init = function () {
+
+            vm.getScheme();
+            vm.getTransactionTypes();
+
+        };
+
+        vm.init()
 
     };
 

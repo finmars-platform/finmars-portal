@@ -318,6 +318,29 @@
 
         };
 
+        vm.makeCopy = function($event){
+
+            var scheme = JSON.parse(JSON.stringify(vm.scheme));
+
+            delete scheme.id;
+            scheme["scheme_name"] = scheme["scheme_name"] + '_copy';
+
+            $mdDialog.show({
+                controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
+                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-create-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        scheme: scheme
+                    }
+                }
+            });
+
+            $mdDialog.hide({status: 'disagree'});
+
+        };
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
@@ -349,7 +372,7 @@
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";
                     importedColumnsNumberZero = true;
-                };
+                }
 
                 if (field.column === null && !importedColumnsNumberEmpty) {
 
@@ -360,7 +383,7 @@
                     }
 
                     importedColumnsNumberEmpty = true;
-                };
+                }
 
                 if (!importedColumnsNumberZero &&
                     !importedColumnsNumberEmpty &&
@@ -368,8 +391,8 @@
 
                     warningMessage += '<p>Imported Columns Field # ' + field.column + ' has no F(X) expression</p>';
 
-                };
-            };
+                }
+            }
 
             if (warningMessage) {
 
@@ -505,7 +528,7 @@
             }
             item.children = item.children.map(setName);
             return item;
-        };
+        }
 
         vm.editTreeAttr = function (attrId, ev) {
 
@@ -518,7 +541,7 @@
                     break;
                 }
 
-            };
+            }
 
             /*classifierObject.id = classifierObject.dynamic_attribute_id;
             delete classifierObject.dynamic_attribute_id;*/

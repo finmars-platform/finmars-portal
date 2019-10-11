@@ -26,7 +26,12 @@
                     abscissa: '',
                     ordinate: '',
                     value_key: '',
-                    subtotal_formula_id: 1
+                    subtotal_formula_id: 1,
+                    styles: {
+                        cell: {
+                            text_align: 'center'
+                        }
+                    }
                 }
             }
         }

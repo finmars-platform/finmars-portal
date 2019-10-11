@@ -35,9 +35,15 @@
         vm.totalSteps = 2;
 
         vm.interface_level = null;
-        vm.activeConfig = null;
+        // vm.activeConfig = null;
+        vm.activeConfig = 'custom'
 
         vm.finishingSetup = false;
+
+        vm.name = '';
+        vm.description = '';
+
+        vm.nameIsUnique = true;
 
 
         vm.finishStep1 = function () {
@@ -55,11 +61,31 @@
             }
         };
 
+        vm.checkUniqueness = function(){
+
+            vm.processingCheckName = true;
+
+            usersService.checkMasterUserUniqueness(vm.name).then(function (data) {
+
+                console.log('data', data);
+
+                if(data.hasOwnProperty('unique')) {
+                    vm.nameIsUnique = data.unique
+                }
+
+                vm.processingCheckName = false;
+
+                $scope.$apply();
+
+            })
+
+        };
+
         vm.finishSetup = function ($event) {
 
             vm.finishingSetup = true;
 
-            usersService.createMasterUser({name: vm.name}).then(function (data) {
+            usersService.createMasterUser({name: vm.name, description: vm.description}).then(function (data) {
 
                 usersService.setMasterUser(data.id).then(function (value) {
 

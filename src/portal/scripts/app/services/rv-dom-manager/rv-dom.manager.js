@@ -602,9 +602,9 @@
                 viewportTop = viewportTop + interfaceLayout.columnArea.height
             }
 
-            console.log('contentWrapElemHeight', contentWrapElemHeight);
-            console.log('viewportTop', viewportTop);
-            console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
+            // console.log('contentWrapElemHeight', contentWrapElemHeight);
+            // console.log('viewportTop', viewportTop);
+            // console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
 
 
             // viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
@@ -656,7 +656,7 @@
             resultWidth = contentWrapElemWidth;
         }
 
-        console.log('resultWidth', resultWidth);
+        // console.log('resultWidth', resultWidth);
 
         rvScrollManager.setContentElemWidth(resultWidth);
 
