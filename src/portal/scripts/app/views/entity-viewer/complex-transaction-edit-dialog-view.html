@@ -186,8 +186,9 @@
                                     <div data-ng-if="!vm.readyStatus.permissions">
                                         <div layout="row" layout-sm="column" layout-align="space-around"
                                              class="m-large">
-                                            <md-progress-circular md-mode="indeterminate"
-                                                                  md-diameter="96"></md-progress-circular>
+                                            <!--<md-progress-circular md-mode="indeterminate"-->
+                                                                  <!--md-diameter="96"></md-progress-circular>-->
+                                            <progress-circular diameter="100"></progress-circular>
                                         </div>
                                     </div>
                                 </md-content>
@@ -198,7 +199,8 @@
             </div>
             <div data-ng-if="!vm.checkReadyStatus()">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-                    <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                    <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                    <progress-circular diameter="100"></progress-circular>
                 </div>
             </div>
         </div>

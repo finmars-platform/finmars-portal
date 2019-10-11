@@ -7,6 +7,7 @@
 
     var gulp = require('gulp');
     var uglify = require('gulp-uglify');
+    var stripDebug = require('gulp-strip-debug');
     var concat = require('gulp-concat');
     var minifyCSS = require('gulp-minify-css');
     var minifyHTML = require('gulp-minify-html');
@@ -147,7 +148,9 @@
             .pipe(replace(/__LOGIN__/g, credentials[PROJECT_ENV].login))
             .pipe(replace(/__PASS__/g, credentials[PROJECT_ENV].pass))
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
+            .pipe(gulpif(PROJECT_ENV === 'production', stripDebug()))
             // .pipe(uglify()) // if you need to debug minified build locally
+            // .pipe(stripDebug()) // if you need to debug minified build locally
             .pipe(rename({basename: 'main', suffix: '.min'}))
             .on('error', function (error) {
                 console.error('\nError on JS minification: \n', error.toString());

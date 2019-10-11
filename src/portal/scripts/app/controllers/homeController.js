@@ -40,9 +40,6 @@
 
                     var info = JSON.parse(sessionStorage.getItem('afterLoginEvents'));
 
-                    console.log('info', info);
-                    console.log('vm.currentMasterUser', vm.currentMasterUser);
-
                     var member = data.results[0];
 
                     var showEventsDialogs = false;

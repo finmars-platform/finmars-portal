@@ -125,7 +125,7 @@ app.directive('dashboardReportViewerCharts', [require('./app/directives/dashboar
 
 app.controller('DashboardReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
 
-app.directive('reportViewerMatrix', [require('./app/directives/reportViewerMatrixDirective')]);
+app.directive('reportViewerMatrix', ['$mdDialog', require('./app/directives/reportViewerMatrixDirective')]);
 app.directive('reportViewerBarsChart', ['d3Service', require('./app/directives/reportViewer/reportViewerBarsChart')]);
 app.directive('reportViewerPieChart', ['d3Service', require('./app/directives/reportViewer/reportViewerPieChart')]);
 
@@ -206,19 +206,19 @@ app.controller('InstrumentDownloadSchemeEditDialogController', ['$scope', '$mdDi
 app.controller('SimpleEntityImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportDialogController')]);
 app.controller('SimpleEntityImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportErrorsDialogController')]);
 app.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeEditDialogController')]);
-app.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeCreateDialogController')]);
+app.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeCreateDialogController')]);
 
 // Complex Import
 
 app.controller('ComplexImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/complex-import/complexImportDialogController')]);
 app.controller('ComplexImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/complex-import/complexImportSchemeEditDialogController')]);
-app.controller('ComplexImportSchemeCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/complex-import/complexImportSchemeCreateDialogController')]);
+app.controller('ComplexImportSchemeCreateDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/complex-import/complexImportSchemeCreateDialogController')]);
 app.controller('ComplexImportSchemeErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/complex-import/complexImportSchemeErrorsDialogController')]);
 app.controller('ComplexImportValidationErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/complex-import/complexImportValidationErrorsDialogController')]);
 
 // Transaction Import
 
-app.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeAddDialogController')]);
+app.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeAddDialogController')]);
 app.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeEditDialogController')]);
 app.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeInputsDialogController')]);
 app.controller('TransactionImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/transaction-import/transactionImportDialogController')]);
@@ -394,6 +394,8 @@ app.directive('layoutConstructorField', [require('./app/directives/layoutConstru
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 
 app.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);
+
+app.directive('progressCircular', [require('./app/directives/progressCircularDirective')]);
 
 // Pages
 

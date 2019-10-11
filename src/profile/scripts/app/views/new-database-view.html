@@ -14,10 +14,27 @@
 
                 <p class="text-center">Please choose a name for your Database:</p>
 
-                <div class="width-100">
+                <div class="width-100 position-relative">
                     <md-input-container class="width-100">
                         <label>Name</label>
-                        <input type="text" data-ng-model="vm.name">
+                        <input type="text" data-ng-model="vm.name" ng-model-options='{ debounce: 500 }' ng-change='vm.checkUniqueness()'>
+                    </md-input-container>
+
+                    <div class="text-warning-red position-absolute" data-ng-if="!vm.nameIsUnique" style="bottom: 0; padding-left: 12px">
+                        This name is already registered, please choose another one
+                    </div>
+
+                </div>
+
+                <div class="width-100">
+                    <md-input-container class="width-100" style="max-height: 108px">
+                        <label>Description</label>
+                        <div class="p-8">
+                                <textarea data-ng-model="vm.description" rows="4" class="max-width">
+
+                                </textarea>
+
+                        </div>
                     </md-input-container>
                 </div>
 
@@ -29,15 +46,14 @@
                             Back to Profile page
                         </md-button>
 
-                        <md-button class="md-raised md-primary m-0 float-right" data-ng-class="{'disabled-btn': !vm.name}"
+                        <md-button class="md-raised md-primary m-0 float-right"
+                                   data-ng-class="{'disabled-btn': !vm.name || vm.processingCheckName || !vm.nameIsUnique}"
                                    data-ng-click="vm.finishStep1()">
                             Next
                         </md-button>
 
                     </div>
                 </div>
-
-
 
 
             </div>
@@ -91,7 +107,7 @@
                             <div class="setup-name p-t-8 m-b-8">Custom</div>
 
                             <div class="setup-description">
-                                Configure all forms, layouts and tables by myself
+                                Empty Ecosystem. Configure all forms, layouts and tables by myself
                             </div>
 
                             <div class="setup-item-footer">
@@ -142,11 +158,12 @@
 
             <h2 class="m-0 text-center ">Please, wait</h2>
 
-            <p class="text-center m-b-50 f-s-20" style="height: 25px; width: 100%" data-ng-if="vm.importConfig && vm.importConfig.total_rows">
+            <p class="text-center  f-s-20" style="height: 25px; width: 100%"
+               data-ng-if="vm.importConfig && vm.importConfig.total_rows">
                 {{vm.importConfig.processed_rows}} / {{vm.importConfig.total_rows}}
             </p>
 
-            <div class="m-l-16" layout="row" layout-sm="column" layout-align="space-around">
+            <div class="m-l-16" style="margin-top: 50px" layout="row" layout-sm="column" layout-align="space-around">
                 <md-progress-circular md-diameter="50" md-mode="indeterminate"></md-progress-circular>
             </div>
 

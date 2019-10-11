@@ -190,11 +190,15 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-if="vm.scheme.id">
+            Make Copy
+        </md-button>
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
         </md-button>
         <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
-            Save
+            <span data-ng-if="vm.scheme.id">Save</span>
+            <span data-ng-if="!vm.scheme.id">Create</span>
         </md-button>
     </md-dialog-actions>
 </md-dialog>

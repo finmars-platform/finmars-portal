@@ -46,6 +46,20 @@
         })
     };
 
+    var checkMasterUserUniqueness = function (name) {
+
+        return window.fetch(baseUrl + 'users/master-user-check-uniqueness/?name=' + name, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        })
+    };
+
     var createMasterUser = function (user) {
         return window.fetch(baseUrl + 'users/master-user-create/', {
             method: 'POST',
@@ -206,6 +220,8 @@
         getMasterByKey: getMasterByKey,
         updateMaster: updateMaster,
         setMasterUser: setMasterUser,
+
+        checkMasterUserUniqueness: checkMasterUserUniqueness,
 
         getInviteToMasterUserList: getInviteToMasterUserList,
         updateInviteToMasterUserByKey: updateInviteToMasterUserByKey,

@@ -16,13 +16,6 @@
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
 
-    var attributeTypeService = require('../../../services/attributeTypeService');
-
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
-
-    var modelService = require('../../../services/modelService');
-
-
     module.exports = function ($scope, $mdDialog, schemeId) {
 
         logService.controller('EntityMappingEditDialogController', 'initialized');
@@ -70,7 +63,6 @@
 
             });
 
-
         };
 
         vm.addSimpleEntityImportAction = function () {
@@ -80,7 +72,7 @@
             vm.scheme.actions.push({
                 action_notes: '',
                 csv_import_scheme: {}
-            })
+            });
 
             console.log('vm.scheme.actions', vm.scheme.actions);
         };
@@ -143,6 +135,29 @@
                 })
 
             })
+        };
+
+        vm.makeCopy = function ($event) {
+
+            var scheme = JSON.parse(JSON.stringify(vm.scheme));
+
+            delete scheme.id;
+            scheme["scheme_name"] = scheme["scheme_name"] + '_copy';
+
+            $mdDialog.show({
+                controller: 'ComplexImportSchemeCreateDialogController as vm',
+                templateUrl: 'views/dialogs/complex-import/complex-import-scheme-create-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        scheme: scheme
+                    }
+                }
+            });
+
+            $mdDialog.hide({status: 'disagree'});
+
         };
 
         vm.init = function () {

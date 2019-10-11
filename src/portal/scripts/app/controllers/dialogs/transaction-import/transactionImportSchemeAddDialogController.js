@@ -5,14 +5,10 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('InstrumentMappingDialogController', 'initialized');
+    module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
@@ -27,7 +23,25 @@
 
         vm.inputsFunctions = [];
 
-        var getFunctions = function () {
+        vm.scheme = {};
+
+        vm.mapFields = [
+            {
+                value: '',
+                transaction_type: null,
+                fields: []
+            }
+        ];
+
+        vm.providerFields = [
+            {
+                name: '',
+                column: 1,
+                name_expr: ''
+            }
+        ];
+
+        vm.getFunctions = function () {
 
             return vm.providerFields.map(function (input) {
 
@@ -42,13 +56,17 @@
 
         };
 
-        transactionTypeService.getList({
-            pageSize: 1000
-        }).then(function (data) {
-            vm.transactionTypes = data.results;
-            vm.readyStatus.transactionTypes = true;
-            $scope.$apply();
-        });
+        vm.getTransactionTypes = function () {
+
+            transactionTypeService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+                vm.transactionTypes = data.results;
+                vm.readyStatus.transactionTypes = true;
+                $scope.$apply();
+            });
+
+        };
 
         vm.openInputs = function (item, $event) {
             $mdDialog.show({
@@ -79,32 +97,12 @@
             return vm.readyStatus.scheme && vm.readyStatus.transactionTypes;
         };
 
-        vm.scheme = {};
-
-        var createEmptyScheme = function () {
+        vm.createEmptyScheme = function () {
             vm.scheme.inputs = [];
             vm.scheme.rules = [];
             vm.scheme.rule_expr = 'a + b';
             vm.scheme.scheme_name = '';
         };
-
-        createEmptyScheme();
-
-        vm.mapFields = [
-            {
-                value: '',
-                transaction_type: null,
-                fields: []
-            }
-        ];
-
-        vm.providerFields = [
-            {
-                name: '',
-                column: 1,
-                name_expr: ''
-            }
-        ];
 
         vm.addProviderField = function () {
             var fieldsLength = vm.providerFields.length;
@@ -139,11 +137,10 @@
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
-                vm.inputsFunctions = getFunctions();
+                vm.inputsFunctions = vm.getFunctions();
             }
 
         };
-
 
         vm.openProviderFieldExpressionBuilder = function (item, $event) {
 
@@ -166,7 +163,7 @@
                 if (res.status === 'agree') {
 
                     item.name_expr = res.data.item.expression;
-                    vm.inputsFunctions = getFunctions();
+                    vm.inputsFunctions = vm.getFunctions();
 
                 }
 
@@ -206,7 +203,8 @@
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";
                     importedColumnsNumberZero = true;
-                };
+                }
+                ;
 
                 if (field.column === null && !importedColumnsNumberEmpty) {
 
@@ -217,7 +215,8 @@
                     }
 
                     importedColumnsNumberEmpty = true;
-                };
+                }
+                ;
 
                 if (!importedColumnsNumberZero &&
                     !importedColumnsNumberEmpty &&
@@ -225,8 +224,10 @@
 
                     warningMessage += '<p>Imported Columns Field # ' + field.column + ' has no F(X) expression</p>';
 
-                };
-            };
+                }
+                ;
+            }
+            ;
 
             if (warningMessage) {
 
@@ -322,6 +323,54 @@
             })
 
         };
+
+        vm.init = function () {
+
+            vm.createEmptyScheme();
+            vm.getTransactionTypes();
+
+            if (data && data.hasOwnProperty('scheme')) {
+
+                vm.scheme = data.scheme;
+
+                if (vm.scheme.inputs.length) {
+
+                    vm.providerFields = [];
+
+                    vm.scheme.inputs.forEach(function (input) {
+                        vm.providerFields.push(input);
+                    });
+
+                    vm.providerFields = vm.providerFields.sort(function (a, b) {
+                        if (a.column > b.column) {
+                            return 1;
+                        }
+                        if (a.column < b.column) {
+                            return -1;
+                        }
+
+                        return 0;
+                    });
+
+                    vm.inputsFunctions = vm.getFunctions();
+
+                }
+
+                if (vm.scheme.rules.length) {
+
+                    vm.mapFields = [];
+
+                    vm.scheme.rules.forEach(function (rule) {
+                        vm.mapFields.push(rule);
+                    })
+
+                }
+
+            }
+
+        };
+
+        vm.init();
 
     };
 

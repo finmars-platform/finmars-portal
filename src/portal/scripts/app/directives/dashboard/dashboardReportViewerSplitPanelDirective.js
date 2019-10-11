@@ -59,10 +59,12 @@
 
                 scope.init = function () {
 
+                    scope.initEventListeners();
+
                     scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    scope.initEventListeners();
+
 
                 };
 
