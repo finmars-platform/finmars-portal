@@ -12,8 +12,11 @@
 
         vm.filterLinks = [];
 
+        vm.barsNamesAttrSelectorTitle;
+        vm.barsNumbersAttrSelectorTitle;
+
         vm.multiselectModalName = 'Fields multiselector';
-        console.log("column selector item", item);
+
         if (item) {
             vm.item = item;
         } else {
@@ -30,14 +33,15 @@
         vm.layouts = [];
 
         var deleteChartTypeBasedProps = function () {
-            delete vm.item.settings.abscissa;
-            delete vm.item.settings.ordinate;
+            delete vm.item.settings.bar_name_key;
+            delete vm.item.settings.bar_number_key;
             delete vm.item.settings.min_bar_width;
             delete vm.item.settings.max_bar_width;
             delete vm.item.settings.group_number_calc_formula;
             delete vm.item.settings.sorting_value_type;
             delete vm.item.settings.sorting_type;
             delete vm.item.settings.crop_tick_text;
+            delete vm.item.settings.auto_refresh;
             // properties for pie chart
             //delete vm.item.settings.fieldsKeys;
             delete vm.item.settings.group_attr;
@@ -55,8 +59,8 @@
 
             switch (vm.item.type) {
                 case 'report_viewer_bars_chart':
-                    vm.item.settings.abscissa = null;
-                    vm.item.settings.ordinate = null;
+                    vm.item.settings.bar_name_key = null;
+                    vm.item.settings.bar_number_key = null;
                     vm.item.settings.group_number_calc_formula = 1;
                     vm.item.settings.autocalc_ticks_number = true;
                     vm.item.settings.bars_sorting = false;
@@ -95,8 +99,8 @@
             switch (vm.item.type) {
                 case 'report_viewer_bars_chart':
                     vm.item.settings = {
-                        abscissa: '',
-                        ordinate: '',
+                        bar_name_key: '',
+                        bar_number_key: '',
                         bars_direction: 'bottom-top',
                         group_number_calc_formula: 1,
                         min_bar_width: 50,
@@ -119,9 +123,17 @@
 
         };
 
-        /*vm.toggleBarsChartSorting = function () {
-            vm.item.settings.bars_sorting = !vm.item.settings.bars_sorting;
-        };*/
+        vm.barsDirectionChanged = function () {
+
+            if (vm.item.settings.bars_direction === 'bottom-top') {
+                vm.barsNamesAttrSelectorTitle = 'Bars Names (Abscissa)';
+                vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Ordinate)';
+            } else {
+                vm.barsNamesAttrSelectorTitle = 'Bars Names (Ordinate)';
+                vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Abscissa)';
+            };
+
+        };
 
         vm.getContentTypeByEntityType = function () {
 

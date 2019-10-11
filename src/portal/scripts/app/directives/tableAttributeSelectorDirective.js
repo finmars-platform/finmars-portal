@@ -9,10 +9,10 @@
         return {
             restrict: 'E',
             scope: {
-                title: '@',
+                title: '<',
                 availableAttrs: '<',
                 item: '=',
-                dialogTitle: '@'
+                dialogTitle: '<'
             },
             templateUrl: 'views/directives/table-attribute-selector-view.html',
             link: function (scope, elem, attr) {

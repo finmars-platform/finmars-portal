@@ -49,6 +49,17 @@
                 };
 
 
+                var changeActiveObject = function (partName) {
+
+                    var activeObject = scope.evDataService.getActiveObject();
+
+                    activeObject[nameKey] = partName;
+
+                    scope.evDataService.setActiveObject(activeObject);
+                    scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                };
+
                 var getDataForCharts = function () {
 
                     chartData = [];
@@ -167,6 +178,7 @@
 
                     chartHolderElem.style.minWidth = svgSize + 'px';
                     chartHolderElem.style.width = svgSize + 'px';
+                    chartHolderElem.style.height = svgSize + 'px';
 
                     var svg = d3.select(chartHolderElem)
                         .append('svg')
@@ -190,6 +202,9 @@
                             });
 
                     chartWrapingG.selectAll('path')
+                        .on("click", function (d) {
+                            changeActiveObject(d.data.name);
+                        })
                         .on("mouseover", function () {
 
                             d3.select(this)
@@ -221,6 +236,8 @@
                 };
 
                 var init = function () {
+
+                    scope.evDataService.setActiveObject({});
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 

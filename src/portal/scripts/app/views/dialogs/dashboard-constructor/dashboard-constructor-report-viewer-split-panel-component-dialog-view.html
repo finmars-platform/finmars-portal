@@ -28,7 +28,36 @@
             </div>
             <div class="m-t-16 m-b-16">
 
-                <md-input-container style="width: 200px;">
+                <md-input-container class="dashboard-constructor-field1">
+                    <label for="">Layout</label>
+                    <md-select ng-model="vm.item.settings.layout"
+                               md-container-class="common-select-container"
+                               md-on-open="vm.getLayouts()"
+                               md-on-close="layoutSearchTerm = ''"
+                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                        <div>
+                            <md-select-header>
+                                <input data-ng-model="layoutSearchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+
+                            <div class="select-options-holder">
+
+                                <md-option
+                                        data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
+                                        ng-value="layout.id"
+                                        ng-bind="layout.name">
+                                </md-option>
+
+                            </div>
+                        </div>
+                    </md-select>
+                </md-input-container>
+
+                <!--<md-input-container style="width: 200px;">
                     <label for="">Layout</label>
                     <md-select data-ng-model="vm.item.settings.layout"
                                ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
@@ -39,7 +68,7 @@
                             {{layout.name}}
                         </md-option>
                     </md-select>
-                </md-input-container>
+                </md-input-container>-->
 
             </div>
 

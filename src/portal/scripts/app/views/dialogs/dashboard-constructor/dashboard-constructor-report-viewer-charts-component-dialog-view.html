@@ -50,6 +50,37 @@
             <div class="m-t-16 m-b-16" layout="row">
                 <md-input-container class="dashboard-constructor-field1">
                     <label for="">Layout</label>
+                    <md-select ng-model="vm.item.settings.layout"
+                               md-container-class="common-select-container"
+                               md-on-open="vm.getLayouts()"
+                               md-on-close="layoutSearchTerm = ''"
+                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                        <div>
+                            <md-select-header>
+                                <input data-ng-model="layoutSearchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+
+                            <div class="select-options-holder">
+
+                                <md-option
+                                        data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
+                                        ng-value="layout.id"
+                                        ng-bind="layout.name">
+                                </md-option>
+
+                            </div>
+                        </div>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+            <!--<div class="m-t-16 m-b-16" layout="row">
+                <md-input-container class="dashboard-constructor-field1">
+                    <label for="">Layout</label>
                     <md-select data-ng-model="vm.item.settings.layout"
                                ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
                                md-on-open="vm.getLayouts()">
@@ -60,16 +91,16 @@
                         </md-option>
                     </md-select>
                 </md-input-container>
-            </div>
+            </div>-->
 
             <div ng-if="vm.item.type === 'report_viewer_bars_chart'">
 
                 <div layout="row">
 
-                    <table-attribute-selector title="Reference Name (Abscissa)"
-                                              dialog-title="Reference Name (Abscissa)"
+                    <table-attribute-selector title="vm.barsNamesAttrSelectorTitle"
+                                              dialog-title="vm.barsNumbersAttrSelectorTitle"
                                               available-attrs="vm.attributes"
-                                              item="vm.item.settings.abscissa"
+                                              item="vm.item.settings.bar_name_key"
                                               class="dashboard-constructor-field1"
                                               style="margin: 0 10px;"></table-attribute-selector>
 
@@ -101,10 +132,10 @@
                         </md-select>
                     </md-input-container>-->
 
-                    <table-attribute-selector title="Reference Name (Ordinate)"
-                                              dialog-title="Reference Name (Ordinate)"
+                    <table-attribute-selector title="vm.barsNamesAttrSelectorTitle"
+                                              dialog-title="vm.barsNumbersAttrSelectorTitle"
                                               available-attrs="vm.numericAttributes"
-                                              item="vm.item.settings.ordinate"
+                                              item="vm.item.settings.bar_number_key"
                                               class="dashboard-constructor-field1"
                                               style="margin: 0 10px;"></table-attribute-selector>
 
@@ -141,7 +172,7 @@
                 <div layout="row" class="m-t-16 m-b-24">
                     <md-input-container class="dashboard-constructor-field1">
                         <label for="">Bars Direction</label>
-                        <md-select data-ng-model="vm.item.settings.bars_direction">
+                        <md-select data-ng-model="vm.item.settings.bars_direction" ng-change="vm.barsDirectionChanged()">
                             <md-option value="bottom-top">Vertical</md-option>
                             <md-option value="left-right">Horizontal</md-option>
                         </md-select>
@@ -226,6 +257,9 @@
                                data-ng-disabled="!vm.item.settings.autocalc_ticks_number">
                     </md-input-container>
                 </div>
+
+                <md-checkbox data-ng-model="vm.item.settings.auto_refresh"
+                             style="margin-left: 10px;">Trigger Refresh on Value Change</md-checkbox>
 
             </div>
 
@@ -331,7 +365,7 @@
 
                 <md-checkbox data-ng-model="vm.item.settings.show_legends"
                              style="margin-left: 10px;">Show legends</md-checkbox>
-                <div layout="row">
+                <div class="m-b-35" layout="row">
                     <md-input-container class="dashboard-constructor-field1">
                         <label for="">Legends Position</label>
                         <md-select data-ng-model="vm.item.settings.legends_position" data-ng-disabled="!vm.item.settings.show_legends">
@@ -340,6 +374,9 @@
                         </md-select>
                     </md-input-container>
                 </div>
+
+                <md-checkbox data-ng-model="vm.item.settings.auto_refresh"
+                             style="margin-left: 10px;">Trigger Refresh on Value Change</md-checkbox>
 
             </div>
 
