@@ -515,7 +515,8 @@
 
             console.time("Copying data");
 
-            data = getNewDataInstance(evDataService);
+            // data = getNewDataInstance(evDataService);
+            data = JSON.parse(JSON.stringify(evDataService.getData()));
 
             console.log('data', data);
 
