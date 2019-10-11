@@ -609,10 +609,12 @@
                         number_format: vm.componentType.data.settings.number_format,
                         abscissa: vm.componentType.data.settings.abscissa,
                         ordinate: vm.componentType.data.settings.ordinate,
-                        value_key: vm.componentType.data.settings.value_key
+                        value_key: vm.componentType.data.settings.value_key,
+                        subtotal_formula_id: vm.componentType.data.settings.subtotal_formula_id,
+                        styles: vm.componentType.data.settings.styles
                     };
                 }
-                ;
+
 
                 if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
