@@ -319,12 +319,27 @@
 
                 };
 
+                scope.setSubtotalType = function(subtotal_formula_id){
+
+                    scope.matrixSettings.subtotal_formula_id = subtotal_formula_id;
+
+                    scope.createMatrix();
+
+                    setTimeout(function () {
+
+                        scope.$apply();
+
+                        scope.alignGrid();
+                    }, 0)
+
+                };
+
                 scope.init = function () {
 
                     scope.evDataService.setActiveObject({});
 
                     scope.top_left_title = scope.matrixSettings.top_left_title;
-                    scope.styles = scope.matrixSettings.styles
+                    scope.styles = scope.matrixSettings.styles;
 
                     // If we already have data (e.g. viewType changed) start
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
