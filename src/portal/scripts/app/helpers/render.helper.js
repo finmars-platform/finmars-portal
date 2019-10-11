@@ -190,7 +190,7 @@
 
         var value = obj[column.key];
 
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined || isNaN(value)) {
             value = '';
         }
 
