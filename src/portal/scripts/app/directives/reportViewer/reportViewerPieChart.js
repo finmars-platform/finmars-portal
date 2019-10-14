@@ -43,10 +43,13 @@
                 var legendsPosition = scope.rvChartsSettings.legends_position;
 
                 scope.pieChartLayout = 'row';
-
                 if (legendsPosition === 'bottom') {
                     scope.pieChartLayout = 'column';
                 };
+                var legendsColumnsNumber = scope.rvChartsSettings.legends_columns_number;
+                if (!legendsColumnsNumber) {
+                    legendsColumnsNumber = 1;
+                }
 
 
                 var changeActiveObject = function (partName) {
@@ -127,6 +130,14 @@
                         backStyle = "background-color: " + backColor;
                     };
                     return backStyle;
+                };
+
+                scope.setLegendsUlStyle = function () {
+                    var style = '-webkit-column-count: ' + legendsColumnsNumber + ';';
+                    style = style + ' -moz-column-count:' + legendsColumnsNumber + ';';
+                    style = style + ' column-count:' + legendsColumnsNumber + ';';
+
+                    return style;
                 };
 
                 scope.getPieChartGlobalClasses = function () {

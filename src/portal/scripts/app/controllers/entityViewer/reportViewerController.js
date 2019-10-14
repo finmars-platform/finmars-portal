@@ -724,7 +724,10 @@
                             spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
                         };
 
-                        var layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
+                        var layoutIsUnchanged = true;
+                        if (activeLayoutConfig && activeLayoutConfig.data) {
+                            layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
+                        };
 
                         if (!layoutIsUnchanged || spChangedLayout) {
 
@@ -769,7 +772,7 @@
                                     };
                                     // < if split panel layout changed, save it >
 
-                                    if (!layoutIsUnchanged) {
+                                    if (activeLayoutConfig && !layoutIsUnchanged) {
 
                                         var saveLayoutChanges = new Promise (function (saveLayoutRes, saveLayoutRej) {
 
@@ -866,7 +869,10 @@
                 var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
                 var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
 
-                var layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
+                var layoutIsUnchanged = true;
+                if (activeLayoutConfig && activeLayoutConfig.data) {
+                    layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
+                };
 
                 var spChangedLayout = false;
                 var additions = vm.entityViewerDataService.getAdditions();

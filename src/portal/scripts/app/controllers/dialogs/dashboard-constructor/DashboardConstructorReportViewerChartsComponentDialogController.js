@@ -48,6 +48,7 @@
             delete vm.item.settings.number_attr;
             delete vm.item.settings.show_legends;
             delete vm.item.settings.legends_position;
+            delete vm.item.settings.legends_columns_number;
         };
 
         vm.reportTypeChange = function() {
@@ -72,6 +73,7 @@
                     vm.item.settings.group_number_calc_formula = 1;
                     vm.item.settings.show_legends = false;
                     vm.item.settings.legends_position = 'right';
+                    vm.item.settings.legends_columns_number = 1;
                     break;
             }
 
@@ -123,7 +125,7 @@
 
         };
 
-        vm.barsDirectionChanged = function () {
+        vm.getAxisInputsNames = function () {
 
             if (vm.item.settings.bars_direction === 'bottom-top') {
                 vm.barsNamesAttrSelectorTitle = 'Bars Names (Abscissa)';
@@ -219,6 +221,7 @@
 
         vm.init = function () {
 
+            vm.getAxisInputsNames();
             vm.componentsTypes = dataService.getComponentsTypes();
 
             if (vm.item.id) {
