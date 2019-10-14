@@ -302,7 +302,7 @@
 
                     vm.readyStatus.content = true;
                     vm.readyStatus.entity = true;
-                    vm.readyStatus.permissions = true;
+                    // vm.readyStatus.permissions = true;
 
                     $scope.$apply();
 
@@ -490,6 +490,8 @@
         vm.init = function () {
 
             vm.getFormLayout();
+
+            vm.loadPermissions();
 
 
         };

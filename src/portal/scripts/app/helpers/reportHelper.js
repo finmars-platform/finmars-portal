@@ -280,7 +280,7 @@
 
             resultKey = parentKey + '.' + attribute.key;
 
-            if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key]) {
+            if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key] && source[attribute.key + '_object']) {
 
                 recursiveUnwrapRelation(result, resultKey, attribute.value_content_type, source[attribute.key + '_object'])
 
@@ -415,7 +415,7 @@
 
         keys.forEach(function (key) {
 
-            if (keysToUnwrap.hasOwnProperty(key) && item[key]) {
+            if (keysToUnwrap.hasOwnProperty(key) && item[key] && item[key + '_object']) {
 
                 result[key + '.id'] = item[key];
 

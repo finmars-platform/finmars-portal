@@ -448,6 +448,28 @@
 
     };
 
+    var isPrimitive = function(value){
+
+        var propertyType = typeof value;
+
+        if (isNaN(value) && propertyType !== 'object' && !Array.isArray(value)) {
+            return true
+        }
+
+        if (value === null) {
+            return true
+        }
+
+        if (['string', 'number', 'boolean', 'undefined'].indexOf(propertyType) !== -1) {
+            return true
+        }
+
+
+        return false;
+
+
+    };
+
     var simpleObjectCopy = function (obj) {
 
         var result = {};
@@ -457,8 +479,10 @@
 
             propertyType = typeof obj[key];
 
-            if (['string', 'number', 'boolean', 'undefined'].indexOf(propertyType === -1) || isNaN(obj[key]) || obj[key] === null) {
+            if (isPrimitive(obj[key])) {
+
                 result[key] = obj[key]
+
             } else if (Array.isArray(obj[key])) {
 
                 result[key] = [];
@@ -468,7 +492,9 @@
                 })
 
             } else if (!Array.isArray(obj[key]) && propertyType === 'object') { // if object
+
                 result[key] = Object.assign({}, obj[key]) // WARNING, Nested objects is not supported
+
             }
 
 
@@ -482,13 +508,13 @@
 
         var sourceData = evDataService.getData();
         var result = {};
-        var sourceDataObject;
+
+        // console.log('sourceData', evDataService.getData());
+        // console.log('getNewDataInstance Object.keys(sourceData)', Object.keys(sourceData));
 
         Object.keys(sourceData).forEach(function (key) {
 
             result[key] = simpleObjectCopy(sourceData[key]);
-
-            sourceDataObject = sourceData[key];
 
         });
 
@@ -515,8 +541,7 @@
 
             console.time("Copying data");
 
-            // data = getNewDataInstance(evDataService);
-            data = JSON.parse(JSON.stringify(evDataService.getData()));
+            data = getNewDataInstance(evDataService);
 
             console.log('data', data);
 
