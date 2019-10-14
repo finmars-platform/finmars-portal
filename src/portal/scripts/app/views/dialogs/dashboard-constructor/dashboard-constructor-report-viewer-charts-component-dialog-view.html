@@ -7,382 +7,137 @@
         </div>
     </md-toolbar>
     <md-dialog-content>
-        <div class="p-24">
+        <div>
+            <md-tabs>
+                <md-tab label="Main">
+                    <md-content class="p-16">
 
-            <div layout="row">
-                <md-input-container class="dashboard-constructor-field1">
-                    <label for="">Name</label>
-                    <input type="text" data-ng-model="vm.item.name">
-                </md-input-container>
-            </div>
-
-            <div layout="row">
-                <md-input-container class="md-block no-error-spacer dashboard-constructor-field1">
-                    <label for="">Chart Type</label>
-                    <div>
-                        <md-select data-ng-model="vm.item.type"
-                                   ng-change="vm.chartTypeChanged()"
-                                   md-container-class="common-select-container"
-                                   class="m-0">
-
-                            <div class="select-options-holder">
-                                <md-option value="report_viewer_bars_chart">Chart With Bars</md-option>
-                                <md-option value="report_viewer_pie_chart">Pie Chart</md-option>
-                            </div>
-                        </md-select>
-                    </div>
-                </md-input-container>
-            </div>
-
-
-            <div class="m-t-16 m-b-16" layout="row">
-                <md-input-container class="dashboard-constructor-field1">
-                    <label for="">Report Type</label>
-                    <md-select data-ng-model="vm.item.settings.entity_type"
-                               data-ng-change="vm.reportTypeChange()">
-                        <md-option value="balance-report">Balance Report</md-option>
-                        <md-option value="pl-report">P&L Report</md-option>
-                        <md-option value="transaction-report">Transaction Report</md-option>
-                    </md-select>
-                </md-input-container>
-            </div>
-
-            <div class="m-t-16 m-b-16" layout="row">
-                <md-input-container class="dashboard-constructor-field1">
-                    <label for="">Layout</label>
-                    <md-select ng-model="vm.item.settings.layout"
-                               md-container-class="common-select-container"
-                               md-on-open="vm.getLayouts()"
-                               md-on-close="layoutSearchTerm = ''"
-                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                        <div>
-                            <md-select-header>
-                                <input data-ng-model="layoutSearchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-
-                            <div class="select-options-holder">
-
-                                <md-option
-                                        data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
-                                        ng-value="layout.id"
-                                        ng-bind="layout.name">
-                                </md-option>
-
-                            </div>
+                        <div layout="row">
+                            <md-input-container class="dashboard-constructor-field1">
+                                <label for="">Name</label>
+                                <input type="text" data-ng-model="vm.item.name">
+                            </md-input-container>
                         </div>
-                    </md-select>
-                </md-input-container>
-            </div>
 
-            <!--<div class="m-t-16 m-b-16" layout="row">
-                <md-input-container class="dashboard-constructor-field1">
-                    <label for="">Layout</label>
-                    <md-select data-ng-model="vm.item.settings.layout"
-                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
-                               md-on-open="vm.getLayouts()">
-                        <md-option
-                                data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
-                                ng-value="layout.id">
-                            {{layout.name}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>
-            </div>-->
+                        <div layout="row">
+                            <md-input-container class="md-block no-error-spacer dashboard-constructor-field1">
+                                <label for="">Chart Type</label>
+                                <div>
+                                    <md-select data-ng-model="vm.item.type"
+                                               ng-change="vm.chartTypeChanged()"
+                                               md-container-class="common-select-container"
+                                               class="m-0">
 
-            <div ng-if="vm.item.type === 'report_viewer_bars_chart'">
-
-                <div layout="row">
-
-                    <table-attribute-selector title="vm.barsNamesAttrSelectorTitle"
-                                              dialog-title="vm.barsNumbersAttrSelectorTitle"
-                                              available-attrs="vm.attributes"
-                                              item="vm.item.settings.bar_name_key"
-                                              class="dashboard-constructor-field1"
-                                              style="margin: 0 10px;"></table-attribute-selector>
-
-                    <!--<md-input-container style="width: 200px;">
-                        <label for="">Reference Name (Abscissa)</label>
-                        <md-select ng-model="vm.item.settings.abscissa"
-                                   md-container-class="common-select-container"
-                                   md-on-close="abscissaSearchTerm = ''"
-                                   style="width: 200px">
-                            <div>
-                                <md-select-header>
-                                    <input data-ng-model="abscissaSearchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
-
-                                <div class="select-options-holder">
-
-                                    <md-option
-                                            data-ng-repeat="attribute in vm.attributes | filter: {name: abscissaSearchTerm}"
-                                            ng-value="attribute.key"
-                                            ng-bind="attribute.name">
-                                    </md-option>
-
+                                        <div class="select-options-holder">
+                                            <md-option value="report_viewer_bars_chart">Chart With Bars</md-option>
+                                            <md-option value="report_viewer_pie_chart">Pie Chart</md-option>
+                                        </div>
+                                    </md-select>
                                 </div>
-                            </div>
-                        </md-select>
-                    </md-input-container>-->
+                            </md-input-container>
+                        </div>
 
-                    <table-attribute-selector title="vm.barsNamesAttrSelectorTitle"
-                                              dialog-title="vm.barsNumbersAttrSelectorTitle"
-                                              available-attrs="vm.numericAttributes"
-                                              item="vm.item.settings.bar_number_key"
-                                              class="dashboard-constructor-field1"
-                                              style="margin: 0 10px;"></table-attribute-selector>
+                        <div class="m-t-16 m-b-16" layout="row">
+                            <md-input-container class="dashboard-constructor-field1">
+                                <label for="">Report Type</label>
+                                <md-select data-ng-model="vm.item.settings.entity_type"
+                                           data-ng-change="vm.reportTypeChange()">
+                                    <md-option value="balance-report">Balance Report</md-option>
+                                    <md-option value="pl-report">P&L Report</md-option>
+                                    <md-option value="transaction-report">Transaction Report</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
 
-                    <!--<md-input-container style="width: 200px;">
-                        <label for="">Reference Name (Ordinate)</label>
-                        <md-select ng-model="vm.item.settings.ordinate"
-                                   md-container-class="common-select-container"
-                                   md-on-close="ordinateSearchTerm = ''"
-                                   style="width: 200px">
-                            <div>
-                                <md-select-header>
-                                    <input data-ng-model="ordinateSearchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
+                        <div class="m-t-16 m-b-16" layout="row">
+                            <md-input-container class="dashboard-constructor-field1">
+                                <label for="">Layout</label>
+                                <md-select ng-model="vm.item.settings.layout"
+                                           md-container-class="common-select-container"
+                                           md-on-open="vm.getLayouts()"
+                                           md-on-close="layoutSearchTerm = ''"
+                                           ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                                    <div>
+                                        <md-select-header>
+                                            <input data-ng-model="layoutSearchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
 
-                                <div class="select-options-holder">
+                                        <div class="select-options-holder">
 
-                                    <md-option
-                                            data-ng-repeat="attribute in vm.numericAttributes| filter: {name: ordinateSearchTerm}"
-                                            ng-value="attribute.key"
-                                            ng-bind="attribute.name">
-                                    </md-option>
+                                            <md-option
+                                                    data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
+                                                    ng-value="layout.id"
+                                                    ng-bind="layout.name">
+                                            </md-option>
 
-                                </div>
-                            </div>
-                        </md-select>
-                    </md-input-container>-->
+                                        </div>
+                                    </div>
+                                </md-select>
+                            </md-input-container>
+                        </div>
 
-                </div>
+                        <div data-ng-if="vm.item.type === 'report_viewer_bars_chart'" layout="row">
+                            <table-attribute-selector title="{{vm.barsNamesAttrSelectorTitle}}"
+                                                      dialog-title="{{vm.barsNamesAttrSelectorTitle}}"
+                                                      available-attrs="vm.attributes"
+                                                      item="vm.item.settings.bar_name_key"
+                                                      class="dashboard-constructor-field1"
+                                                      style="margin: 0 10px;"></table-attribute-selector>
 
-                <div layout="row" class="m-t-16 m-b-24">
-                    <md-input-container class="dashboard-constructor-field1">
-                        <label for="">Bars Direction</label>
-                        <md-select data-ng-model="vm.item.settings.bars_direction" ng-change="vm.barsDirectionChanged()">
-                            <md-option value="bottom-top">Vertical</md-option>
-                            <md-option value="left-right">Horizontal</md-option>
-                        </md-select>
-                    </md-input-container>
-                </div>
+                            <table-attribute-selector title="{{vm.barsNumbersAttrSelectorTitle}}"
+                                                      dialog-title="{{vm.barsNumbersAttrSelectorTitle}}"
+                                                      available-attrs="vm.numericAttributes"
+                                                      item="vm.item.settings.bar_number_key"
+                                                      class="dashboard-constructor-field1"
+                                                      style="margin: 0 10px;"></table-attribute-selector>
+                        </div>
 
-                <div layout="row" class="m-t-16 m-b-35">
-                    <md-input-container class="dashboard-constructor-field1">
-                        <label for="">Calculation Of Number For Bar</label>
-                        <md-select data-ng-model="vm.item.settings.group_number_calc_formula">
-                            <md-option value="1">Sum</md-option>
-                            <md-option value="2">Weighted Market Value</md-option>
-                            <md-option value="3">Weighted Market Value Percent</md-option>
-                            <md-option value="4">Weighted Exposure</md-option>
-                            <md-option value="5">Weighted Exposure Percent</md-option>
-                            <md-option value="6">Weighted Average Market Value</md-option>
-                            <md-option value="7">Weighted Average Market Value Percent</md-option>
-                            <md-option value="8">Weighted Average Exposure</md-option>
-                            <md-option value="9">Weighted Average Exposure Percent</md-option>
-                        </md-select>
-                    </md-input-container>
-                </div>
+                        <div data-ng-if="vm.item.type === 'report_viewer_pie_chart'" layout="row">
 
-                <h5 style="margin-left: 10px">Bar Sorting Settings</h5>
-                <md-checkbox data-ng-model="vm.item.settings.bars_sorting"
-                             style="margin-left: 10px; margin-bottom: 5px;">Sort bars</md-checkbox>
-                <div layout="row" class="m-t-16 m-b-35">
+                            <table-attribute-selector title="Separate Chart By"
+                                                      dialog-title="Separate Chart By"
+                                                      item="vm.item.settings.group_attr"
+                                                      available-attrs="vm.attributes"
+                                                      class="dashboard-constructor-field1"
+                                                      style="margin: 0 10px;"></table-attribute-selector>
 
-                    <md-input-container class="dashboard-constructor-field1">
-                        <label for="">Sort By</label>
-                        <md-select data-ng-model="vm.item.settings.sorting_value_type"
-                                   ng-disabled="!vm.item.settings.bars_sorting">
-                            <md-option value="string">Abscissa</md-option>
-                            <md-option value="number">Ordinate</md-option>
-                        </md-select>
-                    </md-input-container>
+                            <table-attribute-selector title="Chart Numeric Value"
+                                                      dialog-title="Chart Numeric Value"
+                                                      available-attrs="vm.numericAttributes"
+                                                      item="vm.item.settings.number_attr"
+                                                      class="dashboard-constructor-field1"
+                                                      style="margin: 0 10px;"></table-attribute-selector>
 
-                    <md-input-container class="dashboard-constructor-field1">
-                        <label for="">Sort Type</label>
-                        <md-select data-ng-model="vm.item.settings.sorting_type"
-                                   ng-disabled="!vm.item.settings.bars_sorting">
-                            <md-option value="ascending">Ascending</md-option>
-                            <md-option value="descending">Descending</md-option>
-                        </md-select>
-                    </md-input-container>
-                </div>
+                        </div>
 
-                <div layout="row">
-                    <md-input-container style="width: 200px;">
-                        <label for="">Crop Tick Text After</label>
-                        <input type="number"
-                               data-ng-model="vm.item.settings.crop_tick_text"
-                               class="no-input-arrows">
-                    </md-input-container>
-                </div>
+                    </md-content>
+                </md-tab>
 
-                <h5 style="margin-left: 10px">Bar Width Settings</h5>
-                <div layout="row" class="m-t-16 m-b-24">
+                <md-tab label="Advance Settings">
+                    <md-content class="p-16">
 
-                    <md-input-container class="no-error-spacer" style="width: 200px;">
-                        <label for="">Chart bar minimal width (in pixels)</label>
-                        <input class="no-input-arrows"
-                               type="number"
-                               data-ng-model="vm.item.settings.min_bar_width">
-                    </md-input-container>
+                        <div data-ng-if="vm.item.type === 'report_viewer_bars_chart'"
+                             data-ng-include="'views/dialogs/dashboard-constructor/charts/dashboard-constructor-report-viewer-bars-chart-advance-settings-dialog-view.html'">
+                        </div>
 
-                    <md-input-container class="no-error-spacer" style="width: 200px;">
-                        <label for="">Chart bar maximal width (in pixels)</label>
-                        <input class="no-input-arrows"
-                               type="number"
-                               data-ng-model="vm.item.settings.max_bar_width">
-                    </md-input-container>
-                </div>
+                        <div data-ng-if="vm.item.type === 'report_viewer_pie_chart'"
+                             data-ng-include="'views/dialogs/dashboard-constructor/charts/dashboard-constructor-report-viewer-pie-chart-advance-settings-dialog-view.html'">
 
-                <md-checkbox data-ng-model="vm.item.settings.autocalc_ticks_number"
-                             style="margin-left: 10px;">Calculate number of ticks automatically</md-checkbox>
-                <div layout="row">
-                    <md-input-container class="no-input-arrows" style="width: 200px;">
-                        <label for="">Approximate Number of Ticks</label>
-                        <input ng-model="vm.item.settings.ticks_number"
-                               type="number"
-                               data-ng-disabled="!vm.item.settings.autocalc_ticks_number">
-                    </md-input-container>
-                </div>
+                        </div>
 
-                <md-checkbox data-ng-model="vm.item.settings.auto_refresh"
-                             style="margin-left: 10px;">Trigger Refresh on Value Change</md-checkbox>
+                    </md-content>
+                </md-tab>
 
-            </div>
-
-            <div ng-if="vm.item.type === 'report_viewer_pie_chart'">
-                <!--<two-fields-multiselect ng-model="vm.item.settings.fieldsKeys"
-                                        ng-change="vm.fieldsSelected()"
-                                        title="Fields multiselector"
-                                        items="vm.numericAttributesForMultiselect"
-                                        model="vm.item.settings.fieldsKeys"
-                                        nothing-selected-text="Nothing selected"
-                                        name-property="name"
-                                        class="table-filter-input-container dashboard-component-constructor-multiselector"></two-fields-multiselect>-->
-                <div layout="row">
-
-                    <table-attribute-selector title="Separate Chart By"
-                                              dialog-title="Separate Chart By"
-                                              item="vm.item.settings.group_attr"
-                                              available-attrs="vm.attributes"
-                                              class="dashboard-constructor-field1"
-                                              style="margin: 0 10px;"></table-attribute-selector>
-
-                    <!--<md-input-container style="width: 200px;">
-                        <label for="">Separate Chart By</label>
-                        <md-select ng-model="vm.item.settings.group_attr"
-                                   md-container-class="common-select-container"
-                                   md-on-close="abscissaSearchTerm = ''"
-                                   style="width: 200px">
-                            <div>
-                                <md-select-header>
-                                    <input data-ng-model="pieChartNameSearchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
-
-                                <div class="select-options-holder">
-
-                                    <md-option
-                                            data-ng-repeat="attribute in vm.attributes | filter: {name: pieChartNameSearchTerm}"
-                                            ng-value="attribute.key"
-                                            ng-bind="attribute.name">
-                                    </md-option>
-
-                                </div>
-                            </div>
-                        </md-select>
-                    </md-input-container>-->
-
-                    <table-attribute-selector title="Chart Numeric Value"
-                                              dialog-title="Chart Numeric Value"
-                                              available-attrs="vm.numericAttributes"
-                                              item="vm.item.settings.number_attr"
-                                              class="dashboard-constructor-field1"
-                                              style="margin: 0 10px;"></table-attribute-selector>
-
-                    <!--<md-input-container style="width: 200px;">
-                        <label for="">Chart Numeric Value</label>
-                        <md-select ng-model=""
-                                   md-container-class="common-select-container"
-                                   md-on-close="ordinateSearchTerm = ''"
-                                   style="width: 200px">
-                            <div>
-                                <md-select-header>
-                                    <input data-ng-model="pieChartNumberSearchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
-
-                                <div class="select-options-holder">
-
-                                    <md-option
-                                            data-ng-repeat="attribute in vm.numericAttributes| filter: {name: pieChartNumberSearchTerm}"
-                                            ng-value="attribute.key"
-                                            ng-bind="attribute.name">
-                                    </md-option>
-
-                                </div>
-                            </div>
-                        </md-select>
-                    </md-input-container>-->
-
-                </div>
-
-                <div layout="row" class="m-t-16 m-b-24">
-                    <md-input-container class="dashboard-constructor-field1">
-                        <label for="">Calculation Of Number For Bar</label>
-                        <md-select data-ng-model="vm.item.settings.group_number_calc_formula">
-                            <md-option value="1">Sum</md-option>
-                            <md-option value="2">Weighted Market Value</md-option>
-                            <md-option value="3">Weighted Market Value Percent</md-option>
-                            <md-option value="4">Weighted Exposure</md-option>
-                            <md-option value="5">Weighted Exposure Percent</md-option>
-                            <md-option value="6">Weighted Average Market Value</md-option>
-                            <md-option value="7">Weighted Average Market Value Percent</md-option>
-                            <md-option value="8">Weighted Average Exposure</md-option>
-                            <md-option value="9">Weighted Average Exposure Percent</md-option>
-                        </md-select>
-                    </md-input-container>
-                </div>
-
-                <md-checkbox data-ng-model="vm.item.settings.show_legends"
-                             style="margin-left: 10px;">Show legends</md-checkbox>
-                <div class="m-b-35" layout="row">
-                    <md-input-container class="dashboard-constructor-field1">
-                        <label for="">Legends Position</label>
-                        <md-select data-ng-model="vm.item.settings.legends_position" data-ng-disabled="!vm.item.settings.show_legends">
-                            <md-option value="right">To the right of chart</md-option>
-                            <md-option value="bottom">Below chart</md-option>
-                        </md-select>
-                    </md-input-container>
-                </div>
-
-                <md-checkbox data-ng-model="vm.item.settings.auto_refresh"
-                             style="margin-left: 10px;">Trigger Refresh on Value Change</md-checkbox>
-
-            </div>
+            </md-tabs>
 
         </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row">
+
+    <md-dialog-actions layout="row" layout-align="space-between">
         <md-button ng-click="vm.cancel()" style="margin-right:20px;">
             Cancel
         </md-button>

@@ -99,6 +99,7 @@
                 }
 
                 if (layoutCurrentConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+                    delete layoutCurrentConfig.data.reportOptions.report_date;
                     delete layoutCurrentConfig.data.reportOptions.end_date;
                 }
 
