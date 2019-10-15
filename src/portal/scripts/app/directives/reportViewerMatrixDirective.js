@@ -78,23 +78,6 @@
 
                 };
 
-                scope.singleColumnTotalClick = function ($event, index) {
-
-                    console.log('singleColumnTotalClick index', index);
-
-                    scope.activeItem = 'column_total:' + index;
-
-                    var activeObject = scope.evDataService.getActiveObject();
-
-                    activeObject[scope.matrixSettings.abscissa] = scope.columns[index];
-
-                    console.log('activeObject', activeObject);
-
-                    scope.evDataService.setActiveObject(activeObject);
-                    scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-                };
-
                 scope.checkNegative = function (val) {
 
                     if (scope.matrixSettings.number_format) {
@@ -186,13 +169,30 @@
 
                 };
 
+                scope.singleColumnTotalClick = function ($event, index) {
+
+                    console.log('singleColumnTotalClick index', index);
+
+                    scope.activeItem = 'column_total:' + index;
+
+                    var activeObject = {};
+
+                    activeObject[scope.matrixSettings.abscissa] = scope.columns[index];
+
+                    console.log('activeObject', activeObject);
+
+                    scope.evDataService.setActiveObject(activeObject);
+                    scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                };
+
                 scope.singleRowTotalClick = function ($event, index) {
 
                     console.log('singleRowTotalClick, index', index);
 
                     scope.activeItem = 'row_total:' + index;
 
-                    var activeObject = scope.evDataService.getActiveObject();
+                    var activeObject = {};
 
                     activeObject[scope.matrixSettings.ordinate] = scope.rows[index];
 
@@ -209,7 +209,7 @@
 
                     scope.activeItem = 'cell:' + rowIndex + ':' + columnIndex;
 
-                    var activeObject = scope.evDataService.getActiveObject();
+                    var activeObject = {};
 
                     activeObject[scope.matrixSettings.ordinate] = scope.rows[rowIndex];
                     activeObject[scope.matrixSettings.abscissa] = scope.columns[columnIndex];
