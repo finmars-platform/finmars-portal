@@ -27,7 +27,7 @@
 
             var link = document.querySelector('.export-reference-table-link');
 
-            var text = 'Reference Table ' + vm.item.name + ')\n';
+            var text = 'Reference Table: ' + vm.item.name + '\n';
 
             vm.referenceTable.rows.forEach(function (item) {
 
