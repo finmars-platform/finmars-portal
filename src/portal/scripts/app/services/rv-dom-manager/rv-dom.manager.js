@@ -824,6 +824,22 @@
                         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit FX Rate</div>'
                 }
 
+                if(obj['item_type'] === 1) { // item_type: 1 == Instrument
+
+                    popup.innerHTML = popup.innerHTML +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="edit_pricing_currency"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Pricing FX Rate</div>';
+
+                    popup.innerHTML = popup.innerHTML +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="edit_accrued_currency"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Accrued FX Rate</div>';
+
+                }
+
                 popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
                     ' data-ev-dropdown-action="book_transaction"' +
                     ' data-object-id="' + objectId + '"' +

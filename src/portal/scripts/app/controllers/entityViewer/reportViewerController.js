@@ -381,6 +381,224 @@
 
                         }
 
+                        if (action === 'edit_pricing_currency' && activeObject.id) {
+
+                            console.log('activeObject', activeObject);
+
+                            var filters = {
+                                currency: activeObject['pricing_currency.id'],
+                                instrument: activeObject['instrument.id'],
+                                pricing_policy: reportOptions.pricing_policy,
+                                date_0: reportOptions.report_date,
+                                date_1: reportOptions.report_date
+                            };
+
+                            currencyHistoryService.getList({filters: filters}).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var item = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'EntityViewerEditDialogController as vm',
+                                        templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: activeObject.event,
+                                        locals: {
+                                            entityType: 'currency-history',
+                                            entityId: item.id
+                                        }
+                                    }).then(function (res) {
+
+                                        vm.entityViewerDataService.setActiveObjectAction(null);
+
+                                        if (res && res.res === 'agree') {
+
+                                            vm.entityViewerDataService.resetData();
+                                            vm.entityViewerDataService.resetRequestParameters();
+
+                                            var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                            vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                            vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                        }
+                                    });
+
+                                } else {
+
+                                    $mdDialog.show({
+                                        controller: 'WarningDialogController as vm',
+                                        templateUrl: 'views/warning-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: activeObject.event,
+                                        preserveScope: true,
+                                        autoWrap: true,
+                                        multiple: true,
+                                        skipHide: true,
+                                        locals: {
+                                            warning: {
+                                                title: 'Warning',
+                                                description: 'No corresponding record in FX Rates History. Do you want to add the record?'
+                                            }
+                                        }
+                                    }).then(function (res) {
+                                        if (res.status === 'agree') {
+
+                                            $mdDialog.show({
+                                                controller: 'EntityViewerAddDialogController as vm',
+                                                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+                                                parent: angular.element(document.body),
+                                                targetEvent: activeObject.event,
+                                                locals: {
+                                                    entityType: 'currency-history',
+                                                    entity: {
+                                                        currency: activeObject['pricing_currency.id'],
+                                                        currency_object: {
+                                                            id: activeObject['pricing_currency.id'],
+                                                            name: activeObject['pricing_currency.name'],
+                                                            user_code: activeObject['pricing_currency.user_code'],
+                                                            short_name: activeObject['pricing_currency.short_name']
+                                                        },
+                                                        pricing_policy: reportOptions.pricing_policy,
+                                                        pricing_policy_object: reportOptions.pricing_policy_object,
+                                                        date: reportOptions.report_date
+                                                    }
+                                                }
+                                            }).then(function (res) {
+
+                                                vm.entityViewerDataService.setActiveObjectAction(null);
+
+                                                if (res && res.res === 'agree') {
+
+                                                    vm.entityViewerDataService.resetData();
+                                                    vm.entityViewerDataService.resetRequestParameters();
+
+                                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                                }
+                                            });
+
+                                        }
+                                    });
+
+                                }
+
+                            })
+
+                        }
+
+                        if (action === 'edit_accrued_currency' && activeObject.id) {
+
+                            var filters = {
+                                currency: activeObject['accrued_currency.id'],
+                                instrument: activeObject['instrument.id'],
+                                pricing_policy: reportOptions.pricing_policy,
+                                date_0: reportOptions.report_date,
+                                date_1: reportOptions.report_date
+                            };
+
+                            currencyHistoryService.getList({filters: filters}).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var item = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'EntityViewerEditDialogController as vm',
+                                        templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: activeObject.event,
+                                        locals: {
+                                            entityType: 'currency-history',
+                                            entityId: item.id
+                                        }
+                                    }).then(function (res) {
+
+                                        vm.entityViewerDataService.setActiveObjectAction(null);
+
+                                        if (res && res.res === 'agree') {
+
+                                            vm.entityViewerDataService.resetData();
+                                            vm.entityViewerDataService.resetRequestParameters();
+
+                                            var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                            vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                            vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                        }
+                                    });
+
+                                } else {
+
+                                    $mdDialog.show({
+                                        controller: 'WarningDialogController as vm',
+                                        templateUrl: 'views/warning-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: activeObject.event,
+                                        preserveScope: true,
+                                        autoWrap: true,
+                                        multiple: true,
+                                        skipHide: true,
+                                        locals: {
+                                            warning: {
+                                                title: 'Warning',
+                                                description: 'No corresponding record in FX Rates History. Do you want to add the record?'
+                                            }
+                                        }
+                                    }).then(function (res) {
+                                        if (res.status === 'agree') {
+
+                                            $mdDialog.show({
+                                                controller: 'EntityViewerAddDialogController as vm',
+                                                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+                                                parent: angular.element(document.body),
+                                                targetEvent: activeObject.event,
+                                                locals: {
+                                                    entityType: 'currency-history',
+                                                    entity: {
+                                                        currency: activeObject['accrued_currency.id'],
+                                                        currency_object: {
+                                                            id: activeObject['accrued_currency.id'],
+                                                            name: activeObject['accrued_currency.name'],
+                                                            user_code: activeObject['accrued_currency.user_code'],
+                                                            short_name: activeObject['accrued_currency.short_name']
+                                                        },
+                                                        pricing_policy: reportOptions.pricing_policy,
+                                                        pricing_policy_object: reportOptions.pricing_policy_object,
+                                                        date: reportOptions.report_date
+                                                    }
+                                                }
+                                            }).then(function (res) {
+
+                                                vm.entityViewerDataService.setActiveObjectAction(null);
+
+                                                if (res && res.res === 'agree') {
+
+                                                    vm.entityViewerDataService.resetData();
+                                                    vm.entityViewerDataService.resetRequestParameters();
+
+                                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                                }
+                                            });
+
+                                        }
+                                    });
+
+                                }
+
+                            })
+
+                        }
+
                         if (action === 'book_transaction') {
 
                             var contextData = {
