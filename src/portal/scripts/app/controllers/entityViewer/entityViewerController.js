@@ -19,6 +19,9 @@
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
         var middlewareService = require('../../services/middlewareService');
 
+        var currencyHistoryService = require('../../services/currencyHistoryService');
+
+
         module.exports = function ($scope, $mdDialog, $state, $transitions) {
 
             var vm = this;
@@ -61,6 +64,8 @@
                     var activeObject = vm.entityViewerDataService.getActiveObject();
                     var action = vm.entityViewerDataService.getActiveObjectAction();
                     var entitytype = vm.entityViewerDataService.getEntityType();
+
+                    console.log('activeObject', activeObject);
 
                     if (action === 'delete' && activeObject.id) {
 
@@ -317,6 +322,7 @@
                         }
 
                     }
+
                 });
 
             };
