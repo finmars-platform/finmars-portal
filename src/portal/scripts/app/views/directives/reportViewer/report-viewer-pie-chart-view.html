@@ -7,12 +7,19 @@
 
         <div ng-if="readyStatuses.legendsAreReady" class="pie-chart-legends-holder">
             <ul class="pie-chart-legends-ul" style="{{setLegendsUlStyle()}}">
-                <li ng-repeat="legend in CDWithPositiveValues" class="pie-chart-legend">
-                    <div class="pie-chart-legend-color" style="{{getLegendBackgroundColor(legend.name)}}"></div>
+                <li ng-repeat="legend in chartDataWithPosNums" class="pie-chart-legend">
+                    <div class="pie-chart-legend-color" style="{{getLegendBackgroundColor(legend.name, true)}}"></div>
                     <span class="pie-chart-legend-value">- <span class="text-weight-bold">Name:</span> {{legend.name}}; <span class="text-weight-bold">Percentage:</span> {{legend.percentage}}%</span>
                     <md-tooltip class="tooltip_1"
                                 md-direction="top"
                                 ng-bind="legend.numericValue"></md-tooltip>
+                </li>
+
+                <li ng-repeat="legend in chartDataWithNegNums" class="pie-chart-legend">
+                    <div class="pie-chart-legend-color" style="{{getLegendBackgroundColor(legend.name, false)}}"></div>
+                    <span class="pie-chart-legend-value">- <span class="text-weight-bold">Name:</span> {{legend.name}}; <span class="text-weight-bold">Percentage:</span> -{{legend.percentage}}%</span>
+                    <md-tooltip class="tooltip_1"
+                                md-direction="top">-{{legend.numericValue}}</md-tooltip>
                 </li>
             </ul>
         </div>
@@ -20,7 +27,7 @@
 
     <div data-ng-if="!readyStatuses.chartIsReady">
         <div layout="row" layout-sm="column" layout-align="space-around" class="loader-center-64">
-            <progress-circular diameter="64"></progress-circular>
+            <progress-circular diameter="100"></progress-circular>
         </div>
     </div>
 

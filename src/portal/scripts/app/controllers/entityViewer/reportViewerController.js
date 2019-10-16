@@ -716,7 +716,6 @@
                     if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-                        var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
 
                         var spChangedLayout = false;
                         var additions = vm.entityViewerDataService.getAdditions();
@@ -726,6 +725,8 @@
 
                         var layoutIsUnchanged = true;
                         if (activeLayoutConfig && activeLayoutConfig.data) {
+                            var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
+
                             layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
                         };
 
@@ -867,10 +868,11 @@
             var warnAboutLayoutChangesLoss = function (event) {
 
                 var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-                var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
 
                 var layoutIsUnchanged = true;
                 if (activeLayoutConfig && activeLayoutConfig.data) {
+                    var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
+
                     layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
                 };
 

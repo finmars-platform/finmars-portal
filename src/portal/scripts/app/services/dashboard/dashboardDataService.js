@@ -19,6 +19,24 @@
             return layoutData
         }
 
+        function setAllComponentsOutputs(compsOutputs) {
+
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            layoutData.data.components = compsOutputs;
+        }
+
+        function getAllComponentsOutputs() {
+
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            return layoutData.data.components;
+        }
+
         function setComponentOutput(componentId, data) {
 
             if (!layoutData.data.components) {
@@ -36,7 +54,6 @@
 
             return layoutData.data.components[componentId]
         }
-
 
         function setActiveTab(tab) {
             tmpData.activeTab = tab
@@ -62,6 +79,9 @@
 
             setData: setData,
             getData: getData,
+
+            setAllComponentsOutputs: setAllComponentsOutputs,
+            getAllComponentsOutputs: getAllComponentsOutputs,
 
             setComponentOutput: setComponentOutput,
             getComponentOutput: getComponentOutput,

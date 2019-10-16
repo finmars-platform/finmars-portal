@@ -28,6 +28,8 @@
                 scope.showBarTooltip = false;
 
                 var chartData = [];
+                scope.chartDataWithPosNums = [];
+                scope.chartDataWithNegNums = [];
 
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
                 var chartHolderElem = elem[0].querySelector('.report-viewer-chart-holder');
@@ -73,59 +75,59 @@
                     });
 
                     chartData = rvChartsHelper.getDataForChartsFromFlatList(itemList, nameKey, numberKey, fieldValueCalcFormulaId);
-                    /*var fieldsKeys = scope.rvChartsSettings.fieldsKeys;
 
-                    var f;
-                    for (f = 0; f < fieldsKeys.length; f++) {
-
-                        var fieldData = {};
-                        var key = fieldsKeys[f];
-
-                        fieldData.name = key;
-                        fieldData.numericValue = 0;
-
-                        var i;
-                        for (i = 0; i < itemList.length; i++) {
-                            var item = itemList[i];
-
-                            if (item[key]) {
-                                fieldData.numericValue += item[key];
-                            };
+                    scope.chartDataWithPosNums = chartData.filter(function (cData) {
+                        if (cData.numericValue > 0) {
+                            return true;
                         };
 
-                        chartData.push(fieldData);
+                        if (cData.numericValue < 0) {
+                            cData.numericValue = Math.abs(cData.numericValue);
+                            scope.chartDataWithNegNums.push(cData);
+                        };
 
-                    };*/
+                        return false;
+                    });
 
                 };
 
                 var getDataForLegends = function () {
 
-                    var CDPositiveValuesTotal = 0;
-                    scope.CDWithPositiveValues = chartData.filter(function (CDItem) {
-                        if (CDItem.numericValue > 0) {
-                            CDPositiveValuesTotal += CDItem.numericValue;
-                            return true;
-                        }
-                        return false;
+                    var posNumsTotal = 0;
+                    var negNumsTotal = 0;
+
+                    scope.chartDataWithPosNums.forEach(function (CDItem) {
+                        posNumsTotal += CDItem.numericValue;
                     });
 
-                    if (CDPositiveValuesTotal > 0) {
-                        for (var i = 0; i < scope.CDWithPositiveValues.length; i++) {
-                            var chartPart = scope.CDWithPositiveValues[i];
-                            chartPart.percentage = ((chartPart.numericValue / CDPositiveValuesTotal) * 100).toFixed(0);
-                        };
+                    scope.chartDataWithNegNums.forEach(function (CDItem) {
+                        negNumsTotal += CDItem.numericValue;
+                    });
 
-                        scope.CDWithPositiveValues = scope.CDWithPositiveValues.filter(function (chartPart) {
-                            return chartPart.percentage >= 1;
+                    if (posNumsTotal > 0) {
+                        scope.chartDataWithPosNums.forEach(function (chartPart) {
+                            chartPart.percentage = ((chartPart.numericValue / posNumsTotal) * 100).toFixed(0);
+                        });
+                    };
+
+                    if (negNumsTotal > 0) {
+                        scope.chartDataWithNegNums.forEach(function (chartPart) {
+                            chartPart.percentage = ((chartPart.numericValue / negNumsTotal) * 100).toFixed(0);
                         });
                     };
 
                 };
 
-                scope.getLegendBackgroundColor = function (legendName) {
+                scope.getLegendBackgroundColor = function (legendName, isPositive) {
                     var backStyle = "";
-                    var backColor = getPartColor(legendName);
+                    var backColor = "";
+
+                    if (isPositive) {
+                        backColor = getPosPartColor(legendName);
+                    } else {
+                        backColor = getNegPartColor(legendName);
+                    };
+
                     if (legendName && backColor) {
                         backStyle = "background-color: " + backColor;
                     };
@@ -159,27 +161,30 @@
                     '#3946ab', '#39ab3d', '#7c39ab', '#5e0c0c', '#3992ab', '#ab3979', '#ab3939', '#60c877', '#3015f7', '#ffcf00',
                     '#4c334d'
                 ];*/
-                var getPartColor; // need to be outside of draw chart function to use for legends rendering
+
+                // need to be outside of draw chart function to use for legends rendering
+                var getPosPartColor;
+                var getNegPartColor;
 
                 var drawChart = function () {
 
-                    var radius;
+                    var posNumRadius;
 
                     if (componentHeight < componentWidth) {
-                        radius = componentHeight / 2;
+                        posNumRadius = componentHeight / 2;
                     } else {
-                        radius = componentWidth / 2;
+                        posNumRadius = componentWidth / 2;
                     };
 
-                    var svgSize = radius * 2;
+                    var svgSize = posNumRadius * 2;
 
-                    getPartColor = d3.scaleOrdinal()
-                        .domain(d3.map(chartData, function (d) {return d.name}))
+                    getPosPartColor = d3.scaleOrdinal()
+                        .domain(d3.map(scope.chartDataWithPosNums, function (d) {return d.name}))
                         .range(d3.schemeCategory10);
 
-                    var arc = d3.arc()
-                        .innerRadius(radius * 0.8)
-                        .outerRadius(radius);
+                    var posArc = d3.arc()
+                        .innerRadius(posNumRadius * 0.8)
+                        .outerRadius(posNumRadius);
 
                     var pie = d3.pie()
                         .sort(null)
@@ -196,23 +201,25 @@
                             .attr('width', svgSize + 'px')
                             .attr('height', svgSize + 'px');
 
-                    var chartWrapingG = svg.append('g')
-                        .attr('transform', 'translate(' + radius + ',' + radius + ')');
+                    // draw doughnut for positive numbers
+                    var posChartWrapingG = svg.append('g')
+                        .attr('class', 'pie-chart-positive-nums-circle')
+                        .attr('transform', 'translate(' + posNumRadius + ',' + posNumRadius + ')');
 
-                    chartWrapingG.selectAll('g')
-                        .data(pie(chartData))
+                    posChartWrapingG.selectAll('g')
+                        .data(pie(scope.chartDataWithPosNums))
                         .enter()
                         .append('g');
 
-                    chartWrapingG.selectAll('g')
+                    posChartWrapingG.selectAll('g')
                         .append('path')
-                            .attr('d', arc)
+                            .attr('d', posArc)
                             .style("stroke-width", "2px")
                             .attr('fill', function (d) {
-                                return getPartColor(d.data.name)
+                                return getPosPartColor(d.data.name)
                             });
 
-                    chartWrapingG.selectAll('path')
+                    posChartWrapingG.selectAll('path')
                         .on("click", function (d) {
                             changeActiveObject(d.data.name);
                         })
@@ -243,6 +250,75 @@
                             var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
                             document.body.removeChild(barTooltipElem);
                         });
+
+                    // < draw doughnut for positive numbers >
+
+                    // draw doughnut for negative numbers
+                    var negNumsRadius = posNumRadius * 0.75;
+                    var negNumsSpaces = posNumRadius - negNumsRadius;
+
+                    getPosPartColor = d3.scaleOrdinal()
+                        .domain(d3.map(scope.chartDataWithPosNums, function (d) {return d.name}))
+                        .range(d3.schemeCategory10);
+
+                    getNegPartColor = d3.scaleOrdinal()
+                        .domain(d3.map(scope.chartDataWithNegNums, function (d) {return d.name}))
+                        .range(d3.schemeTableau10);
+
+                    var negArc = d3.arc()
+                        .innerRadius(negNumsRadius * 0.75)
+                        .outerRadius(negNumsRadius);
+
+                    var negChartWrapingG = svg.append('g')
+                        .attr('class', 'pie-chart-negative-nums-circle')
+                        .attr('transform', 'translate(' + (negNumsRadius + negNumsSpaces) + ',' + (negNumsRadius + negNumsSpaces) + ')');
+
+                    negChartWrapingG.selectAll('g')
+                        .data(pie(scope.chartDataWithNegNums))
+                        .enter()
+                        .append('g');
+
+                    negChartWrapingG.selectAll('g')
+                        .append('path')
+                        .attr('d', negArc)
+                        .style("stroke-width", "2px")
+                        .attr('fill', function (d) {
+                            return getNegPartColor(d.data.name)
+                        });
+
+                    negChartWrapingG.selectAll('path')
+                        .on("click", function (d) {
+                            changeActiveObject(d.data.name);
+                        })
+                        .on("mouseover", function () {
+
+                            d3.select(this)
+                                .style('opacity', 0.5);
+
+                            var barTooltipElem = document.createElement("div");
+                            barTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
+                            document.body.appendChild(barTooltipElem);
+
+                        })
+                        .on("mousemove", function (d) {
+
+                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+
+                            barTooltipElem.innerText = "Name: " + d.data.name + ";" + "\n" + "Number: " + -Math.abs(d.data.numericValue) + ";";
+                            var tElemWidth = barTooltipElem.offsetWidth;
+                            barTooltipElem.style.top = (d3.event.pageY - 10) + "px";
+                            barTooltipElem.style.left = (d3.event.pageX - tElemWidth - 5) + "px"; // subtractions applied to place tooltip to the left of cursor
+
+                        })
+                        .on("mouseout", function () {
+                            d3.select(this)
+                                .style('opacity', 1);
+
+                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+                            document.body.removeChild(barTooltipElem);
+                        });
+
+                    // < draw doughnut for negative numbers >
 
                 };
 
