@@ -46,6 +46,8 @@
 
         var originalEntityInputs = null;
 
+        vm.processing = false;
+
         // Creating various variables to use as search terms for filters of repeating md-select components
         vm.searchTerms = {};
 
@@ -351,30 +353,29 @@
 
         vm.updateEntityBeforeSave = function () {
 
-            console.log('here?', JSON.parse(JSON.stringify(vm.entity)));
-
             if (vm.entity.attributes) {
-                var i, a, c;
-                var keys = Object.keys(vm.entity);
 
-                for (i = 0; i < vm.attrs.length; i = i + 1) {
+                vm.entity.attributes.forEach(function (attribute) {
 
-                    for (a = 0; a < keys.length; a = a + 1) {
+                    var value_type = attribute.attribute_type_object.value_type;
+                    var key = attribute.attribute_type_object.user_code;
 
-                        if (vm.attrs[i].name === keys[a]) {
-
-                            for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
-
-                                if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
-
-                                    vm.entity.attributes[c] = entityEditorHelper.updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
-                                }
-                            }
-                        }
+                    if (value_type === 10) {
+                        attribute.value_string = vm.entity[key];
                     }
-                }
-            }
+                    if (value_type === 20) {
+                        attribute.value_float = vm.entity[key];
+                    }
+                    if (value_type === 30) {
+                        attribute.classifier = vm.entity[key];
+                    }
+                    if (value_type === 40) {
+                        attribute.value_date = vm.entity[key];
+                    }
 
+                })
+
+            }
 
             if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) === -1) {
                 vm.entity["user_object_permissions"] = [];
@@ -600,62 +601,91 @@
 
         vm.save = function (entityToSave, withoutUpdating) {
 
-            if (!entityToSave) {
-                entityToSave = vm.entity;
-            }
+            vm.processing = true;
 
-            if (!withoutUpdating) {
-                vm.updateEntityBeforeSave();
-            }
+            return new Promise(function (resolve, reject) {
 
-            var actionsErrors = vm.checkActionsForEmptyFields(entityToSave.actions);
-            var entityErrors = vm.checkEntityForEmptyFields(entityToSave);
 
-            console.log('vm.entity', vm.entity);
+                if (!entityToSave) {
+                    entityToSave = vm.entity;
+                }
 
-            console.log('actionsErrors', actionsErrors);
-            console.log('entityErrors', entityErrors);
+                if (!withoutUpdating) {
+                    vm.updateEntityBeforeSave();
+                }
 
-            if (actionsErrors.length || entityErrors.length) {
+                var actionsErrors = vm.checkActionsForEmptyFields(entityToSave.actions);
+                var entityErrors = vm.checkEntityForEmptyFields(entityToSave);
 
-                $mdDialog.show({
-                    controller: 'TransactionTypeValidationErrorsDialogController as vm',
-                    templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
-                    parent: angular.element(document.body),
-                    clickOutsideToClose: false,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            actionErrors: actionsErrors,
-                            entityErrors: entityErrors
+                console.log('vm.entity', vm.entity);
+
+                console.log('actionsErrors', actionsErrors);
+                console.log('entityErrors', entityErrors);
+
+                if (actionsErrors.length || entityErrors.length) {
+
+                    $mdDialog.show({
+                        controller: 'TransactionTypeValidationErrorsDialogController as vm',
+                        templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                        parent: angular.element(document.body),
+                        clickOutsideToClose: false,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                actionErrors: actionsErrors,
+                                entityErrors: entityErrors
+                            }
                         }
-                    }
-                });
+                    });
 
-            } else {
+                    vm.processing = false;
 
-                entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
+                    reject();
 
-                    console.log('data', data);
+                } else {
 
-                    if (data.status === 400) {
-                        vm.handleErrors(data);
-                    } else {
+                    entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
 
-                        if (!withoutUpdating) {
-                            $mdDialog.hide({res: 'agree', data: data});
+                        console.log('data', data);
+
+                        vm.processing = false;
+                        $scope.$apply();
+
+                        if (data.status === 400) {
+                            vm.handleErrors(data);
+                        } else {
+
+                            if (!withoutUpdating) {
+                                // $mdDialog.hide({res: 'agree', data: data});
+                                resolve(data)
+                            }
+
                         }
 
-                    }
+                    }).catch(function (error) {
 
-                }).catch(function (error) {
+                        console.log('error', error);
 
-                    console.log('error', error);
+                        vm.processing = false
 
-                })
+                        $scope.$apply();
 
-            }
+                        reject()
 
+                    })
+
+                }
+
+            })
+
+
+        };
+
+        vm.saveAndExit = function () {
+
+            vm.save().then(function (data) {
+                $mdDialog.hide({res: 'agree', data: data});
+            })
 
         };
 
