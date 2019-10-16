@@ -216,7 +216,7 @@
                                         <div layout="row" layout-sm="column" layout-align="space-around"
                                              class="m-large">
                                             <!--<md-progress-circular md-mode="indeterminate"-->
-                                                                  <!--md-diameter="96"></md-progress-circular>-->
+                                            <!--md-diameter="96"></md-progress-circular>-->
                                             <progress-circular diameter="100"></progress-circular>
                                         </div>
                                     </div>
@@ -237,27 +237,33 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
         <div layout="row">
-            <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
+            <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary"
+                       ng-disabled="!vm.checkReadyStatus()">
                 Edit transaction form
             </md-button>
             <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Manage attributes
             </md-button>
             <md-button
-                    ng-click="vm.delete($event)"
+                    ng-click="vm.delete($event)" ng-class="{'disabled-btn': vm.processing}"
                     class="md-raised md-warn">
                 Delete
             </md-button>
         </div>
         <div>
-            <md-button class="md-raised m-r-24" ng-click="vm.copy()" ng-disabled="!vm.checkReadyStatus()">
+            <md-button class="md-raised m-r-24" ng-click="vm.copy()"
+                       ng-disabled="!vm.checkReadyStatus()" ng-class="{'disabled-btn': vm.processing}">
                 Make a copy
             </md-button>
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised m-r-24" ng-click="vm.save()">
+            <md-button class="md-raised m-r-24" ng-click="vm.save()" style="margin-left:20px;"
+                       ng-class="{'disabled-btn': vm.processing}">
                 Save
+            </md-button>
+            <md-button class="md-raised" ng-click="vm.saveAndExit()" ng-class="{'disabled-btn': vm.processing}">
+                Save and Exit
             </md-button>
         </div>
     </md-dialog-actions>

@@ -41,6 +41,8 @@
 
         vm.entity = {$_isValid: true};
 
+        vm.processing = false;
+
         if (Object.keys(entity).length) {
             vm.entity = entity;
         }
@@ -262,30 +264,17 @@
 
         vm.updateEntityBeforeSave = function () {
 
-            if (vm.entity.attributes) {
-                var i, a, c;
-                var keys = Object.keys(vm.entity), attrExist;
-                for (i = 0; i < vm.attrs.length; i = i + 1) {
-                    for (a = 0; a < keys.length; a = a + 1) {
-                        if (vm.attrs[i].name === keys[a]) {
-                            attrExist = false;
-                            for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
-                                if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
-                                    attrExist = true;
-                                    vm.entity.attributes[c] = entityEditorHelper.updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
-                                }
-                            }
-                            if (!attrExist) {
-                                vm.entity.attributes.push(entityEditorHelper.appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
-                            }
-                        }
-                    }
-                }
-            }
+            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 
-            if (vm.entity.attributes) {
-                vm.entity = entityEditorHelper.checkEntityAttrTypes(vm.entity, vm.entityAttrs);
-                vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
+                vm.entity.attributes = [];
+
+                vm.attrs.forEach(function (attributeType) {
+
+                    var value = vm.entity[attributeType.user_code];
+
+                    vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
+
+                });
             }
 
             if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) === -1) {
@@ -486,54 +475,82 @@
 
         vm.save = function ($event) {
 
-            vm.updateEntityBeforeSave();
+            vm.processing = true;
 
-            var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
-            var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
+            return new Promise(function (resolve, reject) {
 
-            console.log('vm.entity before save', vm.entity);
+                vm.updateEntityBeforeSave();
 
-            if (actionsErrors.length || entityErrors.length) {
+                var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
+                var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
 
-                $mdDialog.show({
-                    controller: 'TransactionTypeValidationErrorsDialogController as vm',
-                    templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            actionErrors: actionsErrors,
-                            entityErrors: entityErrors
-                        }
-                    }
-                });
+                console.log('vm.entity before save', vm.entity);
 
-            } else {
-
-                entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
-
-                    $mdDialog.hide({res: 'agree', data: data});
-
-                }).catch(function (data) {
+                if (actionsErrors.length || entityErrors.length) {
 
                     $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        controller: 'TransactionTypeValidationErrorsDialogController as vm',
+                        templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                        parent: angular.element(document.body),
                         targetEvent: $event,
-                        locals: {
-                            validationData: data
-                        },
-                        preserveScope: true,
+                        clickOutsideToClose: false,
                         multiple: true,
-                        autoWrap: true,
-                        skipHide: true
+                        locals: {
+                            data: {
+                                actionErrors: actionsErrors,
+                                entityErrors: entityErrors
+                            }
+                        }
+                    });
+
+                    vm.processing = false;
+
+                    reject();
+
+                } else {
+
+                    entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
+
+                        vm.processing = false;
+
+                        $scope.$apply();
+
+                        resolve();
+
+                    }).catch(function (data) {
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: data
+                            },
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true
+                        });
+
+                        vm.processing = false;
+
+                        reject();
+
                     })
 
-                })
+                }
 
-            }
+            })
+
+        };
+
+        vm.saveAndExit = function ($event) {
+
+            vm.save().then(function (value) {
+
+                $mdDialog.hide({res: 'agree', data: data});
+
+            })
 
         };
 
@@ -1202,14 +1219,17 @@
                 if (vm.contentTypes[i].entity === entity) {
                     content_type = vm.contentTypes[i].key;
                     break;
-                };
-            };
+                }
+
+            }
+
 
             result = vm.entity.inputs.filter(function (input) {
 
                 if (input.content_type === content_type) {
                     return true;
-                };
+                }
+
 
                 return false;
             });
@@ -1537,7 +1557,7 @@
         };
 
         vm.getNameByValueType = function (value) {
-            console.log("valueTYpe value ", value);
+
             for (var i = 0; i < vm.valueTypes.length; i++) {
                 if (vm.valueTypes[i].value === value) {
                     return vm.valueTypes[i].display_name;
@@ -1551,8 +1571,9 @@
             for (var i = 0; i < vm.contentTypes.length; i++) {
                 if (vm.contentTypes[i].key === contentType) {
                     return vm.contentTypes[i].name;
-                };
-            };
+                }
+
+            }
 
         };
 
