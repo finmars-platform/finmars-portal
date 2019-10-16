@@ -453,7 +453,7 @@
                 scope.openReportSettings = function ($event) {
 
                     var reportOptions = scope.evDataService.getReportOptions();
-                    console.log("settings reportOptions for settings", reportOptions);
+
                     $mdDialog.show({
                         controller: 'GReportSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
@@ -516,17 +516,44 @@
 
                 };
 
+                // show indicator if table layout changed
                 scope.layoutChanged = false;
+
+                var changesTrackingEvents = {
+                    GROUPS_CHANGE: null,
+                    COLUMNS_CHANGE: null,
+                    COLUMN_SORT_CHANGE: null,
+                    RESIZE_COLUMNS_END: null,
+                    FILTERS_CHANGE: null,
+                    ADDITIONS_CHANGE: null,
+                    UPDATE_TABLE_VIEWPORT: null,
+                    TOGGLE_FILTER_AREA: null,
+                    REPORT_OPTIONS_CHANGE: null,
+                    REPORT_TABLE_VIEW_CHANGED: null,
+                    REPORT_EXPORT_OPTIONS_CHANGED: null,
+                    DATA_LOAD_END: null
+                };
+
+                var removeChangesTrackingEventListeners = function () {
+
+                    var trackingEventsListenerNames = Object.keys(changesTrackingEvents);
+
+                    for (var i = 0; i < trackingEventsListenerNames.length; i++) {
+                        var telName = trackingEventsListenerNames[i];
+
+                        if (changesTrackingEvents[telName]) { // execute only if event listener has been added
+
+                            scope.evEventService.removeEventListener(evEvents[telName], changesTrackingEvents[telName]);
+
+                        }
+                    };
+                };
 
                 var didLayoutChanged = function () {
 
                     var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
 
                     if (activeLayoutConfig && activeLayoutConfig.data) {
-
-                        var dleEventIndex = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                            activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
-                        });
 
                         var isLayoutTheSame = function (data1, data2) {
 
@@ -542,8 +569,7 @@
 
                                 return true;
 
-                            }
-                            ;
+                            };
 
                         };
 
@@ -607,8 +633,7 @@
 
                             } else {
                                 return false;
-                            }
-                            ;
+                            };
 
                         };
 
@@ -620,8 +645,7 @@
                             if (!isLayoutTheSame(currentGroups, originalGroups)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -633,8 +657,7 @@
                             if (!isLayoutTheSame(currentColumns, originalColumns)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -646,8 +669,7 @@
                             if (!isLayoutTheSame(currentColumns, originalColumns)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -660,8 +682,7 @@
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
                                 scope.$apply();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -673,8 +694,7 @@
                             if (!isLayoutTheSame(currentFilters, originalFilters)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -686,8 +706,7 @@
                             if (!isLayoutTheSame(originAdditions, currentAdditions)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -699,8 +718,7 @@
                             if (!isLayoutTheSame(originInterfaceLayout, currentInterfaceLayout)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -713,8 +731,7 @@
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
                                 scope.$apply();
-                            }
-                            ;
+                            };
 
                         });
 
@@ -749,8 +766,7 @@
                                     scope.layoutChanged = true;
                                     removeChangesTrackingEventListeners();
 
-                                }
-                                ;
+                                };
 
                             });
 
@@ -766,42 +782,24 @@
 
                             });
 
-                        }
-                        ;
-
-                        var changesTrackingEvents = {
-                            GROUPS_CHANGE: groupsChangeEventIndex,
-                            COLUMNS_CHANGE: columnsChangeEventIndex,
-                            COLUMN_SORT_CHANGE: columnsSortChangeEventIndex,
-                            RESIZE_COLUMNS_END: rceEventIndex,
-                            FILTERS_CHANGE: filtersChangeEventIndex,
-                            ADDITIONS_CHANGE: additionsChangeEventIndex,
-                            UPDATE_TABLE_VIEWPORT: utvEventIndex,
-                            TOGGLE_FILTER_AREA: tfaEventIndex,
-                            REPORT_OPTIONS_CHANGE: roChangeEventIndex,
-                            REPORT_TABLE_VIEW_CHANGED: rtvChangedEventIndex,
-                            REPORT_EXPORT_OPTIONS_CHANGED: reoChangeEventIndex,
-                            DATA_LOAD_END: dleEventIndex
                         };
 
-                        var removeChangesTrackingEventListeners = function () {
-
-                            var trackingEventsListenerNames = Object.keys(changesTrackingEvents);
-
-                            for (var i = 0; i < trackingEventsListenerNames.length; i++) {
-                                var telName = trackingEventsListenerNames[i];
-
-                                if (changesTrackingEvents[telName]) { // execute only if event listener has been added
-
-                                    scope.evEventService.removeEventListener(evEvents[telName], changesTrackingEvents[telName]);
-
-                                }
-                            }
-                            ;
-                        };
+                        changesTrackingEvents.GROUPS_CHANGE = groupsChangeEventIndex;
+                        changesTrackingEvents.COLUMNS_CHANGE = columnsChangeEventIndex;
+                        changesTrackingEvents.COLUMN_SORT_CHANGE = columnsSortChangeEventIndex;
+                        changesTrackingEvents.RESIZE_COLUMNS_END = rceEventIndex;
+                        changesTrackingEvents.FILTERS_CHANGE = filtersChangeEventIndex;
+                        changesTrackingEvents.ADDITIONS_CHANGE = additionsChangeEventIndex;
+                        changesTrackingEvents.UPDATE_TABLE_VIEWPORT = utvEventIndex;
+                        changesTrackingEvents.TOGGLE_FILTER_AREA = tfaEventIndex;
+                        changesTrackingEvents.REPORT_OPTIONS_CHANGE = roChangeEventIndex;
+                        changesTrackingEvents.REPORT_TABLE_VIEW_CHANGED = rtvChangedEventIndex;
+                        changesTrackingEvents.REPORT_EXPORT_OPTIONS_CHANGED = reoChangeEventIndex;
+                        changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
                     }
 
                 };
+                // < show indicator if table layout changed >
 
                 scope.openLayoutList = function ($event) {
 
@@ -981,7 +979,6 @@
 
                             ecosystemDefaultService.getList().then(function (data) {
 
-                                console.log('default values data', data);
                                 var defaultValues = data.results[0];
                                 reportOptions.pricing_policy = defaultValues.pricing_policy;
                                 reportOptions.report_currency = defaultValues.currency;
@@ -1088,7 +1085,6 @@
                         });
 
                     } else {
-                        console.log("create new layout3");
                         createNewLayoutMethod();
                     }
                 };
@@ -1330,7 +1326,9 @@
 
                 checkLayoutExistence();
 
-                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                var dleEventIndex = scope.evEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+                    removeChangesTrackingEventListeners();
+                    changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
                     didLayoutChanged();
                 });
 

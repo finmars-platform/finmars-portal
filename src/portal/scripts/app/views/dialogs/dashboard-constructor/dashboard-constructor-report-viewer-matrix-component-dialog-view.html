@@ -28,7 +28,36 @@
             </div>
             <div class="m-t-16 m-b-16">
 
-                <md-input-container style="width: 200px;">
+                <md-input-container class="dashboard-constructor-field1">
+                    <label for="">Layout</label>
+                    <md-select ng-model="vm.item.settings.layout"
+                               md-container-class="common-select-container"
+                               md-on-open="vm.getLayouts()"
+                               md-on-close="layoutSearchTerm = ''"
+                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                        <div>
+                            <md-select-header>
+                                <input data-ng-model="layoutSearchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+
+                            <div class="select-options-holder">
+
+                                <md-option
+                                        data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
+                                        ng-value="layout.id"
+                                        ng-bind="layout.name">
+                                </md-option>
+
+                            </div>
+                        </div>
+                    </md-select>
+                </md-input-container>
+
+                <!--<md-input-container style="width: 200px;">
                     <label for="">Layout</label>
                     <md-select data-ng-model="vm.item.settings.layout"
                                ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
@@ -39,7 +68,7 @@
                             {{layout.name}}
                         </md-option>
                     </md-select>
-                </md-input-container>
+                </md-input-container>-->
 
             </div>
 
@@ -47,7 +76,13 @@
 
                 <div class="m-t-16 m-b-16">
 
-                    <md-input-container style="width: 200px;">
+                    <table-attribute-selector title="Abscissa"
+                                              dialog-title="Abscissa"
+                                              available-attrs="vm.attributes"
+                                              item="vm.item.settings.abscissa"
+                                              class="dashboard-constructor-field1"></table-attribute-selector>
+
+                    <!--<md-input-container style="width: 200px;">
                         <label for="">Abscissa</label>
                         <md-select data-ng-model="vm.item.settings.abscissa"
                                    md-on-close="abscissaSearchTerm = ''"
@@ -65,7 +100,7 @@
                                 {{attribute.name}}
                             </md-option>
                         </md-select>
-                    </md-input-container>
+                    </md-input-container>-->
 
                 </div>
 
@@ -73,7 +108,13 @@
 
             <div class="m-t-16 m-b-16">
 
-                <md-input-container style="width: 200px;">
+                <table-attribute-selector title="Ordinate"
+                                          dialog-title="Ordinate"
+                                          available-attrs="vm.attributes"
+                                          item="vm.item.settings.ordinate"
+                                          class="dashboard-constructor-field1 md-block"></table-attribute-selector>
+
+                <!--<md-input-container style="width: 200px;">
                     <label for="">Ordinate</label>
                     <md-select data-ng-model="vm.item.settings.ordinate"
                                md-on-close="ordinateSearchTerm = ''"
@@ -91,7 +132,7 @@
                             {{attribute.name}}
                         </md-option>
                     </md-select>
-                </md-input-container>
+                </md-input-container>-->
 
             </div>
 
@@ -99,7 +140,14 @@
 
                 <div class="m-t-16 m-b-16">
 
-                    <md-input-container style="width: 200px;">
+                    <table-attribute-selector title="Value"
+                                              dialog-title="Value"
+                                              available-attrs="vm.numericAttributes"
+                                              item="vm.item.settings.value_key"
+                                              class="dashboard-constructor-field1"
+                                              style="margin: 0 10px;"></table-attribute-selector>
+
+                    <!--<md-input-container style="width: 200px;">
                         <label for="">Value</label>
                         <md-select data-ng-model="vm.item.settings.value_key"
                                    md-on-close="valueSearchTerm = ''"
@@ -118,7 +166,7 @@
                                 {{attribute.name}}
                             </md-option>
                         </md-select>
-                    </md-input-container>
+                    </md-input-container>-->
 
                 </div>
 

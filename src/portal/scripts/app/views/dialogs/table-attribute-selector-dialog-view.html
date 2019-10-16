@@ -17,14 +17,21 @@
                 <ng-md-icon icon="chevron_left" size="24"></ng-md-icon>
             </md-button>
 
+            <div layout="row" class="m-b-24" style="margin-left: 30px">
+                <input data-ng-model="vm.searchTerms"
+                       type="search"
+                       placeholder="Search for a ..."
+                       class="md-text md-select-search-pattern select-input-filter attr-selector-filter"
+                       ng-keydown="$event.stopPropagation()">
+            </div>
+
             <div class="attr-selector-btns-container">
-                <div ng-repeat="item in vm.activeGroup.items | orderBy: ['groupName', 'attrName']">
+                <div ng-repeat="item in vm.activeGroup.items | orderBy: ['order', 'attrName'] | filter: {name: vm.searchTerms}">
                     <md-button class="md-raised"
-                               ng-class="{'md-primary': item.groupName}"
+                               ng-class="{'md-primary': item.isGroup}"
                                ng-click="vm.openGroupOrSelectAttr(item)"
                                aria-label="open group of attributes">
-                        <span ng-if="item.groupName" ng-bind="item.groupName"></span>
-                        <span ng-if="item.attrName" ng-bind="item.attrName"></span>
+                        <span ng-bind="item.name"></span>
                     </md-button>
                 </div>
             </div>
@@ -32,7 +39,7 @@
 
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
+    <md-dialog-actions class="dialog-bottom-footer" layout="row" layout-align="space-between">
         <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
         <md-button class="md-raised" data-ng-click="vm.agree()">Save</md-button>
     </md-dialog-actions>

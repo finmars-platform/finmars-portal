@@ -146,7 +146,11 @@
 
                 }
 
-                if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_matrix') {
+                var componentsForLinking = [
+                    'report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'
+                ];
+
+                if (componentsForLinking.indexOf(vm.componentType.data.type) !== -1) {
 
                     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
@@ -334,7 +338,7 @@
                     vm.entityViewerDataService.setActiveObject(componentOutput);
                     vm.entityViewerDataService.setActiveObjectFromAbove(componentOutput);
 
-                    vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE)
+                    vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
                 }
@@ -613,13 +617,12 @@
                         subtotal_formula_id: vm.componentType.data.settings.subtotal_formula_id,
                         styles: vm.componentType.data.settings.styles
                     };
-                }
-
+                };
 
                 if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
-                        abscissa: vm.componentType.data.settings.abscissa,
-                        ordinate: vm.componentType.data.settings.ordinate,
+                        bar_name_key: vm.componentType.data.settings.bar_name_key,
+                        bar_number_key: vm.componentType.data.settings.bar_number_key,
                         bars_direction: vm.componentType.data.settings.bars_direction,
                         group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula,
                         min_bar_width: vm.componentType.data.settings.min_bar_width,
@@ -630,6 +633,11 @@
                         crop_tick_text: vm.componentType.data.settings.crop_tick_text
                     };
 
+                    if (vm.componentType.data.settings.abscissa || vm.componentType.data.settings.ordinate) {
+                        vm.rvChartsSettings.bar_name_key = vm.componentType.data.settings.abscissa;
+                        vm.rvChartsSettings.bar_number_key = vm.componentType.data.settings.ordinate;
+                    }
+
                 };
 
                 if (vm.componentType.data.type === 'report_viewer_pie_chart') {
@@ -639,7 +647,8 @@
                         number_attr: vm.componentType.data.settings.number_attr,
                         group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula,
                         show_legends: vm.componentType.data.settings.show_legends,
-                        legends_position: vm.componentType.data.settings.legends_position
+                        legends_position: vm.componentType.data.settings.legends_position,
+                        legends_columns_number: vm.componentType.data.settings.legends_columns_number
                     };
                 };
 
