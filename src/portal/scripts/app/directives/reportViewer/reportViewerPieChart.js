@@ -43,11 +43,25 @@
                 var legendsPosition = scope.rvChartsSettings.legends_position;
 
                 scope.pieChartLayout = 'row';
-
                 if (legendsPosition === 'bottom') {
                     scope.pieChartLayout = 'column';
                 };
+                var legendsColumnsNumber = scope.rvChartsSettings.legends_columns_number;
+                if (!legendsColumnsNumber) {
+                    legendsColumnsNumber = 1;
+                }
 
+
+                var changeActiveObject = function (partName) {
+
+                    var activeObject = scope.evDataService.getActiveObject();
+
+                    activeObject[nameKey] = partName;
+
+                    scope.evDataService.setActiveObject(activeObject);
+                    scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                };
 
                 var getDataForCharts = function () {
 
@@ -118,6 +132,14 @@
                     return backStyle;
                 };
 
+                scope.setLegendsUlStyle = function () {
+                    var style = '-webkit-column-count: ' + legendsColumnsNumber + ';';
+                    style = style + ' -moz-column-count:' + legendsColumnsNumber + ';';
+                    style = style + ' column-count:' + legendsColumnsNumber + ';';
+
+                    return style;
+                };
+
                 scope.getPieChartGlobalClasses = function () {
                     var pieChartCompClasses = '';
                     switch (legendsPosition) {
@@ -167,6 +189,7 @@
 
                     chartHolderElem.style.minWidth = svgSize + 'px';
                     chartHolderElem.style.width = svgSize + 'px';
+                    chartHolderElem.style.height = svgSize + 'px';
 
                     var svg = d3.select(chartHolderElem)
                         .append('svg')
@@ -190,6 +213,9 @@
                             });
 
                     chartWrapingG.selectAll('path')
+                        .on("click", function (d) {
+                            changeActiveObject(d.data.name);
+                        })
                         .on("mouseover", function () {
 
                             d3.select(this)
@@ -221,6 +247,8 @@
                 };
 
                 var init = function () {
+
+                    scope.evDataService.setActiveObject({});
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 

@@ -9,8 +9,6 @@
 
         var vm = this;
 
-        console.log("attribute selector tableAttributeSelect", data);
-
         vm.title = "Attribute selector";
 
         if (data.title) {
@@ -20,11 +18,13 @@
         vm.activeGroup = [];
         vm.currentLocation = '-';
 
+        vm.searchTerms = '';
+
         var previousGroup = [];
         var openedGroupNames = [];
         var tableAttributes = data.availableAttrs;
         var tableAttrsTree = {
-            groupName: '-',
+            name: '-',
             items: []
         };
 
@@ -46,7 +46,7 @@
 
                         for (b = 0; b < attrObjPath.length; b++) {
 
-                            var tAttrGroupName = attrObjPath[b].groupName;
+                            var tAttrGroupName = attrObjPath[b].name;
 
                             if (tAttrGroupName === attrPathKey) {
                                 attrObjPath = attrObjPath[b].items;
@@ -60,7 +60,9 @@
                     if (!groupExist) { // if there is no such group, create one
 
                         var newAttrGroup = {
-                            groupName: attrPathKey,
+                            name: attrPathKey,
+                            isGroup: true,
+                            order: 0,
                             items: []
                         };
 
@@ -73,12 +75,16 @@
 
                 var tAttrData = {
                     attributeObject: tAttr,
-                    attrName: attrName
+                    isGroup: false,
+                    order: 1,
+                    name: attrName
                 };
 
                 attrObjPath.push(tAttrData);
 
             };
+
+            console.log("selector tableAttrsTree", tableAttrsTree);
 
         };
 
@@ -103,28 +109,31 @@
         };
 
         vm.returnToPrevGroup = function () {
-            openedGroupNames.splice(-1, 1);
-            vm.activeGroup = previousGroup.pop();
+            if (previousGroup.length > 0) {
+                openedGroupNames.splice(-1, 1);
+                vm.activeGroup = previousGroup.pop();
 
-            getCurrentLocation();
+                getCurrentLocation();
+            }
         };
 
         vm.openGroupOrSelectAttr = function (item) {
 
-            if (item.hasOwnProperty('groupName')) {
+            vm.searchTerms = '';
+
+            if (item.isGroup) {
 
                 var groupData = JSON.parse(JSON.stringify(vm.activeGroup));
                 previousGroup.push(groupData);
                 vm.activeGroup = item;
 
-                openedGroupNames.push(item.groupName);
+                openedGroupNames.push(item.name);
                 getCurrentLocation();
 
-            } else if (item.hasOwnProperty('attrName')) {
-
+            } else {
                 vm.save(item.attributeObject);
-
             }
+
         };
 
         vm.cancel = function () {

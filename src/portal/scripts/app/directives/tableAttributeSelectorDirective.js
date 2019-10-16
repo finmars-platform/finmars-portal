@@ -10,9 +10,9 @@
             restrict: 'E',
             scope: {
                 title: '@',
+                dialogTitle: '@',
                 availableAttrs: '<',
-                item: '=',
-                dialogTitle: '@'
+                item: '='
             },
             templateUrl: 'views/directives/table-attribute-selector-view.html',
             link: function (scope, elem, attr) {

@@ -113,6 +113,8 @@
             $mdDialog.hide({status: 'agree'});
         };
 
+        var componentsForLinking = ['report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'];
+
         vm.init = function () {
 
             console.log('dataService', dataService);
@@ -120,7 +122,7 @@
             vm.componentsTypes = dataService.getComponentsTypes();
 
             vm.reportViewerComponentTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'report_viewer' || componentType.type === 'report_viewer_matrix'
+                return componentsForLinking.indexOf(componentType.type) !== -1;
             });
 
             console.log('vm', vm);

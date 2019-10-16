@@ -485,10 +485,12 @@
                         var additions = vm.entityViewerDataService.getAdditions();
                         if (additions.isOpen) {
                             spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
-                        }
-                        ;
+                        };
 
-                        var layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
+                        var layoutIsUnchanged = true;
+                        if (activeLayoutConfig && activeLayoutConfig.data) {
+                            layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
+                        };
 
                         if (!layoutIsUnchanged || spChangedLayout) {
 
@@ -627,20 +629,21 @@
                 var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
                 var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
 
-                var layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
+                var layoutIsUnchanged = true;
+                if (activeLayoutConfig && activeLayoutConfig.data) {
+                    layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
+                };
 
                 var spChangedLayout = false;
                 var additions = vm.entityViewerDataService.getAdditions();
                 if (additions.isOpen) {
                     spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
-                }
-                ;
+                };
 
                 if (!layoutIsUnchanged || spChangedLayout) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
-                }
-                ;
+                };
 
             };
 
