@@ -8,10 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
-        var evHelperService = require('../../services/entityViewerHelperService');
-
-        var priceHistoryService = require('../../services/priceHistoryService');
-        var currencyHistoryService = require('../../services/currencyHistoryService');
+        var objectComparison = require('../../helpers/objectsComparisonHelper');
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
@@ -48,7 +45,11 @@
             vm.grandTotalProcessing = true;
 
             vm.linkedActiveObjects = {}; // If we have several components linked to spit panel;
+            var lastActiveComponentId;
 
+            var componentsForLinking = [
+                'report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'
+            ];
 
             vm.setEventListeners = function () {
 
@@ -146,10 +147,6 @@
 
                 }
 
-                var componentsForLinking = [
-                    'report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'
-                ];
-
                 if (componentsForLinking.indexOf(vm.componentType.data.type) !== -1) {
 
                     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
@@ -158,9 +155,24 @@
 
                         console.log('click report viewer active object', activeObject);
 
-                        vm.dashboardDataService.setComponentOutput(vm.componentType.data.id, activeObject);
+                        var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
+                        var compsKeys = Object.keys(componentsOutputs);
 
-                        vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentType.data.id)
+                        if (compsKeys.length > 0) {
+                            compsKeys.forEach(function (compKey) {
+                                componentsOutputs[compKey].changedLast = false;
+                            });
+                            vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
+                        };
+
+                        var compOutputData = {
+                            changedLast: true,
+                            data: activeObject
+                        };
+
+                        vm.dashboardDataService.setComponentOutput(vm.componentType.data.id, compOutputData);
+
+                        vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentType.data.id);
 
                         if (vm.componentType.data.settings.auto_refresh) {
 
@@ -335,8 +347,8 @@
 
                 if (vm.componentType.data.type === 'report_viewer_split_panel' && componentOutput) {
 
-                    vm.entityViewerDataService.setActiveObject(componentOutput);
-                    vm.entityViewerDataService.setActiveObjectFromAbove(componentOutput);
+                    vm.entityViewerDataService.setActiveObject(componentOutput.data);
+                    vm.entityViewerDataService.setActiveObjectFromAbove(componentOutput.data);
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
@@ -391,26 +403,51 @@
 
                 if (vm.startupSettings.linked_components.hasOwnProperty('active_object')) {
 
-
                     if (Array.isArray(vm.startupSettings.linked_components.active_object)) {
 
-                        var lastActiveComponentId;
+                        var lastActiveCompChanged = false;
 
-                        vm.startupSettings.linked_components.active_object.forEach(function (componentId) {
+                        for (var i = 0; i < vm.startupSettings.linked_components.active_object.length; i++) {
+                            var componentId = JSON.parse(JSON.stringify(vm.startupSettings.linked_components.active_object[i]));
 
                             var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                            if (vm.linkedActiveObjects[componentId] !== componentOutput) {
-                                lastActiveComponentId = componentId
-                            }
+                            if (componentOutput && componentOutput.changedLast) {
 
-                            vm.linkedActiveObjects[componentId] = componentOutput;
+                                var compOutputData = componentOutput.data;
 
-                        });
+                                if (lastActiveComponentId !== componentId) {
+                                    lastActiveComponentId = componentId;
+                                    lastActiveCompChanged = true;
+                                } else {
 
-                        if (lastActiveComponentId) {
+                                    if (compOutputData && typeof compOutputData === 'object' &&
+                                        vm.linkedActiveObjects[lastActiveComponentId] && typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
+
+                                        if (!objectComparison.comparePropertiesOfObjects(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
+                                            lastActiveCompChanged = true;
+                                        }
+
+                                    } else if (vm.linkedActiveObjects[lastActiveComponentId] !== compOutputData) {
+                                        lastActiveCompChanged = true;
+                                    };
+
+                                };
+
+                                if (compOutputData !== undefined && compOutputData !== null) {
+                                    vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
+                                } else {
+                                    vm.linkedActiveObjects[lastActiveComponentId] = undefined;
+                                };
+
+                                break;
+
+                            };
+                        };
+
+                        if (lastActiveCompChanged) {
                             vm.handleDashboardActiveObject(lastActiveComponentId);
-                        }
+                        };
 
                     } else {
 

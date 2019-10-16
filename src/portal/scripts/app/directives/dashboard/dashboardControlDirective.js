@@ -73,7 +73,7 @@
                     console.log('valueChanged', scope.item.data.store);
                     console.log('valueChanged.value', scope.item.data.store.value);
 
-                    scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store);
+                    scope.dashboardDataService.setComponentOutput(scope.item.data.id, {data: scope.item.data.store});
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
 
                     if(scope.item.data.settings.auto_refresh) {

@@ -473,7 +473,6 @@
                     if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-                        var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
 
                         var spChangedLayout = false;
                         var additions = vm.entityViewerDataService.getAdditions();
@@ -483,6 +482,8 @@
 
                         var layoutIsUnchanged = true;
                         if (activeLayoutConfig && activeLayoutConfig.data) {
+                            var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
+
                             layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
                         };
 

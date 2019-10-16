@@ -218,11 +218,14 @@
 
             var getLayoutChanges = function () {
                 var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-                var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
 
-                if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
-                    return currentLayoutConfig;
-                };
+                if (activeLayoutConfig && activeLayoutConfig.data) {
+                    var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
+
+                    if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
+                        return currentLayoutConfig;
+                    };
+                }
 
                 return false
             };
