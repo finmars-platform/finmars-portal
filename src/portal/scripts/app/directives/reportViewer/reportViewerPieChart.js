@@ -4,6 +4,7 @@
 
     var rvDataHelper = require('../../helpers/rv-data.helper');
     var rvChartsHelper = require('../../helpers/rv-charts.helper');
+    var renderHelper = require('../../helpers/render.helper');
 
     var evEvents = require('../../services/entityViewerEvents');
 
@@ -17,7 +18,7 @@
                 evEventService: '='
             },
             link: function (scope, elem, attr) {
-
+                console.log("charts rvChartsSettings", scope.rvChartsSettings);
                 scope.activeItem = null;
 
                 scope.readyStatuses = {
@@ -45,13 +46,25 @@
                 var legendsPosition = scope.rvChartsSettings.legends_position;
 
                 scope.pieChartLayout = 'row';
+                scope.pieChartLayoutAlign = 'center start';
                 if (legendsPosition === 'bottom') {
                     scope.pieChartLayout = 'column';
+                    scope.pieChartLayoutAlign = 'start center';
                 };
+
                 var legendsColumnsNumber = scope.rvChartsSettings.legends_columns_number;
                 if (!legendsColumnsNumber) {
                     legendsColumnsNumber = 1;
                 }
+
+                scope.number_format = scope.rvChartsSettings.number_format;
+
+                var chartMargin = {
+                    top: 40,
+                    right: 0,
+                    bottom: 0,
+                    left: 0
+                };
 
 
                 var changeActiveObject = function (partName) {
@@ -75,6 +88,13 @@
                     });
 
                     chartData = rvChartsHelper.getDataForChartsFromFlatList(itemList, nameKey, numberKey, fieldValueCalcFormulaId);
+                    /*chartData = [
+                        {name: 'First', numericValue: 12405},
+                        {name: 'Second', numericValue: 43528},
+                        {name: 'Third', numericValue: -3000},
+                        {name: 'Fourth', numericValue: -2345},
+                        {name: 'Fifth', numericValue: -10000}
+                    ];*/
 
                     scope.chartDataWithPosNums = chartData.filter(function (cData) {
                         if (cData.numericValue > 0) {
@@ -156,6 +176,27 @@
                     return pieChartCompClasses;
                 };
 
+                scope.formatValue = function (val, isNegativeNum) {
+
+                    if (isNegativeNum) {
+                        val = -Math.abs(val);
+                    };
+
+                    if (scope.number_format) {
+
+                        return renderHelper.formatValue({
+                            value: val
+                        }, {
+                            key: 'value',
+                            report_settings: scope.number_format
+                        });
+
+                    } else {
+                        return val
+                    }
+
+                };
+
                 /*var colorsList = [
                     '#ab3939', '#70ab39', '#ab6039', '#3972ab', '#ab9039', '#a739ab', '#95ab39', '#6739ab', '#39ab99', '#623879',
                     '#3946ab', '#39ab3d', '#7c39ab', '#5e0c0c', '#3992ab', '#ab3979', '#ab3939', '#60c877', '#3015f7', '#ffcf00',
@@ -169,11 +210,13 @@
                 var drawChart = function () {
 
                     var posNumRadius;
+                    var chartHeight = componentHeight - chartMargin.top - chartMargin.bottom;
+                    var chartWidth = componentWidth - chartMargin.left - chartMargin.right;
 
-                    if (componentHeight < componentWidth) {
-                        posNumRadius = componentHeight / 2;
+                    if (chartHeight < chartWidth) {
+                        posNumRadius = chartHeight / 2;
                     } else {
-                        posNumRadius = componentWidth / 2;
+                        posNumRadius = chartWidth / 2;
                     };
 
                     var svgSize = posNumRadius * 2;
@@ -223,32 +266,33 @@
                         .on("click", function (d) {
                             changeActiveObject(d.data.name);
                         })
-                        .on("mouseover", function () {
+                        .on("mouseover", function (d) {
 
                             d3.select(this)
                                 .style('opacity', 0.5);
 
-                            var barTooltipElem = document.createElement("div");
-                            barTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
-                            document.body.appendChild(barTooltipElem);
+                            var pieTooltipElem = document.createElement("div");
+                            pieTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
+
+                            pieTooltipElem.innerText = "Name: " + d.data.name + ";" + "\n" + "Number: " + scope.formatValue(d.data.numericValue) + ";";
+                            document.body.appendChild(pieTooltipElem);
 
                         })
-                        .on("mousemove", function (d) {
+                        .on("mousemove", function () {
 
-                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+                            var pieTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
 
-                            barTooltipElem.innerText = "Name: " + d.data.name + ";" + "\n" + "Number: " + d.data.numericValue + ";";
-                            var tElemWidth = barTooltipElem.offsetWidth;
-                            barTooltipElem.style.top = (d3.event.pageY - 10) + "px";
-                            barTooltipElem.style.left = (d3.event.pageX - tElemWidth - 5) + "px"; // subtractions applied to place tooltip to the left of cursor
+                            var tElemWidth = pieTooltipElem.offsetWidth;
+                            pieTooltipElem.style.top = (d3.event.pageY - 10) + "px";
+                            pieTooltipElem.style.left = (d3.event.pageX - tElemWidth - 5) + "px"; // subtractions applied to place tooltip to the left of cursor
 
                         })
                         .on("mouseout", function () {
                             d3.select(this)
                                 .style('opacity', 1);
 
-                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
-                            document.body.removeChild(barTooltipElem);
+                            var pieTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+                            document.body.removeChild(pieTooltipElem);
                         });
 
                     // < draw doughnut for positive numbers >
@@ -290,32 +334,39 @@
                         .on("click", function (d) {
                             changeActiveObject(d.data.name);
                         })
-                        .on("mouseover", function () {
+                        .on("mouseover", function (d) {
 
                             d3.select(this)
                                 .style('opacity', 0.5);
 
-                            var barTooltipElem = document.createElement("div");
-                            barTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
-                            document.body.appendChild(barTooltipElem);
+                            var pieTooltipElem = document.createElement("div");
+                            pieTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
+
+                            document.body.appendChild(pieTooltipElem);
+
+                            pieTooltipElem.innerHTML = "Name: " + d.data.name + ";" + "<br>" + "Number: <span class='chart-hover-tolltip-number'>" + scope.formatValue(d.data.numericValue, true) + "</span>;";
+
+                            /*if (scope.number_format.negative_color_format_id === 1) {
+                                var pieTooltipNumberSpan = pieTooltipElem.querySelector('span.chart-hover-tolltip-number');
+                                pieTooltipNumberSpan.classList.add("red-text");
+                            };*/
 
                         })
-                        .on("mousemove", function (d) {
+                        .on("mousemove", function () {
 
-                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+                            var pieTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
 
-                            barTooltipElem.innerText = "Name: " + d.data.name + ";" + "\n" + "Number: " + -Math.abs(d.data.numericValue) + ";";
-                            var tElemWidth = barTooltipElem.offsetWidth;
-                            barTooltipElem.style.top = (d3.event.pageY - 10) + "px";
-                            barTooltipElem.style.left = (d3.event.pageX - tElemWidth - 5) + "px"; // subtractions applied to place tooltip to the left of cursor
+                            var tElemWidth = pieTooltipElem.offsetWidth;
+                            pieTooltipElem.style.top = (d3.event.pageY - 10) + "px";
+                            pieTooltipElem.style.left = (d3.event.pageX - tElemWidth - 5) + "px"; // subtractions applied to place tooltip to the left of cursor
 
                         })
                         .on("mouseout", function () {
                             d3.select(this)
                                 .style('opacity', 1);
 
-                            var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
-                            document.body.removeChild(barTooltipElem);
+                            var pieTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
+                            document.body.removeChild(pieTooltipElem);
                         });
 
                     // < draw doughnut for negative numbers >

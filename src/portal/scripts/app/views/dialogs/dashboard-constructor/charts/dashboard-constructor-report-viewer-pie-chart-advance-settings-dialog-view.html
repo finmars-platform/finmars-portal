@@ -16,11 +16,13 @@
 </div>
 
 <md-checkbox data-ng-model="vm.item.settings.show_legends"
+             ng-change=""
              style="margin-left: 10px;">Show legends</md-checkbox>
-<div class="m-b-35" layout="column">
+<div layout="column">
     <md-input-container class="dashboard-constructor-field1 m-b-16">
         <label for="">Legends Position</label>
-        <md-select data-ng-model="vm.item.settings.legends_position" data-ng-disabled="!vm.item.settings.show_legends">
+        <md-select data-ng-model="vm.item.settings.legends_position"
+                   data-ng-disabled="!vm.item.settings.show_legends">
             <md-option value="right">To the right of chart</md-option>
             <md-option value="bottom">Below chart</md-option>
         </md-select>
@@ -28,8 +30,67 @@
 
     <md-input-container class="dashboard-constructor-field1">
         <label for="">Legends Columns Number</label>
-        <input data-ng-model="vm.item.settings.legends_columns_number" type="number" class="no-input-arrows">
+        <input data-ng-model="vm.item.settings.legends_columns_number"
+               type="number"
+               class="no-input-arrows"
+               data-ng-disabled="!vm.item.settings.show_legends">
     </md-input-container>
+</div>
+
+<div class="m-b-35" layout="row">
+    <md-menu>
+        <md-button class="md-raised"
+                   ng-click="$mdOpenMenu($event)">
+<!--            <ng-md-icon icon="settings"></ng-md-icon>-->
+            Legends Number Format
+        </md-button>
+
+        <md-menu-content width="4">
+
+            <md-menu-item>
+                <md-button ng-click="vm.setNumberFormatPreset('price')"
+                           class="g-settings-option-btn">
+                    <span>Price (0)</span>
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button ng-click="vm.setNumberFormatPreset('market_value')"
+                           class="g-settings-option-btn">
+                    <span>Market Value (000'000)</span>
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button class="g-settings-option-btn"
+                           ng-click="vm.setNumberFormatPreset('amount')">
+                    <span>Amount (000'000.00)</span>
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button class="g-settings-option-btn"
+                           ng-click="vm.setNumberFormatPreset('exposure')">
+                    <span>Exposure (0.0%)</span>
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button class="g-settings-option-btn"
+                           ng-click="vm.setNumberFormatPreset('return')">
+                    <span>Return (0.00%)</span>
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button class="g-settings-option-btn"
+                           ng-click="vm.openNumberFormatSettings($event)">
+                    <span>Custom</span>
+                </md-button>
+            </md-menu-item>
+
+        </md-menu-content>
+    </md-menu>
 </div>
 
 <md-checkbox data-ng-model="vm.item.settings.auto_refresh"
