@@ -28,9 +28,6 @@
                 scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
 
-                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-                scope.attributesFromAbove = [];
-
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     var columnRowsContent  = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
@@ -66,10 +63,6 @@
                         new Date('2016-05-22'),
                         new Date('2016-05-23')
                     ];*/
-
-                    if(!scope.isRootEntityViewer) {
-                        scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
-                    }
 
                     console.log("date tree columnRows", scope.columnRowsContent);
                     scope.$apply();
@@ -109,10 +102,6 @@
                         filterClasses += 'ev-backend-filter ';
                     }
 
-                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
-                        filterClasses += 'link-to-above-filter';
-                    }
-
                     return filterClasses;
                 };
 
@@ -120,42 +109,34 @@
 
                     var filterRegime = "";
 
-                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                    switch (scope.filter.options.filter_type) {
 
-                        filterRegime = "Linked to Selection";
+                        case "equal":
+                            filterRegime = "Equal";
+                            break;
+                        case "not_equal":
+                            filterRegime = "Not equal";
+                            break;
+                        case "greater":
+                            filterRegime = "Greater than";
+                            break;
+                        case "greater_equal":
+                            filterRegime = "Greater or equal to";
+                            break;
+                        case "less":
+                            filterRegime = "Less than";
+                            break;
+                        case "less_equal":
+                            filterRegime = "Less or equal to";
+                            break;
+                        case "empty":
+                            filterRegime = "Show empty cells";
+                            break;
+                        case "date_tree":
+                            filterRegime = "Date tree";
+                            break;
 
-                    } else {
-
-                        switch (scope.filter.options.filter_type) {
-
-                            case "equal":
-                                filterRegime = "Equal";
-                                break;
-                            case "not_equal":
-                                filterRegime = "Not equal";
-                                break;
-                            case "greater":
-                                filterRegime = "Greater than";
-                                break;
-                            case "greater_equal":
-                                filterRegime = "Greater or equal to";
-                                break;
-                            case "less":
-                                filterRegime = "Less than";
-                                break;
-                            case "less_equal":
-                                filterRegime = "Less or equal to";
-                                break;
-                            case "empty":
-                                filterRegime = "Show empty cells";
-                                break;
-                            case "date_tree":
-                                filterRegime = "Date tree";
-                                break;
-
-                        }
-
-                    };
+                    }
 
                     return filterRegime;
 
@@ -163,7 +144,6 @@
 
                 scope.changeFilterType = function (filterType) {
 
-                    delete scope.filter.options.use_from_above;
                     scope.filter.options.filter_type = filterType;
 
                     if (filterType === 'date_tree') {
@@ -190,8 +170,7 @@
                 };
 
                 scope.showFRCheckMark = function (filterRegime) {
-                    if (scope.filter.options.filter_type === filterRegime &&
-                        !scope.filter.options.use_from_above) {
+                    if (scope.filter.options.filter_type === filterRegime) {
 
                         return true;
 
@@ -331,64 +310,6 @@
                     scope.evDataService.setFilters(scope.filters);
 
                 };
-
-
-                /*scope.noDataForLinkingTo = true;
-                var columns = scope.evDataService.getColumns();
-
-                for (var c = 0; c < columns.length; c++) {
-                    if (columns[c].key === scope.filter.options.use_from_above) {
-                        scope.noDataForLinkingTo = false;
-                        break;
-                    };
-                };*/
-
-                scope.initSplitPanelMode = function () {
-
-                    if (!scope.isRootEntityViewer) {
-
-                        scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
-
-                            var key = scope.filter.options.use_from_above;
-                            /*scope.noDataForLinkingTo = true;
-                            var columns = scope.evDataService.getColumns();
-                            var key = scope.filter.options.use_from_above;
-
-                            for (var c = 0; c < columns.length; c++) {
-                                if (columns[c].key === key) {
-                                    scope.noDataForLinkingTo = false;
-                                    break;
-                                };
-                            };*/
-
-                            if (scope.filter.options.hasOwnProperty('use_from_above') && !scope.noDataForLinkingTo) {
-
-                                var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
-
-                                scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
-
-                                var value = activeObjectFromAbove[key];
-
-                                scope.filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
-
-                                scope.updateFilters();
-
-                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                            };
-
-                        });
-
-                    } else {
-
-                        if (scope.filter.options.hasOwnProperty('use_from_above')) {
-                            scope.noDataForLinkingTo = true;
-                        };
-
-                    };
-
-                };
-
 
                 scope.init = function () {
 

@@ -175,11 +175,9 @@
                     };
                     tab.layout.fields.push(field);
 
-                }
-                ;
+                };
 
-            }
-            ;
+            };
 
         }
 
@@ -650,7 +648,7 @@
                     case 'complex-transaction':
                     case 'transaction-type':
 
-                        var doNotShowAttrs = ['code', 'date', 'status', 'text',
+                        var doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
                             'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4',
                             'user_text_5', 'user_text_6', 'user_text_7', 'user_text_8',
                             'user_text_9', 'user_text_10', 'user_number_1', 'user_number_2',

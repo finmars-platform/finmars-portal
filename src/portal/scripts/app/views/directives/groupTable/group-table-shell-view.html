@@ -31,15 +31,17 @@
                                 </md-button>
                             </div>
 
-                            <group-table-body class="group-table-body"
-                                              data-ng-if="viewType == 'report_viewer'"
+                            <group-table-body data-ng-if="viewType == 'report_viewer'"
+                                              class="group-table-body"
                                               ev-data-service="evDataService"
                                               ev-event-service="evEventService"
                                               content-wrap-element="contentWrapElem"
                                               root-wrap-element="rootWrapElem"
                             ></group-table-body>
 
-                            <report-viewer-matrix class="height-100 display-block" data-ng-if="viewType == 'matrix'" style="height: 600px;"
+                            <report-viewer-matrix data-ng-if="viewType == 'matrix'"
+                                                  class="height-100 display-block"
+                                                  style="height: 600px;"
                                                   matrix-settings="viewSettings"
                                                   ev-data-service="evDataService"
                                                   ev-event-service="evEventService"></report-viewer-matrix>
@@ -79,8 +81,10 @@
         <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar">
             <div>
                 <div class="g-filter" id="filtersbag">
-                    <group-sidebar-filter ev-data-service="evDataService" attribute-data-service="attributeDataService"
-                                          ev-event-service="evEventService"></group-sidebar-filter>
+                    <group-sidebar-filter ev-data-service="evDataService"
+                                          attribute-data-service="attributeDataService"
+                                          ev-event-service="evEventService"
+                                          content-wrap-element="contentWrapElem"></group-sidebar-filter>
                 </div>
             </div>
         </div>

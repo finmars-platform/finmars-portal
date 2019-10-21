@@ -646,6 +646,12 @@ md-tooltip.tooltip_1 .md-content.md-show {
   background-color: rgba(0, 0, 0, 0.78);
 }
 
+md-tooltip.md-panel.md-tooltip.md-default-theme, md-tooltip.md-panel.md-tooltip {
+  &.red-text {
+    color: #fa393e;
+  }
+}
+
 .error_box {
   position: absolute;
   color: #ffffff;
@@ -1741,6 +1747,16 @@ md-menu-content md-menu.md-menu {
 
 .transaction-scheme-manager-dialog-view {
   width: 75%;
+
+  .trans-scheme-manager-notes-ic {
+    width: 70%;
+    max-height: initial;
+
+    textarea {
+      border-bottom: 1px solid #000;
+    };
+
+  }
 }
 
 .scheme-manager-import-columns-header {
@@ -2446,9 +2462,11 @@ button.md-button.toggle-calculator-block-btn {
   width: 100%;
   height: 100%;
 }
+
 .g-root-wrapper {
   height: 100%;
 }
+
 .g-content-wrap {
   height: 100%;
 }

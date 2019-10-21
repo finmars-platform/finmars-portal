@@ -26,9 +26,6 @@
                 scope.columnRowsContent = [];
                 scope.showSelectMenu = false;
 
-                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-                scope.attributesFromAbove = [];
-
                 scope.useFromAboveFilterTypes = [
                     {
                         key: 'contains',
@@ -43,10 +40,6 @@
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
                         return {id: cRowsContent, name: cRowsContent}
                     });
-
-                    if (!scope.isRootEntityViewer) {
-                        scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
-                    }
 
                     scope.$apply();
 
@@ -85,10 +78,6 @@
                         filterClasses += 'ev-backend-filter ';
                     }
 
-                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
-                        filterClasses += 'link-to-above-filter';
-                    }
-
                     return filterClasses;
                 };
 
@@ -96,41 +85,31 @@
 
                     var filterRegime = "";
 
-                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
-
-                        filterRegime = "Linked to Selection";
-
-                    } else {
-
-                        switch (scope.filter.options.filter_type) {
-                            case "contains":
-                                filterRegime = "Contains";
-                                break;
-                            case "does_not_contains":
-                                filterRegime = "Does not contains";
-                                break;
-                            case "selector":
-                                filterRegime = "Selector";
-                                break;
-                            case "multiselector":
-                                filterRegime = "Multiple selector";
-                                break;
-                            case "empty":
-                                filterRegime = "Show empty cells";
-                                break;
-                        }
-                    };
+                    switch (scope.filter.options.filter_type) {
+                        case "contains":
+                            filterRegime = "Contains";
+                            break;
+                        case "does_not_contains":
+                            filterRegime = "Does not contains";
+                            break;
+                        case "selector":
+                            filterRegime = "Selector";
+                            break;
+                        case "multiselector":
+                            filterRegime = "Multiple selector";
+                            break;
+                        case "empty":
+                            filterRegime = "Show empty cells";
+                            break;
+                    }
 
                     return filterRegime;
 
                 };
 
                 scope.showFRCheckMark = function (filterRegime) {
-                    if (scope.filter.options.filter_type === filterRegime &&
-                        !scope.filter.options.use_from_above) {
-
+                    if (scope.filter.options.filter_type === filterRegime) {
                         return true;
-
                     };
 
                     return false;
@@ -143,7 +122,6 @@
                 };
 
                 scope.changeFilterType = function (filterType) {
-                    delete scope.filter.options.use_from_above;
                     scope.filter.options.filter_type = filterType;
                     if (filterType === 'empty') {
                         scope.filter.options.exclude_empty_cells = false;
@@ -241,63 +219,6 @@
                     });
 
                     scope.evDataService.setFilters(scope.filters);
-
-                };
-
-
-                /*scope.noDataForLinkingTo = true;
-                var columns = scope.evDataService.getColumns();
-
-                for (var c = 0; c < columns.length; c++) {
-                    if (columns[c].key === scope.filter.options.use_from_above) {
-                        scope.noDataForLinkingTo = false;
-                        break;
-                    };
-                };*/
-
-                scope.initSplitPanelMode = function () {
-
-                    if (!scope.isRootEntityViewer) {
-
-                        scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
-
-                            var key = scope.filter.options.use_from_above;
-                            /*scope.noDataForLinkingTo = true;
-                            var columns = scope.evDataService.getColumns();
-                            var key = scope.filter.options.use_from_above;
-
-                            for (var c = 0; c < columns.length; c++) {
-                                if (columns[c].key === key) {
-                                    scope.noDataForLinkingTo = false;
-                                    break;
-                                };
-                            };*/
-
-                            if (scope.filter.options.hasOwnProperty('use_from_above') && !scope.noDataForLinkingTo) {
-
-                                var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
-
-                                scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
-
-                                var value = activeObjectFromAbove[key];
-
-                                scope.filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
-
-                                scope.updateFilters();
-
-                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                            };
-
-                        });
-
-                    } else {
-
-                        if (scope.filter.options.hasOwnProperty('use_from_above')) {
-                            scope.noDataForLinkingTo = true;
-                        };
-
-                    };
 
                 };
 

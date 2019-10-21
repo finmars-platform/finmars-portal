@@ -22,7 +22,8 @@
             scope: {
                 attributeDataService: '=',
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                contentWrapElement: '='
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
             link: function (scope, elem, attrs) {
