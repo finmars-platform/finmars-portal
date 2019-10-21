@@ -15,7 +15,7 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService) {
+    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
         var vm = this;
         vm.readyStatus = {content: false};
@@ -482,15 +482,14 @@
                 this.dragula.on('drop', function (elem, target) {
                     console.log('here?', target, elem); //TODO fallback to ids instead of name/key
                     $(target).removeClass('active');
-                    var name = $(elem).html();
                     var i;
 
                     var identifier;
                     identifier = $(elem).attr('data-key-identifier');
 
                     exist = false;
-                    if (target === document.querySelector('#columnsbag') ||
-                        target === document.querySelector('.g-columns-holder')) {
+                    if (target === contentWrapElement.querySelector('#columnsbag') ||
+                        target === contentWrapElement.querySelector('.g-columns-holder')) {
                         for (i = 0; i < columns.length; i = i + 1) {
 
                             if (columns[i].key === identifier) {
@@ -498,15 +497,11 @@
                                 columnExist = true;
                             }
 
-                            /*if (columns[i].name === identifier) {
-                                exist = true;
-                                columnExist = true;
-                            }*/
                         }
                     }
-                    /*if (target === document.querySelector('#groupsbag') ||
-                        target === document.querySelector('.g-groups-holder')) {*/
-                    if (target === document.querySelector('#groupsbag')) {
+                    /*if (target === contentWrapElement.querySelector('#groupsbag') ||
+                        target === contentWrapElement.querySelector('.g-groups-holder')) {*/
+                    if (target === contentWrapElement.querySelector('#groupsbag')) {
                         for (i = 0; i < groups.length; i = i + 1) {
                             if (groups[i].key === identifier) {
                                 exist = true;
@@ -515,8 +510,8 @@
 
                         }
                     }
-                    if (target === document.querySelector('#filtersbag .drop-new-filter') ||
-                        target === document.querySelector('.g-filters-holder')) {
+                    if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
+                        target === contentWrapElement.querySelector('.g-filters-holder')) {
                         for (i = 0; i < filters.length; i = i + 1) {
                             if (filters[i].key === identifier) {
                                 exist = true;
@@ -532,14 +527,14 @@
                         var index = nodes.indexOf(elem);
 
                         // .g-columns-holder
-                        if (target === document.querySelector('.g-columns-holder') ||
-                            target === document.querySelector('#columnsbag')) {
+                        if (target === contentWrapElement.querySelector('.g-columns-holder') ||
+                            target === contentWrapElement.querySelector('#columnsbag')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
 
                                 if (attrsList[a].key === identifier) {
 
-                                    if (target === document.querySelector('#columnsbag')) {
+                                    if (target === contentWrapElement.querySelector('#columnsbag')) {
                                         columns.push(attrsList[a]);
                                     } else {
                                         columns.splice(index, 0, attrsList[a]);
@@ -556,7 +551,7 @@
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         };
 
-                        if (target === document.querySelector('#groupsbag')) {
+                        if (target === contentWrapElement.querySelector('#groupsbag')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
                                 if (attrsList[a].key === identifier) {
@@ -572,13 +567,13 @@
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
 
-                        if (target === document.querySelector('#filtersbag .drop-new-filter') ||
-                            target === document.querySelector('.g-filters-holder')) {
+                        if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
+                            target === contentWrapElement.querySelector('.g-filters-holder')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
 
                                 if (attrsList[a].key === identifier) {
-                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                                    if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter')) {
                                         filters.push(attrsList[a]);
                                     } else {
                                         filters.splice(index, 0, attrsList[a]);
@@ -641,12 +636,12 @@
             dragula: function () {
 
                 var items = [
-                    document.querySelector('.g-columns-holder'),
-                    document.querySelector('#columnsbag'),
+                    contentWrapElement.querySelector('.g-columns-holder'),
+                    contentWrapElement.querySelector('#columnsbag'),
                     // document.querySelector('.g-groups-holder'),
-                    document.querySelector('#groupsbag'),
-                    document.querySelector('.g-filters-holder'),
-                    document.querySelector('#filtersbag .drop-new-filter')
+                    contentWrapElement.querySelector('#groupsbag'),
+                    contentWrapElement.querySelector('.g-filters-holder'),
+                    contentWrapElement.querySelector('#filtersbag .drop-new-filter')
                 ];
 
                 var i;

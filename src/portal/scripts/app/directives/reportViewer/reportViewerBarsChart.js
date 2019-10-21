@@ -530,7 +530,7 @@
                         .on("click", function (d) {
                             changeActiveObject(d.name);
                         })
-                        .on("mouseover", function () {
+                        .on("mouseover", function (d) {
 
                             d3.select(this)
                                 .attr("fill", "#f4af8b");
@@ -538,13 +538,13 @@
                             var barTooltipElem = document.createElement("div");
                             barTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
                             document.body.appendChild(barTooltipElem);
+                            barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + d.numericValue + ";";
 
                         })
-                        .on("mousemove", function (d) {
+                        .on("mousemove", function () {
 
                             var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
 
-                            barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + d.numericValue + ";";
                             var tElemWidth = barTooltipElem.offsetWidth;
                             barTooltipElem.style.top = (d3.event.pageY - 10) + "px";
                             barTooltipElem.style.left = (d3.event.pageX - tElemWidth - 5) + "px"; // subtractions applied to place tooltip to the left of cursor

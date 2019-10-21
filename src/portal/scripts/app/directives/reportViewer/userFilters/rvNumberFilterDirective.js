@@ -15,7 +15,8 @@
             scope: {
                 filter: '=',
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                attributeDataService: '='
             },
             templateUrl: 'views/directives/reportViewer/userFilters/rv-number-filter-view.html',
             link: function (scope, elem, attrs) {
@@ -31,7 +32,7 @@
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.useFromAbove = scope.evDataService.getUseFromAbove();
-                scope.attributesFromAbove = [];
+                //scope.attributesFromAbove = [];
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
@@ -41,9 +42,9 @@
                         return cRowsContent;
                     });
 
-                    if(!scope.isRootEntityViewer) {
+                    /*if(!scope.isRootEntityViewer) {
                         scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
-                    }
+                    }*/
 
                     scope.$apply();
 
@@ -67,6 +68,14 @@
 
                 var filterEnabled = scope.filter.options.enabled;
 
+                var isUseFromAboveActive = function () {
+                    if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length > 0) {
+                        return true;
+                    };
+
+                    return false;
+                };
+
                 scope.getClassesForFilter = function () {
                     var filterClasses = '';
 
@@ -74,7 +83,7 @@
                         filterClasses = 'f-disabled ';
                     }
 
-                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                    if (isUseFromAboveActive()) {
                         filterClasses += 'link-to-above-filter';
                     }
 
@@ -85,7 +94,7 @@
 
                     var filterRegime = "";
 
-                    if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                    if (isUseFromAboveActive()) {
 
                         filterRegime = "Linked to Selection";
 
@@ -151,7 +160,7 @@
 
                 scope.changeFilterType = function (filterType) {
 
-                    delete scope.filter.options.use_from_above;
+                    scope.filter.options.use_from_above = {};
                     scope.filter.options.filter_type = filterType;
 
                     if (filterType === 'from_to') {
@@ -171,9 +180,15 @@
                     scope.filterSettingsChange();
                 };
 
+                scope.createUseFromAboveDir = function () {
+                    if (!scope.filter.options.use_from_above) {
+                        scope.filter.options.use_from_above = {};
+                    }
+                };
+
                 scope.showFRCheckMark = function (filterRegime) {
                     if (scope.filter.options.filter_type === filterRegime &&
-                        !scope.filter.options.use_from_above) {
+                        !isUseFromAboveActive()) {
 
                         return true;
 
@@ -256,7 +271,13 @@
 
                         scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
+                            // TODO leave only key = scope.filter.options.use_from_above.key
                             var key = scope.filter.options.use_from_above;
+                            if (typeof scope.filter.options.use_from_above === 'object') {
+                                key = scope.filter.options.use_from_above.key;
+                            }
+                            // < leave only key = scope.filter.options.use_from_above.key >
+
                             /*scope.noDataForLinkingTo = true;
                             var columns = scope.evDataService.getColumns();
                             var key = scope.filter.options.use_from_above;
@@ -268,11 +289,11 @@
                                 };
                             };*/
 
-                            if (scope.filter.options.hasOwnProperty('use_from_above') && !scope.noDataForLinkingTo) {
+                            if (isUseFromAboveActive() && !scope.noDataForLinkingTo) {
 
                                 var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
 
-                                scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+                                //scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
 
                                 var value = activeObjectFromAbove[key];
 
@@ -288,7 +309,7 @@
 
                     } else {
 
-                        if (scope.filter.options.hasOwnProperty('use_from_above')) {
+                        if (isUseFromAboveActive()) {
                             scope.noDataForLinkingTo = true;
                         };
 

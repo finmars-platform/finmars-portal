@@ -12,8 +12,8 @@
 
         vm.filterLinks = [];
 
-        vm.barsNamesAttrSelectorTitle;
-        vm.barsNumbersAttrSelectorTitle;
+        vm.barsNamesAttrSelectorTitle = '';
+        vm.barsNumbersAttrSelectorTitle = '';
 
         vm.multiselectModalName = 'Fields multiselector';
 
@@ -134,6 +134,71 @@
                 vm.barsNamesAttrSelectorTitle = 'Bars Names (Ordinate)';
                 vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Abscissa)';
             };
+
+        };
+
+        vm.setNumberFormatPreset = function (preset) {
+
+            switch (preset) {
+
+                case 'price':
+                    vm.item.settings.number_format.zero_format_id = 1;
+                    vm.item.settings.number_format.negative_color_format_id = 0;
+                    vm.item.settings.number_format.negative_format_id = 0;
+                    break;
+                case 'market_value':
+                    vm.item.settings.number_format.zero_format_id = 1;
+                    vm.item.settings.number_format.negative_color_format_id = 1;
+                    vm.item.settings.number_format.negative_format_id = 1;
+                    vm.item.settings.number_format.thousands_separator_format_id = 2;
+                    break;
+                case 'amount':
+                    vm.item.settings.number_format.zero_format_id = 1;
+                    vm.item.settings.number_format.negative_color_format_id = 1;
+                    vm.item.settings.number_format.negative_format_id = 0;
+                    vm.item.settings.number_format.thousands_separator_format_id = 2;
+                    vm.item.settings.number_format.round_format_id = 3;
+                    vm.item.settings.number_format.percentage_format_id = 0;
+                    break;
+                case 'exposure':
+                    vm.item.settings.number_format.zero_format_id = 1;
+                    vm.item.settings.number_format.negative_color_format_id = 1;
+                    vm.item.settings.number_format.negative_format_id = 1;
+                    vm.item.settings.number_format.round_format_id = 0;
+                    vm.item.settings.number_format.percentage_format_id = 2;
+                    break;
+                case 'return':
+                    vm.item.settings.number_format.zero_format_id = 1;
+                    vm.item.settings.number_format.negative_color_format_id = 1;
+                    vm.item.settings.number_format.negative_format_id = 0;
+                    vm.item.settings.number_format.percentage_format_id = 3;
+                    break;
+            }
+
+        };
+
+        vm.openNumberFormatSettings = function($event){
+
+            $mdDialog.show({
+                controller: 'NumberFormatSettingsDialogController as vm',
+                templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    data: {
+                        settings: vm.item.settings.number_format
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.item.settings.number_format = res.data.settings;
+
+                }
+
+            });
 
         };
 

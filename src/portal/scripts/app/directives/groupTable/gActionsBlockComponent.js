@@ -32,7 +32,8 @@
             scope: {
                 attributeDataService: '=',
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                contentWrapElement: '='
             },
             templateUrl: 'views/directives/groupTable/actions-block-view.html',
             link: function (scope, elem, attrs) {
@@ -90,7 +91,9 @@
                             locals: {
                                 attributeDataService: scope.attributeDataService,
                                 entityViewerDataService: scope.evDataService,
-                                entityViewerEventService: scope.evEventService
+                                entityViewerEventService: scope.evEventService,
+                                contentWrapElement: scope.contentWrapElement
+
                             }
                         });
 
@@ -1097,8 +1100,7 @@
                         uiService.updateListLayout(listLayout.id, listLayout).then(function () {
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
                         });
-                    }
-                    ;
+                    };
 
                     $mdDialog.show({
                         controller: 'SaveLayoutDialogController as vm',

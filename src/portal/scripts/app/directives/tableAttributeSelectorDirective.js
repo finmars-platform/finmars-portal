@@ -34,7 +34,9 @@
 
                 };
 
-                getInputText();
+                scope.$watch('item', function () {
+                    getInputText();
+                });
 
                 $(elem).click(function (event) {
 

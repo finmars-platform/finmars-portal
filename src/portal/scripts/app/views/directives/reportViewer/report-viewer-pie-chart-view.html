@@ -1,8 +1,14 @@
 <div class="report-viewer-charts">
 
+    <div layout="row" class="m-b-16">
+        <h3 data-ng-bind="rvChartsSettings.component_name" class="dashboard-chart-name-h"></h3>
+    </div>
+
     <div data-ng-show="readyStatuses.chartIsReady"
          ng-class="getPieChartGlobalClasses()"
-         layout="{{pieChartLayout}}">
+         layout="{{pieChartLayout}}"
+         layout-align="{{pieChartLayoutAlign}}">
+
         <div class="report-viewer-chart-holder"></div>
 
         <div ng-if="readyStatuses.legendsAreReady" class="pie-chart-legends-holder">
@@ -11,15 +17,15 @@
                     <div class="pie-chart-legend-color" style="{{getLegendBackgroundColor(legend.name, true)}}"></div>
                     <span class="pie-chart-legend-value">- <span class="text-weight-bold">Name:</span> {{legend.name}}; <span class="text-weight-bold">Percentage:</span> {{legend.percentage}}%</span>
                     <md-tooltip class="tooltip_1"
-                                md-direction="top"
-                                ng-bind="legend.numericValue"></md-tooltip>
+                                md-direction="top">{{formatValue(legend.numericValue)}}</md-tooltip>
                 </li>
 
                 <li ng-repeat="legend in chartDataWithNegNums" class="pie-chart-legend">
                     <div class="pie-chart-legend-color" style="{{getLegendBackgroundColor(legend.name, false)}}"></div>
                     <span class="pie-chart-legend-value">- <span class="text-weight-bold">Name:</span> {{legend.name}}; <span class="text-weight-bold">Percentage:</span> -{{legend.percentage}}%</span>
                     <md-tooltip class="tooltip_1"
-                                md-direction="top">-{{legend.numericValue}}</md-tooltip>
+                                ng-class="{'red-text': number_format.negative_color_format_id === 1}"
+                                md-direction="top">{{formatValue(legend.numericValue, true)}}</md-tooltip>
                 </li>
             </ul>
         </div>
