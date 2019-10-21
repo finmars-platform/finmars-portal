@@ -16,7 +16,11 @@
 
             <two-fields-options all-options="vm.groupsList" selected-options="vm.assignedGroupsList"
                                 name-property="name"></two-fields-options>
-            <md-checkbox data-ng-model="vm.member.is_admin" aria-label="member permission">This member is Admin
+
+
+
+
+            <md-checkbox data-ng-model="vm.member.is_admin" aria-label="member permission" data-ng-if="vm.isOwner">This member is Admin
             </md-checkbox>
 
         </div>

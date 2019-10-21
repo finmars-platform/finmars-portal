@@ -5,6 +5,8 @@
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
 
+    var userService = require('../../services/usersService');
+
     module.exports = function ($scope, $mdDialog, memberId) {
 
         var vm = this;
@@ -14,41 +16,54 @@
 
         vm.member = null;
 
+        vm.master_user = null;
+
         vm.readyStatus = {content: false};
+
+        vm.isOwner = false;
 
         vm.getData = function () {
 
-            membersAndGroupsService.getMemberByKey(memberId).then(function (data) {
+            userService.getCurrentMasterUser().then(function (data) {
 
-                vm.member = data;
+                vm.master_user = data;
 
-                membersAndGroupsService.getGroupsList().then(function (data) {
+                vm.isOwner = vm.master_user.is_owner;
 
-                    vm.groupsList = data.results;
+                membersAndGroupsService.getMemberByKey(memberId).then(function (data) {
 
-                    var assignedGroupsIds = vm.member.groups;
+                    vm.member = data;
 
-                    if (assignedGroupsIds && assignedGroupsIds.length > 0) {
+                    membersAndGroupsService.getGroupsList().then(function (data) {
 
-                        assignedGroupsIds.map(function (assignedId) {
-                            vm.groupsList.map(function (group, groupIndex) {
-                                var groupId = group['id'];
-                                if (groupId === assignedId) {
-                                    vm.groupsList.splice(groupIndex, 1);
-                                    vm.assignedGroupsList.push(group);
-                                }
+                        vm.groupsList = data.results;
+
+                        var assignedGroupsIds = vm.member.groups;
+
+                        if (assignedGroupsIds && assignedGroupsIds.length > 0) {
+
+                            assignedGroupsIds.map(function (assignedId) {
+                                vm.groupsList.map(function (group, groupIndex) {
+                                    var groupId = group['id'];
+                                    if (groupId === assignedId) {
+                                        vm.groupsList.splice(groupIndex, 1);
+                                        vm.assignedGroupsList.push(group);
+                                    }
+                                });
                             });
-                        });
 
-                    }
+                        }
 
-                    vm.readyStatus.content = true;
+                        vm.readyStatus.content = true;
 
-                    $scope.$apply();
+                        $scope.$apply();
+
+                    });
 
                 });
 
-            });
+
+            })
 
         };
 
