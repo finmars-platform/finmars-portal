@@ -7,10 +7,9 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (type) {
-        var fetchUrl = '';
-        type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-        return xhrService.fetch(baseUrl + fetchUrl,
+    var getMembersList = function () {
+
+        return xhrService.fetch(baseUrl + 'users/member/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -21,10 +20,9 @@
             })
     };
 
-    var getMemberOrGroupByKey = function (type, id) {
-        var fetchUrl = '';
-        type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-        return xhrService.fetch(baseUrl + fetchUrl + id + '/',
+    var getMemberByKey = function (id) {
+
+        return xhrService.fetch(baseUrl + 'users/member/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -33,29 +31,12 @@
                     'Content-type': 'application/json'
                 }
             });
-    }
-
-    var create = function (type, data) {
-        var fetchUrl = '';
-        type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-        console.log('url is', baseUrl + fetchUrl);
-        return xhrService.fetch(baseUrl + fetchUrl,
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
     };
 
-    var update = function (type, id, data) {
-        var fetchUrl = '';
-        type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-        return xhrService.fetch(baseUrl + fetchUrl + id + '/',
+
+    var updateMember = function (id, data) {
+
+        return xhrService.fetch(baseUrl + 'users/member/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -68,10 +49,8 @@
             })
     };
 
-    var deleteByKey = function (type, id) {
-        var fetchUrl = '';
-        type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-        return xhrService.fetch(baseUrl + fetchUrl + id + '/',
+    var deleteMemberByKey = function (id) {
+        return xhrService.fetch(baseUrl + 'users/member/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -84,7 +63,75 @@
             return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
-            //return data.json();
+        })
+    };
+
+    var getGroupsList = function () {
+        return xhrService.fetch(baseUrl + 'users/group/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getGroupByKey = function (id) {
+        return xhrService.fetch(baseUrl + 'users/group/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            });
+    };
+
+    var createGroup = function (data) {
+        return xhrService.fetch(baseUrl + 'users/group/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateGroup = function (id, data) {
+        return xhrService.fetch(baseUrl + 'users/group/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteGroupByKey = function (id) {
+        return xhrService.fetch(baseUrl + 'users/group/' + id + '/',
+            {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                resolve({status: 'deleted'});
+            });
         })
     };
 
@@ -104,11 +151,20 @@
     };
 
     module.exports = {
-        getList: getList,
-        getMemberOrGroupByKey: getMemberOrGroupByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
+
+        getMembersList: getMembersList,
+        getMemberByKey: getMemberByKey,
+        updateMember: updateMember,
+        deleteMemberByKey: deleteMemberByKey,
+
+        getGroupsList: getGroupsList,
+        getGroupByKey: getGroupByKey,
+        createGroup: createGroup,
+        updateGroup: updateGroup,
+        deleteGroupByKey: deleteGroupByKey,
+
         inviteUser: inviteUser
+
     }
+
 }());

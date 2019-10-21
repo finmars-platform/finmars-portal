@@ -1,56 +1,89 @@
-(function(){
+(function () {
 
-	'use strict';
+    'use strict';
 
-	var logService = require('../../../../../core/services/logService');
-	var membersAndGroupsService = require('../../services/membersAndGroupsService');
-	
-	module.exports = function($scope, $mdDialog, groupId) {
+    var membersAndGroupsService = require('../../services/membersAndGroupsService');
 
-		var vm = this;
+    module.exports = function ($scope, $mdDialog, groupId) {
 
-		vm.membersList = [];
-		vm.assignedMembersList = [];
-		vm.groups = [];
+        var vm = this;
 
-		membersAndGroupsService.getList('members').then(function (data) {
-			vm.membersList = data.results;
+        vm.membersList = [];
+        vm.assignedMembersList = [];
 
-			membersAndGroupsService.getMemberOrGroupByKey('groups', groupId).then(function (data) {
-				vm.groups = data;
-				// console.log('groups is', data);
-				var assignedMembersIds = vm.groups.members;
-				// separate assinged members from available
-				if (assignedMembersIds && assignedMembersIds.length > 0) {
-					assignedMembersIds.map(function(assignedId) {
-						// allMembersList.map(function(member, memberIndex) {
-						vm.membersList.map(function(member, memberIndex) {
-							var memberId = member['id'];
-							if (memberId === assignedId) {
-								vm.membersList.splice(memberIndex, 1);
-								vm.assignedMembersList.push(member);
-							}
-						});
-					});
-				}
-				$scope.$apply();
-			});
+        vm.group = null;
 
-		});
+        vm.readyStatus = {content: false};
 
-		vm.cancel = function () {
-			$mdDialog.hide();
-		};
+        vm.getData = function () {
 
-		vm.agree = function () {
-			var assignedMembersIds = [];
-			if (vm.assignedMembersList && vm.assignedMembersList.length > 0) {
-				vm.assignedMembersList.map(function(group) {
-					assignedMembersIds.push(group['id']);
-				});
-			}
-			$mdDialog.hide({status: 'agree', data: {members: assignedMembersIds, name: vm.groups.name}});
-		};
-	}
+            membersAndGroupsService.getGroupByKey(groupId).then(function (data) {
+
+                vm.group = data;
+
+                membersAndGroupsService.getMembersList().then(function (data) {
+
+                    vm.membersList = data.results;
+
+                    var assignedMembersIds = vm.group.members;
+
+                    if (assignedMembersIds && assignedMembersIds.length > 0) {
+
+                        assignedMembersIds.map(function (assignedId) {
+
+                            vm.membersList.map(function (member, memberIndex) {
+
+                                var memberId = member['id'];
+
+                                if (memberId === assignedId) {
+
+                                    vm.membersList.splice(memberIndex, 1);
+                                    vm.assignedMembersList.push(member);
+
+                                }
+
+                            });
+                        });
+                    }
+
+                    console.log('vm.membersList', vm.membersList);
+                    console.log('vm.assignedMembersList', vm.assignedMembersList);
+
+                    vm.readyStatus.content = true;
+
+                    $scope.$apply();
+                });
+
+            });
+
+        };
+
+        vm.cancel = function () {
+            $mdDialog.hide();
+        };
+
+        vm.agree = function () {
+
+            var assignedMembersIds = [];
+            if (vm.assignedMembersList && vm.assignedMembersList.length > 0) {
+                vm.assignedMembersList.map(function (group) {
+                    assignedMembersIds.push(group['id']);
+                });
+            }
+
+            membersAndGroupsService.updateGroup(vm.group.id, vm.group).then(function () {
+                $mdDialog.hide({status: 'agree'});
+            });
+
+        };
+
+        vm.init = function () {
+
+            vm.getData();
+
+        };
+
+        vm.init();
+    }
 
 }());
