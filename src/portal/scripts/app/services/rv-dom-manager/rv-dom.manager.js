@@ -616,9 +616,13 @@
                 viewportTop = viewportTop + interfaceLayout.columnArea.height
             }
 
+            if (components.groupingArea) {
+                viewportTop = viewportTop + interfaceLayout.groupingArea.height;
+            }
+
             console.log('rootviewer split', viewportTop);
 
-            viewportHeight = Math.floor(rootEntityContentWrapElemHeight - viewportTop);
+            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
         }
 
@@ -633,7 +637,7 @@
         var paddingTop = calculatePaddingTop(evDataService);
         var totalHeight = calculateTotalHeight(evDataService);
 
-        // rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
+        //rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
         rvScrollManager.setContentElemPaddingTop(paddingTop);
 
 

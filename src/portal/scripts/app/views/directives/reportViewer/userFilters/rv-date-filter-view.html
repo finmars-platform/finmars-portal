@@ -171,10 +171,12 @@
                                     Date tree
                                 </md-button>
 
-                                <md-menu-item ng-if="!isRootEntityViewer">
-                                    <use-from-above-button item="filter.options.use_from_above"
-                                                           data="{attributes: attributesFromAbove, valueType: filter.value_type}"
+                                <md-menu-item ng-click="createUseFromAboveDir()">
+                                    <use-from-above-button item="filter.options.use_from_above.key"
+                                                           attributes-entity-type="filter.options.use_from_above.options.entityType"
+                                                           data="{value_type: filter.value_type}"
                                                            filter-type="filter.options.filter_type"
+                                                           attribute-data-service="attributeDataService"
                                                            update-filter-fn="filterSettingsChange()"
                                                            class="rv-filter-link-to-above-btn"></use-from-above-button>
                                 </md-menu-item>

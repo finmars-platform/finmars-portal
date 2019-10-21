@@ -10,14 +10,28 @@
 
     <md-dialog-content class="p-16">
 
-        <div class="p-20" layout="row">
+        <div layout="row" class="m-b-16">
+            <md-input-container style="width: 400px">
+                <label for="">Report Type</label>
+                <md-select data-ng-model="vm.attrsEntityType"
+                           data-ng-change="vm.onAttrsTypeChange()">
+                    <md-option value="balance-report">Balance Report</md-option>
+                    <md-option value="pl-report">P&L Report</md-option>
+                    <md-option value="transaction-report">Transaction Report</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
 
-            <md-input-container class="md-block" style="width: 400px;">
+        <div layout="row">
+
+            <!--<md-input-container class="md-block" style="width: 400px;">
                 <label>Select field</label>
                 <div>
-                    <md-select ng-model="vm.item"
+                    <md-select data-ng-model="vm.item"
                                md-container-class="common-select-container"
-                               md-on-close="searchTerm = ''">
+                               md-on-close="searchTerm = ''"
+                               data-ng-disabled="!vm.attrsEntityType"
+                               class="m-0">
                         <md-select-header>
                             <input data-ng-model="attrsSearchTerm"
                                    type="search"
@@ -28,7 +42,7 @@
 
                         <div class="select-options-holder">
 
-                            <md-option data-ng-repeat="item in vm.data.attributes | filter:{name: attrsSearchTerm}"
+                            <md-option data-ng-repeat="item in vm.attributes | filter:{name: attrsSearchTerm}"
                                        ng-value="item.key">
                                 {{item.name}} ({{item.key}})
                             </md-option>
@@ -37,16 +51,23 @@
 
                     </md-select>
                 </div>
-            </md-input-container>
+            </md-input-container>-->
+            <table-attribute-selector title="Select field"
+                                      dialog-title="Select field"
+                                      available-attrs="vm.attributes"
+                                      item="vm.item"
+                                      class="dashboard-constructor-field1"
+                                      style="margin: 0 10px; width: 400px;"></table-attribute-selector>
 
             <md-input-container class="md-block" style="width: 200px">
 
                 <label>Filter type</label>
                 <div>
-                    <md-select ng-model="vm.filterType"
+                    <md-select data-ng-model="vm.filterType"
                                md-container-class="common-select-container"
                                md-on-close="searchTerm = ''"
-                               ng-disabled="vm.filterTypes.length < 2">
+                               data-ng-disabled="vm.filterTypes.length < 2"
+                               class="m-0">
                         <md-select-header>
                             <input data-ng-model="filterTypeSearchTerm"
                                    type="search"

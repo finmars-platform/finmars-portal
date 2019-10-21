@@ -8,15 +8,17 @@
             templateUrl: 'controls/use-from-above-button/use-from-above-button.html',
             scope: {
                 item: '=',
-                data: '=',
+                data: '<',
+                attributesEntityType: '=',
                 filterType: '=',
+                attributeDataService: '=',
                 updateFilterFn: '&'
             },
             link: function (scope, elem, attr) {
 
                 scope.openUseFromAboveDialog = function ($event) {
 
-                    console.log('control use-from-above', scope.item, scope.data, scope.filterType);
+                    //console.log('control use-from-above', scope.item, scope.data, scope.filterType, scope.attributesEntityType);
 
                     $mdDialog.show({
                         controller: 'UseFromAboveDialogController as vm',
@@ -31,8 +33,10 @@
                             data: {
                                 item: scope.item,
                                 data: scope.data,
+                                attrsEntityType: scope.attributesEntityType,
                                 filterType: scope.filterType
-                            }
+                            },
+                            attributeDataService: scope.attributeDataService
                         }
                     }).then(function (res) {
 
@@ -43,6 +47,7 @@
 
                                 scope.item = res.data.item;
                                 scope.filterType = res.data.filterType;
+                                scope.attributesEntityType = res.data.attrsEntityType;
                                 scope.updateFilterFn();
 
                             }

@@ -163,7 +163,7 @@
                                 componentsOutputs[compKey].changedLast = false;
                             });
                             vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
-                        };
+                        }
 
                         var compOutputData = {
                             changedLast: true,
@@ -259,7 +259,7 @@
                 console.log('filters', filters);
                 console.log('componentOutput', componentOutput);
 
-                if (componentOutput) {
+                if (componentOutput && componentOutput.data) {
 
                     var linkedFilter = filters.find(function (item) {
                         return item.type === 'filter_link' && item.component_id === filter_link.component_id
@@ -267,7 +267,7 @@
 
                     if (linkedFilter) {
 
-                        linkedFilter.options.filter_values = [componentOutput.value];
+                        linkedFilter.options.filter_values = [componentOutput.data.value];
 
                         filters = filters.map(function (item) {
 
@@ -282,14 +282,14 @@
 
                         if (filter_link.value_type === 100) {
 
-                            console.log('componentOutput.value', componentOutput.value)
+                            console.log('componentOutput.value', componentOutput.data.value)
 
                             var values;
 
-                            if (Array.isArray(componentOutput.value)) {
-                                values = componentOutput.value
+                            if (Array.isArray(componentOutput.data.value)) {
+                                values = componentOutput.data.value
                             } else {
-                                values = [componentOutput.value];
+                                values = [componentOutput.data.value];
                             }
 
                             console.log('values', values);
@@ -320,7 +320,7 @@
                                     enabled: true,
                                     exclude_empty_cells: true,
                                     filter_type: 'contains',
-                                    filter_values: [componentOutput.value.toString()]
+                                    filter_values: [componentOutput.data.value.toString()]
                                 }
                             };
 
@@ -430,24 +430,24 @@
 
                                     } else if (vm.linkedActiveObjects[lastActiveComponentId] !== compOutputData) {
                                         lastActiveCompChanged = true;
-                                    };
+                                    }
 
-                                };
+                                }
 
                                 if (compOutputData !== undefined && compOutputData !== null) {
                                     vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
                                 } else {
-                                    vm.linkedActiveObjects[lastActiveComponentId] = undefined;
-                                };
+                                    vm.linkedActiveObjects[lastActiveComponentId] = null;
+                                }
 
                                 break;
 
-                            };
-                        };
+                            }
+                        }
 
                         if (lastActiveCompChanged) {
                             vm.handleDashboardActiveObject(lastActiveComponentId);
-                        };
+                        }
 
                     } else {
 
@@ -654,10 +654,11 @@
                         subtotal_formula_id: vm.componentType.data.settings.subtotal_formula_id,
                         styles: vm.componentType.data.settings.styles
                     };
-                };
+                }
 
                 if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
+                        component_name: vm.componentType.data.name,
                         bar_name_key: vm.componentType.data.settings.bar_name_key,
                         bar_number_key: vm.componentType.data.settings.bar_number_key,
                         bars_direction: vm.componentType.data.settings.bars_direction,
@@ -680,14 +681,16 @@
                 if (vm.componentType.data.type === 'report_viewer_pie_chart') {
                     vm.rvChartsSettings = {
                         //fieldsKeys: vm.componentType.data.settings.fieldsKeys
+                        component_name: vm.componentType.data.name,
                         group_attr: vm.componentType.data.settings.group_attr,
                         number_attr: vm.componentType.data.settings.number_attr,
                         group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula,
                         show_legends: vm.componentType.data.settings.show_legends,
                         legends_position: vm.componentType.data.settings.legends_position,
-                        legends_columns_number: vm.componentType.data.settings.legends_columns_number
+                        legends_columns_number: vm.componentType.data.settings.legends_columns_number,
+                        number_format: vm.componentType.data.settings.number_format
                     };
-                };
+                }
 
                 uiService.getListLayoutByKey(layoutId).then(function (data) {
 

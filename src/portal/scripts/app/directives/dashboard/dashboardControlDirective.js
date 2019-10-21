@@ -73,10 +73,29 @@
                     console.log('valueChanged', scope.item.data.store);
                     console.log('valueChanged.value', scope.item.data.store.value);
 
-                    scope.dashboardDataService.setComponentOutput(scope.item.data.id, {data: scope.item.data.store});
+                    var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputs();
+                    var compsKeys = Object.keys(componentsOutputs);
+
+                    if (compsKeys.length > 0) {
+                        compsKeys.forEach(function (compKey) {
+                            componentsOutputs[compKey].changedLast = false;
+                        });
+                        scope.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
+                    }
+
+                    var changedData = {
+                        changedLast: true,
+                        data: null
+                    };
+
+                    if (scope.item.data.store) {
+                        changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
+                    }
+
+                    scope.dashboardDataService.setComponentOutput(scope.item.data.id, changedData);
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
 
-                    if(scope.item.data.settings.auto_refresh) {
+                    if (scope.item.data.settings.auto_refresh) {
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
                     }
 
