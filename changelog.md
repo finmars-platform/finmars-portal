@@ -1,5 +1,8 @@
 # Changelog
 
+## 21.10.2019
+- Permissions Update
+
 ## 01.10.2019
 - Delete Methods
 

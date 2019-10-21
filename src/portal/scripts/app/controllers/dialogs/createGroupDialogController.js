@@ -1,19 +1,66 @@
-(function() {
+(function () {
 
-	'use strict';
+    'use strict';
 
-	var logService = require('../../../../../core/services/logService');
+    var membersAndGroupsService = require('../../services/membersAndGroupsService');
 
-	module.exports = function ($scope, $mdDialog) {
-		var vm = this;
+    module.exports = function ($scope, $mdDialog) {
 
+        var vm = this;
 
-		vm.agree = function () {
-			$mdDialog.hide({status: 'agree', data: {name: vm.groupName, members: []}});
-		}
+        vm.group = {
+            name: '',
+            is_public: false,
+            members: []
+        };
 
-		vm.cancel = function () {
-			$mdDialog.hide();
-		}
-	}
+        vm.membersList = [];
+        vm.assignedMembersList = [];
+
+        vm.processing = false;
+
+        vm.readyStatus = {content: false};
+
+        vm.getData = function(){
+
+            membersAndGroupsService.getMembersList().then(function (data) {
+
+                vm.membersList = data.results;
+
+                console.log('vm.membersList', vm.membersList);
+
+                vm.readyStatus.content = true;
+
+                $scope.$apply();
+            });
+
+        };
+
+        vm.agree = function () {
+
+            vm.processing = true;
+
+            membersAndGroupsService.createGroup(vm.group).then(function () {
+
+                vm.processing = false;
+
+                $mdDialog.hide({status: 'agree'});
+
+            })
+
+        };
+
+        vm.cancel = function () {
+            $mdDialog.hide();
+        };
+
+        vm.init = function () {
+
+            vm.getData();
+
+        };
+
+        vm.init();
+
+    }
 }());

@@ -1,24 +1,61 @@
-<md-dialog class="create-member-group-dialog draggable-dialog" drag-dialog>
-	<md-toolbar>
-		<div class="md-toolbar-tools">
-			<ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
-			<h2>Add new group</h2>
-		</div>
-	</md-toolbar>
-	<md-dialog-content   class="create-member-dialog-content custom-scrollbar">
-		<div layout="column">
-			<md-input-container>
-				<label>Group name</label>
-				<textarea data-ng-model="vm.groupName"></textarea>
-			</md-input-container>
-		</div>
-	</md-dialog-content>
-	<md-dialog-actions layout="row" layout-align="start center">
-		<div flex="70">
-			<md-button class="md-raised" data-ng-click="vm.cancel()">Cancel</md-button>
-		</div>
-		<div flex="30">
-			<md-button class="md-raised md-primary" data-ng-click="vm.agree()">Create</md-button>
-		</div>
-	</md-dialog-actions>
+<md-dialog class="create-member-group-dialog draggable-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2>Add new group</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="create-member-dialog-content p-16 position-relative">
+
+        <div layout="column" data-ng-if="vm.readyStatus.content">
+
+            <md-input-container>
+                <label>Group name</label>
+                <textarea data-ng-model="vm.group.name"></textarea>
+            </md-input-container>
+
+            <div layout="column">
+                <two-fields-options all-options="vm.membersList"
+                                    selected-options="vm.assignedMembersList"
+                                    name-property="username"
+                ></two-fields-options>
+            </div>
+
+            <md-input-container style="height: 58px">
+
+                <md-checkbox data-ng-model="vm.group.is_public" aria-label="member permission">Public Group
+
+                    <md-tooltip class="tooltip_2"
+                                md-direction="bottom">
+                        Will have access to all Ecosystem data
+                    </md-tooltip>
+
+                </md-checkbox>
+
+            </md-input-container>
+
+        </div>
+
+        <div data-ng-if="vm.processing" class="processing-overlay">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-loader m-t-24">
+                <progress-circular diameter="50"></progress-circular>
+            </div>
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.content">
+
+            <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-loader">
+                <progress-circular diameter="50"></progress-circular>
+            </div>
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="space-between center">
+
+        <md-button class="md-raised" data-ng-click="vm.cancel()">Cancel</md-button>
+
+        <md-button class="md-raised" data-ng-click="vm.agree()" data-ng-class="{'disabled-btn': vm.processing}" >Create</md-button>
+
+    </md-dialog-actions>
 </md-dialog>
