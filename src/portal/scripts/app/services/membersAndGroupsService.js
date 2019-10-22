@@ -3,36 +3,59 @@
 
 	var membersAndGroupsRepository = require('../repositories/membersAndGroupsRepository');
 
-	var getList = function (type) {
-		return membersAndGroupsRepository.getList(type);
+	var getMembersList = function () {
+		return membersAndGroupsRepository.getMembersList();
 	};
 
-	var getMemberOrGroupByKey = function (type, id) {
-		return membersAndGroupsRepository.getMemberOrGroupByKey(type, id);
+	var getMemberByKey = function (id) {
+		return membersAndGroupsRepository.getMemberByKey(id);
 	};
 
-	var create = function (type, data) {
-		return membersAndGroupsRepository.create(type, data);
+	var updateMember = function (id, data) {
+		return membersAndGroupsRepository.updateMember(id, data);
 	};
 
-	var update = function (type, id, data) {
-		return membersAndGroupsRepository.update(type, id, data);
+	var deleteMemberByKey = function (id) {
+		return membersAndGroupsRepository.deleteMemberByKey(id);
 	};
 
-	var deleteByKey = function (type, id) {
-		return membersAndGroupsRepository.deleteByKey(type, id);
+	var getGroupsList = function () {
+		return membersAndGroupsRepository.getGroupsList();
 	};
+
+	var getGroupByKey = function (id) {
+		return membersAndGroupsRepository.getGroupByKey(id);
+	};
+
+	var createGroup = function (data) {
+		return membersAndGroupsRepository.createGroup(data);
+	};
+
+	var updateGroup = function (id, data) {
+		return membersAndGroupsRepository.updateGroup(id, data);
+	};
+
+	var deleteGroupByKey = function (id) {
+		return membersAndGroupsRepository.deleteGroupByKey(id);
+	};
+
 
 	var inviteUser = function (username) {
 		return membersAndGroupsRepository.inviteUser(username);
     };
 
 	module.exports = {
-		getList: getList,
-		getMemberOrGroupByKey: getMemberOrGroupByKey,
-		create: create,
-		update: update,
-		deleteByKey: deleteByKey,
+		getMembersList: getMembersList,
+		getMemberByKey: getMemberByKey,
+		updateMember: updateMember,
+		deleteMemberByKey: deleteMemberByKey,
+
+		getGroupsList: getGroupsList,
+		getGroupByKey: getGroupByKey,
+		createGroup: createGroup,
+		updateGroup: updateGroup,
+		deleteGroupByKey: deleteGroupByKey,
+
 		inviteUser: inviteUser
 	}
 }());
