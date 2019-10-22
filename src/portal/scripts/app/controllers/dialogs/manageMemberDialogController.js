@@ -73,15 +73,9 @@
 
         vm.agree = function () {
 
-            var assignedGroupsIds = [];
-
-            if (vm.assignedGroupsList && vm.assignedGroupsList.length > 0) {
-                vm.assignedGroupsList.map(function (group) {
-                    assignedGroupsIds.push(group['id']);
-                });
-            }
-
-            vm.member.groups = assignedGroupsIds;
+            vm.member.groups = vm.assignedGroupsList.map(function (group) {
+                return group.id
+            });
 
             membersAndGroupsService.updateMember(vm.member.id, vm.member).then(function (data) {
 

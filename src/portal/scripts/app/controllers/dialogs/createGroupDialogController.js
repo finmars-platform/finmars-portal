@@ -40,6 +40,10 @@
 
             vm.processing = true;
 
+            vm.group.members = vm.assignedMembersList.map(function (group) {
+                return group.id
+            });
+
             membersAndGroupsService.createGroup(vm.group).then(function () {
 
                 vm.processing = false;

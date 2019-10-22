@@ -64,12 +64,9 @@
 
         vm.agree = function () {
 
-            var assignedMembersIds = [];
-            if (vm.assignedMembersList && vm.assignedMembersList.length > 0) {
-                vm.assignedMembersList.map(function (group) {
-                    assignedMembersIds.push(group['id']);
-                });
-            }
+            vm.group.members = vm.assignedMembersList.map(function (group) {
+                return group.id
+            });
 
             membersAndGroupsService.updateGroup(vm.group.id, vm.group).then(function () {
                 $mdDialog.hide({status: 'agree'});
