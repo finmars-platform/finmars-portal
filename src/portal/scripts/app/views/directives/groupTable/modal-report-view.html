@@ -14,7 +14,8 @@
             </span> -->
         </div>
     </md-toolbar>
-    <md-dialog-content>
+
+    <md-dialog-content class="vc-dnd-scrollable-elem">
         <div ng-if="vm.readyStatus.content">
 
             <div ng-show="vm.cardsDividedIntoTabs">
@@ -771,7 +772,7 @@
                                 </div>
 
                                 <div class="vcSelectedGroups" style="min-height: 35px">
-                                    <div class="g-checkbox-row"
+                                    <div class="g-checkbox-row vcSelectedGroupItem"
                                          data-ng-repeat="item in vm.selectedGroups | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
                                          data-attribute-key="{{item.key}}"
@@ -804,6 +805,11 @@
                                                 {{item.name}}
                                             </md-card>
                                         </div>
+
+                                        <g-group-settings-button data-group="item"
+                                                                 data-ev-data-service="vm.entityViewerDataService"
+                                                                 data-ev-event-service="vm.entityViewerEventService"></g-group-settings-button>
+
                                     </div>
                                 </div>
                             </div>
@@ -814,7 +820,7 @@
                                 </div>
 
                                 <div class="vcSelectedColumns" style="min-height: 35px">
-                                    <div class="g-checkbox-row"
+                                    <div class="g-checkbox-row vcSelectedColumnItem"
                                          data-ng-repeat="item in vm.selectedColumns | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
                                          data-attribute-key="{{item.key}}"
@@ -850,6 +856,11 @@
                                                 </md-tooltip>
                                             </md-card>
                                         </div>
+
+                                        <g-column-settings-button data-column="item"
+                                                                  data-ev-data-service="vm.entityViewerDataService"
+                                                                  data-ev-event-service="vm.entityViewerEventService"></g-column-settings-button>
+
                                     </div>
                                 </div>
                             </div>
@@ -860,7 +871,7 @@
                                 </div>
 
                                 <div class="vcSelectedFilters" style="min-height: 35px">
-                                    <div class="g-checkbox-row"
+                                    <div class="g-checkbox-row vcSelectedFilterItem"
                                          data-ng-repeat="item in vm.selectedFilters | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
                                          data-attribute-key="{{item.key}}"

@@ -14,9 +14,7 @@
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
-    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService) {
-
-        logService.controller('gModalController', 'initialized');
+    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
         var vm = this;
         vm.readyStatus = {content: false};
@@ -316,22 +314,12 @@
 
         };
 
-        var getSelectedAttrs = function () {
-
-            vm.selectedGroups = [];
-            vm.selectedColumns = [];
-            vm.selectedFilters = [];
-
-            separateSelectedAttrs(vm.entityAttrs, 'entityAttrs');
-            separateSelectedAttrs(vm.attrs, 'attrs');
-
-        };
+        // format data for SELECTED tab
+        var selectedGroups = [];
+        var selectedColumns = [];
+        var selectedFilters = [];
 
         var separateSelectedAttrs = function (attributes, attrsVmKey) {
-
-            var selectedGroups = [];
-            var selectedColumns = [];
-            var selectedFilters = [];
 
             for (var i = 0; i < attributes.length; i++) {
                 var attribute = JSON.parse(angular.toJson(attributes[i]));
@@ -345,35 +333,44 @@
                 } else if (attribute.filters) {
                     selectedFilters.push(attribute);
                 };
-
             };
 
-            // putting selected attributes in the same order as in the table
+        };
 
-            var groupSelectedGroups = function (insideTable, selectedAttrs, vmKey) {
+        var groupSelectedGroups = function (insideTable, selectedAttrs, vmKey) { // putting selected attributes in the same order as in the table
 
-                var a;
-                for (a = 0; a < insideTable.length; a++) {
-                    var attr = insideTable[a];
+            var a;
+            for (a = 0; a < insideTable.length; a++) {
+                var attr = insideTable[a];
 
-                    for (var i = 0; i < selectedAttrs.length; i++) {
-                        var sAttr = selectedAttrs[i];
+                for (var i = 0; i < selectedAttrs.length; i++) {
+                    var sAttr = selectedAttrs[i];
 
-                        if (sAttr.key === attr.key) {
-                            vm[vmKey].push(sAttr);
-                            break;
-                        };
+                    if (sAttr.key === attr.key) {
+                        vm[vmKey].push(sAttr);
+                        break;
                     };
-
                 };
 
             };
+
+        };
+
+        var getSelectedAttrs = function () {
+
+            vm.selectedGroups = [];
+            vm.selectedColumns = [];
+            vm.selectedFilters = [];
+
+            separateSelectedAttrs(vm.entityAttrs, 'entityAttrs');
+            separateSelectedAttrs(vm.attrs, 'attrs');
 
             groupSelectedGroups(groups, selectedGroups, 'selectedGroups');
             groupSelectedGroups(columns, selectedColumns, 'selectedColumns');
             groupSelectedGroups(filters, selectedFilters, 'selectedFilters');
 
         };
+        // < format data for SELECTED tab >
 
         vm.onSelectedAttrsChange = function (attributesList, selectedAttr) {
 
@@ -421,8 +418,8 @@
 
 
                     exist = false;
-                    if (target === document.querySelector('#columnsbag') ||
-                        target === document.querySelector('.g-columns-holder')) {
+                    if (target === contentWrapElement.querySelector('#columnsbag') ||
+                        target === contentWrapElement.querySelector('.g-columns-holder')) {
                         for (i = 0; i < columns.length; i = i + 1) {
                             if (columns[i].key === identifier) {
                                 exist = true;
@@ -434,8 +431,8 @@
                         }
                     }
 
-                    if (target === document.querySelector('#groupsbag') ||
-                        target === document.querySelector('.g-groups-holder')) {
+                    if (target === contentWrapElement.querySelector('#groupsbag') ||
+                        target === contentWrapElement.querySelector('.g-groups-holder')) {
                         for (i = 0; i < groups.length; i = i + 1) {
                             /*if (groups[i].name === name) {
                                 exist = true;
@@ -447,8 +444,8 @@
                         }
                     }
 
-                    if (target === document.querySelector('#filtersbag .drop-new-filter') ||
-                        target === document.querySelector('.g-filters-holder')) {
+                    if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
+                        target === contentWrapElement.querySelector('.g-filters-holder')) {
                         for (i = 0; i < filters.length; i = i + 1) {
                             /*if (filters[i].name === name) {
                                 exist = true;
@@ -467,14 +464,14 @@
                         var nodes = Array.prototype.slice.call(target.children);
                         var index = nodes.indexOf(elem);
 
-                        if (target === document.querySelector('.g-columns-holder') ||
-                            target === document.querySelector('#columnsbag')) {
+                        if (target === contentWrapElement.querySelector('.g-columns-holder') ||
+                            target === contentWrapElement.querySelector('#columnsbag')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
 
                                 if (attrsList[a].key === identifier) {
 
-                                    if (target === document.querySelector('#columnsbag')) {
+                                    if (target === contentWrapElement.querySelector('#columnsbag')) {
                                         columns.push(attrsList[a]);
                                     } else {
                                         columns.splice(index, 0, attrsList[a]);
@@ -485,7 +482,7 @@
 
                                 /*if (attrsList[a].name === name) {
 
-                                    if (target === document.querySelector('#columnsbag')) {
+                                    if (target === contentWrapElement.querySelector('#columnsbag')) {
                                         columns.push(attrsList[a]);
                                     } else {
                                         columns.splice(index, 0, attrsList[a]);
@@ -500,14 +497,14 @@
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         };
 
-                        if (target === document.querySelector('#groupsbag') ||
-                            target === document.querySelector('.g-groups-holder')) {
+                        if (target === contentWrapElement.querySelector('#groupsbag') ||
+                            target === contentWrapElement.querySelector('.g-groups-holder')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
 
                                 if (attrsList[a].key === identifier) {
 
-                                    if (target === document.querySelector('#groupsbag')) {
+                                    if (target === contentWrapElement.querySelector('#groupsbag')) {
                                         groups.push(attrsList[a]);
                                     } else {
                                         groups.splice(index, 0, attrsList[a]);
@@ -518,7 +515,7 @@
 
                                 /*if (attrsList[a].name === name) {
 
-                                    if (target === document.querySelector('#groupsbag')) {
+                                    if (target === contentWrapElement.querySelector('#groupsbag')) {
                                         groups.push(attrsList[a]);
                                     } else {
                                         groups.splice(index, 0, attrsList[a]);
@@ -534,14 +531,14 @@
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         };
 
-                        if (target === document.querySelector('#filtersbag .drop-new-filter') ||
-                            target === document.querySelector('.g-filters-holder')) {
+                        if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
+                            target === contentWrapElement.querySelector('.g-filters-holder')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
 
                                 if (attrsList[a].key === identifier) {
 
-                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                                    if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter')) {
                                         filters.push(attrsList[a]);
                                     } else {
                                         filters.splice(index, 0, attrsList[a]);
@@ -598,12 +595,12 @@
             dragula: function () {
 
                 var items = [
-                    document.querySelector('.g-columns-holder'),
-                    document.querySelector('#columnsbag'),
-                    document.querySelector('.g-groups-holder'),
-                    document.querySelector('#groupsbag'),
-                    document.querySelector('.g-filters-holder'),
-                    document.querySelector('#filtersbag .drop-new-filter')
+                    contentWrapElement.querySelector('.g-columns-holder'),
+                    contentWrapElement.querySelector('#columnsbag'),
+                    contentWrapElement.querySelector('.g-groups-holder'),
+                    contentWrapElement.querySelector('#groupsbag'),
+                    contentWrapElement.querySelector('.g-filters-holder'),
+                    contentWrapElement.querySelector('#filtersbag .drop-new-filter')
                 ];
 
                 var i;
@@ -634,6 +631,28 @@
             }
         };
 
+        // scroll while dragging
+        var DnDScrollElem;
+        var DnDScrollTimeOutId;
+
+        var DnDWheel = function (event) {
+            event.preventDefault();
+            clearTimeout(DnDScrollTimeOutId);
+
+            var scrolled = DnDScrollElem.scrollTop;
+
+            var scrollSize = event.deltaY * 50;
+
+            DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
+                DnDScrollElem.scroll({
+                    top: scrolled + scrollSize,
+                    behavior: 'smooth'
+                });
+            }, 30);
+
+        };
+        // < scroll while dragging >
+
         var selectedDnD = {
 
             init: function () {
@@ -646,6 +665,10 @@
                 var attributeChanged = false;
                 var drake = this.dragula;
 
+                drake.on('drag', function () {
+                    document.addEventListener('wheel', DnDWheel);
+                });
+
                 drake.on('shadow', function (elem, container, source) {
 
                     var attrKey = elem.dataset.attributeKey;
@@ -653,14 +676,14 @@
                     if (container.classList.contains('vcSelectedGroups')) {
                         if (attrsWithoutGroups.indexOf(attrKey) !== -1) {
                             elem.remove();
-                        };
-                    };
+                        }
+                    }
 
                     if (container.classList.contains('vcSelectedFilters')) {
                         if (attrsWithoutFilters.indexOf(attrKey) !== -1) {
                             elem.remove();
-                        };
-                    };
+                        }
+                    }
                 });
 
                 drake.on('drop', function (elem, target, source, nextSibling) {
@@ -681,8 +704,8 @@
                                     vm[attrsVmKey][i].groups = false;
                                     attributeChanged = true;
                                     break;
-                                };
-                            };
+                                }
+                            }
                         // < dragged to columns >
 
                         // dragged to filters
@@ -701,13 +724,58 @@
                                         vm[attrsVmKey][i].filters = true;
                                         attributeChanged = true;
                                         break;
-                                    };
-                                };
+                                    }
+                                }
 
-                            };
-
+                            }
                         // < dragged to filters >
-                        };
+
+                        // If group's order changed
+                        } else if (target.classList.contains('vcSelectedGroups')) {
+
+                            var groupElems = source.querySelectorAll('.vcSelectedGroupItem');
+
+                            var groupsAfterDragging = [];
+
+                            for (var i = 0; i < groupElems.length; i = i + 1) {
+
+                                var groupElemKey = groupElems[i].dataset.attributeKey;
+
+                                for (var x = 0; x < groups.length; x = x + 1) {
+
+                                    if (groupElemKey === groups[x].key) {
+                                        groupsAfterDragging.push(groups[x]);
+                                        break;
+                                    }
+
+                                }
+
+                            }
+
+                            var isChanged = false;
+
+                            for (var i = 0; i < groupsAfterDragging.length; i++) {
+                                var group = groupsAfterDragging[i];
+
+                                if (group.key !== groups[i].key) {
+                                    isChanged = true;
+                                    break;
+                                }
+                            }
+
+                            if (isChanged) {
+
+                                entityViewerDataService.setGroups(groupsAfterDragging);
+
+                                entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                $scope.$apply();
+
+                            }
+
+                        // < If group's order changed >
+                        }
 
                     // < dragging from groups >
 
@@ -727,9 +795,9 @@
                                         vm[attrsVmKey][i].groups = true;
                                         attributeChanged = true;
                                         break;
-                                    };
-                                };
-                            };
+                                    }
+                                }
+                            }
                         // < dragged to groups >
 
                         // dragged to filters
@@ -747,12 +815,57 @@
                                         vm[attrsVmKey][i].filters = true;
                                         attributeChanged = true;
                                         break;
-                                    };
-                                };
+                                    }
+                                }
+                            }
+                        // < dragged to filters >
+
+                        // If column's order changed
+                        } else if (target.classList.contains('vcSelectedColumns')) {
+
+                            var columnElems = source.querySelectorAll('.vcSelectedColumnItem');
+
+                            var columnsAfterDragging = [];
+
+                            for (var i = 0; i < columnElems.length; i = i + 1) {
+
+                                var colElemKey = columnElems[i].dataset.attributeKey;
+
+                                for (var x = 0; x < columns.length; x = x + 1) {
+
+                                    if (colElemKey === columns[x].key) {
+                                        columnsAfterDragging.push(columns[x]);
+                                        break;
+                                    }
+
+                                }
+
                             }
 
-                        // < dragged to filters >
-                        };
+                            var isChanged = false;
+
+                            for (var i = 0; i < columnsAfterDragging.length; i++) {
+                                var column = columnsAfterDragging[i];
+
+                                if (column.key !== columns[i].key) {
+                                    isChanged = true;
+                                    break;
+                                }
+                            }
+
+                            if (isChanged) {
+
+                                entityViewerDataService.setColumns(columnsAfterDragging);
+
+                                entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                $scope.$apply();
+
+                            }
+
+                        // < If column's order changed >
+                        }
                     // < dragging from columns >
 
                     // dragging from filters
@@ -775,9 +888,9 @@
                                     };
                                 };
                             };
-                            // < dragged to columns >
+                        // < dragged to groups >
 
-                            // dragged to columns
+                        // dragged to columns
                         } else if (target.classList.contains('vcSelectedColumns')) {
 
                             for (var i = 0; i < vm[attrsVmKey].length; i++) {
@@ -787,9 +900,53 @@
                                     break;
                                 };
                             };
-                            // < dragged to columns >
+                        // < dragged to columns >
 
-                        };
+                        // If filter's order changed
+                        } else if (target.classList.contains('vcSelectedFilters')) {
+
+                            var filterElems = source.querySelectorAll('.vcSelectedFilterItem');
+
+                            var filtersAfterDragging = [];
+
+                            for (var i = 0; i < filterElems.length; i = i + 1) {
+
+                                var filterElemKey = filterElems[i].dataset.attributeKey;
+
+                                for (var x = 0; x < filters.length; x = x + 1) {
+
+                                    if (filterElemKey === filters[x].key) {
+                                        filtersAfterDragging.push(filters[x]);
+                                    }
+
+                                }
+
+                            }
+
+                            var isChanged = false;
+
+                            for (var i = 0; i < filtersAfterDragging.length; i++) {
+                                var filter = filtersAfterDragging[i];
+
+                                if (filter.key !== filters[i].key) {
+                                    isChanged = true;
+                                    break;
+                                }
+                            }
+
+                            if (isChanged) {
+
+                                entityViewerDataService.setFilters(filtersAfterDragging);
+
+                                entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                $scope.$apply();
+
+                            }
+
+                        // < If filter's order changed >
+                        }
 
                     };
                     // < dragging from filters >
@@ -799,6 +956,10 @@
                         vm.updateAttrs(vm[attrsVmKey]);
                     };
 
+                });
+
+                drake.on('dragend', function () {
+                    document.removeEventListener('wheel', DnDWheel);
                 });
 
             },
@@ -831,6 +992,7 @@
 
         vm.initDnd = function () {
             setTimeout(function () {
+                DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
                 viewConstructorDnD.init();
                 selectedDnD.init();
             }, 500);

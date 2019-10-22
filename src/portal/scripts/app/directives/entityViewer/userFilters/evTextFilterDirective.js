@@ -222,15 +222,6 @@
 
                 };
 
-
-                scope.init = function () {
-
-                    scope.initSplitPanelMode();
-
-                };
-
-                scope.init()
-
             }
         }
     }

@@ -168,6 +168,7 @@
 
                                             if (columnElems[i].dataset.columnKey === columns[x].key) {
                                                 columnsAfterDragging.push(columns[x]);
+                                                break;
                                             }
 
                                         }
@@ -176,13 +177,14 @@
 
                                     var isChanged = false;
 
-                                    columnsAfterDragging.forEach(function (column, index) {
+                                    for (var i = 0; i < columnsAfterDragging.length; i++) {
+                                        var column = columnsAfterDragging[i];
 
-                                        if (column.key !== columns[index].key) {
+                                        if (column.key !== columns[i].key) {
                                             isChanged = true;
+                                            break;
                                         }
-
-                                    });
+                                    }
 
                                     if (isChanged) {
 
@@ -305,7 +307,7 @@
                                 // If group's cards order changed
                                 } else if (target === groupsHolder) {
 
-                                    var groupElems = source.querySelectorAll('.group-item');
+                                    var groupElems = source.querySelectorAll('.vcSelectedGroupItem');
 
                                     var groupsAfterDragging = [];
 
@@ -315,6 +317,7 @@
 
                                             if (groupElems[i].dataset.groupKey === groups[x].key) {
                                                 groupsAfterDragging.push(groups[x]);
+                                                break;
                                             }
 
                                         }
@@ -323,13 +326,14 @@
 
                                     var isChanged = false;
 
-                                    groupsAfterDragging.forEach(function (group, index) {
+                                    for (var i = 0; i < groupsAfterDragging.length; i++) {
+                                        var group = groupsAfterDragging[i];
 
-                                        if (group.key !== groups[index].key) {
+                                        if (group.key !== groups[i].key) {
                                             isChanged = true;
+                                            break;
                                         }
-
-                                    });
+                                    }
 
                                     if (isChanged) {
 

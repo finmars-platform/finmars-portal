@@ -107,7 +107,8 @@
                             locals: {
                                 attributeDataService: scope.attributeDataService,
                                 entityViewerDataService: scope.evDataService,
-                                entityViewerEventService: scope.evEventService
+                                entityViewerEventService: scope.evEventService,
+                                contentWrapElement: scope.contentWrapElement
                             }
                         });
                     }
