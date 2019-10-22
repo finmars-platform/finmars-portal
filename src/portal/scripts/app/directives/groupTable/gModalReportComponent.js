@@ -20,7 +20,10 @@
         var vm = this;
         vm.readyStatus = {content: false};
 
-        vm.entityType = entityViewerDataService.getEntityType();
+        vm.entityViewerDataService = entityViewerDataService;
+        vm.entityViewerEventService = entityViewerEventService;
+
+        vm.entityType = vm.entityViewerDataService.getEntityType();
 
         vm.general = [];
         vm.attrs = [];
@@ -32,10 +35,10 @@
 
         vm.cardsDividedIntoTabs = true;
 
-        var columns = entityViewerDataService.getColumns();
-        var filters = entityViewerDataService.getFilters();
-        var groups = entityViewerDataService.getGroups();
-
+        var columns = vm.entityViewerDataService.getColumns();
+        var filters = vm.entityViewerDataService.getFilters();
+        var groups = vm.entityViewerDataService.getGroups();
+        //console.log("drag n drop gcf", groups, columns, filters);
         var attrsList = [];
 
         $('body').addClass('drag-dialog'); // hide backdrop
@@ -342,9 +345,9 @@
 
             });
 
-            entityViewerDataService.setColumns(columns);
-            entityViewerDataService.setGroups(groups);
-            entityViewerDataService.setFilters(filters);
+            vm.entityViewerDataService.setColumns(columns);
+            vm.entityViewerDataService.setGroups(groups);
+            vm.entityViewerDataService.setFilters(filters);
 
         };
 
@@ -352,14 +355,57 @@
 
             updateTypeAttrs(attrs);
 
-            evDataHelper.updateColumnsIds(entityViewerDataService);
-            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
 
-            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
-            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+        };
+
+        // format data for SELECTED tab
+        var selectedGroups = [];
+        var selectedColumns = [];
+        var selectedFilters = [];
+
+        var separateSelectedAttrs = function (attributes, attrsVmKey) {
+
+            for (var i = 0; i < attributes.length; i++) {
+                var attribute = JSON.parse(angular.toJson(attributes[i]));
+                attribute.attrsVmKey = attrsVmKey;
+
+                // attrsVmKey used in vm.updateAttrs and selectedDnD
+                if (attribute.groups) {
+                    selectedGroups.push(attribute);
+                } else if (attribute.columns) {
+                    selectedColumns.push(attribute);
+                } else if (attribute.filters) {
+                    selectedFilters.push(attribute);
+                };
+
+            };
+        };
+
+        var groupSelectedGroups = function (insideTable, selectedAttrs, vmKey) { // putting selected attributes in the same order as in the table
+
+            var a;
+            for (a = 0; a < insideTable.length; a++) {
+                var attr = insideTable[a];
+
+                for (var i = 0; i < selectedAttrs.length; i++) {
+                    var sAttr = selectedAttrs[i];
+
+                    if (sAttr.key === attr.key) {
+
+                        vm[vmKey].push(sAttr);
+                        break;
+                    };
+                };
+
+            };
 
         };
 
@@ -368,6 +414,10 @@
             vm.selectedGroups = [];
             vm.selectedColumns = [];
             vm.selectedFilters = [];
+
+            selectedGroups = [];
+            selectedColumns = [];
+            selectedFilters = [];
 
             separateSelectedAttrs(vm.balanceAttrs, 'balanceAttrs');
             separateSelectedAttrs(vm.balancePerformanceAttrs, 'balancePerformanceAttrs');
@@ -392,55 +442,13 @@
             separateSelectedAttrs(vm.strategy2attrs, 'strategy2attrs');
             separateSelectedAttrs(vm.strategy3attrs, 'strategy3attrs');
 
-        };
-
-        var separateSelectedAttrs = function (attributes, attrsVmKey) {
-
-            var selectedGroups = [];
-            var selectedColumns = [];
-            var selectedFilters = [];
-
-            for (var i = 0; i < attributes.length; i++) {
-                var attribute = JSON.parse(angular.toJson(attributes[i]));
-                attribute.attrsVmKey = attrsVmKey;
-
-                // attrsVmKey used in vm.updateAttrs and selectedDnD
-                if (attribute.groups) {
-                    selectedGroups.push(attribute);
-                } else if (attribute.columns) {
-                    selectedColumns.push(attribute);
-                } else if (attribute.filters) {
-                    selectedFilters.push(attribute);
-                };
-
-            };
-
-            // putting selected attributes in the same order as in the table
-
-            var groupSelectedGroups = function (insideTable, selectedAttrs, vmKey) {
-
-                var a;
-                for (a = 0; a < insideTable.length; a++) {
-                    var attr = insideTable[a];
-
-                    for (var i = 0; i < selectedAttrs.length; i++) {
-                        var sAttr = selectedAttrs[i];
-
-                        if (sAttr.key === attr.key) {
-                            vm[vmKey].push(sAttr);
-                            break;
-                        };
-                    };
-
-                };
-
-            };
 
             groupSelectedGroups(groups, selectedGroups, 'selectedGroups');
             groupSelectedGroups(columns, selectedColumns, 'selectedColumns');
             groupSelectedGroups(filters, selectedFilters, 'selectedFilters');
 
         };
+        // < format data for SELECTED tab >
 
         vm.onSelectedAttrsChange = function (attributesList, selectedAttr) {
 
@@ -510,6 +518,7 @@
 
                         }
                     }
+
                     if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
                         target === contentWrapElement.querySelector('.g-filters-holder')) {
                         for (i = 0; i < filters.length; i = i + 1) {
@@ -544,11 +553,11 @@
 
                             }
                             syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
 
-                            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         };
 
                         if (target === contentWrapElement.querySelector('#groupsbag')) {
@@ -560,11 +569,11 @@
                             }
 
                             syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
 
-                            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
 
                         if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
@@ -582,11 +591,11 @@
                             }
 
                             syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
 
-                            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
 
                         $scope.$apply();
@@ -671,6 +680,28 @@
             }
         };
 
+        // scroll while dragging
+        var DnDScrollElem;
+        var DnDScrollTimeOutId;
+
+        var DnDWheel = function (event) {
+            event.preventDefault();
+            clearTimeout(DnDScrollTimeOutId);
+
+            var scrolled = DnDScrollElem.scrollTop;
+
+            var scrollSize = event.deltaY * 50;
+
+            DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
+                DnDScrollElem.scroll({
+                    top: scrolled + scrollSize,
+                    behavior: 'smooth'
+                });
+            }, 30);
+
+        };
+        // < scroll while dragging >
+
         var selectedDnD = {
 
             init: function () {
@@ -682,6 +713,10 @@
 
                 var attributeChanged = false;
                 var drake = this.dragula;
+
+                drake.on('drag', function () {
+                    document.addEventListener('wheel', DnDWheel);
+                });
 
                 drake.on('drop', function (elem, target, source, nextSibling) {
 
@@ -715,17 +750,61 @@
                                     vm[attrsVmKey][i].filters = true;
                                     attributeChanged = true;
                                     break;
-                                };
-                            };
+                                }
+                            }
 
-                            // < dragged to filters >
+                        // < dragged to filters >
+
+                            // If group's order changed
                         } else if (target.classList.contains('vcSelectedGroups')) {
-                            drake.cancel()
-                        };
+
+                            var groupElems = source.querySelectorAll('.vcSelectedGroupItem');
+
+                            var groupsAfterDragging = [];
+
+                            for (var i = 0; i < groupElems.length; i = i + 1) {
+
+                                var groupElemKey = groupElems[i].dataset.attributeKey;
+
+                                for (var x = 0; x < groups.length; x = x + 1) {
+
+                                    if (groupElemKey === groups[x].key) {
+                                        groupsAfterDragging.push(groups[x]);
+                                        break;
+                                    }
+
+                                }
+
+                            }
+
+                            var isChanged = false;
+
+                            for (var i = 0; i < groupsAfterDragging.length; i++) {
+                                var group = groupsAfterDragging[i];
+
+                                if (group.key !== groups[i].key) {
+                                    isChanged = true;
+                                    break;
+                                }
+                            }
+
+                            if (isChanged) {
+
+                                vm.entityViewerDataService.setGroups(groupsAfterDragging);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                $scope.$apply();
+
+                            }
+
+                            // < If group's order changed >
+                        }
 
                         // < dragging from groups >
 
-                        // dragging from columns
+                    // dragging from columns
                     } else if (source.classList.contains('vcSelectedColumns')) {
 
                         // dragged to groups
@@ -736,8 +815,8 @@
                                     vm[attrsVmKey][i].groups = true;
                                     attributeChanged = true;
                                     break;
-                                };
-                            };
+                                }
+                            }
                         // < dragged to groups >
 
                         // dragged to filters
@@ -749,16 +828,74 @@
                                     vm[attrsVmKey][i].filters = true;
                                     attributeChanged = true;
                                     break;
-                                };
-                            };
+                                }
+                            }
+                        // < dragged to filters >
 
-                            // < dragged to filters >
+                        // If column's order changed
                         } else if (target.classList.contains('vcSelectedColumns')) {
-                            drake.cancel()
-                        };
-                        // < dragging from columns >
 
-                        // dragging from filters
+                            var columnElems = source.querySelectorAll('.vcSelectedColumnItem');
+
+                            var columnsAfterDragging = [];
+
+                            for (var i = 0; i < groups.length; i++) { // add columns that has groups
+
+                                var groupKey = groups[i].key;
+
+                                for (var x = 0; x < columns.length; x++) {
+
+                                    if (groupKey === columns[x].key) {
+                                        columnsAfterDragging.push(columns[x]);
+                                        break;
+                                    }
+
+                                }
+
+                            }
+
+                            for (var i = 0; i < columnElems.length; i = i + 1) {
+
+                                var colElemKey = columnElems[i].dataset.attributeKey;
+
+                                for (var x = 0; x < columns.length; x = x + 1) {
+
+                                    if (colElemKey === columns[x].key) {
+                                        columnsAfterDragging.push(columns[x]);
+                                        break;
+                                    }
+
+                                }
+
+                            }
+
+                            var isChanged = false;
+
+                            for (var i = 0; i < columnsAfterDragging.length; i++) {
+                                var column = columnsAfterDragging[i];
+
+                                if (column.key !== columns[i].key) {
+                                    isChanged = true;
+                                    break;
+                                }
+                            }
+
+                            if (isChanged) {
+
+                                vm.entityViewerDataService.setColumns(columnsAfterDragging);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                $scope.$apply();
+
+                            }
+
+                        // < If column's order changed >
+                        }
+                    // < dragging from columns >
+
+                    // dragging from filters
                     } else if (source.classList.contains('vcSelectedFilters')) {
 
                         // dragged to groups
@@ -769,8 +906,8 @@
                                     vm[attrsVmKey][i].groups = true;
                                     attributeChanged = true;
                                     break;
-                                };
-                            };
+                                }
+                            }
                             // < dragged to columns >
 
                             // dragged to columns
@@ -781,22 +918,68 @@
                                     vm[attrsVmKey][i].columns = true;
                                     attributeChanged = true;
                                     break;
-                                };
-                            };
-                            // < dragged to columns >
+                                }
+                            }
+                        // < dragged to groups >
 
+                            // If filter's order changed
                         } else if (target.classList.contains('vcSelectedFilters')) {
-                            drake.cancel()
-                        };
 
-                    };
+                            var filterElems = source.querySelectorAll('.vcSelectedFilterItem');
+
+                            var filtersAfterDragging = [];
+
+                            for (var i = 0; i < filterElems.length; i = i + 1) {
+
+                                var filterElemKey = filterElems[i].dataset.attributeKey;
+
+                                for (var x = 0; x < filters.length; x = x + 1) {
+
+                                    if (filterElemKey === filters[x].key) {
+                                        filtersAfterDragging.push(filters[x]);
+                                    }
+
+                                }
+
+                            }
+
+                            var isChanged = false;
+
+                            for (var i = 0; i < filtersAfterDragging.length; i++) {
+                                var filter = filtersAfterDragging[i];
+
+                                if (filter.key !== filters[i].key) {
+                                    isChanged = true;
+                                    break;
+                                }
+                            }
+
+                            if (isChanged) {
+
+                                vm.entityViewerDataService.setFilters(filtersAfterDragging);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                $scope.$apply();
+
+                            }
+
+                        // < If filter's order changed >
+                        }
+
+                    }
                     // < dragging from filters >
 
                     if (attributeChanged) {
                         $(elem).remove();
                         vm.updateAttrs(vm[attrsVmKey]);
-                    };
+                    }
 
+                });
+
+                drake.on('dragend', function () {
+                    document.removeEventListener('wheel', DnDWheel);
                 });
 
             },
@@ -828,6 +1011,7 @@
 
         vm.initDnd = function () {
             setTimeout(function () {
+                DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
                 viewConstructorDnD.init();
                 selectedDnD.init();
             }, 500);
@@ -841,25 +1025,25 @@
 
             vm.getAttributes();
 
-            entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-                columns = entityViewerDataService.getColumns();
+                columns = vm.entityViewerDataService.getColumns();
                 syncAttrs();
                 getSelectedAttrs();
 
             });
 
-            entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-                groups = entityViewerDataService.getGroups();
+                groups = vm.entityViewerDataService.getGroups();
                 syncAttrs();
                 getSelectedAttrs();
 
             });
 
-            entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-                filters = entityViewerDataService.getFilters();
+                filters = vm.entityViewerDataService.getFilters();
                 syncAttrs();
                 getSelectedAttrs();
 
