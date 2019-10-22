@@ -1,25 +1,47 @@
-<md-dialog aria-label="" class="draggable-dialog manage-member-group" drag-dialog>
-	<md-toolbar>
-		<div class="md-toolbar-tools">
-			<ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
-			<h2>Edit group "{{vm.groups.name}}"</h2>
-		</div>
-	</md-toolbar>
-	<md-dialog-content   class="manage-member-dialog-content custom-scrollbar">
-		<div layout="column">
-			<two-fields-options all-options="vm.membersList" selected-options="vm.assignedMembersList"></two-fields-options>
-		</div>
-	</md-dialog-content>
-	<md-dialog-actions layout="row">
-		<div flex="75">
-			<md-button class="md-raised" ng-click="vm.cancel()">
-				Cancel
-			</md-button>
-		</div>
-		<div flex>
-			<md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
-				Save
-			</md-button>
-		</div>
-	</md-dialog-actions>
+<md-dialog aria-label="" class="draggable-dialog manage-member-group width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2>Edit group <b data-ng-bind="::vm.group.name"></b></h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="manage-member-dialog-content p-16">
+
+        <div data-ng-if="vm.readyStatus.content">
+
+            <md-input-container>
+                <label>Group name</label>
+                <textarea data-ng-model="vm.group.name"></textarea>
+            </md-input-container>
+
+            <div layout="column">
+
+                <two-fields-options all-options="vm.membersList"
+                                    selected-options="vm.assignedMembersList"
+                                    name-property="username"></two-fields-options>
+
+            </div>
+
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.content">
+
+            <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-loader">
+                <progress-circular diameter="50"></progress-circular>
+            </div>
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="space-between center">
+
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+
+        <md-button class="md-raised" ng-click="vm.agree()">
+            Save
+        </md-button>
+
+    </md-dialog-actions>
 </md-dialog>

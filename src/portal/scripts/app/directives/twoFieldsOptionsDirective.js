@@ -14,6 +14,9 @@
 			templateUrl: 'views/directives/two-fields-options-view.html',
 			link: function (scope, elem, attr) {
 
+				console.log('twoFieldOptions.allOptions', scope.allOptions);
+				console.log('twoFieldOptions.selectedOptions', scope.selectedOptions);
+
 				scope.highlightOption = function (ev) {
 
 					var clickedOption = ev.currentTarget;
