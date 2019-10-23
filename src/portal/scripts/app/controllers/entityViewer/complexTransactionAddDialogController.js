@@ -324,28 +324,6 @@
             });
         };
 
-        vm.checkPermissions = function () {
-
-            if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
-                return false;
-            }
-
-            if (vm.entityId) {
-
-                var haveAccess = false;
-
-                var entityType = vm.entityType.split('-').join('');
-
-                if (vm.entity.granted_permissions && vm.entity.granted_permissions.indexOf("manage_" + entityType) !== -1) {
-                    haveAccess = true;
-                }
-
-                return haveAccess;
-            } else {
-                return true;
-            }
-        };
-
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
