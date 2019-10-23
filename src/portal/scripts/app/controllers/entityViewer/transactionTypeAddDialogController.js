@@ -75,7 +75,6 @@
 
             var promises = [];
 
-            promises.push(vm.getMemberList());
             promises.push(vm.getGroupList());
 
             Promise.all(promises).then(function (data) {
@@ -94,10 +93,11 @@
 
                 vm.groups.forEach(function (group) {
 
-                    if (vm.entity["group_object_permissions"]) {
-                        vm.entity["group_object_permissions"].forEach(function (permission) {
+                    if (vm.entity.object_permissions) {
+                        vm.entity.object_permissions.forEach(function (permission) {
 
-                            if (permission.group == group.id) {
+                            if (permission.group === group.id) {
+
                                 if (!group.hasOwnProperty('objectPermissions')) {
                                     group.objectPermissions = {};
                                 }
@@ -107,6 +107,7 @@
                                 if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
                                     group.objectPermissions.change = true;
                                 }
+
                             }
                         })
                     }
@@ -114,61 +115,6 @@
                 });
             });
 
-        };
-
-        vm.getMemberList = function () {
-
-            usersService.getMemberList().then(function (data) {
-
-                vm.members = data.results;
-
-                vm.members.forEach(function (member) {
-
-                    if (vm.entity["user_object_permissions"]) {
-                        vm.entity["user_object_permissions"].forEach(function (permission) {
-
-                            if (permission.member == member.id) {
-                                if (!member.hasOwnProperty('objectPermissions')) {
-                                    member.objectPermissions = {};
-                                }
-                                if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                    member.objectPermissions.manage = true;
-                                }
-                                if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                    member.objectPermissions.change = true;
-                                }
-                            }
-                        })
-                    }
-
-                });
-
-                vm.readyStatus.permissions = true;
-
-                $scope.$apply();
-            });
-        };
-
-        vm.checkPermissions = function () {
-
-            if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
-                return false;
-            }
-
-            if (vm.entityId) {
-
-                var haveAccess = false;
-
-                var entityType = vm.entityType.split('-').join('');
-
-                if (vm.entity.granted_permissions && vm.entity.granted_permissions.indexOf("manage_" + entityType) !== -1) {
-                    haveAccess = true;
-                }
-
-                return haveAccess;
-            } else {
-                return true;
-            }
         };
 
         vm.cancel = function () {
