@@ -23,7 +23,11 @@
 
     var updateProperties = function (id, transaction) {
         return complexTransactionRepository.updateProperties(id, transaction)
-    }
+    };
+
+    var updatePropertiesBulk = function (transactions) {
+        return complexTransactionRepository.updatePropertiesBulk(transactions)
+    };
 
     var deleteByKey = function (id) {
         return complexTransactionRepository.deleteByKey(id);
@@ -57,6 +61,7 @@
         deleteByKey: deleteByKey,
 
         updateProperties: updateProperties,
+        updatePropertiesBulk: updatePropertiesBulk,
 
         initRebookComplexTransaction: initRebookComplexTransaction,
         rebookComplexTransaction: rebookComplexTransaction,

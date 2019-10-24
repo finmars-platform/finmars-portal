@@ -41,7 +41,6 @@
 
         vm.contextData = null; // data source when we book from report
 
-
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
         vm.transactionTypeId = null;
@@ -175,7 +174,6 @@
 
                 vm.specialRulesReady = true;
                 vm.readyStatus.entity = true;
-                vm.readyStatus.permissions = true;
 
                 var keys = Object.keys(data.values);
 
@@ -250,7 +248,6 @@
 
             var promises = [];
 
-            promises.push(vm.getMemberList());
             promises.push(vm.getGroupList());
 
             Promise.all(promises).then(function (data) {
@@ -269,10 +266,10 @@
 
                 vm.groups.forEach(function (group) {
 
-                    if (vm.entity["group_object_permissions"]) {
-                        vm.entity["group_object_permissions"].forEach(function (permission) {
+                    if (vm.entity.object_permissions) {
+                        vm.entity.object_permissions.forEach(function (permission) {
 
-                            if (permission.group == group.id) {
+                            if (permission.group === group.id) {
                                 if (!group.hasOwnProperty('objectPermissions')) {
                                     group.objectPermissions = {};
                                 }
@@ -289,39 +286,6 @@
                 });
             });
 
-        };
-
-        vm.getMemberList = function () {
-
-            usersService.getMemberList().then(function (data) {
-
-                vm.members = data.results;
-
-                vm.members.forEach(function (member) {
-
-                    if (vm.entity["user_object_permissions"]) {
-                        vm.entity["user_object_permissions"].forEach(function (permission) {
-
-                            if (permission.member == member.id) {
-                                if (!member.hasOwnProperty('objectPermissions')) {
-                                    member.objectPermissions = {};
-                                }
-                                if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                    member.objectPermissions.manage = true;
-                                }
-                                if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                    member.objectPermissions.change = true;
-                                }
-                            }
-                        })
-                    }
-
-                });
-
-                vm.readyStatus.permissions = true;
-
-                $scope.$apply();
-            });
         };
 
         vm.cancel = function () {
@@ -423,7 +387,6 @@
 
                     vm.specialRulesReady = true;
                     vm.readyStatus.entity = true;
-                    vm.readyStatus.permissions = true;
 
                     var keys = Object.keys(data.values);
 
@@ -501,7 +464,7 @@
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
-                vm.loadPermissions();
+
             });
         };
 
@@ -605,46 +568,24 @@
                 vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
             }
 
-            if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) === -1) {
-                vm.entity["user_object_permissions"] = [];
-            }
-
-            if (vm.members) {
-                vm.members.forEach(function (member) {
-
-                    if (member.objectPermissions && member.objectPermissions.manage === true) {
-                        vm.entity["user_object_permissions"].push({
-                            "member": member.id,
-                            "permission": "manage_" + vm.entityType.split('-').join('') //TODO remove _vm.entityType
-                        })
-                    }
-
-                    if (member.objectPermissions && member.objectPermissions.change == true) {
-                        vm.entity["user_object_permissions"].push({
-                            "member": member.id,
-                            "permission": "change_" + vm.entityType.split('-').join('') //TODO remove _vm.entityType
-                        })
-                    }
-
-                });
-            }
-
-            vm.entity["group_object_permissions"] = [];
+            vm.entity.object_permissions = [];
 
             if (vm.groups) {
                 vm.groups.forEach(function (group) {
 
                     if (group.objectPermissions && group.objectPermissions.manage === true) {
-                        vm.entity["group_object_permissions"].push({
-                            "group": group.id,
-                            "permission": "manage_" + vm.entityType.split('-').join('')
+                        vm.entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "manage_" + vm.entityType.split('-').join('')
                         })
                     }
 
                     if (group.objectPermissions && group.objectPermissions.change === true) {
-                        vm.entity["group_object_permissions"].push({
-                            "group": group.id,
-                            "permission": "change_" + vm.entityType.split('-').join('')
+                        vm.entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "change_" + vm.entityType.split('-').join('')
                         })
                     }
 
@@ -985,6 +926,7 @@
             vm.getPortfolios();
             vm.getInstrumentTypes();
             vm.loadTransactionTypes();
+            vm.loadPermissions();
 
             vm.getAttributeTypes();
         };
