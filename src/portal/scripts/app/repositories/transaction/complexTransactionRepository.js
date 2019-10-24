@@ -78,6 +78,20 @@
             })
     };
 
+    var updatePropertiesBulk = function (transactions) {
+        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/bulk-update-properties/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(transactions)
+            })
+    };
+
     var deleteByKey = function (id) {
         return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/',
             {
@@ -180,6 +194,7 @@
         rebookComplexTransaction: rebookComplexTransaction,
 
         updateProperties: updateProperties,
+        updatePropertiesBulk: updatePropertiesBulk,
 
         initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
         rebookPendingComplexTransaction: rebookPendingComplexTransaction,

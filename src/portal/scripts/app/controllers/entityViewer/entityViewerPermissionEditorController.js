@@ -75,9 +75,9 @@
                 if (!exists) {
 
                     item.object_permissions.push({
-                        "group": vm.activeGroup.id,
-                        "member": null,
-                        "permission": permission_code
+                        group: vm.activeGroup.id,
+                        member: null,
+                        permission: permission_code
                     })
 
                 }
@@ -137,9 +137,9 @@
                 if (!exists) {
 
                     item.object_permissions.push({
-                        "group": vm.activeGroup.id,
-                        "member": null,
-                        "permission": permission_code
+                        group: vm.activeGroup.id,
+                        member: null,
+                        permission: permission_code
                     })
 
                 }
