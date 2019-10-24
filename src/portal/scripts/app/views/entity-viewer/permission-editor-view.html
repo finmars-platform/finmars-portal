@@ -28,7 +28,16 @@
 
             <div layout="row" layout-align="begin center">
                 <span data-ng-bind="group.name"></span>
+
+                <span data-ng-if="vm.activeGroup && vm.activeGroup.id == group.id && vm.processing" class="m-l-8">
+                    <div layout="row" layout-sm="column" layout-align="space-around">
+                    <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                    <progress-circular diameter="20"></progress-circular>
+                </div>
+                </span>
             </div>
+
+
 
             <div layout="row" layout-align="center center" data-ng-if="vm.activeGroup && vm.activeGroup.id == group.id">
 

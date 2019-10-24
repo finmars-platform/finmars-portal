@@ -52,7 +52,7 @@
 
         };
 
-        vm.grantManage = function () {
+        vm.grantManage = function ($event) {
 
             vm.selectedRows = vm.getSelectedRows();
 
@@ -85,10 +85,10 @@
                 return item
             });
 
-            vm.updatePermissions(results);
+            vm.updatePermissions($event, results);
         };
 
-        vm.revokeManage = function () {
+        vm.revokeManage = function ($event) {
 
             vm.selectedRows = vm.getSelectedRows();
 
@@ -111,10 +111,10 @@
                 return item
             });
 
-            vm.updatePermissions(results);
+            vm.updatePermissions($event, results);
         };
 
-        vm.grantChange = function () {
+        vm.grantChange = function ($event) {
 
             vm.selectedRows = vm.getSelectedRows();
 
@@ -147,10 +147,10 @@
                 return item
             });
 
-            vm.updatePermissions(results);
+            vm.updatePermissions($event, results);
         };
 
-        vm.revokeChange = function () {
+        vm.revokeChange = function ($event) {
 
             vm.selectedRows = vm.getSelectedRows();
 
@@ -173,13 +173,35 @@
                 return item
             });
 
-            vm.updatePermissions(results);
+            vm.updatePermissions($event, results);
         };
 
-        vm.updatePermissions = function (items) {
+        vm.updatePermissions = function ($event, items) {
+
+            vm.processing = true;
 
             entityResolverService.updateBulk(vm.entityType, items).then(function () {
+
                 vm.processing = false;
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "Permissions successfully updated"
+                        }
+                    }
+                });
+
                 $scope.$apply();
             })
 
