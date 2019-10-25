@@ -322,26 +322,28 @@
 
                 vm.generateAttributesFromLayoutFields();
 
-                inputsWithCalculations.forEach(function (inputWithCalc) {
+                if (inputsWithCalculations) {
+                    inputsWithCalculations.forEach(function (inputWithCalc) {
 
-                    vm.userInputs.forEach(function (userInput) {
-                        if (userInput.name === inputWithCalc.name) {
-                            if (inputWithCalc.can_recalculate === true) {
-                                userInput.buttons = [
-                                    {
-                                        icon: 'iso',
-                                        tooltip: 'Recalculate',
-                                        caption: '',
-                                        classes: 'md-raised',
-                                        action: vm.recalculate
-                                    }
-                                ]
+                        vm.userInputs.forEach(function (userInput) {
+                            if (userInput.name === inputWithCalc.name) {
+                                if (inputWithCalc.can_recalculate === true) {
+                                    userInput.buttons = [
+                                        {
+                                            icon: 'iso',
+                                            tooltip: 'Recalculate',
+                                            caption: '',
+                                            classes: 'md-raised',
+                                            action: vm.recalculate
+                                        }
+                                    ]
+                                }
                             }
-                        }
-                    })
+                        })
 
-                });
+                    });
 
+                }
                 $scope.$apply();
 
             };
@@ -429,25 +431,28 @@
 
                     vm.generateAttributesFromLayoutFields();
 
-                    inputsWithCalculations.forEach(function (inputWithCalc) {
+                    if (inputsWithCalculations) {
+                        inputsWithCalculations.forEach(function (inputWithCalc) {
 
-                        vm.userInputs.forEach(function (userInput) {
-                            if (userInput.name === inputWithCalc.name) {
-                                if (inputWithCalc.can_recalculate === true) {
-                                    userInput.buttons = [
-                                        {
-                                            icon: 'iso',
-                                            tooltip: 'Recalculate',
-                                            caption: '',
-                                            classes: 'md-raised',
-                                            action: vm.recalculate
-                                        }
-                                    ]
+                            vm.userInputs.forEach(function (userInput) {
+                                if (userInput.name === inputWithCalc.name) {
+                                    if (inputWithCalc.can_recalculate === true) {
+                                        userInput.buttons = [
+                                            {
+                                                icon: 'iso',
+                                                tooltip: 'Recalculate',
+                                                caption: '',
+                                                classes: 'md-raised',
+                                                action: vm.recalculate
+                                            }
+                                        ]
+                                    }
                                 }
-                            }
-                        })
+                            })
 
-                    });
+                        });
+
+                    }
 
                     vm.dataConstructorData = {
                         entityType: vm.entityType,
