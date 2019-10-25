@@ -86,14 +86,12 @@
                         $mdDialog.show({
                             controller: controllerName,
                             templateUrl: templateUrl,
-                            parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: scope.attributeDataService,
                                 entityViewerDataService: scope.evDataService,
                                 entityViewerEventService: scope.evEventService,
                                 contentWrapElement: scope.contentWrapElement
-
                             }
                         });
 

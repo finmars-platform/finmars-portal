@@ -11,12 +11,33 @@
         return {
             restrict: 'E',
             scope: {
-                column: '=',
+                columnKey: '=',
                 evDataService: '=',
                 evEventService: '='
             },
             templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-column-settings-btn-view.html',
             link: function (scope, elem, attrs) {
+
+                var columns = scope.evDataService.getColumns();
+
+                columns.forEach(function (col) {
+                    if (col.key === scope.columnKey) {
+                        scope.column = col;
+                    }
+                });
+
+                var updateColumn = function () {
+
+                    for (var i = 0; i < columns.length; i++) {
+                        if (columns[i].key === scope.columnKey) {
+                            columns[i] = JSON.parse(JSON.stringify(scope.column));
+                            break;
+                        }
+                    }
+
+                    scope.evDataService.setColumns(columns);
+
+                };
 
                 scope.renameColumn = function ($mdMenu, $event) {
 
@@ -29,7 +50,14 @@
                         locals: {
                             data: scope.column
                         }
-                    })
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            updateColumn();
+                        }
+
+                    });
 
                 };
 
@@ -76,6 +104,8 @@
 
                     };
 
+                    updateColumn();
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 
@@ -99,6 +129,8 @@
                         if (res.status === 'agree') {
 
                             scope.column.report_settings = res.data.report_settings;
+                            updateColumn();
+
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 
@@ -118,6 +150,8 @@
                     } else {
                         scope.column.report_settings.subtotal_formula_id = type;
                     };
+
+                    updateColumn();
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
@@ -144,10 +178,16 @@
 
                     scope.column.report_settings.hide_subtotal = !scope.column.report_settings.hide_subtotal;
 
+                    updateColumn();
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 
                 };
+
+                scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+                    columns = scope.evDataService.getColumns();
+                });
 
             }
         }

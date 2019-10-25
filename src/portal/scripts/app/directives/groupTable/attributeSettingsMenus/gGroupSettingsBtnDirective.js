@@ -11,12 +11,33 @@
         return {
             restrict: 'E',
             scope: {
-                group: '=',
+                groupKey: '=',
                 evDataService: '=',
                 evEventService: '='
             },
             templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-group-settings-btn-view.html',
             link: function (scope, elem, attrs) {
+
+                var groups = scope.evDataService.getGroups();
+
+                groups.forEach(function (group) {
+                    if (group.key === scope.groupKey) {
+                        scope.group = group;
+                    }
+                });
+
+                var updateGroup = function () {
+
+                    for (var i = 0; i < groups.length; i++) {
+                        if (groups[i].key === scope.groupKey) {
+                            groups[i] = JSON.parse(JSON.stringify(scope.group));
+                            break;
+                        }
+                    }
+
+                    scope.evDataService.setGroups(groups);
+
+                };
 
                 scope.openGroupSettings = function ($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);
@@ -34,6 +55,8 @@
                         scope.group.report_settings.subtotal_type = type;
                     }
 
+                    updateGroup();
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
@@ -50,6 +73,7 @@
                         scope.group.report_settings.blankline_type = type;
                     }
 
+                    updateGroup();
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
@@ -66,9 +90,20 @@
                         locals: {
                             data: scope.group
                         }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            updateGroup();
+                        }
+
                     })
 
                 };
+
+                scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+                    groups = scope.evDataService.getGroups();
+                });
 
             }
         }
