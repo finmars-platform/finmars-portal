@@ -140,7 +140,7 @@
 
             var promises = [];
 
-            promises.push(vm.getMemberList());
+            promises.push(vm.getCurrentMember());
             promises.push(vm.getGroupList());
 
             Promise.all(promises).then(function (data) {
@@ -159,10 +159,10 @@
 
                 vm.groups.forEach(function (group) {
 
-                    if (vm.entity["group_object_permissions"]) {
-                        vm.entity["group_object_permissions"].forEach(function (permission) {
+                    if (vm.entity.object_permissions) {
+                        vm.entity.object_permissions.forEach(function (permission) {
 
-                            if (permission.group == group.id) {
+                            if (permission.group === group.id) {
                                 if (!group.hasOwnProperty('objectPermissions')) {
                                     group.objectPermissions = {};
                                 }
@@ -181,59 +181,38 @@
 
         };
 
-        vm.getMemberList = function () {
+        vm.getCurrentMember = function () {
 
-            usersService.getMemberList().then(function (data) {
+            return usersService.getMyCurrentMember().then(function (data) {
 
-                vm.members = data.results;
-
-                vm.members.forEach(function (member) {
-
-                    if (vm.entity["user_object_permissions"]) {
-                        vm.entity["user_object_permissions"].forEach(function (permission) {
-
-                            if (permission.member == member.id) {
-                                if (!member.hasOwnProperty('objectPermissions')) {
-                                    member.objectPermissions = {};
-                                }
-                                if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                    member.objectPermissions.manage = true;
-                                }
-                                if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                    member.objectPermissions.change = true;
-                                }
-                            }
-                        })
-                    }
-
-                });
-
-                vm.readyStatus.permissions = true;
+                vm.currentMember = data;
 
                 $scope.$apply();
+
             });
         };
 
+
         vm.checkPermissions = function () {
 
-            if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
-                return false;
+            if (vm.currentMember.is_admin) {
+                return true
             }
 
-            if (vm.entityId) {
+            var permission_code = "manage_" + vm.entityType.split('-').join('').toLowerCase();
 
-                var haveAccess = false;
+            var haveAccess = false;
 
-                var entityType = vm.entityType.split('-').join('');
+            vm.entity.object_permissions.forEach(function (item) {
 
-                if (vm.entity.granted_permissions && vm.entity.granted_permissions.indexOf("manage_" + entityType) !== -1) {
+                if (item.permission === permission_code && vm.currentMember.groups.indexOf(item.group) !== -1) {
                     haveAccess = true;
                 }
 
-                return haveAccess;
-            } else {
-                return true;
-            }
+            });
+
+            return haveAccess;
+
         };
 
         vm.cancel = function () {
@@ -301,7 +280,6 @@
                 var inputsWithCalculations = data.transaction_type_object.inputs;
 
                 vm.readyStatus.entity = true;
-                vm.readyStatus.permissions = true;
 
                 var keys = Object.keys(data.values);
 
@@ -344,26 +322,28 @@
 
                 vm.generateAttributesFromLayoutFields();
 
-                inputsWithCalculations.forEach(function (inputWithCalc) {
+                if (inputsWithCalculations) {
+                    inputsWithCalculations.forEach(function (inputWithCalc) {
 
-                    vm.userInputs.forEach(function (userInput) {
-                        if (userInput.name === inputWithCalc.name) {
-                            if (inputWithCalc.can_recalculate === true) {
-                                userInput.buttons = [
-                                    {
-                                        icon: 'iso',
-                                        tooltip: 'Recalculate',
-                                        caption: '',
-                                        classes: 'md-raised',
-                                        action: vm.recalculate
-                                    }
-                                ]
+                        vm.userInputs.forEach(function (userInput) {
+                            if (userInput.name === inputWithCalc.name) {
+                                if (inputWithCalc.can_recalculate === true) {
+                                    userInput.buttons = [
+                                        {
+                                            icon: 'iso',
+                                            tooltip: 'Recalculate',
+                                            caption: '',
+                                            classes: 'md-raised',
+                                            action: vm.recalculate
+                                        }
+                                    ]
+                                }
                             }
-                        }
-                    })
+                        })
 
-                });
+                    });
 
+                }
                 $scope.$apply();
 
             };
@@ -451,25 +431,28 @@
 
                     vm.generateAttributesFromLayoutFields();
 
-                    inputsWithCalculations.forEach(function (inputWithCalc) {
+                    if (inputsWithCalculations) {
+                        inputsWithCalculations.forEach(function (inputWithCalc) {
 
-                        vm.userInputs.forEach(function (userInput) {
-                            if (userInput.name === inputWithCalc.name) {
-                                if (inputWithCalc.can_recalculate === true) {
-                                    userInput.buttons = [
-                                        {
-                                            icon: 'iso',
-                                            tooltip: 'Recalculate',
-                                            caption: '',
-                                            classes: 'md-raised',
-                                            action: vm.recalculate
-                                        }
-                                    ]
+                            vm.userInputs.forEach(function (userInput) {
+                                if (userInput.name === inputWithCalc.name) {
+                                    if (inputWithCalc.can_recalculate === true) {
+                                        userInput.buttons = [
+                                            {
+                                                icon: 'iso',
+                                                tooltip: 'Recalculate',
+                                                caption: '',
+                                                classes: 'md-raised',
+                                                action: vm.recalculate
+                                            }
+                                        ]
+                                    }
                                 }
-                            }
-                        })
+                            })
 
-                    });
+                        });
+
+                    }
 
                     vm.dataConstructorData = {
                         entityType: vm.entityType,
@@ -487,9 +470,10 @@
                     };
 
                     vm.readyStatus.entity = true;
-                    vm.readyStatus.permissions = true;
                     vm.readyStatus.layout = true;
                     vm.readyStatus.userFields = true;
+
+                    vm.loadPermissions();
 
                     $scope.$apply();
 
@@ -628,46 +612,24 @@
                 vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
             }
 
-            if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) === -1) {
-                vm.entity["user_object_permissions"] = [];
-            }
-
-            if (vm.members) {
-                vm.members.forEach(function (member) {
-
-                    if (member.objectPermissions && member.objectPermissions.manage == true) {
-                        vm.entity["user_object_permissions"].push({
-                            "member": member.id,
-                            "permission": "manage_" + vm.entityType.split('-').join('') //TODO remove _vm.entityType
-                        })
-                    }
-
-                    if (member.objectPermissions && member.objectPermissions.change == true) {
-                        vm.entity["user_object_permissions"].push({
-                            "member": member.id,
-                            "permission": "change_" + vm.entityType.split('-').join('') //TODO remove _vm.entityType
-                        })
-                    }
-
-                });
-            }
-
-            vm.entity["group_object_permissions"] = [];
+            vm.entity.object_permissions = [];
 
             if (vm.groups) {
                 vm.groups.forEach(function (group) {
 
-                    if (group.objectPermissions && group.objectPermissions.manage == true) {
-                        vm.entity["group_object_permissions"].push({
-                            "group": group.id,
-                            "permission": "manage_" + vm.entityType.split('-').join('')
+                    if (group.objectPermissions && group.objectPermissions.manage === true) {
+                        vm.entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "manage_" + vm.entityType.split('-').join('')
                         })
                     }
 
-                    if (group.objectPermissions && group.objectPermissions.change == true) {
-                        vm.entity["group_object_permissions"].push({
-                            "group": group.id,
-                            "permission": "change_" + vm.entityType.split('-').join('')
+                    if (group.objectPermissions && group.objectPermissions.change === true) {
+                        vm.entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "change_" + vm.entityType.split('-').join('')
                         })
                     }
 
@@ -727,6 +689,62 @@
                 if (res.status === 'agree') {
                     $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
                 }
+
+            })
+
+        };
+
+        vm.updatePermissions = function ($event) {
+
+            var permissions = [];
+
+            if (vm.groups) {
+                vm.groups.forEach(function (group) {
+
+                    if (group.objectPermissions && group.objectPermissions.manage === true) {
+                        permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "manage_" + vm.entityType.split('-').join('')
+                        })
+                    }
+
+                    if (group.objectPermissions && group.objectPermissions.change === true) {
+                        permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "change_" + vm.entityType.split('-').join('')
+                        })
+                    }
+
+                });
+            }
+
+            console.log('Update Permissions', permissions);
+
+            complexTransactionService.updateProperties(vm.entity.id, {object_permissions: permissions}).then(function () {
+
+                // console.log('here');
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "Permissions successfully updated"
+                        }
+                    }
+                });
+
+                $scope.$apply();
 
             })
 

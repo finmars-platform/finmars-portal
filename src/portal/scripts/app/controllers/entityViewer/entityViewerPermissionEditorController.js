@@ -5,302 +5,217 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
-    var usersService = require('../../services/usersService');
     var usersGroupService = require('../../services/usersGroupService');
     var entityResolverService = require('../../services/entityResolverService');
+    var evEvents = require('../../services/entityViewerEvents');
 
-
-    module.exports = function ($scope) {
-
-        logService.controller('EntityViewerPermissionEditorController', 'initialized');
+    module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
         var vm = this;
 
-        vm.readyStatus = {users: false, groups: false};
+        vm.readyStatus = {content: false};
 
         vm.processing = false;
+        vm.activeGroup = null;
 
-        vm.getUsers = function () {
-
-            vm.readyStatus.users = false;
-
-            usersService.getMemberList().then(function (data) {
-
-                //console.log('users data', data);
-
-                vm.users = data.results;
-
-                vm.readyStatus.users = true;
-
-                $scope.$apply();
-            })
-        };
+        vm.selectedRows = [];
 
         vm.getGroups = function () {
 
-            vm.readyStatus.groups = false;
+            vm.readyStatus.content = false;
 
             usersGroupService.getList().then(function (data) {
 
-                //console.log('groups data', data);
-
                 vm.groups = data.results;
 
-                vm.readyStatus.groups = true;
+                vm.readyStatus.content = true;
 
                 $scope.$apply();
             })
+
         };
 
-        /*
-         @entity: user / group
-         */
+        vm.getSelectedRows = function(){
 
-        vm.selectEntity = function (type, item) {
+            var list = parentEntityViewerDataService.getFlatList();
 
-            if (type == 'user') {
-                vm.users.forEach(function (user) {
-                    if (item.id !== user.id) {
-                        user.isSelected = false;
+            return list.filter(function (item) {
+                return item.___is_activated
+            })
+
+
+        };
+
+        vm.setActiveGroup = function(group){
+
+            vm.activeGroup = group
+
+        };
+
+        vm.grantManage = function ($event) {
+
+            vm.selectedRows = vm.getSelectedRows();
+
+            console.log('vm.selectedRows', vm.selectedRows);
+
+            var permission_code = "manage_" + vm.entityType.split('-').join('').toLowerCase();
+
+            var results = vm.selectedRows.map(function (item) {
+
+                var exists = false;
+
+                item.object_permissions.forEach(function (perm) {
+
+                    if (perm.group === vm.activeGroup.id && perm.permission === permission_code) {
+                        exists = true;
                     }
+
                 });
 
-                if (!item.isSelected) {
-                    item.isSelected = true;
+                if (!exists) {
 
-                    $scope.$parent.options.externalCallback({
-                        silent: true,
-                        options: {
-                            permission_selected_id: item.id,
-                            permission_selected_entity: 'user'
-                        }
+                    item.object_permissions.push({
+                        group: vm.activeGroup.id,
+                        member: null,
+                        permission: permission_code
                     })
 
                 }
 
+                return item
+            });
 
-            } else {
-                vm.groups.forEach(function (user) {
-                    user.isSelected = false;
+            vm.updatePermissions($event, results);
+        };
+
+        vm.revokeManage = function ($event) {
+
+            vm.selectedRows = vm.getSelectedRows();
+
+            console.log('vm.selectedRows', vm.selectedRows);
+
+            var permission_code = "manage_" + vm.entityType.split('-').join('').toLowerCase();
+
+            var results = vm.selectedRows.map(function (item) {
+
+                item.object_permissions = item.object_permissions.filter(function (perm) {
+
+                    if (perm.group === vm.activeGroup.id && perm.permission === permission_code) {
+                        return false
+                    }
+
+                    return true
+
                 });
 
-                item.isSelected = !item.isSelected;
+                return item
+            });
 
-                if (item.isSelected == true) {
+            vm.updatePermissions($event, results);
+        };
 
-                    $scope.$parent.options.externalCallback({
-                        silent: true,
-                        options: {
-                            permission_selected_id: item.id,
-                            permission_selected_entity: 'group'
-                        }
+        vm.grantChange = function ($event) {
+
+            vm.selectedRows = vm.getSelectedRows();
+
+            console.log('vm.selectedRows', vm.selectedRows);
+
+            var permission_code = "change_" + vm.entityType.split('-').join('').toLowerCase();
+
+            var results = vm.selectedRows.map(function (item) {
+
+                var exists = false;
+
+                item.object_permissions.forEach(function (perm) {
+
+                    if (perm.group === vm.activeGroup.id && perm.permission === permission_code) {
+                        exists = true;
+                    }
+
+                });
+
+                if (!exists) {
+
+                    item.object_permissions.push({
+                        group: vm.activeGroup.id,
+                        member: null,
+                        permission: permission_code
                     })
 
                 }
 
-            }
+                return item
+            });
 
-            //console.log('1111111111111111111111111111111111111111111111111', $scope.$parent.items);
-
+            vm.updatePermissions($event, results);
         };
 
-        vm.toggleManage = function (state, entity) {
+        vm.revokeChange = function ($event) {
 
-            if (!entity.hasOwnProperty('manager_actions')) {
-                entity.manager_actions = {manage: false, change: false};
-            }
+            vm.selectedRows = vm.getSelectedRows();
 
-            //console.log('$scope', $scope);
-            //
-            //console.log($scope.$parent.items);
+            console.log('vm.selectedRows', vm.selectedRows);
 
-            var selectedRows = [];
-            var entityType = $scope.$parent.options.entityType;
+            var permission_code = "change_" + vm.entityType.split('-').join('').toLowerCase();
 
-            if ($scope.$parent.items[0].hasOwnProperty('groups')) {
+            var results = vm.selectedRows.map(function (item) {
 
-                $scope.$parent.items.map(function (group) {
-                    group.items.forEach(function (item) {
+                item.object_permissions = item.object_permissions.filter(function (perm) {
 
-                        if (item.hasOwnProperty('selectedRow') && item.selectedRow == true) {
-                            selectedRows.push(item);
-                        }
-                    });
-                });
-            } else {
-                $scope.$parent.items.forEach(function (item) {
-                    if (item.hasOwnProperty('selectedRow') && item.selectedRow == true) {
-                        selectedRows.push(item);
+                    if (perm.group === vm.activeGroup.id && perm.permission === permission_code) {
+                        return false
                     }
-                })
-            }
 
-            //console.log('selectedRows', selectedRows);
+                    return true
 
-            entity.manager_actions.manage = state;
-
-            var permissionType = 'manage';
-
-            vm.updateBulk(selectedRows, entityType, entity, permissionType);
-        };
-
-        /*
-         @entity: user / group
-         */
-
-        vm.toggleChange = function (state, entity) {
-
-            if (!entity.hasOwnProperty('manager_actions')) {
-                entity.manager_actions = {manage: false, change: false};
-            }
-
-            var selectedRows = [];
-            var entityType = $scope.$parent.options.entityType;
-
-            if ($scope.$parent.items[0].hasOwnProperty('groups')) {
-
-                $scope.$parent.items.map(function (group) {
-                    group.items.forEach(function (item) {
-
-                        if (item.hasOwnProperty('selectedRow') && item.selectedRow == true) {
-                            selectedRows.push(item);
-                        }
-                    });
                 });
-            } else {
-                $scope.$parent.items.forEach(function (item) {
-                    if (item.hasOwnProperty('selectedRow') && item.selectedRow == true) {
-                        selectedRows.push(item);
-                    }
-                })
-            }
 
-            //console.log('selectedRows', selectedRows);
+                return item
+            });
 
-            entity.manager_actions.change = state;
-
-            var permissionType = 'change';
-
-            vm.updateBulk(selectedRows, entityType, entity, permissionType);
+            vm.updatePermissions($event, results);
         };
 
-        vm.updateBulk = function (selectedRows, entityType, entity, permissionType) {
+        vm.updatePermissions = function ($event, items) {
 
             vm.processing = true;
 
-            var selectedRowsUpdated = selectedRows.map(function (item) {
-                return {id: item.id, object_permissions: item.object_permissions};
-            });
+            entityResolverService.updateBulk(vm.entityType, items).then(function () {
 
-            if (entity.hasOwnProperty('first_name')) {
-
-                selectedRowsUpdated.forEach(function (item) {
-
-                    item.object_permissions.forEach(function (permission, $index) {
-
-                        //console.log('entity USER', entity);
-                        //console.log('permission', permission);
-
-                        if (permission.member == entity.id) {
-                            if (permission.group == null) {
-
-                                if (permission.permission.indexOf(permissionType) == 0) {
-                                    item.object_permissions.splice($index, 1);
-                                }
-
-                                console.log('?here', item);
-                            }
-                        }
-
-                    });
-
-                    if (!item.hasOwnProperty('object_permissions')) {
-                        item.object_permissions = [];
-                    }
-
-                    if (entity.hasOwnProperty('manager_actions')) {
-
-                        if (entity.manager_actions.change == true) {
-                            item.object_permissions.push(
-                                {
-                                    "group": null,
-                                    "member": entity.id,
-                                    "permission": "change_" + entityType.split('-').join('').toLowerCase()
-                                }
-                            )
-                        }
-
-                        if (entity.manager_actions.manage == true) {
-                            item.object_permissions.push(
-                                {
-                                    "group": null,
-                                    "member": entity.id,
-                                    "permission": "manage_" + entityType.split('-').join('').toLowerCase()
-                                }
-                            )
-                        }
-
-                    }
-
-                    //console.log('item', item);
-
-                })
-
-            } else {
-
-                selectedRowsUpdated.forEach(function (item) {
-
-                    item.object_permissions.forEach(function (permission, $index) {
-
-                        if (permission.group == entity.id) {
-                            if (permission.member == null) {
-                                item.object_permissions.splice($index, 1);
-                            }
-                        }
-
-                    });
-
-                    if (!item.hasOwnProperty('object_permissions')) {
-                        item.object_permissions = [];
-                    }
-
-                    if (entity.hasOwnProperty('manager_actions')) {
-
-                        if (entity.manager_actions.change == true) {
-                            item.object_permissions.push(
-                                {
-                                    "group": entity.id,
-                                    "member": null,
-                                    "permission": "change_" + entityType.split('-').join('').toLowerCase()
-                                }
-                            )
-                        }
-
-                        if (entity.manager_actions.manage == true) {
-                            item.object_permissions.push({
-                                "group": entity.id,
-                                "member": null,
-                                "permission": "manage_" + entityType.split('-').join('').toLowerCase()
-                            })
-                        }
-
-                    }
-
-                })
-            }
-
-            entityResolverService.updateBulk(entityType, selectedRowsUpdated).then(function () {
                 vm.processing = false;
-                $scope.$parent.options.externalCallback();
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "Permissions successfully updated"
+                        }
+                    }
+                });
+
                 $scope.$apply();
             })
 
         };
 
-        vm.getUsers();
-        vm.getGroups();
+        vm.init = function () {
+
+            vm.entityType = parentEntityViewerDataService.getEntityType();
+
+            vm.getGroups()
+        };
+
+        vm.init();
+
     }
 
 }());

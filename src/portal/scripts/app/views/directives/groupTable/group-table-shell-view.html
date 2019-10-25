@@ -124,7 +124,11 @@
 
         </div>
         <div class="g-additions-workarea" data-ng-if="additions.type === 'permission-editor'">
-            <div data-ng-include="'views/entity-viewer/permission-editor-view.html'" class="min-height"></div>
+
+            <group-permission-editor-binder ev-data-service="evDataService"
+                                         ev-event-service="evEventService"
+                                         sp-exchange-service="spExchangeService"></group-permission-editor-binder>
+
         </div>
         <div class="g-additions-workarea"
              data-ng-if="additions.type === 'balance-report'">

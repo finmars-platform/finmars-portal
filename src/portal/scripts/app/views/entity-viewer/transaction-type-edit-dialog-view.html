@@ -76,7 +76,7 @@
                         <md-tab-body>
                             <md-content class="md-padding p-t-26">
                                 <md-content class="md-padding">
-                                    <div data-ng-if="vm.readyStatus.permissions">
+                                    <div>
                                         <h3>Group permissions</h3>
 
                                         <div>
@@ -123,7 +123,7 @@
                                                 <div layout="row" layout-align="space-between center"
                                                      class="permissions-table-row">
                                                     <div>
-                                                        <p> {{ group["name"] }} </p>
+                                                        <p> {{ group.name }} </p>
                                                     </div>
                                                     <div layout="row" class="permissions-checkbox-holder"
                                                          flex="30"

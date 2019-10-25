@@ -35,6 +35,10 @@
         return usersRepository.getMe();
     };
 
+    var getMyCurrentMember = function () {
+        return usersRepository.getMyCurrentMember();
+    };
+
     var changePassword = function (id, user) {
         return usersRepository.changePassword(id, user);
     };
@@ -130,6 +134,7 @@
         getList: getList,
         getByKey: getByKey,
         getMe: getMe,
+        getMyCurrentMember: getMyCurrentMember,
         changePassword: changePassword,
         update: update,
         patch: patch,
