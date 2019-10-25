@@ -70,7 +70,6 @@
 
         vm.getAttributes = function () {
 
-
             vm.entityAttrs = attributeDataService.getEntityAttributesByEntityType(vm.entityType);
 
             console.log('attrs from attribute data service', vm.entityAttrs);

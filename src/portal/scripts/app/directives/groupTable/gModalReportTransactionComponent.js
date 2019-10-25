@@ -17,14 +17,19 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService) {
+    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
         logService.controller('gModalController', 'initialized');
 
         var vm = this;
         vm.readyStatus = {content: false};
 
-        vm.entityType = entityViewerDataService.getEntityType();
+        vm.entityViewerDataService = entityViewerDataService;
+        vm.entityViewerEventService = entityViewerEventService;
+
+        vm.contentWrapElement = contentWrapElement;
+
+        vm.entityType = vm.entityViewerDataService.getEntityType();
 
         logService.property('vm.entityType', vm.entityType);
 
@@ -38,11 +43,11 @@
 
         vm.cardsDividedIntoTabs = true;
 
-        var columns = entityViewerDataService.getColumns();
-        var filters = entityViewerDataService.getFilters();
-        var groups = entityViewerDataService.getGroups();
+        var columns = vm.entityViewerDataService.getColumns();
+        var filters = vm.entityViewerDataService.getFilters();
+        var groups = vm.entityViewerDataService.getGroups();
 
-        var attrsList = [];
+        vm.attrsList = [];
 
         $('body').addClass('drag-dialog'); // hide backdrop
 
@@ -223,59 +228,59 @@
 
             //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
-            attrsList = attrsList.concat(vm.transactionAttrs);
-            attrsList = attrsList.concat(vm.complexTransactionAttrs);
-            attrsList = attrsList.concat(vm.transactionTypeAttrs);
-            attrsList = attrsList.concat(vm.portfolioAttrs);
-            attrsList = attrsList.concat(vm.instrumentAttrs);
-            attrsList = attrsList.concat(vm.responsibleAttrs);
-            attrsList = attrsList.concat(vm.counterpartyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.transactionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.complexTransactionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.transactionTypeAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.responsibleAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.counterpartyAttrs);
 
-            attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
-            attrsList = attrsList.concat(vm.complexTransactionDynamicAttrs);
-            attrsList = attrsList.concat(vm.transactionTypeDynamicAttrs);
-            attrsList = attrsList.concat(vm.responsibleDynamicAttrs);
-            attrsList = attrsList.concat(vm.counterpartyDynmicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.portfolioDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.complexTransactionDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.transactionTypeDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.responsibleDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.counterpartyDynmicAttrs);
 
 
             // instruments
 
-            attrsList = attrsList.concat(vm.linkedInstrumentAttrs);
-            attrsList = attrsList.concat(vm.allocationBalanceAttrs);
-            attrsList = attrsList.concat(vm.allocationPlAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationBalanceAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationPlAttrs);
 
-            attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
-            attrsList = attrsList.concat(vm.linkedInstrumentDynamicAttrs);
-            attrsList = attrsList.concat(vm.allocationBalanceDynamicAttrs);
-            attrsList = attrsList.concat(vm.allocationPlDnymaicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.instrumentDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationBalanceDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationPlDnymaicAttrs);
 
             // currencies
 
-            attrsList = attrsList.concat(vm.transactionCurrencyAttrs);
-            attrsList = attrsList.concat(vm.settlementCurrencyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.transactionCurrencyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.settlementCurrencyAttrs);
 
             // accounts
 
-            attrsList = attrsList.concat(vm.accountPositionAttrs);
-            attrsList = attrsList.concat(vm.accountCashAttrs);
-            attrsList = attrsList.concat(vm.accountInterimAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountPositionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountCashAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountInterimAttrs);
 
-            attrsList = attrsList.concat(vm.accountPositionDynamicAttrs);
-            attrsList = attrsList.concat(vm.accountCashDynamicAttrs);
-            attrsList = attrsList.concat(vm.accountInterimDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountPositionDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountCashDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountInterimDynamicAttrs);
 
             // strategies
 
-            attrsList = attrsList.concat(vm.strategy1cashAttrs);
-            attrsList = attrsList.concat(vm.strategy1positionAttrs);
-            attrsList = attrsList.concat(vm.strategy2cashAttrs);
-            attrsList = attrsList.concat(vm.strategy2positionAttrs);
-            attrsList = attrsList.concat(vm.strategy3cashAttrs);
-            attrsList = attrsList.concat(vm.strategy3positionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy1cashAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy1positionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy2cashAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy2positionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy3cashAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy3positionAttrs);
 
-            vm.allAttributesList = attrsList;
+            //vm.allAttributesList = vm.attrsList;
 
-            syncAttrs();
+            vm.syncAttrs();
             getSelectedAttrs();
 
             vm.readyStatus.content = true;
@@ -301,7 +306,7 @@
             return item.name;
         };
 
-        var syncAttrs = function () {
+        vm.syncAttrs = function () {
 
             syncTypeAttrs(vm.transactionAttrs);
             syncTypeAttrs(vm.complexTransactionAttrs);
@@ -483,9 +488,9 @@
 
             });
 
-            entityViewerDataService.setColumns(columns);
-            entityViewerDataService.setGroups(groups);
-            entityViewerDataService.setFilters(filters);
+            vm.entityViewerDataService.setColumns(columns);
+            vm.entityViewerDataService.setGroups(groups);
+            vm.entityViewerDataService.setFilters(filters);
 
         }
 
@@ -493,14 +498,57 @@
 
             updateTypeAttrs(attrs);
 
-            evDataHelper.updateColumnsIds(entityViewerDataService);
-            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
 
-            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
-            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+        };
+
+        // format data for SELECTED tab
+        var selectedGroups = [];
+        var selectedColumns = [];
+        var selectedFilters = [];
+
+        var separateSelectedAttrs = function (attributes, attrsVmKey) {
+
+            for (var i = 0; i < attributes.length; i++) {
+                var attribute = JSON.parse(angular.toJson(attributes[i]));
+                attribute.attrsVmKey = attrsVmKey;
+
+                // attrsVmKey used in vm.updateAttrs and selectedDnD
+                if (attribute.groups) {
+                    selectedGroups.push(attribute);
+                } else if (attribute.columns) {
+                    selectedColumns.push(attribute);
+                } else if (attribute.filters) {
+                    selectedFilters.push(attribute);
+                }
+
+            }
+        };
+
+        var groupSelectedGroups = function (insideTable, selectedAttrs, vmKey) { // putting selected attributes in the same order as in the table
+
+            var a;
+            for (a = 0; a < insideTable.length; a++) {
+                var attr = insideTable[a];
+
+                for (var i = 0; i < selectedAttrs.length; i++) {
+                    var sAttr = selectedAttrs[i];
+
+                    if (sAttr.key === attr.key) {
+                        vm[vmKey].push(sAttr);
+                        break;
+                    }
+
+                }
+
+            }
 
         };
 
@@ -509,6 +557,10 @@
             vm.selectedGroups = [];
             vm.selectedColumns = [];
             vm.selectedFilters = [];
+
+            selectedGroups = [];
+            selectedColumns = [];
+            selectedFilters = [];
 
             separateSelectedAttrs(vm.transactionAttrs, 'transactionAttrs');
             separateSelectedAttrs(vm.complexTransactionAttrs, 'complexTransactionAttrs');
@@ -560,50 +612,6 @@
 
             separateSelectedAttrs(vm.custom, 'custom');
 
-        };
-
-        var separateSelectedAttrs = function (attributes, attrsVmKey) {
-
-            var selectedGroups = [];
-            var selectedColumns = [];
-            var selectedFilters = [];
-
-            for (var i = 0; i < attributes.length; i++) {
-                var attribute = JSON.parse(angular.toJson(attributes[i]));
-                attribute.attrsVmKey = attrsVmKey;
-
-                // attrsVmKey used in vm.updateAttrs and selectedDnD
-                if (attribute.groups) {
-                    selectedGroups.push(attribute);
-                } else if (attribute.columns) {
-                    selectedColumns.push(attribute);
-                } else if (attribute.filters) {
-                    selectedFilters.push(attribute);
-                };
-
-            };
-
-            // putting selected attributes in the same order as in the table
-
-            var groupSelectedGroups = function (insideTable, selectedAttrs, vmKey) {
-
-                var a;
-                for (a = 0; a < insideTable.length; a++) {
-                    var attr = insideTable[a];
-
-                    for (var i = 0; i < selectedAttrs.length; i++) {
-                        var sAttr = selectedAttrs[i];
-
-                        if (sAttr.key === attr.key) {
-                            vm[vmKey].push(sAttr);
-                            break;
-                        };
-                    };
-
-                };
-
-            };
-
             groupSelectedGroups(groups, selectedGroups, 'selectedGroups');
             groupSelectedGroups(columns, selectedColumns, 'selectedColumns');
             groupSelectedGroups(filters, selectedFilters, 'selectedFilters');
@@ -618,8 +626,8 @@
                     attributesList[i].columns = selectedAttr.columns;
                     attributesList[i].filters = selectedAttr.filters;
                     break;
-                };
-            };
+                }
+            }
 
             vm.updateAttrs(attributesList);
 
@@ -627,422 +635,7 @@
 
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
-            viewConstructorDnD.destroy();
-            selectedDnD.destroy();
             $mdDialog.hide();
-        };
-
-        var viewConstructorDnD = {
-
-            init: function () {
-                this.dragula();
-                this.eventListeners();
-            },
-
-            eventListeners: function () {
-
-                var exist = false;
-                var columnExist = false;
-                var groupExist = false;
-                var filterExist = false;
-
-                this.dragula.on('over', function (elem, container, source) {
-                    $(container).addClass('active');
-                    $(container).on('mouseleave', function () {
-                        $(this).removeClass('active');
-                    })
-
-                });
-                this.dragula.on('drop', function (elem, target) {
-                    // console.log('here?', target, elem); //TODO fallback to ids instead of name/key
-                    $(target).removeClass('active');
-                    var name = $(elem).html();
-                    var i;
-
-                    var identifier;
-                    identifier = $(elem).attr('data-key-identifier');
-
-                    /*if ($(elem).attr('data-key-identifier')) {
-                        identifier = $(elem).attr('data-key-identifier');
-                    } else {
-                        identifier = $(elem).html();
-                    }*/
-
-                    exist = false;
-                    if (target === document.querySelector('#columnsbag') ||
-                        target === document.querySelector('.g-columns-holder')) {
-                        for (i = 0; i < columns.length; i = i + 1) {
-
-                            if (columns[i].key === identifier) {
-                                exist = true;
-                                columnExist = true;
-                            }
-
-                            /*if (columns[i].name === identifier) {
-                                exist = true;
-                                columnExist = true;
-                            }*/
-                        }
-                    }
-                    /*if (target === document.querySelector('#groupsbag') ||
-                        target === document.querySelector('.g-groups-holder')) {*/
-                    if (target === document.querySelector('#groupsbag')) {
-                        for (i = 0; i < groups.length; i = i + 1) {
-                            if (groups[i].key === identifier) {
-                                exist = true;
-                                groupExist = true;
-                            }
-
-                        }
-                    }
-                    if (target === document.querySelector('#filtersbag .drop-new-filter') ||
-                        target === document.querySelector('.g-filters-holder')) {
-                        for (i = 0; i < filters.length; i = i + 1) {
-                            if (filters[i].key === identifier) {
-                                exist = true;
-                                filterExist = true;
-                            }
-
-                            /*if (filters[i].name === identifier) {
-                                exist = true;
-                                filterExist = true;
-                            }*/
-                        }
-                    }
-
-                    if (!exist && target) {
-                        var a;
-                        //console.log('target', {target: target});
-                        //console.log('elem', {elem: elem});
-
-                        var nodes = Array.prototype.slice.call(target.children);
-                        var index = nodes.indexOf(elem);
-
-                        // .g-columns-holder
-                        //if (target === document.querySelector('#columnsbag')) {
-                        if (target === document.querySelector('.g-columns-holder') ||
-                            target === document.querySelector('#columnsbag')) {
-
-                            for (a = 0; a < attrsList.length; a = a + 1) {
-
-                                if (attrsList[a].key === identifier) {
-
-                                    if (target === document.querySelector('#columnsbag')) {
-                                        columns.push(attrsList[a]);
-                                    } else {
-                                        columns.splice(index, 0, attrsList[a]);
-                                    }
-
-                                    //columns.push(attrsList[a]);
-                                }
-
-                                /*if (attrsList[a].name === identifier) {
-
-                                    if (target === document.querySelector('#columnsbag')) {
-                                        columns.push(attrsList[a]);
-                                    } else {
-                                        columns.splice(index, 0, attrsList[a]);
-                                    }
-
-                                    //columns.push(attrsList[a]);
-                                }*/
-                            }
-                            syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
-
-                            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        }
-                        /*if (target === document.querySelector('#groupsbag') ||
-                            target === document.querySelector('.g-groups-holder')) {*/
-                        if (target === document.querySelector('#groupsbag')) {
-                            for (a = 0; a < attrsList.length; a = a + 1) {
-
-                                if (attrsList[a].key === identifier) {
-
-                                    /*if (target === document.querySelector('#groupsbag')) {
-                                        groups.push(attrsList[a]);
-                                    } else {
-                                        groups.splice(index, 0, attrsList[a]);
-                                    }*/
-                                    groups.push(attrsList[a]);
-
-                                    //columns.push(attrsList[a]);
-                                }
-
-                            }
-                            syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
-
-                            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        }
-                        if (target === document.querySelector('#filtersbag .drop-new-filter') ||
-                            target === document.querySelector('.g-filters-holder')) {
-
-                            for (a = 0; a < attrsList.length; a = a + 1) {
-
-                                if (attrsList[a].key === identifier) {
-
-                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
-                                        filters.push(attrsList[a]);
-                                    } else {
-                                        filters.splice(index, 0, attrsList[a]);
-                                    }
-
-                                    //columns.push(attrsList[a]);
-                                }
-
-                                /*if (attrsList[a].name === identifier) {
-
-                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
-                                        filters.push(attrsList[a]);
-                                    } else {
-                                        filters.splice(index, 0, attrsList[a]);
-                                    }
-
-                                }*/
-                            }
-                            syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
-
-                            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        }
-
-                        // $scope.$apply();
-
-                    } else if (exist && target) {
-
-                        var errorMessage = 'Item should be unique'
-
-                        if (columnExist) {
-                            errorMessage = 'There is already such column in Column Area';
-                        } else if (groupExist) {
-                            errorMessage = 'There is already such group in groups Area';
-                        } else if (filterExist) {
-                            errorMessage = 'There is already such filter in Filter Area';
-                        }
-
-                        $mdDialog.show({
-                            controller: 'WarningDialogController as vm',
-                            templateUrl: 'views/warning-dialog-view.html',
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: false,
-                            multiple: true,
-                            locals: {
-                                warning: {
-                                    title: 'Error',
-                                    description: errorMessage
-                                },
-                                data: {
-                                    actionsButtons: [{
-                                        name: "OK",
-                                        response: false
-                                    }]
-                                }
-                            }
-                        });
-
-                    }
-
-                    $scope.$apply();
-                });
-
-                this.dragula.on('dragend', function (el) {
-                    $scope.$apply();
-                    $(el).remove();
-                })
-            },
-
-            dragula: function () {
-
-                var items = [
-                    document.querySelector('.g-columns-holder'),
-                    document.querySelector('#columnsbag'),
-                    // document.querySelector('.g-groups-holder'),
-                    document.querySelector('#groupsbag'),
-                    document.querySelector('.g-filters-holder'),
-                    document.querySelector('#filtersbag .drop-new-filter')
-                ];
-
-                var i;
-                var itemsElem = document.querySelectorAll('#dialogbag .vcDraggableCard');
-                for (i = 0; i < itemsElem.length; i = i + 1) {
-                    items.push(itemsElem[i]);
-                }
-
-                this.dragula = dragula(items,
-                    {
-                        accepts: function (el, target, source, sibling) {
-
-                            //console.log('el', el, target, source);
-
-                            if (target.classList.contains('g-modal-draggable-card')) {
-                                return false;
-                            }
-
-                            return true;
-                        },
-                        copy: true
-                    });
-            },
-
-            destroy: function () {
-                // console.log('this.dragula', this.dragula);
-                this.dragula.destroy();
-            }
-        };
-
-        var selectedDnD = {
-
-            init: function () {
-                this.selectedDragulaInit();
-                this.eventListeners();
-            },
-
-            eventListeners: function () {
-
-                var attributeChanged = false;
-                var drake = this.dragula;
-
-                drake.on('drop', function (elem, target, source, nextSibling) {
-
-                    var attributeKey = elem.dataset.attributeKey;
-                    var attrsVmKey = elem.dataset.vmKey;
-
-                    // dragging from groups
-                    if (source.classList.contains('vcSelectedGroups')) {
-
-                        // dragged to columns
-                        if (target.classList.contains('vcSelectedColumns')) {
-
-                            attributeChanged = false;
-
-                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                if (vm[attrsVmKey][i].key === attributeKey) {
-                                    vm[attrsVmKey][i].groups = false;
-                                    attributeChanged = true;
-                                    break;
-                                };
-                            };
-                            // < dragged to columns >
-
-                            // dragged to filters
-                        } else if (target.classList.contains('vcSelectedFilters')) {
-
-                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                if (vm[attrsVmKey][i].key === attributeKey) {
-                                    vm[attrsVmKey][i].groups = false;
-                                    vm[attrsVmKey][i].columns = false;
-                                    vm[attrsVmKey][i].filters = true;
-                                    attributeChanged = true;
-                                    break;
-                                };
-                            };
-
-                            // < dragged to filters >
-                        } else if (target.classList.contains('vcSelectedGroups')) {
-                            drake.cancel()
-                        };
-
-                        // < dragging from groups >
-
-                        // dragging from columns
-                    } else if (source.classList.contains('vcSelectedColumns')) {
-
-                        // dragged to groups
-                        if (target.classList.contains('vcSelectedGroups')) {
-
-                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                if (vm[attrsVmKey][i].key === attributeKey) {
-                                    vm[attrsVmKey][i].groups = true;
-                                    attributeChanged = true;
-                                    break;
-                                };
-                            };
-                            // < dragged to groups >
-
-                            // dragged to filters
-                        } else if (target.classList.contains('vcSelectedFilters')) {
-
-                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                if (vm[attrsVmKey][i].key === attributeKey) {
-                                    vm[attrsVmKey][i].columns = false;
-                                    vm[attrsVmKey][i].filters = true;
-                                    attributeChanged = true;
-                                    break;
-                                };
-                            };
-
-                            // < dragged to filters >
-                        } else if (target.classList.contains('vcSelectedColumns')) {
-                            drake.cancel()
-                        };
-                        // < dragging from columns >
-
-                        // dragging from filters
-                    } else if (source.classList.contains('vcSelectedFilters')) {
-
-                        // dragged to groups
-                        if (target.classList.contains('vcSelectedGroups')) {
-
-                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                if (vm[attrsVmKey][i].key === attributeKey) {
-                                    vm[attrsVmKey][i].groups = true;
-                                    attributeChanged = true;
-                                    break;
-                                };
-                            };
-                            // < dragged to columns >
-
-                            // dragged to columns
-                        } else if (target.classList.contains('vcSelectedColumns')) {
-
-                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                if (vm[attrsVmKey][i].key === attributeKey) {
-                                    vm[attrsVmKey][i].columns = true;
-                                    attributeChanged = true;
-                                    break;
-                                };
-                            };
-                            // < dragged to columns >
-
-                        } else if (target.classList.contains('vcSelectedFilters')) {
-                            drake.cancel()
-                        };
-
-                    };
-                    // < dragging from filters >
-
-                    if (attributeChanged) {
-                        $(elem).remove();
-                        vm.updateAttrs(vm[attrsVmKey]);
-                    };
-
-                });
-
-            },
-
-            selectedDragulaInit: function () {
-
-                var items = [
-                    document.querySelector('.vcSelectedGroups'),
-                    document.querySelector('.vcSelectedColumns'),
-                    document.querySelector('.vcSelectedFilters')
-                ];
-
-                this.dragula = dragula(items, {
-                    revertOnSpill: true
-                });
-            },
-
-            destroy: function () {
-                this.dragula.destroy();
-            }
         };
 
         /*vm.openCustomFieldsManager = function () {
@@ -1065,13 +658,6 @@
 
         };*/
 
-        vm.initDnD = function () {
-            setTimeout(function () {
-                viewConstructorDnD.init();
-                selectedDnD.init();
-            }, 500);
-        };
-
         vm.MABtnVisibility = function (entityType) {
             return metaService.checkRestrictedEntityTypesForAM(entityType);
         };
@@ -1080,26 +666,26 @@
 
             vm.getAttributes();
 
-            entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-                columns = entityViewerDataService.getColumns();
-                syncAttrs();
+                columns = vm.entityViewerDataService.getColumns();
+                vm.syncAttrs();
                 getSelectedAttrs();
 
             });
 
-            entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-                groups = entityViewerDataService.getGroups();
-                syncAttrs();
+                groups = vm.entityViewerDataService.getGroups();
+                vm.syncAttrs();
                 getSelectedAttrs();
 
             });
 
-            entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-                filters = entityViewerDataService.getFilters();
-                syncAttrs();
+                filters = vm.entityViewerDataService.getFilters();
+                vm.syncAttrs();
                 getSelectedAttrs();
 
             });

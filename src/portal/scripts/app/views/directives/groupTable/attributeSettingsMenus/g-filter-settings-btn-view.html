@@ -1,0 +1,347 @@
+<div ng-if="filter.value_type === 10 || filter.value_type === 30" class="settings-btn">
+    <md-menu>
+        <md-button aria-label="report viewer filter settings"
+                   class="md-icon-button"
+                   ng-click="$mdMenu.open($event)">
+            <ng-md-icon icon="settings"></ng-md-icon>
+        </md-button>
+
+        <md-menu-content width="3">
+            <md-menu-item>
+                <md-menu>
+                    <md-button class="g-settings-option-btn"
+                               ng-click="$mdOpenMenu($event)"
+                               aria-label="show submenu with filter types">
+                        <ng-md-icon icon="arrow_drop_up"
+                                    class="z-arrow-left-icon"></ng-md-icon>
+                        <span>Filter</span>
+                    </md-button>
+                    <md-menu-content class="dropdown-buttons-menu" width="3">
+                        <md-button ng-click="changeFilterType('contains')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('contains')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('contains')"></ng-md-icon>
+                            Contains
+                        </md-button>
+                        <md-button ng-click="changeFilterType('does_not_contains')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('does_not_contains')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('does_not_contains')"></ng-md-icon>
+                            Does not contains
+                        </md-button>
+                        <md-button ng-click="changeFilterType('selector')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('selector')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('selector')"></ng-md-icon>
+                            Select
+                        </md-button>
+                        <md-button ng-click="changeFilterType('multiselector')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('multiselector')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('multiselector')"></ng-md-icon>
+                            Multiple Select
+                        </md-button>
+                        <md-button ng-click="changeFilterType('empty')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('empty')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('empty')"></ng-md-icon>
+                            Empty cells
+                        </md-button>
+
+                        <md-menu-item ng-click="createUseFromAboveDir()">
+                            <use-from-above-button item="filter.options.use_from_above.key"
+                                                   attributes-entity-type="filter.options.use_from_above.attrs_entity_type"
+                                                   data="{value_type: filter.value_type}"
+                                                   filter-type="filter.options.filter_type"
+                                                   attribute-data-service="attributeDataService"
+                                                   update-filter-fn="filterSettingsChange()"
+                                                   filter-file="filter.options"
+                                                   class="rv-filter-link-to-above-btn"></use-from-above-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-checkbox ng-model="filter.options.exclude_empty_cells"
+                             ng-change="filterSettingsChange()"
+                             class="md-primary g-filter-options-checkbox"
+                             aria-label="hide rows with empty cells checkbox">
+                    Exclude cells with no value
+                </md-checkbox>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button ng-click="renameFilter($mdMenu, $event)"
+                           class="g-settings-option-btn">
+                    <ng-md-icon icon="visibility_off"
+                                style="visibility: hidden;"></ng-md-icon>
+                    <span>Rename</span>
+                </md-button>
+                <md-menu-content style="display: none"></md-menu-content>
+            </md-menu-item>
+
+        </md-menu-content>
+    </md-menu>
+
+</div>
+
+<div ng-if="filter.value_type === 20" class="settings-btn">
+    <md-menu>
+        <md-button aria-label="Open phone interactions menu"
+                   class="md-icon-button"
+                   ng-click="$mdMenu.open($event)">
+            <ng-md-icon icon="settings"></ng-md-icon>
+        </md-button>
+        <md-menu-content width="3">
+            <md-menu-item>
+                <md-menu>
+                    <md-button class="g-settings-option-btn"
+                               ng-click="$mdOpenMenu($event)"
+                               aria-label="show submenu with filter types">
+                        <ng-md-icon icon="arrow_drop_up"
+                                    class="z-arrow-left-icon"></ng-md-icon>
+                        <span>Filter</span>
+                    </md-button>
+                    <md-menu-content class="dropdown-buttons-menu" width="3">
+                        <md-button ng-click="changeFilterType('equal')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('equal')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('equal')"></ng-md-icon>
+                            Equal
+                        </md-button>
+                        <md-button ng-click="changeFilterType('not_equal')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('not_equal')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('not_equal')"></ng-md-icon>
+                            Not equal
+                        </md-button>
+                        <md-button ng-click="changeFilterType('greater')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('greater')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('greater')"></ng-md-icon>
+                            Greater than
+                        </md-button>
+                        <md-button ng-click="changeFilterType('greater_equal')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('greater_equal')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('greater_equal')"></ng-md-icon>
+                            Greater or equal to
+                        </md-button>
+                        <md-button ng-click="changeFilterType('less')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('less')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('less')"></ng-md-icon>
+                            Less than
+                        </md-button>
+                        <md-button ng-click="changeFilterType('less_equal')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('less_equal')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('less_equal')"></ng-md-icon>
+                            Less or equal to
+                        </md-button>
+                        <md-button ng-click="changeFilterType('from_to')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('from_to')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('from_to')"></ng-md-icon>
+                            From ... to ... (incl)
+                        </md-button>
+                        <md-button ng-click="changeFilterType('empty')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('empty')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('empty')"></ng-md-icon>
+                            Empty cells
+                        </md-button>
+
+                        <md-menu-item ng-click="createUseFromAboveDir()">
+                            <use-from-above-button item="filter.options.use_from_above.key"
+                                                   attributes-entity-type="filter.options.use_from_above.options.entityType"
+                                                   data="{value_type: filter.value_type}"
+                                                   filter-type="filter.options.filter_type"
+                                                   attribute-data-service="attributeDataService"
+                                                   update-filter-fn="filterSettingsChange()"
+                                                   class="rv-filter-link-to-above-btn"></use-from-above-button>
+                        </md-menu-item>
+
+                    </md-menu-content>
+                </md-menu>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-checkbox ng-model="filter.options.exclude_empty_cells"
+                             ng-change="filterSettingsChange()"
+                             class="md-primary g-filter-options-checkbox"
+                             aria-label="hide rows with empty cells checkbox">
+                    Exclude cells with no value
+                </md-checkbox>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button ng-click="renameFilter($mdMenu, $event)"
+                           class="g-settings-option-btn">
+                    <ng-md-icon icon="visibility_off"
+                                style="visibility: hidden;"></ng-md-icon>
+                    <span>Rename</span>
+                </md-button>
+                <md-menu-content style="display: none"></md-menu-content>
+            </md-menu-item>
+
+        </md-menu-content>
+    </md-menu>
+
+</div>
+
+<div ng-if="filter.value_type === 40" class="settings-btn">
+    <md-menu>
+        <md-button aria-label="Open phone interactions menu"
+                   class="md-icon-button"
+                   ng-click="$mdMenu.open($event)">
+            <ng-md-icon icon="settings"></ng-md-icon>
+        </md-button>
+        <md-menu-content width="3">
+            <md-menu-item>
+                <md-menu>
+                    <md-button class="g-settings-option-btn"
+                               ng-click="$mdOpenMenu($event)"
+                               aria-label="show submenu with filter types">
+                        <ng-md-icon icon="arrow_drop_up"
+                                    class="z-arrow-left-icon"></ng-md-icon>
+                        <span>Filter</span>
+                    </md-button>
+                    <md-menu-content class="dropdown-buttons-menu" width="3">
+                        <md-button ng-click="changeFilterType('equal')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('equal')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('equal')"></ng-md-icon>
+                            Equal
+                        </md-button>
+                        <md-button ng-click="changeFilterType('not_equal')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('not_equal')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('not_equal')"></ng-md-icon>
+                            Not equal
+                        </md-button>
+                        <md-button ng-click="changeFilterType('greater')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('greater')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('greater')"></ng-md-icon>
+                            Greater than
+                        </md-button>
+                        <md-button ng-click="changeFilterType('greater_equal')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('greater_equal')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('greater_equal')"></ng-md-icon>
+                            Greater or equal to
+                        </md-button>
+                        <md-button ng-click="changeFilterType('less')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('less')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('less')"></ng-md-icon>
+                            Less than
+                        </md-button>
+                        <md-button ng-click="changeFilterType('less_equal')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('less_equal')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('less_equal')"></ng-md-icon>
+                            Less or equal to
+                        </md-button>
+                        <md-button ng-click="changeFilterType('from_to')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('from_to')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('from_to')"></ng-md-icon>
+                            From ... to ... (incl)
+                        </md-button>
+                        <md-button ng-click="changeFilterType('empty')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('empty')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('empty')"></ng-md-icon>
+                            Empty cells
+                        </md-button>
+                        <md-button ng-click="changeFilterType('date_tree')">
+                            <ng-md-icon icon="done"
+                                        ng-show="!showFRCheckMark('date_tree')"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        ng-show="showFRCheckMark('date_tree')"></ng-md-icon>
+                            Date tree
+                        </md-button>
+
+                        <md-menu-item ng-click="createUseFromAboveDir()">
+                            <use-from-above-button item="filter.options.use_from_above.key"
+                                                   attributes-entity-type="filter.options.use_from_above.options.entityType"
+                                                   data="{value_type: filter.value_type}"
+                                                   filter-type="filter.options.filter_type"
+                                                   attribute-data-service="attributeDataService"
+                                                   update-filter-fn="filterSettingsChange()"
+                                                   class="rv-filter-link-to-above-btn"></use-from-above-button>
+                        </md-menu-item>
+
+                    </md-menu-content>
+                </md-menu>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-checkbox ng-model="filter.options.exclude_empty_cells"
+                             ng-change="filterSettingsChange()"
+                             class="md-primary g-filter-options-checkbox"
+                             aria-label="hide rows with empty cells checkbox">
+                    Exclude cells with no value
+                </md-checkbox>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
+                           class="g-settings-option-btn">
+                    <ng-md-icon icon="visibility_off"
+                                style="visibility: hidden;"></ng-md-icon>
+                    <span>Rename</span>
+                </md-button>
+                <md-menu-content style="display: none"></md-menu-content>
+            </md-menu-item>
+
+        </md-menu-content>
+    </md-menu>
+
+</div>
