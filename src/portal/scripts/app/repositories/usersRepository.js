@@ -97,6 +97,17 @@
         })
     };
 
+    var getMyCurrentMember = function () {
+        return xhrService.fetch(baseUrl + 'users/member/0/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+    };
+
     var getCurrentMasterUser = function () {
         return xhrService.fetch(baseUrl + 'users/get-current-master-user', {
             method: 'GET',
@@ -351,6 +362,7 @@
         getList: getList,
         getByKey: getByKey,
         getMe: getMe,
+        getMyCurrentMember: getMyCurrentMember,
         changePassword: changePassword,
         update: update,
         patch: patch,

@@ -56,6 +56,8 @@
 
         vm.attributesLayout = [];
 
+        vm.currentMember = null;
+
         vm.generateAttributesFromLayoutFields = function () {
 
             var tabResult;
@@ -140,7 +142,7 @@
 
             var promises = [];
 
-            promises.push(vm.getMemberList());
+            promises.push(vm.getCurrentMember());
             promises.push(vm.getGroupList());
 
             Promise.all(promises).then(function (data) {
@@ -159,10 +161,10 @@
 
                 vm.groups.forEach(function (group) {
 
-                    if (vm.entity["group_object_permissions"]) {
-                        vm.entity["group_object_permissions"].forEach(function (permission) {
+                    if (vm.entity.object_permissions) {
+                        vm.entity.object_permissions.forEach(function (permission) {
 
-                            if (permission.group == group.id) {
+                            if (permission.group === group.id) {
                                 if (!group.hasOwnProperty('objectPermissions')) {
                                     group.objectPermissions = {};
                                 }
@@ -181,36 +183,14 @@
 
         };
 
-        vm.getMemberList = function () {
+        vm.getCurrentMember = function () {
 
-            usersService.getMemberList().then(function (data) {
+            return usersService.getMyCurrentMember().then(function (data) {
 
-                vm.members = data.results;
-
-                vm.members.forEach(function (member) {
-
-                    if (vm.entity["user_object_permissions"]) {
-                        vm.entity["user_object_permissions"].forEach(function (permission) {
-
-                            if (permission.member == member.id) {
-                                if (!member.hasOwnProperty('objectPermissions')) {
-                                    member.objectPermissions = {};
-                                }
-                                if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                    member.objectPermissions.manage = true;
-                                }
-                                if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                    member.objectPermissions.change = true;
-                                }
-                            }
-                        })
-                    }
-
-                });
-
-                vm.readyStatus.permissions = true;
+                vm.currentMember = data;
 
                 $scope.$apply();
+
             });
         };
 
@@ -220,20 +200,23 @@
                 return false;
             }
 
-            if (vm.entityId) {
+            if (vm.currentMember && vm.currentMember.is_admin) {
+                return true
+            }
 
-                var haveAccess = false;
+            var permission_code = "manage_" + vm.entityType.split('-').join('').toLowerCase();
 
-                var entityType = vm.entityType.split('-').join('');
+            var haveAccess = false;
 
-                if (vm.entity.granted_permissions && vm.entity.granted_permissions.indexOf("manage_" + entityType) !== -1) {
+            vm.entity.object_permissions.forEach(function (item) {
+
+                if (item.permission === permission_code && vm.currentMember.groups.indexOf(item.group) !== -1) {
                     haveAccess = true;
                 }
 
-                return haveAccess;
-            } else {
-                return true;
-            }
+            });
+
+            return haveAccess;
         };
 
         vm.entityTypeSlug = function () {
@@ -468,46 +451,24 @@
 
             }
 
-            if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) === -1) {
-                vm.entity["user_object_permissions"] = [];
-            }
-
-            if (vm.members) {
-                vm.members.forEach(function (member) {
-
-                    if (member.objectPermissions && member.objectPermissions.manage == true) {
-                        vm.entity["user_object_permissions"].push({
-                            "member": member.id,
-                            "permission": "manage_" + vm.entityType.split('-').join('') //TODO remove _vm.entityType
-                        })
-                    }
-
-                    if (member.objectPermissions && member.objectPermissions.change == true) {
-                        vm.entity["user_object_permissions"].push({
-                            "member": member.id,
-                            "permission": "change_" + vm.entityType.split('-').join('') //TODO remove _vm.entityType
-                        })
-                    }
-
-                });
-            }
-
-            vm.entity["group_object_permissions"] = [];
+            vm.entity.object_permissions = [];
 
             if (vm.groups) {
                 vm.groups.forEach(function (group) {
 
-                    if (group.objectPermissions && group.objectPermissions.manage == true) {
-                        vm.entity["group_object_permissions"].push({
-                            "group": group.id,
-                            "permission": "manage_" + vm.entityType.split('-').join('')
+                    if (group.objectPermissions && group.objectPermissions.manage === true) {
+                        vm.entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "manage_" + vm.entityType.split('-').join('')
                         })
                     }
 
-                    if (group.objectPermissions && group.objectPermissions.change == true) {
-                        vm.entity["group_object_permissions"].push({
-                            "group": group.id,
-                            "permission": "change_" + vm.entityType.split('-').join('')
+                    if (group.objectPermissions && group.objectPermissions.change === true) {
+                        vm.entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "change_" + vm.entityType.split('-').join('')
                         })
                     }
 

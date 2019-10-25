@@ -1,133 +1,83 @@
-<div data-ng-controller="EntityViewerPermissionEditorController as vm">
+<div>
 
     <div layout="row" layout-align="center center">
-        <h3>Permission manager</h3>
+        <h3>Groups Permission Manager</h3>
     </div>
 
-    <md-tabs md-dynamic-height md-border-bottom>
-        <md-tab label="Users">
-            <md-content class="md-padding">
+    <div layout="row" layout-align="space-between center" style="margin-bottom: 8px; padding: 0 16px">
+        <div layout="row" layout-align="begin center">
+            Group Name
+        </div>
+        <div layout="row" layout-align="center center">
+            <div layout="row" layout-align="center center" style="width: 210px">
+                <b>Manage</b>
+            </div>
+            <div layout="row" layout-align="center center" style="width: 210px">
+                <b>Change</b>
+            </div>
+        </div>
+    </div>
 
-                <div layout="row" layout-align="space-between center" style="margin-bottom: 8px; padding: 0 16px">
-                    <div layout="row" layout-align="begin center">
-                        <b>Username</b>
-                    </div>
-                    <div layout="row" layout-align="center center">
-                        <div layout="row" layout-align="center center" style="width: 210px">
-                            <b>Manage</b>
-                        </div>
-                        <div layout="row" layout-align="center center" style="width: 210px">
-                            <b>Change</b>
-                        </div>
-                    </div>
+    <div layout="column" class="ev-permission-editor-item">
+
+        <div layout="row" layout-align="space-between"
+             class="m-b-8"
+             ng-class="{'selected': vm.activeGroup && vm.activeGroup.id == group.id}"
+             data-ng-repeat="group in vm.groups"
+             data-ng-click="vm.setActiveGroup(group)" style="height: 48px;">
+
+            <div layout="row" layout-align="begin center">
+                <span data-ng-bind="group.name"></span>
+
+                <span data-ng-if="vm.activeGroup && vm.activeGroup.id == group.id && vm.processing" class="m-l-8">
+                    <div layout="row" layout-sm="column" layout-align="space-around">
+                    <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                    <progress-circular diameter="20"></progress-circular>
                 </div>
-
-                <div layout="column" class="ev-permission-editor-item">
-
-                    <div layout="row" layout-align="space-between" class="{{user.isSelected ? 'selected' : ''}}"
-                         data-ng-repeat="user in vm.users"
-                         data-ng-click="vm.selectEntity('user', user)">
-
-                        <div layout="row" layout-align="begin center">
-                            <span data-ng-bind="user.username"></span>
-                        </div>
-
-                        <div layout="row" layout-align="center center">
-
-                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleManage(false, user)">
-                                <span>Disable</span>
-                            </md-button>
-                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleManage(true, user)">
-                                <span>Enable</span>
-                            </md-button>
-
-                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleChange(false, user)">
-                                <span>Disable</span>
-
-                            </md-button>
-                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleChange(true, user)">
-                                <span>Enable</span>
-                            </md-button>
+                </span>
+            </div>
 
 
-                        </div>
 
-                    </div>
+            <div layout="row" layout-align="center center" data-ng-if="vm.activeGroup && vm.activeGroup.id == group.id">
 
-                </div>
+                <md-button class="md-raised"
+                           ng-class="{'disabled_btn': vm.processing}"
+                           data-ng-click="vm.grantManage()">
+                    <span>Grant</span>
+                </md-button>
 
+                <md-button class="md-raised"
+                           ng-class="{'disabled_btn': vm.processing}"
+                           data-ng-click="vm.revokeManage()">
+                    <span>Revoke</span>
+                </md-button>
 
-            </md-content>
-        </md-tab>
-        <md-tab label="Groups">
-            <md-content class="md-padding">
+                <md-button class="md-raised"
+                           ng-class="{'disabled_btn': vm.processing}"
+                           data-ng-click="vm.grantChange()">
+                    <span>Grant</span>
+                </md-button>
 
-                <div layout="row" layout-align="space-between center" style="margin-bottom: 8px; padding: 0 16px">
-                    <div layout="row" layout-align="begin center">
-                        Group
-                    </div>
-                    <div layout="row" layout-align="center center">
-                        <div layout="row" layout-align="center center" style="width: 210px">
-                            <b>Manage</b>
-                        </div>
-                        <div layout="row" layout-align="center center" style="width: 210px">
-                            <b>Change</b>
-                        </div>
-                    </div>
-                </div>
+                <md-button class="md-raised"
+                           ng-class="{'disabled_btn': vm.processing}"
+                           data-ng-click="vm.revokeChange()">
+                    <span>Revoke</span>
 
-                <div layout="column" class="ev-permission-editor-item">
+                </md-button>
 
-                    <div layout="row" layout-align="space-between" class="{{group.isSelected ? 'selected' : ''}}"
-                         data-ng-repeat="group in vm.groups"
-                         data-ng-click="vm.selectEntity('group', group)">
-
-                        <div layout="row" layout-align="begin center">
-                            <span data-ng-bind="group.name"></span>
-                        </div>
-
-                        <div layout="row" layout-align="center center">
+            </div>
 
 
-                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleManage(false, group)">
-                                <span>Disable</span>
-                            </md-button>
-                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleManage(true, group)">
-                                <span>Enable</span>
-                            </md-button>
+        </div>
 
-                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleChange(false, group)">
-                                <span>Disable</span>
+    </div>
 
-                            </md-button>
-                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleChange(true, group)">
-                                <span>Enable</span>
-                            </md-button>
-
-                        </div>
-
-
-                    </div>
-
-                </div>
-
-                <div style="margin-top: 36px">
-                    <div layout="row" layout-align="end center">
-                        <md-button class="md-raised" data-ui-sref="app.settings.users-groups">Create/Edit Groups
-                        </md-button>
-                    </div>
-                </div>
-
-            </md-content>
-        </md-tab>
-    </md-tabs>
+    <!--<div style="margin-top: 36px">-->
+    <!--<div layout="row" layout-align="end center">-->
+    <!--<md-button class="md-raised" data-ui-sref="app.settings.users-groups">Create/Edit Groups-->
+    <!--</md-button>-->
+    <!--</div>-->
+    <!--</div>-->
 
 </div>
