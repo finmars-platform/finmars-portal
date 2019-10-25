@@ -772,7 +772,7 @@
                                     <p>Groups</p>
                                 </div>
 
-                                <div class="vcSelectedGroups" >
+                                <div class="vc-selected-attrs-holder vcSelectedGroups">
                                     <div class="g-checkbox-row vcSelectedGroupItem"
                                          data-ng-repeat="item in vm.selectedGroups | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
@@ -827,7 +827,7 @@
                                     <p>Columns</p>
                                 </div>
 
-                                <div class="vc-selected-attrs-holder vcSelectedColumns" >
+                                <div class="vc-selected-attrs-holder vcSelectedColumns">
                                     <div class="g-checkbox-row vcSelectedColumnItem"
                                          data-ng-repeat="item in vm.selectedColumns | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
