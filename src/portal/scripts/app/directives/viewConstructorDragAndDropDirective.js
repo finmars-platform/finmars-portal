@@ -127,7 +127,7 @@
 
                                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                };
+                                }
 
                                 if (target === scope.contentWrapElement.querySelector('#groupsbag')) {
 
@@ -281,7 +281,6 @@
 
                     eventListeners: function () {
 
-                        var attributeChanged = false;
                         var drake = this.dragula;
                         var containerWithShadow;
 
@@ -310,13 +309,165 @@
                         });
 
                         drake.on('drop', function (elem, target, source, nextSibling) {
-
+                            console.log('drag n drop nextSibling', nextSibling);
                             columns = scope.evDataService.getColumns();
                             filters = scope.evDataService.getFilters();
                             groups = scope.evDataService.getGroups();
 
+                            var attributeChanged = false; // needed to call view constructor data reload
+
                             var attributeKey = elem.dataset.attributeKey;
                             var attrsVmKey = elem.dataset.vmKey;
+
+                            var changeSelectedGroup = function (draggedTo) {
+
+                                for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
+                                    if (scope.$parent.vm[attrsVmKey][i].key === attributeKey) {
+                                        var GCFElems = [];
+                                        var updateGCFMethod;
+
+                                        switch (draggedTo) {
+                                            case 'groups':
+                                                scope.$parent.vm[attrsVmKey][i].groups = true;
+                                                GCFElems = groups;
+                                                updateGCFMethod = function () {scope.evDataService.setGroups(GCFElems);};
+                                                break;
+                                            case 'columns':
+                                                scope.$parent.vm[attrsVmKey][i].groups = false;
+                                                scope.$parent.vm[attrsVmKey][i].columns = true;
+                                                GCFElems = columns;
+                                                updateGCFMethod = function () {scope.evDataService.setColumns(GCFElems);};
+                                                break;
+                                            case 'filters':
+                                                scope.$parent.vm[attrsVmKey][i].groups = false;
+                                                scope.$parent.vm[attrsVmKey][i].columns = false;
+                                                scope.$parent.vm[attrsVmKey][i].filters = true;
+                                                GCFElems = filters;
+                                                updateGCFMethod = function () {scope.evDataService.setFilters(GCFElems);};
+                                                break;
+                                        }
+
+                                        attributeChanged = true;
+
+                                        if (nextSibling) {
+                                            var nextSiblingKey = nextSibling.dataset.attributeKey;
+                                            var attrData;
+
+                                            for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
+                                                var draggedElemAttrData = scope.$parent.vm[attrsVmKey][i];
+
+                                                if (attributeKey === draggedElemAttrData.key) {
+                                                    attrData = JSON.parse(JSON.stringify(scope.$parent.vm[attrsVmKey][i]));
+                                                    break;
+                                                }
+                                            }
+
+                                            for (var i = 0; i < GCFElems.length; i++) {
+                                                var GCFElem = GCFElems[i];
+
+                                                if (GCFElem.key === nextSiblingKey) {
+                                                    GCFElems.splice(i, 0, attrData);
+                                                    updateGCFMethod();
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        break;
+                                    }
+                                }
+
+                            };
+
+                            var changeOrder = function (orderOf) {
+                                var CGFElems = [];
+                                var GCFHtmlElems = [];
+                                var updateGCFMethod;
+
+                                var elemsAfterDragging = [];
+
+                                switch (orderOf) {
+                                    case 'groups':
+                                        CGFElems = groups;
+                                        GCFHtmlElems = source.querySelectorAll('.vcSelectedGroupItem');
+                                        updateGCFMethod = function () {
+                                            console.log("drag n drop updateGCFMethod groups", elemsAfterDragging);
+                                            scope.evDataService.setGroups(elemsAfterDragging);
+                                            scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                        };
+                                        break;
+                                    case 'columns':
+                                        CGFElems = columns;
+                                        GCFHtmlElems = source.querySelectorAll('.vcSelectedColumnItem');
+                                        updateGCFMethod = function () {
+                                            console.log("drag n drop updateGCFMethod cols", elemsAfterDragging);
+                                            scope.evDataService.setColumns(elemsAfterDragging);
+                                            scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                        };
+                                        break;
+                                    case 'filters':
+                                        CGFElems = filters;
+                                        GCFHtmlElems = source.querySelectorAll('.vcSelectedFilterItem');
+                                        updateGCFMethod = function () {
+                                            console.log("drag n drop updateGCFMethod filters", elemsAfterDragging);
+                                            scope.evDataService.setFilters(elemsAfterDragging);
+                                            scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                                        };
+                                        break;
+                                }
+                                console.log("drag n drop changeOrder CGFElems", CGFElems);
+                                console.log("drag n drop changeOrder GCFHtmlElems", GCFHtmlElems);
+                                if (orderOf === 'columns') {
+
+                                    for (var i = 0; i < GCFHtmlElems.length; i = i + 1) {
+
+                                        var GCFElemKey = GCFHtmlElems[i].dataset.attributeKey;
+
+                                        for (var x = 0; x < groups.length; x = x + 1) {
+
+                                            if (GCFElemKey === groups[x].key) {
+                                                elemsAfterDragging.push(groups[x]);
+                                                break;
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
+
+                                for (var i = 0; i < GCFHtmlElems.length; i = i + 1) {
+
+                                    var GCFElemKey = GCFHtmlElems[i].dataset.attributeKey;
+
+                                    for (var x = 0; x < CGFElems.length; x = x + 1) {
+
+                                        if (GCFElemKey === CGFElems[x].key) {
+                                            elemsAfterDragging.push(CGFElems[x]);
+                                            break;
+                                        }
+
+                                    }
+
+                                }
+                                console.log("drag n drop changeOrder elemsAfterDragging", elemsAfterDragging);
+                                var isChanged = false;
+
+                                for (var i = 0; i < elemsAfterDragging.length; i++) {
+                                    var CGFElem = elemsAfterDragging[i];
+
+                                    if (CGFElem.key !== CGFElems[i].key) {
+                                        isChanged = true;
+                                        break;
+                                    }
+                                }
+
+                                if (isChanged) {
+                                    updateGCFMethod();
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                    scope.$apply();
+                                }
+                            };
 
                             // dragging from groups
                             if (source.classList.contains('vcSelectedGroups')) {
@@ -324,36 +475,49 @@
                                 // dragged to columns
                                 if (target.classList.contains('vcSelectedColumns')) {
 
-                                    attributeChanged = false;
-
-                                    for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
-                                        if (scope.$parent.vm[attrsVmKey][i].key === attributeKey) {
-                                            scope.$parent.vm[attrsVmKey][i].groups = false;
-                                            attributeChanged = true;
-                                            break;
-                                        }
-                                    }
+                                    changeSelectedGroup('columns');
                                 // < dragged to columns >
 
                                 // dragged to filters
                                 } else if (target.classList.contains('vcSelectedFilters')) {
 
-                                    for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
+                                    changeSelectedGroup('filters');
+                                    /*for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
+
                                         if (scope.$parent.vm[attrsVmKey][i].key === attributeKey) {
                                             scope.$parent.vm[attrsVmKey][i].groups = false;
                                             scope.$parent.vm[attrsVmKey][i].columns = false;
                                             scope.$parent.vm[attrsVmKey][i].filters = true;
                                             attributeChanged = true;
+
+                                            if (nextSibling) {
+                                                var nextSiblingKey = nextSibling.dataset.attributeKey;
+
+                                                for (var i = 0; i < filters.length; i++) {
+
+
+                                                    if (scope.$parent.vm[attrsVmKey][i].key === nextSiblingKey) {
+
+                                                        var attrForFilter = JSON.parse(JSON.stringify(scope.$parent.vm[attrsVmKey][i]));
+                                                        filters.splice(i, 0, attrForFilter);
+                                                        scope.evDataService.setFilters(filters);
+
+                                                    }
+
+                                                }
+                                            }
+
                                             break;
                                         }
-                                    }
+                                    }*/
 
                                 // < dragged to filters >
 
-                                    // If group's order changed
+                                // If group's order changed
                                 } else if (target.classList.contains('vcSelectedGroups')) {
 
-                                    var groupElems = source.querySelectorAll('.vcSelectedGroupItem');
+                                    changeOrder('groups');
+                                    /*var groupElems = source.querySelectorAll('.vcSelectedGroupItem');
 
                                     var groupsAfterDragging = [];
 
@@ -384,15 +548,13 @@
                                     }
 
                                     if (isChanged) {
-
                                         scope.evDataService.setGroups(groupsAfterDragging);
 
                                         scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                         scope.$apply();
-
-                                    }
+                                    }*/
 
                                     // < If group's order changed >
                                 }
@@ -405,32 +567,52 @@
                                 // dragged to groups
                                 if (target.classList.contains('vcSelectedGroups')) {
 
-                                    for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
+                                    changeSelectedGroup('groups');
+                                    /*for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
                                         if (scope.$parent.vm[attrsVmKey][i].key === attributeKey) {
                                             scope.$parent.vm[attrsVmKey][i].groups = true;
                                             attributeChanged = true;
+
+                                            if (nextSibling) {
+                                                var nextSiblingKey = nextSibling.dataset.attributeKey;
+
+                                                for (var i = 0; i < columns.length; i++) {
+
+                                                    if (scope.$parent.vm[attrsVmKey][i].key === nextSiblingKey) {
+
+                                                        var attrForCol = JSON.parse(JSON.stringify(scope.$parent.vm[attrsVmKey][i]));
+                                                        columns.splice(i, 0, attrForCol);
+                                                        scope.evDataService.setColumns(columns);
+
+                                                    }
+
+                                                }
+                                            }
+
                                             break;
                                         }
-                                    }
+                                    }*/
                                 // < dragged to groups >
 
                                 // dragged to filters
                                 } else if (target.classList.contains('vcSelectedFilters')) {
 
-                                    for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
+                                    changeSelectedGroup('filters');
+                                    /*for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
                                         if (scope.$parent.vm[attrsVmKey][i].key === attributeKey) {
                                             scope.$parent.vm[attrsVmKey][i].columns = false;
                                             scope.$parent.vm[attrsVmKey][i].filters = true;
                                             attributeChanged = true;
                                             break;
                                         }
-                                    }
+                                    }*/
                                 // < dragged to filters >
 
                                 // If column's order changed
                                 } else if (target.classList.contains('vcSelectedColumns')) {
 
-                                    var columnElems = source.querySelectorAll('.vcSelectedColumnItem');
+                                    changeOrder('columns');
+                                    /*var columnElems = source.querySelectorAll('.vcSelectedColumnItem');
 
                                     var columnsAfterDragging = [];
 
@@ -484,7 +666,7 @@
 
                                         scope.$apply();
 
-                                    }
+                                    }*/
 
                                 // < If column's order changed >
                                 }
@@ -496,31 +678,35 @@
                                 // dragged to groups
                                 if (target.classList.contains('vcSelectedGroups')) {
 
-                                    for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
+                                    changeSelectedGroup('groups');
+
+                                    /*for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
                                         if (scope.$parent.vm[attrsVmKey][i].key === attributeKey) {
                                             scope.$parent.vm[attrsVmKey][i].groups = true;
                                             attributeChanged = true;
                                             break;
                                         }
-                                    }
+                                    }*/
                                 // < dragged to groups >
 
                                 // dragged to columns
                                 } else if (target.classList.contains('vcSelectedColumns')) {
 
-                                    for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
+                                    changeSelectedGroup('columns');
+                                    /*for (var i = 0; i < scope.$parent.vm[attrsVmKey].length; i++) {
                                         if (scope.$parent.vm[attrsVmKey][i].key === attributeKey) {
                                             scope.$parent.vm[attrsVmKey][i].columns = true;
                                             attributeChanged = true;
                                             break;
                                         }
-                                    }
+                                    }*/
                                 // < dragged to columns >
 
-                                    // If filter's order changed
+                                // If filter's order changed
                                 } else if (target.classList.contains('vcSelectedFilters')) {
 
-                                    var filterElems = source.querySelectorAll('.vcSelectedFilterItem');
+                                    changeOrder('filters');
+                                    /*var filterElems = source.querySelectorAll('.vcSelectedFilterItem');
 
                                     var filtersAfterDragging = [];
 
@@ -532,6 +718,7 @@
 
                                             if (filterElemKey === filters[x].key) {
                                                 filtersAfterDragging.push(filters[x]);
+                                                break
                                             }
 
                                         }
@@ -558,7 +745,7 @@
 
                                         scope.$apply();
 
-                                    }
+                                    }*/
 
                                 // < If filter's order changed >
                                 }
