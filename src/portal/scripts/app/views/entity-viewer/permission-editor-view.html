@@ -13,7 +13,10 @@
                 <b>Manage</b>
             </div>
             <div layout="row" layout-align="center center" style="width: 210px">
-                <b>Change</b>
+                <b>Write</b>
+            </div>
+            <div layout="row" layout-align="center center" style="width: 210px">
+                <b>Read</b>
             </div>
         </div>
     </div>
@@ -62,6 +65,19 @@
                 <md-button class="md-raised"
                            ng-class="{'disabled_btn': vm.processing}"
                            data-ng-click="vm.revokeChange()">
+                    <span>Revoke</span>
+
+                </md-button>
+
+                <md-button class="md-raised"
+                           ng-class="{'disabled_btn': vm.processing}"
+                           data-ng-click="vm.grantView()">
+                    <span>Grant</span>
+                </md-button>
+
+                <md-button class="md-raised"
+                           ng-class="{'disabled_btn': vm.processing}"
+                           data-ng-click="vm.revokeView()">
                     <span>Revoke</span>
 
                 </md-button>

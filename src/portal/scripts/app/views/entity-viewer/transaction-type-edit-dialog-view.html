@@ -89,7 +89,7 @@
                                                     <div layout="row" class="permissions-checkbox-holder"
                                                          flex="30"
                                                          layout-align="space-between center">
-                                                        <div class="permissions-columns" flex="50">Delegate
+                                                        <div class="permissions-columns" flex="33">Delegate
                                                             <ng-md-icon class="tooltip-inline-block"
                                                                         icon="info"
                                                                         size="20"
@@ -101,8 +101,21 @@
                                                                 </md-tooltip>
                                                             </ng-md-icon>
                                                         </div>
-                                                        <div class="permissions-columns" flex="50">
-                                                            Read/Write
+                                                        <div class="permissions-columns" flex="33">
+                                                            Write
+                                                            <ng-md-icon class="tooltip-inline-block"
+                                                                        icon="info"
+                                                                        size="20"
+                                                                        style="fill: #777777">
+                                                                <md-tooltip class="tooltip_2"
+                                                                            md-direction="top">
+                                                                    tooltip
+                                                                    text
+                                                                </md-tooltip>
+                                                            </ng-md-icon>
+                                                        </div>
+                                                        <div class="permissions-columns" flex="33">
+                                                            Read
                                                             <ng-md-icon class="tooltip-inline-block"
                                                                         icon="info"
                                                                         size="20"
@@ -128,13 +141,17 @@
                                                     <div layout="row" class="permissions-checkbox-holder"
                                                          flex="30"
                                                          layout-align="space-between center">
-                                                        <div flex="50" layout="center center">
+                                                        <div flex="33" layout="center center">
                                                             <md-checkbox class="md-secondary"
                                                                          ng-model="group.objectPermissions.manage"></md-checkbox>
                                                         </div>
-                                                        <div flex="50" layout="center center">
+                                                        <div flex="33" layout="center center">
                                                             <md-checkbox class="md-secondary"
                                                                          ng-model="group.objectPermissions.change"></md-checkbox>
+                                                        </div>
+                                                        <div flex="33" layout="center center">
+                                                            <md-checkbox class="md-secondary"
+                                                                         ng-model="group.objectPermissions.view"></md-checkbox>
                                                         </div>
                                                     </div>
                                                 </div>

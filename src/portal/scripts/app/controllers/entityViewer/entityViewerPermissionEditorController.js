@@ -176,6 +176,68 @@
             vm.updatePermissions($event, results);
         };
 
+        vm.grantView = function ($event) {
+
+            vm.selectedRows = vm.getSelectedRows();
+
+            console.log('vm.selectedRows', vm.selectedRows);
+
+            var permission_code = "view_" + vm.entityType.split('-').join('').toLowerCase();
+
+            var results = vm.selectedRows.map(function (item) {
+
+                var exists = false;
+
+                item.object_permissions.forEach(function (perm) {
+
+                    if (perm.group === vm.activeGroup.id && perm.permission === permission_code) {
+                        exists = true;
+                    }
+
+                });
+
+                if (!exists) {
+
+                    item.object_permissions.push({
+                        group: vm.activeGroup.id,
+                        member: null,
+                        permission: permission_code
+                    })
+
+                }
+
+                return item
+            });
+
+            vm.updatePermissions($event, results);
+        };
+
+        vm.revokeView = function ($event) {
+
+            vm.selectedRows = vm.getSelectedRows();
+
+            console.log('vm.selectedRows', vm.selectedRows);
+
+            var permission_code = "view_" + vm.entityType.split('-').join('').toLowerCase();
+
+            var results = vm.selectedRows.map(function (item) {
+
+                item.object_permissions = item.object_permissions.filter(function (perm) {
+
+                    if (perm.group === vm.activeGroup.id && perm.permission === permission_code) {
+                        return false
+                    }
+
+                    return true
+
+                });
+
+                return item
+            });
+
+            vm.updatePermissions($event, results);
+        };
+
         vm.updatePermissions = function ($event, items) {
 
             vm.processing = true;
