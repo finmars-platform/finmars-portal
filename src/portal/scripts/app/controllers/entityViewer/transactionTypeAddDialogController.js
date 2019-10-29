@@ -107,6 +107,9 @@
                                 if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
                                     group.objectPermissions.change = true;
                                 }
+                                if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
+                                    group.objectPermissions.view = true;
+                                }
 
                             }
                         })
@@ -241,6 +244,13 @@
                             member: null,
                             group: group.id,
                             permission: "change_" + vm.entityType.split('-').join('')
+                        })
+                    }
+                    if (group.objectPermissions && group.objectPermissions.view === true) {
+                        vm.entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "view_" + vm.entityType.split('-').join('')
                         })
                     }
 
