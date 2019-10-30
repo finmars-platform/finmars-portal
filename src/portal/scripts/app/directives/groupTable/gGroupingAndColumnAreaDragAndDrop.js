@@ -268,24 +268,24 @@
 
                                                         columns.splice(i, 0, columnToAdd);
                                                         break;
-                                                    };
+                                                    }
 
-                                                };
+                                                }
 
-                                            };
+                                            }
 
-                                        };
+                                        }
 
-                                    };
+                                    }
 
                                     for (var i = 0; i < groups.length; i++) {
 
                                         if (groups[i].key === identifier) {
                                             groups.splice(i, 1);
                                             break;
-                                        };
+                                        }
 
-                                    };
+                                    }
 
                                     drake.remove();
 
@@ -356,9 +356,9 @@
                                         if (groups[g].key === identifier) {
                                             groups.splice(g, 1);
                                             break;
-                                        };
+                                        }
 
-                                    };
+                                    }
 
                                     drake.remove();
 

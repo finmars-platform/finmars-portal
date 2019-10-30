@@ -65,7 +65,7 @@
 
                     if (!scope.column.report_settings) {
                         scope.column.report_settings = {};
-                    };
+                    }
 
                     switch (rendPreset) {
 
@@ -102,7 +102,7 @@
                             scope.column.report_settings.percentage_format_id = 3;
                             break;
 
-                    };
+                    }
 
                     updateColumn();
 
@@ -134,7 +134,7 @@
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 
-                        };
+                        }
 
                     });
                 };
@@ -149,7 +149,7 @@
                         scope.column.report_settings.subtotal_formula_id = null;
                     } else {
                         scope.column.report_settings.subtotal_formula_id = type;
-                    };
+                    }
 
                     updateColumn();
 
@@ -163,7 +163,6 @@
                         if (scope.column.report_settings.subtotal_formula_id === type) {
                             return true;
                         }
-
                     }
 
                     return false;
