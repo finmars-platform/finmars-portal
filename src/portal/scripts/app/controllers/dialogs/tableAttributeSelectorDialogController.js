@@ -13,7 +13,7 @@
 
         if (data.title) {
             vm.title = data.title;
-        };
+        }
 
         vm.activeGroup = [];
         vm.currentLocation = '-';
@@ -52,10 +52,10 @@
                                 attrObjPath = attrObjPath[b].items;
                                 groupExist = true;
                                 break;
-                            };
-                        };
+                            }
+                        }
 
-                    };
+                    }
 
                     if (!groupExist) { // if there is no such group, create one
 
@@ -69,7 +69,7 @@
                         attrObjPath.push(newAttrGroup);
                         attrObjPath = attrObjPath[attrObjPath.length - 1].items;
 
-                    };
+                    }
 
                 });
 
@@ -82,7 +82,7 @@
 
                 attrObjPath.push(tAttrData);
 
-            };
+            }
 
             console.log("selector tableAttrsTree", tableAttrsTree);
 

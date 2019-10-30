@@ -40,7 +40,7 @@
         var columns = vm.entityViewerDataService.getColumns();
         var filters = vm.entityViewerDataService.getFilters();
         var groups = vm.entityViewerDataService.getGroups();
-        //console.log("drag n drop gcf", groups, columns, filters);
+
         vm.attrsList = [];
 
         $('body').addClass('drag-dialog'); // hide backdrop
@@ -153,7 +153,7 @@
             vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
             vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
 
-            /*vm.allAttributesList = attrsList;*/
+            /*vm.attrsList = attrsList;*/
 
             vm.syncAttrs();
             getSelectedAttrs();
@@ -174,18 +174,6 @@
                 }
                 return false;
             }
-        };
-
-        vm.bindReportItemName = function (item) {
-
-            // if (item.name.toLocaleLowerCase().indexOf('strategy') == -1) {
-            //
-            //     var pieces = item.name.split('.');
-            //
-            //     return pieces[pieces.length - 1];
-            // }
-
-            return item.name;
         };
 
         vm.syncAttrs = function () {
@@ -377,21 +365,35 @@
 
             for (var i = 0; i < attributes.length; i++) {
                 var attribute = JSON.parse(angular.toJson(attributes[i]));
-                attribute.attrsVmKey = attrsVmKey;
+                attribute['attrsVmKey'] = attrsVmKey;
 
                 // attrsVmKey used in vm.updateAttrs and selectedDnD
-                if (attribute.groups) {
+                /*if (attribute.groups) {
                     selectedGroups.push(attribute);
                 } else if (attribute.columns) {
                     selectedColumns.push(attribute);
                 } else if (attribute.filters) {
                     selectedFilters.push(attribute);
-                };
+                };*/
 
-            };
+                if (attribute.groups) {
+                    selectedGroups.push(attribute);
+                }
+
+                if (attribute.columns) {
+                    selectedColumns.push(attribute);
+                }
+
+                if (attribute.filters) {
+                    selectedFilters.push(attribute);
+                }
+
+            }
         };
 
-        var groupSelectedGroups = function (insideTable, selectedAttrs, vmKey) { // putting selected attributes in the same order as in the table
+        var groupSelectedGroups = function (insideTable, selectedAttrs) { // putting selected attributes in the same order as in the table
+
+            var orderedSelAttrs = [];
 
             var a;
             for (a = 0; a < insideTable.length; a++) {
@@ -401,7 +403,7 @@
                     var sAttr = selectedAttrs[i];
 
                     if (sAttr.key === attr.key) {
-                        vm[vmKey].push(sAttr);
+                        orderedSelAttrs.push(sAttr);
                         break;
                     }
 
@@ -409,13 +411,15 @@
 
             }
 
+            return orderedSelAttrs;
+
         };
 
-        var getSelectedAttrs = function () {
+        vm.selectedGroups = [];
+        vm.selectedColumns = [];
+        vm.selectedFilters = [];
 
-            vm.selectedGroups = [];
-            vm.selectedColumns = [];
-            vm.selectedFilters = [];
+        var getSelectedAttrs = function () {
 
             selectedGroups = [];
             selectedColumns = [];
@@ -445,9 +449,9 @@
             separateSelectedAttrs(vm.strategy3attrs, 'strategy3attrs');
 
 
-            groupSelectedGroups(groups, selectedGroups, 'selectedGroups');
-            groupSelectedGroups(columns, selectedColumns, 'selectedColumns');
-            groupSelectedGroups(filters, selectedFilters, 'selectedFilters');
+            vm.selectedGroups = groupSelectedGroups(groups, selectedGroups);
+            vm.selectedColumns = groupSelectedGroups(columns, selectedColumns);
+            vm.selectedFilters = groupSelectedGroups(filters, selectedFilters);
 
         };
         // < format data for SELECTED tab >
@@ -460,13 +464,82 @@
                     attributesList[i].columns = selectedAttr.columns;
                     attributesList[i].filters = selectedAttr.filters;
                     break;
-                };
-            };
+                }
+            }
 
             vm.updateAttrs(attributesList);
 
         };
 
+
+        vm.selectAttribute = function (selectedGroup, event) {
+
+            var availableAttrs;
+            var dialogTitle;
+
+            switch (selectedGroup) {
+                case 'group':
+                    dialogTitle = 'Choose column to add';
+                    availableAttrs = vm.attrsList.filter(function (attr) {
+                        return !attr.groups;
+                    });
+                    break;
+                case 'column':
+                    dialogTitle = 'Choose column to add';
+                    availableAttrs = vm.attrsList.filter(function (attr) {
+                        return !attr.columns;
+                    });
+                    break;
+                case 'filter':
+                    dialogTitle = 'Choose filter to add';
+                    availableAttrs = vm.attrsList.filter(function (attr) {
+                        return !attr.filters;
+                    });
+                    break;
+            }
+
+            $mdDialog.show({
+                controller: "TableAttributeSelectorDialogController as vm",
+                templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                targetEvent: event,
+                multiple: true,
+                locals: {
+                    data: {
+                        availableAttrs: availableAttrs,
+                        title: dialogTitle
+                    }
+                }
+            }).then(function (res) {
+
+                if (res && res.status === "agree") {
+
+                    for (var i = 0; i < vm.attrsList.length; i++) {
+
+                        if (vm.attrsList[i].key === res.data.key) {
+
+                            switch (selectedGroup) {
+                                case 'group':
+                                    vm.attrsList[i].groups = true;
+                                    break;
+                                case 'column':
+                                    vm.attrsList[i].columns = true;
+                                    break;
+                                case 'filter':
+                                    vm.attrsList[i].filters = true;
+                                    break;
+                            }
+
+                            vm.updateAttrs(vm.attrsList);
+                            break;
+                        }
+
+                    }
+
+                }
+
+            });
+
+        };
 
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
