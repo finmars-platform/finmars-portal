@@ -159,6 +159,12 @@
                                             </div>
                                         </div>
 
+                                        <div>
+                                            <md-button ng-click="vm.recalculatePermissions()" class="md-raised">
+                                                Save and Recalculate Complex Transaction Permissions
+                                            </md-button>
+                                        </div>
+
                                     </div>
                                     <div data-ng-if="!vm.readyStatus.permissions">
                                         <div layout="row" layout-sm="column" layout-align="space-around"
@@ -196,10 +202,6 @@
                     ng-click="vm.delete($event)" ng-class="{'disabled-btn': vm.processing}"
                     class="md-raised md-warn">
                 Delete
-            </md-button>
-
-            <md-button ng-click="vm.recalculatePermissions()" class="md-raised">
-                Recalculate Complex Transaction Permissions
             </md-button>
 
         </div>
