@@ -282,7 +282,7 @@
 
             // TODO make it recursive like transaction import
 
-            complexTransactionService.recalculatePermissions(config).then(function (value) {
+            complexTransactionService.recalculatePermissionTransaction(config).then(function (value) {
 
                 vm.recalculating = false;
 

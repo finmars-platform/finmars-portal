@@ -53,8 +53,12 @@
         return complexTransactionRepository.deleteBulk(data);
     };
 
-    var recalculatePermissions = function (data) {
-        return complexTransactionRepository.recalculatePermissions(data)
+    var recalculatePermissionTransaction = function (data) {
+        return complexTransactionRepository.recalculatePermissionTransaction(data)
+    };
+
+    var recalculatePermissionComplexTransaction = function(data){
+        return complexTransactionRepository.recalculatePermissionComplexTransaction(data)
     };
 
     module.exports = {
@@ -75,7 +79,8 @@
 
         deleteBulk: deleteBulk,
 
-        recalculatePermissions: recalculatePermissions
+        recalculatePermissionTransaction: recalculatePermissionTransaction,
+        recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction
     }
 
 
