@@ -184,8 +184,22 @@
             })
     };
 
-    var recalculatePermissions = function(data){
-        return xhrService.fetch(baseUrl + 'transactions/recalculate-permissions/',
+    var recalculatePermissionTransaction = function(data){
+        return xhrService.fetch(baseUrl + 'transactions/recalculate-permission-transaction/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var recalculatePermissionComplexTransaction = function(data){
+        return xhrService.fetch(baseUrl + 'transactions/recalculate-permission-complex-transaction/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -215,7 +229,8 @@
 
         deleteBulk: deleteBulk,
 
-        recalculatePermissions: recalculatePermissions
+        recalculatePermissionTransaction: recalculatePermissionTransaction,
+        recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction
     }
 
 }());

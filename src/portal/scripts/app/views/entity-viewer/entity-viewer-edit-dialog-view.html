@@ -134,6 +134,31 @@
                                             </div>
                                         </div>
 
+                                        <div>
+
+                                            <div data-ng-if="vm.entityType === 'account-type'">
+
+                                                <md-button ng-click="vm.recalculateAccountPermissions()" class="md-raised">
+                                                    Save and Recalculate Account Permissions
+                                                </md-button>
+
+                                                <md-button ng-click="vm.recalculateAccountWithTransactionPermissions()" class="md-raised">
+                                                    Save Recalculate Account Permissions and Transaction Permissions
+                                                </md-button>
+
+
+                                            </div>
+
+                                            <div data-ng-if="vm.entityType === 'instrument-type'">
+
+                                                <md-button ng-click="vm.recalculateInstrumentsPermissions()" class="md-raised">
+                                                    Save and Recalculate Instruments Permissions
+                                                </md-button>
+
+                                            </div>
+
+                                        </div>
+
                                     </div>
                                     <div data-ng-if="!vm.readyStatus.permissions">
                                         <div layout="row" layout-sm="column" layout-align="space-around"

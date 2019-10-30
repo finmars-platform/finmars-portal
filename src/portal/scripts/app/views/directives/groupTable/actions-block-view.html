@@ -250,7 +250,7 @@
                         Split Panel
                     </md-button>
                     <md-menu-content width="4">
-                        <md-menu-item data-ng-if="!isReport">
+                        <md-menu-item data-ng-if="!isReport && entityType !== 'complex-transaction'">
                             <md-button ng-click="toggleSplitPanel($event, 'permission-editor')" class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
                                             data-ng-show="!currentAdditions.type !== 'permission-editor'"
