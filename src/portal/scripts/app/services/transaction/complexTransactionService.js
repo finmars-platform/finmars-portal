@@ -49,8 +49,16 @@
         return complexTransactionRepository.rebookPendingComplexTransaction(id, transaction);
     };
 
-    var deleteBulk = function(data){
+    var deleteBulk = function (data) {
         return complexTransactionRepository.deleteBulk(data);
+    };
+
+    var recalculatePermissionTransaction = function (data) {
+        return complexTransactionRepository.recalculatePermissionTransaction(data)
+    };
+
+    var recalculatePermissionComplexTransaction = function(data){
+        return complexTransactionRepository.recalculatePermissionComplexTransaction(data)
     };
 
     module.exports = {
@@ -69,7 +77,10 @@
         initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
         rebookPendingComplexTransaction: rebookPendingComplexTransaction,
 
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+
+        recalculatePermissionTransaction: recalculatePermissionTransaction,
+        recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction
     }
 
 

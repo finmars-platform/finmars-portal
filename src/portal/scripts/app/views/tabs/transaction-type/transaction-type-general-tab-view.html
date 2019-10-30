@@ -97,6 +97,17 @@
             <!--</md-select>-->
             <!--</md-input-container>-->
         </div>
+
+        <div>
+            <md-input-container>
+                <label >Visibility Settings</label>
+                <md-select data-ng-model="vm.entity.visibility_status">
+                    <md-option ng-value="1" >Parameters are visible</md-option>
+                    <md-option ng-value="2" >Parameters are hidden</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+
     </div>
     <div data-ng-if="!vm.checkReadyStatus()">
         <div layout="row" layout-sm="column" layout-align="space-around">

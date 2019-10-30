@@ -31,7 +31,9 @@
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
 
-    var referenceTableService = require('../../services/referenceTablesService')
+    var referenceTableService = require('../../services/referenceTablesService');
+
+    var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
 
@@ -100,6 +102,9 @@
                                 }
                                 if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
                                     group.objectPermissions.change = true;
+                                }
+                                if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
+                                    group.objectPermissions.view = true;
                                 }
                             }
                         })
@@ -375,6 +380,14 @@
                             member: null,
                             group: group.id,
                             permission: "change_" + vm.entityType.split('-').join('')
+                        })
+                    }
+
+                    if (group.objectPermissions && group.objectPermissions.view === true) {
+                        vm.entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "view_" + vm.entityType.split('-').join('')
                         })
                     }
 
@@ -657,6 +670,42 @@
                 $scope.$apply();
 
             })
+        };
+
+        vm.recalculatePermissions = function ($event) {
+
+            console.log("Recalculate");
+
+            var config = {
+                // content_type: 'portfolios.portfolio'
+            };
+
+            // TODO make it recursive like transaction import
+
+            complexTransactionService.recalculatePermissionComplexTransaction(config).then(function (value) {
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "Complex Transaction Permissions successfully recalculated"
+                        }
+                    }
+                });
+
+                console.log("Recalculate done");
+
+            })
+
         };
 
         vm.init = function () {
