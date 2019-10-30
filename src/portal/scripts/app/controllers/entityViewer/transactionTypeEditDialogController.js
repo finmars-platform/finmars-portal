@@ -677,7 +677,7 @@
             console.log("Recalculate");
 
             var config = {
-                content_type: 'portfolios.portfolio'
+                // content_type: 'portfolios.portfolio'
             };
 
             // TODO make it recursive like transaction import

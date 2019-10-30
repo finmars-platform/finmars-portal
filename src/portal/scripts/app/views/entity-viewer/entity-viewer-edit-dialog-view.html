@@ -157,6 +157,11 @@
 
                                             </div>
 
+                                            <md-button ng-click="vm.recalculatePermissions()" class="md-raised"
+                                                       data-ng-if="vm.entityType === 'portfolio' || vm.entityType === 'account'">
+                                                Save and Recalculate Transaction Permissions
+                                            </md-button>
+
                                         </div>
 
                                     </div>
@@ -209,10 +214,7 @@
                 Delete
             </md-button>
 
-            <md-button ng-click="vm.recalculatePermissions()" class="md-raised"
-                       data-ng-if="vm.entityType === 'portfolio' || vm.entityType === 'account'">
-                Recalculate Transaction Permissions
-            </md-button>
+
 
         </div>
         <div>
