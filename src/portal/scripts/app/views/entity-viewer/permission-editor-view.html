@@ -89,6 +89,11 @@
 
     </div>
 
+    <div layout="row">
+        <md-button data-ng-click="vm.recalculateTransactionPermissions()" class="md-raised md-primary">Recalculate Transaction Permissions</md-button>
+        <progress-circular diameter="20" data-ng-if="vm.recalculating"></progress-circular>
+    </div>
+
     <!--<div style="margin-top: 36px">-->
     <!--<div layout="row" layout-align="end center">-->
     <!--<md-button class="md-raised" data-ui-sref="app.settings.users-groups">Create/Edit Groups-->
