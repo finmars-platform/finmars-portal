@@ -7,6 +7,7 @@
 
     var usersGroupService = require('../../services/usersGroupService');
     var entityResolverService = require('../../services/entityResolverService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService');
     var evEvents = require('../../services/entityViewerEvents');
 
     module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
@@ -35,7 +36,7 @@
 
         };
 
-        vm.getSelectedRows = function(){
+        vm.getSelectedRows = function () {
 
             var list = parentEntityViewerDataService.getFlatList();
 
@@ -46,7 +47,7 @@
 
         };
 
-        vm.setActiveGroup = function(group){
+        vm.setActiveGroup = function (group) {
 
             vm.activeGroup = group
 
@@ -176,6 +177,68 @@
             vm.updatePermissions($event, results);
         };
 
+        vm.grantView = function ($event) {
+
+            vm.selectedRows = vm.getSelectedRows();
+
+            console.log('vm.selectedRows', vm.selectedRows);
+
+            var permission_code = "view_" + vm.entityType.split('-').join('').toLowerCase();
+
+            var results = vm.selectedRows.map(function (item) {
+
+                var exists = false;
+
+                item.object_permissions.forEach(function (perm) {
+
+                    if (perm.group === vm.activeGroup.id && perm.permission === permission_code) {
+                        exists = true;
+                    }
+
+                });
+
+                if (!exists) {
+
+                    item.object_permissions.push({
+                        group: vm.activeGroup.id,
+                        member: null,
+                        permission: permission_code
+                    })
+
+                }
+
+                return item
+            });
+
+            vm.updatePermissions($event, results);
+        };
+
+        vm.revokeView = function ($event) {
+
+            vm.selectedRows = vm.getSelectedRows();
+
+            console.log('vm.selectedRows', vm.selectedRows);
+
+            var permission_code = "view_" + vm.entityType.split('-').join('').toLowerCase();
+
+            var results = vm.selectedRows.map(function (item) {
+
+                item.object_permissions = item.object_permissions.filter(function (perm) {
+
+                    if (perm.group === vm.activeGroup.id && perm.permission === permission_code) {
+                        return false
+                    }
+
+                    return true
+
+                });
+
+                return item
+            });
+
+            vm.updatePermissions($event, results);
+        };
+
         vm.updatePermissions = function ($event, items) {
 
             vm.processing = true;
@@ -203,6 +266,49 @@
                 });
 
                 $scope.$apply();
+            })
+
+        };
+
+        vm.recalculateTransactionPermissions = function ($event) {
+
+            vm.recalculating = true;
+
+            console.log("Recalculate");
+
+            var config = {
+                content_type: 'portfolios.portfolio'
+            };
+
+            // TODO make it recursive like transaction import
+
+            complexTransactionService.recalculatePermissionTransaction(config).then(function (value) {
+
+                vm.recalculating = false;
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "Transaction Permissions successfully recalculated"
+                        }
+                    }
+                });
+
+                $scope.$apply();
+
+
+                console.log("Recalculate done");
+
             })
 
         };

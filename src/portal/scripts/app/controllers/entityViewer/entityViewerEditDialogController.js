@@ -23,6 +23,8 @@
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
+    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
 
         var vm = this;
@@ -165,14 +167,19 @@
                         vm.entity.object_permissions.forEach(function (permission) {
 
                             if (permission.group === group.id) {
+
                                 if (!group.hasOwnProperty('objectPermissions')) {
                                     group.objectPermissions = {};
                                 }
+
                                 if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
                                     group.objectPermissions.manage = true;
                                 }
                                 if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
                                     group.objectPermissions.change = true;
+                                }
+                                if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
+                                    group.objectPermissions.view = true;
                                 }
                             }
                         })
@@ -472,6 +479,14 @@
                         })
                     }
 
+                    if (group.objectPermissions && group.objectPermissions.view === true) {
+                        vm.entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "view_" + vm.entityType.split('-').join('')
+                        })
+                    }
+
                 });
             }
 
@@ -646,6 +661,205 @@
                 $scope.$apply();
 
             })
+
+        };
+
+        vm.recalculatePermissions = function ($event) {
+
+            console.log("Recalculate");
+
+
+            vm.updateItem().then(function (value) {
+
+                var config = {};
+
+                // TODO make it recursive like transaction import
+
+                complexTransactionService.recalculatePermissionTransaction(config).then(function (value) {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: "Transaction Permissions successfully recalculated"
+                            }
+                        }
+                    });
+
+                    console.log("Recalculate done");
+
+                })
+            })
+
+        };
+
+        vm.recalculateAccountPermissions = function ($event) {
+
+            vm.updateItem().then(function (value) {
+
+                entityResolverService.getList('account', {pageSize: 1000}).then(function (data) {
+
+                    console.log('data', data);
+
+                    var accountsWithPermissions = data.results.map(function (item) {
+
+                        return {
+                            id: item.id,
+                            object_permissions: vm.entity.object_permissions.map(function (item) {
+
+                                item.permission = item.permission.split('_')[0] + '_account';
+
+                                return item
+
+                            })
+                        }
+
+                    });
+
+                    entityResolverService.updateBulk('account', accountsWithPermissions).then(function () {
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Accounts Permissions successfully updated"
+                                }
+                            }
+                        });
+
+                    })
+
+
+                })
+
+            });
+
+        };
+
+        vm.recalculateAccountWithTransactionPermissions = function ($event) {
+
+            vm.updateItem().then(function (value) {
+
+                entityResolverService.getList('account', {pageSize: 1000}).then(function (data) {
+
+                    console.log('data', data);
+
+                    var accountsWithPermissions = data.results.map(function (item) {
+
+                        return {
+                            id: item.id,
+                            object_permissions: vm.entity.object_permissions.map(function (item) {
+
+                                item.permission = item.permission.split('_')[0] + '_account';
+
+                                return item
+
+                            })
+                        }
+
+                    });
+
+                    entityResolverService.updateBulk('account', accountsWithPermissions).then(function () {
+
+                        complexTransactionService.recalculatePermissionTransaction().then(function (value) {
+
+                            $mdDialog.show({
+                                controller: 'InfoDialogController as vm',
+                                templateUrl: 'views/info-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: $event,
+                                clickOutsideToClose: false,
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true,
+                                multiple: true,
+                                locals: {
+                                    info: {
+                                        title: 'Success',
+                                        description: "Accounts Permissions and Transaction Permissions successfully updated"
+                                    }
+                                }
+                            });
+
+
+                        })
+
+                    })
+
+
+                })
+
+            });
+        };
+
+        vm.recalculateInstrumentsPermissions = function ($event) {
+
+
+            vm.updateItem().then(function (value) {
+
+                entityResolverService.getList('instrument', {pageSize: 1000}).then(function (data) {
+
+                    console.log('data', data);
+
+                    var instrumentsWithPermissions = data.results.map(function (item) {
+
+                        return {
+                            id: item.id,
+                            object_permissions: vm.entity.object_permissions.map(function (item) {
+
+                                item.permission = item.permission.split('_')[0] + '_instrument';
+
+                                return item
+
+                            })
+                        }
+
+                    });
+
+                    entityResolverService.updateBulk('instrument', instrumentsWithPermissions).then(function () {
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Instrument Permissions successfully updated"
+                                }
+                            }
+                        });
+
+                    });
+
+                });
+
+            });
+
 
         };
 
