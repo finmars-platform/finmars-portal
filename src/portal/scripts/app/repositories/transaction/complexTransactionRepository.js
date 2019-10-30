@@ -184,6 +184,20 @@
             })
     };
 
+    var recalculatePermissions = function(data){
+        return xhrService.fetch(baseUrl + 'transactions/recalculate-permissions/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
@@ -199,7 +213,9 @@
         initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
         rebookPendingComplexTransaction: rebookPendingComplexTransaction,
 
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+
+        recalculatePermissions: recalculatePermissions
     }
 
 }());

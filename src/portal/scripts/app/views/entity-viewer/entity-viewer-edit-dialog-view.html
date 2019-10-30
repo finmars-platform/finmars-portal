@@ -16,7 +16,8 @@
                             <span>{{tab.name}}</span>
                         </md-tab-label>
                         <md-tab-body>
-                            <md-content class="md-padding p-t-26" ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
+                            <md-content class="md-padding p-t-26"
+                                        ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
                                 <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
                                     <div class="ev-data-field
@@ -24,7 +25,8 @@
                                          data-ng-repeat="field in tab.layout.fields track by $index"
                                          flex="{{vm.bindFlex(tab, row, field)}}"
                                          data-ng-if="vm.checkFieldRender(tab, row, field)">
-                                        <bind-field-control entity-type="vm.entityType" entity="vm.entity" item="vm.attributesLayout[tab.index][$index]"></bind-field-control>
+                                        <bind-field-control entity-type="vm.entityType" entity="vm.entity"
+                                                            item="vm.attributesLayout[tab.index][$index]"></bind-field-control>
                                     </div>
                                 </div>
                             </md-content>
@@ -35,7 +37,8 @@
                             <span class="grey-tab">{{tab.label}}</span>
                         </md-tab-lable>
                         <md-tab-body>
-                            <md-content class="md-padding p-t-26" ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
+                            <md-content class="md-padding p-t-26"
+                                        ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
                                 <div data-ng-include="tab.templateUrl"></div>
                             </md-content>
                         </md-tab-body>
@@ -155,7 +158,7 @@
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
         <div layout="row">
             <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary">
-               Edit Form
+                Edit Form
             </md-button>
             <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary">
                 Manage attributes
@@ -181,9 +184,15 @@
                 Delete
             </md-button>
 
+            <md-button ng-click="vm.recalculatePermissions()" class="md-raised"
+                       data-ng-if="vm.entityType === 'portfolio' || vm.entityType === 'account'">
+                Recalculate Transaction Permissions
+            </md-button>
+
         </div>
-        <div >
-            <md-button class="md-raised m-r-24" ng-click="vm.copy()" ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled">
+        <div>
+            <md-button class="md-raised m-r-24" ng-click="vm.copy()"
+                       ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled">
                 Make a copy
             </md-button>
             <md-button class="md-raised" ng-click="vm.cancel()">

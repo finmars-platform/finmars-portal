@@ -23,6 +23,8 @@
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
+    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
 
         var vm = this;
@@ -657,6 +659,42 @@
                 vm.readyStatus.userFields = true;
 
                 $scope.$apply();
+
+            })
+
+        };
+
+        vm.recalculatePermissions = function ($event) {
+
+            console.log("Recalculate");
+
+            var config = {
+                content_type: 'portfolios.portfolio'
+            };
+
+            // TODO make it recursive like transaction import
+
+            complexTransactionService.recalculatePermissions(config).then(function (value) {
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "Transaction Permissions successfully recalculated"
+                        }
+                    }
+                });
+
+                console.log("Recalculate done");
 
             })
 
