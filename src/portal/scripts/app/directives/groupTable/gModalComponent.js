@@ -19,8 +19,11 @@
         var vm = this;
         vm.readyStatus = {content: false};
 
-        vm.entityType = entityViewerDataService.getEntityType();
-        vm.contentType = entityViewerDataService.getContentType();
+        vm.entityViewerDataService = entityViewerDataService;
+        vm.entityViewerEventService = entityViewerEventService;
+
+        vm.entityType = vm.entityViewerDataService.getEntityType();
+        vm.contentType = vm.entityViewerDataService.getContentType();
 
         console.log('vm', vm);
 
@@ -31,10 +34,10 @@
 
         vm.cardsDividedIntoTabs = true;
 
-        var columns = entityViewerDataService.getColumns();
+        var columns = vm.entityViewerDataService.getColumns();
         var currentColumnsWidth = columns.length;
-        var filters = entityViewerDataService.getFilters();
-        var groups = entityViewerDataService.getGroups();
+        var filters = vm.entityViewerDataService.getFilters();
+        var groups = vm.entityViewerDataService.getGroups();
 
         vm.attrsList = [];
 
@@ -285,9 +288,9 @@
                 }
             }
 
-            entityViewerDataService.setColumns(columns);
-            entityViewerDataService.setGroups(groups);
-            entityViewerDataService.setFilters(filters);
+            vm.entityViewerDataService.setColumns(columns);
+            vm.entityViewerDataService.setGroups(groups);
+            vm.entityViewerDataService.setFilters(filters);
 
         }
 
@@ -297,14 +300,14 @@
 
             addColumn();
 
-            evDataHelper.updateColumnsIds(entityViewerDataService);
-            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
 
-            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
-            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
         };
 
@@ -487,9 +490,9 @@
 
                             }
                             syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         };
 
                         if (target === contentWrapElement.querySelector('#groupsbag') ||
@@ -511,10 +514,10 @@
                             }
 
                             syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
-                            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
 
                         if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
@@ -534,9 +537,9 @@
 
                             }
                             syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
 
                     } else if (exist && target) {
@@ -667,16 +670,13 @@
                     }
 
                     if (container === source) {
-
                         source.classList.remove('dragged-out-card-space');
-
                     } else {
-                        if (!source.classList.contains('dragged-out-card-space')) {
-                            source.classList.add('dragged-out-card-space');
-                        }
+                        source.classList.add('dragged-out-card-space');
 
                         container.classList.add('remove-card-space');
                         containerWithShadow = container;
+                        sourceContainer = source;
                     }
                 });
 
@@ -690,8 +690,6 @@
                     var attributeKey = elem.dataset.attributeKey;
                     var attrsVmKey = elem.dataset.vmKey;
 
-                    sourceContainer = source;
-
                     var changeSelectedGroup = function (draggedTo) {
 
                         for (var i = 0; i < vm[attrsVmKey].length; i++) {
@@ -704,20 +702,20 @@
                                     case 'groups':
                                         vm[attrsVmKey][i].groups = true;
                                         GCFItems = groups;
-                                        updateGCFMethod = function () {entityViewerDataService.setGroups(GCFItems);};
+                                        updateGCFMethod = function () {vm.entityViewerDataService.setGroups(GCFItems);};
                                         break;
                                     case 'columns':
                                         vm[attrsVmKey][i].groups = false;
                                         vm[attrsVmKey][i].columns = true;
                                         GCFItems = columns;
-                                        updateGCFMethod = function () {entityViewerDataService.setColumns(GCFItems);};
+                                        updateGCFMethod = function () {vm.entityViewerDataService.setColumns(GCFItems);};
                                         break;
                                     case 'filters':
                                         vm[attrsVmKey][i].groups = false;
                                         vm[attrsVmKey][i].columns = false;
                                         vm[attrsVmKey][i].filters = true;
                                         GCFItems = filters;
-                                        updateGCFMethod = function () {entityViewerDataService.setFilters(GCFItems);};
+                                        updateGCFMethod = function () {vm.entityViewerDataService.setFilters(GCFItems);};
                                         break;
                                 }
 
@@ -766,24 +764,24 @@
                                 CGFElems = groups;
                                 GCFHtmlElems = source.querySelectorAll('.vcSelectedGroupItem');
                                 updateGCFMethod = function () {
-                                    entityViewerDataService.setGroups(elemsAfterDragging);
-                                    entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                    vm.entityViewerDataService.setGroups(elemsAfterDragging);
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                                 };
                                 break;
                             case 'columns':
                                 CGFElems = columns;
                                 GCFHtmlElems = source.querySelectorAll('.vcSelectedColumnItem');
                                 updateGCFMethod = function () {
-                                    entityViewerDataService.setColumns(elemsAfterDragging);
-                                    entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                    vm.entityViewerDataService.setColumns(elemsAfterDragging);
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                                 };
                                 break;
                             case 'filters':
                                 CGFElems = filters;
                                 GCFHtmlElems = source.querySelectorAll('.vcSelectedFilterItem');
                                 updateGCFMethod = function () {
-                                    entityViewerDataService.setFilters(elemsAfterDragging);
-                                    entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                                    vm.entityViewerDataService.setFilters(elemsAfterDragging);
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
                                 };
                                 break;
 
@@ -817,7 +815,7 @@
 
                         if (isChanged) {
                             updateGCFMethod();
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             $scope.$apply();
                         }
                     };
@@ -1005,10 +1003,10 @@
 
                             if (isChanged) {
 
-                                entityViewerDataService.setGroups(groupsAfterDragging);
+                                vm.entityViewerDataService.setGroups(groupsAfterDragging);
 
-                                entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                 $scope.$apply();
 
@@ -1092,10 +1090,10 @@
 
                             if (isChanged) {
 
-                                entityViewerDataService.setColumns(columnsAfterDragging);
+                                vm.entityViewerDataService.setColumns(columnsAfterDragging);
 
-                                entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                 $scope.$apply();
 
@@ -1173,10 +1171,10 @@
 
                             if (isChanged) {
 
-                                entityViewerDataService.setFilters(filtersAfterDragging);
+                                vm.entityViewerDataService.setFilters(filtersAfterDragging);
 
-                                entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                 $scope.$apply();
 
@@ -1311,25 +1309,25 @@
 
             vm.getAttributes();
 
-            entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-                columns = entityViewerDataService.getColumns();
+                columns = vm.entityViewerDataService.getColumns();
                 syncAttrs();
                 getSelectedAttrs();
 
             });
 
-            entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-                groups = entityViewerDataService.getGroups();
+                groups = vm.entityViewerDataService.getGroups();
                 syncAttrs();
                 getSelectedAttrs();
 
             });
 
-            entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-                filters = entityViewerDataService.getFilters();
+                filters = vm.entityViewerDataService.getFilters();
                 syncAttrs();
                 getSelectedAttrs();
 

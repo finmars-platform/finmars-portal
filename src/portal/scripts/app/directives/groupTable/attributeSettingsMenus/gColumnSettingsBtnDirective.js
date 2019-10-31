@@ -6,6 +6,7 @@
     'use strict';
 
     var evEvents = require('../../../services/entityViewerEvents');
+    var metaService = require('../../../services/metaService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -17,6 +18,9 @@
             },
             templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-column-settings-btn-view.html',
             link: function (scope, elem, attrs) {
+
+                scope.entityType = scope.evDataService.getEntityType();
+                scope.isReport = metaService.isReport(scope.entityType);
 
                 var columns = scope.evDataService.getColumns();
 

@@ -467,7 +467,8 @@ app.directive('viewConstructorDragAndDrop', ['$mdDialog', require('./app/directi
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);
 app.directive('gColumnSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gColumnSettingsBtnDirective.js')]);
 app.directive('gGroupSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gGroupSettingsBtnDirective.js')]);
-app.directive('gFilterSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gFilterSettingsBtnDirective.js')]);
+app.directive('gRvFilterSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gRvFilterSettingsBtnDirective.js')]);
+app.directive('gEvFilterSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gEvFilterSettingsBtnDirective.js')]);
 app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitleDirective.js')]);
 app.directive('valueTitle', ['$timeout', require('./app/directives/valueTitleDirective.js')]);
 

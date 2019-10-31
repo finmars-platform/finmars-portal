@@ -26,13 +26,6 @@
                 scope.columnRowsContent = [];
                 scope.showSelectMenu = false;
 
-                scope.useFromAboveFilterTypes = [
-                    {
-                        key: 'contains',
-                        name: 'CONTAINS'
-                    }
-                ];
-
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
@@ -47,23 +40,23 @@
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
-                };
+                }
 
                 if (!scope.filter.options.filter_type) {
                     scope.filter.options.filter_type = "contains";
-                };
+                }
 
                 if (!scope.filter.options.filter_values) {
                     scope.filter.options.filter_values = [];
-                };
+                }
 
                 if (!scope.filter.options.hasOwnProperty('exclude_empty_cells')) {
                     scope.filter.options.exclude_empty_cells = false;
-                };
+                }
 
                 if (!scope.filter.options.hasOwnProperty('is_frontend_filter')) {
                     scope.filter.options.is_frontend_filter = true;
-                };
+                }
 
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 
@@ -142,9 +135,9 @@
                             scope.filter.options.filter_values = [];
                             scope.filter.options.filter_type = "contains";
 
-                        };
+                        }
 
-                    };
+                    }
 
                     scope.filterSettingsChanged();
 
@@ -206,7 +199,7 @@
                 };
 
 
-                scope.updateFilters = function(){
+                /*scope.updateFilters = function(){
 
                     var filters = scope.evDataService.getFilters();
 
@@ -220,7 +213,7 @@
 
                     scope.evDataService.setFilters(scope.filters);
 
-                };
+                };*/
 
             }
         }
