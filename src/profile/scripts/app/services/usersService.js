@@ -154,8 +154,8 @@
         })
     };
 
-    var getInviteToMasterUserList = function () {
-        return window.fetch(baseUrl + 'users/invite-to-master-user/', {
+    var getInviteFromMasterUserList = function () {
+        return window.fetch(baseUrl + 'users/invite-from-master-user/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -167,8 +167,8 @@
         })
     };
 
-    var updateInviteToMasterUserByKey = function (id, invite) {
-        return window.fetch(baseUrl + 'users/invite-to-master-user/' + id + '/', {
+    var updateInviteFromMasterUserByKey = function (id, invite) {
+        return window.fetch(baseUrl + 'users/invite-from-master-user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -223,8 +223,8 @@
 
         checkMasterUserUniqueness: checkMasterUserUniqueness,
 
-        getInviteToMasterUserList: getInviteToMasterUserList,
-        updateInviteToMasterUserByKey: updateInviteToMasterUserByKey,
+        getInviteFromMasterUserList: getInviteFromMasterUserList,
+        updateInviteFromMasterUserByKey: updateInviteFromMasterUserByKey,
 
         leaveMasterUser: leaveMasterUser,
         deleteMasterUser: deleteMasterUser

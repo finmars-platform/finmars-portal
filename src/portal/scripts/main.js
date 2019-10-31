@@ -366,7 +366,7 @@ app.controller('EditConfigurationDialogController', ['$scope', '$mdDialog', 'ite
 // Groups & Members
 
 app.controller('SettingsMembersAndGroupsController', ['$scope', '$mdDialog', require('./app/controllers/settings/settingsMembersAndGroupsController')]);
-app.controller('CreateMemberDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createMemberDialogController')]);
+app.controller('CreateInviteDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createInviteDialogController')]);
 app.controller('ManageMemberDialogController', ['$scope', '$mdDialog', 'memberId', require('./app/controllers/dialogs/manageMemberDialogController')]);
 app.controller('ManageGroupDialogController', ['$scope', '$mdDialog', 'groupId', require('./app/controllers/dialogs/manageGroupDialogController')]);
 app.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createGroupDialogController')]);

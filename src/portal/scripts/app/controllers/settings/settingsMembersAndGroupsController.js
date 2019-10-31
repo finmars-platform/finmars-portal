@@ -51,15 +51,31 @@
 
                     });
 
-                    vm.readyStatus.content = true;
+                    membersAndGroupsService.getInvitesList().then(function (data) {
 
-                    $scope.$apply();
+                        vm.invites = data.results;
+
+                        vm.invites  = vm.invites.map(function (item) {
+
+                            item.assigned_groups_pretty = item.groups_object.map(function (group) {
+                                return group.name
+                            }).join(', ');
+
+                            return item;
+
+                        });
+
+                        vm.readyStatus.content = true;
+
+                        $scope.$apply();
+
+                    })
                 });
             });
         };
 
 
-        vm.deleteGroup = function($event, group){
+        vm.deleteGroup = function ($event, group) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -93,7 +109,7 @@
 
         };
 
-        vm.deleteMember = function($event, member){
+        vm.deleteMember = function ($event, member) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -126,16 +142,18 @@
 
         };
 
-        vm.createMemberDialog = function (ev) {
+        vm.inviteMember = function (ev) {
 
             $mdDialog.show({
-                controller: 'CreateMemberDialogController as vm',
-                templateUrl: 'views/dialogs/create-member-dialog-view.html',
+                controller: 'CreateInviteDialogController as vm',
+                templateUrl: 'views/dialogs/create-invite-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev
             }).then(function (res) {
 
-                if(res && res.status === 'agree') {
+                console.log('res', res);
+
+                if (res && res.status === 'agree') {
 
                     vm.getData();
 
@@ -154,7 +172,7 @@
                 targetEvent: ev
             }).then(function (res) {
 
-                if(res && res.status === 'agree') {
+                if (res && res.status === 'agree') {
 
                     vm.getData();
 
@@ -176,7 +194,7 @@
                 }
             }).then(function (res) {
 
-                if(res && res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     vm.getData();
                 }
 
@@ -196,11 +214,63 @@
                 }
             }).then(function (res) {
 
-               if(res && res.status === 'agree') {
-                   vm.getData();
-               }
+                if (res && res.status === 'agree') {
+                    vm.getData();
+                }
 
             });
+
+        };
+
+        vm.getInviteStatus = function(item){
+
+            if (item.status === 0){
+                return "Sent"
+            }
+
+            if (item.status === 1){
+                return "Accepted"
+            }
+
+            if (item.status === 2){
+                return "Declined"
+            }
+
+            return "Unknown";
+
+        };
+
+        vm.deleteInvite = function($event, item) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure you want to delete this invite?"
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res && res.status === 'agree') {
+
+                    membersAndGroupsService.deleteInviteByKey(item.id).then(function () {
+
+                        vm.getData();
+
+                    })
+
+
+                }
+            })
 
         };
 

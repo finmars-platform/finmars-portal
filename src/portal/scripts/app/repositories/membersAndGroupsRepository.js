@@ -5,6 +5,8 @@
     var xhrService = require('../../../../core/services/xhrService');
     var baseUrlService = require('../services/baseUrlService');
 
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+
     var baseUrl = baseUrlService.resolve();
 
     var getMembersList = function () {
@@ -135,9 +137,9 @@
         })
     };
 
-    var inviteUser = function (username) {
+    var inviteUser = function (data) {
 
-        return xhrService.fetch(baseUrl + 'users/create-invite-to-master-user/', {
+        return xhrService.fetch(baseUrl + 'users/create-invite-to-user/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -145,9 +147,40 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({username: username})
+            body: JSON.stringify(data)
         })
 
+    };
+
+    var getInvitesList = function(options){
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'users/invite-to-user/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    };
+
+    var deleteInviteByKey = function (id) {
+        return xhrService.fetch(baseUrl + 'users/invite-to-user/' + id + '/',
+            {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                resolve({status: 'deleted'});
+            });
+        })
     };
 
     module.exports = {
@@ -163,7 +196,9 @@
         updateGroup: updateGroup,
         deleteGroupByKey: deleteGroupByKey,
 
-        inviteUser: inviteUser
+        inviteUser: inviteUser,
+        getInvitesList: getInvitesList,
+        deleteInviteByKey: deleteInviteByKey
 
     }
 
