@@ -27,10 +27,7 @@
                 scope.groups = scope.evDataService.getGroups();
                 scope.downloadedItemsCount = null;
 
-                scope.isReport = ['balance-report',
-                    'cash-flow-projection-report',
-                    'performance-report', 'pl-report',
-                    'transaction-report'].indexOf(scope.entityType) !== -1;
+                scope.isReport = metaService.isReport(scope.entityType);
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
 

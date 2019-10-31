@@ -6,7 +6,12 @@
     <div layout="row"
          layout-align="center center"
          style="margin-bottom: 13px;">
-        <span flex ng-bind="filter.name"
+        <span data-ng-if="!filter.layout_name"
+              ng-bind="filter.name"
+              flex="100"
+              style="text-align: center;"></span>
+        <span data-ng-if="filter.layout_name"
+              ng-bind="filter.layout_name"
               flex="100"
               style="text-align: center;"></span>
     </div>
@@ -102,11 +107,13 @@
 
         <div class="settings-btn" flex="15">
             <md-menu>
-                <md-button aria-label="Open phone interactions menu"
+
+                <md-button aria-label="entity viewer filter types menu"
                            class="md-icon-button"
                            ng-click="$mdMenu.open($event)">
                     <ng-md-icon icon="settings"></ng-md-icon>
                 </md-button>
+
                 <md-menu-content width="3">
                     <md-menu-item>
                         <md-menu>

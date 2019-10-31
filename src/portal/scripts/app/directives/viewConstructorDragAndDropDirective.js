@@ -294,6 +294,8 @@
 
                         drake.on('shadow', function (elem, container, source) {
 
+                            sourceContainer = source;
+
                             elem.classList.add('vc-shadow-elem');
 
                             if (containerWithShadow) {
@@ -301,9 +303,7 @@
                             }
 
                             if (container === source) {
-
                                 source.classList.remove('dragged-out-card-space');
-
                             } else {
                                 if (!source.classList.contains('dragged-out-card-space')) {
                                     source.classList.add('dragged-out-card-space');
@@ -311,6 +311,7 @@
 
                                 container.classList.add('remove-card-space');
                                 containerWithShadow = container;
+                                sourceContainer = source;
                             }
                         });
 
@@ -328,7 +329,6 @@
 
                             var attributeKey = elem.dataset.attributeKey;
                             var attrsVmKey = elem.dataset.vmKey;
-                            sourceContainer = source;
 
                             var changeSelectedGroup = function (draggedTo) {
 

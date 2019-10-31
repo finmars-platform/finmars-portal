@@ -132,7 +132,7 @@
                                     <p>Groups and Columns</p>
                                 </div>
 
-                                <div class="vcSelectedGroups">
+                                <!--<div class="vcSelectedGroups">
                                     <div class="g-checkbox-row vcSelectedGroupItem"
                                          data-ng-repeat="item in vm.selectedGroups | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
@@ -171,7 +171,7 @@
                                         </div>
 
                                     </div>
-                                </div>
+                                </div>-->
 
                                 <div class="vc-selected-attrs-holder vcSelectedColumns">
                                     <div class="g-checkbox-row vcSelectedColumnItem"
@@ -209,6 +209,14 @@
                                                     {{item.name}}
                                                 </md-card>
                                             </div>
+                                        </div>
+
+                                        <div flex="10"
+                                             layout="row"
+                                             layout-align="end center">
+                                            <g-column-settings-button data-column-key="item.key"
+                                                                      data-ev-data-service="vm.entityViewerDataService"
+                                                                      data-ev-event-service="vm.entityViewerEventService"></g-column-settings-button>
                                         </div>
 
                                     </div>
@@ -260,6 +268,14 @@
                                                     {{item.name}}
                                                 </md-card>
                                             </div>
+                                        </div>
+
+                                        <div flex="10"
+                                             layout="row"
+                                             layout-align="end center">
+                                            <g-ev-filter-settings-button data-filter-key="item.key"
+                                                                         data-ev-data-service="vm.entityViewerDataService"
+                                                                         data-ev-event-service="vm.entityViewerEventService"></g-ev-filter-settings-button>
                                         </div>
 
                                     </div>
