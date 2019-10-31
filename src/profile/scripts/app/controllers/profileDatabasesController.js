@@ -29,7 +29,7 @@
 
             vm.readyStatus.invites = false;
 
-            usersService.getInviteToMasterUserList().then(function (data) {
+            usersService.getInviteFromMasterUserList().then(function (data) {
 
                 vm.invites = data.results;
                 vm.readyStatus.invites = true;
@@ -145,7 +145,7 @@
 
             item.status = 2; // Decline code
 
-            usersService.updateInviteToMasterUserByKey(item.id, item).then(function () {
+            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 vm.getInvites();
 
@@ -157,9 +157,9 @@
 
             item.status = 1; // Accept code
 
-            usersService.updateInviteToMasterUserByKey(item.id, item).then(function () {
+            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
-                usersService.setMasterUser(item.to_master_user.id).then(function (value) {
+                usersService.setMasterUser(item.to_master_user).then(function (value) {
                     $state.go('app.setup');
                 })
 

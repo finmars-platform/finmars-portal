@@ -20,14 +20,14 @@
                         <md-card-title>
                             <md-card-title-text>
                                 <div>
-                                    You have been invited to a <b>{{item.to_master_user.name}}</b> database by
-                                    <b>{{item.from_member}}</b>
+                                    You have been invited to a <b>{{item.to_master_user_object.name}}</b> database by
+                                    <b>{{item.from_member_object.username}}</b>
                                 </div>
 
-                                <div class="m-t-16" style="font-size: 13px;">
+                                <div class="m-t-16" style="font-size: 13px;" data-ng-if="item.to_master_user_object.description">
                                     Description:
-                                    <div class="m-b-8 mm-description" data-ng-if="!item.descriptionEdit">
-                                        {{item.to_master_user.description}}
+                                    <div class="m-b-8 mm-description">
+                                        {{item.to_master_user_object.description}}
                                     </div>
                                 </div>
 

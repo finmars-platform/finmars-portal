@@ -40,9 +40,17 @@
 	};
 
 
-	var inviteUser = function (username) {
-		return membersAndGroupsRepository.inviteUser(username);
+	var inviteUser = function (data) {
+		return membersAndGroupsRepository.inviteUser(data);
     };
+
+	var getInvitesList = function(options){
+		return membersAndGroupsRepository.getInvitesList(options);
+	};
+
+	var deleteInviteByKey = function(id) {
+		return membersAndGroupsRepository.deleteInviteByKey(id)
+	};
 
 	module.exports = {
 		getMembersList: getMembersList,
@@ -56,6 +64,8 @@
 		updateGroup: updateGroup,
 		deleteGroupByKey: deleteGroupByKey,
 
-		inviteUser: inviteUser
+		inviteUser: inviteUser,
+		getInvitesList: getInvitesList,
+		deleteInviteByKey: deleteInviteByKey
 	}
 }());
