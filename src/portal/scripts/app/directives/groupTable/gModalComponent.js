@@ -19,8 +19,11 @@
         var vm = this;
         vm.readyStatus = {content: false};
 
-        vm.entityType = entityViewerDataService.getEntityType();
-        vm.contentType = entityViewerDataService.getContentType();
+        vm.entityViewerDataService = entityViewerDataService;
+        vm.entityViewerEventService = entityViewerEventService;
+
+        vm.entityType = vm.entityViewerDataService.getEntityType();
+        vm.contentType = vm.entityViewerDataService.getContentType();
 
         console.log('vm', vm);
 
@@ -31,12 +34,12 @@
 
         vm.cardsDividedIntoTabs = true;
 
-        var columns = entityViewerDataService.getColumns();
+        var columns = vm.entityViewerDataService.getColumns();
         var currentColumnsWidth = columns.length;
-        var filters = entityViewerDataService.getFilters();
-        var groups = entityViewerDataService.getGroups();
+        var filters = vm.entityViewerDataService.getFilters();
+        var groups = vm.entityViewerDataService.getGroups();
 
-        var attrsList = [];
+        vm.attrsList = [];
 
         var attrsWithoutGroups = ['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'tags', 'content_types'];
         var attrsWithoutFilters = ['notes'];
@@ -72,9 +75,6 @@
 
             vm.entityAttrs = attributeDataService.getEntityAttributesByEntityType(vm.entityType);
 
-            console.log('attrs from attribute data service', vm.entityAttrs);
-
-            console.log("strategies view constructor attrs", vm.entityType, JSON.parse(JSON.stringify(vm.entityAttrs)));
             vm.entityAttrs.forEach(function (item) {
                 if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
                     item.name = 'Group';
@@ -127,10 +127,8 @@
 
             });
 
-            attrsList = attrsList.concat(vm.entityAttrs);
-            attrsList = attrsList.concat(vm.attrs);
-
-            vm.allAttributesList = attrsList;
+            vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.attrs);
 
             syncAttrs();
             getSelectedAttrs();
@@ -290,9 +288,9 @@
                 }
             }
 
-            entityViewerDataService.setColumns(columns);
-            entityViewerDataService.setGroups(groups);
-            entityViewerDataService.setFilters(filters);
+            vm.entityViewerDataService.setColumns(columns);
+            vm.entityViewerDataService.setGroups(groups);
+            vm.entityViewerDataService.setFilters(filters);
 
         }
 
@@ -302,14 +300,14 @@
 
             addColumn();
 
-            evDataHelper.updateColumnsIds(entityViewerDataService);
-            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
 
-            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
-            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
         };
 
@@ -322,21 +320,25 @@
 
             for (var i = 0; i < attributes.length; i++) {
                 var attribute = JSON.parse(angular.toJson(attributes[i]));
-                attribute.attrsVmKey = attrsVmKey;
+                attribute['attrsVmKey'] = attrsVmKey;
 
                 // attrsVmKey used in vm.updateAttrs and selectedDnD
-                if (attribute.groups) {
-                    selectedGroups.push(attribute);
-                } else if (attribute.columns) {
+                if (attribute.columns) {
                     selectedColumns.push(attribute);
-                } else if (attribute.filters) {
+                } else if (attribute.groups) {
+                    selectedGroups.push(attribute);
+                }
+
+                if (attribute.filters) {
                     selectedFilters.push(attribute);
-                };
-            };
+                }
+            }
 
         };
 
-        var groupSelectedGroups = function (insideTable, selectedAttrs, vmKey) { // putting selected attributes in the same order as in the table
+        var groupSelectedGroups = function (insideTable, selectedAttrs) { // putting selected attributes in the same order as in the table
+
+            var orderedSelAttrs = [];
 
             var a;
             for (a = 0; a < insideTable.length; a++) {
@@ -346,29 +348,36 @@
                     var sAttr = selectedAttrs[i];
 
                     if (sAttr.key === attr.key) {
-                        vm[vmKey].push(sAttr);
+                        orderedSelAttrs.push(sAttr);
                         break;
-                    };
-                };
+                    }
+                }
 
-            };
+            }
+
+            return orderedSelAttrs;
 
         };
 
+        vm.selectedGroups = [];
+        vm.selectedColumns = [];
+        vm.selectedFilters = [];
+
         var getSelectedAttrs = function () {
 
-            vm.selectedGroups = [];
-            vm.selectedColumns = [];
-            vm.selectedFilters = [];
+            selectedGroups = [];
+            selectedColumns = [];
+            selectedFilters = [];
 
             separateSelectedAttrs(vm.entityAttrs, 'entityAttrs');
             separateSelectedAttrs(vm.attrs, 'attrs');
 
-            groupSelectedGroups(groups, selectedGroups, 'selectedGroups');
-            groupSelectedGroups(columns, selectedColumns, 'selectedColumns');
-            groupSelectedGroups(filters, selectedFilters, 'selectedFilters');
+            vm.selectedGroups = groupSelectedGroups(groups, selectedGroups);
+            vm.selectedColumns = groupSelectedGroups(columns, selectedColumns);
+            vm.selectedFilters = groupSelectedGroups(filters, selectedFilters);
 
         };
+
         // < format data for SELECTED tab >
 
         vm.onSelectedAttrsChange = function (attributesList, selectedAttr) {
@@ -379,8 +388,8 @@
                     attributesList[i].columns = selectedAttr.columns;
                     attributesList[i].filters = selectedAttr.filters;
                     break;
-                };
-            };
+                }
+            }
 
             vm.updateAttrs(attributesList);
 
@@ -466,97 +475,76 @@
                         if (target === contentWrapElement.querySelector('.g-columns-holder') ||
                             target === contentWrapElement.querySelector('#columnsbag')) {
 
-                            for (a = 0; a < attrsList.length; a = a + 1) {
+                            for (a = 0; a < vm.attrsList.length; a = a + 1) {
 
-                                if (attrsList[a].key === identifier) {
+                                if (vm.attrsList[a].key === identifier) {
 
                                     if (target === contentWrapElement.querySelector('#columnsbag')) {
-                                        columns.push(attrsList[a]);
+                                        columns.push(vm.attrsList[a]);
                                     } else {
-                                        columns.splice(index, 0, attrsList[a]);
+                                        columns.splice(index, 0, vm.attrsList[a]);
                                     }
 
-                                    //columns.push(attrsList[a]);
+                                    //columns.push(vm.attrsList[a]);
                                 }
 
-                                /*if (attrsList[a].name === name) {
-
-                                    if (target === contentWrapElement.querySelector('#columnsbag')) {
-                                        columns.push(attrsList[a]);
-                                    } else {
-                                        columns.splice(index, 0, attrsList[a]);
-                                    }
-
-                                    //columns.push(attrsList[a]);
-                                }*/
                             }
                             syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         };
 
                         if (target === contentWrapElement.querySelector('#groupsbag') ||
                             target === contentWrapElement.querySelector('.g-groups-holder')) {
 
-                            for (a = 0; a < attrsList.length; a = a + 1) {
+                            for (a = 0; a < vm.attrsList.length; a = a + 1) {
 
-                                if (attrsList[a].key === identifier) {
+                                if (vm.attrsList[a].key === identifier) {
 
                                     if (target === contentWrapElement.querySelector('#groupsbag')) {
-                                        groups.push(attrsList[a]);
+                                        groups.push(vm.attrsList[a]);
                                     } else {
-                                        groups.splice(index, 0, attrsList[a]);
+                                        groups.splice(index, 0, vm.attrsList[a]);
                                     }
 
-                                    //columns.push(attrsList[a]);
+                                    //columns.push(vm.attrsList[a]);
                                 }
 
-                                /*if (attrsList[a].name === name) {
-
-                                    if (target === contentWrapElement.querySelector('#groupsbag')) {
-                                        groups.push(attrsList[a]);
-                                    } else {
-                                        groups.splice(index, 0, attrsList[a]);
-                                    }
-
-                                }*/
-                            };
+                            }
 
                             syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
-                            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        };
+                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        }
 
                         if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
                             target === contentWrapElement.querySelector('.g-filters-holder')) {
 
-                            for (a = 0; a < attrsList.length; a = a + 1) {
+                            for (a = 0; a < vm.attrsList.length; a = a + 1) {
 
-                                if (attrsList[a].key === identifier) {
+                                if (vm.attrsList[a].key === identifier) {
 
                                     if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter')) {
-                                        filters.push(attrsList[a]);
+                                        filters.push(vm.attrsList[a]);
                                     } else {
-                                        filters.splice(index, 0, attrsList[a]);
+                                        filters.splice(index, 0, vm.attrsList[a]);
                                     }
 
                                 }
 
                             }
                             syncAttrs();
-                            evDataHelper.updateColumnsIds(entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
-                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
-
-                        // $scope.$apply();
 
                     } else if (exist && target) {
 
-                        var errorMessage = 'Item should be unique'
+                        var errorMessage = 'Item should be unique';
 
                         if (columnExist) {
                             errorMessage = 'There is already such column in Column Area';
@@ -633,26 +621,277 @@
         // scroll while dragging
         var DnDScrollElem;
         var DnDScrollTimeOutId;
+        var scrollSize = null;
 
         var DnDWheel = function (event) {
             event.preventDefault();
-            clearTimeout(DnDScrollTimeOutId);
 
             var scrolled = DnDScrollElem.scrollTop;
 
-            var scrollSize = event.deltaY * 50;
+            if (scrollSize === null) {
+                scrollSize = scrolled;
+            }
+
+            if (event.deltaY > 0) {
+                scrollSize = scrollSize + 100;
+            } else {
+                scrollSize = scrollSize - 100;
+            }
+
+            clearTimeout(DnDScrollTimeOutId);
 
             DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
                 DnDScrollElem.scroll({
-                    top: scrolled + scrollSize,
-                    behavior: 'smooth'
+                    top: Math.max(0, scrollSize)
                 });
+                scrollSize = null;
             }, 30);
 
         };
         // < scroll while dragging >
 
         var selectedDnD = {
+
+            init: function () {
+                this.selectedDragulaInit();
+                this.eventListeners();
+            },
+
+            eventListeners: function () {
+
+                var drake = this.dragula;
+                var containerWithShadow;
+                var sourceContainer;
+
+                drake.on('shadow', function (elem, container, source) {
+
+                    if (containerWithShadow) {
+                        containerWithShadow.classList.remove('remove-card-space');
+                    }
+
+                    if (container === source) {
+                        source.classList.remove('dragged-out-card-space');
+                    } else {
+                        source.classList.add('dragged-out-card-space');
+
+                        container.classList.add('remove-card-space');
+                        containerWithShadow = container;
+                        sourceContainer = source;
+                    }
+                });
+
+                drake.on('drag', function () {
+                    document.addEventListener('wheel', DnDWheel);
+                });
+
+                drake.on('drop', function (elem, target, source, nextSibling) {
+
+                    var attributeChanged = false; // needed to call view constructor data reload
+                    var attributeKey = elem.dataset.attributeKey;
+                    var attrsVmKey = elem.dataset.vmKey;
+
+                    var changeSelectedGroup = function (draggedTo) {
+
+                        for (var i = 0; i < vm[attrsVmKey].length; i++) {
+
+                            if (vm[attrsVmKey][i].key === attributeKey) {
+                                var GCFItems = [];
+                                var updateGCFMethod;
+
+                                switch (draggedTo) {
+                                    case 'groups':
+                                        vm[attrsVmKey][i].groups = true;
+                                        GCFItems = groups;
+                                        updateGCFMethod = function () {vm.entityViewerDataService.setGroups(GCFItems);};
+                                        break;
+                                    case 'columns':
+                                        vm[attrsVmKey][i].groups = false;
+                                        vm[attrsVmKey][i].columns = true;
+                                        GCFItems = columns;
+                                        updateGCFMethod = function () {vm.entityViewerDataService.setColumns(GCFItems);};
+                                        break;
+                                    case 'filters':
+                                        vm[attrsVmKey][i].groups = false;
+                                        vm[attrsVmKey][i].columns = false;
+                                        vm[attrsVmKey][i].filters = true;
+                                        GCFItems = filters;
+                                        updateGCFMethod = function () {vm.entityViewerDataService.setFilters(GCFItems);};
+                                        break;
+                                }
+
+                                var attrData = JSON.parse(JSON.stringify(vm[attrsVmKey][i]));
+
+                                attributeChanged = true;
+
+                                for (var a = 0; a < GCFItems.length; a++) { // remove same element from selected group
+                                    if (GCFItems[a].key === attributeKey) {
+                                        GCFItems.splice(a, 1);
+                                        break;
+                                    }
+                                }
+
+                                if (nextSibling) {
+                                    var nextSiblingKey = nextSibling.dataset.attributeKey;
+
+                                    for (var a = 0; a < GCFItems.length; a++) {
+                                        var GCFElem = GCFItems[a];
+
+                                        if (GCFElem.key === nextSiblingKey) {
+                                            GCFItems.splice(a, 0, attrData);
+                                            updateGCFMethod();
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                break;
+                            }
+
+                        }
+
+                    };
+
+                    var changeOrder = function (orderOf) {
+
+                        var CGFElems = [];
+                        var GCFHtmlElems = [];
+                        var updateGCFMethod;
+
+                        var elemsAfterDragging = [];
+
+                        switch (orderOf) {
+                            case 'groups':
+                                CGFElems = groups;
+                                GCFHtmlElems = source.querySelectorAll('.vcSelectedGroupItem');
+                                updateGCFMethod = function () {
+                                    vm.entityViewerDataService.setGroups(elemsAfterDragging);
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                };
+                                break;
+                            case 'columns':
+                                CGFElems = columns;
+                                GCFHtmlElems = source.querySelectorAll('.vcSelectedColumnItem');
+                                updateGCFMethod = function () {
+                                    vm.entityViewerDataService.setColumns(elemsAfterDragging);
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                };
+                                break;
+                            case 'filters':
+                                CGFElems = filters;
+                                GCFHtmlElems = source.querySelectorAll('.vcSelectedFilterItem');
+                                updateGCFMethod = function () {
+                                    vm.entityViewerDataService.setFilters(elemsAfterDragging);
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                                };
+                                break;
+
+                        }
+
+                        for (var i = 0; i < GCFHtmlElems.length; i = i + 1) {
+
+                            var GCFElemKey = GCFHtmlElems[i].dataset.attributeKey;
+
+                            for (var x = 0; x < CGFElems.length; x = x + 1) {
+
+                                if (GCFElemKey === CGFElems[x].key) {
+                                    elemsAfterDragging.push(CGFElems[x]);
+                                    break;
+                                }
+
+                            }
+
+                        }
+
+                        var isChanged = false;
+
+                        for (var i = 0; i < elemsAfterDragging.length; i++) {
+                            var CGFElem = elemsAfterDragging[i];
+
+                            if (CGFElem.key !== CGFElems[i].key) {
+                                isChanged = true;
+                                break;
+                            }
+                        }
+
+                        if (isChanged) {
+                            updateGCFMethod();
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            $scope.$apply();
+                        }
+                    };
+
+                    if (source.classList.contains('vcSelectedColumns')) {
+
+                        // dragged to filters
+                        if (target.classList.contains('vcSelectedFilters')) {
+                            changeSelectedGroup('filters');
+                        // < dragged to filters >
+
+                            // If column's order changed
+                        } else if (target.classList.contains('vcSelectedColumns')) {
+                            changeOrder('columns');
+                            // < If column's order changed >
+                        }
+                        // < dragging from columns >
+
+                    // dragging from filters
+                    } else if (source.classList.contains('vcSelectedFilters')) {
+
+                        // dragged to columns
+                        if (target.classList.contains('vcSelectedColumns')) {
+                            changeSelectedGroup('columns');
+                        // < dragged to columns >
+
+                        // If filter's order changed
+                        } else if (target.classList.contains('vcSelectedFilters')) {
+                            changeOrder('filters');
+                        // < If filter's order changed >
+                        }
+
+                    }
+                    // < dragging from filters >
+
+                    if (attributeChanged) { // does not trigger on order change
+
+                        vm.updateAttrs(vm[attrsVmKey]);
+                        drake.remove(); // adds delay if called when only attributes order changed in group
+
+                    }
+
+                });
+
+                drake.on('dragend', function () {
+                    if (sourceContainer) {
+                        sourceContainer.classList.remove('dragged-out-card-space');
+                    }
+
+                    if (containerWithShadow) {
+                        containerWithShadow.classList.remove('remove-card-space');
+                    }
+                    document.removeEventListener('wheel', DnDWheel);
+                });
+
+            },
+
+            selectedDragulaInit: function () {
+
+                var items = [
+                    //document.querySelector('.vcSelectedGroups'),
+                    document.querySelector('.vcSelectedColumns'),
+                    document.querySelector('.vcSelectedFilters')
+                ];
+
+                this.dragula = dragula(items, {
+                    revertOnSpill: true
+                });
+            },
+
+            destroy: function () {
+                this.dragula.destroy();
+            }
+        };
+
+        /*var selectedDnD = {
 
             init: function () {
                 this.selectedDragulaInit();
@@ -764,10 +1003,10 @@
 
                             if (isChanged) {
 
-                                entityViewerDataService.setGroups(groupsAfterDragging);
+                                vm.entityViewerDataService.setGroups(groupsAfterDragging);
 
-                                entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                 $scope.$apply();
 
@@ -803,11 +1042,8 @@
                         } else if (target.classList.contains('vcSelectedFilters')) {
 
                             if (attrsWithoutFilters.indexOf(attributeKey) !== -1) {
-
                                 drake.cancel();
-
                             } else {
-
                                 for (var i = 0; i < vm[attrsVmKey].length; i++) {
                                     if (vm[attrsVmKey][i].key === attributeKey) {
                                         vm[attrsVmKey][i].columns = false;
@@ -854,10 +1090,10 @@
 
                             if (isChanged) {
 
-                                entityViewerDataService.setColumns(columnsAfterDragging);
+                                vm.entityViewerDataService.setColumns(columnsAfterDragging);
 
-                                entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                 $scope.$apply();
 
@@ -935,10 +1171,10 @@
 
                             if (isChanged) {
 
-                                entityViewerDataService.setFilters(filtersAfterDragging);
+                                vm.entityViewerDataService.setFilters(filtersAfterDragging);
 
-                                entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                 $scope.$apply();
 
@@ -979,7 +1215,7 @@
             destroy: function () {
                 this.dragula.destroy();
             }
-        };
+        };*/
 
         var addColumn = function () {
             if (currentColumnsWidth < columns.length) {
@@ -987,6 +1223,66 @@
             } else {
                 metaService.columnsWidthGroups(false);
             }
+        };
+
+
+        vm.selectAttribute = function (selectedGroup, event) {
+
+            var availableAttrs;
+            var dialogTitle;
+
+            switch (selectedGroup) {
+                case 'column':
+                    dialogTitle = 'Choose column to add';
+                    availableAttrs = vm.attrsList.filter(function (attr) {
+                        return !attr.columns;
+                    });
+                    break;
+                case 'filter':
+                    dialogTitle = 'Choose filter to add';
+                    availableAttrs = vm.attrsList.filter(function (attr) {
+                        if (attrsWithoutFilters.indexOf(attr.key) === -1 || attr.filters) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    break;
+            }
+
+            $mdDialog.show({
+                controller: "TableAttributeSelectorDialogController as vm",
+                templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                targetEvent: event,
+                multiple: true,
+                locals: {
+                    data: {
+                        availableAttrs: availableAttrs,
+                        title: dialogTitle
+                    }
+                }
+            }).then(function (res) {
+
+                if (res && res.status === "agree") {
+
+                    for (var i = 0; i < vm.attrsList.length; i++) {
+
+                        if (vm.attrsList[i].key === res.data.key) {
+
+                            if (selectedGroup === 'column') {
+                                vm.attrsList[i].columns = true;
+                            } else {
+                                vm.attrsList[i].filters = true;
+                            }
+                            vm.updateAttrs(vm.attrsList);
+                            break;
+                        }
+
+                    }
+
+                }
+
+            });
+
         };
 
         vm.initDnd = function () {
@@ -1013,25 +1309,25 @@
 
             vm.getAttributes();
 
-            entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-                columns = entityViewerDataService.getColumns();
+                columns = vm.entityViewerDataService.getColumns();
                 syncAttrs();
                 getSelectedAttrs();
 
             });
 
-            entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-                groups = entityViewerDataService.getGroups();
+                groups = vm.entityViewerDataService.getGroups();
                 syncAttrs();
                 getSelectedAttrs();
 
             });
 
-            entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+            vm.entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-                filters = entityViewerDataService.getFilters();
+                filters = vm.entityViewerDataService.getFilters();
                 syncAttrs();
                 getSelectedAttrs();
 

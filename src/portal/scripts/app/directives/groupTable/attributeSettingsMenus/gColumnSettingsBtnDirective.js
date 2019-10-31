@@ -6,6 +6,7 @@
     'use strict';
 
     var evEvents = require('../../../services/entityViewerEvents');
+    var metaService = require('../../../services/metaService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -17,6 +18,9 @@
             },
             templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-column-settings-btn-view.html',
             link: function (scope, elem, attrs) {
+
+                scope.entityType = scope.evDataService.getEntityType();
+                scope.isReport = metaService.isReport(scope.entityType);
 
                 var columns = scope.evDataService.getColumns();
 
@@ -65,7 +69,7 @@
 
                     if (!scope.column.report_settings) {
                         scope.column.report_settings = {};
-                    };
+                    }
 
                     switch (rendPreset) {
 
@@ -102,7 +106,7 @@
                             scope.column.report_settings.percentage_format_id = 3;
                             break;
 
-                    };
+                    }
 
                     updateColumn();
 
@@ -134,7 +138,7 @@
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 
-                        };
+                        }
 
                     });
                 };
@@ -149,7 +153,7 @@
                         scope.column.report_settings.subtotal_formula_id = null;
                     } else {
                         scope.column.report_settings.subtotal_formula_id = type;
-                    };
+                    }
 
                     updateColumn();
 
@@ -163,7 +167,6 @@
                         if (scope.column.report_settings.subtotal_formula_id === type) {
                             return true;
                         }
-
                     }
 
                     return false;

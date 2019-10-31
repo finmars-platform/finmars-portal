@@ -1,5 +1,5 @@
 /**
- * Created by mevstratov on 23.10.2019.
+ * Created by mevstratov on 30.10.2019.
  */
 (function () {
 
@@ -15,7 +15,7 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-filter-settings-btn-view.html',
+            templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-ev-filter-settings-btn-view.html',
             link: function (scope, elem, attrs) {
 
                 var filters = scope.evDataService.getFilters();
@@ -23,37 +23,17 @@
                 filters.forEach(function (filter) {
                     if (filter.key === scope.filterKey) {
                         scope.filter = filter;
+
+                        if (scope.filter && !scope.filter.hasOwnProperty('options')) {
+                            scope.filter.options = {};
+                        }
                     }
                 });
 
                 var filterEnabled = scope.filter.options.enabled;
 
-
-                var updateFilter = function () {
-
-                    for (var i = 0; i < filters.length; i++) {
-                        if (filters[i].key === scope.filterKey) {
-                            filters[i] = JSON.parse(JSON.stringify(scope.filter));
-                            break;
-                        }
-                    }
-
-                    scope.evDataService.setFilters(filters);
-
-                };
-
-                var isUseFromAboveActive = function () {
-                    if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length > 0) {
-                        return true;
-                    };
-
-                    return false;
-                };
-
                 scope.showFRCheckMark = function (filterRegime) {
-                    if (scope.filter.options.filter_type === filterRegime &&
-                        !isUseFromAboveActive()) {
-
+                    if (scope.filter.options.filter_type === filterRegime) {
                         return true;
                     };
 
@@ -92,62 +72,37 @@
 
                 scope.applyFilter = function () {
 
-                    if (scope.filter.options.enabled) {
+                    if (scope.filter.options.enabled || filterEnabled) {
 
-                        scope.evDataService.resetData();
-                        scope.evDataService.resetRequestParameters();
+                        filterEnabled = scope.filter.options.enabled;
 
-                        var rootGroup = scope.evDataService.getRootGroupData();
-
-                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        if (scope.filter.options.is_frontend_filter) {
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        }
 
                     }
 
                 };
                 // < for filter with 'date' data type >
 
-                scope.filterSettingsChange = function () {
-
-                    if (scope.filter.options.enabled || filterEnabled) {
-
-                        filterEnabled = scope.filter.options.enabled;
-
-                        if (scope.filter.options.filter_type === 'date_tree') {
-                            scope.filter.options.filter_values = convertDatesTreeToFlatList();
-                        }
-
-                        scope.evDataService.resetData();
-                        scope.evDataService.resetRequestParameters();
-
-                        var rootGroup = scope.evDataService.getRootGroupData();
-
-                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                    };
-
-                };
-
                 scope.changeFilterType = function (filterType) {
 
-                    scope.filter.options.use_from_above = {};
                     scope.filter.options.filter_type = filterType;
 
                     switch (scope.filter.value_type) {
                         case 10:
                         case 30:
+
                             if (filterType === 'empty') {
                                 scope.filter.options.exclude_empty_cells = false;
                             }
                             scope.filter.options.filter_values = [];
+
                             break;
 
                         case 20:
                             if (filterType === 'from_to') {
-                                scope.filter.options.filter_values = {}
+                                scope.filter.options.filter_values = {};
                             } else {
 
                                 if (filterType === 'empty') {
@@ -176,38 +131,58 @@
                             break;
                     }
 
-                    updateFilter();
-
-                    scope.filterSettingsChange();
-
+                    scope.filterSettingsChanged();
                 };
 
-                scope.changeFilterType = function (filterType) {
+                scope.toggleFrontendFilter = function () {
 
-                    scope.filter.options.use_from_above = {};
-                    scope.filter.options.filter_type = filterType;
+                    scope.filter.options.is_frontend_filter = !scope.filter.options.is_frontend_filter;
 
-                    if (filterType === 'from_to') {
+                    if (!scope.filter.options.is_frontend_filter) {
 
-                        scope.filter.options.filter_values = {}
+                        switch (scope.filter.value_type) {
+                            case 10:
+                            case 30:
+                                if (scope.filter.options.filter_type === "multiselector" ||
+                                    scope.filter.options.filter_type === "selector") {
 
-                    } else {
+                                    scope.filter.options.filter_values = [];
+                                    scope.filter.options.filter_type = "contains";
 
-                        if (filterType === 'empty') {
-                            scope.filter.options.exclude_empty_cells = false;
+                                }
+                                break;
+                            case 40:
+                                if (scope.filter.options.filter_type === "date_tree") {
+
+                                    scope.filter.options.filter_values = [];
+                                    scope.filter.options.filter_type = "equal";
+
+                                }
+                                break;
                         }
 
-                        scope.filter.options.filter_values = [];
-
                     }
 
-                    scope.filterSettingsChange();
+                    scope.filterSettingsChanged();
+
                 };
 
-                scope.createUseFromAboveDir = function () {
-                    if (!scope.filter.options.use_from_above) {
-                        scope.filter.options.use_from_above = {};
+                scope.filterSettingsChanged = function () {
+
+                    if (scope.filter.options.enabled || filterEnabled) {
+
+                        filterEnabled = scope.filter.options.enabled;
+
+                        if (scope.filter.options.filter_type === 'date_tree') {
+                            scope.filter.options.filter_values = convertDatesTreeToFlatList();
+                        }
+
+                        if (scope.filter.options.is_frontend_filter) {
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        }
+
                     }
+
                 };
 
                 scope.renameFilter = function ($mdMenu, $event) {
@@ -219,14 +194,11 @@
                         templateUrl: 'views/dialogs/rename-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
+                        multiple: true,
                         locals: {
                             data: scope.filter
                         }
 
-                    }).then(function (res) {
-                        if (res.status === 'agree') {
-
-                        }
                     });
 
                 };
