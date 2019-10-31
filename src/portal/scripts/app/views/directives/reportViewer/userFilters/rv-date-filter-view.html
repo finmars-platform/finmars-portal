@@ -5,7 +5,12 @@
     <div layout="row"
          layout-align="center center"
          style="margin-bottom: 13px;">
-        <span flex ng-bind="filter.name"
+        <span data-ng-if="!filter.layout_name"
+              ng-bind="filter.name"
+              flex="100"
+              style="text-align: center;"></span>
+        <span data-ng-if="filter.layout_name"
+              ng-bind="filter.layout_name"
               flex="100"
               style="text-align: center;"></span>
     </div>

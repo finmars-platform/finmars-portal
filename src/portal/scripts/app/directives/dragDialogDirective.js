@@ -9,11 +9,8 @@
 			restrict: 'A',
 			link: function (scope, elem, attrs) {
 
-				//console.log('drag dialog working');
-
 				var dragger = $(elem).find('md-toolbar');
-				// var dragger = $(elem);
-				//console.log('drag element is', $(elem), dragger);
+
 				var parent = $(elem);
 
 				var posY = 0, posX = 0;

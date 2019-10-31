@@ -1,4 +1,5 @@
-<div ng-if="filter.value_type === 10 || filter.value_type === 30" class="settings-btn">
+<div data-ng-if="filter.value_type === 10 || filter.value_type === 30"
+     class="settings-btn">
     <md-menu>
         <md-button aria-label="report viewer filter settings"
                    class="md-icon-button"
@@ -16,6 +17,7 @@
                                     class="z-arrow-left-icon"></ng-md-icon>
                         <span>Filter</span>
                     </md-button>
+
                     <md-menu-content class="dropdown-buttons-menu" width="3">
                         <md-button ng-click="changeFilterType('contains')">
                             <ng-md-icon icon="done"
@@ -332,7 +334,7 @@
             </md-menu-item>
 
             <md-menu-item>
-                <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
+                <md-button ng-click="renameFilter($mdMenu, $event)"
                            class="g-settings-option-btn">
                     <ng-md-icon icon="visibility_off"
                                 style="visibility: hidden;"></ng-md-icon>

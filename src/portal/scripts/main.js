@@ -462,12 +462,13 @@ app.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller',
 app.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
 app.directive('groupPermissionEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gPermissionEditorBinderComponent')]);
 app.directive('groupingAndColumnAreaDragAndDrop', ['$mdDialog', require('./app/directives/groupTable/gGroupingAndColumnAreaDragAndDrop')]);
-app.directive('viewConstructorDragAndDrop', [require('./app/directives/viewConstructorDragAndDropDirective')]);
+app.directive('viewConstructorDragAndDrop', ['$mdDialog', require('./app/directives/viewConstructorDragAndDropDirective')]);
 
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);
 app.directive('gColumnSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gColumnSettingsBtnDirective.js')]);
 app.directive('gGroupSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gGroupSettingsBtnDirective.js')]);
-app.directive('gFilterSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gFilterSettingsBtnDirective.js')]);
+app.directive('gRvFilterSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gRvFilterSettingsBtnDirective.js')]);
+app.directive('gEvFilterSettingsButton', ['$mdDialog', require('./app/directives/groupTable/attributeSettingsMenus/gEvFilterSettingsBtnDirective.js')]);
 app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitleDirective.js')]);
 app.directive('valueTitle', ['$timeout', require('./app/directives/valueTitleDirective.js')]);
 
