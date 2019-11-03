@@ -30,7 +30,7 @@
 
                 scope.rootGroupOptions = scope.evDataService.getRootGroupOptions();
 
-                scope.grouping = scope.evDataService.getGroups();
+                scope.groups = scope.evDataService.getGroups();
                 setDefaultGroupType(scope.evDataService);
                 scope.components = scope.evDataService.getComponents();
 
@@ -145,7 +145,7 @@
                 scope.removeGroup = function (group) {
 
                     if (group.key) {
-                        scope.grouping = scope.grouping.filter(function (item) {
+                        scope.groups = scope.groups.filter(function (item) {
                             if (item.key === group.key) {
                                 return false;
                             }
@@ -153,7 +153,7 @@
                         })
                     }
 
-                    scope.evDataService.setGroups(scope.grouping);
+                    scope.evDataService.setGroups(scope.groups);
                     scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
@@ -260,12 +260,20 @@
 
                 };
 
+                scope.isGrandTotalAvailable = function () {
+                    if (scope.groups && scope.groups.length > 0) {
+                        return true;
+                    }
+
+                    return false;
+                };
+
                 function createDefaultOptions() {
 
                     var i;
-                    for (i = 0; i < scope.grouping.length; i = i + 1) {
-                        if (!scope.grouping[i].options) {
-                            scope.grouping[i].options = {};
+                    for (i = 0; i < scope.groups.length; i = i + 1) {
+                        if (!scope.groups[i].options) {
+                            scope.groups[i].options = {};
                         }
                     }
 
@@ -349,89 +357,6 @@
 
                 }
 
-                var dragAndDrop = {
-
-                    init: function () {
-                        this.dragula();
-                        this.eventListeners();
-                    },
-
-                    eventListeners: function () {
-
-                        this.dragula.on('over', function (elem, container, source) {
-                            $(container).addClass('active');
-                            $(container).on('mouseleave', function () {
-                                $(this).removeClass('active');
-                            })
-                        });
-                        this.dragula.on('drop', function (elem, target) {
-                            $(target).removeClass('active');
-                        });
-
-                        this.dragula.on('dragend', function (element) {
-
-                            var parent = element.parentElement;
-
-                            var elemItems = parent.querySelectorAll('.group-item');
-
-                            var result = [];
-                            var groups = scope.evDataService.getGroups();
-
-                            for (var i = 0; i < elemItems.length; i = i + 1) {
-
-                                for (var x = 0; x < groups.length; x = x + 1) {
-
-                                    if (elemItems[i].dataset.groupTypeId === groups[x].___group_type_id) {
-                                        result.push(groups[x]);
-                                    }
-
-                                }
-
-                            }
-
-                            var isChanged = false;
-
-                            console.log('result', result);
-                            console.log('groups', groups);
-
-                            result.forEach(function (resultItem, index) {
-
-                                if (resultItem.___group_type_id !== groups[index].___group_type_id) {
-                                    isChanged = true;
-                                }
-
-                            });
-
-                            if (isChanged) {
-
-                                scope.evDataService.setGroups(result);
-
-                                // console.log('groups', groups);
-                                // console.log('elemItems', elemItems);
-                                //
-                                // console.log('element', element);
-
-                                scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-
-                            }
-
-                        })
-                    },
-
-                    dragula: function () {
-
-                        var items = [document.querySelector('.g-groups-holder')];
-
-                        this.dragula = dragula(items);
-                    }
-                };
-
-                /*if (!scope.isReport) {
-                    setTimeout(function () {
-                        dragAndDrop.init();
-                    }, 500);
-                }*/
-
                 var init = function () {
 
                     scope.updateGroupTypeIds();
@@ -455,7 +380,7 @@
 
                         scope.updateGroupTypeIds();
 
-                        scope.grouping = scope.evDataService.getGroups();
+                        scope.groups = scope.evDataService.getGroups();
 
                         setDefaultGroupType(scope.evDataService);
 

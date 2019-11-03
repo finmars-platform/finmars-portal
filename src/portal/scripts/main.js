@@ -64,7 +64,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
         document.title = title;
 
         setTimeout(function () {
-            $(window).trigger('resize');
+            window.dispatchEvent(new Event('resize'));
         }, 1000);
 
     });

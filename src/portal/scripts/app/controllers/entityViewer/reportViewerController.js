@@ -792,6 +792,7 @@
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
+                vm.entityViewerDataService.setViewContext('entity_viewer');
 
                 vm.downloadAttributes();
                 vm.setEventListeners();
@@ -871,12 +872,12 @@
                         //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
 
-                    };
+                    }
 
                     var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
                     if (interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
                         vm.entityViewerDataService.setSplitPanelStatus(true);
-                    };
+                    }
 
                 };
 
@@ -939,14 +940,14 @@
                         var additions = vm.entityViewerDataService.getAdditions();
                         if (additions.isOpen) {
                             spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
-                        };
+                        }
 
                         var layoutIsUnchanged = true;
                         if (activeLayoutConfig && activeLayoutConfig.data) {
                             var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
 
                             layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
-                        };
+                        }
 
                         if (!layoutIsUnchanged || spChangedLayout) {
 
@@ -988,7 +989,7 @@
 
                                         layoutsSavePromises.push(saveSPLayoutChanges);
 
-                                    };
+                                    }
                                     // < if split panel layout changed, save it >
 
                                     if (activeLayoutConfig && !layoutIsUnchanged) {
@@ -1031,12 +1032,12 @@
 
                                                 });
 
-                                            };
+                                            }
 
                                             layoutsSavePromises.push(saveLayoutChanges);
 
                                         });
-                                    };
+                                    }
 
                                     Promise.all(layoutsSavePromises).then(function () {
                                         resolve(true);
@@ -1063,7 +1064,7 @@
                     } else {
                         removeTransitionWatcher();
                         resolve(true);
-                    };
+                    }
 
                 });
 
@@ -1092,13 +1093,13 @@
                     var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
 
                     layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
-                };
+                }
 
                 var spChangedLayout = false;
                 var additions = vm.entityViewerDataService.getAdditions();
                 if (additions.isOpen) {
                     spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
-                };
+                }
 
                 if (!layoutIsUnchanged || spChangedLayout) {
                     event.preventDefault();

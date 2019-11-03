@@ -34,6 +34,20 @@
                 console.log('scope.components', scope.components);
 
                 var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                var viewContext = scope.evDataService.getViewContext();
+
+                scope.isInsideDashboard = false;
+                if (viewContext === 'dashboard') {
+                    scope.isInsideDashboard = true;
+
+                    interfaceLayout.groupingArea.collapsed = true;
+                    interfaceLayout.groupingArea.height = 2;
+                    interfaceLayout.columnArea.collapsed = true;
+                    interfaceLayout.columnArea.height = 37;
+
+                    scope.evDataService.setInterfaceLayout(interfaceLayout);
+                }
+
 
                 scope.groupingAndColumnAreaCollapsed = interfaceLayout.groupingArea.collapsed;
                 scope.dashboardFilterCollapsed = true;

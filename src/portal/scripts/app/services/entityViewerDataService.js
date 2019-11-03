@@ -123,6 +123,7 @@
                 step: 60, // rows to render
                 direction: null
             },
+            viewContext: '',
             viewType: 'report_viewer',
             viewSettings: {},
             lastViewSettings: {},
@@ -1009,6 +1010,14 @@
             return data.lastViewSettings[viewType]
         }
 
+        function setViewContext(vContext) {
+            data.viewContext = vContext;
+        }
+
+        function getViewContext() {
+            return data.viewContext;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1173,7 +1182,10 @@
             setViewSettings: setViewSettings,
             getViewSettings: getViewSettings,
 
-            getLastViewSettings: getLastViewSettings
+            getLastViewSettings: getLastViewSettings,
+
+            setViewContext: setViewContext,
+            getViewContext: getViewContext
 
         }
     }

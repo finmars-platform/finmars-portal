@@ -299,10 +299,10 @@
             }
         };
 
-        vm.bindReportItemName = function (item) {
+        /*vm.bindReportItemName = function (item) {
 
             return item.name;
-        };
+        };*/
 
         vm.syncAttrs = function () {
 
