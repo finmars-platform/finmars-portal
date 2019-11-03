@@ -608,53 +608,7 @@
                                     </md-card>
                                 </div>
                             </div>
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1subgroupAttrs | filter: {name: strategiesSearchTerms}" layout="row">
-                                <div class="view-constructor-checkboxes-container"
-                                     layout="row"
-                                     layout-align="start center">
-                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy1subgroupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                                 class="md-g-green"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy1subgroupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                                 class="md-primary"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy1subgroupAttrs)">
-                                    </md-checkbox>
-                                </div>
-                                <div class="g-modal-draggable-card vcDraggableCard">
-                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
-                                        {{item.name}}
-                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                        </md-tooltip>
-                                    </md-card>
-                                </div>
-                            </div>
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1groupAttrs | filter: {name: strategiesSearchTerms}" layout="row">
-                                <div class="view-constructor-checkboxes-container"
-                                     layout="row"
-                                     layout-align="start center">
-                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy1groupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                                 class="md-g-green"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy1groupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                                 class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy1groupAttrs)">
-                                    </md-checkbox>
-                                </div>
-                                <div class="g-modal-draggable-card vcDraggableCard">
-                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
-                                        {{item.name}}
-                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                        </md-tooltip>
-                                    </md-card>
-                                </div>
-                            </div>
+
                             <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2attrs | filter: {name: strategiesSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
@@ -678,53 +632,7 @@
                                     </md-card>
                                 </div>
                             </div>
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2subgroupAttrs | filter: {name: strategiesSearchTerms}" layout="row">
-                                <div class="view-constructor-checkboxes-container"
-                                     layout="row"
-                                     layout-align="start center">
-                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy2subgroupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                                 class="md-g-green"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy2subgroupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                                 class="md-primary"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy2subgroupAttrs)">
-                                    </md-checkbox>
-                                </div>
-                                <div class="g-modal-draggable-card vcDraggableCard">
-                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
-                                        {{item.name}}
-                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                        </md-tooltip>
-                                    </md-card>
-                                </div>
-                            </div>
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2groupAttrs | filter: {name: strategiesSearchTerms}" layout="row">
-                                <div class="view-constructor-checkboxes-container"
-                                     layout="row"
-                                     layout-align="start center">
-                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy2groupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                                 class="md-g-green"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy2groupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                                 class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy2groupAttrs)">
-                                    </md-checkbox>
-                                </div>
-                                <div class="g-modal-draggable-card vcDraggableCard">
-                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
-                                        {{item.name}}
-                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                        </md-tooltip>
-                                    </md-card>
-                                </div>
-                            </div>
+
                             <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3attrs | filter: {name: strategiesSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
@@ -748,53 +656,7 @@
                                     </md-card>
                                 </div>
                             </div>
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3subgroupAttrs | filter: {name: strategiesSearchTerms}" layout="row">
-                                <div class="view-constructor-checkboxes-container"
-                                     layout="row"
-                                     layout-align="start center">
-                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy3subgroupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                                 class="md-g-green"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy3subgroupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                                 class="md-primary"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy3subgroupAttrs)">
-                                    </md-checkbox>
-                                </div>
-                                <div class="g-modal-draggable-card vcDraggableCard">
-                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
-                                        {{item.name}}
-                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                        </md-tooltip>
-                                    </md-card>
-                                </div>
-                            </div>
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3groupAttrs | filter: {name: strategiesSearchTerms}" layout="row">
-                                <div class="view-constructor-checkboxes-container"
-                                     layout="row"
-                                     layout-align="start center">
-                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy3groupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                                 class="md-g-green"
-                                                 data-ng-change="vm.updateAttrs(vm.strategy3groupAttrs)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                                 class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy3groupAttrs)">
-                                    </md-checkbox>
-                                </div>
-                                <div class="g-modal-draggable-card vcDraggableCard">
-                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
-                                        {{item.name}}
-                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                        </md-tooltip>
-                                    </md-card>
-                                </div>
-                            </div>
+
                         </md-content>
                     </md-tab>
 
@@ -962,7 +824,7 @@
                      data-update-attrs-callback="vm.updateAttrs(attrs)"></div>
             </div>
 
-            <div ng-show="!vm.cardsDividedIntoTabs" class="md-padding">
+            <div ng-if="!vm.cardsDividedIntoTabs" class="md-padding">
 
                 <input type="text"
                        ng-model="allAttributesSearchTerms"
@@ -975,7 +837,9 @@
                     <span class="g-meta-circle blue">F</span>
                 </div>
 
-                <div class="g-checkbox-row" data-ng-repeat="item in vm.attrsList | filter: {name: allAttributesSearchTerms}" layout="row">
+                <div class="g-checkbox-row"
+                     data-ng-repeat="item in vm.attrsList | orderBy: 'name' | filter: {name: allAttributesSearchTerms} as results track by item.key"
+                     layout="row">
                     <div class="view-constructor-checkboxes-container"
                          layout="row"
                          layout-align="start center">

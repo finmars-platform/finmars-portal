@@ -50,7 +50,7 @@
                 if (legendsPosition === 'bottom') {
                     scope.pieChartLayout = 'column';
                     scope.pieChartLayoutAlign = 'start center';
-                };
+                }
 
                 var legendsColumnsNumber = scope.rvChartsSettings.legends_columns_number;
                 if (!legendsColumnsNumber) {
@@ -99,12 +99,12 @@
                     scope.chartDataWithPosNums = chartData.filter(function (cData) {
                         if (cData.numericValue > 0) {
                             return true;
-                        };
+                        }
 
                         if (cData.numericValue < 0) {
                             cData.numericValue = Math.abs(cData.numericValue);
                             scope.chartDataWithNegNums.push(cData);
-                        };
+                        }
 
                         return false;
                     });
@@ -128,13 +128,13 @@
                         scope.chartDataWithPosNums.forEach(function (chartPart) {
                             chartPart.percentage = ((chartPart.numericValue / posNumsTotal) * 100).toFixed(0);
                         });
-                    };
+                    }
 
                     if (negNumsTotal > 0) {
                         scope.chartDataWithNegNums.forEach(function (chartPart) {
                             chartPart.percentage = ((chartPart.numericValue / negNumsTotal) * 100).toFixed(0);
                         });
-                    };
+                    }
 
                 };
 
@@ -146,11 +146,11 @@
                         backColor = getPosPartColor(legendName);
                     } else {
                         backColor = getNegPartColor(legendName);
-                    };
+                    }
 
                     if (legendName && backColor) {
                         backStyle = "background-color: " + backColor;
-                    };
+                    }
                     return backStyle;
                 };
 
@@ -171,7 +171,7 @@
                         case 'bottom':
                             pieChartCompClasses = "pie-chart-bottom-legends";
                             break;
-                    };
+                    }
 
                     return pieChartCompClasses;
                 };
@@ -180,7 +180,7 @@
 
                     if (isNegativeNum) {
                         val = -Math.abs(val);
-                    };
+                    }
 
                     if (scope.number_format) {
 
@@ -217,7 +217,7 @@
                         posNumRadius = chartHeight / 2;
                     } else {
                         posNumRadius = chartWidth / 2;
-                    };
+                    }
 
                     var svgSize = posNumRadius * 2;
 
