@@ -632,7 +632,7 @@
         rvScrollManager.setViewportHeight(viewportHeight);
         if (viewportWidth) {
             rvScrollManager.setViewportWidth(viewportWidth);
-        };
+        }
 
         var paddingTop = calculatePaddingTop(evDataService);
         var totalHeight = calculateTotalHeight(evDataService);

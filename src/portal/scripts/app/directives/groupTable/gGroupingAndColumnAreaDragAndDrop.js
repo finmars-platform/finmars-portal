@@ -73,7 +73,7 @@
 
                         this.dragula.on('shadow', function (elem, container) { // used to prevent showing shadow of card in deletion area
                             if ($(container).attr('id') === 'gc-delete-area') {
-                                elem.remove();
+                                drake.remove();
                             }
                         });
 
@@ -307,7 +307,7 @@
                                 // If group's cards order changed
                                 } else if (target === groupsHolder) {
 
-                                    var groupElems = source.querySelectorAll('.vcSelectedGroupItem');
+                                    var groupElems = source.querySelectorAll('.g-groups-holder .group-item');
 
                                     var groupsAfterDragging = [];
 
@@ -323,7 +323,7 @@
                                         }
 
                                     }
-
+                                    console.log("drag n drop groupsAfterDragging", groupsAfterDragging);
                                     var isChanged = false;
 
                                     for (var i = 0; i < groupsAfterDragging.length; i++) {
@@ -336,7 +336,7 @@
                                     }
 
                                     if (isChanged) {
-
+                                        console.log("drag n drop isChanged", groupsAfterDragging, isChanged);
                                         areaItemsChanged = true;
                                         scope.evDataService.setGroups(groupsAfterDragging);
 

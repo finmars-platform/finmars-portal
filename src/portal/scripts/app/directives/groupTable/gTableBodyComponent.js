@@ -119,12 +119,12 @@
 
                                 if (filterValues[0] || filterValues[0] === 0) {
                                     return true;
-                                };
+                                }
 
-                            };
-                        };
+                            }
+                        }
 
-                    };
+                    }
 
                     return false;
                 };
@@ -163,13 +163,13 @@
 
                             frontEndFilters.push(filterOptions);
 
-                        };
-                    };
+                        }
+                    }
 
                     if (frontEndFilters.length > 0) {
                         var groups = scope.evDataService.getGroups();
                         flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
-                    };
+                    }
 
 
                     scope.evDataService.setFlatList(flatList);
@@ -276,7 +276,7 @@
                         }
                     }
 
-                };
+                }
 
                 function clearOverflowingCells() {
                     var overflowingCells = contentElem.querySelectorAll('.g-overflowing-cell');
@@ -337,7 +337,7 @@
                         activeLayoutConfigIsSet = true;
                         scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
                         scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
-                    };
+                    }
 
                 });
 
@@ -479,14 +479,18 @@
 
                 window.addEventListener('resize', function () {
 
-                    if (projection) {
+                    if (isReport) {
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
 
-                        if (isReport) {
-                            rvDomManager.calculateScroll(elements, scope.evDataService);
+                        if (projection) {
                             rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
-                        } else {
-                            evDomManager.calculateScroll(elements, scope.evDataService);
-                            evDomManager.calculateVirtualStep(elements, scope.evDataService);
+                        }
+
+                    } else {
+                        evDomManager.calculateScroll(elements, scope.evDataService);
+                        evDomManager.calculateVirtualStep(elements, scope.evDataService);
+
+                        if (projection) {
                             evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
                         }
 

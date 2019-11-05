@@ -631,6 +631,7 @@
                 vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
                 vm.componentType = $scope.$parent.vm.componentType;
+                vm.entityViewerDataService.setViewContext('dashboard');
 
                 vm.downloadAttributes();
                 vm.setEventListeners();
@@ -676,7 +677,7 @@
                         vm.rvChartsSettings.bar_number_key = vm.componentType.data.settings.ordinate;
                     }
 
-                };
+                }
 
                 if (vm.componentType.data.type === 'report_viewer_pie_chart') {
                     vm.rvChartsSettings = {

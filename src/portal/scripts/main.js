@@ -64,7 +64,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
         document.title = title;
 
         setTimeout(function () {
-            $(window).trigger('resize');
+            window.dispatchEvent(new Event('resize'));
         }, 1000);
 
     });
@@ -479,7 +479,7 @@ app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitl
 app.directive('valueTitle', ['$timeout', require('./app/directives/valueTitleDirective.js')]);
 
 app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'reportOptions', 'options', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
-app.controller('GEntityViewerSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/gEntityViewerSettingsDialogController')]);
+app.controller('GEntityViewerSettingsDialogController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/controllers/dialogs/gEntityViewerSettingsDialogController')]);
 app.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/periodsEditorDialogController')]);
 app.controller('DateTreeDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dateTreeDialogController')]);
 app.controller('gColumnNumbersRenderingSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/gColumnNumbersRenderingSettingsDialogController')]);

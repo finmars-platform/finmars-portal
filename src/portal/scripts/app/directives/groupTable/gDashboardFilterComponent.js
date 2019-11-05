@@ -227,7 +227,7 @@
                     scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_AREA);
 
                     var interval = setInterval(function () {
-                        $(window).trigger('resize');
+                        window.dispatchEvent(new Event('resize'));
                     }, 50);
 
                     setTimeout(function () {

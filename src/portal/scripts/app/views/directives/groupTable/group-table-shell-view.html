@@ -3,7 +3,8 @@
     <div class="g-content-wrap">
 
         <div class="g-workarea-wrap" >
-            <div class="g-workarea main-area" ng-if="contentWrapElem"
+            <div class="g-workarea main-area"
+                 data-ng-if="contentWrapElem"
                  ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
@@ -22,7 +23,8 @@
                                                content-wrap-element="contentWrapElem"
                                 ></group-columns>
 
-                                <md-button class="toggle-group-column-area-btn"
+                                <md-button data-ng-if="!isInsideDashboard"
+                                           class="toggle-group-column-area-btn"
                                            ng-click="toggleGroupAndColumnArea()">
                                     <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"
                                                 icon="keyboard_arrow_up"></ng-md-icon>
@@ -62,7 +64,8 @@
 
         <div class="g-dashboard-filter-holder">
 
-            <md-button class="toggle-dashboard-filter-btn"
+            <md-button data-ng-if="isInsideDashboard"
+                       class="toggle-dashboard-filter-btn"
                        ng-click="toggleDashboardFilter()">
                 <ng-md-icon ng-hide="dashboardFilterCollapsed"
                             icon="keyboard_arrow_left"></ng-md-icon>

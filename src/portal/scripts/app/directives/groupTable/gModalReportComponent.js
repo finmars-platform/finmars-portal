@@ -45,6 +45,56 @@
 
         $('body').addClass('drag-dialog'); // hide backdrop
 
+        var balanceAttrsToRemove = [
+            'pricing_currency.notes', 'pricing_currency.reference_for_pricing', 'pricing_currency.daily_pricing_model.name', 'pricing_currency.default_fx_rate', 'currency.name',
+            'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.reference_for_pricing', 'currency.daily_pricing_model.name', 'currency.default_fx_rate', 'pricing_currency_fx_rate'
+        ];
+
+        var balancePerformanceAttrsToRemove = [
+            'principal_fx', 'principal_fixed_loc', 'principal_fx_loc', 'carry_fixed_loc', 'carry', 'carry_fx', 'carry_fx_loc', 'overheads', 'overheads_fixed', 'overheads_fixed_loc',
+            'carry_fixed', 'overheads_fx', 'overheads_fx_loc', 'total', 'total_loc', 'total_fx', 'total_fx_loc', 'total_fixed', 'total_fixed_loc', 'carry_loc', 'overheads_loc',
+            'principal', 'principal_loc'
+        ];
+
+        var balancePerformanceAttrsToRemove = [
+            'principal_fx', 'principal_fixed_loc', 'principal_fx_loc', 'carry_fixed_loc', 'carry', 'carry_fx', 'carry_fx_loc', 'overheads', 'overheads_fixed', 'overheads_fixed_loc',
+            'carry_fixed', 'overheads_fx', 'overheads_fx_loc', 'total', 'total_loc', 'total_fx', 'total_fx_loc', 'total_fixed', 'total_fixed_loc', 'carry_loc', 'overheads_loc',
+            'principal', 'principal_loc'
+        ];
+
+        var instrumentAttrsToRemove = [
+            'instrument.instrument_type.is_active', 'instrument.instrument_type.instrument_class.name', 'instrument.pricing_currency.notes', 'instrument.pricing_currency.reference_for_pricing',
+            'instrument.pricing_currency.daily_pricing_model.name', 'instrument.pricing_currency.default_fx_rate'
+        ];
+
+        var linkedInstrumentAttrsToShow = [
+            'linked_instrument.name', 'linked_instrument.short_name', 'linked_instrument.user_code', 'linked_instrument.user_text_1', 'linked_instrument.user_text_2', 'linked_instrument.user_text_3'
+        ];
+
+        var accountAttrsToRemove = ['account.type.transaction_details_expr'];
+
+        var strategy1AttrsToRemove = ['strategy1.subgroup.short_name', 'strategy1.subgroup.notes', 'strategy1.subgroup.user_code'];
+        var strategy2AttrsToRemove = ['strategy2.subgroup.short_name', 'strategy2.subgroup.notes', 'strategy2.subgroup.user_code'];
+        var strategy3AttrsToRemove = ['strategy3.subgroup.short_name', 'strategy3.subgroup.notes', 'strategy3.subgroup.user_code'];
+
+        var allocationAttrsToRemove = [
+            'allocation.instrument_type.notes', 'allocation.instrument_type.is_active', 'allocation.instrument_type.instrument_class.name', 'allocation.is_active', 'allocation.reference_for_pricing',
+            'allocation.pricing_currency.name', 'allocation.pricing_currency.short_name', 'allocation.pricing_currency.notes', 'allocation.pricing_currency.user_code',
+            'allocation.pricing_currency.daily_pricing_model.name', 'allocation.pricing_currency.default_fx_rate', 'allocation.price_multiplier', 'allocation.pricing_currency.reference_for_pricing',
+            'allocation.accrued_currency.name', 'allocation.accrued_currency.short_name', 'allocation.accrued_currency.notes', 'allocation.accrued_currency.user_code', 'allocation.accrued_currency.reference_for_pricing',
+            'allocation.accrued_currency.daily_pricing_model.name', 'allocation.accrued_currency.default_fx_rate', 'allocation.maturity_date', 'allocation.maturity_price', 'allocation.accrued_multiplier',
+            'allocation.daily_pricing_model.name', 'allocation.payment_size_detail.name', 'allocation.default_price', 'allocation.default_accrued'
+        ];
+
+        var filterAttrsToShow = function (vmAttrKey, attrsToRemoveArray) {
+            vm[vmAttrKey] = vm[vmAttrKey].filter(function (attr) {
+                if (attrsToRemoveArray.indexOf(attr.key) !== -1) {
+                    return false;
+                }
+                return true;
+            })
+        };
+
         vm.getAttributes = function () {
 
             vm.balanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
@@ -152,6 +202,21 @@
             vm.attrsList = vm.attrsList.concat(vm.strategy1attrs);
             vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
             vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
+
+            /*filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
+            filterAttrsToShow('balancePerformanceAttrs', balancePerformanceAttrsToRemove);
+            filterAttrsToShow('allocationAttrs', allocationAttrsToRemove);
+            filterAttrsToShow('instrumentAttrs', instrumentAttrsToRemove);
+            vm.linkedInstrumentAttrs = vm.linkedInstrumentAttrs.filter(function (attr) {
+                if (linkedInstrumentAttrsToShow.indexOf(attr.key) !== -1) {
+                    return true;
+                }
+                return false;
+            });
+            filterAttrsToShow('accountAttrs', accountAttrsToRemove);
+            filterAttrsToShow('strategy1attrs', strategy1AttrsToRemove);
+            filterAttrsToShow('strategy2attrs', strategy2AttrsToRemove);
+            filterAttrsToShow('strategy3attrs', strategy3AttrsToRemove);*/
 
             /*vm.attrsList = attrsList;*/
 

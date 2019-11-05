@@ -306,6 +306,7 @@
                     }
                 ],
                 "filters": [],
+                "additions": {},
                 "additionsType": ""
             }
         }]
