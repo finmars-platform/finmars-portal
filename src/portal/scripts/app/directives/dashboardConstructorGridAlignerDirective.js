@@ -195,7 +195,7 @@
 
                         });
 
-                        $(window).on('resize', function () {
+                        window.addEventListener('resize', function () {
                             scope.resize();
                         });
 

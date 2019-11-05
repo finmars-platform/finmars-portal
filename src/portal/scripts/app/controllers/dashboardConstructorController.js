@@ -1336,9 +1336,7 @@
 
                 console.log('vm.layout', vm.layout)
 
-
             }
-
 
         };
 

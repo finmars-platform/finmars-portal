@@ -21,8 +21,6 @@
             templateUrl: 'views/directives/reportViewer/userFilters/rv-text-filter-view.html',
             link: function (scope, elem, attrs) {
 
-                console.log("filter filterTextData", scope.filter);
-
                 scope.filters = scope.evDataService.getFilters();
 
                 scope.filterValue = undefined;
@@ -51,19 +49,19 @@
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
-                };
+                }
 
                 if (!scope.filter.options.filter_type) {
                     scope.filter.options.filter_type = "contains";
-                };
+                }
 
                 if (!scope.filter.options.filter_values) {
                     scope.filter.options.filter_values = [];
-                };
+                }
 
                 if (!scope.filter.options.hasOwnProperty('exclude_empty_cells')) {
                     scope.filter.options.exclude_empty_cells = false;
-                };
+                }
 
                 var filterEnabled = scope.filter.options.enabled;
 
@@ -115,9 +113,9 @@
                             case "empty":
                                 filterRegime = "Show empty cells";
                                 break;
-                        };
+                        }
 
-                    };
+                    }
 
                     return filterRegime;
 
@@ -129,7 +127,7 @@
 
                         return true;
 
-                    };
+                    }
 
                     return false;
                 };
@@ -177,7 +175,7 @@
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                    };
+                    }
 
                 };
 
@@ -292,7 +290,7 @@
 
                                 scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                            };
+                            }
 
                         });
 
@@ -300,9 +298,9 @@
 
                         if (isUseFromAboveActive()) {
                             scope.noDataForLinkingTo = true;
-                        };
+                        }
 
-                    };
+                    }
 
                 };
 

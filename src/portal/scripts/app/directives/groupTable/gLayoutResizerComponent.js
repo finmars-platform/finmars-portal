@@ -78,7 +78,7 @@
 
                     resizeWorkarea();
 
-                    $(window).on('resize', function () {
+                    window.addEventListener('resize', function () {
                         resizeWorkarea();
                         // resizeSidebarHeight();
                     });

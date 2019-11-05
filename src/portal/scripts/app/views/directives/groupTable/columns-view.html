@@ -1,4 +1,5 @@
 <div class="g-columns-component g-thead" group-column-init-width columns="columns">
+
     <div class="g-column-title-row"
          layout="row"
          data-ng-if="components.columnAreaHeader">
@@ -13,6 +14,7 @@
         <div ng-if="!isReport && downloadedItemsCount"
              class="g-downloaded-items-count">Objects Loaded: {{downloadedItemsCount}}</div>
     </div>
+
     <div class="g-column-bottom-row">
         <div class="g-cell-select all {{isAllSelected ? 'active' : ''}}" data-ng-click="selectAllRows()">
             <ng-md-icon icon="signal_cellular_0_bar"></ng-md-icon>
@@ -29,7 +31,7 @@
                              data-callback="triggerResizeTableHeadColumns()"
                              data-column-key="{{column.key}}"
                              data-column-id="{{column.___column_id}}">
-                        <div class="g-column-content">
+                        <div class="g-column-content" data-ng-class="{'p-r-8': viewContext === 'dashboard' && !hasFoldingBtn($index)}">
                             <div class="column-left-content">
                                 <div class="sort"
                                      data-ng-if="isSortable(column) && checkReportSortButton(column, $index)">
@@ -62,7 +64,8 @@
                                     <span ng-bind="column.layout_name" class="column-name-span"></span>
                                 </div>
                             </div>
-                            <div class="settings-btn">
+
+                            <div data-ng-if="viewContext !== 'dashboard'" class="settings-btn">
                                 <md-menu data-ng-if="isReport && column.value_type == 20">
                                     <md-button aria-label="Open phone interactions menu"
                                                class="md-icon-button column-btns"
@@ -427,6 +430,21 @@
                                     </md-menu-content>
                                 </md-menu>
                             </div>
+
+                            <div data-ng-if="viewContext === 'dashboard'"
+                                 class="settings-btn dashboard-fold-btns-container">
+                                <div data-ng-if="hasFoldingBtn($index)">
+                                    <div data-ng-hide="!groupLevelIsFolded($index)"
+                                         class="ev-fold-button"
+                                         data-ng-click="unfoldLevel(column.key, $index)">+
+                                    </div>
+                                    <div data-ng-hide="groupLevelIsFolded($index)"
+                                         class="ev-fold-button"
+                                         data-ng-click="foldLevel(column.key, $index)">-
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="column-name-tooltip-wrap">
                                 <div class="column-name-tooltip-content">
                                     <span ng-if="!column.layout_name" data-ng-bind="column.name"></span>

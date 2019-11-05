@@ -148,14 +148,14 @@
                 $('body').removeClass('sidenav-collapsed');
                 $('body').addClass('sidenav-expanded');
 
-                $(window).trigger('resize');
+                window.dispatchEvent(new Event('resize'));
 
             } else {
 
                 $('body').removeClass('sidenav-expanded');
                 $('body').addClass('sidenav-collapsed');
 
-                $(window).trigger('resize');
+                window.dispatchEvent(new Event('resize'));
 
             }
 

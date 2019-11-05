@@ -107,6 +107,23 @@
             }
         };
 
+        vm.selectedLayoutId = null;
+
+        vm.collapseAll = function () {
+            var keys = Object.keys(vm.collapsingGroups);
+
+            keys.forEach(function (key) {
+                vm.collapsingGroups[key] = false;
+            });
+        };
+
+        vm.expandAll = function () {
+            var keys = Object.keys(vm.collapsingGroups);
+
+            keys.forEach(function (key) {
+                vm.collapsingGroups[key] = true;
+            });
+        };
 
         var getLayouts = function () {
 
@@ -171,14 +188,6 @@
             }, 100);
         };
 
-        var init = function () {
-            getLayouts();
-
-            vm.setLRWHeight();
-        };
-
-        vm.selectedLayoutId = null;
-
         vm.selectLayout = function (item) {
             vm.selectedLayoutId = item.id;
             vm.selectedContentType = item.content_type;
@@ -206,6 +215,12 @@
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
+        };
+
+        var init = function () {
+            getLayouts();
+
+            vm.setLRWHeight();
         };
 
         init();

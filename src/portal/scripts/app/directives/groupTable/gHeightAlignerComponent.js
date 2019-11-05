@@ -120,7 +120,7 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
                 }
 
-                $(window).on('resize', gHeightAlignerMethodToTriggerOnWindowResize);
+                window.addEventListener('resize', gHeightAlignerMethodToTriggerOnWindowResize);
 
                 var additionsChangeCallbackIndex = scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
                     scope.additions = scope.evDataService.getAdditions();
@@ -151,7 +151,7 @@
 
                 scope.$on('$destroy', function () {
 
-                    $(window).off('resize', gHeightAlignerMethodToTriggerOnWindowResize);
+                    window.removeEventListener('resize', gHeightAlignerMethodToTriggerOnWindowResize);
                     scope.evEventService.removeEventListener(evEvents.ADDITIONS_CHANGE, additionsChangeCallbackIndex);
                     /*scope.evEventService.removeEventListener(evEvents.REDRAW_TABLE, redrawTableCallbackIndex);
                     scope.evEventService.removeEventListener(evEvents.UPDATE_TABLE, updateTableCallbackIndex);*/

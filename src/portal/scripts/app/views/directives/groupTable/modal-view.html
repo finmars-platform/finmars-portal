@@ -132,7 +132,7 @@
                                     <p>Groups and Columns</p>
                                 </div>
 
-                                <!--<div class="vcSelectedGroups">
+                                <div class="vcSelectedGroups">
                                     <div class="g-checkbox-row vcSelectedGroupItem"
                                          data-ng-repeat="item in vm.selectedGroups | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
@@ -171,7 +171,7 @@
                                         </div>
 
                                     </div>
-                                </div>-->
+                                </div>
 
                                 <div class="vc-selected-attrs-holder vcSelectedColumns">
                                     <div class="g-checkbox-row vcSelectedColumnItem"
@@ -392,7 +392,7 @@
                 </div>
 
                 <div class="g-checkbox-row"
-                     data-ng-repeat="item in vm.attrsList | filter: {name: allAttrsSearchTerms}"
+                     data-ng-repeat="item in vm.attrsList | orderBy: 'name' | filter: {name: allAttrsSearchTerms} as results track by item.key"
                      layout="row">
                     <div class="view-constructor-checkboxes-container"
                          layout="row"

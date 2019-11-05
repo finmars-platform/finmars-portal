@@ -1,4 +1,5 @@
 <div class="g-grouping-component">
+
     <div layout="row" layout-align="space-between end" layout>
         <div layout="row">
             <div>
@@ -10,13 +11,17 @@
                 </p>
             </div>
 
-            <md-card data-ng-if="isReport" class="card grouping-area-settings-card" layout="row">
+            <md-card data-ng-if="isReport"
+                     data-ng-class="{'opacity-05': !isGrandTotalAvailable()}"
+                     class="card grouping-area-settings-card"
+                     layout="row">
                 <p>Grand Total</p>
                 <div class="grouping-area-settings-container">
                     <md-menu>
                         <md-button class="md-icon-button grouping-area-settings-btn"
                                    aria-label="grand total settings"
-                                   ng-click="openGroupSettings($mdOpenMenu, $event)">
+                                   ng-click="openGroupSettings($mdOpenMenu, $event)"
+                                   ng-disabled="!isGrandTotalAvailable()">
                             <ng-md-icon icon="settings" size="21"></ng-md-icon>
                         </md-button>
 
@@ -60,6 +65,9 @@
                         </md-menu-content>
                     </md-menu>
                 </div>
+                <md-tooltip data-ng-if="!isGrandTotalAvailable()"
+                            class="tooltip_2"
+                            md-direction="top">Select Grouping Column to apply Grand Total</md-tooltip>
             </md-card>
         </div>
 
@@ -69,13 +77,14 @@
             </ng-md-icon>
         </div>
     </div>
+
     <div class="g-second-line" style="overflow: auto">
 
         <div class="groups-holder" layout="row">
 
             <div class="g-groups-holder">
 
-                <md-card data-ng-repeat="item in grouping track by item.key"
+                <md-card data-ng-repeat="item in groups track by item.key"
                          class="group-item card"
                          data-group-key="{{item.key}}"
                          data-group-type-id="{{item.___group_type_id}}">
@@ -224,8 +233,9 @@
                     </div>
                 </md-card>
             </div>
+
             <div class="drop-new-group" id="groupsbag">
-                <!-- Drop level {{grouping.length + 1}} Group -->
+                <!-- Drop level {{groups.length + 1}} Group -->
                 Drop New Grouping Level
             </div>
         </div>

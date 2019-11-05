@@ -244,7 +244,7 @@
                 vm.calculationsHistory = "";
                 currentNumber = Number(calcResultNumber).toString(); // Number() needed to remove tailing zeros from float number
 
-            };
+            }
 
         };
 
