@@ -672,6 +672,8 @@
                     return "Report builder layouts";
                 case 'ui.dashboardlayout':
                     return "Dashboard layouts";
+                case 'ui.templatelayout':
+                    return 'Template Layout';
                 case 'ui.bookmark':
                     return "Bookmarks";
                 case 'reference_tables.referencetable':

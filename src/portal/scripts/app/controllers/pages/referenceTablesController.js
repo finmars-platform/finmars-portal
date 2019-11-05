@@ -59,8 +59,8 @@
         vm.renameReferenceTable = function ($event, item) {
 
             $mdDialog.show({
-                controller: 'ReferenceTableRenameDialogController as vm',
-                templateUrl: 'views/dialogs/reference-table-rename-dialog-view.html',
+                controller: 'ReferenceTablerenameFieldDialogController as vm',
+                templateUrl: 'views/dialogs/reference-table-rename-field-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,

@@ -132,7 +132,8 @@
 
                     </md-input-container>-->
                     <span data-ng-if="item.value_type == 110" ng-bind="item.reference_table"></span>
-                    <span data-ng-if="item.value_type == 100" ng-bind="vm.getNameByContentType(item.content_type)"></span>
+                    <span data-ng-if="item.value_type == 100"
+                          ng-bind="vm.getNameByContentType(item.content_type)"></span>
                 </td>
 
                 <td class="edit-state-td ttype-inputs-checkbox-td">
@@ -447,5 +448,31 @@
             </tr>
             </tbody>
         </table>
+
+        <div layout="row">
+
+            <md-menu>
+                <md-button  class="md-raised"
+                           data-ng-class="{'disabled-btn': !vm.readyStatus.input_templates}"
+                           ng-click="$mdMenu.open($event)">
+                    Append From Template
+                </md-button>
+
+                <md-menu-content width="3">
+                    <md-menu-item data-ng-repeat="template in vm.inputTemplates">
+                        <md-button
+                                   data-ng-click="vm.appendFromTemplate($event, template)">
+                            {{template.name}}
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+            <md-button class="md-raised" data-ng-click="vm.saveAsTemplate($event, 'input_template')">Save as a
+                Template
+            </md-button>
+
+        </div>
+
     </div>
 </div>

@@ -76,61 +76,81 @@
 
             Promise.all(promises).then(function (data) {
 
+                console.log('loadPermissions data', data);
+
                 vm.readyStatus.permissions = true;
                 $scope.$apply();
+
             });
 
         };
 
         vm.getGroupList = function () {
 
-            return usersGroupService.getList().then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.groups = data.results;
+                usersGroupService.getList().then(function (data) {
 
-                vm.groups.forEach(function (group) {
+                    vm.groups = data.results;
 
-                    if (vm.entity.object_permissions) {
-                        vm.entity.object_permissions.forEach(function (permission) {
+                    vm.groups.forEach(function (group) {
 
-                            if (permission.group === group.id) {
-                                if (!group.hasOwnProperty('objectPermissions')) {
-                                    group.objectPermissions = {};
+                        if (vm.entity.object_permissions) {
+                            vm.entity.object_permissions.forEach(function (permission) {
+
+                                if (permission.group === group.id) {
+                                    if (!group.hasOwnProperty('objectPermissions')) {
+                                        group.objectPermissions = {};
+                                    }
+                                    if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
+                                        group.objectPermissions.manage = true;
+                                    }
+                                    if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
+                                        group.objectPermissions.change = true;
+                                    }
+                                    if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
+                                        group.objectPermissions.view = true;
+                                    }
                                 }
-                                if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                    group.objectPermissions.manage = true;
-                                }
-                                if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                    group.objectPermissions.change = true;
-                                }
-                                if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
-                                    group.objectPermissions.view = true;
-                                }
-                            }
-                        })
-                    }
+                            })
+                        }
+
+                    });
+
+                    resolve(vm.groups)
 
                 });
-            });
+
+            })
 
         };
 
         vm.getCurrentMember = function () {
 
-            return usersService.getMyCurrentMember().then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.currentMember = data;
+                usersService.getMyCurrentMember().then(function (data) {
 
-                $scope.$apply();
+                    vm.currentMember = data;
 
-            });
+                    resolve(vm.currentMember);
+
+                });
+
+            })
         };
 
         vm.checkPermissions = function () {
 
+            if (!vm.currentMember) {
+                return false // TODO find out why executes before permissions ready
+            }
+
             if (vm.currentMember && vm.currentMember.is_admin) {
                 return true
             }
+
+            console.log('vm.currentMember', vm.currentMember);
 
             var permission_code = "manage_" + vm.entityType.split('-').join('').toLowerCase();
 
@@ -708,19 +728,6 @@
 
         };
 
-        vm.init = function () {
-
-            vm.getItem();
-            vm.getAttrs();
-            vm.getReferenceTables();
-
-
-            vm.layoutAttrs = layoutService.getLayoutAttrs();
-            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
-
-        };
-
-        vm.init();
 
         vm.editLayout = function (ev) {
 
@@ -1573,16 +1580,16 @@
                     content_type = vm.contentTypes[i].key;
                     break;
                 }
-                ;
+
             }
-            ;
+
 
             result = vm.entity.inputs.filter(function (input) {
 
                 if (input.content_type === content_type) {
                     return true;
                 }
-                ;
+
 
                 return false;
             });
@@ -1932,7 +1939,6 @@
                 if (cType.key === contentType) {
                     typeName = cType.name;
                 }
-                ;
             });
 
             return typeName;
@@ -1945,6 +1951,292 @@
             vm.entityType = entityType;
             vm.entityId = entityId;
         };
+
+
+        vm.getInputTemplates = function () {
+
+            vm.readyStatus.input_templates = false;
+
+            return uiService.getTemplateLayoutList({filters: {type: 'input_template'}}).then(function (data) {
+
+                vm.inputTemplates = data.results;
+
+                vm.readyStatus.input_templates = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getFieldTemplates = function () {
+
+            vm.readyStatus.field_templates = false;
+
+            return uiService.getTemplateLayoutList({filters: {type: 'field_template'}}).then(function (data) {
+
+                vm.fieldTemplates = data.results;
+
+                vm.readyStatus.field_templates = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getActionTemplates = function () {
+
+            vm.readyStatus.action_templates = false;
+
+            return uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
+
+                vm.actionTemplates = data.results;
+
+                vm.readyStatus.action_templates = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.appendFromTemplate = function ($event, template) {
+
+            console.log("Append from Template", template);
+
+            if (template.type === 'input_template') {
+
+                $mdDialog.show({
+                    controller: 'InputTemplateLayoutViewerDialogController as vm',
+                    templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        data: {
+                            template: template
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                }).then(function (res) {
+
+                    if (res.status === 'agree') {
+
+                        var template = res.data.template;
+
+                        template.data.inputs.forEach(function (input) {
+
+                            vm.entity.inputs.push(input);
+
+                        })
+
+                    }
+
+                })
+
+            }
+
+            if (template.type === 'field_template') {
+
+                Object.keys(vm.entity).forEach(function (key) {
+
+                    if (key.indexOf('user_text_') !== -1) {
+                        vm.entity[key] = '';
+                    }
+
+                    if (key.indexOf('user_number_') !== -1) {
+                        vm.entity[key] = '';
+                    }
+
+                    if (key.indexOf('user_date_') !== -1) {
+                        vm.entity[key] = '';
+                    }
+
+                });
+
+                Object.keys(template.data.fields).forEach(function (key) {
+
+                    vm.entity[key] = template.data.fields[key];
+
+                })
+
+            }
+
+            if (template.type === 'action_template') {
+
+                template.data.actions.forEach(function (action) {
+
+                    vm.entity.actions.push(action);
+
+                })
+
+            }
+
+        };
+
+        vm.saveAsTemplate = function ($event, type) {
+
+            console.log("Save as Template")
+
+            $mdDialog.show({
+                controller: 'SaveAsDialogController as vm',
+                templateUrl: 'views/dialogs/save-as-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {}
+                }
+            }).then(function (res) {
+
+
+                if (res.status === 'agree') {
+
+                    var template = {
+                        name: '',
+                        type: type,
+                        data: {}
+                    };
+
+                    template.name = res.data.name;
+
+                    if (type === 'input_template') {
+
+                        template.data.inputs = vm.entity.inputs.map(function (item) {
+
+                            return {
+                                name: item.name,
+                                verbose_name: item.verbose_name,
+                                value_type: item.value_type,
+                                content_type: item.content_type
+                            }
+
+                        })
+
+                    }
+
+                    if (type === 'field_template') {
+
+                        template.data.fields = {};
+
+                        Object.keys(vm.entity).forEach(function (key) {
+
+                            if (key.indexOf('user_text_') !== -1) {
+                                template.data.fields[key] = vm.entity[key];
+                            }
+
+                            if (key.indexOf('user_number_') !== -1) {
+                                template.data.fields[key] = vm.entity[key];
+                            }
+
+                            if (key.indexOf('user_date_') !== -1) {
+                                template.data.fields[key] = vm.entity[key];
+                            }
+
+                        });
+
+                    }
+
+                    if (type === 'action_template') {
+
+                        template.data.actions = vm.entity.actions.map(function (action) {
+
+                            var result = {};
+
+                            Object.keys(action).forEach(function (key) {
+
+                                if (typeof action[key] === 'object' && action[key] !== null) {
+
+                                    result[key] = {};
+
+                                    Object.keys(action[key]).forEach(function (actionItemKey) {
+
+                                        result[key][actionItemKey] = action[key][actionItemKey];
+
+                                        if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+                                            result[key][actionItemKey] = null; // if its relation property
+                                        }
+
+                                        if (actionItemKey.indexOf('_input') !== -1) {
+                                            result[key][actionItemKey] = null; // if its relation_input property
+                                        }
+
+                                        if (actionItemKey.indexOf('_toggle') !== -1) {
+                                            delete result[key][actionItemKey]
+                                        }
+
+                                        if (actionItemKey.indexOf('_object') !== -1) {
+                                            delete result[key][actionItemKey]
+                                        }
+
+
+
+                                    })
+
+
+                                } else {
+                                    result[key] = action[key];
+                                }
+
+                            });
+
+                            return result
+
+                        })
+
+                    }
+
+                    uiService.createTemplateLayout(template).then(function (data) {
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Template successfully created"
+                                }
+                            }
+                        });
+
+                    })
+
+                }
+
+            });
+
+        };
+
+
+        vm.init = function () {
+
+            vm.getItem();
+            vm.getAttrs();
+            vm.getReferenceTables();
+
+            vm.getInputTemplates();
+            vm.getFieldTemplates();
+            vm.getActionTemplates();
+
+            vm.layoutAttrs = layoutService.getLayoutAttrs();
+            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+        };
+
+        vm.init();
 
     }
 
