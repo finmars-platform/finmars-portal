@@ -1,5 +1,8 @@
 # Changelog
 
+# 05.11.2019
+- Templates Update
+
 ## 21.10.2019
 - Permissions Update
 

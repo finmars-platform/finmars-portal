@@ -151,7 +151,7 @@ app.controller('TableAttributeSelectorDialogController', ['$scope', '$mdDialog',
 app.controller('LayoutChangesLossWarningDialogController', ['$scope', 'data', '$mdDialog', require('./app/controllers/dialogs/layoutChangesLossWarningDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
-app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
+app.controller('RenameFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameFieldDialogController')]);
 app.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveConfigurationExportLayoutDialogController')]);
 app.controller('ActionsNotificationsSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/actionsNotificationsSettingsDialogController')]);
 app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', 'data', require('./app/controllers/dialogs/exportPdfDialogController')]);
@@ -160,6 +160,12 @@ app.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', re
 app.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/helpDialogController')]);
 app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
 app.controller('CalculatorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/calculatorDialogController')]);
+
+app.controller('InputTemplateLayoutViewerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/inputTemplateLayoutViewerDialogController')]);
+app.controller('TemplateLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateLayoutManagerController')]);
+app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
+app.controller('SaveAsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveAsDialogController')]);
+
 
 
 app.controller('EcosystemDefaultSettingsController', ['$scope', '$mdDialog', require('./app/controllers/pages/ecosystemDefaultSettingsController')]);

@@ -734,6 +734,46 @@
 
                             }));
                             break;
+                        case 'ui.templatelayout':
+                            resolve(new Promise(function (resolve, reject) {
+
+                                uiRepository.getTemplateLayoutList({
+                                    filters: {
+                                        name: item.name
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.name === item.name) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolve(uiRepository.updateTemplateLayout(item.id, item));
+
+                                        } else {
+                                            resolve(uiRepository.createTemplateLayout(item));
+                                        }
+                                    } else {
+
+                                        resolve(uiRepository.createTemplateLayout(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
                         case 'ui.editlayout':
                             resolve(new Promise(function (resolve, reject) {
 
@@ -1266,6 +1306,7 @@
                     item.entity !== 'transactions.transactiontype' &&
                     item.entity !== 'ui.editlayout' &&
                     item.entity !== 'ui.listlayout' &&
+                    item.entity !== 'ui.templatelayout' &&
                     item.entity !== 'ui.reportlayout'&&
                     item.entity !== 'ui.dashboardlayout'
             });
@@ -1277,6 +1318,7 @@
             var layoutEntities = items.filter(function (item) {
                 return (item.entity === 'ui.editlayout' ||
                     item.entity === 'ui.listlayout' ||
+                    item.entity === 'ui.templatelayout' ||
                     item.entity === 'ui.reportlayout') &&
                     item.entity !== 'ui.dashboardlayout'
             });
@@ -1526,6 +1568,60 @@
                                     } else {
 
                                         resolveLocal(uiRepository.createListLayout(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'ui.templatelayout':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                uiRepository.getTemplateLayoutList({
+                                    filters: {
+                                        name: item.name
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.name === item.name) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    content_type: 'ui.templatelayout',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Layout already exists: name ' + item.name
+                                                    },
+                                                    mode: 'skip'
+                                                });
+
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(uiRepository.createTemplateLayout(item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(uiRepository.createTemplateLayout(item));
 
                                     }
 
@@ -2566,6 +2662,7 @@
                     item.entity !== 'transactions.transactiontypegroup' &&
                     item.entity !== 'ui.editlayout' &&
                     item.entity !== 'ui.listlayout' &&
+                    item.entity !== 'ui.templatelayout' &&
                     item.entity !== 'ui.reportlayout' &&
                     item.entity !== 'ui.dashboardlayout' &&
                     item.entity !== 'ui.bookmark' &&
@@ -2582,6 +2679,7 @@
             var layoutEntities = items.filter(function (item) {
                 return (item.entity === 'ui.editlayout' ||
                     item.entity === 'ui.listlayout' ||
+                    item.entity === 'ui.templatelayout' ||
                     item.entity === 'ui.reportlayout') &&
                     item.entity !== 'ui.dashboardlayout'
             });

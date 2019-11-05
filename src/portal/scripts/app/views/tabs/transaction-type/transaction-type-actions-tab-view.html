@@ -141,4 +141,30 @@
         </div>
 
     </div>
+
+
+    <div layout="row" class="transaction-type-template-controls">
+
+        <md-menu>
+            <md-button  class="md-raised"
+                        data-ng-class="{'disabled-btn': !vm.readyStatus.action_templates}"
+                        ng-click="$mdMenu.open($event)">
+                Append From Template
+            </md-button>
+
+            <md-menu-content width="3">
+                <md-menu-item data-ng-repeat="template in vm.actionTemplates">
+                    <md-button
+                            data-ng-click="vm.appendFromTemplate($event, template)">
+                        {{template.name}}
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+
+        <md-button class="md-raised" data-ng-click="vm.saveAsTemplate($event, 'action_template')">Save as a Template
+        </md-button>
+
+    </div>
+
 </div>

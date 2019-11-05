@@ -124,6 +124,8 @@
         return usersRepository.updateOwnMemberSettings(id, member);
     };
 
+
+
     module.exports = {
         login: login,
         logout: logout,

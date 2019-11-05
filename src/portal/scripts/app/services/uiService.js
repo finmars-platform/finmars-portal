@@ -159,6 +159,31 @@
         return uiRepository.deleteDashboardLayoutByKey(id);
     };
 
+    var getTemplateLayoutList = function (options) {
+        return uiRepository.getTemplateLayoutList(options);
+    };
+
+    var getDefaultTemplateLayout = function () {
+        return uiRepository.getDefaultTemplateLayout()
+    };
+
+    var getTemplateLayoutByKey = function (key) {
+        return uiRepository.getTemplateLayoutByKey(key);
+    };
+
+    var createTemplateLayout = function (data) {
+
+        return uiRepository.createTemplateLayout(data);
+    };
+
+    var updateTemplateLayout = function (id, data) {
+        return uiRepository.updateTemplateLayout(id, data)
+    };
+
+    var deleteTemplateLayoutByKey = function (id) {
+        return uiRepository.deleteTemplateLayoutByKey(id);
+    };
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -203,7 +228,15 @@
         getDefaultDashboardLayout: getDefaultDashboardLayout,
         createDashboardLayout: createDashboardLayout,
         updateDashboardLayout: updateDashboardLayout,
-        deleteDashboardLayoutByKey: deleteDashboardLayoutByKey
+        deleteDashboardLayoutByKey: deleteDashboardLayoutByKey,
+
+
+        getTemplateLayoutList: getTemplateLayoutList,
+        getTemplateLayoutByKey: getTemplateLayoutByKey,
+        getDefaultTemplateLayout: getDefaultTemplateLayout,
+        createTemplateLayout: createTemplateLayout,
+        updateTemplateLayout: updateTemplateLayout,
+        deleteTemplateLayoutByKey: deleteTemplateLayoutByKey
     }
 
 }());
