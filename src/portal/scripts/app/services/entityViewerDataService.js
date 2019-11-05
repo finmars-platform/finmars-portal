@@ -806,33 +806,56 @@
 
                 var listLayout = metaHelper.recursiveDeepCopy(getListLayout());
 
-                if (options && options.isReport) {
+                var interfaceLayout = getInterfaceLayout();
 
-                    listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
-                    listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
-                    listLayout.data.rootGroupOptions = metaHelper.recursiveDeepCopy(getRootGroupOptions());
+                var interfaceLayoutToSave = {};
+                interfaceLayoutToSave.groupingArea = {};
+                interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
+                interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
+                interfaceLayoutToSave.columnArea = {};
+                interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
+                interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
 
-                    if (getExportOptions()) {
-                        listLayout.data.export = metaHelper.recursiveDeepCopy(getExportOptions());
+                interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
+
+                listLayout.data.interfaceLayout = interfaceLayoutToSave;
+
+                if (isRootEntityViewer()) {
+                    listLayout.data.additions = getAdditions()
+                }
+
+                if (options) {
+
+                    if (options.isReport) {
+
+                        listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
+                        listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
+                        listLayout.data.rootGroupOptions = metaHelper.recursiveDeepCopy(getRootGroupOptions());
+
+                        if (getExportOptions()) {
+                            listLayout.data.export = metaHelper.recursiveDeepCopy(getExportOptions());
+                        }
+
+                        delete listLayout.data.reportOptions.items;
+                        delete listLayout.data.reportOptions.item_complex_transactions;
+                        delete listLayout.data.reportOptions.item_counterparties;
+                        delete listLayout.data.reportOptions.item_responsibles;
+                        delete listLayout.data.reportOptions.item_strategies3;
+                        delete listLayout.data.reportOptions.item_strategies2;
+                        delete listLayout.data.reportOptions.item_strategies1;
+                        delete listLayout.data.reportOptions.item_portfolios;
+                        delete listLayout.data.reportOptions.item_instruments;
+                        delete listLayout.data.reportOptions.item_instrument_pricings;
+                        delete listLayout.data.reportOptions.item_instrument_accruals;
+                        delete listLayout.data.reportOptions.item_currency_fx_rates;
+                        delete listLayout.data.reportOptions.item_currencies;
+                        delete listLayout.data.reportOptions.item_accounts;
+
+                    } else {
+                        listLayout.data.pagination = getPagination();
                     }
 
-                    delete listLayout.data.reportOptions.items;
-                    delete listLayout.data.reportOptions.item_complex_transactions;
-                    delete listLayout.data.reportOptions.item_counterparties;
-                    delete listLayout.data.reportOptions.item_responsibles;
-                    delete listLayout.data.reportOptions.item_strategies3;
-                    delete listLayout.data.reportOptions.item_strategies2;
-                    delete listLayout.data.reportOptions.item_strategies1;
-                    delete listLayout.data.reportOptions.item_portfolios;
-                    delete listLayout.data.reportOptions.item_instruments;
-                    delete listLayout.data.reportOptions.item_instrument_pricings;
-                    delete listLayout.data.reportOptions.item_instrument_accruals;
-                    delete listLayout.data.reportOptions.item_currency_fx_rates;
-                    delete listLayout.data.reportOptions.item_currencies;
-                    delete listLayout.data.reportOptions.item_accounts;
-
                 }
-                ;
 
                 data.activeLayoutConfiguration = listLayout;
 
@@ -892,6 +915,8 @@
                 delete listLayout.data.reportOptions.item_currencies;
                 delete listLayout.data.reportOptions.item_accounts;
 
+            } else {
+                listLayout.data.pagination = getPagination();
             }
 
             return listLayout;
@@ -938,6 +963,8 @@
 
                 setExportOptions(listLayout.data.export);
 
+            } else {
+                setPagination(listLayout.data.pagination);
             }
 
             setColumns(listLayout.data.columns);

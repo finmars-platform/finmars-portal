@@ -67,6 +67,10 @@
                     });
                 };
 
+                scope.getDataForMultiselect = function () {
+                    return entityResolverService.getList(scope.entityType);
+                };
+
 
                 scope.valueChanged = function () {
 
@@ -98,7 +102,6 @@
                     if (scope.item.data.settings.auto_refresh) {
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
                     }
-
 
                 };
 

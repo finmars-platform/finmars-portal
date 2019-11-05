@@ -193,9 +193,8 @@
                                                         item="item"
                                                         dashboard-constructor-data-service="vm.dashboardConstructorDataService"
                                                         dashboard-constructor-event-service="vm.dashboardConstructorEventService"
-                                                        attribute-data-service="vm.attributeDataService"
-
-                                                ></dashboard-constructor-field>
+                                                        attribute-data-service="vm.attributeDataService">
+                                                </dashboard-constructor-field>
 
                                             </div>
 
@@ -218,6 +217,7 @@
                                                 <md-tooltip class="tooltip_1" md-direction="top">Insert row below
                                                 </md-tooltip>
                                             </md-button>
+
                                             <md-button ng-if="tab.layout.rows > row"
                                                        class="md-button dashboard-manage-row-btn"
                                                        ng-click="vm.deleteRow(tab, row)"

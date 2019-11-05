@@ -109,6 +109,32 @@
                         return false;
                     });
 
+                    var cDataNumber = 0.1;
+
+                    scope.chartDataWithPosNums.forEach(function (cData) {
+                        cData.colorNumber = cDataNumber;
+
+                        if (cDataNumber === 1) {
+                            cDataNumber = 0.1;
+                        } else {
+                            cDataNumber = (cDataNumber + 0.1).toFixed(1);
+                            cDataNumber = parseFloat(cDataNumber);
+                        }
+                    });
+
+                    cDataNumber = 0.1;
+
+                    scope.chartDataWithNegNums.forEach(function (cData) {
+                        cData.colorNumber = cDataNumber;
+
+                        if (cDataNumber === 1) {
+                            cDataNumber = 0.1;
+                        } else {
+                            cDataNumber = (cDataNumber + 0.1).toFixed(1);
+                            cDataNumber = parseFloat(cDataNumber);
+                        }
+                    });
+
                 };
 
                 var getDataForLegends = function () {
@@ -138,19 +164,22 @@
 
                 };
 
-                scope.getLegendBackgroundColor = function (legendName, isPositive) {
+                scope.getLegendBackgroundColor = function (colorNum, isPositive) {
                     var backStyle = "";
                     var backColor = "";
 
-                    if (isPositive) {
+                    /*if (isPositive) {
                         backColor = getPosPartColor(legendName);
                     } else {
                         backColor = getNegPartColor(legendName);
-                    }
+                    }*/
+                    backColor = getPartColor(colorNum);
 
-                    if (legendName && backColor) {
+                    //if (legendName && backColor) {
+                    if (colorNum && backColor) {
                         backStyle = "background-color: " + backColor;
                     }
+
                     return backStyle;
                 };
 
@@ -204,8 +233,9 @@
                 ];*/
 
                 // need to be outside of draw chart function to use for legends rendering
-                var getPosPartColor;
-                var getNegPartColor;
+                /*var getPosPartColor;
+                var getNegPartColor;*/
+                var getPartColor;
 
                 var drawChart = function () {
 
@@ -221,9 +251,11 @@
 
                     var svgSize = posNumRadius * 2;
 
-                    getPosPartColor = d3.scaleOrdinal()
+                    /*getPosPartColor = d3.scaleOrdinal()
                         .domain(d3.map(scope.chartDataWithPosNums, function (d) {return d.name}))
-                        .range(d3.schemeCategory10);
+                        .range(d3.schemeCategory10);*/
+                    getPartColor = d3.scaleSequential(d3.interpolatePuOr)
+                        .domain([0, 1]);
 
                     var posArc = d3.arc()
                         .innerRadius(posNumRadius * 0.8)
@@ -259,7 +291,8 @@
                             .attr('d', posArc)
                             .style("stroke-width", "2px")
                             .attr('fill', function (d) {
-                                return getPosPartColor(d.data.name)
+                                // return getPosPartColor(d.data.colorNumber)
+                                return getPartColor(d.data.colorNumber)
                             });
 
                     posChartWrapingG.selectAll('path')
@@ -301,13 +334,13 @@
                     var negNumsRadius = posNumRadius * 0.75;
                     var negNumsSpaces = posNumRadius - negNumsRadius;
 
-                    getPosPartColor = d3.scaleOrdinal()
+                    /*getPosPartColor = d3.scaleOrdinal()
                         .domain(d3.map(scope.chartDataWithPosNums, function (d) {return d.name}))
                         .range(d3.schemeCategory10);
 
                     getNegPartColor = d3.scaleOrdinal()
                         .domain(d3.map(scope.chartDataWithNegNums, function (d) {return d.name}))
-                        .range(d3.schemeTableau10);
+                        .range(d3.schemeTableau10);*/
 
                     var negArc = d3.arc()
                         .innerRadius(negNumsRadius * 0.75)
@@ -327,7 +360,8 @@
                         .attr('d', negArc)
                         .style("stroke-width", "2px")
                         .attr('fill', function (d) {
-                            return getNegPartColor(d.data.name)
+                            // return getNegPartColor(d.data.name);
+                            return getPartColor(d.data.colorNumber);
                         });
 
                     negChartWrapingG.selectAll('path')

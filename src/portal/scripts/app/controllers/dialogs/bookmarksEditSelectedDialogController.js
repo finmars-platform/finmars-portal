@@ -14,7 +14,7 @@
         logService.controller('BookmarksEditSelectedDialogController', 'initialized');
 
         var vm = this;
-        console.log("bookmarks data", data);
+
         var bookmarkData = data;
         var bookmarkCurrentLayoutId = bookmarkData.original.list_layout;
         if (bookmarkData.a_attr.list_layout && !isNaN(bookmarkData.a_attr.list_layout)) {
@@ -67,13 +67,21 @@
         vm.editBookmarkLayout = function ($event) {
 
             $mdDialog.show({
-                controller: 'BookmarksLayoutSelectDialogController as vm',
-                templateUrl: 'views/dialogs/bookmarks-layout-select-dialog-view.html',
+                controller: 'SelectLayoutDialogController as vm',
+                templateUrl: 'views/dialogs/select-layout-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
+                preserveScope: true,
                 autoWrap: true,
-                multiple: true
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    options: {
+                        dialogTitle: "UI layouts"
+                    }
+                }
             }).then(function (res) {
+
                 if (res.status === 'agree') {
 
                     if (res.data.listLayoutId && bookmarkCurrentLayoutId !== res.data.listLayoutId) {
@@ -87,8 +95,8 @@
                     }
 
                 }
-            });
 
+            });
 
         };
 

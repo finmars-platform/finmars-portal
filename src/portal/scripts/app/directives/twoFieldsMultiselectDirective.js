@@ -14,7 +14,8 @@
                 model: '=',
                 title: "@",
                 nothingSelectedText: "@",
-                nameProperty: "@"
+                nameProperty: "@",
+                onChangeCallback: '&?'
             },
             require: '?ngModel',
             templateUrl: "views/directives/two-fields-multiselect-view.html",
@@ -24,7 +25,7 @@
 
                 if (!scope.nameProperty) {
                     scope.nameProperty = 'name';
-                };
+                }
 
                 var setInputText = function () {
 
@@ -33,8 +34,14 @@
                         selElemNumber = scope.model.length;
                     }
 
-                    if (selElemNumber === 0 && scope.nothingSelectedText) {
-                        scope.inputText = scope.nothingSelectedText;
+                    if (selElemNumber === 0) {
+
+                        scope.inputText = "";
+
+                        if (scope.nothingSelectedText) {
+                            scope.inputText = scope.nothingSelectedText;
+                        }
+
                     } else {
                         scope.inputText = selElemNumber + " " + "items selected";
                     }
@@ -73,9 +80,17 @@
 
                            scope.model = res.selectedItems;
 
-                           if (ngModel) {
+                           if (scope.onChangeCallback) {
+                               scope.model = res.selectedItems;
+
+                               setTimeout(function () {
+                                   scope.onChangeCallback();
+                               }, 500);
+
+                           } else if (ngModel) {
                                ngModel.$setViewValue(res.selectedItems);
                            }
+
 
                            setInputText();
 

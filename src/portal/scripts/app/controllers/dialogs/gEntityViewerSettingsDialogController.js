@@ -5,11 +5,11 @@
 
     'use strict';
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var evEvents = require('../../services/entityViewerEvents');
+
+    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
 
         var vm = this;
-
-        var entityViewerDataService = data.entityViewerDataService;
 
         var pagePagination = entityViewerDataService.getPagination();
         vm.itemsToLoad = pagePagination.page_size;
@@ -20,10 +20,17 @@
 
         vm.saveSettings = function () {
 
-            pagePagination = entityViewerDataService.getPagination();
-            pagePagination.page_size = vm.itemsToLoad;
+            if (pagePagination.page_size !== vm.itemsToLoad) {
+                console.log("pagination pagePagination changed");
+                pagePagination = entityViewerDataService.getPagination();
+                pagePagination.page_size = vm.itemsToLoad;
 
-            entityViewerDataService.setPagination(pagePagination);
+                entityViewerDataService.setPagination(pagePagination);
+
+                entityViewerEventService.dispatchEvent(evEvents.ENTITY_VIEWER_PAGINATION_CHANGED);
+
+            }
+
             $mdDialog.hide({status: 'agree'});
         };
 

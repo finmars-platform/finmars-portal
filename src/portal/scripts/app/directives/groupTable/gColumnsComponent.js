@@ -27,6 +27,7 @@
                 scope.groups = scope.evDataService.getGroups();
                 scope.downloadedItemsCount = null;
 
+                scope.viewContext = scope.evDataService.getViewContext();
                 scope.isReport = metaService.isReport(scope.entityType);
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
@@ -38,11 +39,11 @@
 
                         if (column.key === groups[index].key) {
                             return false;
-                        };
+                        }
 
                         return true;
 
-                    };
+                    }
 
                     return true;
 
@@ -54,11 +55,11 @@
 
                         if (column.key === scope.groups[index].key) {
                             return false;
-                        };
+                        }
 
                         return true;
 
-                    };
+                    }
 
 
                     return true;
@@ -89,7 +90,7 @@
 
                             });
 
-                        };
+                        }
 
                     });
 
@@ -104,7 +105,7 @@
 
                 scope.isColumnFloat = function (column) {
 
-                    return column.value_type == 20
+                    return column.value_type == 20;
                 };
 
                 scope.sortHandler = function (column, sort) {
@@ -126,7 +127,7 @@
                     columns.forEach(function (item) {
 
                         if (column.key === item.key) {
-                            item = column
+                            item = column;
                         }
 
                     });
@@ -149,7 +150,7 @@
                         column.report_settings.subtotal_formula_id = null;
                     } else {
                         column.report_settings.subtotal_formula_id = type;
-                    };
+                    }
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
@@ -164,7 +165,7 @@
 
                     }
 
-                    return false
+                    return false;
 
                 };
 
@@ -207,9 +208,10 @@
 
                         if (column.report_settings.round_format_id == type) {
                             return true;
-                        };
+                        }
 
-                    };
+                    }
+
                     return false;
                 };
 
@@ -312,9 +314,9 @@
 
                         if (column.report_settings.zero_format_id == type) {
                             return true;
-                        };
+                        }
 
-                    };
+                    }
 
                     return false;
 
@@ -326,15 +328,15 @@
 
                     if (column.hasOwnProperty('key')) {
                         groupToAdd.key = column.key;
-                    };
+                    }
 
                     if (column.hasOwnProperty('entity')) {
                         groupToAdd.entity = column.entity;
-                    };
+                    }
 
                     if (column.hasOwnProperty('id')) {
                         groupToAdd.id = column.id;
-                    };
+                    }
 
                     groupToAdd.name = column.name;
                     groupToAdd.value_type = column.value_type;
@@ -343,7 +345,7 @@
 
                 };
 
-                var dragAndDrop = {
+                /*var dragAndDrop = {
 
                     init: function () {
                         this.dragulaInit();
@@ -399,7 +401,7 @@
 
                                 if (resultItem.___column_id !== columns[index].___column_id) {
                                     isChanged = true;
-                                };
+                                }
 
 
                             });
@@ -429,7 +431,7 @@
                     }
                 };
 
-                /*if (!scope.isReport) {
+                if (!scope.isReport) {
                     setTimeout(function () {
                         dragAndDrop.init();
                     }, 500);
@@ -471,16 +473,16 @@
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 
-                        };
+                        }
 
                     });
                 };
 
                 scope.activateColumnNumberRenderingPreset = function (column, rendPreset) {
-                    console.log("number format column", column);
+
                     if (!column.report_settings) {
                         column.report_settings = {};
-                    };
+                    }
 
                     switch (rendPreset) {
 
@@ -517,7 +519,7 @@
                             column.report_settings.percentage_format_id = 3;
                             break;
 
-                    };
+                    }
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
@@ -625,6 +627,99 @@
 
                     scope.downloadedItemsCount = unfilteredFlatList.length;
 
+                };
+
+                scope.hasFoldingBtn = function ($index) {
+                    var groups = scope.evDataService.getGroups();
+
+                    if (scope.isReport && $index < groups.length) {
+                        return true;
+                    }
+
+                    return false;
+                };
+
+                scope.foldLevel = function (key, $index) {
+
+                    scope.groups = scope.evDataService.getGroups();
+
+                    var item = scope.groups[$index];
+                    console.log("folding foldLevel data", key, scope.groups, item);
+                    item.report_settings.is_level_folded = true;
+
+                    for (; $index < scope.groups.length; $index = $index + 1) {
+
+                        scope.groups[$index].report_settings.is_level_folded = true;
+
+                        var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
+
+                        groupsContent.forEach(function (groupItem) {
+                            groupItem.___is_open = false;
+
+                            var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, scope.evDataService);
+                            childrens.forEach(function (children) {
+
+                                if (children.___type === 'group') {
+
+                                    item = scope.evDataService.getData(children.___id);
+
+                                    if (item) {
+                                        item.___is_open = false;
+                                        scope.evDataService.setData(item);
+                                    } else {
+                                        children.___is_open = false;
+                                        scope.evDataService.setData(children);
+                                    }
+
+
+                                }
+
+                            })
+
+                        });
+
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                };
+
+                scope.unfoldLevel = function (key, $index) {
+
+                    scope.groups = scope.evDataService.getGroups();
+
+                    var item = scope.groups[$index];
+
+                    item.report_settings.is_level_folded = false;
+
+                    scope.groups = scope.evDataService.getGroups();
+
+                    for (; $index >= 0; $index = $index - 1) {
+
+                        var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
+                        scope.groups[$index].report_settings.is_level_folded = false;
+
+                        groupsContent.forEach(function (groupItem) {
+                            groupItem.___is_open = true;
+                            scope.evDataService.setData(groupItem);
+                        });
+
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                };
+
+                scope.groupLevelIsFolded = function ($index) {
+                    var groups = scope.evDataService.getGroups();
+
+                    /*for (var i = 0; i < groups.length; i++) {
+                        if (groups[i].key === key) {
+                            console.log("folding is_level_folded", groups[i].report_settings.is_level_folded);
+                            return groups[i].report_settings.is_level_folded;
+                        }
+                    }*/
+                    return groups[$index].report_settings.is_level_folded;
                 };
 
                 var init = function () {
