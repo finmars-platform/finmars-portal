@@ -182,7 +182,6 @@
                 };
 
                 scope.getEntityNameByState = function () {
-
                     switch ($state.current.name) {
                         case 'app.data.portfolio':
                             return "PORTFOLIO";
@@ -340,9 +339,7 @@
                 };
 
                 scope.openActions = function ($mdOpenMenu, $event) {
-
                     $mdOpenMenu($event);
-
                 };
 
                 scope.openExportActions = function ($mdOpenMenu, $event) {
@@ -386,7 +383,7 @@
                             case "transaction-report":
                                 entityType = type;
                                 break;
-                        };
+                        }
 
                         if (entityType) {
 
@@ -422,7 +419,7 @@
                                     scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
                                     scope.currentAdditions = scope.evDataService.getAdditions();
 
-                                };
+                                }
 
                             });
 
@@ -510,9 +507,8 @@
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         locals: {
-                            data: {
-                                entityViewerDataService: scope.evDataService
-                            }
+                            entityViewerDataService: scope.evDataService,
+                            entityViewerEventService: scope.evEventService
                         }
                     });
 
@@ -533,7 +529,8 @@
                     REPORT_OPTIONS_CHANGE: null,
                     REPORT_TABLE_VIEW_CHANGED: null,
                     REPORT_EXPORT_OPTIONS_CHANGED: null,
-                    DATA_LOAD_END: null
+                    DATA_LOAD_END: null,
+                    ENTITY_VIEWER_PAGINATION_CHANGED: null
                 };
 
                 var removeChangesTrackingEventListeners = function () {
@@ -548,7 +545,7 @@
                             scope.evEventService.removeEventListener(evEvents[telName], changesTrackingEvents[telName]);
 
                         }
-                    };
+                    }
                 };
 
                 var didLayoutChanged = function () {
@@ -571,7 +568,7 @@
 
                                 return true;
 
-                            };
+                            }
 
                         };
 
@@ -635,7 +632,7 @@
 
                             } else {
                                 return false;
-                            };
+                            }
 
                         };
 
@@ -647,7 +644,7 @@
                             if (!isLayoutTheSame(currentGroups, originalGroups)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
 
                         });
 
@@ -659,7 +656,7 @@
                             if (!isLayoutTheSame(currentColumns, originalColumns)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
 
                         });
 
@@ -671,7 +668,7 @@
                             if (!isLayoutTheSame(currentColumns, originalColumns)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
 
                         });
 
@@ -684,7 +681,7 @@
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
                                 scope.$apply();
-                            };
+                            }
 
                         });
 
@@ -696,7 +693,7 @@
                             if (!isLayoutTheSame(currentFilters, originalFilters)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
 
                         });
 
@@ -708,7 +705,7 @@
                             if (!isLayoutTheSame(originAdditions, currentAdditions)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
 
                         });
 
@@ -720,7 +717,7 @@
                             if (!isLayoutTheSame(originInterfaceLayout, currentInterfaceLayout)) {
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
-                            };
+                            }
 
                         });
 
@@ -733,8 +730,13 @@
                                 scope.layoutChanged = true;
                                 removeChangesTrackingEventListeners();
                                 scope.$apply();
-                            };
+                            }
 
+                        });
+
+                        var evpcEventIndex = scope.evEventService.addEventListener(evEvents.ENTITY_VIEWER_PAGINATION_CHANGED, function () {
+                            scope.layoutChanged = true;
+                            removeChangesTrackingEventListeners();
                         });
 
                         if (scope.isReport) {
@@ -768,7 +770,7 @@
                                     scope.layoutChanged = true;
                                     removeChangesTrackingEventListeners();
 
-                                };
+                                }
 
                             });
 
@@ -784,7 +786,7 @@
 
                             });
 
-                        };
+                        }
 
                         changesTrackingEvents.GROUPS_CHANGE = groupsChangeEventIndex;
                         changesTrackingEvents.COLUMNS_CHANGE = columnsChangeEventIndex;
@@ -798,6 +800,7 @@
                         changesTrackingEvents.REPORT_TABLE_VIEW_CHANGED = rtvChangedEventIndex;
                         changesTrackingEvents.REPORT_EXPORT_OPTIONS_CHANGED = reoChangeEventIndex;
                         changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
+                        changesTrackingEvents.ENTITY_VIEWER_PAGINATION_CHANGED = evpcEventIndex;
                     }
 
                 };
@@ -946,39 +949,6 @@
                                 datepickerMode: 'datepicker'
                             };
 
-
-                            var optionsForDataRequest = {
-                                pageSize: 1000,
-                                page: 1
-                            };
-
-                            /*var getPricingPolicy = function () {
-
-                                pricingPolicyService.getList(optionsForDataRequest).then(function (data) {
-
-                                    var pricingPolicies = data.results;
-
-                                    var p;
-                                    for (p = 0; p < pricingPolicies.length; p++) {
-
-                                        if (pricingPolicies[p].name === '-') {
-                                            reportOptions.pricing_policy = pricingPolicies[p].id;
-                                            break;
-                                        }
-
-                                    }
-
-                                    finishCreatingNewReportLayout();
-
-
-                                }, function (rej) {
-
-                                    finishCreatingNewReportLayout();
-
-                                });
-
-                            };*/
-
                             ecosystemDefaultService.getList().then(function (data) {
 
                                 var defaultValues = data.results[0];
@@ -988,28 +958,6 @@
                                 finishCreatingNewReportLayout();
 
                             });
-
-                            /*currencyService.getList(optionsForDataRequest).then(function (data) {
-
-                                var currencies = data.results;
-
-                                var c;
-                                for (c = 0; c < currencies.length; c++) {
-
-                                    if (currencies[c].name === '-') {
-                                        reportOptions.report_currency = currencies[c].id;
-                                        break;
-                                    }
-
-                                }
-
-                                getPricingPolicy();
-
-                            }, function (rej) {
-
-                                getPricingPolicy();
-
-                            });*/
 
                         } else { // For transaction report
 

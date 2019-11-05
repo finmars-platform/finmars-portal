@@ -50,6 +50,7 @@ module.exports = {
     // Events used only to track layout changes
     'REPORT_EXPORT_OPTIONS_CHANGED': 'REPORT_EXPORT_OPTIONS_CHANGED',
     'REPORT_TABLE_VIEW_CHANGED': 'REPORT_TABLE_VIEW_CHANGED',
+    'ENTITY_VIEWER_PAGINATION_CHANGED': 'ENTITY_VIEWER_PAGINATION_CHANGED',
 
     // Trigger Split Panel events from root entity viewer
 

@@ -114,16 +114,6 @@
 
         };
 
-        /*vm.renameNode = function () {
-            var ref = $('#jstree_demo').jstree(true),
-                sel = ref.get_selected();
-            if (!sel.length) {
-                return false;
-            }
-            sel = sel[0];
-            ref.edit(sel);
-        };*/
-
         vm.editNode = function ($event) {
             var ref = $('#jstree_demo').jstree(true),
                 sel = ref.get_selected(true);
