@@ -486,8 +486,11 @@
                     uiService.getTransactionFieldList().then(function (data) {
 
                         var transactionFields = data.results;
+
+                        console.log('transactionFields transactionFields', transactionFields);
+
                         scope.transactionsUserDates = transactionFields.filter(function (field) {
-                            return field.key.indexOf('user_date') !== -1;
+                            return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].indexOf(field.key) !== -1;
                         });
 
                     });
