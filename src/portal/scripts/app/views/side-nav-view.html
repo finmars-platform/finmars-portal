@@ -235,15 +235,6 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
-                                <li>
-                                    <md-button ui-sref-active="active"
-                                               class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.import.reference-tables">
-                                        <span class="side-nav-title">Reference Tables</span>
-                                        <span class="md-visually-hidden"
-                                              data-ng-if="isSelected()">current page</span>
-                                    </md-button>
-                                </li>
                             </ul>
                         </div>
                     </li>
@@ -527,7 +518,7 @@
                                 </md-button>
                             </li>
 
-                            <li>
+                            <li data-ng-if="vm.accessTable.configuration_templates">
                                 <md-button class="sidemenu-btn"
                                            ui-sref="app.template-layout-manager">
                                     <span class="side-nav-title">Templates</span>
@@ -585,6 +576,16 @@
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.settings.entities-custom-attributes">
                                                 <span class="side-nav-title">User Attributes</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li data-ng-if="vm.accessTable.configuration_reference_table">
+                                            <md-button ui-sref-active="active"
+                                                       class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.import.reference-tables">
+                                                <span class="side-nav-title">Reference Tables</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
