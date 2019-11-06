@@ -323,7 +323,7 @@
 
 
                     $mdDialog.show({
-                        controller: 'renameFieldDialogController as vm',
+                        controller: 'RenameFieldDialogController as vm',
                         templateUrl: 'views/dialogs/rename-field-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
