@@ -203,7 +203,7 @@
 
 
                         elem[0].addEventListener("scroll", function (event) {
-                            console.log('here?', event);
+                            //console.log('here?', event);
                             scope.updateRowControlsHolderPosition(event)
                         });
 

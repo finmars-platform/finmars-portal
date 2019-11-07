@@ -49,6 +49,7 @@
 
         vm.generateAttributesFromLayoutFields = function () {
 
+            vm.attributesLayout = [];
             var tabResult;
             var fieldResult;
             var i, l, e, u;
@@ -92,26 +93,41 @@
 
                         } else {
 
+                            var attrFound = false;
+
                             for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                                 if (field.name === vm.entityAttrs[e].name) {
                                     vm.entityAttrs[e].options = field.options;
                                     fieldResult = vm.entityAttrs[e];
+
+                                    attrFound = true;
+                                    break;
                                 }
                             }
 
-                            for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                                if (field.name === vm.layoutAttrs[l].name) {
-                                    vm.layoutAttrs[l].options = field.options;
-                                    fieldResult = vm.layoutAttrs[l];
+                            if (!attrFound) {
+                                for (u = 0; u < vm.userInputs.length; u = u + 1) {
+                                    //console.log('vm.userInputs[u]', vm.userInputs[u]);
+                                    if (field.name === vm.userInputs[u].name) {
+                                        vm.userInputs[u].options = field.options;
+                                        // return vm.userInputs[u];
+                                        fieldResult = vm.userInputs[u];
+
+                                        attrFound = true;
+                                        break;
+                                    }
                                 }
                             }
 
-                            for (u = 0; u < vm.userInputs.length; u = u + 1) {
-                                //console.log('vm.userInputs[u]', vm.userInputs[u]);
-                                if (field.name === vm.userInputs[u].name) {
-                                    vm.userInputs[u].options = field.options;
-                                    // return vm.userInputs[u];
-                                    fieldResult = vm.userInputs[u];
+                            if (!attrFound) {
+                                for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                                    if (field.name === vm.layoutAttrs[l].name) {
+                                        vm.layoutAttrs[l].options = field.options;
+                                        fieldResult = vm.layoutAttrs[l];
+
+                                        attrFound = true;
+                                        break;
+                                    }
                                 }
                             }
 
@@ -120,6 +136,8 @@
                         if (field.backgroundColor) {
                             fieldResult.backgroundColor = field.backgroundColor;
                         }
+
+                        fieldResult.editable = field.editable;
 
                     }
 
@@ -325,9 +343,9 @@
                         $scope.$apply();
                     });
                     vm.init();*/
-                    vm.getAttributeTypes();
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
                     vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+                    vm.getAttributeTypes();
 
                     vm.getFormLayout();
 

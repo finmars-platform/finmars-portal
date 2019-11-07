@@ -49,15 +49,6 @@
     </md-input-container>
 </div>
 
-<div layout="row">
-    <md-input-container style="width: 200px;">
-        <label for="">Crop Tick Text After</label>
-        <input type="number"
-               data-ng-model="vm.item.settings.crop_tick_text"
-               class="no-input-arrows">
-    </md-input-container>
-</div>
-
 <h5 style="margin-left: 10px">Bar Width Settings</h5>
 <div layout="row" class="m-t-16 m-b-24">
 
@@ -76,6 +67,15 @@
     </md-input-container>
 </div>
 
+<div layout="row">
+    <md-input-container style="width: 200px;">
+        <label for="">Crop Tick Text After</label>
+        <input type="number"
+               data-ng-model="vm.item.settings.crop_tick_text"
+               class="no-input-arrows">
+    </md-input-container>
+</div>
+
 <md-checkbox data-ng-model="vm.item.settings.autocalc_ticks_number"
              style="margin-left: 10px;">Calculate number of ticks automatically</md-checkbox>
 <div layout="row">
@@ -88,4 +88,14 @@
 </div>
 
 <md-checkbox data-ng-model="vm.item.settings.auto_refresh"
+             class="m-b-35"
              style="margin-left: 10px;">Trigger Refresh on Value Change</md-checkbox>
+
+<div>
+    <md-input-container class="dashboard-constructor-field1">
+        <label for="">Tooltip Font Size</label>
+        <input data-ng-model="vm.item.settings.tooltip_font_size"
+               type="number"
+               class="no-input-arrows">
+    </md-input-container>
+</div>

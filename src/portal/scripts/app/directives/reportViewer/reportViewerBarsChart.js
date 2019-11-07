@@ -59,7 +59,7 @@
                     chartMargin.top = 30;
                     chartMargin.bottom = 40;
                     chartMargin.left = 40;
-                };
+                }
 
                 var bandPadding = 0.2;
 
@@ -142,8 +142,22 @@
                                 break;
                         }
 
-                    };
+                    }
 
+                };
+
+                var getTooltipStyle = function () {
+                    var tStyle = '';
+
+                    if (scope.rvChartsSettings.tooltip_font_size) {
+                        if (scope.rvChartsSettings.tooltip_font_size > 0) {
+                            tStyle = 'font-size: ' + scope.rvChartsSettings.tooltip_font_size + 'px; ';
+                        } else {
+                            tStyle = 'font-size: 10px; ';
+                        }
+                    }
+
+                    return tStyle;
                 };
 
                 // functions-helpers
@@ -163,7 +177,7 @@
                         var croppedString = textContent.slice(0, cropTickText) + '...';
 
                         return croppedString;
-                    };
+                    }
 
                     return textContent;
                 };
@@ -247,7 +261,7 @@
                             chartWidth = (barsMaxWidth + barPaddingInPx) * chartData.length;
                             componentWidth = chartWidth + chartMargin.right + chartMargin.left;
 
-                        };
+                        }
                     }
                     // < check if chart has enough width >
 
@@ -293,8 +307,8 @@
                                     .domain([getMinValueForAxis(), d3.max(chartData, returnNumericValue)]).nice()
                                     .range([chartHeight, chartMargin.top]);*/
 
-                            };
-                        };
+                            }
+                        }
                     }
 
                     // < check if ticks are located too close to each other >
@@ -323,7 +337,7 @@
                             return calcBarHeight
                         } else {
                             return Math.max(2, calcBarHeight);
-                        };
+                        }
 
                     };
 
@@ -349,21 +363,24 @@
                         .on("click", function (d) {
                             changeActiveObject(d.name);
                         })
-                        .on("mouseover", function () {
+                        .on("mouseover", function (d) {
 
                             d3.select(this)
                                 .attr("fill", "#f4af8b");
 
                             var barTooltipElem = document.createElement("div");
                             barTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
+                            barTooltipElem.style.cssText = getTooltipStyle();
+
                             document.body.appendChild(barTooltipElem);
+
+                            barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + d.numericValue + ";";
 
                         })
                         .on("mousemove", function (d) {
 
                             var barTooltipElem = document.querySelector(".dashboard-bar-chart-tooltip");
 
-                            barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + d.numericValue + ";";
                             var tElemWidth = barTooltipElem.offsetWidth;
                             barTooltipElem.style.top = (d3.event.pageY - 10) + "px";
                             barTooltipElem.style.left = (d3.event.pageX - tElemWidth - 5) + "px"; // subtractions applied to place tooltip to the left of cursor
@@ -402,8 +419,8 @@
 
                         if (cData.name.length > longestName.length) {
                             longestName = cData.name;
-                        };
-                    };
+                        }
+                    }
 
                     longestName = cropText(longestName);
 
@@ -436,7 +453,7 @@
                             chartHeight = (barsMaxWidth + barPaddingInPx) * chartData.length;
                             componentHeight = chartHeight + chartMargin.top + chartMargin.bottom;
 
-                        };
+                        }
                     }
                     // < check if chart has enough >
 
@@ -537,7 +554,10 @@
 
                             var barTooltipElem = document.createElement("div");
                             barTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
+                            barTooltipElem.style.cssText = getTooltipStyle();
+
                             document.body.appendChild(barTooltipElem);
+
                             barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + d.numericValue + ";";
 
                         })
@@ -582,7 +602,7 @@
                             drawChartWithVerticalCols();
                         } else {
                             drawChartWithHorizontalCols();
-                        };
+                        }
 
                         scope.readyStatus = true;
                         scope.$apply();

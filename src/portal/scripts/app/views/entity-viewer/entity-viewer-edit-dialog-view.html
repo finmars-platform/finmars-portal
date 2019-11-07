@@ -1,4 +1,6 @@
-<md-dialog aria-label="entity edit" ng-cloak class="entity-editor-dialog draggable-dialog" drag-dialog
+<md-dialog class="entity-editor-dialog draggable-dialog"
+           drag-dialog
+           aria-label="entity edit"
            style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -6,11 +8,13 @@
             <span flex></span>
         </div>
     </md-toolbar>
+
     <md-dialog-content style="height: 100%">
 
         <div style="min-width: 1450px">
             <div data-ng-if="vm.checkReadyStatus()">
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
+
                     <md-tab data-ng-repeat="tab in vm.tabs">
                         <md-tab-label>
                             <span>{{tab.name}}</span>
@@ -18,7 +22,8 @@
                         <md-tab-body>
                             <md-content class="md-padding p-t-26"
                                         ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
-                                <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
+                                <div layout="row"
+                                     data-ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
                                     <div class="ev-data-field
 								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
@@ -32,6 +37,7 @@
                             </md-content>
                         </md-tab-body>
                     </md-tab>
+
                     <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)">
                         <md-tab-lable>
                             <span class="grey-tab">{{tab.label}}</span>
@@ -43,6 +49,7 @@
                             </md-content>
                         </md-tab-body>
                     </md-tab>
+
                     <md-tab data-ng-if="vm.checkPermissions()">
                         <md-tab-label>
                             <span class="colored-tab">Permissions</span>
@@ -185,6 +192,7 @@
         </div>
 
     </md-dialog-content>
+
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
         <div layout="row">
             <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary">
@@ -213,10 +221,8 @@
                     class="md-raised md-warn">
                 Delete
             </md-button>
-
-
-
         </div>
+
         <div>
             <md-button class="md-raised m-r-24" ng-click="vm.copy()"
                        ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled">

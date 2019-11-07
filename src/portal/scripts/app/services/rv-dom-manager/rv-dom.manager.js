@@ -570,7 +570,7 @@
         var contentWrapElemHeight = rvScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = rvScrollManager.getContentWrapElemWidth();
 
-        var rootEntityContentWrapElemHeight = rvScrollManager.getRootWrapElemHeight();
+        //var rootEntityContentWrapElemHeight = rvScrollManager.getRootWrapElemHeight();
         //var rootEntityContentWrapElemWidth = rvScrollManager.getRootEntityContentWrapElemWidth();
 
 

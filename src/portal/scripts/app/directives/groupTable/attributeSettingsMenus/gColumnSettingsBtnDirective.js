@@ -77,6 +77,7 @@
                             scope.column.report_settings.zero_format_id = 1;
                             scope.column.report_settings.negative_color_format_id = 0;
                             scope.column.report_settings.negative_format_id = 0;
+                            column.report_settings.round_format_id = 1;
                             break;
                         case 'market_value':
                             scope.column.report_settings.zero_format_id = 1;

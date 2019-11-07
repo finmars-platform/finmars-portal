@@ -17,7 +17,8 @@
                     <div class="pie-chart-legend-color" style="{{getLegendBackgroundColor(legend.colorNumber)}}"></div>
                     <span class="pie-chart-legend-value">- <span class="text-weight-bold">Name:</span> {{legend.name}}; <span class="text-weight-bold">Percentage:</span> {{legend.percentage}}%</span>
                     <md-tooltip class="tooltip_1"
-                                md-direction="top">{{formatValue(legend.numericValue)}}</md-tooltip>
+                                md-direction="top"
+                                style="{{getTooltipStyle()}}">{{formatValue(legend.numericValue)}}</md-tooltip>
                 </li>
 
                 <li ng-repeat="legend in chartDataWithNegNums" class="pie-chart-legend">
@@ -25,7 +26,10 @@
                     <span class="pie-chart-legend-value">- <span class="text-weight-bold">Name:</span> {{legend.name}}; <span class="text-weight-bold">Percentage:</span> -{{legend.percentage}}%</span>
                     <md-tooltip class="tooltip_1"
                                 ng-class="{'red-text': number_format.negative_color_format_id === 1}"
-                                md-direction="top">{{formatValue(legend.numericValue, true)}}</md-tooltip>
+                                md-direction="top"
+                                style="{{getTooltipStyle()}}">
+                        {{formatValue(legend.numericValue, true)}}
+                    </md-tooltip>
                 </li>
             </ul>
         </div>

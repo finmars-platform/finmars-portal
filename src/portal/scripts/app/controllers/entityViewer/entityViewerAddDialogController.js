@@ -227,7 +227,7 @@
 
             uiService.getEditLayout(vm.entityType).then(function (data) {
 
-                if (data.results.length) {
+                if (data.results.length && data.results.length > 0 && data.results[0].data) {
                     vm.tabs = data.results[0].data;
                 } else {
                     vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;

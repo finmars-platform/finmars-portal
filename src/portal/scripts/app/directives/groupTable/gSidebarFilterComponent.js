@@ -20,9 +20,10 @@
         return {
             restrict: 'AE',
             scope: {
-                attributeDataService: '=',
                 evDataService: '=',
                 evEventService: '=',
+                attributeDataService: '=',
+                spExchangeService: '=',
                 contentWrapElement: '='
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
@@ -37,8 +38,6 @@
                 }
 
                 scope.isReport = metaService.isReport(scope.evDataService.getEntityType());
-
-                var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 scope.fields = {};
 
@@ -108,7 +107,7 @@
                                 } else {
                                     scope.$apply();
                                     resolve(true);
-                                };
+                                }
 
                             }).catch(function (error) {
                                 reject(error);
@@ -144,7 +143,7 @@
                                 } else {
                                     scope.$apply();
                                     resolve(true);
-                                };
+                                }
 
                             }).catch(function (error) {
                                 reject(error);
@@ -499,9 +498,7 @@
                     });*/
 
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
-
                         syncFilters();
-
                     });
 
                     scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {

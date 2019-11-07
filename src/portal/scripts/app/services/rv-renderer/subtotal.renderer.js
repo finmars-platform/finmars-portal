@@ -145,7 +145,7 @@
                             foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '"><div>+</div></div>';
                         }
 
-                        result.html_result = '<span class="g-cell-content">' + foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span></span>';
+                        result.html_result = foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span>';
 
                     }
 
@@ -187,13 +187,12 @@
 
         if (columnNumber > obj.___level - 1) {
 
-            if (column.report_settings && !column.report_settings.hide_subtotal) {
+            if (column.report_settings && column.report_settings.subtotal_formula_id && !column.report_settings.hide_subtotal) {
 
                 if (obj.hasOwnProperty(column.key)) {
-                    result.html_result = '<span class="g-cell-content"><span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span></span>';
+                    result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
                     result.numeric_result = obj[column.key];
                 } else {
-
                     result = getDynamicAttributeValue(obj, column);
                 }
 

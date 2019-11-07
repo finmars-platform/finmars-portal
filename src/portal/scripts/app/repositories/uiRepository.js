@@ -222,7 +222,7 @@
         var fields;
         var entitiesWithoutBaseAttrs = metaRestrictionsRepository.getEntitiesWithoutBaseAttrsList();
 
-        if (entitiesWithoutBaseAttrs.indexOf(entityType) !== -1) {
+        /*if (entitiesWithoutBaseAttrs.indexOf(entityType) !== -1) {
             fields = []
         } else {
             fields = [
@@ -247,14 +247,14 @@
                     "key": null
                 }
             ];
-        }
+        }*/
 
         console.log('fields', fields);
 
         return [
             {
                 data: [
-                    {
+                    /*{
                         "name": "General",
                         "id": 1,
                         "layout": {
@@ -262,7 +262,7 @@
                             "rows": 1,
                             "columns": 1
                         }
-                    }
+                    }*/
                 ]
             }
         ]
