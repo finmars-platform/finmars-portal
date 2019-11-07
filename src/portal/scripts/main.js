@@ -83,8 +83,9 @@ app.factory('d3Service', ['$window', function ($window) {
     if ($window.d3) {
         return $window.d3;
     }
-    ;
 }]);
+
+app.service('$customDialog', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/customDialogService')]);
 
 
 app.controller('DashboardLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/dashboardLayoutManagerController')]);
@@ -165,6 +166,8 @@ app.controller('InputTemplateLayoutViewerDialogController', ['$scope', '$mdDialo
 app.controller('TemplateLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateLayoutManagerController')]);
 app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
 app.controller('SaveAsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveAsDialogController')]);
+app.controller('LoaderDialogController', ['$scope', '$customDialog', 'data', require('./app/controllers/dialogs/loaderDialogController')]);
+
 
 
 
@@ -251,7 +254,7 @@ app.controller('EntityTypeClassifierMappingDialogController', ['$scope', '$mdDia
 
 // Entity Viewer & Report Viewer
 
-app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$transitions', require('./app/controllers/entityViewer/entityViewerController')]);
+app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$transitions', '$customDialog', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('ReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
 app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
