@@ -158,8 +158,8 @@
                     $mdMenu.close($event);
 
                     $mdDialog.show({
-                        controller: 'RenameDialogController as vm',
-                        templateUrl: 'views/dialogs/rename-dialog-view.html',
+                        controller: 'RenameFieldDialogController as vm',
+                        templateUrl: 'views/dialogs/rename-field-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         locals: {

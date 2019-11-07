@@ -13,7 +13,7 @@
 
         vm.data = data;
 
-        vm.name = vm.data.name;
+        vm.layout_name = vm.data.layout_name;
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -21,9 +21,9 @@
 
         vm.agree = function () {
 
-            vm.data.name = vm.name;
+            vm.data.layout_name = vm.layout_name;
 
-            $mdDialog.hide({status: 'agree'});
+            $mdDialog.hide({status: 'agree', data: vm.data});
         };
     }
 

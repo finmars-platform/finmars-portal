@@ -70,6 +70,12 @@
             controller: 'NotFoundPageController as vm'
         });
 
+        $stateProvider.state('app.template-layout-manager', {
+            url: '/template-layouts',
+            templateUrl: 'views/pages/template-layout-manager-view.html',
+            controller: 'TemplateLayoutManagerController as vm'
+        });
+
         $stateProvider
             .state('app.data', {
                 url: '/data',

@@ -714,7 +714,7 @@
 
                         return {
                             id: item.id,
-                            object_permissions: vm.entity.object_permissions.map(function (item) {
+                            object_permissions: item.type_object.object_permissions.map(function (item) {
 
                                 item.permission = item.permission.split('_')[0] + '_account';
 
@@ -766,7 +766,7 @@
 
                         return {
                             id: item.id,
-                            object_permissions: vm.entity.object_permissions.map(function (item) {
+                            object_permissions: item.type_object.object_permissions.map(function (item) {
 
                                 item.permission = item.permission.split('_')[0] + '_account';
 
@@ -823,7 +823,7 @@
 
                         return {
                             id: item.id,
-                            object_permissions: vm.entity.object_permissions.map(function (item) {
+                            object_permissions: item.instrument_type_object.object_permissions.map(function (item) {
 
                                 item.permission = item.permission.split('_')[0] + '_instrument';
 

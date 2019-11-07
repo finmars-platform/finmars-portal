@@ -824,7 +824,25 @@
 
                         complexTransactionService.rebookComplexTransaction(result.id, result).then(function (data) {
                             resolve(data);
-                        });
+                        }).catch(function (data) {
+
+                            console.log('data', data);
+
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                parent: angular.element(document.body),
+                                locals: {
+                                    validationData: data
+                                },
+                                preserveScope: true,
+                                multiple: true,
+                                autoWrap: true,
+                                skipHide: true
+                            })
+
+                        })
                     });
                 }).then(function (data) {
 

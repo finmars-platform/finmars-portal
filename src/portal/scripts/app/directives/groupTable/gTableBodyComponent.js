@@ -184,6 +184,8 @@
 
                     evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 
+                    scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER)
+
                 }
 
                 function updateTableContent() {
