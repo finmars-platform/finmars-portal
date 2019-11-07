@@ -22,7 +22,7 @@
         var currencyHistoryService = require('../../services/currencyHistoryService');
 
 
-        module.exports = function ($scope, $mdDialog, $state, $transitions) {
+        module.exports = function ($scope, $mdDialog, $state, $transitions, $customDialog) {
 
             var vm = this;
 
@@ -32,6 +32,19 @@
                 attributes: false,
                 layout: false
             };
+
+            // $customDialog.show({
+            //     controller: 'LoaderDialogController as vm',
+            //     templateUrl: 'views/dialogs/loader-dialog-view.html',
+            //     locals: {
+            //         data: {}
+            //     }
+            // }).then(function (data) {
+            //
+            //     console.log('Resolved??', data);
+            //
+            // });
+
 
             var setEventListeners = function () {
 
