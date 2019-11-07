@@ -40,7 +40,7 @@
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
-                var rootWrapElem = scope.rootWrapElement
+                var rootWrapElem = scope.rootWrapElement;
 
                 var contentWrapElem = scope.contentWrapElement;
 
@@ -374,21 +374,15 @@
                 });
 
                 scope.evEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
-
                     viewportElem.scrollTop = 0;
-
                 });
 
                 scope.evEventService.addEventListener(evEvents.GROUP_TYPE_SORT_CHANGE, function () {
-
                     viewportElem.scrollTop = 0;
-
                 });
 
                 scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
-
                     viewportElem.scrollTop = 0;
-
                 });
 
                 var init = function () {

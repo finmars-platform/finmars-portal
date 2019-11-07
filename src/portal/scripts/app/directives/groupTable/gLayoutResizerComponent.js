@@ -101,8 +101,6 @@
                     resizeWorkarea();
                     // resizeSidebarHeight();
 
-
-
                 });
 
                 init();

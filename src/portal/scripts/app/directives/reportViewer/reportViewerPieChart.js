@@ -205,6 +205,20 @@
                     return pieChartCompClasses;
                 };
 
+                scope.getTooltipStyle = function () {
+                    var tStyle = '';
+
+                    if (scope.rvChartsSettings.tooltip_font_size) {
+                        if (scope.rvChartsSettings.tooltip_font_size > 0) {
+                            tStyle = 'font-size: ' + scope.rvChartsSettings.tooltip_font_size + 'px; ';
+                        } else {
+                            tStyle = 'font-size: 10px; ';
+                        }
+                    }
+
+                    return tStyle;
+                };
+
                 scope.formatValue = function (val, isNegativeNum) {
 
                     if (isNegativeNum) {
@@ -308,6 +322,7 @@
                             pieTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
 
                             pieTooltipElem.innerText = "Name: " + d.data.name + ";" + "\n" + "Number: " + scope.formatValue(d.data.numericValue) + ";";
+                            pieTooltipElem.style.cssText = scope.getTooltipStyle();
                             document.body.appendChild(pieTooltipElem);
 
                         })
@@ -375,6 +390,7 @@
 
                             var pieTooltipElem = document.createElement("div");
                             pieTooltipElem.classList.add("chart-tooltip1", "dashboard-bar-chart-tooltip");
+                            pieTooltipElem.style.cssText = scope.getTooltipStyle();
 
                             document.body.appendChild(pieTooltipElem);
 

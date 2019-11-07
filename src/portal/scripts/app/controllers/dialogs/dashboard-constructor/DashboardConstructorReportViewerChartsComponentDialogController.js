@@ -42,6 +42,7 @@
             delete vm.item.settings.sorting_type;
             delete vm.item.settings.crop_tick_text;
             delete vm.item.settings.auto_refresh;
+            delete vm.item.settings.tooltip_font_size;
             // properties for pie chart
             //delete vm.item.settings.fieldsKeys;
             delete vm.item.settings.group_attr;
@@ -67,7 +68,6 @@
                     vm.item.settings.bars_sorting = false;
                     break;
                 case 'report_viewer_pie_chart':
-                    //vm.item.settings.fieldsKeys = [];
                     vm.item.settings.group_attr = '';
                     vm.item.settings.number_attr = '';
                     vm.item.settings.group_number_calc_formula = 1;
@@ -111,7 +111,8 @@
                         sorting_value_type: null,
                         sorting_type: null,
                         autocalc_ticks_number: true,
-                        ticks_number: null
+                        ticks_number: null,
+                        tooltip_font_size: 10
                     };
                     break;
                 case 'report_viewer_pie_chart':
@@ -120,8 +121,9 @@
                     vm.item.settings.group_number_calc_formula = 1;
                     vm.item.settings.show_legends = false;
                     vm.item.settings.legends_position = 'right';
+                    vm.item.settings.tooltip_font_size = 10;
                     break;
-            };
+            }
 
         };
 
@@ -133,7 +135,7 @@
             } else {
                 vm.barsNamesAttrSelectorTitle = 'Bars Names (Ordinate)';
                 vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Abscissa)';
-            };
+            }
 
         };
 
@@ -145,6 +147,7 @@
                     vm.item.settings.number_format.zero_format_id = 1;
                     vm.item.settings.number_format.negative_color_format_id = 0;
                     vm.item.settings.number_format.negative_format_id = 0;
+                    column.report_settings.round_format_id = 1;
                     break;
                 case 'market_value':
                     vm.item.settings.number_format.zero_format_id = 1;

@@ -104,7 +104,7 @@
                         });
 
                         addRowForTab();
-                        console.log("vm.tabs", vm.tabs);
+
                         resolve(vm.tabs);
 
                     });
@@ -272,10 +272,8 @@
                 if (tab.layout.fields[r].row > row) {
                     tab.layout.fields[r].row = tab.layout.fields[r].row + 1;
                 }
-                ;
 
             }
-            ;
 
             tab.layout.rows = tab.layout.rows + 1;
 
@@ -291,7 +289,6 @@
                 };
                 tab.layout.fields.push(field);
             }
-            ;
 
             vm.createFieldsTree();
             vm.updateDrakeContainers();
@@ -301,22 +298,18 @@
         vm.isRowEmpty = function (tabId, rowNumber, columnsNumber) {
 
             var isEmpty = true;
-            for (var i = 1; i < columnsNumber; i++) {
+            for (var i = 1; i <= columnsNumber; i++) {
                 var socket = vm.fieldsTree[tabId][rowNumber][i];
 
                 if (socket && socket.type !== 'empty') {
-
                     isEmpty = false;
                     break;
-
                 } else if (!socket) {
                     isEmpty = false;
                     break;
                 }
-                ;
 
             }
-            ;
 
             return isEmpty;
 
@@ -335,7 +328,6 @@
                     return false;
 
                 }
-                ;
 
                 return true;
 
@@ -364,8 +356,6 @@
                     removeLastRow(vm.tabs[i]);
                 }
                 vm.ui.data = vm.tabs;
-
-                console.log("constructor vm.ui", vm.ui);
 
                 if (vm.uiIsDefault) {
                     if (vm.instanceId) {
@@ -680,7 +670,6 @@
                         vm.entityAttrs = entityAttrs;
 
                 }
-                ;
 
                 vm.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -800,7 +789,6 @@
                     treeTab[fRow][fCol] = field;
 
                 }
-                ;
 
             });
 

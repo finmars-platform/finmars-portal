@@ -132,6 +132,11 @@
 
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+                if (parts[1]) { // fraction digits
+                    parts[1] = parts[1].replace(/(\d{3})(?=\d)/g, "$1 ")
+                }
+
                 return parts.join(".");
 
             }
@@ -140,6 +145,11 @@
 
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+
+                if (parts[1]) { // fraction digits
+                    parts[1] = parts[1].replace(/(\d{3})(?=\d)/g, "$1'")
+                }
+
                 return parts.join(".");
 
             }

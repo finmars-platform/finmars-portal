@@ -102,7 +102,7 @@
 
                     }
 
-                    scope.groupingAndColumnAreaCollapsed = groupingAndColumnAreaCollapsed;
+                    //scope.groupingAndColumnAreaCollapsed = groupingAndColumnAreaCollapsed;
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
@@ -112,42 +112,52 @@
                     scope.dashboardFilterCollapsed = !scope.dashboardFilterCollapsed
                 };
 
-                scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
-
-                    scope.additions = scope.evDataService.getAdditions();
-
-                    console.log('scope.additions', scope.additions);
-
-                    scope.activeObject = scope.evDataService.getActiveObject();
-
-                });
-
-                scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-
-                    scope.activeObject = scope.evDataService.getActiveObject();
-                    scope.activeObjectsCount = scope.evDataService.getActiveObjectsCount();
-
-                });
-
-                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
-                    scope.additions = scope.evDataService.getAdditions();
-                    scope.activeObject = scope.evDataService.getActiveObject();
-
-                });
-
-                scope.evEventService.addEventListener(evEvents.VIEW_TYPE_CHANGED, function () {
-
-                    scope.viewType = scope.evDataService.getViewType();
-                    scope.viewSettings = scope.evDataService.getViewSettings(scope.viewType);
-
-                    console.log('scope.viewType ', scope.viewType)
-                    console.log('scope.viewSettings', scope.viewSettings)
-
-                });
-
                 scope.init = function () {
+                    scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
 
+                        scope.additions = scope.evDataService.getAdditions();
+
+                        console.log('scope.additions', scope.additions);
+
+                        scope.activeObject = scope.evDataService.getActiveObject();
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                        scope.activeObject = scope.evDataService.getActiveObject();
+                        scope.activeObjectsCount = scope.evDataService.getActiveObjectsCount();
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        scope.additions = scope.evDataService.getAdditions();
+                        scope.activeObject = scope.evDataService.getActiveObject();
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.VIEW_TYPE_CHANGED, function () {
+
+                        scope.viewType = scope.evDataService.getViewType();
+                        scope.viewSettings = scope.evDataService.getViewSettings(scope.viewType);
+
+                        console.log('scope.viewType ', scope.viewType);
+                        console.log('scope.viewSettings', scope.viewSettings);
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
+
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        if (interfaceLayout.groupingArea.collapsed && interfaceLayout.columnArea.collapsed) {
+                            scope.groupingAndColumnAreaCollapsed = true;
+                        } else {
+                            scope.groupingAndColumnAreaCollapsed = false;
+                        }
+
+                    });
                 };
 
                 scope.init();

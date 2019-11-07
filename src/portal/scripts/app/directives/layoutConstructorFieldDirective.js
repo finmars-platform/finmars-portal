@@ -60,7 +60,6 @@
                     if (scope.tabFieldsTree) {
                         findItem();
                     }
-                    ;
 
                 });
 
@@ -75,12 +74,18 @@
                         scope.fieldUsesBackgroundColor = false;
                         scope.fieldBackgroundColor = '#000000';
                     }
-
-                    console.log('scope.item', scope.item)
+                    console.log("decoration findItem scope.item", scope.item);
+                    if (scope.item.attribute && scope.item.attribute.value_type !== "decoration") {
+                        if (scope.item.editable === false) {
+                            scope.item.editable = false;
+                        } else {
+                            scope.item.editable = true;
+                        }
+                    }
 
                     findAttribute();
 
-                };
+                }
 
                 function findAttribute() {
 
@@ -96,7 +101,6 @@
                             }
                         }
                     }
-                    ;
 
                     if (!attrFound) {
                         for (e = 0; e < scope.entityAttrs.length; e = e + 1) {
@@ -106,9 +110,7 @@
                                 break;
                             }
                         }
-                        ;
                     }
-                    ;
 
                     if (!attrFound) {
                         for (u = 0; u < scope.userInputs.length; u = u + 1) {
@@ -118,7 +120,6 @@
                                 break;
                             }
                         }
-                        ;
                     }
 
                     if (!scope.item.attribute) {
@@ -128,7 +129,6 @@
                             }
                         }
                     }
-                    ;
                 };
 
                 scope.changeFieldColspan = function (colspan) {
@@ -148,9 +148,8 @@
                             type: 'empty'
                         });
                     }
-                    ;
 
-                };
+                }
 
                 scope.cancel = function () {
 
@@ -164,7 +163,6 @@
                             break;
                         }
                     }
-                    ;
 
                     scope.item = originalFieldSettings;
                     scope.tabFieldsTree[scope.row][scope.column] = originalFieldSettings; // needed to reset colspan
@@ -225,7 +223,7 @@
                             scope.tab.layout.fields[i].colspan = scope.item.colspan;
                             scope.tab.layout.fields[i].attribute = scope.item.attribute;
 
-                            if (scope.item.editable) { // its important
+                            if (scope.item.editable !== false) { // its important
                                 scope.tab.layout.fields[i].editable = true
                             } else {
                                 scope.tab.layout.fields[i].editable = false
@@ -430,10 +428,8 @@
                             return item.attribute.name;
 
                         }
-                        ;
 
                     }
-                    ;
 
                 };
 
@@ -541,7 +537,6 @@
                         return false;
 
                     }
-                    ;
 
                     return true;
                 };
@@ -552,6 +547,17 @@
 
                 scope.setFieldBackgroundColor = function (color) {
                     scope.fieldBackgroundColor = color;
+                };
+
+                scope.hasEditablesToggle = function () {
+                    if ((scope.entityType == 'transaction-type' || scope.entityType == 'complex-transaction') &&
+                        scope.item.attribute && scope.item.attribute.value_type !== "decoration") {
+
+                        return true;
+
+                    }
+
+                    return false;
                 };
 
             }

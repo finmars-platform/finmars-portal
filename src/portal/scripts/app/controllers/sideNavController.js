@@ -204,13 +204,13 @@
                     break;
                 } else {
                     elem = elem.parentNode;
-                };
+                }
 
-            };
+            }
 
             if (clickedOutside) {
                 vm.toggleSettingsSideMenu();
-            };
+            }
 
         };
 

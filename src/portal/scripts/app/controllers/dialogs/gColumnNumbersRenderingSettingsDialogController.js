@@ -18,31 +18,31 @@
 
         if (!vm.reportSettings) {
             vm.reportSettings = {};
-        };
+        }
 
         if (!vm.reportSettings.zero_format_id) {
             vm.reportSettings.zero_format_id = 0;
-        };
+        }
 
         if (!vm.reportSettings.negative_format_id) {
             vm.reportSettings.negative_format_id = 0;
-        };
+        }
 
         if (!vm.reportSettings.negative_color_format_id) {
             vm.reportSettings.negative_color_format_id = 0;
-        };
+        }
 
         if (!vm.reportSettings.round_format_id) {
             vm.reportSettings.round_format_id = 0;
-        };
+        }
 
         if (!vm.reportSettings.thousands_separator_format_id) {
             vm.reportSettings.thousands_separator_format_id = 0;
-        };
+        }
 
         if (!vm.reportSettings.percentage_format_id) {
             vm.reportSettings.percentage_format_id = 0;
-        };
+        }
 
         vm.onRoundingChange = function () {
             if (vm.reportSettings.round_format_id !== 0) {
@@ -53,7 +53,7 @@
         vm.onPercentageChange = function () {
             if (vm.reportSettings.percentage_format_id !== 0) {
                 vm.reportSettings.round_format_id = 0
-            };
+            }
         };
 
         /*vm.selectZeroFormat = function (type) {
