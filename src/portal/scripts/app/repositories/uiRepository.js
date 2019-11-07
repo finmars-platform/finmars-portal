@@ -648,6 +648,95 @@
         })
     };
 
+
+    var getTemplateLayoutList = function (options) {
+
+        console.log('options', options);
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/template-layout/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getTemplateLayoutByKey = function (id) {
+        return xhrService.fetch(baseUrl + 'ui/template-layout/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getDefaultTemplateLayout = function () {
+
+        return xhrService.fetch(baseUrl + 'ui/template-layout/?is_default=2',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createTemplateLayout = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/template-layout/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateTemplateLayout = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/template-layout/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteTemplateLayoutByKey = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/template-layout/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -697,7 +786,16 @@
         getDefaultDashboardLayout: getDefaultDashboardLayout,
         createDashboardLayout: createDashboardLayout,
         updateDashboardLayout: updateDashboardLayout,
-        deleteDashboardLayoutByKey: deleteDashboardLayoutByKey
+        deleteDashboardLayoutByKey: deleteDashboardLayoutByKey,
+
+
+        getTemplateLayoutList: getTemplateLayoutList,
+        getTemplateLayoutByKey: getTemplateLayoutByKey,
+        getDefaultTemplateLayout: getDefaultTemplateLayout,
+        createTemplateLayout: createTemplateLayout,
+        updateTemplateLayout: updateTemplateLayout,
+        deleteTemplateLayoutByKey: deleteTemplateLayoutByKey
+
 
 
     }

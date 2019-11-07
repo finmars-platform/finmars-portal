@@ -295,4 +295,28 @@
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
         </div>
     </div>
+
+    <div layout="row">
+
+        <md-menu>
+            <md-button  class="md-raised"
+                        data-ng-class="{'disabled-btn': !vm.readyStatus.field_templates}"
+                        ng-click="$mdMenu.open($event)">
+                Use From Template
+            </md-button>
+
+            <md-menu-content width="3">
+                <md-menu-item data-ng-repeat="template in vm.fieldTemplates">
+                    <md-button
+                            data-ng-click="vm.appendFromTemplate($event, template)">
+                        {{template.name}}
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+
+        <md-button class="md-raised" data-ng-click="vm.saveAsTemplate($event, 'field_template')">Save as a Template</md-button>
+
+    </div>
+
 </div>

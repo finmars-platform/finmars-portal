@@ -1511,6 +1511,274 @@
 
         };
 
+        vm.getInputTemplates = function () {
+
+            vm.readyStatus.input_templates = false;
+
+            return uiService.getTemplateLayoutList({filters: {type: 'input_template'}}).then(function (data) {
+
+                vm.inputTemplates = data.results;
+
+                vm.readyStatus.input_templates = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getFieldTemplates = function () {
+
+            vm.readyStatus.field_templates = false;
+
+            return uiService.getTemplateLayoutList({filters: {type: 'field_template'}}).then(function (data) {
+
+                vm.fieldTemplates = data.results;
+
+                vm.readyStatus.field_templates = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getActionTemplates = function () {
+
+            vm.readyStatus.action_templates = false;
+
+            return uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
+
+                vm.actionTemplates = data.results;
+
+                vm.readyStatus.action_templates = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.appendFromTemplate = function ($event, template) {
+
+            console.log("Append from Template", template);
+
+            if (template.type === 'input_template') {
+
+                $mdDialog.show({
+                    controller: 'InputTemplateLayoutViewerDialogController as vm',
+                    templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        data: {
+                            template: template
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                }).then(function (res) {
+
+                    if (res.status === 'agree') {
+
+                        var template = res.data.template;
+
+                        template.data.inputs.forEach(function (input) {
+
+                            vm.entity.inputs.push(input);
+
+                        })
+
+                    }
+
+                })
+
+            }
+
+            if (template.type === 'field_template') {
+
+                Object.keys(vm.entity).forEach(function (key) {
+
+                    if (key.indexOf('user_text_') !== -1) {
+                        vm.entity[key] = '';
+                    }
+
+                    if (key.indexOf('user_number_') !== -1) {
+                        vm.entity[key] = '';
+                    }
+
+                    if (key.indexOf('user_date_') !== -1) {
+                        vm.entity[key] = '';
+                    }
+
+                });
+
+                Object.keys(template.data.fields).forEach(function (key) {
+
+                    vm.entity[key] = template.data.fields[key];
+
+                })
+
+            }
+
+            if (template.type === 'action_template') {
+
+                template.data.actions.forEach(function (action) {
+
+                    vm.entity.actions.push(action);
+
+                })
+
+            }
+
+        };
+
+        vm.saveAsTemplate = function ($event, type) {
+
+            console.log("Save as Template")
+
+            $mdDialog.show({
+                controller: 'SaveAsDialogController as vm',
+                templateUrl: 'views/dialogs/save-as-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {}
+                }
+            }).then(function (res) {
+
+
+                if (res.status === 'agree') {
+
+                    var template = {
+                        name: '',
+                        type: type,
+                        data: {}
+                    };
+
+                    template.name = res.data.name;
+
+                    if (type === 'input_template') {
+
+                        template.data.inputs = vm.entity.inputs.map(function (item) {
+
+                            return {
+                                name: item.name,
+                                verbose_name: item.verbose_name,
+                                value_type: item.value_type,
+                                content_type: item.content_type
+                            }
+
+                        })
+
+                    }
+
+                    if (type === 'field_template') {
+
+                        template.data.fields = {};
+
+                        Object.keys(vm.entity).forEach(function (key) {
+
+                            if (key.indexOf('user_text_') !== -1) {
+                                template.data.fields[key] = vm.entity[key];
+                            }
+
+                            if (key.indexOf('user_number_') !== -1) {
+                                template.data.fields[key] = vm.entity[key];
+                            }
+
+                            if (key.indexOf('user_date_') !== -1) {
+                                template.data.fields[key] = vm.entity[key];
+                            }
+
+                        });
+
+                    }
+
+                    if (type === 'action_template') {
+
+                        template.data.actions = vm.entity.actions.map(function (action) {
+
+                            var result = {};
+
+                            Object.keys(action).forEach(function (key) {
+
+                                if (typeof action[key] === 'object' && action[key] !== null) {
+
+                                    result[key] = {};
+
+                                    Object.keys(action[key]).forEach(function (actionItemKey) {
+
+                                        result[key][actionItemKey] = action[key][actionItemKey];
+
+                                        if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+                                            result[key][actionItemKey] = null; // if its relation property
+                                        }
+
+                                        if (actionItemKey.indexOf('_input') !== -1) {
+                                            result[key][actionItemKey] = null; // if its relation_input property
+                                        }
+
+                                        if (actionItemKey.indexOf('_toggle') !== -1) {
+                                            delete result[key][actionItemKey]
+                                        }
+
+                                        if (actionItemKey.indexOf('_object') !== -1) {
+                                            delete result[key][actionItemKey]
+                                        }
+
+
+
+                                    })
+
+
+                                } else {
+                                    result[key] = action[key];
+                                }
+
+                            });
+
+                            return result
+
+                        })
+
+                    }
+
+                    uiService.createTemplateLayout(template).then(function (data) {
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Template successfully created"
+                                }
+                            }
+                        });
+
+                    })
+
+                }
+
+            });
+
+        };
+
+
         // Transaction type actions controller end
 
         vm.init = function () {
@@ -1520,6 +1788,10 @@
             vm.getPortfolios();
             vm.getInstrumentTypes();
             vm.getTags();
+
+            vm.getInputTemplates();
+            vm.getFieldTemplates();
+            vm.getActionTemplates();
 
             $scope.$watch('vm.entity.tags', function () {
 

@@ -76,6 +76,8 @@
             configuration_mapping_tables: true,
             configuration_user_attributes: true,
             configuration_aliases: true,
+            configuration_template: true,
+            configuration_reference_table: true,
 
             settings_notification: true,
             settings_export_configuration: true,
@@ -304,7 +306,8 @@
                 vm.accessTable.configuration_instrument_type ||
                 vm.accessTable.configuration_transaction_type ||
                 vm.accessTable.configuration_pricing_policy ||
-                vm.accessTable.configuration_user_attributes;
+                vm.accessTable.configuration_user_attributes ||
+                vm.accessTable.configuration_reference_table;
 
             vm.accessSectionTable.settings_import_from_providers =
                 vm.accessTable.configuration_price_download_scheme ||
