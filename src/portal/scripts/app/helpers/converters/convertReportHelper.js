@@ -71,11 +71,11 @@
                 hColumnText = columns[hc].layout_name;
             } else {
                 hColumnText = columns[hc].name;
-            };
+            }
 
             table = table + '<th>' + hColumnText + '</th>';
 
-        };
+        }
 
         table = table + '</tr></thead>';
 
@@ -126,7 +126,7 @@
 
                 td = td + '<td>' + cellText + '</td>';
 
-            };
+            }
 
             return td;
 
@@ -159,13 +159,23 @@
 
                 } else if (flatList[r][columnKey]) {
 
-                    cellText = String(flatList[r][columnKey]);
+                    var colValueType = columns[c].value_type;
 
-                };
+                    if (colValueType === 'field') {
+
+                        var attrObjName = columnKey + '_object';
+                        var attrObj = flatList[r][attrObjName];
+                        cellText = attrObj.name;
+
+                    } else {
+                        cellText = String(flatList[r][columnKey]);
+                    }
+
+                }
 
                 td = td + '<td>' + cellText + '</td>';
 
-            };
+            }
 
             return td;
 
@@ -200,7 +210,7 @@
                     tr = tr + '<tr>' + reportViewerGetTdElements() + '</tr>';
                     table = table + tr;
 
-                };
+                }
 
             } else {
 
@@ -215,7 +225,7 @@
 
             }
 
-        };
+        }
 
         table = table + '</tbody></table>';
 
@@ -237,17 +247,17 @@
                 hColumnText = columns[hc].layout_name;
             } else {
                 hColumnText = columns[hc].name;
-            };
+            }
 
             // Escaping double quotes and commas
             if (hColumnText.indexOf('"') !== -1) {
                 hColumnText = hColumnText.replace(/"/g, '""');
-            };
+            }
             hColumnText = '"' + hColumnText + '"';
 
             csv[0].push(hColumnText);
 
-        };
+        }
 
         if (csv[0].length > 0) {
             csv[0] = csv[0].join(',');
@@ -299,12 +309,12 @@
                 // Escaping double quotes and commas
                 if (cellText.indexOf('"') !== -1) {
                     cellText = cellText.replace(/"/g, '""');
-                };
+                }
                 cellText = '"' + cellText + '"';
 
                 csv[csvRowOrder].push(cellText);
 
-            };
+            }
 
         };
 
@@ -339,12 +349,12 @@
                 // Escaping double quotes and commas
                 if (cellText.indexOf('"') !== -1) {
                     cellText = cellText.replace(/"/g, '""');
-                };
+                }
                 cellText = '"' + cellText + '"';
 
                 csv[csvRowOrder].push(cellText);
 
-            };
+            }
 
         };
 
@@ -378,7 +388,7 @@
 
                     csv[csvRowOrder] = csv[csvRowOrder].join(',');
 
-                };
+                }
 
             } else {
 
@@ -391,7 +401,7 @@
 
             }
 
-        };
+        }
 
         csv = csv.filter(function (row) { // filter proxyline rows
             return row.length > 0;

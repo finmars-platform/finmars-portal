@@ -186,10 +186,8 @@
                     break;
 
             }
-            ;
 
         }
-        ;
 
         return value;
 

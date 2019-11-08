@@ -45,15 +45,15 @@
 
                         if (row.___subtotal_type === "line" && parentGroup.___is_line_subtotal_activated) {
                             return true;
-                        };
+                        }
 
                         if (row.___subtotal_type === "area" && parentGroup.___is_area_subtotal_activated) {
                             return true;
-                        };
+                        }
 
                     } else if (row.___is_activated) {
                         return true;
-                    };
+                    }
 
                     return false;
 
@@ -65,9 +65,9 @@
                     return row.___is_activated;
                 });
 
-            };
+            }
 
-        };
+        }
 
         if (flatList.length) {
             var columns = evDataService.getColumns();

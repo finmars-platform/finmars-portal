@@ -6,7 +6,7 @@
 
         // It is necessary to create a new blob object with mime-type explicitly set
         // otherwise only Chrome works like it should
-        var newBlob = new Blob([blobParts], {type: blobType})
+        var newBlob = new Blob([blobParts], {type: blobType});
 
         console.log(newBlob);
 
