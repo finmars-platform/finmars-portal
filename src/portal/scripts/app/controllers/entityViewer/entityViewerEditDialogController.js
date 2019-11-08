@@ -864,9 +864,7 @@
         };
 
         vm.init = function () {
-
             vm.getItem();
-
         };
 
         vm.init();

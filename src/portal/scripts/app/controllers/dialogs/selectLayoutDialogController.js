@@ -109,7 +109,7 @@
 
         vm.selectedLayoutId = null;
 
-        vm.collapseAll = function () {
+        vm.expandAll = function () {
             var keys = Object.keys(vm.collapsingGroups);
 
             keys.forEach(function (key) {
@@ -117,7 +117,7 @@
             });
         };
 
-        vm.expandAll = function () {
+        vm.collapseAll = function () {
             var keys = Object.keys(vm.collapsingGroups);
 
             keys.forEach(function (key) {

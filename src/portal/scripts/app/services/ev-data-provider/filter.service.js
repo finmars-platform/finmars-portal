@@ -52,9 +52,9 @@
 
                     useFilterExprs = false;
 
-                };
+                }
 
-            };
+            }
 
 
             if (useFilterExprs) {
@@ -71,7 +71,7 @@
 
                     if (keyProperty !== 'ordering') {
 
-                        var valueFromTable;
+                        var valueFromTable = null;
 
                         // Check is it a dynamic attribute
                         if (keyProperty.indexOf("attributes.") === 0) {
@@ -89,7 +89,7 @@
                                             valueFromTable = JSON.parse(JSON.stringify(dynamicAttributeData.classifier_object.name));
                                         } else {
                                             valueFromTable = '';
-                                        };
+                                        }
 
                                         break;
 
@@ -105,17 +105,17 @@
                                             case 40:
                                                 valueFromTable = JSON.parse(JSON.stringify(dynamicAttributeData.value_date));
                                                 break;
-                                        };
+                                        }
 
                                         break;
 
-                                    };
+                                    }
 
-                                };
+                                }
 
-                            };
+                            }
 
-                        };
+                        }
                         // < Check is it a dynamic attribute >
 
                         if ((item.hasOwnProperty(keyProperty) && item[keyProperty]) || valueFromTable) { // check if cell that is used to filter row is not empty
@@ -123,7 +123,7 @@
                             if (filterType === 'empty') { // prevent pass of cells with values
                                 match = false;
                                 break;
-                            };
+                            }
 
                             if (checkForEmptyRegularFilter(filterValue, filterType)) {
 
@@ -137,13 +137,13 @@
                                         valueFromTable = JSON.parse(JSON.stringify(relationFieldData.display_name));
                                     } else {
                                         valueFromTable = JSON.parse(JSON.stringify(relationFieldData.name));
-                                    };
+                                    }
 
                                 } else if (!valueFromTable) {
 
                                     valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
 
-                                };
+                                }
 
                                 if (valueType === 10 ||
                                     valueType === 30 ||
@@ -154,7 +154,7 @@
                                         filterArgument = filterArgument[0].toLowerCase();
                                     }
 
-                                };
+                                }
 
                                 if (valueType === 20) {
 
@@ -173,7 +173,7 @@
                                     }*/
                                     // < Compare position number of item with maximum allowed >
 
-                                };
+                                }
 
                                 if (valueType === 40) {
 
@@ -198,7 +198,7 @@
                                             break;
                                     }
 
-                                };
+                                }
 
                                 match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
@@ -206,7 +206,7 @@
                                     break;
                                 }
 
-                            };
+                            }
 
                         } else {
 
@@ -216,17 +216,17 @@
                             } else {
                                 match = true;
                             }
-                        };
+                        }
 
-                    };
+                    }
 
-                };
+                }
 
-            };
+            }
 
             if (flItem.___type === 'group' && !match) {
                 filteredOutGroupsIds.push(flItem.___id);
-            };
+            }
 
             return match;
 
@@ -328,7 +328,7 @@
                 }
                 break;
 
-        };
+        }
 
         return false;
 

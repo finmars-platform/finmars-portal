@@ -44,7 +44,7 @@
                 };
 
                 scope.getModelKeyEntity = function () {
-                    var key;
+                    //var key;
                     var modelKeyEntity;
 
                     if (scope.entityType === 'complex-transaction') {
@@ -54,17 +54,19 @@
                         // console.log('modelKeyEntity', modelKeyEntity);
 
                     } else {
-                        key = scope.item.name;
 
-                        switch (key) {
-                            case 'linked_instrument':
-                                modelKeyEntity = 'instrument';
-                                break;
-                            case 'account_interim':
-                            case 'account_cash':
-                            case 'account_position':
-                                modelKeyEntity = 'account';
-                                break;
+                        if (scope.item.key && ['linked_instrument', 'allocation_balance', 'allocation_pl'].indexOf(scope.item.key) !== -1) {
+                            modelKeyEntity = 'instrument';
+                        } else {
+
+                            switch (scope.item.name) {
+                                case 'account_interim':
+                                case 'account_cash':
+                                case 'account_position':
+                                    modelKeyEntity = 'account';
+                                    break;
+                            }
+
                         }
                     }
 

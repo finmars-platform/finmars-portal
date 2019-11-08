@@ -335,7 +335,6 @@
                             scope.entity[scope.getModelKey()] = res.numberValue;
 
                         }
-                        ;
 
                     });
 
