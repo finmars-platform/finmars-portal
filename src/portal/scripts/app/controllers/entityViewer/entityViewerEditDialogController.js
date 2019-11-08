@@ -159,7 +159,11 @@
 
             return usersGroupService.getList().then(function (data) {
 
-                vm.groups = data.results;
+                vm.groups = data.results.filter(function (item) {
+
+                    return item.role === 2;
+
+                });
 
                 vm.groups.forEach(function (group) {
 
