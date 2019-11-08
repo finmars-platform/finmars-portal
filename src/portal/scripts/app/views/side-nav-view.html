@@ -518,13 +518,7 @@
                                 </md-button>
                             </li>
 
-                            <li data-ng-if="vm.accessTable.configuration_templates">
-                                <md-button class="sidemenu-btn"
-                                           ui-sref="app.template-layout-manager">
-                                    <span class="side-nav-title">Templates</span>
-                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
-                                </md-button>
-                            </li>
+
                         </ul>
                     </div>
 
@@ -588,6 +582,14 @@
                                                 <span class="side-nav-title">Reference Tables</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li data-ng-if="vm.accessTable.configuration_template">
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.template-layout-manager">
+                                                <span class="side-nav-title">Templates</span>
+                                                <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                             </md-button>
                                         </li>
 
