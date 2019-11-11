@@ -1,4 +1,4 @@
-<md-dialog aria-label="" class="draggable-dialog manage-member-group width-50" drag-dialog>
+<md-dialog aria-label="" class="draggable-dialog manage-member-group width-70" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
@@ -9,16 +9,139 @@
 
         <div data-ng-if="vm.readyStatus.content">
 
-            <md-input-container>
-                <label>Group name</label>
-                <textarea data-ng-model="vm.group.name"></textarea>
-            </md-input-container>
+            <div>
+                <md-input-container>
+                    <label>Group name</label>
+                    <textarea data-ng-model="vm.group.name"></textarea>
+                </md-input-container>
+            </div>
 
             <div layout="column">
 
                 <two-fields-options all-options="vm.membersList"
                                     selected-options="vm.assignedMembersList"
                                     name-property="username"></two-fields-options>
+
+            </div>
+
+            <div layout="column">
+
+                <div layout="row" style="margin-bottom: 5px;">
+
+                    <div style="width: 150px">
+                        &nbsp;
+                    </div>
+
+                    <div style="width: 220px; text-align: center; margin-right: 20px;">
+                        Object
+                    </div>
+                    <div style="width: 140px; text-align: center; margin-right: 25px;">
+                        Object Creator
+                    </div>
+                    <div style="width: 140px; text-align: center; margin-right: 25px;">
+                        Other Members
+                    </div>
+                </div>
+
+                <div layout="row" style="margin-bottom: 10px">
+
+                    <div layout="row">
+
+                        <div style="width: 150px">
+                            &nbsp;
+                        </div>
+
+                        <div style="width: 110px; margin-right: 10px;">
+                            Create Objects
+                        </div>
+                        <div style="width: 95px; margin-right: 25px;">
+                            Inherit Rights
+                        </div>
+                    </div>
+
+                    <div layout="row">
+                        <div style="width: 60px">
+                            Manage
+                        </div>
+                        <div style="width: 40px; text-align: center">
+                            Edit
+                        </div>
+                        <div style="width: 40px; text-align: center; margin-right: 25px;">
+                            View
+                        </div>
+                    </div>
+
+                    <div layout="row">
+                        <div style="width: 60px">
+                            Manage
+                        </div>
+                        <div style="width: 40px; text-align: center">
+                            Edit
+                        </div>
+                        <div style="width: 40px; text-align: center; margin-right: 25px;">
+                            View
+                        </div>
+                    </div>
+
+                    <div layout="row">
+                        <div>
+                            Overwrite for Existing Objects
+                        </div>
+                    </div>
+
+                </div>
+
+                <div layout="column">
+
+                    <div data-ng-repeat="item in vm.permissionTable" layout="row" style="margin-bottom: 10px">
+
+                        <div style="width: 150px">
+                            {{item.name}}
+                        </div>
+
+                        <div style="width: 110px; margin-right: 10px;">
+                            <md-checkbox class="checkbox-center" data-ng-model="item.data.create_objects" data-ng-checked="item.data.create_objects">
+                            </md-checkbox>
+                        </div>
+
+                        <div style="width: 95px; margin-right: 25px;">
+                            <md-checkbox class="checkbox-center" data-ng-model="item.data.inherit_rights" data-ng-checked="item.data.inherit_rights">
+                            </md-checkbox>
+                        </div>
+
+                        <div style="width: 60px">
+                            <md-checkbox class="checkbox-center" data-ng-model="item.data.creator_manage" data-ng-checked="item.data.creator_manage">
+                            </md-checkbox>
+                        </div>
+
+                        <div style="width: 40px">
+                            <md-checkbox class="checkbox-center" data-ng-model="item.data.creator_change" data-ng-checked="item.data.creator_change">
+                            </md-checkbox>
+                        </div>
+
+                        <div style="width: 40px; margin-right: 25px;">
+                            <md-checkbox class="checkbox-center" data-ng-model="item.data.creator_view" data-ng-checked="item.data.creator_view">
+                            </md-checkbox>
+                        </div>
+
+                        <div style="width: 60px">
+                            <md-checkbox class="checkbox-center" data-ng-model="item.data.other_manage" data-ng-checked="item.data.other_manage">
+                            </md-checkbox>
+                        </div>
+
+                        <div style="width: 40px">
+                            <md-checkbox class="checkbox-center" data-ng-model="item.data.other_change" data-ng-checked="item.data.other_change">
+                            </md-checkbox>
+                        </div>
+
+                        <div style="width: 40px">
+                            <md-checkbox class="checkbox-center" data-ng-model="item.data.other_view" data-ng-checked="item.data.other_view">
+                            </md-checkbox>
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
