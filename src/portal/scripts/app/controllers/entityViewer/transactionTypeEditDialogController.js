@@ -15,10 +15,9 @@
     var metaService = require('../../services/metaService');
 
     var gridHelperService = require('../../services/gridHelperService');
-    var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
+    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
     var attributeTypeService = require('../../services/attributeTypeService');
-    var metaPermissionsService = require('../../services/metaPermissionsService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var transactionTypeGroupService = require('../../services/transaction/transactionTypeGroupService');
 
@@ -1549,7 +1548,7 @@
                         defaultPropertyName = 'scheme_name';
                     }
 
-                    vm.relationItems[relationType].forEach(function (relation) {
+                    /*vm.relationItems[relationType].forEach(function (relation) {
 
                         if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
                             item[propertyName][fieldName] = relation.id;
@@ -1559,14 +1558,30 @@
 
                         }
 
-                    });
+                    });*/
+                    ecosystemDefaultService.getList().then(function (data) {
 
-                    $scope.$apply(function () {
-                        setTimeout(function () {
-                            $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                                ev.stopPropagation();
-                            });
-                        }, 100);
+                        var defaultValues = data.results[0];
+                        item[propertyName][fieldName] = defaultValues[relationType];
+
+                        for (var i = 0; i < vm.relationItems[relationType].length; i++) {
+                            var relation = vm.relationItems[relationType][i];
+
+                            if (relation.id === item[propertyName][fieldName]) {
+                                item[propertyName][fieldName + '_object'] = {};
+                                item[propertyName][fieldName + '_object']['name'] = relation[defaultPropertyName];
+                                break;
+                            }
+                        }
+
+                        $scope.$apply(function () {
+                            setTimeout(function () {
+                                $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                                    ev.stopPropagation();
+                                });
+                            }, 100);
+                        });
+
                     });
 
                 });

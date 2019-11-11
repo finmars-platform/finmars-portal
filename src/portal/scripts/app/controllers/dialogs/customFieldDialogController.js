@@ -7,12 +7,13 @@
 
     var customFieldService = require('../../services/reports/customFieldService');
 
-    var AttributeDataService = require('../../services/attributeDataService');
+    //var AttributeDataService = require('../../services/attributeDataService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, attributeDataService, data) {
 
         var vm = this;
 
+        vm.attributeDataService = attributeDataService;
         vm.customFields = [];
         vm.entityType = data.entityType;
 
@@ -53,7 +54,10 @@
                 multiple: true
             }).then(function (res) {
                 if (res && res.status === 'agree') {
-                    vm.getList()
+
+                    vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType);
+                    vm.getList();
+
                 }
             });
 
@@ -79,7 +83,10 @@
                 multiple: true
             }).then(function (res) {
                 if (res && res.status === 'agree') {
-                    vm.getList()
+
+                    vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType);
+                    vm.getList();
+
                 }
             });
 
@@ -126,6 +133,7 @@
                             })
                         } else {
 
+                            vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType);
                             vm.getList();
 
                         }
@@ -182,7 +190,7 @@
 
         vm.init = function () {
 
-            vm.attributeDataService = new AttributeDataService();
+            //vm.attributeDataService = new AttributeDataService();
 
             vm.downloadAttributes();
 

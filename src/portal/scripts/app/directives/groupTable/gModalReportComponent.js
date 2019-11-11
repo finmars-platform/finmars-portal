@@ -404,7 +404,7 @@
             vm.entityViewerDataService.setGroups(groups);
             vm.entityViewerDataService.setFilters(filters);
 
-        };
+        }
 
         vm.updateAttrs = function (attrs) {
 
