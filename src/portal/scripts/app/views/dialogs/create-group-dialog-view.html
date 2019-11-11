@@ -14,12 +14,22 @@
                 <textarea data-ng-model="vm.group.name"></textarea>
             </md-input-container>
 
-            <div layout="column">
-                <two-fields-options all-options="vm.membersList"
-                                    selected-options="vm.assignedMembersList"
-                                    name-property="username"
-                ></two-fields-options>
-            </div>
+            <md-input-container style="height: 56px;">
+                <label>Preset</label>
+                <md-select data-ng-model="vm.activePresetId" data-ng-change="vm.presetChange($event)">
+                    <md-option data-ng-repeat="item in vm.presets"
+                               ng-value="item.id">
+                        {{item.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <!--<div layout="column">-->
+                <!--<two-fields-options all-options="vm.membersList"-->
+                                    <!--selected-options="vm.assignedMembersList"-->
+                                    <!--name-property="username"-->
+                <!--&gt;</two-fields-options>-->
+            <!--</div>-->
 
             <md-input-container style="height: 58px">
 
