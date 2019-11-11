@@ -21,8 +21,6 @@
     var metaHelper = require('../../helpers/meta.helper');
 
     var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
-    var pricingPolicyService = require('../../services/pricingPolicyService');
-    var currencyService = require('../../services/currencyService');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
@@ -1318,6 +1316,7 @@
                         autoWrap: true,
                         skipHide: true,
                         locals: {
+                            attributeDataService: scope.attributeDataService,
                             data: {
                                 entityType: scope.entityType
                             }
