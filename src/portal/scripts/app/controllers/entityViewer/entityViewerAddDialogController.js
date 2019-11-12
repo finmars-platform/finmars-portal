@@ -17,6 +17,7 @@
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
 
     var uiService = require('../../services/uiService');
@@ -132,14 +133,30 @@
 
             var promises = [];
 
+            promises.push(vm.getCurrentMember());
             promises.push(vm.getGroupList());
 
             Promise.all(promises).then(function (data) {
 
                 vm.readyStatus.permissions = true;
+
+                vm.setPermissionsDefaults();
+
                 $scope.$apply();
+
             });
 
+        };
+
+        vm.getCurrentMember = function () {
+
+            return usersService.getMyCurrentMember().then(function (data) {
+
+                vm.currentMember = data;
+
+                $scope.$apply();
+
+            });
         };
 
         vm.getGroupList = function () {
@@ -153,29 +170,87 @@
                 });
 
 
-                vm.groups.forEach(function (group) {
+                // vm.groups.forEach(function (group) {
+                //
+                //     if (vm.entity.object_permissions) {
+                //         vm.entity.object_permissions.forEach(function (permission) {
+                //
+                //             if (permission.group === group.id) {
+                //                 if (!group.hasOwnProperty('objectPermissions')) {
+                //                     group.objectPermissions = {};
+                //                 }
+                //                 if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
+                //                     group.objectPermissions.manage = true;
+                //                 }
+                //                 if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
+                //                     group.objectPermissions.change = true;
+                //                 }
+                //                 if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
+                //                     group.objectPermissions.view = true;
+                //                 }
+                //             }
+                //         })
+                //     }
+                //
+                // });
 
-                    if (vm.entity.object_permissions) {
-                        vm.entity.object_permissions.forEach(function (permission) {
+            });
 
-                            if (permission.group === group.id) {
-                                if (!group.hasOwnProperty('objectPermissions')) {
-                                    group.objectPermissions = {};
-                                }
-                                if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                    group.objectPermissions.manage = true;
-                                }
-                                if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                    group.objectPermissions.change = true;
-                                }
-                                if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
-                                    group.objectPermissions.view = true;
-                                }
-                            }
-                        })
+        };
+
+        vm.setPermissionsDefaults = function () {
+
+            var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType);
+            var table;
+            var isCreator;
+
+            vm.groups.forEach(function (group) {
+
+                if (group.permission_table) {
+
+                    table = group.permission_table.find(function (item) {
+                       return item.content_type === contentType
+                    }).data;
+
+                    isCreator = vm.currentMember.groups.indexOf(group.id) !== -1;
+
+                    group.objectPermissions = {};
+
+                    if (isCreator) {
+
+                        if (table.creator_manage) {
+                            group.objectPermissions.manage = true;
+                        }
+
+                        if (table.creator_change) {
+                            group.objectPermissions.change = true;
+                        }
+
+                        if (table.creator_view) {
+                            group.objectPermissions.view = true;
+                        }
+
+
+                    } else {
+
+                        if (table.other_manage) {
+                            group.objectPermissions.manage = true;
+                        }
+
+                        if (table.other_change) {
+                            group.objectPermissions.change = true;
+                        }
+
+                        if (table.other_view) {
+                            group.objectPermissions.view = true;
+                        }
+
+
                     }
 
-                });
+                }
+
+
             });
 
         };
