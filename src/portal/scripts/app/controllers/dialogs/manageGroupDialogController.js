@@ -3,6 +3,8 @@
     'use strict';
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
+    var entityResolverService = require('../../services/entityResolverService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
 
     module.exports = function ($scope, $mdDialog, groupId) {
 
@@ -15,176 +17,299 @@
 
         vm.readyStatus = {content: false};
 
-        vm.permissionTable = [
-            {
-                name: "Portfolios",
-                content_type: "portfolios.portfolio",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
+        vm.isSaved = true;
+
+        vm.permissionTable = {
+            data: [
+                {
+                    name: "Portfolios",
+                    content_type: "portfolios.portfolio",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Accounts",
+                    content_type: "accounts.account",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Instruments",
+                    content_type: "instruments.instrument",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Counterparties",
+                    content_type: "counterparties.counterparty",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Responsibles",
+                    content_type: "counterparties.responsible",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Currency",
+                    content_type: "currencies.currency",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Strategy 1",
+                    content_type: "strategies.strategy1",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Strategy 2",
+                    content_type: "strategies.strategy2",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Strategy 3",
+                    content_type: "strategies.strategy3",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Account Type",
+                    content_type: "accounts.accounttype",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Instrument Type",
+                    content_type: "instruments.instrumenttype",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Transaction Type",
+                    content_type: "transactions.transactiontype",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
                 }
-            },
-            {
-                name: "Accounts",
-                content_type: "accounts.account",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
+            ],
+            configuration: [
+                {
+                    name: 'User Attributes',
+                    content_type: 'obj_attrs.attributetype',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
+                },
+                {
+                    name: 'Reference Tables',
+                    content_type: 'reference_tables.referencetable',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
+                },
+                {
+                    name: 'Templates',
+                    content_type: 'ui.templatelayout',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
+                },
+                {
+                    name: 'Mapping Tables',
+                    content_type: 'integrations.mappingtable',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
+                },
+                {
+                    name: 'Price Schemes',
+                    content_type: 'integrations.pricedownloadscheme',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
+                },
+                {
+                    name: 'Instrument Schemes',
+                    content_type: 'integrations.instrumentdownloadscheme',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
+                },
+                {
+                    name: 'Data Import',
+                    content_type: 'csv_import.csvimportscheme',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
+                },
+                {
+                    name: 'Transaction Import',
+                    content_type: 'integrations.complextransactionimportscheme',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
+                },
+                {
+                    name: 'Complex Import',
+                    content_type: 'complex_import.compleximportscheme',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
+                },
+                {
+                    name: 'Aliases',
+                    content_type: 'ui.userfield',
+                    data: {
+                        creator_change: false,
+                        creator_view: false
+                    }
                 }
-            },
-            {
-                name: "Instruments",
-                content_type: "instruments.instrument",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
+            ],
+            function: [
+                {
+                    name: "Import Data",
+                    content_type: "function.import_data",
+                    data: {
+                        creator_view: false
+                    }
+                },
+                {
+                    name: "Import Transactions",
+                    content_type: "function.import_transactions",
+                    data: {
+                        creator_view: false
+                    }
+                },
+                {
+                    name: "Import Complex",
+                    content_type: "function.import_complex",
+                    data: {
+                        creator_view: false
+                    }
+                },
+                {
+                    name: "Import From Provider - Instrument",
+                    content_type: "function.provider_download_instrument",
+                    data: {
+                        creator_view: false
+                    }
+                },
+                {
+                    name: "Import From Provider - Prices",
+                    content_type: "function.provider_download_price",
+                    data: {
+                        creator_view: false
+                    }
                 }
-            },
-            {
-                name: "Counterparties",
-                content_type: "counterparties.counterparty",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Responsibles",
-                content_type: "counterparties.responsible",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Currency",
-                content_type: "currencies.currency",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Strategy 1",
-                content_type: "strategies.strategy1",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Strategy 2",
-                content_type: "strategies.strategy2",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Strategy 3",
-                content_type: "strategies.strategy3",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Account Type",
-                content_type: "accounts.accounttype",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Instrument Type",
-                content_type: "instruments.instrumenttype",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Transaction Type",
-                content_type: "transactions.transactiontype",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            }
-        ];
+            ]
+        };
 
         vm.presetChange = function ($event) {
 
@@ -222,9 +347,179 @@
 
         };
 
+        vm.updateCheckbox = function (item, prop) {
+
+            item.data[prop] = !item.data[prop];
+
+            vm.isSaved = false;
+
+            if (prop === 'create_objects' && item.data[prop] === false) {
+
+                Object.keys(item.data).forEach(function (key) {
+
+                    item.data[key] = false;
+
+                })
+
+            }
+
+            if (prop === 'inherit_rights' && item.data[prop] === true) {
+
+                Object.keys(item.data).forEach(function (key) {
+
+                    if (key !== 'create_objects' && key !== 'inherit_rights') {
+                        item.data[key] = false;
+                    }
+
+                })
+
+            }
+
+        };
+
         vm.canInheritRight = function (contentType) {
 
             return ['accounts.account', 'instruments.instrument'].indexOf(contentType) !== -1
+
+        };
+
+        vm.overwritePermissions = function ($event, permissionTableRow, hideDialog) {
+
+            vm.processing = true;
+
+            return new Promise(function (resolve, reject) {
+
+
+                var entityType = metaContentTypesService.findEntityByContentType(permissionTableRow.content_type);
+
+                entityResolverService.getList(entityType, {pageSize: 1000}).then(function (data) {
+
+                    console.log('data', data);
+
+                    var itemsWithPermissions = data.results.map(function (item) {
+
+                        return {
+                            id: item.id,
+                            object_permissions: item.object_permissions.filter(function (item) {
+
+                                return item.group !== vm.group.id
+
+                            })
+                        }
+
+                    });
+
+
+                    var manage_code = "manage_" + entityType.split('-').join('').toLowerCase();
+                    var change_code = "change_" + entityType.split('-').join('').toLowerCase();
+                    var view_code = "view_" + entityType.split('-').join('').toLowerCase();
+
+                    itemsWithPermissions.forEach(function (itemWithPermission) {
+
+                        if (permissionTableRow.data.other_manage) {
+                            itemWithPermission.object_permissions.push({
+                                group: vm.group.id,
+                                member: null,
+                                permission: manage_code
+                            })
+                        }
+
+                        if (permissionTableRow.data.other_change) {
+                            itemWithPermission.object_permissions.push({
+                                group: vm.group.id,
+                                member: null,
+                                permission: change_code
+                            })
+                        }
+
+                        if (permissionTableRow.data.other_view) {
+                            itemWithPermission.object_permissions.push({
+                                group: vm.group.id,
+                                member: null,
+                                permission: view_code
+                            })
+                        }
+
+                    });
+
+                    console.log('entityType', entityType);
+
+                    entityResolverService.updateBulk(entityType, itemsWithPermissions).then(function () {
+
+                        if (!hideDialog) {
+
+                            $mdDialog.show({
+                                controller: 'InfoDialogController as vm',
+                                templateUrl: 'views/info-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: $event,
+                                clickOutsideToClose: false,
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true,
+                                multiple: true,
+                                locals: {
+                                    info: {
+                                        title: 'Success',
+                                        description: "Permissions successfully updated"
+                                    }
+                                }
+                            });
+
+                            vm.processing = false;
+                            $scope.$apply();
+
+                        }
+
+                        resolve()
+
+                    })
+
+
+                })
+
+            })
+
+        };
+
+        vm.overwritePermissionAll = function ($event) {
+
+            var promises = [];
+
+            vm.processing = true;
+
+            vm.permissionTable.data.forEach(function (permissionTableRow) {
+
+                promises.push(vm.overwritePermissions($event, permissionTableRow, true))
+
+            });
+
+            Promise.all(promises).then(function () {
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "All Permissions successfully updated"
+                        }
+                    }
+                });
+
+                vm.processing = false;
+
+                $scope.$apply();
+
+
+            })
 
         };
 
@@ -235,7 +530,7 @@
                 vm.group = data;
 
                 if (vm.group.permission_table) {
-                    vm.permissionTable = vm.group.permission_table;
+                    vm.permissionTable = Object.assign({}, vm.permissionTable, vm.group.permission_table);
                 }
 
                 membersAndGroupsService.getMembersList().then(function (data) {
@@ -275,6 +570,7 @@
 
         };
 
+
         vm.cancel = function () {
             $mdDialog.hide();
         };
@@ -289,6 +585,43 @@
 
             membersAndGroupsService.updateGroup(vm.group.id, vm.group).then(function () {
                 $mdDialog.hide({status: 'agree'});
+            });
+
+        };
+
+        vm.save = function ($event) {
+
+            vm.group.members = vm.assignedMembersList.map(function (group) {
+                return group.id
+            });
+
+            vm.group.permission_table = vm.permissionTable;
+
+            membersAndGroupsService.updateGroup(vm.group.id, vm.group).then(function () {
+
+                vm.isSaved = true;
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "Group Settings successfully updated"
+                        }
+                    }
+                });
+
+
+                $scope.$apply();
+
             });
 
         };

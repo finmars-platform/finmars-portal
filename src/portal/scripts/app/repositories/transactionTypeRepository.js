@@ -79,6 +79,20 @@
             })
     };
 
+    var updateBulkLight = function (transactionTypes) {
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type-light/bulk-update/',
+            {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(transactionTypes)
+            })
+    };
+
     var updateBulk = function (transactionTypes) {
         return xhrService.fetch(baseUrl + 'transactions/transaction-type/bulk-update/',
             {
@@ -217,6 +231,7 @@
         initBookPendingComplexTransaction: initBookPendingComplexTransaction,
         bookPendingComplexTransaction: bookPendingComplexTransaction,
 
+        updateBulkLight: updateBulkLight,
         updateBulk: updateBulk,
         deleteBulk: deleteBulk
     }
