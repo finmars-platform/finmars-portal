@@ -301,7 +301,18 @@
 
                 Object.keys(preset.data).forEach(function (key) {
 
-                    item.data[key] = preset.data[key]
+                    if (key === 'inherit_rights') {
+
+                        if (item.content_type === 'accounts.account' || item.content_type === 'instruments.instrument') {
+                            item.data[key] = preset.data[key]
+                        }
+
+                    } else {
+
+                        if (!item.data.inherit_rights) {
+                            item.data[key] = preset.data[key]
+                        }
+                    }
 
                 });
 
@@ -311,7 +322,7 @@
 
             setTimeout(function () {
                 $scope.$apply();
-            },0);
+            }, 0);
 
             console.log('vm.permissionTable', vm.permissionTable);
 
