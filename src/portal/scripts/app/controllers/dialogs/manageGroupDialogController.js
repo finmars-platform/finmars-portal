@@ -389,96 +389,124 @@
 
             return new Promise(function (resolve, reject) {
 
-
                 var entityType = metaContentTypesService.findEntityByContentType(permissionTableRow.content_type);
 
-                entityResolverService.getList(entityType, {pageSize: 1000}).then(function (data) {
+                if (entityType === 'currency') {
 
-                    console.log('data', data);
-
-                    var itemsWithPermissions = data.results.map(function (item) {
-
-                        return {
-                            id: item.id,
-                            object_permissions: item.object_permissions.filter(function (item) {
-
-                                return item.group !== vm.group.id
-
-                            })
-                        }
-
-                    });
-
-
-                    var manage_code = "manage_" + entityType.split('-').join('').toLowerCase();
-                    var change_code = "change_" + entityType.split('-').join('').toLowerCase();
-                    var view_code = "view_" + entityType.split('-').join('').toLowerCase();
-
-                    itemsWithPermissions.forEach(function (itemWithPermission) {
-
-                        if (permissionTableRow.data.other_manage) {
-                            itemWithPermission.object_permissions.push({
-                                group: vm.group.id,
-                                member: null,
-                                permission: manage_code
-                            })
-                        }
-
-                        if (permissionTableRow.data.other_change) {
-                            itemWithPermission.object_permissions.push({
-                                group: vm.group.id,
-                                member: null,
-                                permission: change_code
-                            })
-                        }
-
-                        if (permissionTableRow.data.other_view) {
-                            itemWithPermission.object_permissions.push({
-                                group: vm.group.id,
-                                member: null,
-                                permission: view_code
-                            })
-                        }
-
-                    });
-
-                    console.log('entityType', entityType);
-
-                    entityResolverService.updateBulk(entityType, itemsWithPermissions).then(function () {
-
-                        if (!hideDialog) {
-
-                            $mdDialog.show({
-                                controller: 'InfoDialogController as vm',
-                                templateUrl: 'views/info-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: $event,
-                                clickOutsideToClose: false,
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true,
-                                multiple: true,
-                                locals: {
-                                    info: {
-                                        title: 'Success',
-                                        description: "Permissions successfully updated"
-                                    }
+                    if (!hideDialog) {
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Permissions successfully updated"
                                 }
-                            });
+                            }
+                        });
 
-                            vm.processing = false;
-                            $scope.$apply();
+                        vm.processing = false;
+                    }
 
-                        }
+                    resolve()
+                } else {
 
-                        resolve()
+                    entityResolverService.getList(entityType, {pageSize: 1000}).then(function (data) {
+
+                        console.log('data', data);
+
+                        var itemsWithPermissions = data.results.map(function (item) {
+
+                            return {
+                                id: item.id,
+                                object_permissions: item.object_permissions.filter(function (item) {
+
+                                    return item.group !== vm.group.id
+
+                                })
+                            }
+
+                        });
+
+
+                        var manage_code = "manage_" + entityType.split('-').join('').toLowerCase();
+                        var change_code = "change_" + entityType.split('-').join('').toLowerCase();
+                        var view_code = "view_" + entityType.split('-').join('').toLowerCase();
+
+                        itemsWithPermissions.forEach(function (itemWithPermission) {
+
+                            if (permissionTableRow.data.other_manage) {
+                                itemWithPermission.object_permissions.push({
+                                    group: vm.group.id,
+                                    member: null,
+                                    permission: manage_code
+                                })
+                            }
+
+                            if (permissionTableRow.data.other_change) {
+                                itemWithPermission.object_permissions.push({
+                                    group: vm.group.id,
+                                    member: null,
+                                    permission: change_code
+                                })
+                            }
+
+                            if (permissionTableRow.data.other_view) {
+                                itemWithPermission.object_permissions.push({
+                                    group: vm.group.id,
+                                    member: null,
+                                    permission: view_code
+                                })
+                            }
+
+                        });
+
+                        console.log('entityType', entityType);
+
+                        entityResolverService.updateBulk(entityType, itemsWithPermissions).then(function () {
+
+                            if (!hideDialog) {
+
+                                $mdDialog.show({
+                                    controller: 'InfoDialogController as vm',
+                                    templateUrl: 'views/info-dialog-view.html',
+                                    parent: angular.element(document.body),
+                                    targetEvent: $event,
+                                    clickOutsideToClose: false,
+                                    preserveScope: true,
+                                    autoWrap: true,
+                                    skipHide: true,
+                                    multiple: true,
+                                    locals: {
+                                        info: {
+                                            title: 'Success',
+                                            description: "Permissions successfully updated"
+                                        }
+                                    }
+                                });
+
+                                vm.processing = false;
+                                $scope.$apply();
+
+                            }
+
+                            resolve()
+
+                        })
+
 
                     })
-
-
-                })
+                }
 
             })
+
 
         };
 
@@ -493,6 +521,8 @@
                 promises.push(vm.overwritePermissions($event, permissionTableRow, true))
 
             });
+
+            console.log('promises', promises);
 
             Promise.all(promises).then(function () {
 

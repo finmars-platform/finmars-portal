@@ -92,7 +92,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(instruments)
+                body: JSON.stringify(data)
             })
 
     };
