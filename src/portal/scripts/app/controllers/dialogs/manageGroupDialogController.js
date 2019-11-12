@@ -216,9 +216,15 @@
 
             setTimeout(function () {
                 $scope.$apply();
-            },0);
+            }, 0);
 
             console.log('vm.permissionTable', vm.permissionTable);
+
+        };
+
+        vm.canInheritRight = function (contentType) {
+
+            return ['accounts.account', 'instruments.instrument'].indexOf(contentType) !== -1
 
         };
 
@@ -228,7 +234,9 @@
 
                 vm.group = data;
 
-                vm.permissionTable = vm.group.permission_table;
+                if (vm.group.permission_table) {
+                    vm.permissionTable = vm.group.permission_table;
+                }
 
                 membersAndGroupsService.getMembersList().then(function (data) {
 

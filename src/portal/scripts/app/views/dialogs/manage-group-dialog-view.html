@@ -105,37 +105,37 @@
                         </div>
 
                         <div style="width: 95px; margin-right: 25px;">
-                            <md-checkbox class="checkbox-center" data-ng-model="item.data.inherit_rights" data-ng-checked="item.data.inherit_rights">
+                            <md-checkbox class="checkbox-center" ng-class="{'disabled-btn': !vm.canInheritRight(item.content_type)}" data-ng-model="item.data.inherit_rights" data-ng-checked="item.data.inherit_rights">
                             </md-checkbox>
                         </div>
 
                         <div style="width: 60px">
-                            <md-checkbox class="checkbox-center" data-ng-model="item.data.creator_manage" data-ng-checked="item.data.creator_manage">
+                            <md-checkbox class="checkbox-center" ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}" data-ng-model="item.data.creator_manage" data-ng-checked="item.data.creator_manage">
                             </md-checkbox>
                         </div>
 
                         <div style="width: 40px">
-                            <md-checkbox class="checkbox-center" data-ng-model="item.data.creator_change" data-ng-checked="item.data.creator_change">
+                            <md-checkbox class="checkbox-center" ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}" data-ng-model="item.data.creator_change" data-ng-checked="item.data.creator_change">
                             </md-checkbox>
                         </div>
 
                         <div style="width: 40px; margin-right: 25px;">
-                            <md-checkbox class="checkbox-center" data-ng-model="item.data.creator_view" data-ng-checked="item.data.creator_view">
+                            <md-checkbox class="checkbox-center" ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}" data-ng-model="item.data.creator_view" data-ng-checked="item.data.creator_view">
                             </md-checkbox>
                         </div>
 
                         <div style="width: 60px">
-                            <md-checkbox class="checkbox-center" data-ng-model="item.data.other_manage" data-ng-checked="item.data.other_manage">
+                            <md-checkbox class="checkbox-center" ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}" data-ng-model="item.data.other_manage" data-ng-checked="item.data.other_manage">
                             </md-checkbox>
                         </div>
 
                         <div style="width: 40px">
-                            <md-checkbox class="checkbox-center" data-ng-model="item.data.other_change" data-ng-checked="item.data.other_change">
+                            <md-checkbox class="checkbox-center" ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}" data-ng-model="item.data.other_change" data-ng-checked="item.data.other_change">
                             </md-checkbox>
                         </div>
 
                         <div style="width: 40px">
-                            <md-checkbox class="checkbox-center" data-ng-model="item.data.other_view" data-ng-checked="item.data.other_view">
+                            <md-checkbox class="checkbox-center" ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}" data-ng-model="item.data.other_view" data-ng-checked="item.data.other_view">
                             </md-checkbox>
                         </div>
 
