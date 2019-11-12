@@ -25,6 +25,10 @@
         return instrumentTypeRepository.deleteByKey(id);
     };
 
+    var updateBulk = function (data) {
+        return instrumentTypeRepository.updateBulk(data)
+    };
+
     var deleteBulk = function(data){
         return instrumentTypeRepository.deleteBulk(data)
     };
@@ -36,6 +40,7 @@
         update: update,
         deleteByKey: deleteByKey,
 
+        updateBulk: updateBulk,
         deleteBulk: deleteBulk
 
     }

@@ -64,7 +64,8 @@
             case 'instrument-type':
                 return instrumentTypeService.getList(options);
             case 'transaction-type':
-                return transactionTypeService.getList(options);
+                // return transactionTypeService.getList(options);
+                return transactionTypeService.getListLight(options);
             case 'periodicity':
                 return instrumentPeriodicityService.getList(options);
             case 'accrual-calculation-model':
@@ -439,7 +440,7 @@
                 return instrumentService.updateBulk(entities);
                 break;
             case 'instrument-type':
-                //return instrumentTypeService.update(id, entity);
+                return instrumentTypeService.updateBulk(entities);
                 break;
             case 'transaction':
                 //return transactionService.update(id, entity);
@@ -447,8 +448,8 @@
             case 'complex-transaction':
                 return complexTransactionService.updatePropertiesBulk(entities);
             case 'transaction-type':
-                return transactionTypeService.updateBulk(entities);
-                break;
+                // return transactionTypeService.updateBulk(entities);
+                return transactionTypeService.updateBulkLight(entities);
             case 'transaction-type-group':
                 //return transactionTypeGroupService.update(id, entity);
                 break;
@@ -462,13 +463,13 @@
                 //return currencyHistoryService.update(id, entity);
                 break;
             case 'strategy-1':
-                //return strategyService.update(1, id, entity);
+                return strategyService.updateBulk(1, entities);
                 break;
             case 'strategy-2':
-                //return strategyService.update(2, id, entity);
+                return strategyService.updateBulk(2, entities);
                 break;
             case 'strategy-3':
-                //return strategyService.update(3, id, entity);
+                return strategyService.updateBulk(3, entities);
                 break;
             case 'strategy-1-group':
                 //return strategyGroupService.update(1, id, entity);

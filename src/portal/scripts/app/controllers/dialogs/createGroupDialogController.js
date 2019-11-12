@@ -108,176 +108,178 @@
             }
         ];
 
-        vm.permissionTable = [
-            {
-                name: "Portfolios",
-                content_type: "portfolios.portfolio",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
+        vm.permissionTable = {
+            data: [
+                {
+                    name: "Portfolios",
+                    content_type: "portfolios.portfolio",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Accounts",
+                    content_type: "accounts.account",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Instruments",
+                    content_type: "instruments.instrument",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Counterparties",
+                    content_type: "counterparties.counterparty",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Responsibles",
+                    content_type: "counterparties.responsible",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Currency",
+                    content_type: "currencies.currency",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Strategy 1",
+                    content_type: "strategies.strategy1",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Strategy 2",
+                    content_type: "strategies.strategy2",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Strategy 3",
+                    content_type: "strategies.strategy3",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Account Type",
+                    content_type: "accounts.accounttype",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Instrument Type",
+                    content_type: "instruments.instrumenttype",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
+                },
+                {
+                    name: "Transaction Type",
+                    content_type: "transactions.transactiontype",
+                    data: {
+                        create_objects: false,
+                        inherit_rights: false,
+                        creator_manage: false,
+                        creator_change: false,
+                        creator_view: false,
+                        other_manage: false,
+                        other_change: false,
+                        other_view: false
+                    }
                 }
-            },
-            {
-                name: "Accounts",
-                content_type: "accounts.account",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Instruments",
-                content_type: "instruments.instrument",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Counterparties",
-                content_type: "counterparties.counterparty",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Responsibles",
-                content_type: "counterparties.responsible",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Currency",
-                content_type: "currencies.currency",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Strategy 1",
-                content_type: "strategies.strategy1",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Strategy 2",
-                content_type: "strategies.strategy2",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Strategy 3",
-                content_type: "strategies.strategy3",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Account Type",
-                content_type: "accounts.accounttype",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Instrument Type",
-                content_type: "instruments.instrumenttype",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            },
-            {
-                name: "Transaction Type",
-                content_type: "transactions.transactiontype",
-                data: {
-                    create_objects: false,
-                    inherit_rights: false,
-                    creator_manage: false,
-                    creator_change: false,
-                    creator_view: false,
-                    other_manage: false,
-                    other_change: false,
-                    other_view: false
-                }
-            }
-        ];
+            ]
+        };
 
         vm.activePresetId = 6;
 
@@ -297,7 +299,7 @@
 
             console.log('preset', preset);
 
-            vm.permissionTable = vm.permissionTable.map(function (item) {
+            vm.permissionTable.data = vm.permissionTable.data.map(function (item) {
 
                 Object.keys(preset.data).forEach(function (key) {
 

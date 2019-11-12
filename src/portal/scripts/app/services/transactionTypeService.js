@@ -29,6 +29,10 @@
         return transactionTypeRepository.deleteByKey(id);
     };
 
+    var updateBulkLight = function(entities){
+        return transactionTypeRepository.updateBulkLight(entities);
+    };
+
     var updateBulk = function(entities){
         return transactionTypeRepository.updateBulk(entities);
     };
@@ -67,6 +71,7 @@
         initBookPendingComplexTransaction: initBookPendingComplexTransaction,
         bookPendingComplexTransaction: bookPendingComplexTransaction,
 
+        updateBulkLight: updateBulkLight,
         updateBulk: updateBulk,
         deleteBulk: deleteBulk
 
