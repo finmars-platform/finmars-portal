@@ -204,11 +204,14 @@
             var table;
             var isCreator;
 
+            // console.log('vm.groups', vm.groups);
+            // console.log('vm.currentMember.groups', vm.currentMember.groups);
+
             vm.groups.forEach(function (group) {
 
-                if (group.permission_table) {
+                if (group.permission_table && group.permission_table.data) {
 
-                    table = group.permission_table.find(function (item) {
+                    table = group.permission_table.data.find(function (item) {
                        return item.content_type === contentType
                     }).data;
 
