@@ -1575,14 +1575,6 @@
             if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
 
                 setDefaultValueForRelation(item, propertyName, fieldName);
-                console.log("template action", item);
-                $scope.$apply(function () {
-                    setTimeout(function () {
-                        $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                            ev.stopPropagation();
-                        });
-                    }, 100);
-                });
 
                 /*vm.loadRelation(relationType).then(function (data) {
 
