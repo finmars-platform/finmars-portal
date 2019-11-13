@@ -101,6 +101,67 @@
             }
         ];
 
+        vm.contextProperties = {
+
+            'instruments.instrument': [
+                {
+                    key: 'instrument',
+                    name: 'Instrument'
+                }
+
+                // TODO is not in use now
+                // {
+                //     id: 9,
+                //     name: 'position'
+                // },
+                // {
+                //     id: 10,
+                //     name: 'effective_date'
+                // }
+            ],
+            'currencies.currency': [
+                {
+                    key: 'pricing_currency',
+                    name: 'Pricing Currency'
+                },
+                {
+                    key: 'accrued_currency',
+                    name: 'Accrued Currency'
+                }
+            ],
+            'portfolios.portfolio': [
+                {
+                    key: 'portfolio',
+                    name: 'Portfolio'
+                }
+            ],
+            'accounts.account': [
+                {
+                    key: 'account',
+                    name: 'Account'
+                }
+            ],
+            'strategies.strategy1': [
+                {
+                    key: 'strategy1',
+                    name: 'Strategy 1'
+                }
+            ],
+            'strategies.strategy2': [
+                {
+                    key: 'strategy2',
+                    name: 'Strategy 2'
+                }
+            ],
+            'strategies.strategy3': [
+                {
+                    key: 'strategy3',
+                    name: 'Strategy 3'
+                }
+            ]
+
+        };
+
         vm.transactionUserFields = {};
 
         var ecosystemDefaultData = {};
