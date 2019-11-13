@@ -4,7 +4,7 @@
 
         <div ng-if="!isReport">
 
-            <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport">
+            <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport && hasCreatePermission">
                 <button class="md-raised clear-all full-width md-button md-ink-ripple md-primary" type="button"
                         data-ng-click="addEntity($event)">Add {{getEntityNameByState()}}
                 </button>

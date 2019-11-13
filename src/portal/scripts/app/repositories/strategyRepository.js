@@ -82,6 +82,20 @@
         })
     };
 
+    var updateBulk = function (strategyNumber, data) {
+        return xhrService.fetch(baseUrl + 'strategies/' + strategyNumber + '/strategy/bulk-update/',
+            {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
     var deleteBulk = function (strategyNumber, data) {
         return xhrService.fetch(baseUrl + 'strategies/' + strategyNumber + '/strategy/bulk-delete/',
             {
@@ -109,6 +123,7 @@
         update: update,
         deleteByKey: deleteByKey,
 
+        updateBulk: updateBulk,
         deleteBulk: deleteBulk
 
     }

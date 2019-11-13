@@ -13,6 +13,7 @@
     var middlewareService = require('../../services/middlewareService');
 
     var uiService = require('../../services/uiService');
+    var usersService = require('../../services/usersService');
 
     var convertReportHelper = require('../../helpers/converters/convertReportHelper');
     var reportCopyHelper = require('../../helpers/reportCopyHelper');
@@ -41,6 +42,8 @@
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
+                scope.hasCreatePermission = false;
+
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
 
@@ -50,6 +53,47 @@
                     if (!listLayout.hasOwnProperty('id')) {
                         scope.isNewLayout = true;
                     }
+                };
+
+                scope.getCurrentMember = function () {
+
+                    usersService.getMyCurrentMember().then(function (data) {
+
+                        scope.currentMember = data;
+
+                        scope.currentMember.groups_object.forEach(function (group) {
+
+                            if (group.permission_table) {
+                                
+                                if(group.permission_table.data) {
+
+                                    group.permission_table.data.forEach(function (item) {
+
+                                        var itemEntityType = metaContentTypesService.findEntityByContentType(item.content_type);
+
+                                        if (itemEntityType === scope.entityType) {
+
+                                            if (item.data.create_objects) {
+                                                scope.hasCreatePermission = true;
+                                            }
+
+                                        }
+
+                                    })
+                                    
+                                }
+                                
+                            }
+                            
+                        });
+
+                        if (scope.currentMember.is_admin || scope.currentMember.is_owner) {
+                            scope.hasCreatePermission = true;
+                        }
+
+                        scope.$apply();
+
+                    });
                 };
 
                 scope.openViewConstructor = function (ev) {
@@ -1394,6 +1438,14 @@
                     changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
                     didLayoutChanged();
                 });
+
+                scope.init = function () {
+
+                    scope.getCurrentMember();
+
+                };
+
+                scope.init()
 
             }
         }

@@ -28,31 +28,23 @@
 
         <div layout="row" layout-align="space-between"
              class="m-b-8"
-             ng-class="{'selected': vm.activeGroup && vm.activeGroup.id == group.id}"
              data-ng-repeat="group in vm.groups"
-             data-ng-click="vm.setActiveGroup($event, group)" style="height: 48px;">
+             style="height: 48px;">
 
             <div layout="row" layout-align="begin center">
                 <span data-ng-bind="group.name"></span>
-
-                <span data-ng-if="vm.activeGroup && vm.activeGroup.id == group.id && vm.processing" class="m-l-8">
-                    <div layout="row" layout-sm="column" layout-align="space-around">
-                    <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
-                    <progress-circular diameter="20"></progress-circular>
-                </div>
                 </span>
             </div>
 
 
-            <div layout="row" layout-align="center center" data-ng-if="vm.activeGroup && vm.activeGroup.id == group.id">
+            <div layout="row" layout-align="center center">
 
                 <div style="width: 210px">
 
                     <md-checkbox class="permission-checkbox"
-                                 data-ng-class="{'disabled-btn': !vm.selectedRows.length}"
-                                 data-ng-checked="vm.isManageChecked"
-                                 md-indeterminate="vm.isManageIndeterminate"
-                                 data-ng-click="vm.toggleManage($event)">
+                                 data-ng-checked="group.isManageChecked"
+                                 md-indeterminate="group.isManageIndeterminate == true"
+                                 data-ng-click="vm.toggleManage($event, group)">
                     </md-checkbox>
 
                 </div>
@@ -60,10 +52,9 @@
                 <div style="width: 210px">
 
                     <md-checkbox class="permission-checkbox"
-                                 data-ng-class="{'disabled-btn': !vm.selectedRows.length}"
-                                 data-ng-checked="vm.isChangeChecked"
-                                 md-indeterminate="vm.isChangeIndeterminate"
-                                 data-ng-click="vm.toggleChange($event)">
+                                 data-ng-checked="group.isChangeChecked"
+                                 md-indeterminate="group.isChangeIndeterminate == true"
+                                 data-ng-click="vm.toggleChange($event, group)">
                     </md-checkbox>
 
                 </div>
@@ -71,10 +62,9 @@
                 <div style="width: 210px">
 
                     <md-checkbox class="permission-checkbox"
-                                 data-ng-class="{'disabled-btn': !vm.selectedRows.length}"
-                                 data-ng-checked="vm.isViewChecked"
-                                 md-indeterminate="vm.isViewIndeterminate"
-                                 data-ng-click="vm.toggleView($event)">
+                                 data-ng-checked="group.isViewChecked"
+                                 md-indeterminate="group.isViewIndeterminate == true"
+                                 data-ng-click="vm.toggleView($event, group)">
                     </md-checkbox>
 
                 </div>
@@ -88,7 +78,7 @@
 
     <div layout="row">
 
-        <md-button data-ng-click="vm.save()" class="md-raised md-primary" data-ng-class="{'disabled-btn': !vm.selectedRows.length || !vm.activeGroup}">Save</md-button>
+        <md-button data-ng-click="vm.save()" class="md-raised md-primary" data-ng-class="{'disabled-btn': !vm.selectedRows.length}">Save</md-button>
 
 
         <div data-ng-if="vm.entityType == 'portfolio' || vm.entityType == 'account' || vm.entityType == 'transaction-type'">
@@ -123,12 +113,5 @@
         <progress-circular diameter="20" data-ng-if="vm.recalculating" class="m-t-8"></progress-circular>
 
     </div>
-
-    <!--<div style="margin-top: 36px">-->
-    <!--<div layout="row" layout-align="end center">-->
-    <!--<md-button class="md-raised" data-ui-sref="app.settings.users-groups">Create/Edit Groups-->
-    <!--</md-button>-->
-    <!--</div>-->
-    <!--</div>-->
 
 </div>

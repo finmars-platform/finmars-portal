@@ -27,6 +27,10 @@
         return strategyRepository.deleteByKey(strategyNumber, id);
     };
 
+    var updateBulk = function (strategyNumber, data) {
+      return strategyRepository.updateBulk(strategyNumber, data)
+    };
+
     var deleteBulk = function(strategyNumber, data){
         return strategyRepository.deleteBulk(strategyNumber, data)
     };
@@ -39,6 +43,8 @@
         update: update,
         deleteByKey: deleteByKey,
 
+
+        updateBulk: updateBulk,
         deleteBulk: deleteBulk
 
     }
