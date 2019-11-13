@@ -39,7 +39,7 @@
         vm.readyStatus = {content: false, entity: true, permissions: true};
         vm.entityType = entityType;
 
-        vm.entity = {$_isValid: true};
+        vm.entity = {$_isValid: true, visibility_status: 1};
 
         vm.processing = false;
 
@@ -485,7 +485,7 @@
 
         vm.saveAndExit = function ($event) {
 
-            vm.save().then(function (value) {
+            vm.save().then(function (data) {
 
                 $mdDialog.hide({res: 'agree', data: data});
 
@@ -1257,6 +1257,9 @@
                 ],
                 'instrument_factor_schedule': [
                     'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
+                ],
+                'execute_command': [
+                    'expr'
                 ]
             };
 
