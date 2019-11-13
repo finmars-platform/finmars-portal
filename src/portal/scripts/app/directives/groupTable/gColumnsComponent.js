@@ -497,6 +497,7 @@
                             column.report_settings.negative_color_format_id = 1;
                             column.report_settings.negative_format_id = 1;
                             column.report_settings.thousands_separator_format_id = 2;
+                            column.report_settings.round_format_id = 1;
                             break;
                         case 'amount':
                             column.report_settings.zero_format_id = 1;
@@ -527,14 +528,22 @@
 
                 };
 
-                scope.checkForExistingGroupingColumn = function (index) {
+                scope.checkForExistingGroupingColumn = function (columnKey) {
 
                     var groups = scope.evDataService.getGroups();
-                    if (groups.length > 0 && index <= groups.length - 1) {
+
+                    for (var i = 0; i < groups.length; i++) {
+                        if (groups[i].key === columnKey) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                    /*if (groups.length > 0 && index <= groups.length - 1) {
                         return false;
                     } else {
                         return true;
-                    }
+                    }*/
 
                 };
 

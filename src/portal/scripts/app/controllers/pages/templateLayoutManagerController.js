@@ -8,6 +8,8 @@
     var uiService = require('../../services/uiService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
+    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
+
     module.exports = function ($scope, $mdDialog) {
 
         var vm = this;
@@ -100,6 +102,8 @@
         ];
 
         vm.transactionUserFields = {};
+
+        var ecosystemDefaultData = {};
 
         vm.getTransactionUserFields = function () {
 
@@ -210,6 +214,98 @@
                 pane.toggle();
                 item.isPaneExpanded = !item.isPaneExpanded;
             }
+
+        };
+
+        var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+
+            var relationType = '';
+            switch (fieldName) {
+                case 'linked_instrument':
+                case 'allocation_pl':
+                case 'allocation_balance':
+                    relationType = 'instrument';
+                    break;
+                default:
+                    relationType = fieldName;
+            }
+
+            var defaultValueKey = '';
+
+            switch (relationType) {
+                case 'account_position':
+                case 'account_cash':
+                case 'account_interim':
+                    defaultValueKey = 'account';
+                    break;
+                case 'settlement_currency':
+                case 'transaction_currency':
+                case 'accrued_currency':
+                case 'pricing_currency':
+                    defaultValueKey = 'currency';
+                    break;
+                case 'strategy1_position':
+                case 'strategy1_cash':
+                    defaultValueKey = 'strategy1';
+                    break;
+                case 'strategy2_position':
+                case 'strategy2_cash':
+                    defaultValueKey = 'strategy2';
+                    break;
+                case 'strategy3_position':
+                case 'strategy3_cash':
+                    defaultValueKey = 'strategy3';
+                    break;
+                default:
+                    defaultValueKey = relationType;
+            }
+
+            var defaultName = ecosystemDefaultData[defaultValueKey + '_object'].name;
+
+            actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
+
+            // needed for displaying default value after turning on 'relation' field
+            actionData[propertyName][fieldName + '_object'] = {};
+            actionData[propertyName][fieldName + '_object']['name'] = defaultName;
+            actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+
+        };
+
+        vm.setStateInActionsControls = function () {
+
+            vm.actionsKeysList = [
+                'instrument',
+                'transaction',
+                'instrument_factor_schedule',
+                'instrument_manual_pricing_formula',
+                'instrument_accrual_calculation_schedules',
+                'instrument_event_schedule',
+                'instrument_event_schedule_action'
+            ];
+
+            vm.activeActionTemplate.data.actions.forEach(function (action) {
+
+                var keys;
+
+                vm.actionsKeysList.forEach(function (actionKey) {
+
+                    if (action[actionKey] !== null) {
+                        keys = Object.keys(action[actionKey]);
+
+                        keys.forEach(function (key) {
+                            if (action[actionKey].hasOwnProperty(key + '_input')) {
+                                if (action[actionKey][key + '_field_type'] === 'relation') {
+                                    action[actionKey][key + '_toggle'] = true;
+
+                                    setDefaultValueForRelation(action, actionKey, key);
+                                }
+                            }
+                        })
+                    }
+
+                })
+
+            });
 
         };
 
@@ -334,15 +430,16 @@
 
                     if (template.type === 'field_template') {
 
-                        vm.activeActionTemplateId = data.id;
-                        vm.activeActionTemplate = data;
+                        vm.activeFieldTemplateId = data.id;
+                        vm.activeFieldTemplate = data;
 
                     }
 
                     if (template.type === 'action_template') {
 
-                        vm.activeFieldTemplateId = data.id;
-                        vm.activeFieldTemplate = data;
+                        vm.activeActionTemplateId = data.id;
+                        vm.activeActionTemplate = data;
+                        vm.setStateInActionsControls();
 
                     }
 
@@ -407,15 +504,16 @@
 
                             if (template.type === 'field_template') {
 
-                                vm.activeActionTemplateId = data.id;
-                                vm.activeActionTemplate = data;
+                                vm.activeFieldTemplateId = data.id;
+                                vm.activeFieldTemplate = data;
 
                             }
 
                             if (template.type === 'action_template') {
 
-                                vm.activeFieldTemplateId = data.id;
-                                vm.activeFieldTemplate = data;
+                                vm.activeActionTemplateId = data.id;
+                                vm.activeActionTemplate = data;
+                                vm.setStateInActionsControls();
 
                             }
 
@@ -475,7 +573,6 @@
 
                         vm.getData().then(function (value) {
 
-
                             if (template.type === 'input_template') {
 
                                 vm.activeInputTemplateId = data.id;
@@ -485,15 +582,16 @@
 
                             if (template.type === 'field_template') {
 
-                                vm.activeActionTemplateId = data.id;
-                                vm.activeActionTemplate = data;
+                                vm.activeFieldTemplateId = data.id;
+                                vm.activeFieldTemplate = data;
 
                             }
 
                             if (template.type === 'action_template') {
 
-                                vm.activeFieldTemplateId = data.id;
-                                vm.activeFieldTemplate = data;
+                                vm.activeActionTemplateId = data.id;
+                                vm.activeActionTemplate = data;
+                                vm.setStateInActionsControls();
 
                             }
 
@@ -583,7 +681,9 @@
 
                         }
 
-                        vm.getData();
+                        vm.getData().then(function () {
+                            vm.getTransactionUserFields();
+                        });
 
                     });
 
@@ -615,6 +715,7 @@
 
                 if (item.id === vm.activeActionTemplateId) {
                     vm.activeActionTemplate = item;
+                    vm.setStateInActionsControls();
                 }
 
             });
@@ -642,7 +743,13 @@
 
         vm.init = function () {
 
-            vm.getData();
+            ecosystemDefaultService.getList().then(function (data) {
+                ecosystemDefaultData = data.results[0];
+
+                vm.getData().then(function () {
+                    vm.setStateInActionsControls();
+                });
+            });
 
             vm.getTransactionUserFields();
 

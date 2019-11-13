@@ -11,7 +11,7 @@
 
     var getPortalInterfaceAccess = function () {
         return uiRepository.getPortalInterfaceAccess();
-    }
+    };
 
     var getEditLayout = function (entity) {
         return uiRepository.getEditLayout(entity);

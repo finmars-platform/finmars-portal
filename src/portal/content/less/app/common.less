@@ -498,7 +498,7 @@ md-input-container:not(.md-input-focused):not(.md-input-has-value) {
 .no-pointer-events {
   pointer-events: none;
 
-  label {
+  label, md-input-container .md-placeholder, md-input-container label:not(.md-no-float):not(.md-container-ignore) {
     pointer-events: none;
   }
 

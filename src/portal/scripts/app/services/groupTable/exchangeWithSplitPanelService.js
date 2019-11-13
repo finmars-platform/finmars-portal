@@ -13,11 +13,15 @@
 
         function setSplitPanelLayoutChangesCheckFn(callbackFn) {
             data.checkForSplitPanelLayoutChangesFn = callbackFn;
-        };
+        }
 
         function getSplitPanelChangedLayout() {
+            if (!data.checkForSplitPanelLayoutChangesFn) {
+                return null;
+            }
+
             return data.checkForSplitPanelLayoutChangesFn();
-        };
+        }
 
         return {
             setSplitPanelLayoutChangesCheckFn: setSplitPanelLayoutChangesCheckFn,

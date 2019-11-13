@@ -607,7 +607,7 @@
                 <div class="template-form-div m-t-8 m-b-8">
 
 
-                    <div>
+                    <div class="template-ttype-actions">
 
                         <v-accordion class="vAccordion--default" multiple control="vm.accordion">
 
@@ -651,9 +651,9 @@
                                                        style="background: #ffeee8;"
                                                        data-ng-click="vm.deletePane(item, $index, $event)">Delete
                                             </md-button>
-                                            <md-button class="md-raised"
+                                            <!--<md-button class="md-raised"
                                                        data-ng-click="vm.makeCopyOfAction(item, $index, $event)">Make copy
-                                            </md-button>
+                                            </md-button>-->
                                             <md-button class="md-raised" ng-disabled="$index == 0"
                                                        data-ng-click="vm.moveUp(item, $index, $event)">Move up
                                             </md-button>
@@ -668,7 +668,7 @@
                                     </div>
                                 </v-pane-header>
 
-                                <v-pane-content style="padding: 20px;">
+                                <v-pane-content class="no-pointer-events" style="padding: 20px;">
 
                                     <div data-ng-if="item.transaction != null"
                                          data-ng-include="'views/tabs/transaction-type/actions/transaction-action-view.html'">

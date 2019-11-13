@@ -108,7 +108,7 @@
                         <md-menu-item data-ng-if="!isReport && entityType !== 'complex-transaction'">
                             <md-button ng-click="toggleSplitPanel($event, 'permission-editor')" class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
-                                            data-ng-show="!currentAdditions.type !== 'permission-editor'"
+                                            data-ng-show="currentAdditions.type !== 'permission-editor'"
                                             class="z-menu-icon"
                                             style="visibility: hidden;"></ng-md-icon>
                                 <ng-md-icon icon="done"

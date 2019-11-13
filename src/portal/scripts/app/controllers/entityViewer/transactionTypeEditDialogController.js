@@ -66,6 +66,8 @@
 
         vm.currentMember = null;
 
+        var ecosystemDefaultData = {};
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -522,8 +524,7 @@
 
                     }
 
-
-                })
+                });
 
 
                 if (!action.action_notes) {
@@ -800,12 +801,10 @@
                         vm.save();
 
                     }
-                    ;
 
                 });
 
             }
-            ;
 
             /*$state.go('app.data-constructor', {entityType: vm.entityType});
             $mdDialog.hide();*/
@@ -858,7 +857,6 @@
 
                 if (vm.entity.is_valid_for_all_instruments) {
                     v.entity.instrument_types = [];
-                    ;
                 }
 
             } else if (entity === 'portfolios') {
@@ -894,7 +892,6 @@
         };
 
         vm.openExpressionDialog = function ($event, item, options) {
-
 
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
@@ -1373,37 +1370,30 @@
             if (action.instrument) {
                 return "Create Instrument";
             }
-            ;
 
             if (action.transaction) {
                 return "Create Transaction";
             }
-            ;
 
             if (action.instrument_factor_schedule) {
                 return "Create Factor Schedule";
             }
-            ;
 
             if (action.instrument_manual_pricing_formula) {
                 return "Create Manual Pricing Formula";
             }
-            ;
 
             if (action.instrument_accrual_calculation_schedules) {
                 return "Create Accrual Calculation Schedules";
             }
-            ;
 
             if (action.instrument_event_schedule) {
                 return "Create Event Schedule";
             }
-            ;
 
             if (action.instrument_event_schedule_action) {
                 return "Create Event Schedule Action"
             }
-            ;
         };
 
         vm.preventSpace = function ($event) {
@@ -1507,8 +1497,62 @@
 
             });
 
-        }
+        };
 
+
+        var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+
+            var relationType = '';
+            switch (fieldName) {
+                case 'linked_instrument':
+                case 'allocation_pl':
+                case 'allocation_balance':
+                    relationType = 'instrument';
+                    break;
+                default:
+                    relationType = fieldName;
+            }
+
+            var defaultValueKey = '';
+
+            switch (relationType) {
+                case 'account_position':
+                case 'account_cash':
+                case 'account_interim':
+                    defaultValueKey = 'account';
+                    break;
+                case 'settlement_currency':
+                case 'transaction_currency':
+                case 'accrued_currency':
+                case 'pricing_currency':
+                    defaultValueKey = 'currency';
+                    break;
+                case 'strategy1_position':
+                case 'strategy1_cash':
+                    defaultValueKey = 'strategy1';
+                    break;
+                case 'strategy2_position':
+                case 'strategy2_cash':
+                    defaultValueKey = 'strategy2';
+                    break;
+                case 'strategy3_position':
+                case 'strategy3_cash':
+                    defaultValueKey = 'strategy3';
+                    break;
+                default:
+                    defaultValueKey = relationType;
+            }
+
+            var defaultName = ecosystemDefaultData[defaultValueKey + '_object'].name;
+
+            actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
+
+            // needed for displaying default value after turning on 'relation' field
+            actionData[propertyName][fieldName + '_object'] = {};
+            actionData[propertyName][fieldName + '_object']['name'] = defaultName;
+            actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+
+        };
 
         vm.resetProperty = function (item, propertyName, fieldName) {
 
@@ -1530,25 +1574,24 @@
 
             if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
 
-                var relationType = '';
-                switch (fieldName) {
-                    case 'linked_instrument':
-                    case 'allocation_pl':
-                    case 'allocation_balance':
-                        relationType = 'instrument';
-                        break;
-                    default:
-                        relationType = fieldName;
-                }
+                setDefaultValueForRelation(item, propertyName, fieldName);
+                console.log("template action", item);
+                $scope.$apply(function () {
+                    setTimeout(function () {
+                        $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                            ev.stopPropagation();
+                        });
+                    }, 100);
+                });
 
-                vm.loadRelation(relationType).then(function (data) {
+                /*vm.loadRelation(relationType).then(function (data) {
 
                     var defaultPropertyName = 'name';
                     if (fieldName === 'price_download_scheme') {
                         defaultPropertyName = 'scheme_name';
                     }
 
-                    /*vm.relationItems[relationType].forEach(function (relation) {
+                    vm.relationItems[relationType].forEach(function (relation) {
 
                         if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
                             item[propertyName][fieldName] = relation.id;
@@ -1558,33 +1601,17 @@
 
                         }
 
-                    });*/
-                    ecosystemDefaultService.getList().then(function (data) {
-
-                        var defaultValues = data.results[0];
-                        item[propertyName][fieldName] = defaultValues[relationType];
-
-                        for (var i = 0; i < vm.relationItems[relationType].length; i++) {
-                            var relation = vm.relationItems[relationType][i];
-
-                            if (relation.id === item[propertyName][fieldName]) {
-                                item[propertyName][fieldName + '_object'] = {};
-                                item[propertyName][fieldName + '_object']['name'] = relation[defaultPropertyName];
-                                break;
-                            }
-                        }
-
-                        $scope.$apply(function () {
-                            setTimeout(function () {
-                                $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                                    ev.stopPropagation();
-                                });
-                            }, 100);
-                        });
-
                     });
 
-                });
+                    $scope.$apply(function () {
+                        setTimeout(function () {
+                            $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                                ev.stopPropagation();
+                            });
+                        }, 100);
+                    });
+
+                });*/
 
             }
 
@@ -1924,19 +1951,11 @@
                     fieldResolverService.getFields(field).then(function (data) {
                         vm.relationItems[field] = data.data;
 
-                        /*$scope.$apply(function () {
-                            setTimeout(function () {
-                                $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                                    ev.stopPropagation();
-                                });
-                            }, 100);
-                        });*/
                         $scope.$apply();
 
                         resolve(vm.relationItems[field]);
                     })
                 } else {
-
                     resolve(vm.relationItems[field]);
                 }
 
@@ -2077,28 +2096,51 @@
                 });
 
                 Object.keys(template.data.fields).forEach(function (key) {
-
                     vm.entity[key] = template.data.fields[key];
-
                 })
 
             }
 
             if (template.type === 'action_template') {
 
-                template.data.actions.forEach(function (action) {
+                var actionsToAdd = template.data.actions.map(function (action) {
 
-                    vm.entity.actions.push(action);
+                    Object.keys(action).forEach(function (key) {
 
-                })
+                        if (typeof action[key] === 'object' && action[key] !== null) {
+
+                            Object.keys(action[key]).forEach(function (actionItemKey) {
+
+                                if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+
+                                    if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
+                                        if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
+                                            action[key][actionItemKey + '_toggle'] = true;
+
+                                            setDefaultValueForRelation(action, key, actionItemKey);
+                                        }
+
+                                        delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
+                                    }
+
+                                }
+
+                            })
+
+                        }
+
+                    });
+
+                    return action;
+                });
+
+                vm.entity.actions = vm.entity.actions.concat(actionsToAdd);
 
             }
 
         };
 
         vm.saveAsTemplate = function ($event, type) {
-
-            console.log("Save as Template")
 
             $mdDialog.show({
                 controller: 'SaveAsDialogController as vm',
@@ -2180,6 +2222,13 @@
                                         result[key][actionItemKey] = action[key][actionItemKey];
 
                                         if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+
+                                            result[key][actionItemKey + '_field_type'] = 'input';
+
+                                            if (action[key][actionItemKey + '_toggle']) {
+                                                result[key][actionItemKey + '_field_type'] = 'relation';
+                                            }
+
                                             result[key][actionItemKey] = null; // if its relation property
                                         }
 
@@ -2194,7 +2243,6 @@
                                         if (actionItemKey.indexOf('_object') !== -1) {
                                             delete result[key][actionItemKey]
                                         }
-
 
 
                                     })
@@ -2243,6 +2291,10 @@
 
         vm.init = function () {
 
+            ecosystemDefaultService.getList().then(function (data) {
+                ecosystemDefaultData = data.results[0];
+            });
+
             vm.getItem();
             vm.getAttrs();
             vm.getReferenceTables();
@@ -2253,6 +2305,7 @@
 
             vm.layoutAttrs = layoutService.getLayoutAttrs();
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
 
         };
 

@@ -203,7 +203,7 @@
             vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
             vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
 
-            /*filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
+            filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
             filterAttrsToShow('balancePerformanceAttrs', balancePerformanceAttrsToRemove);
             filterAttrsToShow('allocationAttrs', allocationAttrsToRemove);
             filterAttrsToShow('instrumentAttrs', instrumentAttrsToRemove);
@@ -216,7 +216,7 @@
             filterAttrsToShow('accountAttrs', accountAttrsToRemove);
             filterAttrsToShow('strategy1attrs', strategy1AttrsToRemove);
             filterAttrsToShow('strategy2attrs', strategy2AttrsToRemove);
-            filterAttrsToShow('strategy3attrs', strategy3AttrsToRemove);*/
+            filterAttrsToShow('strategy3attrs', strategy3AttrsToRemove);
 
             /*vm.attrsList = attrsList;*/
 

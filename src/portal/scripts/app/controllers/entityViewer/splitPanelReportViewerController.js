@@ -100,7 +100,7 @@
 
                     var spDefaultLayout = vm.entityViewerDataService.getSplitPanelDefaultLayout();
                     var additions = parentEntityViewerDataService.getAdditions();
-                    additions.layoutId = spDefaultLayout;
+                    additions.layoutData.layoutId = spDefaultLayout;
                     parentEntityViewerDataService.setAdditions(additions);
 
                 });
@@ -203,7 +203,7 @@
                 if (splitPanelActiveLayoutId) {
                     defaultLayoutId = splitPanelActiveLayoutId;
                 } else {
-                    defaultLayoutId = additions.layoutId;
+                    defaultLayoutId = additions.layoutData.layoutId;
                 }
 
                 vm.entityViewerDataService.setAttributesFromAbove(columns);

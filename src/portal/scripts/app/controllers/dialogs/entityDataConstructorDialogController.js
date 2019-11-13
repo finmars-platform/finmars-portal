@@ -49,8 +49,6 @@
             hideManageAttributesButton = data.hideManageAttributesButton;
         }
 
-        console.log('cancel button initEntityType', $stateParams);
-
         var choices = metaService.getTypeCaptions();
 
         // weirdo stuff
@@ -175,9 +173,9 @@
                     };
                     tab.layout.fields.push(field);
 
-                };
+                }
 
-            };
+            }
 
         }
 
@@ -304,10 +302,10 @@
                 if (socket && socket.type !== 'empty') {
                     isEmpty = false;
                     break;
-                } else if (!socket) {
+                } /*else if (!socket) {
                     isEmpty = false;
                     break;
-                }
+                }*/
 
             }
 

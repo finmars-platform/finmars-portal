@@ -73,7 +73,7 @@
 
                         this.dragula.on('shadow', function (elem, container) { // used to prevent showing shadow of card in deletion area
                             if ($(container).attr('id') === 'gc-delete-area') {
-                                drake.remove();
+                                $(elem).remove(); // removing only shadow of the dragged element
                             }
                         });
 
@@ -207,9 +207,9 @@
                                         if (columns[c].key === identifier) {
                                             columns.splice(c, 1);
                                             break;
-                                        };
+                                        }
 
-                                    };
+                                    }
 
                                     drake.remove();
 

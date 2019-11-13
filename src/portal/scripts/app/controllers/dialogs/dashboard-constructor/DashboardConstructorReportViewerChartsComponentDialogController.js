@@ -147,13 +147,14 @@
                     vm.item.settings.number_format.zero_format_id = 1;
                     vm.item.settings.number_format.negative_color_format_id = 0;
                     vm.item.settings.number_format.negative_format_id = 0;
-                    column.report_settings.round_format_id = 1;
+                    vm.item.settings.round_format_id = 1;
                     break;
                 case 'market_value':
                     vm.item.settings.number_format.zero_format_id = 1;
                     vm.item.settings.number_format.negative_color_format_id = 1;
                     vm.item.settings.number_format.negative_format_id = 1;
                     vm.item.settings.number_format.thousands_separator_format_id = 2;
+                    vm.item.settings.round_format_id = 1;
                     break;
                 case 'amount':
                     vm.item.settings.number_format.zero_format_id = 1;

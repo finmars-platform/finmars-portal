@@ -821,7 +821,7 @@
                 listLayout.data.interfaceLayout = interfaceLayoutToSave;
 
                 if (isRootEntityViewer()) {
-                    listLayout.data.additions = getAdditions()
+                    listLayout.data.additions = JSON.parse(JSON.stringify(getAdditions()));
                 }
 
                 if (options) {

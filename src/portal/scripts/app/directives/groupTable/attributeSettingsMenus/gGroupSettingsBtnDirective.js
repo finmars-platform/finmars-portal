@@ -6,6 +6,7 @@
     'use strict';
 
     var evEvents = require('../../../services/entityViewerEvents');
+    var metaService = require('../../../services/metaService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -17,6 +18,9 @@
             },
             templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-group-settings-btn-view.html',
             link: function (scope, elem, attrs) {
+                console.log("rename scope.groupKey", scope.groupKey);
+                scope.entityType = scope.evDataService.getEntityType();
+                scope.isReport = metaService.isReport(scope.entityType);
 
                 var groups = scope.evDataService.getGroups();
 
@@ -25,7 +29,7 @@
                         scope.group = group;
                     }
                 });
-
+                console.log("rename scope.group", scope.group);
                 var updateGroup = function () {
 
                     for (var i = 0; i < groups.length; i++) {

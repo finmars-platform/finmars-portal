@@ -69,6 +69,8 @@
 
         vm.formIsFilled = false;
 
+        var ecosystemDefaultData = {};
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -1084,6 +1086,60 @@
 
         });
 
+        var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+
+            var relationType = '';
+            switch (fieldName) {
+                case 'linked_instrument':
+                case 'allocation_pl':
+                case 'allocation_balance':
+                    relationType = 'instrument';
+                    break;
+                default:
+                    relationType = fieldName;
+            }
+
+            var defaultValueKey = '';
+
+            switch (relationType) {
+                case 'account_position':
+                case 'account_cash':
+                case 'account_interim':
+                    defaultValueKey = 'account';
+                    break;
+                case 'settlement_currency':
+                case 'transaction_currency':
+                case 'accrued_currency':
+                case 'pricing_currency':
+                    defaultValueKey = 'currency';
+                    break;
+                case 'strategy1_position':
+                case 'strategy1_cash':
+                    defaultValueKey = 'strategy1';
+                    break;
+                case 'strategy2_position':
+                case 'strategy2_cash':
+                    defaultValueKey = 'strategy2';
+                    break;
+                case 'strategy3_position':
+                case 'strategy3_cash':
+                    defaultValueKey = 'strategy3';
+                    break;
+                default:
+                    defaultValueKey = relationType;
+            }
+
+            var defaultName = ecosystemDefaultData[defaultValueKey + '_object'].name;
+
+            actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
+
+            // needed for displaying default value after turning on 'relation' field
+            actionData[propertyName][fieldName + '_object'] = {};
+            actionData[propertyName][fieldName + '_object']['name'] = defaultName;
+            actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+
+        };
+
         vm.resetProperty = function (item, propertyName, fieldName) {
 
             item[propertyName][fieldName] = null;
@@ -1104,61 +1160,44 @@
 
             if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
 
-                var relationType = '';
-                switch (fieldName) {
-                    case 'linked_instrument':
-                    case 'allocation_pl':
-                    case 'allocation_balance':
-                        relationType = 'instrument';
-                        break;
-                    default:
-                        relationType = fieldName;
-                }
+                setDefaultValueForRelation(item, propertyName, fieldName);
 
-                vm.loadRelation(relationType).then(function (data) {
+                $scope.$apply(function () {
+                    setTimeout(function () {
+                        $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                            ev.stopPropagation();
+                        });
+                    }, 100);
+                });
+
+                /*vm.loadRelation(relationType).then(function (data) {
 
                     var defaultPropertyName = 'name';
                     if (fieldName === 'price_download_scheme') {
                         defaultPropertyName = 'scheme_name';
                     }
 
-                    /*vm.relationItems[relationType].forEach(function (relation) {
+                    vm.relationItems[relationType].forEach(function (relation) {
 
                         if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
                             item[propertyName][fieldName] = relation.id;
 
                             item[propertyName][fieldName + '_object'] = {};
                             item[propertyName][fieldName + '_object']['name'] = relation[defaultPropertyName];
+
                         }
-
-                    });*/
-
-                    ecosystemDefaultService.getList().then(function (data) {
-
-                        var defaultValues = data.results[0];
-                        item[propertyName][fieldName] = defaultValues[relationType];
-
-                        for (var i = 0; i < vm.relationItems[relationType].length; i++) {
-                            var relation = vm.relationItems[relationType][i];
-
-                            if (relation.id === item[propertyName][fieldName]) {
-                                item[propertyName][fieldName + '_object'] = {};
-                                item[propertyName][fieldName + '_object']['name'] = relation[defaultPropertyName];
-                                break;
-                            }
-                        }
-
-                        $scope.$apply(function () {
-                            setTimeout(function () {
-                                $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                                    ev.stopPropagation();
-                                });
-                            }, 100);
-                        });
 
                     });
 
-                });
+                    $scope.$apply(function () {
+                        setTimeout(function () {
+                            $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                                ev.stopPropagation();
+                            });
+                        }, 100);
+                    });
+
+                });*/
 
             }
 
@@ -1491,13 +1530,6 @@
                     fieldResolverService.getFields(field).then(function (data) {
                         vm.relationItems[field] = data.data;
 
-                        /*$scope.$apply(function () {
-                            setTimeout(function () {
-                                $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                                    ev.stopPropagation();
-                                });
-                            }, 100);
-                        });*/
                         $scope.$apply();
 
                         resolve(vm.relationItems[field]);
@@ -1644,11 +1676,38 @@
 
             if (template.type === 'action_template') {
 
-                template.data.actions.forEach(function (action) {
+                var actionsToAdd = template.data.actions.map(function (action) {
 
-                    vm.entity.actions.push(action);
+                    Object.keys(action).forEach(function (key) {
 
-                })
+                        if (typeof action[key] === 'object' && action[key] !== null) {
+
+                            Object.keys(action[key]).forEach(function (actionItemKey) {
+
+                                if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+
+                                    if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
+                                        if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
+                                            action[key][actionItemKey + '_toggle'] = true;
+
+                                            setDefaultValueForRelation(action, key, actionItemKey); // set default values for 'relation' fields
+                                        }
+
+                                        delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
+                                    }
+
+                                }
+
+                            })
+
+                        }
+
+                    });
+
+                    return action;
+                });
+
+                vm.entity.actions = vm.entity.actions.concat(actionsToAdd);
 
             }
 
@@ -1738,6 +1797,13 @@
                                         result[key][actionItemKey] = action[key][actionItemKey];
 
                                         if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+
+                                            result[key][actionItemKey + '_field_type'] = 'input';
+
+                                            if (action[key][actionItemKey + '_toggle']) {
+                                                result[key][actionItemKey + '_field_type'] = 'relation';
+                                            }
+
                                             result[key][actionItemKey] = null; // if its relation property
                                         }
 
@@ -1803,6 +1869,10 @@
 
         vm.init = function () {
 
+            ecosystemDefaultService.getList().then(function (data) {
+                ecosystemDefaultData = data.results[0];
+            });
+
             vm.getAttributeTypes();
             vm.getTransactionTypeGroups();
             vm.getPortfolios();
@@ -1827,7 +1897,6 @@
 
                 }
             });
-
 
         };
 
