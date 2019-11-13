@@ -22,15 +22,6 @@
 
         vm.selectedRows = [];
 
-        vm.isManageChecked = false;
-        vm.isManageIndeterminate = false;
-
-        vm.isChangeChecked = false;
-        vm.isChangeIndeterminate = false;
-
-        vm.isViewChecked = false;
-        vm.isViewIndeterminate = false;
-
         vm.getGroups = function () {
 
             vm.readyStatus.content = false;
@@ -59,23 +50,6 @@
                 return item.___is_activated
             })
 
-
-        };
-
-        vm.setActiveGroup = function ($event, group) {
-
-            vm.activeGroup = group;
-            vm.isSaved = false;
-
-            if (!$event.target.classList.contains('md-container')) {
-
-                vm.selectedRows = vm.getSelectedRows();
-
-                if (vm.selectedRows.length) {
-                    vm.updateStates();
-                }
-
-            }
 
         };
 
@@ -110,11 +84,9 @@
                     resolve();
 
 
-
                 })
 
             })
-
 
 
         };
@@ -162,7 +134,7 @@
 
         };
 
-        vm.recalculateInstrumentPermissions = function($event){
+        vm.recalculateInstrumentPermissions = function ($event) {
 
             vm.recalculating = true;
             vm.isSaved = false;
@@ -215,7 +187,7 @@
 
         };
 
-        vm.recalculateAccountPermissions = function($event) {
+        vm.recalculateAccountPermissions = function ($event) {
 
             vm.recalculating = true;
             vm.isSaved = false;
@@ -270,7 +242,7 @@
 
         };
 
-        vm.recalculateAccountAndTransactionsPermissions = function($event) {
+        vm.recalculateAccountAndTransactionsPermissions = function ($event) {
 
             vm.recalculating = true;
             vm.isSaved = false;
@@ -338,56 +310,60 @@
             var change_code = "change_" + vm.entityType.split('-').join('').toLowerCase();
             var view_code = "view_" + vm.entityType.split('-').join('').toLowerCase();
 
+
             vm.selectedRows.forEach(function (item) {
 
                 obj = {id: item.id, object_permissions: []};
 
-                item.object_permissions.forEach(function (perm) {
+                vm.groups.forEach(function (group) {
 
-                    if (perm.group === vm.activeGroup.id) {
+                    item.object_permissions.forEach(function (perm) {
 
-                        if (perm.permission.indexOf('manage') !== -1 && vm.isManageIndeterminate) {
-                            obj.object_permissions.push(perm)
+                        if (perm.group === group.id) {
+
+                            if (perm.permission.indexOf('manage') !== -1 && group.isManageIndeterminate) {
+                                obj.object_permissions.push(perm)
+                            }
+
+                            if (perm.permission.indexOf('change') !== -1 && group.isChangeIndeterminate) {
+                                obj.object_permissions.push(perm)
+                            }
+
+                            if (perm.permission.indexOf('view') !== -1 && group.isViewIndeterminate) {
+                                obj.object_permissions.push(perm)
+                            }
+
                         }
 
-                        if (perm.permission.indexOf('change') !== -1 && vm.isChangeIndeterminate) {
-                            obj.object_permissions.push(perm)
-                        }
 
-                        if (perm.permission.indexOf('view') !== -1 && vm.isViewIndeterminate) {
-                            obj.object_permissions.push(perm)
-                        }
+                    });
 
-                    } else {
-                        obj.object_permissions.push(perm)
+
+                    if (group.isManageChecked) {
+                        obj.object_permissions.push({
+                            group: group.id,
+                            member: null,
+                            permission: manage_code
+                        })
                     }
 
+                    if (group.isChangeChecked) {
+                        obj.object_permissions.push({
+                            group: group.id,
+                            member: null,
+                            permission: change_code
+                        })
+                    }
+
+                    if (group.isViewChecked) {
+                        obj.object_permissions.push({
+                            group: group.id,
+                            member: null,
+                            permission: view_code
+                        })
+                    }
 
                 });
-
-                if (vm.isManageChecked) {
-                    obj.object_permissions.push({
-                        group: vm.activeGroup.id,
-                        member: null,
-                        permission: manage_code
-                    })
-                }
-
-                if (vm.isChangeChecked) {
-                    obj.object_permissions.push({
-                        group: vm.activeGroup.id,
-                        member: null,
-                        permission: change_code
-                    })
-                }
-
-                if (vm.isViewChecked) {
-                    obj.object_permissions.push({
-                        group: vm.activeGroup.id,
-                        member: null,
-                        permission: view_code
-                    })
-                }
 
                 result.push(obj);
 
@@ -425,26 +401,26 @@
 
         };
 
-        vm.toggleManage = function ($event) {
+        vm.toggleManage = function ($event, group) {
 
-            vm.isManageChecked = !vm.isManageChecked;
-            vm.isManageIndeterminate = false;
+            group.isManageChecked = !group.isManageChecked;
+            group.isManageIndeterminate = false;
             vm.isSaved = false;
 
         };
 
-        vm.toggleChange = function ($event) {
+        vm.toggleChange = function ($event, group) {
 
-            vm.isChangeChecked = !vm.isChangeChecked;
-            vm.isChangeIndeterminate = false;
+            group.isChangeChecked = !group.isChangeChecked;
+            group.isChangeIndeterminate = false;
             vm.isSaved = false;
 
         };
 
-        vm.toggleView = function ($event) {
+        vm.toggleView = function ($event, group) {
 
-            vm.isViewChecked = !vm.isViewChecked;
-            vm.isViewIndeterminate = false;
+            group.isViewChecked = !group.isViewChecked;
+            group.isViewIndeterminate = false;
             vm.isSaved = false;
 
         };
@@ -453,76 +429,100 @@
 
             console.time("Update States");
 
-            vm.isManageChecked = false;
-            vm.isManageIndeterminate = false;
+            var permCounter = {};
 
-            vm.isChangeChecked = false;
-            vm.isChangeIndeterminate = false;
+            vm.groups.forEach(function (group) {
 
-            vm.isViewChecked = false;
-            vm.isViewIndeterminate = false;
+                group.isManageIndeterminate = false;
+                group.isChangeIndeterminate = false;
+                group.isViewIndeterminate = false;
 
-            var managePermCount = 0;
-            var changePermCount = 0;
-            var viewPermCount = 0;
+                group.isManageChecked = false;
+                group.isChangeChecked = false;
+                group.isViewChecked = false;
+
+                permCounter[group.id] = {
+                    manage: 0,
+                    change: 0,
+                    view: 0
+                }
+
+            });
 
             vm.selectedRows.forEach(function (item) {
 
-                item.object_permissions.forEach(function (perm) {
+                vm.groups.forEach(function (group) {
 
-                    if (vm.activeGroup.id === perm.group) {
-
-                        if (perm.permission.indexOf('manage_') !== -1) {
-
-                            vm.isManageIndeterminate = true;
-
-                            managePermCount = managePermCount + 1
-
+                    if (!permCounter.hasOwnProperty(group.id)) {
+                        permCounter[group.id] = {
+                            manage: 0,
+                            change: 0,
+                            view: 0
                         }
-
-                        if (perm.permission.indexOf('change_') !== -1) {
-
-                            vm.isChangeIndeterminate = true;
-
-                            changePermCount = changePermCount + 1
-
-                        }
-
-                        if (perm.permission.indexOf('view_') !== -1) {
-
-                            vm.isViewIndeterminate = true;
-
-                            viewPermCount = viewPermCount + 1
-
-                        }
-
                     }
 
+                    item.object_permissions.forEach(function (perm) {
+
+                        if (group.id === perm.group) {
+
+                            if (perm.permission.indexOf('manage_') !== -1) {
+
+                                group.isManageIndeterminate = true;
+
+                                permCounter[group.id].manage = permCounter[group.id].manage + 1;
+
+
+                            }
+
+                            if (perm.permission.indexOf('change_') !== -1) {
+
+                                group.isChangeIndeterminate = true;
+
+                                permCounter[group.id].change = permCounter[group.id].change + 1;
+
+                            }
+
+                            if (perm.permission.indexOf('view_') !== -1) {
+
+                                group.isViewIndeterminate = true;
+
+                                permCounter[group.id].view = permCounter[group.id].view + 1;
+
+                            }
+
+                        }
+
+
+                    })
 
                 })
 
             });
 
-            if (managePermCount === vm.selectedRows.length && vm.selectedRows.length !== 0) {
-                vm.isManageChecked = true;
-                vm.isManageIndeterminate = false;
-            }
+            vm.groups.forEach(function (group) {
 
-            if (changePermCount === vm.selectedRows.length && vm.selectedRows.length !== 0) {
-                vm.isChangeChecked = true;
-                vm.isChangeIndeterminate = false;
-            }
+                if (permCounter[group.id].manage === vm.selectedRows.length && vm.selectedRows.length !== 0) {
+                    group.isManageChecked = true;
+                    group.isManageIndeterminate = false;
+                }
 
-            if (viewPermCount === vm.selectedRows.length && vm.selectedRows.length !== 0) {
-                vm.isViewChecked = true;
-                vm.isViewIndeterminate = false;
-            }
+                if (permCounter[group.id].change === vm.selectedRows.length && vm.selectedRows.length !== 0) {
+                    group.isChangeChecked = true;
+                    group.isChangeIndeterminate = false;
+                }
+
+                if (permCounter[group.id].view === vm.selectedRows.length && vm.selectedRows.length !== 0) {
+                    group.isViewChecked = true;
+                    group.isViewIndeterminate = false;
+                }
+
+            });
 
             console.timeEnd("Update States");
 
             setTimeout(function () {
                 $scope.$apply();
-            },0)
+            }, 0)
 
         };
 
@@ -530,11 +530,7 @@
 
             vm.selectedRows = vm.getSelectedRows();
 
-            console.log('activeGroup', vm.activeGroup);
-
-            if (vm.activeGroup) {
-                vm.updateStates();
-            }
+            vm.updateStates();
 
         });
 

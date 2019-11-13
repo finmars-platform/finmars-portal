@@ -1726,6 +1726,9 @@
                 ],
                 'instrument_factor_schedule': [
                     'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
+                ],
+                'execute_command': [
+                    'expr'
                 ]
             };
 

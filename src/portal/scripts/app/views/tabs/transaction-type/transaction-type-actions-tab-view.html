@@ -90,6 +90,10 @@
                          data-ng-include="'views/tabs/transaction-type/actions/instrument-event-schedule-action-action-view.html'">
                     </div>
 
+                    <div data-ng-if="item.execute_command != null"
+                         data-ng-include="'views/tabs/transaction-type/actions/execute-command-action-view.html'">
+                    </div>
+
                 </v-pane-content>
             </v-pane>
 
@@ -105,6 +109,10 @@
                 </md-button>
                 <md-button class="md-raised" data-ng-click="vm.addAction('instrument')">
                     Create instrument
+                </md-button>
+
+                <md-button class="md-raised" data-ng-click="vm.addAction('execute_command')">
+                    Execute Command
                 </md-button>
             </div>
 

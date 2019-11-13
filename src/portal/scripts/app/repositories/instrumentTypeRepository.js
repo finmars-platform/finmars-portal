@@ -81,6 +81,22 @@
         })
     };
 
+    var updateBulk = function (data) {
+
+        return xhrService.fetch(baseUrl + 'instruments/instrument-type/bulk-update/',
+            {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+
+    };
+
     var deleteBulk = function (data) {
         return xhrService.fetch(baseUrl + 'instruments/instrument-type/bulk-delete/',
             {
@@ -107,6 +123,7 @@
         update: update,
         deleteByKey: deleteByKey,
 
+        updateBulk: updateBulk,
         deleteBulk: deleteBulk
     }
 
