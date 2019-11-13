@@ -18,6 +18,9 @@
                     <th>Verbose Name</th>
                     <th>Value Type</th>
                     <th>Content Type</th>
+                    <th>Use Default Value from Context</th>
+                    <th>Default Value</th>
+                    <th>Input Expression</th>
                 </tr>
 
                 <tr data-ng-repeat="input in vm.template.data.inputs track by $index">
@@ -69,6 +72,7 @@
                             </md-select>
                         </md-input-container>
                     </td>
+
                     <td>
                         <md-input-container class="md-block m-0"
                                             aria-label="content type input"
@@ -102,6 +106,62 @@
                             </md-select>
                         </md-input-container>
 
+                    </td>
+
+                    <td class="edit-state-td ttype-inputs-checkbox-td">
+
+                        <md-input-container class="no-error-spacer" data-ng-if="input.value_type == 100">
+                            <md-checkbox data-ng-model="input.is_fill_from_context"
+                            ></md-checkbox>
+                        </md-input-container>
+
+                        <div data-ng-if="input.value_type != 100">
+                            &nbsp;
+                        </div>
+
+                    </td>
+
+                    <td>
+                        <div data-ng-if="input.value_type != 100">
+
+                            <md-input-container class="no-error-spacer m-0">
+                                <input type="text" data-ng-model="input.value">
+                            </md-input-container>
+
+                        </div>
+
+                        <div data-ng-if="input.is_fill_from_context && input.value_type == 100">
+
+                            <md-select ng-model="input.context_property"
+                                       md-container-class="common-select-container">
+
+                                <div class="select-options-holder">
+
+                                    <md-option
+                                            data-ng-repeat="item in vm.contextProperties[input.content_type]"
+                                            ng-value="item.key">
+                                        {{item.name}}
+                                    </md-option>
+
+                                </div>
+                            </md-select>
+
+                        </div>
+
+                        <div data-ng-if="!input.is_fill_from_context && input.value_type == 100">
+
+                            <md-input-container class="no-error-spacer m-0">
+                                <input type="text" data-ng-model="input.value" disabled>
+                            </md-input-container>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        <md-input-container class="no-error-spacer m-0">
+                            <input type="text" data-ng-model="input.value_expr">
+                        </md-input-container>
                     </td>
 
                 </tr>

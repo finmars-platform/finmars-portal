@@ -60,6 +60,9 @@
                                 <th>Verbose Name</th>
                                 <th>Value Type</th>
                                 <th>Content Type</th>
+                                <th>Use Default Value from Context</th>
+                                <th>Default Value</th>
+                                <th>Input Expression</th>
                                 <th></th>
                             </tr>
 
@@ -107,6 +110,7 @@
                                         </md-select>
                                     </md-input-container>
                                 </td>
+
                                 <td>
                                     <md-input-container class="md-block m-0"
                                                         aria-label="content type input"
@@ -140,6 +144,62 @@
                                         </md-select>
                                     </md-input-container>
 
+                                </td>
+
+                                <td class="edit-state-td ttype-inputs-checkbox-td">
+
+                                    <md-input-container class="no-error-spacer" data-ng-if="input.value_type == 100">
+                                        <md-checkbox data-ng-model="input.is_fill_from_context"
+                                        ></md-checkbox>
+                                    </md-input-container>
+
+                                    <div data-ng-if="input.value_type != 100">
+                                        &nbsp;
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    <div data-ng-if="input.value_type != 100">
+
+                                        <md-input-container class="no-error-spacer m-0">
+                                            <input type="text" data-ng-model="input.value">
+                                        </md-input-container>
+
+                                    </div>
+
+                                    <div data-ng-if="input.is_fill_from_context && input.value_type == 100">
+
+                                        <md-select ng-model="input.context_property"
+                                                   md-container-class="common-select-container">
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.contextProperties[input.content_type]"
+                                                        ng-value="item.key">
+                                                    {{item.name}}
+                                                </md-option>
+
+                                            </div>
+                                        </md-select>
+
+                                    </div>
+
+                                    <div data-ng-if="!input.is_fill_from_context && input.value_type == 100">
+
+                                        <md-input-container class="no-error-spacer m-0">
+                                            <input type="text" data-ng-model="input.value" disabled>
+                                        </md-input-container>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    <md-input-container class="no-error-spacer m-0">
+                                        <input type="text" data-ng-model="input.value_expr">
+                                    </md-input-container>
                                 </td>
 
                                 <td>
@@ -225,7 +285,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_1']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_1">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_1">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -237,7 +298,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_2']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_2">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_2">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -249,7 +311,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_3']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_3">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_3">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -261,7 +324,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_4']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_4">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_4">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -273,7 +337,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_5']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_5">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_5">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -285,7 +350,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_6']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_6">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_6">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -297,7 +363,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_7']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_7">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_7">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -309,7 +376,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_8']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_8">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_8">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -321,7 +389,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_9']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_9">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_9">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -333,7 +402,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_text_10']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_text_10">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_text_10">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -357,7 +427,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_1']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_1">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_1">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -369,7 +440,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_2']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_2">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_2">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -381,7 +453,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_3']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_3">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_3">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -393,7 +466,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_4']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_4">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_4">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -405,7 +479,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_5']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_5">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_5">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -417,7 +492,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_6']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_6">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_6">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -429,7 +505,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_7']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_7">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_7">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -441,7 +518,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_8']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_8">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_8">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -453,7 +531,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_9']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_9">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_9">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -465,7 +544,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_number_10']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_number_10">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_number_10">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -489,7 +569,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_date_1']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_date_1">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_date_1">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -501,7 +582,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_date_2']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_date_2">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_date_2">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -513,7 +595,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_date_3']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_date_3">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_date_3">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -525,7 +608,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_date_4']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_date_4">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_date_4">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -537,7 +621,8 @@
                                         <md-input-container>
                                             <label for=""
                                                    data-ng-bind="vm.transactionUserFields['user_date_5']"></label>
-                                            <input type="text" data-ng-model="vm.activeFieldTemplate.data.fields.user_date_5">
+                                            <input type="text"
+                                                   data-ng-model="vm.activeFieldTemplate.data.fields.user_date_5">
                                         </md-input-container>
 
                                         <expression-editor-button
@@ -611,7 +696,8 @@
 
                         <v-accordion class="vAccordion--default" multiple control="vm.accordion">
 
-                            <v-pane data-ng-repeat="item in vm.activeActionTemplate.data.actions track by $index" expanded="item.isPaneExpanded">
+                            <v-pane data-ng-repeat="item in vm.activeActionTemplate.data.actions track by $index"
+                                    expanded="item.isPaneExpanded">
                                 <v-pane-header inactive class="transaction-type-action-pane">
                                     <div layout="row"
                                          layout-align="space-between center"
@@ -657,10 +743,12 @@
                                             <md-button class="md-raised" ng-disabled="$index == 0"
                                                        data-ng-click="vm.moveUp(item, $index, $event)">Move up
                                             </md-button>
-                                            <md-button class="md-raised" ng-disabled="$index == vm.activeActionTemplate.data.actions.length - 1"
+                                            <md-button class="md-raised"
+                                                       ng-disabled="$index == vm.activeActionTemplate.data.actions.length - 1"
                                                        data-ng-click="vm.moveDown(item, $index, $event)">Move Down
                                             </md-button>
-                                            <md-button class="md-raised" data-ng-click="vm.toggleItem($pane, item, $event)">
+                                            <md-button class="md-raised"
+                                                       data-ng-click="vm.toggleItem($pane, item, $event)">
                                                 <span data-ng-if="item.isPaneExpanded">Collapse</span>
                                                 <span data-ng-if="!item.isPaneExpanded">Expand</span>
                                             </md-button>
@@ -733,11 +821,13 @@
                                     Create factor
                                 </md-button>
 
-                                <md-button class="md-raised" data-ng-click="vm.addAction('instrument_manual_pricing_formula')">
+                                <md-button class="md-raised"
+                                           data-ng-click="vm.addAction('instrument_manual_pricing_formula')">
                                     Create pricing
                                 </md-button>
 
-                                <md-button class="md-raised" data-ng-click="vm.addAction('instrument_accrual_calculation_schedules')">
+                                <md-button class="md-raised"
+                                           data-ng-click="vm.addAction('instrument_accrual_calculation_schedules')">
                                     Create accrual
                                 </md-button>
                                 <md-button class="md-raised" data-ng-click="vm.addAction('instrument_event_schedule')">
@@ -747,7 +837,8 @@
                             </div>
 
                             <div layout="row" layout-align="end center">
-                                <md-button class="md-raised" data-ng-click="vm.addAction('instrument_event_schedule_action')">
+                                <md-button class="md-raised"
+                                           data-ng-click="vm.addAction('instrument_event_schedule_action')">
                                     Create Event Action
                                 </md-button>
                             </div>
