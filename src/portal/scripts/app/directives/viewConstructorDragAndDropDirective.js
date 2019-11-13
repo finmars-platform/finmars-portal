@@ -294,25 +294,51 @@
 
                         drake.on('shadow', function (elem, container, source) {
 
-                            sourceContainer = source;
+                            if (container.classList.contains("vcSelectedGroups")) {
 
-                            elem.classList.add('vc-shadow-elem');
-
-                            if (containerWithShadow) {
-                                containerWithShadow.classList.remove('remove-card-space');
-                            }
-
-                            if (container === source) {
-                                source.classList.remove('dragged-out-card-space');
-                            } else {
-                                if (!source.classList.contains('dragged-out-card-space')) {
-                                    source.classList.add('dragged-out-card-space');
+                                if (containerWithShadow) {
+                                    containerWithShadow.classList.remove('remove-card-space');
                                 }
 
-                                container.classList.add('remove-card-space');
-                                containerWithShadow = container;
+                                if (container === source) {
+                                    source.classList.remove('dragged-out-card-space');
+                                } else {
+                                    $(elem).remove();  // removing only shadow of the dragged element
+
+                                    container.classList.add("vc-groups-container-shadowed");
+
+                                    if (!source.classList.contains('dragged-out-card-space')) {
+                                        source.classList.add('dragged-out-card-space');
+                                    }
+
+                                    source.classList.add('dragged-out-card-space');
+                                    containerWithShadow = container;
+                                    sourceContainer = source;
+                                }
+
+                            } else {
                                 sourceContainer = source;
+
+                                elem.classList.add('vc-shadow-elem');
+
+                                if (containerWithShadow) {
+                                    containerWithShadow.classList.remove('remove-card-space');
+                                    containerWithShadow.classList.remove('vc-groups-container-shadowed');
+                                }
+
+                                if (container === source) {
+                                    source.classList.remove('dragged-out-card-space');
+                                } else {
+                                    if (!source.classList.contains('dragged-out-card-space')) {
+                                        source.classList.add('dragged-out-card-space');
+                                    }
+
+                                    container.classList.add('remove-card-space');
+                                    containerWithShadow = container;
+                                    sourceContainer = source;
+                                }
                             }
+
                         });
 
                         drake.on('drag', function () {
@@ -339,11 +365,11 @@
                                         var updateGCFMethod;
 
                                         switch (draggedTo) {
-                                            case 'groups':
+                                            /*case 'groups':
                                                 scope.$parent.vm[attrsVmKey][i].groups = true;
                                                 GCFItems = groups;
                                                 updateGCFMethod = function () {scope.evDataService.setGroups(GCFItems);};
-                                                break;
+                                                break;*/
                                             case 'columns':
                                                 scope.$parent.vm[attrsVmKey][i].groups = false;
                                                 scope.$parent.vm[attrsVmKey][i].columns = true;
@@ -363,25 +389,59 @@
 
                                         attributeChanged = true;
 
-                                        for (var a = 0; a < GCFItems.length; a++) { // remove same element from selected group
-                                            if (GCFItems[a].key === attributeKey) {
-                                                GCFItems.splice(a, 1);
-                                                break;
+                                        if (draggedTo === 'groups') {
+
+                                            if (scope.$parent.vm[attrsVmKey][i].groups) {
+
+                                                drake.cancel();
+
+                                                $mdDialog.show({
+                                                    controller: 'WarningDialogController as vm',
+                                                    templateUrl: 'views/warning-dialog-view.html',
+                                                    parent: angular.element(document.body),
+                                                    clickOutsideToClose: false,
+                                                    multiple: true,
+                                                    locals: {
+                                                        warning: {
+                                                            title: 'Error',
+                                                            description: 'There is already such group in Grouping Area',
+                                                            actionsButtons: [{
+                                                                name: "OK",
+                                                                response: false
+                                                            }]
+                                                        }
+                                                    }
+                                                });
+
+                                            } else {
+                                                scope.$parent.vm[attrsVmKey][i].groups = true;
+                                                groups.push(attrData);
+                                                scope.evDataService.setGroups(groups);
                                             }
-                                        }
 
-                                        if (nextSibling) {
-                                            var nextSiblingKey = nextSibling.dataset.attributeKey;
+                                        } else {
 
-                                            for (var a = 0; a < GCFItems.length; a++) {
-                                                var GCFElem = GCFItems[a];
-
-                                                if (GCFElem.key === nextSiblingKey) {
-                                                    GCFItems.splice(a, 0, attrData);
-                                                    updateGCFMethod();
+                                            for (var a = 0; a < GCFItems.length; a++) { // remove same element from selected group
+                                                if (GCFItems[a].key === attributeKey) {
+                                                    GCFItems.splice(a, 1);
                                                     break;
                                                 }
                                             }
+
+                                            if (nextSibling) {
+                                                var nextSiblingKey = nextSibling.dataset.attributeKey;
+
+                                                for (var a = 0; a < GCFItems.length; a++) {
+                                                    var GCFElem = GCFItems[a];
+
+                                                    if (GCFElem.key === nextSiblingKey) {
+                                                        GCFItems.splice(a, 0, attrData);
+                                                        updateGCFMethod();
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
                                         }
 
                                         break;
@@ -565,7 +625,6 @@
                                 // If filter's order changed
                                 } else if (target.classList.contains('vcSelectedFilters')) {
                                     changeOrder('filters');
-
                                 // < If filter's order changed >
                                 }
 
@@ -590,6 +649,7 @@
 
                             if (containerWithShadow) {
                                 containerWithShadow.classList.remove('remove-card-space');
+                                containerWithShadow.classList.remove('vc-groups-container-shadowed');
                             }
 
                         });

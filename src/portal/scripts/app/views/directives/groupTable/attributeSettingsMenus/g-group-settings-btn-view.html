@@ -1,4 +1,4 @@
-<div class="settings-btn">
+<div data-ng-if="isReport" class="settings-btn">
     <md-menu>
         <md-button aria-label="view constructor groups settings"
                    class="md-icon-button"
@@ -69,4 +69,25 @@
         </md-menu-content>
     </md-menu>
 
+</div>
+
+<div data-ng-if="!isReport" class="settings-btn">
+    <md-menu>
+        <md-button aria-label="ev groups settings"
+                   class="md-icon-button"
+                   ng-click="openGroupSettings($mdOpenMenu, $event)">
+            <ng-md-icon icon="settings"></ng-md-icon>
+        </md-button>
+        <md-menu-content width="4">
+            <md-menu-item>
+                <md-button ng-click="renameGroup($mdMenu, $event)"
+                           class="g-settings-option-btn">
+                    <ng-md-icon icon="visibility_off"
+                                style="visibility: hidden;"></ng-md-icon>
+                    <span>Rename group</span>
+                </md-button>
+                <md-menu-content style="display: none"></md-menu-content>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
 </div>

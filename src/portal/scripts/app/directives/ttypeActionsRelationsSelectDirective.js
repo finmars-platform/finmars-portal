@@ -21,7 +21,7 @@
             },
             templateUrl: 'views/directives/ttype-actions-relations-select-view.html',
             link: function (scope, elem, attrs) {
-                // console.log("ttype input directive data", scope.labelTitle, scope.model, scope.loadRelation, scope.propertyValue, scope.propertyValue);
+
                 if (!scope.propertyValue) {
                     scope.propertyValue = "id";
                 }

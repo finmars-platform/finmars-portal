@@ -83,7 +83,7 @@
                                             </md-button>
                                         </md-menu-item>
 
-                                        <md-menu-item data-ng-if="checkForExistingGroupingColumn($index)">
+                                        <md-menu-item data-ng-if="checkForExistingGroupingColumn(column.key)">
                                             <md-button data-ng-click="addColumnEntityToGrouping(column)"
                                                        class="g-settings-option-btn">
                                                 <ng-md-icon icon="visibility_off"
@@ -364,7 +364,7 @@
                                             </md-menu>
                                         </md-menu-item>
 
-                                        <md-menu-item data-ng-if="checkForExistingGroupingColumn($index)">
+                                        <md-menu-item data-ng-if="checkForExistingGroupingColumn(column.key)">
                                             <md-menu>
                                                 <md-button data-ng-click="addColumnEntityToGrouping(column)"
                                                            class="g-settings-option-btn">
@@ -376,7 +376,7 @@
                                             </md-menu>
                                         </md-menu-item>
 
-                                        <md-menu-item data-ng-if="!checkForExistingGroupingColumn($index)">
+                                        <md-menu-item data-ng-if="!checkForExistingGroupingColumn(column.key)">
                                             <md-menu>
                                                 <md-button data-ng-click="removeGroup(column.___column_id)"
                                                            class="g-settings-option-btn">
@@ -421,6 +421,19 @@
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
                                         </md-menu-item>
+
+                                        <md-menu-item data-ng-if="checkForExistingGroupingColumn(column.key)">
+                                            <md-menu>
+                                                <md-button data-ng-click="addColumnEntityToGrouping(column)"
+                                                           class="g-settings-option-btn">
+                                                    <ng-md-icon icon="visibility_off"
+                                                                style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Add to grouping</span>
+                                                </md-button>
+                                                <md-menu-content style="display: none"></md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
+
                                         <md-menu-item>
                                             <md-button ng-click="removeColumn(column)" class="g-settings-option-btn">
                                                 <ng-md-icon icon="visibility_off"></ng-md-icon>

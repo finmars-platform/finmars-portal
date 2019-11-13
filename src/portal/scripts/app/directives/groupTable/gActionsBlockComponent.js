@@ -43,9 +43,6 @@
 
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
-                if (scope.isRootEntityViewer) {
-                    console.log("split panel spExchangeService", scope.spExchangeService);
-                }
 
                 var checkLayoutExistence = function () {
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
@@ -294,9 +291,7 @@
                             }).then(function (res) {
 
                                 if (res && res.res === 'agree') {
-
                                     scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
-
                                 }
 
                             })
@@ -316,9 +311,7 @@
                             }).then(function (res) {
 
                                 if (res && res.res === 'agree') {
-
                                     scope.insertObjectAfterCreateHandler(res.data);
-
                                 }
 
                             })
@@ -354,7 +347,8 @@
 
                     additions.isOpen = false;
                     additions.type = '';
-                    delete additions.layoutId;
+                    delete additions.layoutData;
+                    /*delete additions.layoutId;*/
 
                     scope.evDataService.setSplitPanelStatus(false);
                     scope.evDataService.setAdditions(additions);
@@ -411,9 +405,17 @@
                                     additions.type = type;
 
                                     if (res.data.listLayoutId) {
-                                        additions.layoutId = res.data.listLayoutId;
+
+                                        if (!additions.layoutData) {
+                                            additions.layoutData = {};
+                                        }
+
+                                        additions.layoutData.layoutId = res.data.listLayoutId;
+                                        additions.layoutData.name = res.data.name;
+                                        additions.layoutData.content_type = res.data.content_type;
+
                                     } else {
-                                        delete additions.layoutId;
+                                        delete additions.layoutData;
                                     }
 
                                     scope.evDataService.setSplitPanelStatus(true);
@@ -431,7 +433,8 @@
 
                             additions.isOpen = true;
                             additions.type = type;
-                            delete additions.layoutId;
+
+                            delete additions.layoutData;
 
                             scope.evDataService.setSplitPanelStatus(true);
                             scope.evDataService.setAdditions(additions);

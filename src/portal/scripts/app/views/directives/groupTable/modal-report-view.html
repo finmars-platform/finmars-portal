@@ -56,20 +56,20 @@
                                                 <md-checkbox ng-model="item.columns"
                                                              aria-label="user attributes for columns"
                                                              aria="columns"
-                                                             ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)">
+                                                             data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.groups"
                                                              aria-label="user attributes for groups"
                                                              aria="groups"
                                                              class="md-g-green"
-                                                             ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)">
+                                                             data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.filters"
                                                              aria-label="user attributes for filters"
                                                              aria="filters"
                                                              class="md-primary"
                                                              ng-style="vm.checkAreaAccessibility(item, 'filter') ? {'visibility': 'hidden'} : {}"
-                                                             ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)">
+                                                             data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)">
                                                 </md-checkbox>
                                             </div>
 
