@@ -14,7 +14,8 @@
                 item: '=',
                 inputText: '<',
                 entityType: '=',
-                callback: '&'
+                callback: '&',
+                isDisabled: '<'
             },
             link: function (scope, elem, attrs) {
 
@@ -24,42 +25,46 @@
                     event.preventDefault();
                     event.stopPropagation();
 
-                    $mdDialog.show({
-                        controller: 'EntitySearchDialogController as vm',
-                        templateUrl: 'views/dialogs/entity-search-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: event,
-                        preserveScope: false,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true,
-                        clickOutsideToClose: false,
-                        locals: {
-                            data: {
-                                entityType: scope.entityType,
-                                selectedItem: scope.item
+                    if (!scope.isDisabled) {
+
+                        $mdDialog.show({
+                            controller: 'EntitySearchDialogController as vm',
+                            templateUrl: 'views/dialogs/entity-search-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: event,
+                            preserveScope: false,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            clickOutsideToClose: false,
+                            locals: {
+                                data: {
+                                    entityType: scope.entityType,
+                                    selectedItem: scope.item
+                                }
                             }
-                        }
-                    }).then(function (res) {
+                        }).then(function (res) {
 
-                        if (res.status === 'agree') {
+                            if (res.status === 'agree') {
 
-                            scope.item = res.data.item.id;
-                            scope.inputText = res.data.item.name;
+                                scope.item = res.data.item.id;
+                                scope.inputText = res.data.item.name;
 
-                            console.log('res', res);
+                                console.log('res', res);
 
-                            setTimeout(function () {
+                                setTimeout(function () {
 
-                                scope.callback();
+                                    scope.callback();
 
-                                scope.$apply();
+                                    scope.$apply();
 
-                            }, 0)
+                                }, 0)
 
 
-                        }
-                    });
+                            }
+                        });
+
+                    }
 
                 });
 

@@ -1,9 +1,11 @@
-<md-input-container class="md-block" aria-label="select with filter">
+<md-input-container class="md-block"
+                    aria-label="select with filter">
     <label>{{labelTitle}}</label>
     <md-select ng-model="model"
                md-container-class="common-select-container"
                md-on-close="searchTerm = ''"
-               md-on-open="loadRelationsOnOpen()">
+               md-on-open="loadRelationsOnOpen()"
+               data-ng-disabled="isDisabled">
 
             <md-select-header>
                 <input data-ng-model="searchTerm"

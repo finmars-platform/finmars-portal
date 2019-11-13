@@ -3,29 +3,6 @@
         <div layout="row">
 
             <div flex="66">
-                <!--<md-input-container>
-                    <label for="" content-title>Transaction class</label>
-                    <md-select data-ng-model="item.transaction.transaction_class"
-                               md-on-open="vm.loadRelation('transaction_class')"
-                               md-container-class="simple-search-select">
-                        &lt;!&ndash;<md-select-header>
-                            <input data-ng-model="searchTerm"
-                                   type="search"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern">
-                        </md-select-header>&ndash;&gt;
-                        <md-option data-ng-repeat="relationItem in vm.relationItems['transaction_class']"
-                                   data-ng-value="relationItem.value"
-                                   data-ng-if="vm.relationItems['transaction_class'].length">
-                            {{relationItem.name}}
-                        </md-option>
-
-                        <md-option data-ng-if="!vm.relationItems['transaction_class'].length"
-                                   ng-value="item.transaction.transaction_class_object.id">
-                            {{item.transaction.transaction_class_object.name}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>-->
 
                 <ttype-actions-relations-select label-title="Transaction class"
                                                 model="item.transaction.transaction_class"
@@ -33,13 +10,14 @@
                                                 relation-items="vm.relationItems['transaction_class']"
                                                 property-value="value"
                                                 selected-value="item.transaction.transaction_class_object.id"
-                                                selected-name="item.transaction.transaction_class_object.name"></ttype-actions-relations-select>
+                                                selected-name="item.transaction.transaction_class_object.name"
+                                                is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
             </div>
 
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.portfolio_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.portfolio_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'portfolio')">
                         <span data-ng-if="!!item.transaction.portfolio_toggle">R</span>
@@ -52,24 +30,16 @@
                         <entity-search-select data-item="item.transaction.portfolio"
                                               data-label="'Portfolio'"
                                               data-input-text="item.transaction.portfolio_object.name"
-                                              data-entity-type="'portfolio'"></entity-search-select>
+                                              data-entity-type="'portfolio'"
+                                              is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
 
                     <div data-ng-if="!item.transaction.portfolio_toggle">
-                        <!--<md-input-container>
-                            <label for="" content-title>Portfolio</label>
-                            <md-select data-ng-model="item.transaction.portfolio_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('portfolio')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Portfolio"
                                                     model="item.transaction.portfolio_input"
-                                                    find-inputs="vm.findInputs('portfolio')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('portfolio')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
 
                 </div>
@@ -82,7 +52,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.settlement_currency_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.settlement_currency_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'settlement_currency')">
                         <span data-ng-if="!!item.transaction.settlement_currency_toggle">R</span>
@@ -91,53 +61,21 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.transaction.settlement_currency_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Settlement currency</label>
-                            <md-select data-ng-model="item.transaction.settlement_currency"
-                                       md-on-open="vm.loadRelation('settlement_currency')"
-                                       md-container-class="simple-search-select">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern simple-search-filter-input">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['settlement_currency'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['settlement_currency'].length">
-                                    {{relationItem.name}}
-                                </md-option>
-
-                                <md-option data-ng-if="!vm.relationItems['settlement_currency'].length"
-                                           ng-value="item.transaction.settlement_currency_object.id">
-                                    {{item.transaction.settlement_currency_object.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-relations-select label-title="Settlement currency"
                                                         model="item.transaction.settlement_currency"
                                                         load-relation="vm.loadRelation('settlement_currency')"
                                                         relation-items="vm.relationItems['settlement_currency']"
                                                         selected-value="item.transaction.settlement_currency_object.id"
-                                                        selected-name="item.transaction.settlement_currency_object.name"></ttype-actions-relations-select>
+                                                        selected-name="item.transaction.settlement_currency_object.name"
+                                                        is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.transaction.settlement_currency_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Settlement currency</label>
-                            <md-select
-                                    data-ng-model="item.transaction.settlement_currency_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('currency')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Settlement currency"
                                                     model="item.transaction.settlement_currency_input"
-                                                    find-inputs="vm.findInputs('currency')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('currency')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -145,7 +83,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.transaction_currency_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.transaction_currency_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'transaction_currency')">
                         <span data-ng-if="!!item.transaction.transaction_currency_toggle">R</span>
@@ -154,19 +92,20 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.transaction.transaction_currency_toggle">
-
                         <ttype-actions-relations-select label-title="Transaction currency"
                                                         model="item.transaction.transaction_currency"
                                                         load-relation="vm.loadRelation('transaction_currency')"
                                                         relation-items="vm.relationItems['transaction_currency']"
                                                         selected-value="item.transaction.transaction_currency_object.id"
-                                                        selected-name="item.transaction.transaction_currency_object.name"></ttype-actions-relations-select>
+                                                        selected-name="item.transaction.transaction_currency_object.name"
+                                                        is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
-                    <div data-ng-if="!item.transaction.transaction_currency_toggle">
 
+                    <div data-ng-if="!item.transaction.transaction_currency_toggle">
                         <ttype-actions-input-select label-title="Transaction currency"
                                                     model="item.transaction.transaction_currency_input"
-                                                    find-inputs="vm.findInputs('currency')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('currency')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -175,7 +114,7 @@
                 <div layout="row">
                     <div flex="20">
                         <md-button
-                                class="md-icon-button md-raised {{!!item.transaction.instrument_toggle ? 'ref' : ''}}"
+                                class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.instrument_toggle ? 'ref' : ''}}"
                                 style="transform: scale(0.7,0.7)"
                                 data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'instrument')">
                             <span data-ng-if="!!item.transaction.instrument_toggle">R</span>
@@ -183,18 +122,20 @@
                         </md-button>
                     </div>
                     <div flex="80">
+
                         <div data-ng-if="item.transaction.instrument_toggle">
                             <entity-search-select data-item="item.transaction.instrument"
                                                   data-label="'Instrument'"
                                                   data-input-text="item.transaction.instrument_object.name"
-                                                  data-entity-type="'instrument'"></entity-search-select>
+                                                  data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
 
                         <div data-ng-if="!item.transaction.instrument_toggle">
                             <md-input-container>
                                 <label for="" content-title>Instrument</label>
                                 <md-select
-                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'instrument')]">
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'instrument')]"
+                                        data-ng-disabled="vm.isRelationInputFieldDisabled">
                                     <md-optgroup label="Inputs">
                                         <md-option
                                                 data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'instrument')"
@@ -214,6 +155,7 @@
                                 </md-select>
                             </md-input-container>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -351,7 +293,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.account_position_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.account_position_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'account_position')">
                         <span data-ng-if="!!item.transaction.account_position_toggle">R</span>
@@ -363,13 +305,14 @@
                         <entity-search-select data-item="item.transaction.account_position"
                                               data-label="'Account position'"
                                               data-input-text="item.transaction.account_position_object.name"
-                                              data-entity-type="'account'"></entity-search-select>
+                                              data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_position_toggle">
 
                         <ttype-actions-input-select label-title="Account position"
                                                     model="item.transaction.account_position_input"
-                                                    find-inputs="vm.findInputs('account')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('account')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -391,7 +334,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.account_cash_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.account_cash_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'account_cash')">
                         <span data-ng-if="!!item.transaction.account_cash_toggle">R</span>
@@ -403,7 +346,7 @@
                         <entity-search-select data-item="item.transaction.account_cash"
                                               data-label="'Account cash'"
                                               data-input-text="item.transaction.account_cash_object.name"
-                                              data-entity-type="'account'"></entity-search-select>
+                                              data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_cash_toggle">
                         <!--<md-input-container>
@@ -420,7 +363,8 @@
 
                         <ttype-actions-input-select label-title="Account cash"
                                                     model="item.transaction.account_cash_input"
-                                                    find-inputs="vm.findInputs('account')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('account')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -438,7 +382,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.account_interim_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.account_interim_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'account_interim')">
                         <span data-ng-if="!!item.transaction.account_interim_toggle">R</span>
@@ -450,7 +394,7 @@
                         <entity-search-select data-item="item.transaction.account_interim"
                                               data-label="'Account interim'"
                                               data-input-text="item.transaction.account_interim_object.name"
-                                              data-entity-type="'account'"></entity-search-select>
+                                              data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_interim_toggle">
                         <!--<md-input-container>
@@ -467,7 +411,8 @@
 
                         <ttype-actions-input-select label-title="Account interim"
                                                     model="item.transaction.account_interim_input"
-                                                    find-inputs="vm.findInputs('account')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('account')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -480,7 +425,7 @@
                 <div layout="row">
                     <div flex="20">
                         <md-button
-                                class="md-icon-button md-raised {{!!item.transaction.linked_instrument_toggle ? 'ref' : ''}}"
+                                class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.linked_instrument_toggle ? 'ref' : ''}}"
                                 style="transform: scale(0.7,0.7)"
                                 data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'linked_instrument')">
                             <span data-ng-if="!!item.transaction.linked_instrument_toggle">R</span>
@@ -492,13 +437,15 @@
                             <entity-search-select data-item="item.transaction.linked_instrument"
                                                   data-label="'Linked instrument'"
                                                   data-input-text="item.transaction.linked_instrument_object.name"
-                                                  data-entity-type="'instrument'"></entity-search-select>
+                                                  data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
+
                         <div data-ng-if="!item.transaction.linked_instrument_toggle">
                             <md-input-container>
                                 <label for="" content-title>Linked instrument</label>
                                 <md-select
-                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'linked_instrument')]">
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'linked_instrument')]"
+                                        data-ng-disabled="vm.isRelationInputFieldDisabled">
                                     <md-optgroup label="Inputs">
                                         <md-option
                                                 data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'linked_instrument')"
@@ -526,7 +473,7 @@
                 <div layout="row">
                     <div flex="20">
                         <md-button
-                                class="md-icon-button md-raised {{!!item.transaction.allocation_pl_toggle ? 'ref' : ''}}"
+                                class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.allocation_pl_toggle ? 'ref' : ''}}"
                                 style="transform: scale(0.7,0.7)"
                                 data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'allocation_pl')">
                             <span data-ng-if="!!item.transaction.allocation_pl_toggle">R</span>
@@ -538,13 +485,15 @@
                             <entity-search-select data-item="item.transaction.allocation_pl"
                                                   data-label="'Allocation-P&L'"
                                                   data-input-text="item.transaction.allocation_pl_object.name"
-                                                  data-entity-type="'instrument'"></entity-search-select>
+                                                  data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
+
                         <div data-ng-if="!item.transaction.allocation_pl_toggle">
                             <md-input-container>
                                 <label for="" content-title>Allocation-P&L</label>
                                 <md-select
-                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_pl')]">
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_pl')]"
+                                        data-ng-disabled="vm.isRelationInputFieldDisabled">
                                     <md-optgroup label="Inputs">
                                         <md-option
                                                 data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_pl')"
@@ -572,7 +521,7 @@
                 <div layout="row">
                     <div flex="20">
                         <md-button
-                                class="md-icon-button md-raised {{!!item.transaction.allocation_balance_toggle ? 'ref' : ''}}"
+                                class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.allocation_balance_toggle ? 'ref' : ''}}"
                                 style="transform: scale(0.7,0.7)"
                                 data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'allocation_balance')">
                             <span data-ng-if="!!item.transaction.allocation_balance_toggle">R</span>
@@ -584,13 +533,15 @@
                             <entity-search-select data-item="item.transaction.allocation_balance"
                                                   data-label="'Allocation-Balance'"
                                                   data-input-text="item.transaction.allocation_balance_object.name"
-                                                  data-entity-type="'instrument'"></entity-search-select>
+                                                  data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
+
                         <div data-ng-if="!item.transaction.allocation_balance_toggle">
                             <md-input-container>
                                 <label for="" content-title>Allocation-Balance</label>
                                 <md-select
-                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_balance')]">
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_balance')]"
+                                        data-ng-disabled="vm.isRelationInputFieldDisabled">
                                     <md-optgroup label="Inputs">
                                         <md-option
                                                 data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_balance')"
@@ -625,7 +576,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.strategy1_position_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.strategy1_position_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy1_position')">
                         <span data-ng-if="!!item.transaction.strategy1_position_toggle">R</span>
@@ -637,24 +588,14 @@
                         <entity-search-select data-item="item.transaction.strategy1_position"
                                               data-label="'Strategy1 position'"
                                               data-input-text="item.transaction.strategy1_position_object.name"
-                                              data-entity-type="'strategy-1'"></entity-search-select>
+                                              data-entity-type="'strategy-1'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_position_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy1 position</label>
-                            <md-select
-                                    data-ng-model="item.transaction.strategy1_position_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('strategy-1')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Strategy1 position"
                                                     model="item.transaction.strategy1_position_input"
-                                                    find-inputs="vm.findInputs('strategy-1')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('strategy-1')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -662,7 +603,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.strategy2_position_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.strategy2_position_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy2_position')">
                         <span data-ng-if="!!item.transaction.strategy2_position_toggle">R</span>
@@ -674,24 +615,14 @@
                         <entity-search-select data-item="item.transaction.strategy2_position"
                                               data-label="'Strategy2 position'"
                                               data-input-text="item.transaction.strategy2_position_object.name"
-                                              data-entity-type="'strategy-2'"></entity-search-select>
+                                              data-entity-type="'strategy-2'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_position_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy2 position</label>
-                            <md-select
-                                    data-ng-model="item.transaction.strategy2_position_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('strategy-2')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Strategy2 position"
                                                     model="item.transaction.strategy2_position_input"
-                                                    find-inputs="vm.findInputs('strategy-2')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('strategy-2')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -699,7 +630,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.strategy3_position_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.strategy3_position_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy3_position')">
                         <span data-ng-if="!!item.transaction.strategy3_position_toggle">R</span>
@@ -711,7 +642,7 @@
                         <entity-search-select data-item="item.transaction.strategy3_position"
                                               data-label="'Strategy3 position'"
                                               data-input-text="item.transaction.strategy3_position_object.name"
-                                              data-entity-type="'strategy-3'"></entity-search-select>
+                                              data-entity-type="'strategy-3'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_position_toggle">
                         <!--<md-input-container>
@@ -728,7 +659,8 @@
 
                         <ttype-actions-input-select label-title="Strategy3 position"
                                                     model="item.transaction.strategy3_position_input"
-                                                    find-inputs="vm.findInputs('strategy-3')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('strategy-3')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -740,7 +672,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.strategy1_cash_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.strategy1_cash_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy1_cash')">
                         <span data-ng-if="!!item.transaction.strategy1_cash_toggle">R</span>
@@ -774,7 +706,7 @@
                         <entity-search-select data-item="item.transaction.strategy1_cash"
                                               data-label="'Strategy1 cash'"
                                               data-input-text="item.transaction.strategy1_cash_object.name"
-                                              data-entity-type="'strategy-1'"></entity-search-select>
+                                              data-entity-type="'strategy-1'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_cash_toggle">
                         <!--<md-input-container>
@@ -791,7 +723,8 @@
 
                         <ttype-actions-input-select label-title="Strategy1 cash"
                                                     model="item.transaction.strategy1_cash_input"
-                                                    find-inputs="vm.findInputs('strategy-1')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('strategy-1')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -799,7 +732,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.strategy2_cash_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.strategy2_cash_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy2_cash')">
                         <span data-ng-if="!!item.transaction.strategy2_cash_toggle">R</span>
@@ -811,24 +744,14 @@
                         <entity-search-select data-item="item.transaction.strategy2_cash"
                                               data-label="'Strategy2 cash'"
                                               data-input-text="item.transaction.strategy2_cash_object.name"
-                                              data-entity-type="'strategy-2'"></entity-search-select>
+                                              data-entity-type="'strategy-2'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_cash_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy2 cash</label>
-                            <md-select
-                                    data-ng-model="item.transaction.strategy2_cash_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('strategy-2')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Strategy2 cash"
                                                     model="item.transaction.strategy2_cash_input"
-                                                    find-inputs="vm.findInputs('strategy-2')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('strategy-2')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -836,7 +759,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.strategy3_cash_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.strategy3_cash_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy3_cash')">
                         <span data-ng-if="!!item.transaction.strategy3_cash_toggle">R</span>
@@ -848,24 +771,14 @@
                         <entity-search-select data-item="item.transaction.strategy3_cash"
                                               data-label="'Strategy3 cash'"
                                               data-input-text="item.transaction.strategy3_cash_object.name"
-                                              data-entity-type="'strategy-3'"></entity-search-select>
+                                              data-entity-type="'strategy-3'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_cash_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy3 cash</label>
-                            <md-select
-                                    data-ng-model="item.transaction.strategy3_cash_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('strategy-3')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Strategy3 cash"
                                                     model="item.transaction.strategy3_cash_input"
-                                                    find-inputs="vm.findInputs('strategy-3')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('strategy-3')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -877,7 +790,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.counterparty_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.counterparty_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'counterparty')">
                         <span data-ng-if="!!item.transaction.counterparty_toggle">R</span>
@@ -889,24 +802,14 @@
                         <entity-search-select data-item="item.transaction.counterparty"
                                               data-label="'Counterparty'"
                                               data-input-text="item.transaction.counterparty_object.name"
-                                              data-entity-type="'counterparty'"></entity-search-select>
+                                              data-entity-type="'counterparty'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.counterparty_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Counterparty</label>
-                            <md-select
-                                    data-ng-model="item.transaction.counterparty_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('counterparty')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Counterparty"
                                                     model="item.transaction.counterparty_input"
-                                                    find-inputs="vm.findInputs('counterparty')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('counterparty')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -914,7 +817,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.transaction.responsible_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.responsible_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'responsible')">
                         <span data-ng-if="!!item.transaction.responsible_toggle">R</span>
@@ -926,25 +829,16 @@
                         <entity-search-select data-item="item.transaction.responsible"
                                               data-label="'Responsible'"
                                               data-input-text="item.transaction.responsible_object.name"
-                                              data-entity-type="'responsible'"></entity-search-select>
+                                              data-entity-type="'responsible'"
+                                              is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
 
                     <div data-ng-if="!item.transaction.responsible_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Responsible</label>
-                            <md-select
-                                    data-ng-model="item.transaction.responsible_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('responsible')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Responsible"
                                                     model="item.transaction.responsible_input"
-                                                    find-inputs="vm.findInputs('responsible')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('responsible')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>

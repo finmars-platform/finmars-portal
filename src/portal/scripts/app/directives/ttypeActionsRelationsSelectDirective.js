@@ -17,11 +17,12 @@
                 propertyName: '@',
                 propertyValue: '@',
                 selectedValue: '<',
-                selectedName: '<'
+                selectedName: '<',
+                isDisabled: '<'
             },
             templateUrl: 'views/directives/ttype-actions-relations-select-view.html',
             link: function (scope, elem, attrs) {
-
+                console.log("template isDisabled", scope.isDisabled);
                 if (!scope.propertyValue) {
                     scope.propertyValue = "id";
                 }

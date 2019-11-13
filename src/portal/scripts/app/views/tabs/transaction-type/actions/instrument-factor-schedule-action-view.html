@@ -16,7 +16,7 @@
                 <div layout="row">
                     <div flex="20">
                         <md-button
-                                class="md-icon-button md-raised {{!!item.instrument_factor_schedule.instrument_toggle ? 'ref' : ''}}"
+                                class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument_factor_schedule.instrument_toggle ? 'ref' : ''}}"
                                 style="transform: scale(0.7,0.7)"
                                 data-ng-click="vm.resetPropertyBtn(item, 'instrument_factor_schedule', 'instrument')">
                             <span data-ng-if="!!item.instrument_factor_schedule.instrument_toggle">R</span>
@@ -28,13 +28,15 @@
                             <entity-search-select data-item="item.instrument_factor_schedule.instrument"
                                                   data-label="'Instrument'"
                                                   data-input-text="item.instrument_factor_schedule.instrument_object.name"
-                                                  data-entity-type="'instrument'"></entity-search-select>
+                                                  data-entity-type="'instrument'"
+                                                  is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.instrument_factor_schedule.instrument_toggle">
                             <md-input-container>
                                 <label for="" content-title>Instrument</label>
                                 <md-select
-                                        data-ng-model="item.instrument_factor_schedule[vm.resolveInstrumentProp(item, 'instrument_factor_schedule', 'instrument')]">
+                                        data-ng-model="item.instrument_factor_schedule[vm.resolveInstrumentProp(item, 'instrument_factor_schedule', 'instrument')]"
+                                        data-ng-disabled="vm.isRelationInputFieldDisabled()">
                                     <md-optgroup label="Inputs">
                                         <md-option
                                                 data-ng-click="vm.setItemInstrumentInput(item, 'instrument_factor_schedule', inputItem.name, 'instrument')"

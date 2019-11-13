@@ -17,7 +17,7 @@
             <div flex="66" layout="row">
                 <div flex>
                     <md-button
-                            class="md-icon-button md-raised {{!!item.instrument.instrument_type_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.instrument_type_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'instrument_type')">
                         <span data-ng-if="!!item.instrument.instrument_type_toggle">R</span>
@@ -27,54 +27,22 @@
                 <div flex="90">
                     <div>
                         <div data-ng-if="item.instrument.instrument_type_toggle">
-                            <!--<md-input-container>
-                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument type</label>
-                                <md-select data-ng-model="item.instrument.instrument_type"
-                                           md-on-open="vm.loadRelation('instrument_type')"
-                                           md-container-class="simple-search-select">
-                                    <md-select-header>
-                                        <input data-ng-model="searchTerm"
-                                               type="search"
-                                               placeholder="Search for a ..."
-                                               class="md-text md-select-search-pattern simple-search-filter-input">
-                                    </md-select-header>
-                                    <md-option data-ng-repeat="relationItem in vm.relationItems['instrument_type'] | filter: {name: searchTerm}"
-                                               data-ng-value="relationItem.id"
-                                               data-ng-if="vm.relationItems['instrument_type'].length">
-                                        {{relationItem.name}}
-                                    </md-option>
-
-                                    <md-option data-ng-if="!vm.relationItems['instrument_type'].length"
-                                               ng-value="item.instrument.instrument_type_object.id">
-                                        {{item.instrument.instrument_type_object.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>-->
 
                             <ttype-actions-relations-select label-title="Instrument type"
                                                             model="item.instrument.instrument_type"
                                                             load-relation="vm.loadRelation('instrument_type')"
                                                             relation-items="vm.relationItems['instrument_type']"
                                                             selected-value="item.instrument.instrument_type_object.id"
-                                                            selected-name="item.instrument.instrument_type_object.name"></ttype-actions-relations-select>
+                                                            selected-name="item.instrument.instrument_type_object.name"
+                                                            is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                         </div>
 
                         <div data-ng-if="!item.instrument.instrument_type_toggle">
-                            <!--<md-input-container>
-                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument type</label>
-                                <md-select
-                                        data-ng-model="item.instrument.instrument_type_input">
-                                    <md-option
-                                            data-ng-repeat="inputItem in vm.findInputs('instrument-type')"
-                                            ng-value="inputItem.name">
-                                        {{inputItem.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>-->
 
                             <ttype-actions-input-select label-title="Instrument type"
                                                         model="item.instrument.instrument_type_input"
-                                                        find-inputs="vm.findInputs('instrument-type')"></ttype-actions-input-select>
+                                                        find-inputs="vm.findInputs('instrument-type')"
+                                                        is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                         </div>
                     </div>
                 </div>
@@ -172,7 +140,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.instrument.pricing_currency_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.pricing_currency_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'pricing_currency')">
                         <span data-ng-if="!!item.instrument.pricing_currency_toggle">R</span>
@@ -181,54 +149,22 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.pricing_currency_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Pricing currency</label>
-                            <md-select data-ng-model="item.instrument.pricing_currency"
-                                       md-on-open="vm.loadRelation('pricing_currency')"
-                                       md-container-class="simple-search-select">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern simple-search-filter-input">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['pricing_currency'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['pricing_currency'].length">
-                                    {{relationItem.name}}
-                                </md-option>
-
-                                <md-option data-ng-if="!vm.relationItems['pricing_currency'].length"
-                                           ng-value="item.instrument.pricing_currency_object.id">
-                                    {{item.instrument.pricing_currency_object.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-relations-select label-title="Pricing currency"
                                                         model="item.instrument.pricing_currency"
                                                         load-relation="vm.loadRelation('pricing_currency')"
                                                         relation-items="vm.relationItems['pricing_currency']"
                                                         selected-value="item.instrument.pricing_currency_object.id"
-                                                        selected-name="item.instrument.pricing_currency_object.name"></ttype-actions-relations-select>
+                                                        selected-name="item.instrument.pricing_currency_object.name"
+                                                        is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
 
                     <div data-ng-if="!item.instrument.pricing_currency_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Pricing currency</label>
-                            <md-select
-                                    data-ng-model="item.instrument.pricing_currency_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('currency')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Pricing currency"
                                                     model="item.instrument.pricing_currency_input"
-                                                    find-inputs="vm.findInputs('currency')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('currency')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -236,7 +172,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.instrument.accrued_currency_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.accrued_currency_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'accrued_currency')">
                         <span data-ng-if="!!item.instrument.accrued_currency_toggle">R</span>
@@ -245,53 +181,21 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.accrued_currency_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Accrued currency</label>
-                            <md-select data-ng-model="item.instrument.accrued_currency"
-                                       md-on-open="vm.loadRelation('accrued_currency')"
-                                       md-container-class="simple-search-select">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern simple-search-filter-input">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['accrued_currency'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['accrued_currency'].length">
-                                    {{relationItem.name}}
-                                </md-option>
-
-                                <md-option data-ng-if="!vm.relationItems['accrued_currency'].length"
-                                           ng-value="item.instrument.accrued_currency_object.id">
-                                    {{item.instrument.accrued_currency_object.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-relations-select label-title="Accrued currency"
                                                         model="item.instrument.accrued_currency"
                                                         load-relation="vm.loadRelation('accrued_currency')"
                                                         relation-items="vm.relationItems['accrued_currency']"
                                                         selected-value="item.instrument.accrued_currency_object.id"
-                                                        selected-name="item.instrument.accrued_currency_object.name"></ttype-actions-relations-select>
+                                                        selected-name="item.instrument.accrued_currency_object.name"
+                                                        is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument.accrued_currency_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Accrued currency</label>
-                            <md-select
-                                    data-ng-model="item.instrument.accrued_currency_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('currency')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Accrued currency"
                                                     model="item.instrument.accrued_currency_input"
-                                                    find-inputs="vm.findInputs('currency')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('currency')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -299,7 +203,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.instrument.daily_pricing_model_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.daily_pricing_model_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'daily_pricing_model')">
                         <span data-ng-if="!!item.instrument.daily_pricing_model_toggle">R</span>
@@ -308,53 +212,21 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.daily_pricing_model_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Daily pricing model</label>
-                            <md-select data-ng-model="item.instrument.daily_pricing_model"
-                                       md-on-open="vm.loadRelation('daily_pricing_model')"
-                                       md-container-class="simple-search-select">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern simple-search-filter-input">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['daily_pricing_model'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['daily_pricing_model'].length">
-                                    {{relationItem.name}}
-                                </md-option>
-
-                                <md-option data-ng-if="!vm.relationItems['daily_pricing_model'].length"
-                                           ng-value="item.instrument.daily_pricing_model_object.id">
-                                    {{item.instrument.daily_pricing_model_object.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-relations-select label-title="Daily pricing model"
                                                         model="item.instrument.daily_pricing_model"
                                                         load-relation="vm.loadRelation('daily_pricing_model')"
                                                         relation-items="vm.relationItems['daily_pricing_model']"
                                                         selected-value="item.instrument.daily_pricing_model_object.id"
-                                                        selected-name="item.instrument.daily_pricing_model_object.name"></ttype-actions-relations-select>
+                                                        selected-name="item.instrument.daily_pricing_model_object.name"
+                                                        is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument.daily_pricing_model_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Daily pricing model</label>
-                            <md-select
-                                    data-ng-model="item.instrument.daily_pricing_model_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('daily_pricing_model')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Daily pricing model"
                                                     model="item.instrument.daily_pricing_model_input"
-                                                    find-inputs="vm.findInputs('daily-pricing-model')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('daily-pricing-model')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -384,7 +256,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.instrument.price_download_scheme_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.price_download_scheme_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'price_download_scheme')">
                         <span data-ng-if="!!item.instrument.price_download_scheme_toggle">R</span>
@@ -393,29 +265,6 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.price_download_scheme_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Price download scheme</label>
-                            <md-select data-ng-model="item.instrument.price_download_scheme"
-                                       md-on-open="vm.loadRelation('price_download_scheme')"
-                                       md-container-class="simple-search-select">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern simple-search-filter-input">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['price_download_scheme'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['price_download_scheme'].length">
-                                    {{relationItem.name}}
-                                </md-option>
-
-                                <md-option data-ng-if="!vm.relationItems['price_download_scheme'].length"
-                                           ng-value="item.instrument.price_download_scheme_object.id">
-                                    {{item.instrument.price_download_scheme_object.scheme_name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-relations-select label-title="Price download scheme"
                                                         model="item.instrument.price_download_scheme"
@@ -423,24 +272,15 @@
                                                         load-relation="vm.loadRelation('price_download_scheme')"
                                                         property-name="scheme_name"
                                                         selected-value="item.instrument.price_download_scheme_object.id"
-                                                        selected-name="item.instrument.price_download_scheme_object.scheme_name"></ttype-actions-relations-select>
+                                                        selected-name="item.instrument.price_download_scheme_object.scheme_name"
+                                                        is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument.price_download_scheme_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Price download scheme</label>
-                            <md-select
-                                    data-ng-model="item.instrument.price_download_scheme_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('price_download_scheme')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Price download scheme"
                                                     model="item.instrument.price_download_scheme_input"
-                                                    find-inputs="vm.findInputs('price-download-scheme')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('price-download-scheme')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -484,7 +324,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.instrument.payment_size_detail_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.payment_size_detail_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'payment_size_detail')">
                         <span data-ng-if="!!item.instrument.payment_size_detail_toggle">R</span>
@@ -493,52 +333,21 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.payment_size_detail_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Payment size details</label>
-                            <md-select data-ng-model="item.instrument.payment_size_detail"
-                                       md-on-open="vm.loadRelation('payment_size_detail')"
-                                       md-container-class="simple-search-select">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern simple-search-filter-input">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['payment_size_detail'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['payment_size_detail'].length">
-                                    {{relationItem.name}}
-                                </md-option>
 
-                                <md-option data-ng-if="!vm.relationItems['payment_size_detail'].length"
-                                           ng-value="item.instrument.payment_size_detail_object.id">
-                                    {{item.instrument.payment_size_detail_object.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
                         <ttype-actions-relations-select label-title="Payment size details"
                                                         model="item.instrument.payment_size_detail"
                                                         load-relation="vm.loadRelation('payment_size_detail')"
                                                         relation-items="vm.relationItems['payment_size_detail']"
                                                         selected-value="item.instrument.payment_size_detail_object.id"
-                                                        selected-name="item.instrument.payment_size_detail_object.name"></ttype-actions-relations-select>
+                                                        selected-name="item.instrument.payment_size_detail_object.name"
+                                                        is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument.payment_size_detail_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Payment size details</label>
-                            <md-select
-                                    data-ng-model="item.instrument.payment_size_detail_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('payment_size_detail')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Payment size details"
                                                     model="item.instrument.payment_size_detail_input"
-                                                    find-inputs="vm.findInputs('payment-size-detail')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('payment-size-detail')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
