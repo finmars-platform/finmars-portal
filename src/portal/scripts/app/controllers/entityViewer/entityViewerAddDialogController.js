@@ -430,6 +430,7 @@
             }
 
             vm.entity.object_permissions = [];
+            console.log('vm.groups', vm.groups);
 
             if (vm.groups) {
                 vm.groups.forEach(function (group) {
