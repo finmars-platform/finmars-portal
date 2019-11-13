@@ -1,6 +1,10 @@
 <div>
-    <md-input-container class="md-block no-error-spacer">
-        <label data-ng-bind="label" style="cursor: pointer"></label>
-        <input type="text" data-ng-model="inputText" style="cursor: pointer" readonly>
+    <md-input-container class="md-block no-error-spacer" ng-class="{'cursor-pointer': !isDisabled}">
+        <label ng-class="{'cursor-pointer': !isDisabled}" data-ng-bind="label"></label>
+        <input type="text"
+               data-ng-model="inputText"
+               ng-class="{'cursor-pointer': !isDisabled}"
+               data-ng-disabled="isDisabled"
+               readonly>
     </md-input-container>
 </div>

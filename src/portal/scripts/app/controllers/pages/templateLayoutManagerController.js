@@ -741,6 +741,11 @@
             })
         };
 
+        // disable relation field when action opened in template manager
+        vm.isRelationInputFieldDisabled = function () {
+            return true;
+        };
+
         vm.init = function () {
 
             ecosystemDefaultService.getList().then(function (data) {

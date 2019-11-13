@@ -16,7 +16,7 @@
                 <div layout="row">
                     <div flex="20">
                         <md-button
-                                class="md-icon-button md-raised {{!!item.instrument_accrual_calculation_schedules.instrument_toggle ? 'ref' : ''}}"
+                                class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument_accrual_calculation_schedules.instrument_toggle ? 'ref' : ''}}"
                                 style="transform: scale(0.7,0.7)"
                                 data-ng-click="vm.resetPropertyBtn(item, 'instrument_accrual_calculation_schedules', 'instrument')">
                             <span data-ng-if="!!item.instrument_accrual_calculation_schedules.instrument_toggle">R</span>
@@ -28,13 +28,15 @@
                             <entity-search-select data-item="item.instrument_accrual_calculation_schedules.instrument"
                                                   data-label="'Instrument'"
                                                   data-input-text="item.instrument_accrual_calculation_schedules.instrument_object.name"
-                                                  data-entity-type="'instrument'"></entity-search-select>
+                                                  data-entity-type="'instrument'"
+                                                  is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.instrument_accrual_calculation_schedules.instrument_toggle">
                             <md-input-container>
                                 <label for="" content-title>Instrument</label>
                                 <md-select
-                                        data-ng-model="item.instrument_accrual_calculation_schedules[vm.resolveInstrumentProp(item, 'instrument_accrual_calculation_schedules', 'instrument')]">
+                                        data-ng-model="item.instrument_accrual_calculation_schedules[vm.resolveInstrumentProp(item, 'instrument_accrual_calculation_schedules', 'instrument')]"
+                                        data-ng-disabled="vm.isRelationInputFieldDisabled()">
                                     <md-optgroup label="Inputs">
                                         <md-option
                                                 data-ng-click="vm.setItemInstrumentInput(item, 'instrument_accrual_calculation_schedules', inputItem.name, 'instrument')"
@@ -107,7 +109,7 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.instrument_accrual_calculation_schedules.periodicity_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument_accrual_calculation_schedules.periodicity_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'instrument_accrual_calculation_schedules', 'periodicity')">
                         <span data-ng-if="!!item.instrument_accrual_calculation_schedules.periodicity_toggle">R</span>
@@ -116,30 +118,6 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument_accrual_calculation_schedules.periodicity_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
-                            <md-select data-ng-model="item.instrument_accrual_calculation_schedules.periodicity"
-                                       md-on-open="vm.loadRelation('periodicity')"
-                                       md-container-class="simple-search-select">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern simple-search-filter-input">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['periodicity'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['periodicity'].length">
-                                    {{relationItem.name}}
-                                </md-option>
-
-                                <md-option
-                                        data-ng-if="!vm.relationItems['periodicity'].length"
-                                        ng-value="item.instrument_accrual_calculation_schedules.periodicity_object.id">
-                                    {{item.instrument_accrual_calculation_schedules.periodicity_object.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-relations-select
                                 label-title="Periodicity"
@@ -147,24 +125,15 @@
                                 load-relation="vm.loadRelation('periodicity')"
                                 relation-items="vm.relationItems['periodicity']"
                                 selected-value="item.instrument_accrual_calculation_schedules.periodicity_object.id"
-                                selected-name="item.instrument_accrual_calculation_schedules.periodicity_object.name"></ttype-actions-relations-select>
+                                selected-name="item.instrument_accrual_calculation_schedules.periodicity_object.name"
+                                is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument_accrual_calculation_schedules.periodicity_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
-                            <md-select
-                                    data-ng-model="item.instrument_accrual_calculation_schedules.periodicity_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('periodicity')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Periodicity"
                                                     model="item.instrument_accrual_calculation_schedules.periodicity_input"
-                                                    find-inputs="vm.findInputs('periodicity')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('periodicity')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -172,7 +141,7 @@
 
                 <div flex="20">
                     <md-button
-                            class="md-icon-button md-raised {{!!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
                             data-ng-click="vm.resetPropertyBtn(item, 'instrument_accrual_calculation_schedules', 'accrual_calculation_model')">
                         <span data-ng-if="!!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">R</span>
@@ -181,24 +150,6 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Accrual calculation model</label>
-                            <md-select data-ng-model="item.instrument_accrual_calculation_schedules.accrual_calculation_model"
-                                       md-on-open="vm.loadRelation('accrual_calculation_model')"
-                                       md-container-class="simple-search-select">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['accrual_calculation_model'].length"
-                                        ng-value="item.instrument_accrual_calculation_schedules.accrual_calculation_model_object.id">
-                                    {{item.instrument_accrual_calculation_schedules.accrual_calculation_model_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['accrual_calculation_model'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['accrual_calculation_model']"
-                                        ng-value="relationItem.id">
-                                    {{relationItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-relations-select
                                 label-title="Accrual calculation model"
@@ -206,24 +157,15 @@
                                 load-relation="vm.loadRelation('accrual_calculation_model')"
                                 relation-items="vm.relationItems['accrual_calculation_model']"
                                 selected-value="item.instrument_accrual_calculation_schedules.accrual_calculation_model_object.id"
-                                selected-name="item.instrument_accrual_calculation_schedules.accrual_calculation_model_object.name"></ttype-actions-relations-select>
+                                selected-name="item.instrument_accrual_calculation_schedules.accrual_calculation_model_object.name"
+                                is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Accrual calculation model</label>
-                            <md-select
-                                    data-ng-model="item.instrument_accrual_calculation_schedules.accrual_calculation_model_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('accrual_calculation_model')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
 
                         <ttype-actions-input-select label-title="Accrual calculation model"
                                                     model="item.instrument_accrual_calculation_schedules.accrual_calculation_model_input"
-                                                    find-inputs="vm.findInputs('accrual-calculation-model')"></ttype-actions-input-select>
+                                                    find-inputs="vm.findInputs('accrual-calculation-model')"
+                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>
 

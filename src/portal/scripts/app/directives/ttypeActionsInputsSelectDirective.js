@@ -12,7 +12,8 @@
             scope: {
                 labelTitle: '@',
                 model: '=',
-                findInputs: '&'
+                findInputs: '&',
+                isDisabled: '<'
             },
             templateUrl: 'views/directives/ttype-actions-inputs-select-view.html',
             link: function (scope, elem, attrs) {
