@@ -27,6 +27,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -41,6 +42,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -55,6 +57,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -69,6 +72,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -83,6 +87,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -97,6 +102,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -111,6 +117,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -125,6 +132,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -139,6 +147,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -153,6 +162,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -167,6 +177,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
@@ -181,6 +192,7 @@
                     data: {
                         create_objects: false,
                         inherit_rights: false,
+                        manage_attributes: false,
                         creator_manage: false,
                         creator_change: false,
                         creator_view: false,
