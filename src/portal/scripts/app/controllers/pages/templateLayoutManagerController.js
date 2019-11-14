@@ -470,6 +470,33 @@
 
         };
 
+        vm.deletePane = function (item, $index, $event) {
+
+            $event.stopPropagation();
+            var description = 'Are you sure to delete this action?';
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: description
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    vm.activeActionTemplate.data.actions.splice($index, 1);
+                }
+            });
+        };
+
         // ACTIONS TAB END
 
         vm.saveTemplate = function ($event, template) {
