@@ -51,6 +51,46 @@
             {
                 "key": "user_text_10",
                 "name": "User Text 10"
+            },
+            {
+                "key": "user_text_11",
+                "name": "User Text 11"
+            },
+            {
+                "key": "user_text_12",
+                "name": "User Text 12"
+            },
+            {
+                "key": "user_text_13",
+                "name": "User Text 13"
+            },
+            {
+                "key": "user_text_14",
+                "name": "User Text 14"
+            },
+            {
+                "key": "user_text_15",
+                "name": "User Text 15"
+            },
+            {
+                "key": "user_text_16",
+                "name": "User Text 16"
+            },
+            {
+                "key": "user_text_17",
+                "name": "User Text 17"
+            },
+            {
+                "key": "user_text_18",
+                "name": "User Text 18"
+            },
+            {
+                "key": "user_text_19",
+                "name": "User Text 19"
+            },
+            {
+                "key": "user_text_20",
+                "name": "User Text 20"
             }
         ];
 
@@ -94,6 +134,46 @@
             {
                 "key": "user_number_10",
                 "name": "User Number 10"
+            },
+            {
+                "key": "user_number_11",
+                "name": "User Number 11"
+            },
+            {
+                "key": "user_number_12",
+                "name": "User Number 12"
+            },
+            {
+                "key": "user_number_13",
+                "name": "User Number 13"
+            },
+            {
+                "key": "user_number_14",
+                "name": "User Number 14"
+            },
+            {
+                "key": "user_number_15",
+                "name": "User Number 15"
+            },
+            {
+                "key": "user_number_16",
+                "name": "User Number 16"
+            },
+            {
+                "key": "user_number_17",
+                "name": "User Number 17"
+            },
+            {
+                "key": "user_number_18",
+                "name": "User Number 18"
+            },
+            {
+                "key": "user_number_19",
+                "name": "User Number 19"
+            },
+            {
+                "key": "user_number_20",
+                "name": "User Number 20"
             }
         ];
 
@@ -153,7 +233,7 @@
 
             var getTransactionTypeFields = function () {
 
-                return uiService.getTransactionFieldList().then(function (data) {
+                return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
                     data.results.forEach(function (field) {
 

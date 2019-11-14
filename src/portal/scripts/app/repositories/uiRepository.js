@@ -464,6 +464,8 @@
 
     var getTransactionFieldList = function (options) {
 
+        console.log('options', options);
+
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/transaction-user-field/', options),
             {
                 method: 'GET',
