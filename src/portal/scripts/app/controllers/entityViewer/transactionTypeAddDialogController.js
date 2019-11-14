@@ -1099,8 +1099,12 @@
                     relationType = fieldName;
             }
 
-            var defaultValueKey = '';
+            var nameProperty = 'name';
+            if (fieldName === 'price_download_scheme') {
+                nameProperty = 'scheme_name';
+            }
 
+            var defaultValueKey = '';
             switch (relationType) {
                 case 'account_position':
                 case 'account_cash':
@@ -1129,13 +1133,13 @@
                     defaultValueKey = relationType;
             }
 
-            var defaultName = ecosystemDefaultData[defaultValueKey + '_object'].name;
+            var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
 
             actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
 
             // needed for displaying default value after turning on 'relation' field
             actionData[propertyName][fieldName + '_object'] = {};
-            actionData[propertyName][fieldName + '_object']['name'] = defaultName;
+            actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
             actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
 
         };
@@ -1682,11 +1686,14 @@
                                 if (action[key].hasOwnProperty(actionItemKey + '_input')) {
 
                                     if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
-                                        if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
+                                        /*if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
                                             action[key][actionItemKey + '_toggle'] = true;
 
                                             setDefaultValueForRelation(action, key, actionItemKey); // set default values for 'relation' fields
-                                        }
+                                        }*/
+                                        action[key][actionItemKey + '_toggle'] = true;
+
+                                        setDefaultValueForRelation(action, key, actionItemKey);
 
                                         delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
                                     }
