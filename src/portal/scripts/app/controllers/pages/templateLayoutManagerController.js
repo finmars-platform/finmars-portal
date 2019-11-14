@@ -438,6 +438,14 @@
                 result[actionType][key] = null;
             });
 
+            Object.keys(result[actionType]).forEach(function (key) {
+                if (result[actionType].hasOwnProperty(key + '_input')) {
+                    result[actionType][key + '_toggle'] = true;
+
+                    setDefaultValueForRelation(result, actionType, key);
+                }
+            });
+
             vm.activeActionTemplate.data.actions.push(result);
 
         };
