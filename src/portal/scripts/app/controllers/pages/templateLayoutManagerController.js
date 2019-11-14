@@ -291,8 +291,12 @@
                     relationType = fieldName;
             }
 
-            var defaultValueKey = '';
+            var nameProperty = 'name';
+            if (fieldName === 'price_download_scheme') {
+                nameProperty = 'scheme_name';
+            }
 
+            var defaultValueKey = '';
             switch (relationType) {
                 case 'account_position':
                 case 'account_cash':
@@ -321,13 +325,13 @@
                     defaultValueKey = relationType;
             }
 
-            var defaultName = ecosystemDefaultData[defaultValueKey + '_object'].name;
+            var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
 
             actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
 
             // needed for displaying default value after turning on 'relation' field
             actionData[propertyName][fieldName + '_object'] = {};
-            actionData[propertyName][fieldName + '_object']['name'] = defaultName;
+            actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
             actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
 
         };
@@ -355,11 +359,14 @@
 
                         keys.forEach(function (key) {
                             if (action[actionKey].hasOwnProperty(key + '_input')) {
-                                if (action[actionKey][key + '_field_type'] === 'relation') {
+                                /*if (action[actionKey][key + '_field_type'] === 'relation') {
                                     action[actionKey][key + '_toggle'] = true;
 
                                     setDefaultValueForRelation(action, actionKey, key);
-                                }
+                                }*/
+                                action[actionKey][key + '_toggle'] = true;
+
+                                setDefaultValueForRelation(action, actionKey, key);
                             }
                         })
                     }
