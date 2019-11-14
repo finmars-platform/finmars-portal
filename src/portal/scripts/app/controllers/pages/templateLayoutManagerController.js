@@ -168,7 +168,7 @@
 
         vm.getTransactionUserFields = function () {
 
-            return uiService.getTransactionFieldList().then(function (data) {
+            return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
                 data.results.forEach(function (field) {
 
@@ -431,6 +431,9 @@
                 ],
                 'instrument_factor_schedule': [
                     'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
+                ],
+                'execute_command': [
+                    'expr'
                 ]
             };
 

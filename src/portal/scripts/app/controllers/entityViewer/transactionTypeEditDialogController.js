@@ -240,7 +240,7 @@
 
         vm.getTransactionUserFields = function () {
 
-            return uiService.getTransactionFieldList().then(function (data) {
+            return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
                 data.results.forEach(function (field) {
 
