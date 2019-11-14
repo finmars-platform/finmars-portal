@@ -104,7 +104,7 @@
             <p class="text-right text-weight-bold m-b-16">General operations:</p>
 
             <div layout="row" layout-align="end center">
-                <md-button class="md-raised" data-ng-click="vm.addAction('transaction')">
+                <md-button class="md-raised" data-ng-class="{'disabled-btn': vm.entity.type == 2}" data-ng-click="vm.addAction('transaction')">
                     Create base transaction
                 </md-button>
                 <md-button class="md-raised" data-ng-click="vm.addAction('instrument')">
