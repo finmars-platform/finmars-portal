@@ -231,8 +231,13 @@
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised m-r-24"
+            <md-button class="md-raised m-r-24" data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history'"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled}"
+                       ng-click="vm.save()">
+                Save
+            </md-button>
+            <md-button class="md-raised m-r-24" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history'"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid}"
                        ng-click="vm.save()">
                 Save
             </md-button>

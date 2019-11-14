@@ -117,7 +117,7 @@
                                 <span>Open permission editor</span>
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item>
+                        <md-menu-item data-ng-if="isReport">
                             <md-button ng-click="toggleSplitPanel($event, 'balance-report')" class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
                                             data-ng-show="currentAdditions.type !== 'balance-report'"
@@ -129,7 +129,7 @@
                                 <span>Open Balance Report view panel</span>
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item>
+                        <md-menu-item data-ng-if="isReport">
                             <md-button ng-click="toggleSplitPanel($event, 'pl-report')" class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
                                             data-ng-show="currentAdditions.type !== 'pl-report'"
@@ -141,7 +141,7 @@
                                 <span>Open P&L Report view panel</span>
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item>
+                        <md-menu-item data-ng-if="isReport">
                             <md-button ng-click="toggleSplitPanel($event, 'transaction-report')"
                                        class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
