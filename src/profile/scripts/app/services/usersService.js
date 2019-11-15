@@ -154,8 +154,8 @@
         })
     };
 
-    var getInviteFromMasterUserList = function () {
-        return window.fetch(baseUrl + 'users/invite-from-master-user/', {
+    var getInviteFromMasterUserList = function (status) {
+        return window.fetch(baseUrl + 'users/invite-from-master-user/?status=' + status, {
             method: 'GET',
             credentials: 'include',
             headers: {
