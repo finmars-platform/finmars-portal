@@ -163,6 +163,10 @@
 
                 });
 
+                if (vm.currentMember && vm.currentMember.is_admin) {
+                    vm.hasEditPermission = true;
+                }
+
                 vm.readyStatus.permissions = true;
                 $scope.$apply();
             });
