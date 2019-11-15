@@ -68,6 +68,8 @@
 
         var ecosystemDefaultData = {};
 
+        vm.hasEditPermission = false;
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -78,6 +80,18 @@
             Promise.all(promises).then(function (data) {
 
                 console.log('loadPermissions data', data);
+
+                vm.entity.object_permissions.forEach(function (perm) {
+
+                    if (perm.permission === "change_" + vm.entityType.split('-').join('')) {
+
+                        if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
+                            vm.hasEditPermission = true;
+                        }
+
+                    }
+
+                });
 
                 vm.readyStatus.permissions = true;
                 $scope.$apply();
