@@ -562,7 +562,7 @@
 
                 var result = [];
 
-                uiService.getTransactionFieldList().then(function (data) {
+                uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
                     result = data.results;
 

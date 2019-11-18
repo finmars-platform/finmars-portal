@@ -621,8 +621,19 @@
                         '<div class="ev-dropdown-option"' +
                         ' data-ev-dropdown-action="delete"' +
                         ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>' +
-                        '</div>';
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
+
+
+                    if (entityType === 'price-history') {
+
+                        popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
+                            ' data-ev-dropdown-action="edit_instrument"' +
+                            ' data-object-id="' + objectId + '"' +
+                            ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
+
+                    }
+
+                    popup.innerHTML = popup.innerHTML + '</div>';
 
                     popup.style.position = 'absolute';
                     popup.style.left = event.pageX + 'px';

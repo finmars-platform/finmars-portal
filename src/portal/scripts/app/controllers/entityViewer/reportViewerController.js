@@ -166,6 +166,36 @@
 
                         }
 
+                        if (action === 'edit_currency') {
+
+                            $mdDialog.show({
+                                controller: 'EntityViewerEditDialogController as vm',
+                                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: activeObject.event,
+                                locals: {
+                                    entityType: 'currency',
+                                    entityId: activeObject['currency.id']
+                                }
+                            }).then(function (res) {
+
+                                vm.entityViewerDataService.setActiveObjectAction(null);
+
+                                if (res && res.res === 'agree') {
+
+                                    vm.entityViewerDataService.resetData();
+                                    vm.entityViewerDataService.resetRequestParameters();
+
+                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                }
+                            });
+
+                        }
+
                         if (action === 'edit_price') {
 
                             var filters = {

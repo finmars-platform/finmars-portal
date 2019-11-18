@@ -105,8 +105,8 @@
     };
 
 
-    var getTransactionFieldList = function () {
-        return uiRepository.getTransactionFieldList()
+    var getTransactionFieldList = function (options) {
+        return uiRepository.getTransactionFieldList(options)
     };
 
     var createTransactionField = function (data) {

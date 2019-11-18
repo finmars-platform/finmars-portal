@@ -29,7 +29,9 @@
 
             vm.readyStatus.invites = false;
 
-            usersService.getInviteFromMasterUserList().then(function (data) {
+            var status = 0; // 0 - SENT, 1 - ACCEPTED, 2 - DECLINED
+
+            usersService.getInviteFromMasterUserList(status).then(function (data) {
 
                 vm.invites = data.results;
                 vm.readyStatus.invites = true;

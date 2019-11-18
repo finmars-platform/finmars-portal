@@ -51,7 +51,7 @@
             return new Promise(function (resolve) {
 
                 if (vm.entityType === 'complex-transaction') {
-                    uiService.getTransactionFieldList().then(function (data) {
+                    uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
                         resolve(data);
                     })
                 } else {
