@@ -139,7 +139,7 @@
 
                     $(document).bind('copy', handler);
 
-                    scope.$on("destroy", function () {
+                    scope.$on("$destroy", function () {
                         $(document).unbind('copy');
                         document.removeEventListener('copy');
                     })

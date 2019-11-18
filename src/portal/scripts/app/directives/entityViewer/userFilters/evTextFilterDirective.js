@@ -26,7 +26,9 @@
                 scope.columnRowsContent = [];
                 scope.showSelectMenu = false;
 
-                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                var dataLoadEndId;
+
+                var getDataForSelects = function () {
 
                     var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
 
@@ -36,7 +38,7 @@
 
                     scope.$apply();
 
-                });
+                };
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
@@ -214,6 +216,24 @@
                     scope.evDataService.setFilters(scope.filters);
 
                 };*/
+
+                var init = function () {
+                    if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
+                        dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
+                    }
+
+                    if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
+                        setTimeout(function () {
+                            getDataForSelects();
+                        }, 500);
+                    }
+                };
+
+                init();
+
+                scope.$on("$destroy", function () {
+                    scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndId);
+                });
 
             }
         }

@@ -31,8 +31,9 @@
                 scope.useFromAbove = scope.evDataService.getUseFromAbove();
                 //scope.attributesFromAbove = [];
 
-                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                var dataLoadEndId;
 
+                var getDataForSelects = function () {
                     var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
@@ -44,8 +45,7 @@
                     }*/
 
                     scope.$apply();
-
-                });
+                };
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
@@ -68,7 +68,7 @@
                 var isUseFromAboveActive = function () {
                     if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length > 0) {
                         return true;
-                    };
+                    }
 
                     return false;
                 };
@@ -306,12 +306,25 @@
 
 
                 scope.init = function () {
-
                     scope.initSplitPanelMode();
+
+                    if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
+                        dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
+                    }
+
+                    if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
+                        setTimeout(function () {
+                            getDataForSelects();
+                        }, 500);
+                    }
 
                 };
 
-                scope.init()
+                scope.init();
+
+                scope.$on("$destroy", function () {
+                    scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndId);
+                });
 
             }
         }

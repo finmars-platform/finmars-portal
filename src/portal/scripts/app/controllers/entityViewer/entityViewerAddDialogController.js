@@ -468,36 +468,71 @@
             vm.updateEntityBeforeSave();
 
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
-
             console.log('vm.entity before save', vm.entity);
+
+            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
 
             if (vm.entity.$_isValid) {
 
-                var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                if (hasProhibitNegNums.length === 0) {
 
-                console.log('resultEntity', resultEntity);
+                    var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
-                entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
+                    console.log('resultEntity', resultEntity);
 
-                    $mdDialog.hide({res: 'agree', data: data});
+                    entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
-                }).catch(function (data) {
+                        $mdDialog.hide({res: 'agree', data: data});
 
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        parent: angular.element(document.body),
-                        locals: {
-                            validationData: data
-                        },
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true
+                    }).catch(function (data) {
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            parent: angular.element(document.body),
+                            locals: {
+                                validationData: data
+                            },
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
                     })
 
-                })
+                } else {
+
+                    var warningDescription = '<p>Next fields should have positive number value to proceed:';
+
+                    hasProhibitNegNums.forEach(function (field) {
+                        warningDescription = warningDescription + '<br>' + field;
+                    });
+
+                    warningDescription = warningDescription + '</p>';
+
+                    $mdDialog.show({
+                        controller: "WarningDialogController as vm",
+                        templateUrl: "views/warning-dialog-view.html",
+                        multiple: true,
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: "Warning",
+                                description: warningDescription,
+                                actionsButtons: [
+                                    {
+                                        name: "CLOSE",
+                                        response: {status: 'disagree'}
+                                    }
+                                ]
+                            }
+                        }
+
+                    });
+
+                }
 
             }
 

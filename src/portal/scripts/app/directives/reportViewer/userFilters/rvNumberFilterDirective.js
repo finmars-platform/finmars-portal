@@ -34,44 +34,28 @@
                 scope.useFromAbove = scope.evDataService.getUseFromAbove();
                 //scope.attributesFromAbove = [];
 
-                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
-                    var columnRowsContent  = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
-
-                    scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
-                        return cRowsContent;
-                    });
-
-                    /*if(!scope.isRootEntityViewer) {
-                        scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
-                    }*/
-
-                    scope.$apply();
-
-                });
-
                 if (!scope.filter.options) {
                     scope.filter.options = {};
-                };
+                }
 
                 if (!scope.filter.options.filter_type) {
                     scope.filter.options.filter_type = "equal";
-                };
+                }
 
                 if (!scope.filter.options.filter_values) {
                     scope.filter.options.filter_values = [];
-                };
+                }
 
                 if (!scope.filter.options.hasOwnProperty('exclude_empty_cells')) {
                     scope.filter.options.exclude_empty_cells = false;
-                };
+                }
 
                 var filterEnabled = scope.filter.options.enabled;
 
                 var isUseFromAboveActive = function () {
                     if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length > 0) {
                         return true;
-                    };
+                    }
 
                     return false;
                 };
@@ -128,9 +112,9 @@
                             case "bottom_n":
                                 filterRegime = "Bottom N items";
                                 break;*/
-                        };
+                        }
 
-                    };
+                    }
 
                     return filterRegime;
 
@@ -191,8 +175,7 @@
                         !isUseFromAboveActive()) {
 
                         return true;
-
-                    };
+                    }
 
                     return false;
                 };
@@ -303,7 +286,7 @@
 
                                 scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                            };
+                            }
 
                         });
 
@@ -311,20 +294,18 @@
 
                         if (isUseFromAboveActive()) {
                             scope.noDataForLinkingTo = true;
-                        };
+                        }
 
-                    };
+                    }
 
                 };
 
 
                 scope.init = function () {
-
                     scope.initSplitPanelMode();
-
                 };
 
-                scope.init()
+                scope.init();
 
             }
         }

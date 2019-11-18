@@ -207,12 +207,14 @@
             filterAttrsToShow('balancePerformanceAttrs', balancePerformanceAttrsToRemove);
             filterAttrsToShow('allocationAttrs', allocationAttrsToRemove);
             filterAttrsToShow('instrumentAttrs', instrumentAttrsToRemove);
+
             vm.linkedInstrumentAttrs = vm.linkedInstrumentAttrs.filter(function (attr) {
                 if (linkedInstrumentAttrsToShow.indexOf(attr.key) !== -1) {
                     return true;
                 }
                 return false;
             });
+
             filterAttrsToShow('accountAttrs', accountAttrsToRemove);
             filterAttrsToShow('strategy1attrs', strategy1AttrsToRemove);
             filterAttrsToShow('strategy2attrs', strategy2AttrsToRemove);
