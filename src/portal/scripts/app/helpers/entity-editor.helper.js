@@ -42,12 +42,13 @@
     var checkEntityAttrTypes = function (entity, entityAttrs) {
         var i;
         for (i = 0; i < entityAttrs.length; i = i + 1) {
-            //console.log('entityAttrs[i]', entityAttrs[i]);
+
             if (entityAttrs[i]['value_type'] === 40) {
                 entity[entityAttrs[i].key] = moment(new Date(entity[entityAttrs[i].key])).format('YYYY-MM-DD');
             }
+
             if (entityAttrs[i]['value_type'] === 20 || entityAttrs[i]['value_type'] === 'float') {
-                //console.log('entity[entityAttrs[i].key]', entity[entityAttrs[i].key]);
+
                 var withoutSpaces = (entity[entityAttrs[i].key] + '').replace(' ', '');
                 var res;
                 if (withoutSpaces.indexOf(',') !== -1) {
@@ -128,7 +129,7 @@
                 if (keys[i] === entityAttrs[e].key) {
                     if (entityAttrs[e].options && entityAttrs[e].options.notNull === true) {
                         if (item[keys[i]] === '' || item[keys[i]] == null || item[keys[i]] === undefined) {
-                            isValid = false
+                            isValid = false;
                         }
                     }
                 }
@@ -138,7 +139,7 @@
                 if (keys[i] === attrs[a].name) {
                     if (attrs[a].options && attrs[a].options.notNull === true) {
                         if (item[keys[i]] === '' || item[keys[i]] == null || item[keys[i]] === undefined) {
-                            isValid = false
+                            isValid = false;
                         }
                     }
                 }
@@ -148,13 +149,78 @@
         return isValid
     };
 
+    var checkForNegNumsRestriction = function (item, entityAttrs, userInputs, layoutAttrs) {
+
+        var fieldsWithNegVal = [];
+
+        var i, e, a, b;
+        var keys = Object.keys(item);
+        for (i = 0; i < keys.length; i = i + 1) {
+            var attrWithNegVal = null;
+            var foundAttr = false;
+
+            for (e = 0; e < entityAttrs.length; e = e + 1) {
+                if (keys[i] === entityAttrs[e].key) {
+                    if (entityAttrs[e].options && entityAttrs[e].options.onlyPositive === true) {
+                        if (item[keys[i]] == null || item[keys[i]] === undefined) {
+                            attrWithNegVal = entityAttrs[e];
+                            foundAttr = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!foundAttr) {
+                for (a = 0; a < userInputs.length; a = a + 1) {
+                    if (keys[i] === userInputs[a].name) {
+                        if (userInputs[a].options && userInputs[a].options.onlyPositive === true) {
+                            if (item[keys[i]] == null || item[keys[i]] === undefined) {
+                                attrWithNegVal = userInputs[a];
+                                foundAttr = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!foundAttr) {
+                for (b = 0; b < layoutAttrs.length; b = b + 1) {
+                    if (keys[i] === layoutAttrs[b].name) {
+                        if (layoutAttrs[b].options && layoutAttrs[b].options.onlyPositive === true) {
+                            if (item[keys[i]] == null || item[keys[i]] === undefined) {
+                                attrWithNegVal = layoutAttrs[b];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (attrWithNegVal) {
+                if (attrWithNegVal.options && attrWithNegVal.options.fieldName) {
+                    fieldsWithNegVal.push(attrWithNegVal.options.fieldName);
+                } else if (attrWithNegVal.hasOwnProperty('verbose_name')) {
+                    fieldsWithNegVal.push(attrWithNegVal.verbose_name);
+                } else {
+                    fieldsWithNegVal.push(attrWithNegVal.name);
+                }
+            }
+
+        }
+
+        return fieldsWithNegVal;
+    };
+
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
         removeNullFields: removeNullFields,
         clearUnusedAttributeValues: clearUnusedAttributeValues,
         appendAttribute: appendAttribute,
         updateValue: updateValue,
-        checkForNotNullRestriction: checkForNotNullRestriction
+        checkForNotNullRestriction: checkForNotNullRestriction,
+        checkForNegNumsRestriction: checkForNegNumsRestriction
     }
 
 }());

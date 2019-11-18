@@ -619,92 +619,127 @@
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
             console.log('vm.entity before save', vm.entity);
+            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
 
             if (vm.entity.$_isValid) {
 
-                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
-                var resultEntity = vm.entity;
+                if (hasProhibitNegNums.length === 0) {
 
-                resultEntity.values = {};
+                    // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                    var resultEntity = vm.entity;
 
-                vm.userInputs.forEach(function (userInput) {
+                    resultEntity.values = {};
 
-                    if (userInput !== null) {
-                        var keys = Object.keys(vm.entity);
-                        keys.forEach(function (key) {
-                            if (key === userInput.name) {
-                                resultEntity.values[userInput.name] = vm.entity[userInput.name];
-                            }
+                    vm.userInputs.forEach(function (userInput) {
+
+                        if (userInput !== null) {
+                            var keys = Object.keys(vm.entity);
+                            keys.forEach(function (key) {
+                                if (key === userInput.name) {
+                                    resultEntity.values[userInput.name] = vm.entity[userInput.name];
+                                }
+                            });
+                        }
+                    });
+
+                    resultEntity.store = true;
+                    resultEntity.calculate = true;
+
+                    console.log('resultEntity', resultEntity);
+
+                    new Promise(function (resolve, reject) {
+
+                        transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type, {}).then(function (data) {
+
+                            var res = Object.assign(data, resultEntity);
+
+                            res.complex_transaction.is_locked = resultEntity.is_locked;
+                            res.complex_transaction.is_canceled = resultEntity.is_canceled;
+
+                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                resolve(data);
+                            }).catch(function (data) {
+
+                                console.log('data', data);
+
+                                $mdDialog.show({
+                                    controller: 'ValidationDialogController as vm',
+                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                    targetEvent: $event,
+                                    parent: angular.element(document.body),
+                                    locals: {
+                                        validationData: data
+                                    },
+                                    preserveScope: true,
+                                    multiple: true,
+                                    autoWrap: true,
+                                    skipHide: true
+                                })
+
+                            })
                         });
-                    }
-                });
 
-                resultEntity.store = true;
-                resultEntity.calculate = true;
+                    }).then(function (data) {
 
-                console.log('resultEntity', resultEntity);
-
-                new Promise(function (resolve, reject) {
-
-                    transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type, {}).then(function (data) {
-
-                        var res = Object.assign(data, resultEntity);
-
-                        res.complex_transaction.is_locked = resultEntity.is_locked;
-                        res.complex_transaction.is_canceled = resultEntity.is_canceled;
-
-                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
-                            resolve(data);
-                        }).catch(function (data) {
-
-                            console.log('data', data);
+                        if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
                                 targetEvent: $event,
-                                parent: angular.element(document.body),
                                 locals: {
-                                    validationData: data
+                                    validationData: {
+                                        complex_transaction_errors: data.complex_transaction_errors,
+                                        instruments_errors: data.instruments_errors,
+                                        transactions_errors: data.transactions_errors
+                                    }
                                 },
-                                preserveScope: true,
                                 multiple: true,
+                                preserveScope: true,
                                 autoWrap: true,
                                 skipHide: true
                             })
 
-                        })
+                        } else {
+
+                            $mdDialog.hide({res: 'agree', data: data});
+
+                        }
+
+
+                    })
+
+                } else {
+
+                    var warningDescription = '<p>Next fields should have positive number value to proceed:';
+
+                    hasProhibitNegNums.forEach(function (field) {
+                        warningDescription = warningDescription + '<br>' + field;
                     });
 
-                }).then(function (data) {
+                    warningDescription = warningDescription + '</p>';
 
-                    if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+                    $mdDialog.show({
+                        controller: "WarningDialogController as vm",
+                        templateUrl: "views/warning-dialog-view.html",
+                        multiple: true,
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: "Warning",
+                                description: warningDescription,
+                                actionsButtons: [
+                                    {
+                                        name: "CLOSE",
+                                        response: {status: 'disagree'}
+                                    }
+                                ]
+                            }
+                        }
 
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                validationData: {
-                                    complex_transaction_errors: data.complex_transaction_errors,
-                                    instruments_errors: data.instruments_errors,
-                                    transactions_errors: data.transactions_errors
-                                }
-                            },
-                            multiple: true,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
+                    });
 
-                    } else {
-
-                        $mdDialog.hide({res: 'agree', data: data});
-
-                    }
-
-
-                })
+                }
 
             }
 
@@ -717,89 +752,124 @@
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
             console.log('vm.entity before save', vm.entity);
+            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
 
             if (vm.entity.$_isValid) {
 
-                var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                if (hasProhibitNegNums.length === 0) {
 
-                resultEntity.values = {};
+                    var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
-                vm.userInputs.forEach(function (userInput) {
+                    resultEntity.values = {};
 
-                    if (userInput !== null) {
-                        var keys = Object.keys(vm.entity);
-                        keys.forEach(function (key) {
-                            if (key === userInput.name) {
-                                resultEntity.values[userInput.name] = vm.entity[userInput.name];
-                            }
-                        });
-                    }
-                });
+                    vm.userInputs.forEach(function (userInput) {
 
-                resultEntity.store = true;
-                resultEntity.calculate = true;
-
-                console.log('resultEntity', resultEntity);
-
-                new Promise(function (resolve, reject) {
-
-                    transactionTypeService.initBookPendingComplexTransaction(resultEntity.transaction_type).then(function (data) {
-
-                        var res = Object.assign(data, resultEntity);
-
-                        res.complex_transaction.is_locked = resultEntity.is_locked;
-                        res.complex_transaction.is_canceled = resultEntity.is_canceled;
-
-                        transactionTypeService.bookPendingComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
-                            resolve(data);
-                        });
+                        if (userInput !== null) {
+                            var keys = Object.keys(vm.entity);
+                            keys.forEach(function (key) {
+                                if (key === userInput.name) {
+                                    resultEntity.values[userInput.name] = vm.entity[userInput.name];
+                                }
+                            });
+                        }
                     });
 
-                }).then(function (data) {
+                    resultEntity.store = true;
+                    resultEntity.calculate = true;
 
-                    if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+                    console.log('resultEntity', resultEntity);
+
+                    new Promise(function (resolve, reject) {
+
+                        transactionTypeService.initBookPendingComplexTransaction(resultEntity.transaction_type).then(function (data) {
+
+                            var res = Object.assign(data, resultEntity);
+
+                            res.complex_transaction.is_locked = resultEntity.is_locked;
+                            res.complex_transaction.is_canceled = resultEntity.is_canceled;
+
+                            transactionTypeService.bookPendingComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                resolve(data);
+                            });
+                        });
+
+                    }).then(function (data) {
+
+                        if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: {
+                                        complex_transaction_errors: data.complex_transaction_errors,
+                                        instruments_errors: data.instruments_errors,
+                                        transactions_errors: data.transactions_errors
+                                    }
+                                },
+                                multiple: true,
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true
+                            })
+
+                        } else {
+
+                            $mdDialog.hide({res: 'agree'});
+                        }
+
+                        $mdDialog.hide({res: 'agree'});
+
+                    }).catch(function (data) {
 
                         $mdDialog.show({
                             controller: 'ValidationDialogController as vm',
                             templateUrl: 'views/dialogs/validation-dialog-view.html',
                             targetEvent: $event,
+                            parent: angular.element(document.body),
                             locals: {
-                                validationData: {
-                                    complex_transaction_errors: data.complex_transaction_errors,
-                                    instruments_errors: data.instruments_errors,
-                                    transactions_errors: data.transactions_errors
-                                }
+                                validationData: data
                             },
-                            multiple: true,
                             preserveScope: true,
+                            multiple: true,
                             autoWrap: true,
                             skipHide: true
                         })
 
-                    } else {
-
-                        $mdDialog.hide({res: 'agree'});
-                    }
-
-                    $mdDialog.hide({res: 'agree'});
-
-                }).catch(function (data) {
-
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        parent: angular.element(document.body),
-                        locals: {
-                            validationData: data
-                        },
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true
                     })
 
-                })
+                } else {
+
+                    var warningDescription = '<p>Next fields should have positive number value to proceed:';
+
+                    hasProhibitNegNums.forEach(function (field) {
+                        warningDescription = warningDescription + '<br>' + field;
+                    });
+
+                    warningDescription = warningDescription + '</p>';
+
+                    $mdDialog.show({
+                        controller: "WarningDialogController as vm",
+                        templateUrl: "views/warning-dialog-view.html",
+                        multiple: true,
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: "Warning",
+                                description: warningDescription,
+                                actionsButtons: [
+                                    {
+                                        name: "CLOSE",
+                                        response: {status: 'disagree'}
+                                    }
+                                ]
+                            }
+                        }
+
+                    });
+
+                }
 
             }
 
