@@ -670,6 +670,18 @@
 
                             };
 
+                            if (activeObject.item_type === 2) { // currency
+
+                                contextData.currency = activeObject['currency.id'];
+                                contextData.currency_object = {
+                                    id: activeObject['currency_object.id'],
+                                    name: activeObject['currency_object.name'],
+                                    user_code: activeObject['currency_object.user_code'],
+                                    content_type: "currencies.currency"
+                                };
+
+                            }
+
                             if(activeObject['position_size']) {
                                 contextData.position = activeObject['position_size'];
                             }
@@ -715,7 +727,7 @@
                                     id: activeObject['allocation_balance.id'],
                                     name: activeObject['allocation_balance.name'],
                                     user_code: activeObject['allocation_balance.user_code'],
-                                    content_type: "allocation_balance.instrument"
+                                    content_type: "instruments.instrument"
                                 };
                             }
 
@@ -725,7 +737,7 @@
                                     id: activeObject['allocation_pl.id'],
                                     name: activeObject['allocation_pl.name'],
                                     user_code: activeObject['allocation_pl.user_code'],
-                                    content_type: "allocation_pl.instrument"
+                                    content_type: "instruments.instrument"
                                 };
                             }
 
