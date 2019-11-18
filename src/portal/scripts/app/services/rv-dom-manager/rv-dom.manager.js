@@ -844,6 +844,15 @@
 
                 }
 
+                if(obj['item_type'] === 2) { // item_type: 1 == Instrument
+
+                    popup.innerHTML = popup.innerHTML +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="edit_currency"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Currency</div>';
+                }
+
                 popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
                     ' data-ev-dropdown-action="book_transaction"' +
                     ' data-object-id="' + objectId + '"' +

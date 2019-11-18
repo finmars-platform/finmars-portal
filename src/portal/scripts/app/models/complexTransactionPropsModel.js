@@ -97,6 +97,65 @@
             },
 
             {
+                "key": "user_text_11",
+                "name": "User Text 11",
+                "value_type": 10
+            },
+            {
+                "key": "user_text_12",
+                "name": "User Text 12",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_13",
+                "name": "User Text 13",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_14",
+                "name": "User Text 14",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_15",
+                "name": "User Text 15",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_16",
+                "name": "User Text 16",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_17",
+                "name": "User Text 17",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_18",
+                "name": "User Text 18",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_19",
+                "name": "User Text 19",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_20",
+                "name": "User Text 20",
+                "value_type": 10
+            },
+
+            {
                 "key": "user_number_1",
                 "name": "User Number 1",
                 "value_type": 20
@@ -152,6 +211,64 @@
             {
                 "key": "user_number_10",
                 "name": "User Number 10",
+                "value_type": 20
+            },
+            {
+                "key": "user_number_11",
+                "name": "User Number 11",
+                "value_type": 20
+            },
+            {
+                "key": "user_number_12",
+                "name": "User Number 12",
+                "value_type": 20
+            },
+
+            {
+                "key": "user_number_13",
+                "name": "User Number 13",
+                "value_type": 20
+            },
+
+            {
+                "key": "user_number_14",
+                "name": "User Number 14",
+                "value_type": 20
+            },
+
+            {
+                "key": "user_number_15",
+                "name": "User Number 15",
+                "value_type": 20
+            },
+
+            {
+                "key": "user_number_16",
+                "name": "User Number 16",
+                "value_type": 20
+            },
+
+            {
+                "key": "user_number_17",
+                "name": "User Number 17",
+                "value_type": 20
+            },
+
+            {
+                "key": "user_number_18",
+                "name": "User Number 18",
+                "value_type": 20
+            },
+
+            {
+                "key": "user_number_19",
+                "name": "User Number 19",
+                "value_type": 20
+            },
+
+            {
+                "key": "user_number_20",
+                "name": "User Number 20",
                 "value_type": 20
             },
 

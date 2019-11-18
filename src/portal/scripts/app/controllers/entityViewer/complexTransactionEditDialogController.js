@@ -1,4 +1,4 @@
-/**
+    /**
  * Created by szhitenev on 05.05.2016.
  */
 (function () {
@@ -46,6 +46,8 @@
         vm.dataConstructorData = {entityType: vm.entityType};
 
         vm.attributesLayout = [];
+
+        vm.hasEditPermission = false;
 
         vm.generateAttributesFromLayoutFields = function () {
 
@@ -162,6 +164,41 @@
 
             Promise.all(promises).then(function (data) {
 
+                var hasTransactionTypeEditAccess = false;
+                var hasFullViewComplexTransaction = false;
+
+                vm.complexTransactionData.transaction_type_object.object_permissions.forEach(function (perm) {
+
+                    if (perm.permission === "change_transactiontype") {
+
+                        if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
+                            hasTransactionTypeEditAccess = true;
+                        }
+
+                    }
+
+                });
+
+                vm.complexTransactionData.complex_transaction.object_permissions.forEach(function (perm) {
+
+                    if (perm.permission === "view_complextransaction") {
+
+                        if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
+                            vm.hasFullViewComplexTransaction = true;
+                        }
+
+                    }
+
+                });
+
+                if (hasTransactionTypeEditAccess && hasFullViewComplexTransaction) {
+                    vm.hasEditPermission = true;
+                }
+
+                if (vm.currentMember && vm.currentMember.is_admin) {
+                    vm.hasEditPermission = true;
+                }
+
                 vm.readyStatus.permissions = true;
                 $scope.$apply();
             });
@@ -208,7 +245,6 @@
 
             });
         };
-
 
         vm.checkPermissions = function () {
 
@@ -397,23 +433,25 @@
         vm.getItem = function (fromChild) {
             return new Promise(function (res, rej) {
 
-                complexTransactionService.initRebookComplexTransaction(vm.entityId).then(function (complextTransactionData) {
+                complexTransactionService.initRebookComplexTransaction(vm.entityId).then(function (complexTransactionData) {
 
-                    vm.transactionTypeId = complextTransactionData.transaction_type;
-                    vm.editLayoutEntityInstanceId = complextTransactionData.complex_transaction.id;
-                    vm.entity = complextTransactionData.complex_transaction;
+                    vm.complexTransactionData = complexTransactionData;
+
+                    vm.transactionTypeId = complexTransactionData.transaction_type;
+                    vm.editLayoutEntityInstanceId = complexTransactionData.complex_transaction.id;
+                    vm.entity = complexTransactionData.complex_transaction;
 
                     console.log('vm.entity', vm.entity);
 
-                    var inputsWithCalculations = complextTransactionData.transaction_type_object.inputs;
+                    var inputsWithCalculations = complexTransactionData.transaction_type_object.inputs;
 
-                    var keys = Object.keys(complextTransactionData.values);
+                    var keys = Object.keys(complexTransactionData.values);
 
                     keys.forEach(function (key) {
-                        vm.entity[key] = complextTransactionData.values[key];
+                        vm.entity[key] = complexTransactionData.values[key];
                     });
 
-                    complextTransactionData.complex_transaction.attributes.forEach(function (item) {
+                    complexTransactionData.complex_transaction.attributes.forEach(function (item) {
                         if (item.attribute_type_object.value_type === 10) {
                             vm.entity[item.attribute_type_object.name] = item.value_string;
                         }
@@ -428,7 +466,7 @@
                         }
                     });
 
-                    vm.tabs = complextTransactionData.book_transaction_layout.data;
+                    vm.tabs = complexTransactionData.book_transaction_layout.data;
                     vm.userInputs = [];
                     vm.tabs.forEach(function (tab) {
                         tab.layout.fields.forEach(function (field) {

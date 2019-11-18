@@ -336,6 +336,33 @@
 
                     }
 
+                    if (action === 'edit_instrument' && activeObject.id) {
+
+                        $mdDialog.show({
+                            controller: 'EntityViewerEditDialogController as vm',
+                            templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: activeObject.event,
+                            //clickOutsideToClose: false,
+                            locals: {
+                                entityType: 'instrument',
+                                entityId: activeObject.instrument
+                            }
+                        }).then(function (res) {
+
+                            vm.entityViewerDataService.setActiveObjectAction(null);
+
+                            if (res && res.res === 'agree') {
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            }
+
+
+                        });
+
+                    }
+
                 });
 
             };

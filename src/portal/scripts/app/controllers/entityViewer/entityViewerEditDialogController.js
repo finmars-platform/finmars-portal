@@ -60,6 +60,8 @@
 
         vm.currentMember = null;
 
+        vm.hasEditPermission = false;
+
         vm.generateAttributesFromLayoutFields = function () {
 
             var tabResult;
@@ -148,6 +150,22 @@
             promises.push(vm.getGroupList());
 
             Promise.all(promises).then(function (data) {
+
+                vm.entity.object_permissions.forEach(function (perm) {
+
+                    if (perm.permission === "change_" + vm.entityType.split('-').join('')) {
+
+                        if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
+                            vm.hasEditPermission = true;
+                        }
+
+                    }
+
+                });
+
+                if (vm.currentMember && vm.currentMember.is_admin) {
+                    vm.hasEditPermission = true;
+                }
 
                 vm.readyStatus.permissions = true;
                 $scope.$apply();

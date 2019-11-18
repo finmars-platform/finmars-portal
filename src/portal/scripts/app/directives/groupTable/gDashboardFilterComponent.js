@@ -479,7 +479,7 @@
 
                 var init = function () {
 
-                    uiService.getTransactionFieldList().then(function (data) {
+                    uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
                         var transactionFields = data.results;
                         scope.transactionsUserDates = transactionFields.filter(function (field) {
