@@ -1,6 +1,6 @@
 <div class="g-grouping-component">
 
-    <div layout="row" layout-align="space-between end" layout>
+    <div class="g-first-line" layout="row" layout-align="space-between end" layout>
         <div layout="row">
             <div>
                 <p class="g-drag-section-title">
@@ -239,6 +239,10 @@
                 <!-- Drop level {{groups.length + 1}} Group -->
                 Drop New Grouping Level
             </div>
+
+            <md-button class="md-raised g-add-group-btn" data-ng-click="addGroup()">
+                Add Grouping
+            </md-button>
         </div>
 
         <!--<md-button data-ng-if="components.fieldManagerBtn == true" class="md-fab g-settings-btn" aria-label="drag modal"-->

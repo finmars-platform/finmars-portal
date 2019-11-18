@@ -577,19 +577,55 @@
 
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
+            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
+
             if (vm.entity.$_isValid) {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                if (hasProhibitNegNums.length === 0) {
 
-                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+                    var result = entityEditorHelper.removeNullFields(vm.entity);
 
-                    if (data.status === 400) {
-                        vm.handleErrors($event, data);
-                    } else {
-                        $mdDialog.hide({res: 'agree', data: data});
-                    }
+                    entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
-                });
+                        if (data.status === 400) {
+                            vm.handleErrors($event, data);
+                        } else {
+                            $mdDialog.hide({res: 'agree', data: data});
+                        }
+
+                    });
+
+                } else {
+
+                    var warningDescription = '<p>Next fields should have positive number value to proceed:';
+
+                    hasProhibitNegNums.forEach(function (field) {
+                        warningDescription = warningDescription + '<br>' + field;
+                    });
+
+                    warningDescription = warningDescription + '</p>';
+
+                    $mdDialog.show({
+                        controller: "WarningDialogController as vm",
+                        templateUrl: "views/warning-dialog-view.html",
+                        multiple: true,
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: "Warning",
+                                description: warningDescription,
+                                actionsButtons: [
+                                    {
+                                        name: "CLOSE",
+                                        response: {status: 'disagree'}
+                                    }
+                                ]
+                            }
+                        }
+
+                    });
+
+                }
 
             }
 

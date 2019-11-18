@@ -20,6 +20,7 @@
             scope: {
                 evDataService: '=',
                 evEventService: '=',
+                attributeDataService: '=',
                 contentWrapElement: '='
             },
             templateUrl: 'views/directives/groupTable/grouping-view.html',
@@ -27,6 +28,7 @@
 
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType);
+                scope.contentType = scope.evDataService.getContentType();
 
                 scope.rootGroupOptions = scope.evDataService.getRootGroupOptions();
 
@@ -35,6 +37,89 @@
                 scope.components = scope.evDataService.getComponents();
 
                 scope.columns = scope.evDataService.getColumns();
+
+                var entityAttrs = [];
+                var dynamicAttrs = [];
+                var allAttrsList = [];
+
+                var getAttributes = function () {
+
+                    switch (scope.entityType) {
+                        case 'balance-report':
+                            allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
+                            break;
+
+                        case 'pl-report':
+                            allAttrsList = scope.attributeDataService.getPlReportAttributes();
+                            break;
+
+                        case 'transaction-report':
+                            allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
+                            break;
+
+                        default:
+                            entityAttrs = [];
+                            dynamicAttrs = [];
+                            allAttrsList = [];
+
+                            entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(scope.entityType);
+
+                            entityAttrs.forEach(function (item) {
+                                if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                                    item.name = 'Group';
+                                }
+                                item.entity = scope.entityType;
+                            });
+
+                            var instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
+                            var transactionUserFields = scope.attributeDataService.getTransactionUserFields();
+
+                            instrumentUserFields.forEach(function (field) {
+
+                                entityAttrs.forEach(function (entityAttr) {
+
+                                    if (entityAttr.key === field.key) {
+                                        entityAttr.name = field.name;
+                                    }
+
+                                })
+
+                            });
+
+                            transactionUserFields.forEach(function (field) {
+
+                                entityAttrs.forEach(function (entityAttr) {
+
+                                    if (entityAttr.key === field.key) {
+                                        entityAttr.name = field.name;
+                                    }
+
+                                })
+
+                            });
+
+                            dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
+
+
+                            dynamicAttrs = dynamicAttrs.map(function (attribute) {
+
+                                var result = {};
+
+                                result.attribute_type = Object.assign({}, attribute);
+                                result.value_type = attribute.value_type;
+                                result.content_type = scope.contentType;
+                                result.key = 'attributes.' + attribute.user_code;
+                                result.name = attribute.name;
+
+                                return result
+
+                            });
+
+                            allAttrsList = allAttrsList.concat(entityAttrs);
+                            allAttrsList = allAttrsList.concat(dynamicAttrs);
+                    }
+
+                };
 
                 function setDefaultGroupType(evDataService) {
 
@@ -357,9 +442,58 @@
 
                 }
 
+                var attrsWithoutGroups = ['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'tags', 'content_types'];
+
+                scope.addGroup = function ($event) {
+
+                    getAttributes();
+
+                    var availableAttrs;
+
+                    availableAttrs = allAttrsList.filter(function (attr) {
+                        for (var i = 0; i < scope.groups.length; i++) {
+                            if (scope.groups[i].key === attr.key) {
+                                return false;
+                            }
+                        }
+
+                        if (attrsWithoutGroups.indexOf(attr.key) !== -1) {
+                            return false;
+                        }
+
+                        return true;
+                    });
+
+                    $mdDialog.show({
+                        controller: "TableAttributeSelectorDialogController as vm",
+                        templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                availableAttrs: availableAttrs,
+                                title: 'Choose column to add'
+                            }
+                        }
+                    }).then(function (res) {
+
+                        if (res && res.status === "agree") {
+                            res.data.groups = true;
+                            scope.groups.push(res.data);
+                            scope.evDataService.setGroups(scope.groups);
+                            scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        }
+
+                    });
+
+                };
+
                 var init = function () {
 
                     scope.updateGroupTypeIds();
+
+                    getAttributes();
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 

@@ -18,6 +18,7 @@
     top: 5px;
     right: 15px;
     border: 1px dotted #575757;
+    height: 35px;
 
     &.active {
       box-shadow: 0 0 6px #363636 inset;
@@ -349,6 +350,10 @@
     transition: height ease .25s;
   }
 
+  .g-first-line {
+
+  }
+
   .g-second-line {
     &:after {
       display: block;
@@ -363,13 +368,13 @@
 
   .g-column-title {
     position: relative;
-    margin: 0px;
+    margin: 0 50px 0 0;
     color: #ffffff;
   }
 
   .g-downloaded-items-count {
     color: #ffffff;
-    margin-left: 50px;
+    margin-left: 20px;
   }
 
   .g-cell-select {
@@ -471,6 +476,42 @@
     left: 8px;
     top: 5px;
     z-index: 1;
+  }
+
+  .g-add-gcf-btn-mixin() {
+    line-height: 1;
+    min-height: 10px;
+    color: #fff;
+    background-color: #AD725D;
+    transition: background-color 0.2s linear 0s;
+
+    &.md-button.md-raised:not([disabled]):hover {
+      background-color: #F4AF8B;
+    }
+  }
+
+  .g-add-column-btn {
+    float: left;
+    margin: 0;
+    height: 18px;
+    .g-add-gcf-btn-mixin();
+  }
+
+  .g-add-group-btn {
+    float: left;
+    margin-top: 7px;
+    height: 32px;
+    .g-add-gcf-btn-mixin();
+  }
+
+  .g-add-filter-btn {
+    background-color: #AD725D;
+    transition: background-color 0.2s linear 0s;
+    color: #fff;
+
+    &.md-button.md-raised:not([disabled]):hover {
+      background-color: #F4AF8B;
+    }
   }
 
   .drop-new-field {

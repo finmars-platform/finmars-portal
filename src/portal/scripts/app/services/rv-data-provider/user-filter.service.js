@@ -24,7 +24,7 @@
                                 cellValue = dynamicAttributeData.classifier_object.name;
                             } else {
                                 cellValue = '';
-                            };
+                            }
 
                             break;
 
@@ -37,15 +37,15 @@
                                 case 40:
                                     cellValue = dynamicAttributeData.value_date;
                                     break;
-                            };
+                            }
 
                             break;
 
-                        };
+                        }
 
                     }
 
-                };
+                }
 
             } else {
 
@@ -61,23 +61,21 @@
 
                             cellValue = item[fieldObjKey].display_name;
 
-                        };
+                        }
 
                     } else {
 
                         cellValue = item[key];
 
-                    };
+                    }
 
-                };
+                }
 
-            };
+            }
 
             if (cellValue && result.indexOf(cellValue) === -1) {
-
                 result.push(cellValue);
-
-            };
+            }
 
         });
 
