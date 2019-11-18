@@ -2196,7 +2196,9 @@
                                 name: item.name,
                                 verbose_name: item.verbose_name,
                                 value_type: item.value_type,
-                                content_type: item.content_type
+                                content_type: item.content_type,
+                                value: item.value,
+                                value_expr: item.value_expr
                             }
 
                         })
@@ -2299,6 +2301,10 @@
                                 }
                             }
                         });
+
+                        vm.getInputTemplates();
+                        vm.getFieldTemplates();
+                        vm.getActionTemplates();
 
                     })
 

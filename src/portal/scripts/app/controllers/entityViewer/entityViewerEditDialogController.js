@@ -352,7 +352,16 @@
 
                     // vm.readyStatus.permissions = true;
 
-                    vm.loadPermissions();
+                    if (vm.entityType !== 'price-history' && vm.entity !== 'currency-history') {
+
+                        vm.loadPermissions();
+
+                    } else {
+
+                        vm.readyStatus.permissions = true;
+                        vm.hasEditPermission = true;
+
+                    }
 
                     vm.getFormLayout();
 
