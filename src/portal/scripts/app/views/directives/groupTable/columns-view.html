@@ -1,8 +1,11 @@
-<div class="g-columns-component g-thead" group-column-init-width columns="columns">
+<div class="g-columns-component g-thead"
+     group-column-init-width
+     columns="columns">
 
     <div class="g-column-title-row"
          layout="row"
          data-ng-if="components.columnAreaHeader">
+
         <p class="g-column-title"><span class="g-meta-circle red">C</span>OLUMN AREA
             <ng-md-icon class="tooltips-sign"
                         icon="info"
@@ -11,6 +14,9 @@
                 <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
             </ng-md-icon>
         </p>
+
+        <md-button class="md-raised g-add-column-btn" data-ng-click="addColumn()">Add Column</md-button>
+
         <div ng-if="!isReport && downloadedItemsCount"
              class="g-downloaded-items-count">Objects Loaded: {{downloadedItemsCount}}</div>
     </div>
@@ -470,9 +476,13 @@
                              ev-event-service="evEventService"></div>
                     </md-card>
                 </div>
-                <div class="drop-new-field" id="columnsbag" data-ng-if="!isItemAddition">
+
+                <div data-ng-if="!isItemAddition"
+                     class="drop-new-field"
+                     id="columnsbag">
                     Drop New Column
                 </div>
+
             </div>
         </div>
     </div>

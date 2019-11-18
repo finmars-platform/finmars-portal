@@ -737,6 +737,10 @@
             getInstrumentUserFields: getInstrumentUserFields,
             getTransactionUserFields: getTransactionUserFields,
 
+            getBalanceReportAttributes: _getBalanceReportAttributes,
+            getPlReportAttributes: _getPlReportAttributes,
+            getTransactionReportAttributes: _getTransactionReportAttributes,
+
             getEntityAttributesByEntityType: getEntityAttributesByEntityType,
             getCustomFieldsByEntityType: getCustomFieldsByEntityType,
             getDynamicAttributesByEntityType: getDynamicAttributesByEntityType,
