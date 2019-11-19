@@ -49,10 +49,10 @@
             "instrument-scheme": require('../models/instrumentSchemePropsModel').getAttributes(),
 
             "balance-report": require('../models/balanceReportPropsModel').getAttributes(),
-            'balance-report-perfomance': require('../models/reportAddonPerformancePropsModel').getAttributes(),
+            'balance-report-performance': require('../models/reportAddonPerformancePropsModel').getAttributes(),
             'balance-report-mismatch': require('../models/reportMismatchPropsModel').getAttributes(),
             "pl-report": require('../models/pnlReportPropsModel').getAttributes(),
-            'pl-report-perfomance': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
+            'pl-report-performance': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
             'pl-report-mismatch': require('../models/reportMismatchPnlPropsModel').getAttributes(),
             "transaction-report": require('../models/transactionReportPropsModel').getAttributes(),
             "cash-flow-projection-report": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
@@ -74,7 +74,7 @@
 
             var balanceMismatchAttrs = getAllAttributesAsFlatList('reports.balancereportmismatch', '', 'Mismatch', {maxDepth: 1});
 
-            var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.balancereportperfomance', '', 'Perfomance', {maxDepth: 1});
+            var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.balancereportperformance', '', 'Performance', {maxDepth: 1});
 
             var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
 
@@ -147,7 +147,7 @@
 
             var balanceMismatchAttrs = getAllAttributesAsFlatList('reports.plreportmismatch', '', 'Mismatch', {maxDepth: 1});
 
-            var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.plreportperfomance', '', 'Perfomance', {maxDepth: 1});
+            var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.plreportperformance', '', 'Performance', {maxDepth: 1});
 
             var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
 
@@ -687,7 +687,7 @@
                 console.warn('Can\'t find attributes for content type: ' + contentType)
             }
 
-        };
+        }
 
         /**
          * Get list of entity attribute types.
