@@ -324,7 +324,10 @@
                 preserveScope: true,
                 multiple: true,
                 autoWrap: true,
-                skipHide: true
+                skipHide: true,
+                locals: {
+                    data: {}
+                }
             }).then(function () {
 
                 vm.getSchemeList();
