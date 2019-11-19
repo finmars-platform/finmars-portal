@@ -32,7 +32,10 @@
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-create-dialog-view.html',
-                targetEvent: $event
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                }
             }).then(function (res) {
                 if (res.res === 'agree') {
                     vm.getList();

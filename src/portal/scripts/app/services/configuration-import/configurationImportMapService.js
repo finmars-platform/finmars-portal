@@ -269,7 +269,7 @@
 
                     });
 
-                    reject(reason)
+                    resolveRelation(reason)
                 })
 
             } else {
@@ -297,7 +297,7 @@
 
                         });
 
-                        reject(reason)
+                        resolveRelation(reason)
                     });
 
                 }
@@ -325,7 +325,7 @@
                         });
 
 
-                        reject(reason)
+                        resolveRelation(reason)
                     });
 
                 }
@@ -336,80 +336,6 @@
 
     };
 
-
-    // DEPRECATED
-    var mapCustomField = function (item, key, entity, code) {
-
-        console.log('code', code);
-        console.log('entity', entity);
-        console.log('item', item);
-        console.log('key', key);
-
-        return new Promise(function (resolve, reject) {
-
-            configurationImportGetService.getCustomFieldByUserCode(code, entity).then(function (data) {
-
-                var pieces = item[key].split('.');
-                pieces.splice(-1, 1);
-                pieces.push(data.user_code);
-                var result = pieces.join('.');
-                item[key] = result;
-
-                console.log('item[key]', item[key]);
-                console.log('item', item);
-
-                resolve(item)
-
-            }).catch(function (reason) {
-
-                console.error(reason);
-
-                toastNotificationService.error(reason);
-
-                reject(reason)
-
-            })
-
-        })
-
-    };
-
-    // DEPRECATED
-    var mapAttributeType = function (item, key, entity, code) {
-
-        console.log('code', code);
-        console.log('entity', entity);
-        console.log('item', item);
-        console.log('key', key);
-
-        return new Promise(function (resolve, reject) {
-
-            configurationImportGetService.getAttributeTypeByUserCode(code, entity).then(function (data) {
-
-                var pieces = item[key].split('.');
-                pieces.splice(-1, 1);
-                pieces.push(data.user_code);
-                var result = pieces.join('.');
-                item[key] = result;
-
-                console.log('item[key]', item[key]);
-                console.log('item', item);
-
-                resolve(item)
-
-            }).catch(function (reason) {
-
-                console.error(reason);
-
-                toastNotificationService.error(reason);
-
-                reject(reason)
-
-            })
-
-        })
-
-    };
 
     var mapActionRelations = function (action, key, cacheContainer, errors, errorOptions) {
 

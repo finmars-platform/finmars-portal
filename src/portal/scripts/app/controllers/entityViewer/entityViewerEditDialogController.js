@@ -352,7 +352,16 @@
 
                     // vm.readyStatus.permissions = true;
 
-                    vm.loadPermissions();
+                    if (vm.entityType !== 'price-history' && vm.entity !== 'currency-history') {
+
+                        vm.loadPermissions();
+
+                    } else {
+
+                        vm.readyStatus.permissions = true;
+                        vm.hasEditPermission = true;
+
+                    }
 
                     vm.getFormLayout();
 
@@ -595,7 +604,7 @@
 
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
-            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
+            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, [], vm.layoutAttrs);
 
             if (vm.entity.$_isValid) {
 

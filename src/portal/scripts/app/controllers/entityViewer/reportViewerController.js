@@ -631,6 +631,23 @@
 
                         if (action === 'book_transaction') {
 
+                            var report_date = null;
+                            var report_start_date = null;
+
+                            if (vm.entityType === 'balance-report') {
+                                report_date = reportOptions.report_date;
+                            }
+
+                            if (vm.entityType === 'pl-report') {
+                                report_date = reportOptions.report_date;
+                                report_start_date = reportOptions.pl_first_date;
+                            }
+
+                            if (vm.entityType === 'transaction-report') {
+                                report_date = reportOptions.end_date;
+                                report_start_date = reportOptions.begin_date;
+                            }
+
                             var contextData = {
                                 effective_date: reportOptions.report_date,
                                 position: null,
@@ -641,11 +658,37 @@
                                 account: null,
                                 strategy1: null,
                                 strategy2: null,
-                                strategy3: null
+                                strategy3: null,
+
+
+                                currency: null,
+                                report_date: report_date,
+                                report_start_date: report_start_date,
+                                pricing_policy: null,
+                                allocation_balance: null,
+                                allocation_pl: null
+
                             };
+
+                            if (activeObject.item_type === 2) { // currency
+
+                                contextData.currency = activeObject['currency.id'];
+                                contextData.currency_object = {
+                                    id: activeObject['currency_object.id'],
+                                    name: activeObject['currency_object.name'],
+                                    user_code: activeObject['currency_object.user_code'],
+                                    content_type: "currencies.currency"
+                                };
+
+                            }
 
                             if(activeObject['position_size']) {
                                 contextData.position = activeObject['position_size'];
+                            }
+
+                            if(reportOptions['pricing_policy']) {
+                                contextData.pricing_policy = reportOptions.pricing_policy;
+                                contextData.pricing_policy_object = Object.assign({}, reportOptions.pricing_policy_object)
                             }
 
                             if (activeObject['pricing_currency.id']) {
@@ -674,6 +717,26 @@
                                     id: activeObject['instrument.id'],
                                     name: activeObject['instrument.name'],
                                     user_code: activeObject['instrument.user_code'],
+                                    content_type: "instruments.instrument"
+                                };
+                            }
+
+                            if (activeObject['allocation_balance.id']) {
+                                contextData.allocation_balance = activeObject['allocation_balance.id'];
+                                contextData.allocation_balance_object = {
+                                    id: activeObject['allocation_balance.id'],
+                                    name: activeObject['allocation_balance.name'],
+                                    user_code: activeObject['allocation_balance.user_code'],
+                                    content_type: "instruments.instrument"
+                                };
+                            }
+
+                            if (activeObject['allocation_pl.id']) {
+                                contextData.allocation_pl = activeObject['allocation_pl.id'];
+                                contextData.allocation_pl_object = {
+                                    id: activeObject['allocation_pl.id'],
+                                    name: activeObject['allocation_pl.name'],
+                                    user_code: activeObject['allocation_pl.user_code'],
                                     content_type: "instruments.instrument"
                                 };
                             }
