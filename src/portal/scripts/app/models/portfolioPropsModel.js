@@ -28,6 +28,12 @@
                 "value_type": 10
             },
             {
+                "key": "public_name",
+                "name": "Public name",
+                "value_type": 10,
+                "allow_null": true
+            },
+            {
                 "key": "accounts",
                 "name": "Accounts",
                 "value_content_type": "accounts.account",

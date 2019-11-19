@@ -70,7 +70,7 @@
 
     var getListForSimpleEntityImport = function () {
         return metaContentTypesRepository.getListForSimpleEntityImport();
-    }
+    };
 
     var getContentTypeUIByState = function (stateName, stateParams) {
 
