@@ -97,7 +97,7 @@
 
         vm.getTransactionTypes = function () {
 
-            transactionTypeService.getList({
+            transactionTypeService.getListLight({
                 pageSize: 1000
             }).then(function (data) {
                 vm.transactionTypes = data.results;

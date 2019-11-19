@@ -489,49 +489,53 @@
 
                         actionItemKeys.forEach(function (actionItemKey) {
 
-                            if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
+                            if (actionItemKey !== 'notes') {
 
-                                var inputValue = actionItem[actionItemKey + '_input'];
-                                var relationValue = actionItem[actionItemKey];
+                                if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
 
-                                var valueIsEmpty = false;
+                                    var inputValue = actionItem[actionItemKey + '_input'];
+                                    var relationValue = actionItem[actionItemKey];
 
-                                if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
+                                    var valueIsEmpty = false;
 
-                                    var phantomValue = actionItem[actionItemKey + '_phantom'];
+                                    if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
 
-                                    if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
-                                        valueIsEmpty = true;
+                                        var phantomValue = actionItem[actionItemKey + '_phantom'];
+
+                                        if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
+                                            valueIsEmpty = true;
+                                        }
+
+                                    } else {
+
+                                        if (!inputValue && !relationValue) {
+                                            valueIsEmpty = true;
+                                        }
+
                                     }
+
+                                    if (valueIsEmpty) {
+
+                                        result.push({
+                                            action_notes: action.action_notes,
+                                            key: actionItemKey,
+                                            value: actionItem[actionItemKey]
+                                        })
+
+                                    }
+
 
                                 } else {
 
-                                    if (!inputValue && !relationValue) {
-                                        valueIsEmpty = true;
+                                    if (actionItem[actionItemKey] === null || actionItem[actionItemKey] === undefined || actionItem[actionItemKey] === "") {
+
+                                        result.push({
+                                            action_notes: action.action_notes,
+                                            key: actionItemKey,
+                                            value: actionItem[actionItemKey]
+                                        })
+
                                     }
-
-                                }
-
-                                if (valueIsEmpty) {
-
-                                    result.push({
-                                        action_notes: action.action_notes,
-                                        key: actionItemKey,
-                                        value: actionItem[actionItemKey]
-                                    })
-
-                                }
-
-
-                            } else {
-
-                                if (actionItem[actionItemKey] === null || actionItem[actionItemKey] === undefined || actionItem[actionItemKey] === "") {
-
-                                    result.push({
-                                        action_notes: action.action_notes,
-                                        key: actionItemKey,
-                                        value: actionItem[actionItemKey]
-                                    })
 
                                 }
 
@@ -2196,7 +2200,9 @@
                                 name: item.name,
                                 verbose_name: item.verbose_name,
                                 value_type: item.value_type,
-                                content_type: item.content_type
+                                content_type: item.content_type,
+                                value: item.value,
+                                value_expr: item.value_expr
                             }
 
                         })
@@ -2299,6 +2305,10 @@
                                 }
                             }
                         });
+
+                        vm.getInputTemplates();
+                        vm.getFieldTemplates();
+                        vm.getActionTemplates();
 
                     })
 
