@@ -39,14 +39,21 @@
 
                     if (data.results.length) {
 
+                        var exist = false;
+
                         data.results.forEach(function (item) {
 
                             if (item.user_code === user_code) {
                                 cacheContainer[entity][user_code] = item;
+                                exist = true;
                                 resolve(item)
                             }
 
-                        })
+                        });
+
+                        if (!exist) {
+                            reject(new Error("Entity with user code '-' does not exist"))
+                        }
 
                     } else {
 
