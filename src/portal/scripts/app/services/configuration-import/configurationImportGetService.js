@@ -51,8 +51,21 @@
 
                         });
 
+                        if (exist) {
+                            return;
+                        }
+
+                        console.log('entity: ' + entity + 'user_code: ' + user_code);
+
                         if (!exist) {
-                            reject(new Error("Entity with user code '-' does not exist"))
+                            if (user_code !== '-') {
+
+                                resolve(getEntityByUserCode('-', entity))
+
+                            } else {
+                                reject(new Error("Entity with user code '-' does not exist"))
+                            }
+
                         }
 
                     } else {
