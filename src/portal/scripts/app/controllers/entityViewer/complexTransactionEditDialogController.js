@@ -184,7 +184,7 @@
                     if (perm.permission === "view_complextransaction") {
 
                         if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
-                            vm.hasFullViewComplexTransaction = true;
+                            hasFullViewComplexTransaction = true;
                         }
 
                     }
