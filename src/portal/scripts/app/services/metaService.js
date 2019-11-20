@@ -295,6 +295,10 @@
         } else {
 
             switch ($state.current.name) {
+                case 'app.home':
+                    name = 'HOME PAGE';
+                    break;
+
                 case 'app.reports.balance-report':
                     name = 'REPORT > BALANCE';
                     break;
@@ -375,6 +379,9 @@
                     name = 'DASHBOARD';
                     break;
 
+                case 'app.dashboard-layout-manager':
+                    name = 'SETTINGS > DASHBOARD LAYOUTS';
+                    break;
                 case 'app.settings.forms':
                     name = 'SETTINGS > FORMS';
                     break;
@@ -383,6 +390,9 @@
                     break;
                 case 'app.settings.notifications':
                     name = 'SETTINGS > NOTIFICATIONS';
+                    break;
+                case 'app.settings.interface-access':
+                    name = 'SETTINGS > INTERFACE COMPLEXITY';
                     break;
 
                 case 'app.data.account-type':
@@ -399,6 +409,12 @@
                     break;
                 case 'app.settings.entities-custom-attributes':
                     name = 'SETTINGS > DATA TYPES > USER ATTRIBUTES';
+                    break;
+                case 'app.import.reference-tables':
+                    name = 'SETTINGS > DATA TYPES > REFERENCE TABLE';
+                    break;
+                case 'app.template-layout-manager':
+                    name = 'SETTINGS > DATA TYPES > TEMPLATES';
                     break;
 
                 case 'app.settings.price-download-scheme':
@@ -443,6 +459,9 @@
                     break;
                 case 'app.settings.ecosystem-default-settings':
                     name = 'SETTINGS > DEFAULT SETTINGS';
+                    break;
+                case 'app.processes':
+                    name = 'SETTINGS > ACTIVE PROCESSES';
                     break;
             }
         }

@@ -2,6 +2,27 @@
 
     <md-card data-ng-show="!item.editMode" class="dashboard-field-card height-100 width-100">
         <div layout="row">
+
+            <div class="dc-extend-btns-holder" layout="row" style="margin-right: 5px">
+                <button class="md-button md-raised" ng-click="decreaseRowspan(item)">
+                    <ng-md-icon icon="expand_less" size="16"></ng-md-icon>
+                </button>
+
+                <button class="md-button md-raised" ng-click="increaseRowspan(item)">
+                    <ng-md-icon icon="expand_more" size="16"></ng-md-icon>
+                </button>
+            </div>
+
+            <div class="dc-extend-btns-holder" layout="row">
+                <button class="md-button md-raised" ng-click="decreaseColspan(item)">
+                    <ng-md-icon icon="chevron_left" size="16"></ng-md-icon>
+                </button>
+
+                <button class="md-button md-raised" ng-click="increaseColspan(item)">
+                    <ng-md-icon icon="chevron_right" size="16"></ng-md-icon>
+                </button>
+            </div>
+
             <p class="name-holder">
                 <b><span data-ng-bind="item.data.name"></span></b> (<span
                     data-ng-bind="getVerboseType()"></span>)
