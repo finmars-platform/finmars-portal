@@ -74,7 +74,7 @@
                         scope.fieldUsesBackgroundColor = false;
                         scope.fieldBackgroundColor = '#000000';
                     }
-                    console.log("decoration findItem scope.item", scope.item);
+
                     if (scope.item.attribute && scope.item.attribute.value_type !== "decoration") {
                         if (scope.item.editable === false) {
                             scope.item.editable = false;
@@ -128,6 +128,25 @@
                                 scope.item.attribute = scope.layoutAttrs[l];
                             }
                         }
+                    }
+                };
+
+                scope.increaseColspan = function (item) {
+                    var colspansList = scope.getCols();
+                    var maxColspan = colspansList[colspansList.length - 1];
+
+                    if (item.colspan < maxColspan) {
+                        item.colspan += 1;
+                        console.log("change colspan scope.increaseColspan", item.colspan);
+                        scope.changeFieldColspan(item.colspan);
+                    }
+                };
+
+                scope.decreaseColspan = function (item) {
+                    if (item.colspan > 1) {
+                        item.colspan -= 1;
+                        console.log("change colspan decreaseColspan", item.colspan);
+                        scope.changeFieldColspan(item.colspan);
                     }
                 };
 

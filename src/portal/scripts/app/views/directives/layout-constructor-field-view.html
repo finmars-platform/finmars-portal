@@ -3,10 +3,21 @@
         <div data-ng-if="item.attribute">
             <md-card class="ec-attr-card">
                 <div layout="row">
+                    <div class="ec-extend-btns-holder" layout="row">
+                        <button class="md-button md-raised" ng-click="decreaseColspan(item)">
+                            <ng-md-icon icon="chevron_left" size="16"></ng-md-icon>
+                        </button>
+
+                        <button class="md-button md-raised" ng-click="increaseColspan(item)">
+                            <ng-md-icon icon="chevron_right" size="16"></ng-md-icon>
+                        </button>
+                    </div>
+
                     <p class="name-holder" flex="60">
                         <b><span data-ng-bind="bindAttrName(item)"></span></b> (<span
                             data-ng-bind="bindTypeByValueType(item.attribute['value_type'])"></span>)
                     </p>
+
                     <div class="options-holder" flex="40">
                         <md-button aria-label="delete attribute" data-ng-click="deleteField()">
                             <ng-md-icon icon="delete"></ng-md-icon>
@@ -18,6 +29,7 @@
                 </div>
             </md-card>
         </div>
+
         <div data-ng-if="!item.attribute">
             <div class="ec-attr-card ec-attr-empty" data-col="{{column}}" data-row="{{row}}" data-tab-name="{{tab.name}}">
                 <md-button aria-label="add field" data-ng-click="toggleEditMode()" class="width-100">
@@ -26,6 +38,7 @@
             </div>
         </div>
     </div>
+
     <div data-ng-if="item.editMode">
         <md-card class="ec-attr-card {{item.editMode ? 'active' : ''}}">
             <md-input-container class="md-block ec-attr-row" flex-gt-sm>
