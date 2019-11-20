@@ -369,7 +369,10 @@
 
                 Object.keys(item.data).forEach(function (key) {
 
-                    item.data[key] = false;
+                    if (['other_manage', 'other_change', 'other_view'].indexOf(key) === -1) {
+
+                        item.data[key] = false;
+                    }
 
                 })
 
