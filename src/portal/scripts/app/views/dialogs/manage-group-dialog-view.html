@@ -31,7 +31,7 @@
 
             </div>
 
-            <div layout="column">
+            <div layout="column" data-ng-if="vm.group.role != 1">
 
                 <div layout="row" style="margin-bottom: 5px;">
 
@@ -156,7 +156,7 @@
 
                         <div style="width: 60px">
                             <md-checkbox class="checkbox-center"
-                                         ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}"
+                                         ng-class="{'disabled-btn': item.data.inherit_rights}"
                                          data-ng-checked="item.data.other_manage"
                                          data-ng-click="vm.updateCheckbox(item, 'other_manage')">
                             </md-checkbox>
@@ -164,7 +164,7 @@
 
                         <div style="width: 40px">
                             <md-checkbox class="checkbox-center"
-                                         ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}"
+                                         ng-class="{'disabled-btn': item.data.inherit_rights}"
                                          data-ng-checked="item.data.other_change"
                                          data-ng-click="vm.updateCheckbox(item, 'other_change')">
                             </md-checkbox>
@@ -172,7 +172,7 @@
 
                         <div style="width: 40px; margin-right: 80px;">
                             <md-checkbox class="checkbox-center"
-                                         ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}"
+                                         ng-class="{'disabled-btn': item.data.inherit_rights}"
                                          data-ng-checked="item.data.other_view"
                                          data-ng-click="vm.updateCheckbox(item, 'other_view')">
                             </md-checkbox>

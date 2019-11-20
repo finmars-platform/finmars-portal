@@ -41,13 +41,17 @@
             return false;
         };
 
-        transactionTypeService.getList().then(function (data) {
-            console.log('data', data);
-            vm.transactionTypes = data.results;
-            vm.readyStatus.transactionTypes = true;
-            //console.log('test?', vm.readyStatus.transactionTypes);
-            $scope.$apply();
-        });
+        vm.getTransactionTypes = function(){
+
+            transactionTypeService.getListLight().then(function (data) {
+                console.log('data', data);
+                vm.transactionTypes = data.results;
+                vm.readyStatus.transactionTypes = true;
+                //console.log('test?', vm.readyStatus.transactionTypes);
+                $scope.$apply();
+            });
+
+        };
 
         vm.newItem = {
             "transaction_type": '',
@@ -110,6 +114,12 @@
         vm.cancel = function () {
             $mdDialog.hide();
         };
+
+        vm.init = function () {
+            vm.getTransactionTypes();
+        };
+
+        vm.init();
 
     }
 
