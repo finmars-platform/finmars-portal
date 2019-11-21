@@ -19,7 +19,8 @@
                 entity: '=',
                 content_type: '=',
                 options: '=',
-                entityType: '='
+                entityType: '=',
+                itemChange: '&'
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs) {
@@ -92,6 +93,12 @@
                         if (entityType === 'transaction-types') {
                             entityType = 'transaction-type'
                         }
+
+                        if (scope.item.key === 'type') {
+                            entityType = 'account-type';
+                        }
+
+                        console.log('getFieldsGrouped.entityType', entityType);
 
                         tagService.getListByContentType(entityType).then(function (data) { //refactor entityType getter
                             scope.tags = data.results;
@@ -243,6 +250,8 @@
 
                 scope.getData = function () {
 
+                    console.log('getData.key', scope.item.key);
+
                     fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
 
                         scope.type = res.type;
@@ -290,6 +299,12 @@
                     scope.inputText = scope.getInputTextForEntitySearch()
 
                 });
+
+                scope.changeHandler = function () {
+                    if(scope.itemChange) {
+                        scope.itemChange()
+                    }
+                };
 
 
                 scope.init = function () {
