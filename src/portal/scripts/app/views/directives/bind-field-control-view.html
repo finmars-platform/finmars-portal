@@ -5,6 +5,7 @@
             <label data-ng-bind="getName()"></label>
             <input data-ng-model="entity[getModelKey()]"
                    type="number"
+                   data-ng-change="itemChange()"
                    data-ng-if="!item.options.onlyPositive"
                    class="no-input-arrows"
                    style="{{styleForInputsWithButtons()}}">
@@ -12,6 +13,7 @@
                    type="number"
                    min="0"
                    data-ng-if="item.options.onlyPositive"
+                   data-ng-change="itemChange()"
                    class="no-input-arrows"
                    style="{{styleForInputsWithButtons()}}">
 
@@ -44,6 +46,7 @@
                 <label data-ng-bind="getName()"></label>
                 <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}"
                           data-ng-model="entity[getModelKey()]"
+                          data-ng-change="itemChange()"
                           cols="30"
                           rows="{{item.options.rowCount}}"
                           style="{{inputBackgroundColor()}}"></textarea>
@@ -58,6 +61,7 @@
                 <label data-ng-bind="getName()"></label>
                 <input type="text"
                        data-ng-model="entity[getModelKey()]"
+                       data-ng-change="itemChange()"
                        style="{{styleForInputsWithButtons()}}">
 
                 <div class="bind-field-buttons-block">
@@ -88,10 +92,12 @@
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
             <input data-ng-model="entity[getModelKey()]"
+                   data-ng-change="itemChange()"
                    data-float-numbers
                    data-ng-if="!item.options.onlyPositive"
                    style="{{styleForInputsWithButtons()}}">
             <input data-ng-model="entity[getModelKey()]"
+                   data-ng-change="itemChange()"
                    data-float-numbers
                    data-only-positive="true"
                    data-ng-if="item.options.onlyPositive"
@@ -125,6 +131,7 @@
             <ev-field-resolver data-item="item"
                                data-entity="entity"
                                data-options="options"
+                               data-item-change="itemChange()"
                                data-entity-type="entityType"></ev-field-resolver>
         </div>
         <div data-ng-if="item.buttons.length" class="bind-field-number-btn">
@@ -185,7 +192,9 @@
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
-        <md-checkbox class="checkbox-bind-field" data-ng-model="entity[getModelKey()]"
+        <md-checkbox class="checkbox-bind-field"
+                     data-ng-model="entity[getModelKey()]"
+                     data-ng-change="itemChange()"
                      aria-label="checkbox">
             <label data-ng-bind="getName()"></label>
         </md-checkbox>

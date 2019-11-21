@@ -26,6 +26,7 @@
                                          flex="{{vm.bindFlex(tab, row, field)}}"
                                          data-ng-if="vm.checkFieldRender(tab, row, field)">
                                         <bind-field-control entity-type="vm.entityType" entity="vm.entity"
+                                                            entity-change="vm.entityChange()"
                                                             item="vm.attributesLayout[tab.index][$index]"></bind-field-control>
                                     </div>
                                 </div>
@@ -121,14 +122,17 @@
                                                          layout-align="space-between center">
                                                         <div flex="33" layout="center center">
                                                             <md-checkbox class="md-secondary"
+                                                                         data-ng-class="{'disabled-btn': vm.isInheritRights}"
                                                                          ng-model="group.objectPermissions.manage"></md-checkbox>
                                                         </div>
                                                         <div flex="33" layout="center center">
                                                             <md-checkbox class="md-secondary"
+                                                                         data-ng-class="{'disabled-btn': vm.isInheritRights}"
                                                                          ng-model="group.objectPermissions.change"></md-checkbox>
                                                         </div>
                                                         <div flex="33" layout="center center">
                                                             <md-checkbox class="md-secondary"
+                                                                         data-ng-class="{'disabled-btn': vm.isInheritRights}"
                                                                          ng-model="group.objectPermissions.view"></md-checkbox>
                                                         </div>
                                                     </div>

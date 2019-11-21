@@ -4,6 +4,7 @@
         <label data-ng-bind="getName()"></label>
         <md-select md-on-close="searchTerm = ''"
                    data-ng-model="entity[item.name]"
+                   data-ng-change="changeHandler()"
                    md-selected-text="entity[item.name]"
                    md-on-open="getData()"
                    md-container-class="common-select-container">
