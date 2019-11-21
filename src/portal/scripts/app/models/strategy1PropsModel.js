@@ -29,7 +29,7 @@
             },
             {
                 "key": "subgroup",
-                "name": "Sub Group",
+                "name": "Group",
                 "value_type": "field",
                 "value_entity": "strategy-1-subgroup",
                 "value_content_type": "strategies.strategy1subgroup",

@@ -51,18 +51,18 @@
                         if ((filterValues.min_value || filterValues.min_value === 0) &&
                             (filterValues.max_value || filterValues.max_value === 0)) {
                             return true;
-                        };
+                        }
 
                     } else if (Array.isArray(filterValues)) {
 
                         if (filterValues[0] || filterValues[0] === 0) {
                             return true;
-                        };
+                        }
 
-                    };
-                };
+                    }
+                }
 
-            };
+            }
 
             return false;
         };
@@ -84,12 +84,12 @@
 
                 if (item.options.is_frontend_filter) {
                     filterSettings.is_frontend_filter = true;
-                };
+                }
 
                 //newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
                 newRequestParametersBody['filter_settings'].push(filterSettings);
 
-            };
+            }
 
         });
 

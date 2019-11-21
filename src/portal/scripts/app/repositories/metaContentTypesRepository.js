@@ -225,12 +225,12 @@
             {
                 name: "Strategy 2 subgroup",
                 entity: 'strategy-2-subgroup',
-                key: "strategies.strategy1subgroup"
+                key: "strategies.strategy2subgroup"
             },
             {
                 name: "Strategy 3 subgroup",
                 entity: 'strategy-3-subgroup',
-                key: "strategies.strategy1subgroup"
+                key: "strategies.strategy3subgroup"
             },
             {
                 name: "Tag",
@@ -299,9 +299,9 @@
                 key: "reports.balancereport"
             },
             {
-                name: "Balance report Perfomance",
-                entity: 'balance-report-perfomance',
-                key: "reports.balancereportperfomance"
+                name: "Balance report Performance",
+                entity: 'balance-report-performance',
+                key: "reports.balancereportperformance"
             },
             {
                 name: "Balance report Mismatch",
@@ -314,9 +314,9 @@
                 key: "reports.plreport"
             },
             {
-                name: "P&L report Perfomance",
-                entity: 'pl-report-perfomance',
-                key: "reports.plreportperfomance"
+                name: "P&L report Performance",
+                entity: 'pl-report-performance',
+                key: "reports.plreportperformance"
             },
             {
                 name: "P&L report Mismatch",

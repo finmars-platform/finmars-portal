@@ -28,6 +28,8 @@
 
                     var itemToCreate = {};
 
+                    itemToCreate.groups = true;
+
                     if (item.hasOwnProperty('key')) {
                         itemToCreate.key = item.key;
                     }
@@ -89,6 +91,144 @@
                             var groups = scope.evDataService.getGroups();
                             var columns = scope.evDataService.getColumns();
 
+                            var changeOrder = function (orderOf) {
+
+                                var htmlElems = [];
+                                var GCFitems = [];
+                                var GCFKeyProp = '';
+                                var itemsAfterDragging = [];
+                                var updateGCFMethod = null;
+
+                                switch (orderOf) {
+                                    case 'groups':
+                                        htmlElems = target.querySelectorAll('.g-groups-holder .group-item');
+                                        GCFitems = groups;
+                                        GCFKeyProp = 'groupKey';
+                                        updateGCFMethod = function () {
+                                            scope.evDataService.setGroups(itemsAfterDragging);
+                                            scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                        };
+                                        break;
+                                    case 'columns':
+                                        htmlElems = target.querySelectorAll('.g-columns-holder .g-cell.g-column');
+                                        GCFitems = columns;
+                                        GCFKeyProp = 'columnKey';
+                                        updateGCFMethod = function () {
+                                            scope.evDataService.setColumns(itemsAfterDragging);
+                                            scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                        };
+                                        break;
+                                }
+                                console.log("drag n drop htmlElems", htmlElems);
+                                for (var i = 0; i < htmlElems.length; i = i + 1) {
+
+                                    for (var x = 0; x < GCFitems.length; x = x + 1) {
+
+                                        if (htmlElems[i].dataset[GCFKeyProp] === GCFitems[x].key) {
+                                            itemsAfterDragging.push(GCFitems[x]);
+                                            break;
+                                        }
+
+                                    }
+
+                                }
+                                console.log("drag n drop itemsAfterDragging", itemsAfterDragging);
+                                var isChanged = false;
+
+                                for (var i = 0; i < itemsAfterDragging.length; i++) {
+                                    var item = itemsAfterDragging[i];
+
+                                    if (item.key !== GCFitems[i].key) {
+                                        isChanged = true;
+                                        break;
+                                    }
+                                }
+
+                                if (isChanged) {
+                                    areaItemsChanged = true;
+                                    updateGCFMethod();
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                }
+                            };
+
+                            var deleteItem = function (deletionOf) {
+
+                                var GCFitems = [];
+                                var identifier = '';
+                                var updateGCFMethod = null;
+                                var allowColDeletion = true;
+
+                                switch (deletionOf) {
+                                    case 'group':
+                                        GCFitems = groups;
+                                        identifier = elem.dataset['groupKey'];
+                                        updateGCFMethod = function () {
+                                            scope.evDataService.setGroups(GCFitems);
+                                            scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                                        };
+                                        break;
+                                    case 'column':
+                                        GCFitems = columns;
+                                        identifier = elem.dataset['columnKey'];
+
+                                        if (isReport) { // prevent column deletion, if there is group with same attr
+                                            for (var i = 0; i < groups.length; i++) {
+                                                if (groups[i].key === identifier) {
+                                                    allowColDeletion = false;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        updateGCFMethod = function () {
+                                            scope.evDataService.setColumns(GCFitems);
+                                            scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                        };
+                                        break;
+                                }
+
+                                if (allowColDeletion) {
+
+                                    for (var g = 0; 0 < GCFitems.length; g++) {
+
+                                        if (GCFitems[g].key === identifier) {
+                                            GCFitems.splice(g, 1);
+                                            break;
+                                        }
+
+                                    }
+
+                                    drake.remove();
+
+                                    areaItemsChanged = true;
+                                    updateGCFMethod();
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                } else {
+
+                                    drake.cancel();
+
+                                    $mdDialog.show({
+                                        controller: 'WarningDialogController as vm',
+                                        templateUrl: 'views/warning-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        clickOutsideToClose: false,
+                                        multiple: true,
+                                        locals: {
+                                            warning: {
+                                                title: 'Error',
+                                                description: "Can't delete column that has grouping.",
+                                                actionsButtons: [{
+                                                    name: "OK",
+                                                    response: false
+                                                }]
+                                            }
+                                        }
+                                    });
+                                }
+
+                            };
+
                             // Methods for column's cards dragging
                             if (source === columnsHolder) {
 
@@ -131,8 +271,6 @@
 
                                         drake.cancel();
 
-                                        var errorMessage = 'There is already such group in Grouping Area';
-
                                         $mdDialog.show({
                                             controller: 'WarningDialogController as vm',
                                             templateUrl: 'views/warning-dialog-view.html',
@@ -142,7 +280,7 @@
                                             locals: {
                                                 warning: {
                                                     title: 'Error',
-                                                    description: errorMessage,
+                                                    description: 'There is already such group in Grouping Area',
                                                     actionsButtons: [{
                                                         name: "OK",
                                                         response: false
@@ -158,7 +296,7 @@
                                 // If column's cards order changed
                                 } else if (target === columnsHolder) {
 
-                                    var columnElems = source.querySelectorAll('.g-cell.g-column');
+                                    /*var columnElems = source.querySelectorAll('.g-cell.g-column');
 
                                     var columnsAfterDragging = [];
 
@@ -194,14 +332,15 @@
                                         scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                                    }
+                                    }*/
+                                    changeOrder("columns");
 
                                 // < If column's cards order changed >
 
                                 // If column needs to be deleted
                                 } else if (target === deleteArea) {
 
-                                    var identifier = elem.dataset.columnKey;
+                                    /*var identifier = elem.dataset.columnKey;
                                     for (var c = 0; 0 < columns.length; c++) {
 
                                         if (columns[c].key === identifier) {
@@ -217,10 +356,11 @@
                                     scope.evDataService.setColumns(columns);
 
                                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
+                                    deleteItem("column");
 
                                     // < If column needs to be deleted >
-                                } else {
+                                } else if (target === groupsHolder || target === columnsBag) {
                                     drake.cancel();
                                 }
                             // < Methods for column's cards dragging >
@@ -307,7 +447,7 @@
                                 // If group's cards order changed
                                 } else if (target === groupsHolder) {
 
-                                    var groupElems = source.querySelectorAll('.g-groups-holder .group-item');
+                                    /*var groupElems = source.querySelectorAll('.g-groups-holder .group-item');
 
                                     var groupsAfterDragging = [];
 
@@ -323,7 +463,7 @@
                                         }
 
                                     }
-                                    console.log("drag n drop groupsAfterDragging", groupsAfterDragging);
+
                                     var isChanged = false;
 
                                     for (var i = 0; i < groupsAfterDragging.length; i++) {
@@ -336,21 +476,22 @@
                                     }
 
                                     if (isChanged) {
-                                        console.log("drag n drop isChanged", groupsAfterDragging, isChanged);
+
                                         areaItemsChanged = true;
                                         scope.evDataService.setGroups(groupsAfterDragging);
 
                                         scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                                    }
+                                    }*/
+                                    changeOrder("groups");
 
                                 // < If group's cards order changed >
 
                                 // If group needs to be deleted
                                 } else if (target === deleteArea) {
 
-                                    var identifier = elem.dataset.groupKey;
+                                    /*var identifier = elem.dataset.groupKey;
                                     for (var g = 0; 0 < groups.length; g++) {
 
                                         if (groups[g].key === identifier) {
@@ -366,7 +507,8 @@
                                     scope.evDataService.setGroups(groups);
 
                                     scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
+                                    deleteItem("group");
 
                                     // < If group needs to be deleted >
                                 }

@@ -41,6 +41,8 @@
         var filters = vm.entityViewerDataService.getFilters();
         var groups = vm.entityViewerDataService.getGroups();
 
+        vm.balanceTabName = "Balance";
+
         vm.attrsList = [];
 
         $('body').addClass('drag-dialog'); // hide backdrop
@@ -50,58 +52,83 @@
             'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.reference_for_pricing', 'currency.daily_pricing_model.name', 'currency.default_fx_rate', 'pricing_currency_fx_rate'
         ];
 
-        var balancePerformanceAttrsToRemove = [
-            'principal_fx', 'principal_fixed_loc', 'principal_fx_loc', 'carry_fixed_loc', 'carry', 'carry_fx', 'carry_fx_loc', 'overheads', 'overheads_fixed', 'overheads_fixed_loc',
-            'carry_fixed', 'overheads_fx', 'overheads_fx_loc', 'total', 'total_loc', 'total_fx', 'total_fx_loc', 'total_fixed', 'total_fixed_loc', 'carry_loc', 'overheads_loc',
-            'principal', 'principal_loc'
+        var performanceAttrsComp = [
+            'net_position_return', 'net_position_return_loc', 'position_return', 'position_return_loc', 'daily_price_change', 'mtd_price_change', 'total_opened',
+            'total_fixed_opened', 'total_fx_opened', 'principal_opened', 'principal_fixed_opened', 'principal_fx_opened', 'carry_opened', 'carry_fixed_opened',
+            'carry_fx_opened', 'overheads_opened', 'overheads_fixed_opened', 'overheads_fx_opened', 'total_opened_loc', 'total_fixed_opened_loc', 'total_fx_opened_loc',
+            'principal_opened_loc', 'principal_fixed_opened_loc', 'principal_fx_opened_loc', 'carry_opened_loc', 'carry_fixed_opened_loc', 'carry_fx_opened_loc',
+            'overheads_opened_loc', 'overheads_fixed_opened_loc', 'overheads_fx_opened_loc', 'total_closed', 'total_fixed_closed', 'total_fx_closed', 'principal_closed',
+            'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
+            'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
+            'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
+            'overheads_fx_closed_loc'
         ];
 
-        var balancePerformanceAttrsToRemove = [
-            'principal_fx', 'principal_fixed_loc', 'principal_fx_loc', 'carry_fixed_loc', 'carry', 'carry_fx', 'carry_fx_loc', 'overheads', 'overheads_fixed', 'overheads_fixed_loc',
-            'carry_fixed', 'overheads_fx', 'overheads_fx_loc', 'total', 'total_loc', 'total_fx', 'total_fx_loc', 'total_fixed', 'total_fixed_loc', 'carry_loc', 'overheads_loc',
-            'principal', 'principal_loc'
-        ];
-
-        var instrumentAttrsToRemove = [
-            'instrument.instrument_type.is_active', 'instrument.instrument_type.instrument_class.name', 'instrument.pricing_currency.notes', 'instrument.pricing_currency.reference_for_pricing',
-            'instrument.pricing_currency.daily_pricing_model.name', 'instrument.pricing_currency.default_fx_rate'
-        ];
-
-        var linkedInstrumentAttrsToShow = [
+        var linkedInstrumentAttrsComp = [
             'linked_instrument.name', 'linked_instrument.short_name', 'linked_instrument.user_code', 'linked_instrument.user_text_1', 'linked_instrument.user_text_2', 'linked_instrument.user_text_3'
         ];
 
-        var accountAttrsToRemove = ['account.type.transaction_details_expr'];
+        var accountAttrsComp = [
+            'account.name', 'account.short_name', 'account.notes', 'account.user_code', 'account.public_name', 'account.type.name', 'account.type.short_name',
+            'account.type.notes', 'account.type.public_name', 'account.type.user_code', 'account.type.show_transaction_details'
+        ];
+
+        var portfolioAttrsComp = ['portfolio.name', 'portfolio.short_name', 'portfolio.notes', 'portfolio.user_code', 'portfolio.public_name'];
+
+        var instrumentAttrsComp = [
+            'instrument.name', 'instrument.short_name', 'instrument.user_code', 'instrument.public_name', 'instrument.instrument_type.name',
+            'instrument.instrument_type.short_name', 'instrument.instrument_type.user_code', 'instrument.instrument_type.public_name', 'instrument.is_active',
+            'instrument.price_multiplier', 'instrument.accrued_currency.name', 'instrument.accrued_currency.short_name', 'instrument.accrued_currency.user_code',
+            'instrument.maturity_date', 'instrument.maturity_price', 'instrument.accrued_multiplier', 'instrument.user_text_1', 'instrument.user_text_2',
+            'instrument.user_text_3'
+        ];
 
         var strategy1AttrsToRemove = ['strategy1.subgroup.short_name', 'strategy1.subgroup.notes', 'strategy1.subgroup.user_code'];
         var strategy2AttrsToRemove = ['strategy2.subgroup.short_name', 'strategy2.subgroup.notes', 'strategy2.subgroup.user_code'];
         var strategy3AttrsToRemove = ['strategy3.subgroup.short_name', 'strategy3.subgroup.notes', 'strategy3.subgroup.user_code'];
 
-        var allocationAttrsToRemove = [
-            'allocation.instrument_type.notes', 'allocation.instrument_type.is_active', 'allocation.instrument_type.instrument_class.name', 'allocation.is_active', 'allocation.reference_for_pricing',
-            'allocation.pricing_currency.name', 'allocation.pricing_currency.short_name', 'allocation.pricing_currency.notes', 'allocation.pricing_currency.user_code',
-            'allocation.pricing_currency.daily_pricing_model.name', 'allocation.pricing_currency.default_fx_rate', 'allocation.price_multiplier', 'allocation.pricing_currency.reference_for_pricing',
-            'allocation.accrued_currency.name', 'allocation.accrued_currency.short_name', 'allocation.accrued_currency.notes', 'allocation.accrued_currency.user_code', 'allocation.accrued_currency.reference_for_pricing',
-            'allocation.accrued_currency.daily_pricing_model.name', 'allocation.accrued_currency.default_fx_rate', 'allocation.maturity_date', 'allocation.maturity_price', 'allocation.accrued_multiplier',
-            'allocation.daily_pricing_model.name', 'allocation.payment_size_detail.name', 'allocation.default_price', 'allocation.default_accrued'
+        var allocationAttrsComp = [
+            'allocation.name', 'allocation.short_name', 'allocation.notes', 'allocation.user_code', 'allocation.instrument_type.name', 'allocation.instrument_type.short_name',
+            'allocation.instrument_type.user_code', 'allocation.instrument_type.public_name', 'allocation.user_text_1', 'allocation.user_text_2', 'allocation.user_text_3'
         ];
 
-        var filterAttrsToShow = function (vmAttrKey, attrsToRemoveArray) {
-            vm[vmAttrKey] = vm[vmAttrKey].filter(function (attr) {
-                if (attrsToRemoveArray.indexOf(attr.key) !== -1) {
-                    return false;
+        var filterAttrsToShow = function (vmAttrsKey, attrsToRemoveArray) {
+            vm[vmAttrsKey].forEach(function (attr) {
+                if (attrsToRemoveArray.indexOf(attr.key) === -1) {
+                    vm[vmAttrsKey + 'Filtered'].push(attr);
                 }
-                return true;
-            })
+            });
+        };
+
+        var composeAttrsInsideTab = function (vmAttrsKey, attrsToShow) {
+            vm[vmAttrsKey].forEach(function (attr) {
+                if (attrsToShow.indexOf(attr.key) !== -1) {
+                    attr.orderNumber__ = attrsToShow.indexOf(attr.key);
+                    vm[vmAttrsKey + 'Filtered'].push(attr);
+                }
+            });
         };
 
         vm.getAttributes = function () {
+
+            // needed to display hided attributes inside selected Tab
+            vm.balanceAttrsFiltered = [];
+            vm.balanceMismatchAttrsFiltered = [];
+            vm.balancePerformanceAttrsFiltered = [];
+            vm.instrumentAttrsFiltered = [];
+            vm.linkedInstrumentAttrsFiltered = [];
+            vm.accountAttrsFiltered = [];
+            vm.portfolioAttrsFiltered = [];
+            vm.strategy1attrsFiltered = [];
+            vm.strategy2attrsFiltered = [];
+            vm.strategy3attrsFiltered = [];
+            vm.allocationAttrsFiltered = [];
 
             vm.balanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
 
             vm.balanceMismatchAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereportmismatch', '', 'Mismatch', {maxDepth: 1});
 
-            vm.balancePerformanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereportperfomance', '', 'Perfomance', {maxDepth: 1});
+            vm.balancePerformanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereportperformance', '', 'Performance', {maxDepth: 1});
 
             vm.allocationAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
 
@@ -204,21 +231,17 @@
             vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
 
             filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
-            filterAttrsToShow('balancePerformanceAttrs', balancePerformanceAttrsToRemove);
-            filterAttrsToShow('allocationAttrs', allocationAttrsToRemove);
-            filterAttrsToShow('instrumentAttrs', instrumentAttrsToRemove);
+            composeAttrsInsideTab('balancePerformanceAttrs', performanceAttrsComp);
+            composeAttrsInsideTab('instrumentAttrs', instrumentAttrsComp);
+            composeAttrsInsideTab('linkedInstrumentAttrs', linkedInstrumentAttrsComp);
 
-            vm.linkedInstrumentAttrs = vm.linkedInstrumentAttrs.filter(function (attr) {
-                if (linkedInstrumentAttrsToShow.indexOf(attr.key) !== -1) {
-                    return true;
-                }
-                return false;
-            });
-
-            filterAttrsToShow('accountAttrs', accountAttrsToRemove);
+            //filterAttrsToShow('accountAttrs', accountAttrsToRemove);
+            composeAttrsInsideTab('accountAttrs', accountAttrsComp);
+            composeAttrsInsideTab('portfolioAttrs', portfolioAttrsComp);
             filterAttrsToShow('strategy1attrs', strategy1AttrsToRemove);
             filterAttrsToShow('strategy2attrs', strategy2AttrsToRemove);
             filterAttrsToShow('strategy3attrs', strategy3AttrsToRemove);
+            composeAttrsInsideTab('allocationAttrs', allocationAttrsComp);
 
             /*vm.attrsList = attrsList;*/
 

@@ -201,7 +201,7 @@
             },
             {
                 "key": "principal_loc",
-                "name": "Pricnipal (LOC)",
+                "name": "Principal (LOC)",
                 "value_type": 20
             },
             {

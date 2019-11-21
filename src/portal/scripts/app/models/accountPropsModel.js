@@ -28,6 +28,11 @@
                 "value_type": 10
             },
             {
+                "key": "public_name",
+                "name": "Public name",
+                "value_type": 10
+            },
+            {
                 "key": "portfolios",
                 "name": "Portfolios",
                 "value_type": "mc_field"
@@ -40,11 +45,6 @@
                 "value_content_type": "accounts.accounttype",
                 "value_entity": "account-type",
                 "code": "user_code"
-            },
-            {
-                "key": "public_name",
-                "name": "Public name",
-                "value_type": 10
             },
             {
                 "key": "tags",

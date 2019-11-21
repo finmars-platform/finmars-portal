@@ -27,14 +27,14 @@
                 "name": "User code",
                 "value_type": 10
             },
-            {
+            /*{
                 "key": "group",
                 "name": "Group",
                 "value_type": "field",
                 "value_entity": "strategy-2-group",
                 "value_content_type": "strategies.strategy2group",
                 "code": "user_code"
-            },
+            },*/
             {
                 "key": "tags",
                 "name": "Tags",
