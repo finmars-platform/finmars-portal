@@ -49,7 +49,7 @@
                                             md-no-float="">
                             <md-select ng-model="input.value_type"
                                        md-container-class="common-select-container"
-                                       ng-change="vm.valueTypeChanged(vm.newItem)"
+                                       ng-change="vm.valueTypeChanged(input)"
                                        md-on-close="newItemValueTypeSearchTerm = ''"
                                        id="ttype-inputs-value-type">
                                 <md-select-header>
@@ -78,7 +78,7 @@
                                             aria-label="content type input"
                                             md-no-float="">
                             <label for="ttype-inputs-default-value"></label>
-                            <md-select ng-model="vm.newItem.content_type"
+                            <md-select ng-model="input.content_type"
                                        md-container-class="common-select-container"
                                        md-on-close="newItemContentTypeSearchTerm = ''"
                                        id="ttype-inputs-default-value"
