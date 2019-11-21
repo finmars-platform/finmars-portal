@@ -71,7 +71,8 @@
 
                 var filterType = filterItem.options.filter_type;
 
-                if (filterType === 'empty') { // if filter works for empty cells
+                if (filterType === 'empty' ||
+                    filterItem.options.exclude_empty_cells) { // if filter works for empty cells
 
                     return true;
 
@@ -84,18 +85,18 @@
                         if ((filterValues.min_value || filterValues.min_value === 0) &&
                             (filterValues.max_value || filterValues.max_value === 0)) {
                             return true;
-                        };
+                        }
 
                     } else if (Array.isArray(filterValues)) {
 
-                        if (filterValues[0] && filterValues[0] !== null) {
+                        if (filterValues[0] || filterValues[0] === 0) {
                             return true;
-                        };
+                        }
 
-                    };
-                };
+                    }
+                }
 
-            };
+            }
 
             return false;
         };
@@ -116,7 +117,7 @@
 
                 newRequestParametersBody['filter_settings'].push(filterSettings);
 
-            };
+            }
 
         });
 

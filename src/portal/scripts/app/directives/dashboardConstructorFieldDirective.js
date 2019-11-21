@@ -282,6 +282,42 @@
 
                 };
 
+                scope.increaseColspan = function (item) {
+                    var maxColspan = scope.colspanList[scope.colspanList.length - 1];
+
+                    if (item.colspan < maxColspan) {
+                        item.colspan += 1;
+                        console.log("change colspan scope.increaseColspan", item.colspan);
+                        scope.saveField();
+                    }
+                };
+
+                scope.decreaseColspan = function (item) {
+                    if (item.colspan > 1) {
+                        item.colspan -= 1;
+                        console.log("change colspan decreaseColspan", item.colspan);
+                        scope.saveField();
+                    }
+                };
+
+                scope.increaseRowspan = function (item) {
+                    var maxRowspan = scope.rowspanList[scope.rowspanList.length - 1];
+
+                    if (item.rowspan < maxRowspan) {
+                        item.rowspan += 1;
+                        console.log("change colspan scope.increaseRowspan", item.rowspan);
+                        scope.saveField();
+                    }
+                };
+
+                scope.decreaseRowspan = function (item) {
+                    if (item.rowspan > 1) {
+                        item.rowspan -= 1;
+                        console.log("change colspan decreaseRowspan", item.rowspan);
+                        scope.saveField();
+                    }
+                };
+
                 scope.saveField = function () {
 
                     scope.item.editMode = false;

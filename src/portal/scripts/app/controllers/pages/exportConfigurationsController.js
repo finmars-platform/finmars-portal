@@ -561,7 +561,6 @@
                 if (res.status === 'agree') {
                     vm.getConfigurationExportLayouts();
                 }
-                ;
 
             })
 

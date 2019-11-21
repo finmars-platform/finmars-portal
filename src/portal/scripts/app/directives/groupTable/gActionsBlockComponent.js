@@ -943,6 +943,10 @@
 
                     if (scope.isReport) {
 
+                        var rootGroupOptions = scope.evDataService.getRootGroupOptions();
+                        rootGroupOptions.subtotal_type = false;
+                        scope.evDataService.setRootGroupOptions(rootGroupOptions);
+
                         var reportOptions = {};
                         var reportLayoutOptions = {
                             datepickerOptions: {

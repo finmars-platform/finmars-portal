@@ -41,7 +41,7 @@
                 uiRepository.createConfigurationExportLayout(vm.layout).then(function () {
                     $mdDialog.hide({status: 'agree'});
                 });
-            };
+            }
 
         };
 

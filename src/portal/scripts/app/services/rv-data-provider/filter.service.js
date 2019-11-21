@@ -39,7 +39,6 @@
                 var excludeEmptyCells = regularFilters[k].exclude_empty_cells;
                 var filterValue = regularFilters[k].value;
 
-
                 if (keyProperty !== 'ordering') {
 
                     if (item.hasOwnProperty(keyProperty) && item[keyProperty]) { // check if cell used to filter row is not empty
@@ -117,7 +116,7 @@
                             if (!match) {
                                 break;
                             }
-                        };
+                        }
 
                     } else {
 
@@ -127,7 +126,7 @@
                         } else {
                             match = true;
                         }
-                    };
+                    }
 
                 }
 

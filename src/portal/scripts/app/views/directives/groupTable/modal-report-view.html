@@ -221,7 +221,7 @@
                         </md-content>
                     </md-tab>
 
-                    <md-tab label="Balance">
+                    <md-tab label="{{vm.balanceTabName}}">
                         <md-content class="md-padding">
 
                             <input type="text"
@@ -235,7 +235,9 @@
                                 <span class="g-meta-circle blue">F</span>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.balanceAttrs | filter: {name: balanceSearchTerms}" layout="row">
+                            <div data-ng-repeat="item in vm.balanceAttrsFiltered | orderBy: 'orderNumber__' | filter: {name: balanceSearchTerms}"
+                                 class="g-checkbox-row"
+                                 layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">
@@ -258,6 +260,26 @@
                                     </md-card>
                                 </div>
                             </div>
+
+                            <!--<div class="g-checkbox-row"
+                                 layout="row">
+                                <div class="view-constructor-checkboxes-container"
+                                     layout="row"
+                                     layout-align="start center">
+                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                                 data-ng-change="vm.updateAttrs(vm.balanceAttrs)">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                                 class="md-g-green"
+                                                 data-ng-change="vm.updateAttrs(vm.balanceAttrs)">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                                 class="md-primary" data-ng-change="vm.updateAttrs(vm.balanceAttrs)">
+                                    </md-checkbox>
+                                </div>
+                                <div class="g-modal-draggable-card vcDraggableCard"></div>
+                            </div>-->
+
                         </md-content>
                     </md-tab>
 
@@ -275,7 +297,7 @@
                                 <span class="g-meta-circle blue">F</span>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.balancePerformanceAttrs | filter: {name: performanceSearchTerms}" layout="row">
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.balancePerformanceAttrsFiltered | orderBy: 'orderNumber__' | filter: {name: performanceSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">
@@ -315,7 +337,7 @@
                                 <span class="g-meta-circle blue">F</span>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentAttrs | filter: {name: instrumentSearchTerms}" layout="row">
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentAttrsFiltered | filter: {name: instrumentSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">
@@ -370,7 +392,7 @@
                         </md-content>
                     </md-tab>
 
-                    <md-tab label="Linked Instrument">
+                    <!--<md-tab label="Linked Instrument">
                         <md-content class="md-padding">
                             <input type="text"
                                    ng-model="linkedInstrumentSearchTerms"
@@ -436,7 +458,7 @@
                                 </div>
                             </div>
                         </md-content>
-                    </md-tab>
+                    </md-tab>-->
 
                     <md-tab label="Account">
                         <md-content class="md-padding">
@@ -451,7 +473,7 @@
                                 <span class="g-meta-circle blue">F</span>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.accountAttrs | filter: {name: accountSearchTerms}" layout="row">
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.accountAttrsFiltered | orderBy: 'orderNumber__' | filter: {name: accountSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">
@@ -518,7 +540,7 @@
                                 <span class="g-meta-circle blue">F</span>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioAttrs | filter: {name: portfolioSearchTerms}" layout="row">
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioAttrsFiltered | orderBy: 'orderNumber__' | orderBy: 'orderNumber__' | filter: {name: portfolioSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">
@@ -585,7 +607,7 @@
                                 <span class="g-meta-circle blue">F</span>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1attrs | filter: {name: strategiesSearchTerms}" layout="row">
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1attrsFiltered | filter: {name: strategiesSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">
@@ -609,7 +631,7 @@
                                 </div>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2attrs | filter: {name: strategiesSearchTerms}" layout="row">
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2attrsFiltered | filter: {name: strategiesSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">
@@ -633,7 +655,7 @@
                                 </div>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3attrs | filter: {name: strategiesSearchTerms}" layout="row">
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3attrsFiltered | filter: {name: strategiesSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">
@@ -712,18 +734,26 @@
                                 <span class="g-meta-circle blue">F</span>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.balanceMismatchAttrs | filter: {name: balanceMismatchSearchTerms}" layout="row">
+                            <div class="g-checkbox-row"
+                                 data-ng-repeat="item in vm.balanceMismatchAttrsFiltered | filter: {name: balanceMismatchSearchTerms}"
+                                 layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">
-                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                    <md-checkbox ng-model="item.columns"
+                                                 aria-label="Columns"
+                                                 aria="columns"
                                                  data-ng-change="vm.updateAttrs(vm.balanceMismatchAttrs)">
                                     </md-checkbox>
-                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                    <md-checkbox ng-model="item.groups"
+                                                 aria-label="Groups"
+                                                 aria="groups"
                                                  class="md-g-green"
                                                  data-ng-change="vm.updateAttrs(vm.balanceMismatchAttrs)">
                                     </md-checkbox>
-                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                    <md-checkbox ng-model="item.filters"
+                                                 aria-label="Filters"
+                                                 aria="filters"
                                                  class="md-primary"
                                                  data-ng-change="vm.updateAttrs(vm.balanceMismatchAttrs)">
                                     </md-checkbox>
@@ -736,6 +766,62 @@
                                     </md-card>
                                 </div>
                             </div>
+
+                            <div class="g-checkbox-row"
+                                 data-ng-repeat="item in vm.linkedInstrumentAttrsFiltered | filter: {name: linkedInstrumentSearchTerms}"
+                                 layout="row">
+                                <div class="view-constructor-checkboxes-container"
+                                     layout="row"
+                                     layout-align="start center">
+                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                                 data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                                 class="md-g-green"
+                                                 data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                                 class="md-primary" data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
+                                    </md-checkbox>
+                                </div>
+                                <div class="g-modal-draggable-card vcDraggableCard">
+                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                        {{item.name}}
+                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                        </md-tooltip>
+                                    </md-card>
+                                </div>
+                            </div>
+
+                            <div layout="row" class="view-constructor-attributes-separator"
+                                 data-ng-show="vm.linkedInstrumentDynamicAttrs.length > 0">
+                                <p>User Attributes</p>
+                            </div>
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentDynamicAttrs | filter: {name: linkedInstrumentSearchTerms}" layout="row">
+                                <div class="view-constructor-checkboxes-container"
+                                     layout="row"
+                                     layout-align="start center">
+                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                                 data-ng-change="vm.updateAttrs(vm.linkedInstrumentDynamicAttrs)">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                                 class="md-g-green"
+                                                 data-ng-change="vm.updateAttrs(vm.linkedInstrumentDynamicAttrs)">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                                 class="md-primary"
+                                                 data-ng-change="vm.updateAttrs(vm.linkedInstrumentDynamicAttrs)">
+                                    </md-checkbox>
+                                </div>
+                                <div class="g-modal-draggable-card vcDraggableCard">
+                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                        {{item.name}}
+                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                        </md-tooltip>
+                                    </md-card>
+                                </div>
+                            </div>
+
                         </md-content>
                     </md-tab>
 

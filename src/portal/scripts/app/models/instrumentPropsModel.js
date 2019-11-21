@@ -28,6 +28,11 @@
                 "value_type": 10
             },
             {
+                "key": "public_name",
+                "name": "Public name",
+                "value_type": 10
+            },
+            {
                 "key": "instrument_type",
                 "name": "Instrument type",
                 "value_type": "field",
