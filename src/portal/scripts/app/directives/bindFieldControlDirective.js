@@ -16,7 +16,8 @@
             scope: {
                 item: '=',
                 entity: '=',
-                entityType: '='
+                entityType: '=',
+                entityChange: '&'
             },
             link: function (scope, elem, attr) {
 
@@ -196,7 +197,14 @@
                             classifierTree.classifiers.forEach(findNodeInChildren);
                             scope.$apply();
                         })
+
+                        if (scope.entityChange) {
+                            scope.entityChange();
+                        }
+
                     }
+
+
                 };
 
                 scope.styleForInputsWithButtons = function () {
@@ -388,6 +396,14 @@
                                 scope.$apply();
                             })
                         }
+                    }
+
+                };
+
+                scope.itemChange = function(){
+
+                    if (scope.entityChange) {
+                        scope.entityChange();
                     }
 
                 };
