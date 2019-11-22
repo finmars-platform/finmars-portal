@@ -38,6 +38,19 @@
             })
     };
 
+    var getListLightWithInputs = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-type-light-with-inputs/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var getByKey = function (id) {
         return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
             {
@@ -219,6 +232,7 @@
     module.exports = {
         getList: getList,
         getListLight: getListLight,
+        getListLightWithInputs: getListLightWithInputs,
         getByKey: getByKey,
         create: create,
         update: update,

@@ -13,6 +13,10 @@
         return transactionTypeRepository.getListLight(options)
     };
 
+    var getListLightWithInputs = function (options) {
+        return transactionTypeRepository.getListLightWithInputs(options)
+    };
+
     var getByKey = function (id) {
         return transactionTypeRepository.getByKey(id);
     };
@@ -60,6 +64,7 @@
     module.exports = {
         getList: getList,
         getListLight: getListLight,
+        getListLightWithInputs: getListLightWithInputs,
         getByKey: getByKey,
         create: create,
         update: update,
