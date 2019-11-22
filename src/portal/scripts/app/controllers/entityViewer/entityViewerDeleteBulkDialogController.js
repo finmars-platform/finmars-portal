@@ -17,12 +17,14 @@
 
         vm.entityType = evDataService.getEntityType();
 
+        vm.isDeleted = false;
+
 
         vm.cancel = function () {
             $mdDialog.hide();
         };
 
-        vm.delete = function () {
+        vm.delete = function ($event) {
 
             var objects = evDataService.getObjects();
 
@@ -36,11 +38,68 @@
 
             console.log('ids', ids);
 
+            vm.processing = true;
+            vm.isDeleted = true;
+
             entityResolverService.deleteBulk(vm.entityType, {ids: ids}).then(function (data) {
+
+                vm.processing = false;
 
                 $mdDialog.hide({status: 'agree', data: {ids: ids}});
 
+            }).catch(function (reason) {
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Warning',
+                            description: "Something wrong. Please, try again later."
+                        }
+                    }
+                }).then(function (value) {
+
+                    $mdDialog.hide({status: 'agree', data: {ids: []}});
+
+                })
+
             });
+
+
+            setTimeout(function () {
+
+                vm.processing = false;
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Warning',
+                            description: "Deletion in progress. Please, wait"
+                        }
+                    }
+                });
+
+                $scope.$apply()
+
+            }, 60 * 1000)
+
         };
 
     }
