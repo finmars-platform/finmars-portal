@@ -32,6 +32,8 @@
         vm.entity = {$_isValid: true};
         vm.transactionType = null;
 
+        vm.recalculating = false;
+
         vm.transactionTypes = [];
 
         vm.filters = {
@@ -371,6 +373,8 @@
 
         vm.recalculate = function (item) {
 
+            vm.recalculating = true;
+
             var values = {};
 
             vm.userInputs.forEach(function (item) {
@@ -468,6 +472,8 @@
                     });
 
                     console.log('vm.entity', vm.entity);
+
+                    vm.recalculating = false;
 
                     $scope.$apply();
 
