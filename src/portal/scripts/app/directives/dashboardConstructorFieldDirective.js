@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents')
+    var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents');
 
     module.exports = function ($mdDialog) {
         return {
@@ -21,7 +21,7 @@
             },
             templateUrl: 'views/directives/dashboard-constructor-field-view.html',
             link: function (scope, elem, attr) {
-                console.log("d3 service dashboard field", scope.item);
+
                 scope.getVerboseType = function () {
 
                     var verboseType = 'Unknown';
@@ -77,6 +77,7 @@
                                 item.editMode = false;
 
                                 return item
+
                             });
 
                             return row
@@ -88,12 +89,14 @@
 
                     scope.dashboardConstructorDataService.setData(layout);
 
-                    scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+                    scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
 
                     scope.item.editMode = true;
 
+                    /*
                     scope.calculateColspanList();
                     scope.calculateRowspanList();
+                    */
 
                 };
 
@@ -283,20 +286,25 @@
                 };
 
                 scope.increaseColspan = function (item) {
+
                     var maxColspan = scope.colspanList[scope.colspanList.length - 1];
 
                     if (item.colspan < maxColspan) {
                         item.colspan += 1;
-                        console.log("change colspan scope.increaseColspan", item.colspan);
-                        scope.saveField();
+                        scope.changeSpan();
+
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
                     }
                 };
 
                 scope.decreaseColspan = function (item) {
                     if (item.colspan > 1) {
                         item.colspan -= 1;
-                        console.log("change colspan decreaseColspan", item.colspan);
-                        scope.saveField();
+                        scope.changeSpan();
+
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
                     }
                 };
 
@@ -305,16 +313,20 @@
 
                     if (item.rowspan < maxRowspan) {
                         item.rowspan += 1;
-                        console.log("change colspan scope.increaseRowspan", item.rowspan);
-                        scope.saveField();
+                        scope.changeSpan();
+
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
                     }
                 };
 
                 scope.decreaseRowspan = function (item) {
                     if (item.rowspan > 1) {
                         item.rowspan -= 1;
-                        console.log("change colspan decreaseRowspan", item.rowspan);
-                        scope.saveField();
+                        scope.changeSpan();
+
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
                     }
                 };
 
@@ -546,7 +558,6 @@
                             templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html';
                             break;
                     }
-                    ;
 
                     if (contrName && templateUrl) {
                         $mdDialog.show({
@@ -566,11 +577,24 @@
 
                         });
                     }
-                    ;
 
                 };
 
+                var init = function () {
+                    scope.calculateColspanList();
+                    scope.calculateRowspanList();
+                };
 
+                init();
+
+                var updateDashboardConstructorId = scope.dashboardConstructorEventService.addEventListener(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR, function () {
+                    scope.calculateColspanList();
+                    scope.calculateRowspanList();
+                });
+
+                scope.$on("$destroy", function () {
+                    scope.dashboardConstructorEventService.removeEventListener(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR, updateDashboardConstructorId);
+                });
             }
         }
     }

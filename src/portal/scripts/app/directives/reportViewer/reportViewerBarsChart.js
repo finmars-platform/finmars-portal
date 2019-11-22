@@ -4,6 +4,7 @@
 
     var rvDataHelper = require('../../helpers/rv-data.helper');
     var rvChartsHelper = require('../../helpers/rv-charts.helper');
+    var renderHelper = require('../../helpers/render.helper');
 
     var evEvents = require('../../services/entityViewerEvents');
 
@@ -122,7 +123,7 @@
                             } else {
                                 aData = a.name.toLowerCase();
                                 bData = b.name.toLowerCase();
-                            };
+                            }
 
                             if (aData > bData) {
                                 return -1;
@@ -158,6 +159,23 @@
                     }
 
                     return tStyle;
+                };
+
+                scope.formatValue = function (val) {
+
+                    if (scope.rvChartsSettings.number_format) {
+
+                        return renderHelper.formatValue({
+                            value: val
+                        }, {
+                            key: 'value',
+                            report_settings: scope.rvChartsSettings.number_format
+                        });
+
+                    } else {
+                        return val
+                    }
+
                 };
 
                 // functions-helpers
@@ -374,7 +392,7 @@
 
                             document.body.appendChild(barTooltipElem);
 
-                            barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + d.numericValue + ";";
+                            barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + scope.formatValue(d.numericValue) + ";";
 
                         })
                         .on("mousemove", function (d) {
@@ -406,6 +424,9 @@
                 };
 
                 var drawChartWithHorizontalCols = function () {
+
+                    var chartNameElemHeight = elem[0].querySelector('.dashboard-chart-name-h').clientHeight;
+                    chartMargin.top += chartNameElemHeight;
 
                     // calculating left margin
                     var textElem = document.createElement("span");
@@ -503,7 +524,7 @@
                     // move abscissa line behind margin
                     var xAxis = function (g) {
                         g
-                            .attr("transform", "translate(0,0)")
+                            .attr("transform", "translate(0," + chartNameElemHeight + ")")
                             .call(bottomAxis)
                             .call(function (g) {g.select(".domain").remove()});
                     };
@@ -522,7 +543,7 @@
                             return calcBarWidth;
                         } else {
                             return Math.max(2, calcBarWidth);
-                        };
+                        }
 
                     };
 
@@ -558,7 +579,7 @@
 
                             document.body.appendChild(barTooltipElem);
 
-                            barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + d.numericValue + ";";
+                            barTooltipElem.innerText = "Name: " + d.name + ";" + "\n" + "Number: " + scope.formatValue(d.numericValue) + ";";
 
                         })
                         .on("mousemove", function () {

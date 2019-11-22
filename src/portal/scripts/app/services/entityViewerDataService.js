@@ -365,16 +365,7 @@
         }
 
         function setData(obj) {
-
-            // console.time('Set Data');
-            //
-            // console.log('obj.___id', obj.___id);
-
             data.data[obj.___id] = obj;
-
-            // console.log(data.data);
-            //
-            // console.timeEnd('Set Data');
         }
 
         function setAllData(data) {
