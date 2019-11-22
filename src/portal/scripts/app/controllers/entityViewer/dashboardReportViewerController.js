@@ -670,7 +670,8 @@
                         sorting_type: vm.componentType.data.settings.sorting_type,
                         ticks_number: vm.componentType.data.settings.ticks_number,
                         crop_tick_text: vm.componentType.data.settings.crop_tick_text,
-                        tooltip_font_size: vm.componentType.data.settings.tooltip_font_size
+                        tooltip_font_size: vm.componentType.data.settings.tooltip_font_size,
+                        number_format: vm.componentType.data.settings.number_format
                     };
 
                     if (vm.componentType.data.settings.abscissa || vm.componentType.data.settings.ordinate) {
@@ -691,7 +692,8 @@
                         legends_position: vm.componentType.data.settings.legends_position,
                         legends_columns_number: vm.componentType.data.settings.legends_columns_number,
                         number_format: vm.componentType.data.settings.number_format,
-                        tooltip_font_size: vm.componentType.data.settings.tooltip_font_size
+                        tooltip_font_size: vm.componentType.data.settings.tooltip_font_size,
+                        chart_form: vm.componentType.data.settings.chart_form
                     };
                 }
 

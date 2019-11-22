@@ -453,15 +453,16 @@
 
                             var changeOrder = function (orderOf) {
 
-                                var CGFElems = [];
+                                var CGFItems = [];
                                 var GCFHtmlElems = [];
                                 var updateGCFMethod;
 
                                 var elemsAfterDragging = [];
+                                var colsWithGroupsKeys = [];
 
                                 switch (orderOf) {
                                     case 'groups':
-                                        CGFElems = groups;
+                                        CGFItems = groups;
                                         GCFHtmlElems = source.querySelectorAll('.vcSelectedGroupItem');
                                         updateGCFMethod = function () {
                                             scope.evDataService.setGroups(elemsAfterDragging);
@@ -469,7 +470,7 @@
                                         };
                                         break;
                                     case 'columns':
-                                        CGFElems = columns;
+                                        CGFItems = columns;
                                         GCFHtmlElems = source.querySelectorAll('.vcSelectedColumnItem');
                                         updateGCFMethod = function () {
                                             scope.evDataService.setColumns(elemsAfterDragging);
@@ -477,7 +478,7 @@
                                         };
                                         break;
                                     case 'filters':
-                                        CGFElems = filters;
+                                        CGFItems = filters;
                                         GCFHtmlElems = source.querySelectorAll('.vcSelectedFilterItem');
                                         updateGCFMethod = function () {
                                             scope.evDataService.setFilters(elemsAfterDragging);
@@ -495,6 +496,7 @@
                                         for (var x = 0; x < groups.length; x = x + 1) {
 
                                             if (GCFElemKey === groups[x].key) {
+                                                colsWithGroupsKeys.push(groups[x].key);
                                                 elemsAfterDragging.push(groups[x]);
                                                 break;
                                             }
@@ -509,23 +511,26 @@
 
                                     var GCFElemKey = GCFHtmlElems[i].dataset.attributeKey;
 
-                                    for (var x = 0; x < CGFElems.length; x = x + 1) {
+                                    for (var x = 0; x < CGFItems.length; x = x + 1) {
 
-                                        if (GCFElemKey === CGFElems[x].key) {
-                                            elemsAfterDragging.push(CGFElems[x]);
+                                        if (GCFElemKey === CGFItems[x].key &&
+                                            colsWithGroupsKeys.indexOf(CGFItems[x].key) === -1) {
+
+                                            elemsAfterDragging.push(CGFItems[x]);
                                             break;
+
                                         }
 
                                     }
 
                                 }
-
+                                console.log("drag n drop elemsAfterDragging", elemsAfterDragging, orderOf);
                                 var isChanged = false;
 
                                 for (var i = 0; i < elemsAfterDragging.length; i++) {
                                     var CGFElem = elemsAfterDragging[i];
 
-                                    if (CGFElem.key !== CGFElems[i].key) {
+                                    if (CGFElem.key !== CGFItems[i].key) {
                                         isChanged = true;
                                         break;
                                     }

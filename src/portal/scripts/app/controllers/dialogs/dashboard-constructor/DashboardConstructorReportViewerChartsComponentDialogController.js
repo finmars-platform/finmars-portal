@@ -50,6 +50,7 @@
             delete vm.item.settings.show_legends;
             delete vm.item.settings.legends_position;
             delete vm.item.settings.legends_columns_number;
+            delete vm.item.settings.chart_form;
         };
 
         vm.reportTypeChange = function() {
@@ -74,6 +75,7 @@
                     vm.item.settings.show_legends = false;
                     vm.item.settings.legends_position = 'right';
                     vm.item.settings.legends_columns_number = 1;
+                    vm.item.settings.chart_form = 'doughnut';
                     break;
             }
 
@@ -122,6 +124,7 @@
                     vm.item.settings.show_legends = false;
                     vm.item.settings.legends_position = 'right';
                     vm.item.settings.tooltip_font_size = 10;
+                    vm.item.settings.chart_form = 'doughnut';
                     break;
             }
 
@@ -140,6 +143,10 @@
         };
 
         vm.setNumberFormatPreset = function (preset) {
+
+            if (!vm.item.settings.number_format) {
+                vm.item.settings.number_format = {};
+            }
 
             switch (preset) {
 
