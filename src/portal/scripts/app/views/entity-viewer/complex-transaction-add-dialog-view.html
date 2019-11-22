@@ -2,8 +2,21 @@
            style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Book Transaction</h2>
-            <span flex></span>
+
+            <div layout="row">
+                <h2>Book Transaction</h2>
+                <span flex></span>
+
+                <div data-ng-if="vm.recalculating" layout="row" class="m-l-16">
+                    <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                        <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                        <progress-circular diameter="20"></progress-circular>
+                    </div>
+                    — Processing
+                </div>
+
+            </div>
+
         </div>
     </md-toolbar>
     <md-dialog-content style="height: 100%">
@@ -36,8 +49,9 @@
 
                                             <md-optgroup label="{{group.name}}"
                                                          data-ng-repeat="group in vm.transactionGroups">
-                                                <md-option data-ng-repeat="item in group.items | orderBy: 'name' | filter:{name: searchTerm}"
-                                                           ng-value="item.id">
+                                                <md-option
+                                                        data-ng-repeat="item in group.items | orderBy: 'name' | filter:{name: searchTerm}"
+                                                        ng-value="item.id">
                                                     {{item.name}}
                                                 </md-option>
                                             </md-optgroup>
@@ -121,7 +135,8 @@
                                     <span>{{tab.name}}</span>
                                 </md-tab-label>
                                 <md-tab-body>
-                                    <md-content class="md-padding p-t-26 " ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
+                                    <md-content class="md-padding p-t-26 "
+                                                ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
                                         <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
                                              class="entity-editor-row">
                                             <div class="ev-data-field
@@ -186,33 +201,33 @@
             <div ng-if="vm.checkReadyStatus()">
 
                 <!--<md-button ng-click="vm.entity.is_locked = true"-->
-                           <!--ng-if="vm.entity.is_locked == false"-->
-                           <!--class="md-raised"-->
-                           <!--ng-disabled="vm.entity.is_canceled == true">-->
-                    <!--Lock-->
+                <!--ng-if="vm.entity.is_locked == false"-->
+                <!--class="md-raised"-->
+                <!--ng-disabled="vm.entity.is_canceled == true">-->
+                <!--Lock-->
                 <!--</md-button>-->
 
                 <!--<md-button-->
-                        <!--ng-click="vm.entity.is_locked = false"-->
-                        <!--ng-if="vm.entity.is_locked == true"-->
-                        <!--class="md-raised"-->
-                        <!--ng-disabled="vm.entity.is_canceled == true">-->
-                    <!--Unlock-->
+                <!--ng-click="vm.entity.is_locked = false"-->
+                <!--ng-if="vm.entity.is_locked == true"-->
+                <!--class="md-raised"-->
+                <!--ng-disabled="vm.entity.is_canceled == true">-->
+                <!--Unlock-->
                 <!--</md-button>-->
 
                 <!--<md-button ng-click="vm.entity.is_canceled = false"-->
-                           <!--ng-if="vm.entity.is_canceled == true"-->
-                           <!--ng-disabled="vm.entity.is_locked == true"-->
-                           <!--class="md-raised">-->
-                    <!--Ignore-->
+                <!--ng-if="vm.entity.is_canceled == true"-->
+                <!--ng-disabled="vm.entity.is_locked == true"-->
+                <!--class="md-raised">-->
+                <!--Ignore-->
                 <!--</md-button>-->
 
                 <!--<md-button-->
-                        <!--ng-click="vm.entity.is_canceled = true"-->
-                        <!--ng-if="vm.entity.is_canceled == false"-->
-                        <!--ng-disabled="vm.entity.is_locked == true"-->
-                        <!--class="md-raised">-->
-                    <!--Activate-->
+                <!--ng-click="vm.entity.is_canceled = true"-->
+                <!--ng-if="vm.entity.is_canceled == false"-->
+                <!--ng-disabled="vm.entity.is_locked == true"-->
+                <!--class="md-raised">-->
+                <!--Activate-->
                 <!--</md-button>-->
 
             </div>

@@ -34,6 +34,8 @@
         vm.editLayoutEntityInstanceId = null;
         vm.editLayoutByEntityInsance = false;
 
+        vm.recalculating = false;
+
         vm.formIsValid = true;
 
         vm.attrs = [];
@@ -307,6 +309,8 @@
 
         vm.recalculate = function (item) {
 
+            vm.recalculating = true;
+
             var values = {};
 
             console.log('vm.userInputs', vm.userInputs);
@@ -397,6 +401,9 @@
                     });
 
                 }
+
+                vm.recalculating = false;
+
                 $scope.$apply();
 
             };
