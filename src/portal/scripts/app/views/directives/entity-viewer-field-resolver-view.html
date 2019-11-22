@@ -15,6 +15,7 @@
                     <div>
                         <md-select md-on-close="searchTerm = ''"
                                    data-ng-model="entity[getModelKey()]"
+                                   data-ng-change="changeHandler()"
                                    md-on-open="getData()"
                                    md-selected-text="bindFormFields()"
                                    md-container-class="common-select-container">
@@ -50,6 +51,7 @@
                             <label data-ng-bind="getName()"></label>
                             <md-select md-on-close="searchTerm = ''"
                                        data-ng-model="entity[getModelKey()]"
+                                       data-ng-change="changeHandler()"
                                        md-on-open="getData()"
                                        md-selected-text="bindFormFields()"
                                        md-container-class="common-select-container">
@@ -85,6 +87,7 @@
                         <label data-ng-bind="getName()"></label>
                         <md-select md-on-close="searchTerm = ''"
                                    data-ng-model="entity[getModelKey()]"
+                                   data-ng-change="changeHandler()"
                                    md-on-open="getData()"
                                    md-container-class="common-select-container">
                             <md-select-header>
@@ -115,6 +118,7 @@
                 <md-select md-on-close="searchTerm = ''"
                            md-on-open="getData()"
                            data-ng-model="entity[getModelKey()]"
+                           data-ng-change="changeHandler()"
                            multiple="true"
                            md-selected-text="bindMCField()">
                     <md-select-header>
@@ -143,6 +147,7 @@
                         <md-select md-on-close="searchTerm = ''"
                                    md-on-open="getData()"
                                    data-ng-model="entity[getModelKey()]"
+                                   data-ng-change="changeHandler()"
                                    md-selected-text="bindMCField()"
                                    multiple="true">
                             <md-select-header>
@@ -165,6 +170,7 @@
                         <md-select md-on-close="searchTerm = ''"
                                    md-on-open="getData()"
                                    data-ng-model="entity[getModelKey()]"
+                                   data-ng-change="changeHandler()"
                                    md-selected-text="bindFormFields()"
                                    md-container-class="common-select-container">
                             <md-select-header>
@@ -192,6 +198,7 @@
                     <md-select md-on-close="searchTerm = ''"
                                md-on-open="getData()"
                                data-ng-model="entity[getModelKey()]"
+                               data-ng-change="changeHandler()"
                                md-selected-text="bindMCField()"
                                multiple="true">
                         <md-select-header>

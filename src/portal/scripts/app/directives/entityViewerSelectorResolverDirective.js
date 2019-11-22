@@ -15,7 +15,8 @@
                 entity: '=',
                 content_type: '=',
                 options: '=',
-                entityType: '='
+                entityType: '=',
+                itemChange: '&'
             },
             templateUrl: 'views/directives/entity-viewer-selector-resolver-view.html',
             link: function (scope, elem, attrs) {
@@ -90,6 +91,12 @@
                             }, 100);
                         });
                     });
+                };
+
+                scope.changeHandler = function () {
+                    if(scope.itemChange) {
+                        scope.itemChange()
+                    }
                 };
 
                 scope.init = function () {

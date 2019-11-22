@@ -49,6 +49,11 @@
 
         vm.attributesLayout = [];
 
+        vm.isInheritRights = false;
+
+        vm.lastAccountType = null;
+        vm.lastInstrumentType = null;
+
         vm.generateAttributesFromLayoutFields = function () {
 
             var tabResult;
@@ -142,6 +147,12 @@
 
                 vm.setPermissionsDefaults();
 
+                if (vm.entityType === 'account' || vm.entityType === 'instrument') {
+
+                    vm.checkInheritRight();
+
+                }
+
                 $scope.$apply();
 
             });
@@ -169,31 +180,6 @@
 
                 });
 
-
-                // vm.groups.forEach(function (group) {
-                //
-                //     if (vm.entity.object_permissions) {
-                //         vm.entity.object_permissions.forEach(function (permission) {
-                //
-                //             if (permission.group === group.id) {
-                //                 if (!group.hasOwnProperty('objectPermissions')) {
-                //                     group.objectPermissions = {};
-                //                 }
-                //                 if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                //                     group.objectPermissions.manage = true;
-                //                 }
-                //                 if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                //                     group.objectPermissions.change = true;
-                //                 }
-                //                 if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
-                //                     group.objectPermissions.view = true;
-                //                 }
-                //             }
-                //         })
-                //     }
-                //
-                // });
-
             });
 
         };
@@ -212,7 +198,7 @@
                 if (group.permission_table && group.permission_table.data) {
 
                     table = group.permission_table.data.find(function (item) {
-                       return item.content_type === contentType
+                        return item.content_type === contentType
                     }).data;
 
                     isCreator = vm.currentMember.groups.indexOf(group.id) !== -1;
@@ -255,6 +241,143 @@
 
 
             });
+
+        };
+
+        vm.checkInheritRight = function () {
+
+            var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType);
+            var table;
+
+            vm.groups.forEach(function (group) {
+
+                if (vm.currentMember.groups.indexOf(group.id) !== -1) {
+
+                    if (group.permission_table && group.permission_table.data) {
+
+                        table = group.permission_table.data.find(function (item) {
+                            return item.content_type === contentType
+                        }).data;
+
+                        console.log(' checkInheritRight table', table);
+
+                        if (table.inherit_rights) {
+                            vm.isInheritRights = true;
+                        }
+
+                    }
+
+                }
+            })
+
+        };
+
+        vm.setInheritedPermissions = function () {
+
+            console.log('setInheritedPermissions');
+
+            return new Promise(function (resolve, reject) {
+
+                if (vm.entityType === 'instrument') {
+
+                    console.log('vm.entity', vm.entity)
+
+                    entityResolverService.getByKey('instrument-type', vm.entity.instrument_type).then(function (data) {
+
+                        vm.entity.object_permissions = data.object_permissions.map(function (item) {
+
+                            var result = Object.assign({}, item)
+
+                            result.permission = item.permission.split('_')[0] + '_instrument';
+
+                            return result
+
+                        });
+
+                        console.log('vm.entityPermissions', vm.entity.object_permissions);
+
+                        vm.groups.forEach(function (group) {
+
+                            if (vm.entity.object_permissions) {
+                                vm.entity.object_permissions.forEach(function (permission) {
+
+                                    if (permission.group === group.id) {
+
+                                        if (!group.hasOwnProperty('objectPermissions')) {
+                                            group.objectPermissions = {};
+                                        }
+
+                                        if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
+                                            group.objectPermissions.manage = true;
+                                        }
+                                        if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
+                                            group.objectPermissions.change = true;
+                                        }
+                                        if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
+                                            group.objectPermissions.view = true;
+                                        }
+                                    }
+                                })
+                            }
+
+                        });
+
+                        console.log('vm.groups', vm.groups);
+
+                        $scope.$apply();
+
+                    })
+
+                }
+
+                if (vm.entityType === 'account') {
+
+                    entityResolverService.getByKey('account-type', vm.entity.type).then(function (data) {
+
+                        vm.entity.object_permissions = data.object_permissions.map(function (item) {
+
+                            var result = Object.assign({}, item);
+
+                            result.permission = item.permission.split('_')[0] + '_account';
+
+                            return result
+
+                        });
+
+                        vm.groups.forEach(function (group) {
+
+                            if (vm.entity.object_permissions) {
+                                vm.entity.object_permissions.forEach(function (permission) {
+
+                                    if (permission.group === group.id) {
+
+                                        if (!group.hasOwnProperty('objectPermissions')) {
+                                            group.objectPermissions = {};
+                                        }
+
+                                        if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
+                                            group.objectPermissions.manage = true;
+                                        }
+                                        if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
+                                            group.objectPermissions.change = true;
+                                        }
+                                        if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
+                                            group.objectPermissions.view = true;
+                                        }
+                                    }
+                                })
+                            }
+
+                        });
+
+                        $scope.$apply();
+
+                    })
+
+
+                }
+
+            })
 
         };
 
@@ -538,12 +661,34 @@
 
         };
 
+        vm.entityChange = function () {
+
+            console.log("entityChange");
+
+            if (vm.lastAccountType !== vm.entity.type) {
+                vm.lastAccountType = vm.entity.type;
+
+                if (vm.isInheritRights && vm.entity.type) {
+                    vm.setInheritedPermissions();
+                }
+            }
+
+            if (vm.lastInstrumentType !== vm.entity.instrument_type) {
+                vm.lastInstrumentType = vm.entity.instrument_type;
+
+                if (vm.isInheritRights && vm.entity.instrument_type) {
+                    vm.setInheritedPermissions();
+                }
+            }
+
+
+        };
+
         vm.init = function () {
 
             vm.getFormLayout();
 
             vm.loadPermissions();
-
 
         };
 
