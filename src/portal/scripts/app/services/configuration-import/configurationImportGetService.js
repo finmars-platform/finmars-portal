@@ -6,6 +6,7 @@
     'use strict';
 
     var entityResolverService = require('../../services/entityResolverService');
+    var transactionTypeService = require('../../services/transactionTypeService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var customFieldService = require('../../services/reports/customFieldService');
 
@@ -31,10 +32,29 @@
 
             } else {
 
-                entityResolverService.getList(entity, {
-                    filters: {
-                        "user_code": user_code
+
+                new Promise(function (resolve, reject) {
+
+                    if (entity === 'transaction-type') {
+
+                        transactionTypeService.getListLightWithInputs({
+                            filters: {
+                                "user_code": user_code
+                            }
+                        }).then(function (data) {
+                            resolve(data)
+                        })
+
+                    } else {
+                        entityResolverService.getList(entity, {
+                            filters: {
+                                "user_code": user_code
+                            }
+                        }).then(function (data) {
+                            resolve(data)
+                        })
                     }
+
                 }).then(function (data) {
 
                     if (data.results.length) {
