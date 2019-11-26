@@ -42,7 +42,7 @@
 
         var columnBottomRow;
 
-        var scrollYHandler = utilsHelper.debounce(function () {
+        var scrollYHandler = utilsHelper.throttle(function () {
 
             // offset = Math.floor(viewportElem.scrollTop / rowHeight);
             // evDataService.setVirtualScrollOffset(offset);
@@ -52,7 +52,7 @@
             calculateScroll(elements, evDataService)
 
 
-        }, 25);
+        }, 10);
 
         var scrollXHandler = function () {
 
