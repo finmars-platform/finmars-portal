@@ -74,7 +74,6 @@
   }
 
 
-
   .g-column-bottom-row {
     position: relative;
   }
@@ -195,7 +194,7 @@
     //background: #ddd;
     background-color: rgb(63, 81, 181);
     color: #fff;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
     margin: 2px;
     height: 20px;
     border: 0;
@@ -240,4 +239,24 @@
     background: rgba(158, 158, 158, 0.2);
   }
 
+}
+
+.ev-dropdown-submenu {
+  //height: 200px;
+  width: 320px;
+  background: #fff;
+  position: absolute;
+  left: 320px;
+  margin-top: -26px;
+  display: none;
+  //overflow: auto;
+  &:hover {
+    display: block;
+  }
+}
+
+.ev-dropdown-menu-holder:hover {
+  & > .ev-dropdown-submenu {
+    display: block;
+  }
 }

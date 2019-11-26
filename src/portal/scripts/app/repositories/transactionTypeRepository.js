@@ -64,6 +64,19 @@
             })
     };
 
+    var getByKeyLight = function (id) {
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type-light/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var create = function (transaction) {
         return xhrService.fetch(baseUrl + 'transactions/transaction-type/',
             {
@@ -234,6 +247,7 @@
         getListLight: getListLight,
         getListLightWithInputs: getListLightWithInputs,
         getByKey: getByKey,
+        getByKeyLight: getByKeyLight,
         create: create,
         update: update,
         deleteByKey: deleteByKey,

@@ -117,6 +117,16 @@
             </md-input-container>
         </div>
 
+        <div>
+            <md-input-container>
+                <label >Show In Report Context Menu</label>
+                <md-select data-ng-model="vm.entity.show_in_menu">
+                    <md-option ng-value="true" >Show</md-option>
+                    <md-option ng-value="false" >Hide</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+
     </div>
     <div data-ng-if="!vm.checkReadyStatus()">
         <div layout="row" layout-sm="column" layout-align="space-around">

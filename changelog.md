@@ -1,5 +1,8 @@
 # Changelog
 
+# 26.11.2019
+- Context Menu Update
+
 # 05.11.2019
 - Templates Update
 

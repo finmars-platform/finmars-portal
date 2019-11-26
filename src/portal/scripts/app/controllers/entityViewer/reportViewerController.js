@@ -70,9 +70,11 @@
 
                     var activeObject = vm.entityViewerDataService.getActiveObject();
                     var action = vm.entityViewerDataService.getActiveObjectAction();
+                    var actionData = vm.entityViewerDataService.getActiveObjectActionData();
                     var reportOptions = vm.entityViewerDataService.getReportOptions();
 
                     console.log('activeObject', activeObject);
+                    console.log('actionData', actionData);
 
                     if (activeObject) {
 
@@ -90,6 +92,7 @@
                             }).then(function (res) {
 
                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                 if (res && res.res === 'agree') {
 
@@ -120,6 +123,7 @@
                             }).then(function (res) {
 
                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                 if (res && res.res === 'agree') {
 
@@ -150,6 +154,7 @@
                             }).then(function (res) {
 
                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                 if (res && res.res === 'agree') {
 
@@ -180,6 +185,7 @@
                             }).then(function (res) {
 
                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                 if (res && res.res === 'agree') {
 
@@ -223,6 +229,7 @@
                                     }).then(function (res) {
 
                                         vm.entityViewerDataService.setActiveObjectAction(null);
+                                        vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                         if (res && res.res === 'agree') {
 
@@ -280,6 +287,7 @@
                                             }).then(function (res) {
 
                                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                                 if (res && res.res === 'agree') {
 
@@ -331,6 +339,7 @@
                                     }).then(function (res) {
 
                                         vm.entityViewerDataService.setActiveObjectAction(null);
+                                        vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                         if (res && res.res === 'agree') {
 
@@ -388,6 +397,7 @@
                                             }).then(function (res) {
 
                                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                                 if (res && res.res === 'agree') {
 
@@ -441,6 +451,7 @@
                                     }).then(function (res) {
 
                                         vm.entityViewerDataService.setActiveObjectAction(null);
+                                        vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                         if (res && res.res === 'agree') {
 
@@ -498,6 +509,7 @@
                                             }).then(function (res) {
 
                                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                                 if (res && res.res === 'agree') {
 
@@ -549,6 +561,7 @@
                                     }).then(function (res) {
 
                                         vm.entityViewerDataService.setActiveObjectAction(null);
+                                        vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                         if (res && res.res === 'agree') {
 
@@ -606,6 +619,7 @@
                                             }).then(function (res) {
 
                                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                                 if (res && res.res === 'agree') {
 
@@ -808,6 +822,7 @@
                             }).then(function (res) {
 
                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                 if (res && res.res === 'agree') {
 
@@ -824,6 +839,205 @@
 
                         }
 
+                        if (action === 'book_transaction_specific') {
+
+                            var report_date = null;
+                            var report_start_date = null;
+
+                            if (vm.entityType === 'balance-report') {
+                                report_date = reportOptions.report_date;
+                            }
+
+                            if (vm.entityType === 'pl-report') {
+                                report_date = reportOptions.report_date;
+                                report_start_date = reportOptions.pl_first_date;
+                            }
+
+                            if (vm.entityType === 'transaction-report') {
+                                report_date = reportOptions.end_date;
+                                report_start_date = reportOptions.begin_date;
+                            }
+
+                            var contextData = {
+                                effective_date: reportOptions.report_date,
+                                position: null,
+                                pricing_currency: null,
+                                accrued_currency: null,
+                                instrument: null,
+                                portfolio: null,
+                                account: null,
+                                strategy1: null,
+                                strategy2: null,
+                                strategy3: null,
+
+
+                                currency: null,
+                                report_date: report_date,
+                                report_start_date: report_start_date,
+                                pricing_policy: null,
+                                allocation_balance: null,
+                                allocation_pl: null
+
+                            };
+
+                            if (activeObject.item_type === 2) { // currency
+
+                                contextData.currency = activeObject['currency.id'];
+                                contextData.currency_object = {
+                                    id: activeObject['currency_object.id'],
+                                    name: activeObject['currency_object.name'],
+                                    user_code: activeObject['currency_object.user_code'],
+                                    content_type: "currencies.currency"
+                                };
+
+                            }
+
+                            if(activeObject['position_size']) {
+                                contextData.position = activeObject['position_size'];
+                            }
+
+                            if(reportOptions['pricing_policy']) {
+                                contextData.pricing_policy = reportOptions.pricing_policy;
+                                contextData.pricing_policy_object = Object.assign({}, reportOptions.pricing_policy_object)
+                            }
+
+                            if (activeObject['pricing_currency.id']) {
+                                contextData.pricing_currency = activeObject['pricing_currency.id'];
+                                contextData.pricing_currency_object = {
+                                    id: activeObject['pricing_currency.id'],
+                                    name: activeObject['pricing_currency.name'],
+                                    user_code: activeObject['pricing_currency.user_code'],
+                                    content_type: "currencies.currency"
+                                };
+                            }
+
+                            if (activeObject['instrument.accrued_currency.id']) {
+                                contextData.accured_currency = activeObject['instrument.accrued_currency.id'];
+                                contextData.accured_currency_object = {
+                                    id: activeObject['instrument.accrued_currency.id'],
+                                    name: activeObject['instrument.accrued_currency.name'],
+                                    user_code: activeObject['instrument.accrued_currency.user_code'],
+                                    content_type: "currencies.currency"
+                                };
+                            }
+
+                            if (activeObject['instrument.id']) {
+                                contextData.instrument = activeObject['instrument.id'];
+                                contextData.instrument_object = {
+                                    id: activeObject['instrument.id'],
+                                    name: activeObject['instrument.name'],
+                                    user_code: activeObject['instrument.user_code'],
+                                    content_type: "instruments.instrument"
+                                };
+                            }
+
+                            if (activeObject['allocation_balance.id']) {
+                                contextData.allocation_balance = activeObject['allocation_balance.id'];
+                                contextData.allocation_balance_object = {
+                                    id: activeObject['allocation_balance.id'],
+                                    name: activeObject['allocation_balance.name'],
+                                    user_code: activeObject['allocation_balance.user_code'],
+                                    content_type: "instruments.instrument"
+                                };
+                            }
+
+                            if (activeObject['allocation_pl.id']) {
+                                contextData.allocation_pl = activeObject['allocation_pl.id'];
+                                contextData.allocation_pl_object = {
+                                    id: activeObject['allocation_pl.id'],
+                                    name: activeObject['allocation_pl.name'],
+                                    user_code: activeObject['allocation_pl.user_code'],
+                                    content_type: "instruments.instrument"
+                                };
+                            }
+
+                            if (activeObject['portfolio.id']) {
+                                contextData.portfolio = activeObject['portfolio.id'];
+                                contextData.portfolio_object = {
+                                    id: activeObject['portfolio.id'],
+                                    name: activeObject['portfolio.name'],
+                                    user_code: activeObject['portfolio.user_code'],
+                                    content_type: "portfolios.portfolio"
+                                };
+                            }
+
+                            if (activeObject['account.id']) {
+                                contextData.account = activeObject['account.id'];
+                                contextData.account_object = {
+                                    id: activeObject['account.id'],
+                                    name: activeObject['account.name'],
+                                    user_code: activeObject['account.user_code'],
+                                    content_type: "accounts.account"
+                                };
+                            }
+
+                            if (activeObject['strategy1.id']) {
+                                contextData.strategy1 = activeObject['strategy1.id'];
+                                contextData.strategy1_object = {
+                                    id: activeObject['strategy1.id'],
+                                    name: activeObject['strategy1.name'],
+                                    user_code: activeObject['strategy1.user_code'],
+                                    content_type: "strategies.strategy1"
+                                };
+                            }
+
+                            if (activeObject['strategy2.id']) {
+                                contextData.strategy2 = activeObject['strategy2.id'];
+                                contextData.strategy2_object = {
+                                    id: activeObject['strategy2.id'],
+                                    name: activeObject['strategy2.name'],
+                                    user_code: activeObject['strategy2.user_code'],
+                                    content_type: "strategies.strategy2"
+                                };
+                            }
+
+                            if (activeObject['strategy3.id']) {
+                                contextData.strategy3 = activeObject['strategy3.id'];
+                                contextData.strategy3_object = {
+                                    id: activeObject['strategy3.id'],
+                                    name: activeObject['strategy3.name'],
+                                    user_code: activeObject['strategy3.user_code'],
+                                    content_type: "strategies.strategy3"
+                                };
+                            }
+
+
+                            var entity = {
+                                contextData: contextData
+                            };
+
+                            if (actionData && actionData.id) {
+                                entity.transaction_type = actionData.id
+                            }
+
+                            $mdDialog.show({
+                                controller: 'ComplexTransactionAddDialogController as vm',
+                                templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: activeObject.event,
+                                locals: {
+                                    entityType: 'complex-transaction',
+                                    entity: entity
+                                }
+                            }).then(function (res) {
+
+                                vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                                if (res && res.res === 'agree') {
+
+                                    vm.entityViewerDataService.resetData();
+                                    vm.entityViewerDataService.resetRequestParameters();
+
+                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                }
+                            });
+
+                        }
                     }
 
                 });
