@@ -335,7 +335,7 @@ app.controller('TransactionReportController', ['$scope', '$stateParams', require
 app.controller('CashFlowProjectionReportController', ['$scope', '$stateParams', require('./app/controllers/reports/cashFlowProjectionReportController')]);
 app.controller('PerformanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/performanceReportController')]);
 
-app.controller('CustomFieldDialogController', ['$scope', '$mdDialog', 'attributeDataService', 'data', require('./app/controllers/dialogs/customFieldDialogController')]);
+app.controller('CustomFieldDialogController', ['$scope', '$mdDialog', 'attributeDataService', 'entityViewerEventService', 'data', require('./app/controllers/dialogs/customFieldDialogController')]);
 app.controller('CustomFieldController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/customFieldController')]);
 app.controller('CustomFieldAddDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldAddDialogController')]);
 app.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService',  require('./app/controllers/dialogs/customFieldEditDialogController')]);

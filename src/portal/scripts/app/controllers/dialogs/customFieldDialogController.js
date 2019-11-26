@@ -5,15 +5,18 @@
 
     'use strict';
 
+    var evEvents = require('../../services/entityViewerEvents');
+
     var customFieldService = require('../../services/reports/customFieldService');
 
     //var AttributeDataService = require('../../services/attributeDataService');
 
-    module.exports = function ($scope, $mdDialog, attributeDataService, data) {
+    module.exports = function ($scope, $mdDialog, attributeDataService, entityViewerEventService, data) {
 
         var vm = this;
 
         vm.attributeDataService = attributeDataService;
+        vm.entityViewerEventService = entityViewerEventService;
         vm.customFields = [];
         vm.entityType = data.entityType;
 
@@ -56,6 +59,7 @@
                 if (res && res.status === 'agree') {
 
                     vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType);
+                    vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
                     vm.getList();
 
                 }
@@ -85,6 +89,7 @@
                 if (res && res.status === 'agree') {
 
                     vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType);
+                    vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
                     vm.getList();
 
                 }
@@ -134,6 +139,7 @@
                         } else {
 
                             vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
                             vm.getList();
 
                         }
