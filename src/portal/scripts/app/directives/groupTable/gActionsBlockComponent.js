@@ -64,8 +64,8 @@
                         scope.currentMember.groups_object.forEach(function (group) {
 
                             if (group.permission_table) {
-                                
-                                if(group.permission_table.data) {
+
+                                if (group.permission_table.data) {
 
                                     group.permission_table.data.forEach(function (item) {
 
@@ -80,11 +80,11 @@
                                         }
 
                                     })
-                                    
+
                                 }
-                                
+
                             }
-                            
+
                         });
 
                         if (scope.currentMember.is_admin || scope.currentMember.is_owner) {
@@ -1106,7 +1106,7 @@
                                 // if split panel layout changed, save it
                                 if (spChangedLayout) {
 
-                                    var saveSPLayoutChanges = new Promise (function (spLayoutSaveRes, spLayoutSaveRej) {
+                                    var saveSPLayoutChanges = new Promise(function (spLayoutSaveRes, spLayoutSaveRej) {
 
                                         if (spChangedLayout.hasOwnProperty('id')) {
                                             uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
@@ -1140,7 +1140,7 @@
                                 }*/
                                 if (activeLayoutConfig && !layoutIsUnchanged) {
 
-                                    var saveLayoutChanges = new Promise (function (saveLayoutRes, saveLayoutRej) {
+                                    var saveLayoutChanges = new Promise(function (saveLayoutRes, saveLayoutRej) {
 
                                         if (layoutCurrentConfig.hasOwnProperty('id')) {
 
@@ -1312,6 +1312,22 @@
 
                 };
 
+                scope.exportLayout = function ($event) {
+
+                    var layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+                    $mdDialog.show({
+                        controller: 'LayoutExportDialogController as vm',
+                        templateUrl: 'views/dialogs/layout-export-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: {layout: layout, isReport: scope.isReport}
+                        }
+                    })
+
+                };
+
                 scope.exportAsPdf = function ($event) {
 
                     $mdDialog.show({
@@ -1446,6 +1462,8 @@
                 scope.init = function () {
 
                     scope.getCurrentMember();
+
+                    scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
                 };
 

@@ -184,6 +184,27 @@
         return uiRepository.deleteTemplateLayoutByKey(id);
     };
 
+    var getContextMenuLayoutList = function (options) {
+        return uiRepository.getContextMenuLayoutList(options);
+    };
+
+    var getContextMenuLayoutByKey = function (key) {
+        return uiRepository.getContextMenuLayoutByKey(key);
+    };
+
+    var createContextMenuLayout = function (data) {
+
+        return uiRepository.createContextMenuLayout(data);
+    };
+
+    var updateContextMenuLayout = function (id, data) {
+        return uiRepository.updateContextMenuLayout(id, data)
+    };
+
+    var deleteContextMenuLayoutByKey = function (id) {
+        return uiRepository.deleteContextMenuLayoutByKey(id);
+    };
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -236,7 +257,15 @@
         getDefaultTemplateLayout: getDefaultTemplateLayout,
         createTemplateLayout: createTemplateLayout,
         updateTemplateLayout: updateTemplateLayout,
-        deleteTemplateLayoutByKey: deleteTemplateLayoutByKey
+        deleteTemplateLayoutByKey: deleteTemplateLayoutByKey,
+
+
+
+        getContextMenuLayoutList: getContextMenuLayoutList,
+        getContextMenuLayoutByKey: getContextMenuLayoutByKey,
+        createContextMenuLayout: createContextMenuLayout,
+        updateContextMenuLayout: updateContextMenuLayout,
+        deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey
     }
 
 }());

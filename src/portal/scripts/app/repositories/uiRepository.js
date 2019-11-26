@@ -739,6 +739,80 @@
         })
     };
 
+    var getContextMenuLayoutList = function (options) {
+
+        console.log('options', options);
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/context-menu-layout/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getContextMenuLayoutByKey = function (id) {
+        return xhrService.fetch(baseUrl + 'ui/context-menu-layout/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createContextMenuLayout = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/context-menu-layout/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateContextMenuLayout = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/context-menu-layout/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteContextMenuLayoutByKey = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/context-menu-layout/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -796,7 +870,14 @@
         getDefaultTemplateLayout: getDefaultTemplateLayout,
         createTemplateLayout: createTemplateLayout,
         updateTemplateLayout: updateTemplateLayout,
-        deleteTemplateLayoutByKey: deleteTemplateLayoutByKey
+        deleteTemplateLayoutByKey: deleteTemplateLayoutByKey,
+
+
+        getContextMenuLayoutList: getContextMenuLayoutList,
+        getContextMenuLayoutByKey: getContextMenuLayoutByKey,
+        createContextMenuLayout: createContextMenuLayout,
+        updateContextMenuLayout: updateContextMenuLayout,
+        deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey
 
 
 

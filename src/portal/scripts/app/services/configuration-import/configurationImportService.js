@@ -774,6 +774,46 @@
 
                             }));
                             break;
+                        case 'ui.contextmenulayout':
+                            resolve(new Promise(function (resolve, reject) {
+
+                                uiRepository.getContextMenuLayoutList({
+                                    filters: {
+                                        name: item.name
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.name === item.name) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolve(uiRepository.updateContextMenuLayout(item.id, item));
+
+                                        } else {
+                                            resolve(uiRepository.createContextMenuLayout(item));
+                                        }
+                                    } else {
+
+                                        resolve(uiRepository.createContextMenuLayout(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
                         case 'ui.editlayout':
                             resolve(new Promise(function (resolve, reject) {
 
@@ -1622,6 +1662,60 @@
                                     } else {
 
                                         resolveLocal(uiRepository.createTemplateLayout(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'ui.contextmenulayout':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                uiRepository.getContextMenuLayoutList({
+                                    filters: {
+                                        name: item.name
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.name === item.name) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    content_type: 'ui.contextmenulayout',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Context Menu Layout already exists: name ' + item.name
+                                                    },
+                                                    mode: 'skip'
+                                                });
+
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(uiRepository.createContextMenuLayout(item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(uiRepository.createContextMenuLayout(item));
 
                                     }
 

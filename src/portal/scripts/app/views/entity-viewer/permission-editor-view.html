@@ -78,12 +78,18 @@
 
     <div layout="row">
 
-        <md-button data-ng-click="vm.save()" class="md-raised md-primary" data-ng-class="{'disabled-btn': !vm.selectedRows.length}">Save</md-button>
+        <md-button data-ng-click="vm.save()" class="md-raised md-primary"
+                   data-ng-class="{'disabled-btn': !vm.selectedRows.length}">Save
+
+            <span data-ng-if="vm.selectedRows.length > 1">for All Objects</span>
+
+        </md-button>
 
 
         <div data-ng-if="vm.entityType == 'portfolio' || vm.entityType == 'account' || vm.entityType == 'transaction-type'">
 
-            <md-button data-ng-click="vm.recalculateTransactionPermissions()" data-ng-class="{'disabled-btn': !vm.isSaved}"
+            <md-button data-ng-click="vm.recalculateTransactionPermissions()"
+                       data-ng-class="{'disabled-btn': !vm.isSaved}"
                        class="md-raised md-primary">Apply new Permissions to Transactions
             </md-button>
 
@@ -91,7 +97,8 @@
 
         <div data-ng-if="vm.entityType == 'instrument-type'">
 
-            <md-button data-ng-click="vm.recalculateInstrumentPermissions()" data-ng-class="{'disabled-btn': !vm.isSaved}"
+            <md-button data-ng-click="vm.recalculateInstrumentPermissions()"
+                       data-ng-class="{'disabled-btn': !vm.isSaved}"
                        class="md-raised md-primary">Apply new Permissions to Instruments
             </md-button>
 
@@ -103,7 +110,8 @@
                        class="md-raised md-primary">Apply new Permissions to Accounts
             </md-button>
 
-            <md-button data-ng-click="vm.recalculateAccountAndTransactionsPermissions()" data-ng-class="{'disabled-btn': !vm.isSaved}"
+            <md-button data-ng-click="vm.recalculateAccountAndTransactionsPermissions()"
+                       data-ng-class="{'disabled-btn': !vm.isSaved}"
                        class="md-raised md-primary">Apply new Permissions to Accounts and Transactions
             </md-button>
 

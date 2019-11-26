@@ -181,15 +181,15 @@
                 ];
             case 'complex-transaction':
                 return [
-                    {
-                        label: 'Actions',
-                        templateUrl: 'views/tabs/complex-transaction/book-transaction-actions-tab-view.html'
-                    },
-                    {
-                        enabled: ['update'],
-                        label: 'Transactions',
-                        templateUrl: 'views/tabs/complex-transaction/book-transaction-transactions-tab-view.html'
-                    }
+                    // {
+                    //     label: 'Actions',
+                    //     templateUrl: 'views/tabs/complex-transaction/book-transaction-actions-tab-view.html'
+                    // },
+                    // {
+                    //     enabled: ['update'],
+                    //     label: 'Transactions',
+                    //     templateUrl: 'views/tabs/complex-transaction/book-transaction-transactions-tab-view.html'
+                    // }
                 ];
             case 'transaction-type':
                 return [

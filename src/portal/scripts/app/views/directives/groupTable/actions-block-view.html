@@ -51,6 +51,11 @@
                                 <span>Save as</span>
                             </md-button>
                         </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="exportLayout($event)" class="g-settings-option-btn" ng-class="{'disabled-btn': !layout.id  }">
+                                <span>Export Layout</span>
+                            </md-button>
+                        </md-menu-item>
                     </md-menu-content>
                 </md-menu>
             </div>
@@ -283,6 +288,11 @@
                             <md-menu-item>
                                 <md-button ng-click="saveAsLayoutList($event)" class="g-settings-option-btn">
                                     <span>Save as</span>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="exportLayout($event)" class="g-settings-option-btn" ng-class="{'disabled-btn': !layout.id  }">
+                                    <span>Export Layout</span>
                                 </md-button>
                             </md-menu-item>
                         </md-menu-content>

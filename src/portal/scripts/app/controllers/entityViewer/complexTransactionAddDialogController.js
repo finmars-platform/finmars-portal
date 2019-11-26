@@ -32,6 +32,8 @@
         vm.entity = {$_isValid: true};
         vm.transactionType = null;
 
+        vm.recalculating = false;
+
         vm.transactionTypes = [];
 
         vm.filters = {
@@ -371,6 +373,8 @@
 
         vm.recalculate = function (item) {
 
+            vm.recalculating = true;
+
             var values = {};
 
             vm.userInputs.forEach(function (item) {
@@ -468,6 +472,8 @@
                     });
 
                     console.log('vm.entity', vm.entity);
+
+                    vm.recalculating = false;
 
                     $scope.$apply();
 
@@ -981,6 +987,8 @@
 
         vm.init = function () {
 
+            console.log("Book Init. Entity", entity);
+
             if (Object.keys(entity).length) { // if copy
 
                 if (!entity.hasOwnProperty('contextData')) {
@@ -1008,6 +1016,18 @@
                 } else {
                     vm.contextData = Object.assign({}, entity.contextData);
                     delete entity.contextData;
+                }
+
+                if (entity.hasOwnProperty('transaction_type')) {
+
+                    vm.transactionTypeId = entity.transaction_type;
+
+                    vm.dataConstructorData = {
+                        entityType: vm.entityType,
+                        instanceId: vm.transactionTypeId
+                    };
+
+                    vm.getFormLayout();
                 }
             }
 
