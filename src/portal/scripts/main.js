@@ -153,6 +153,7 @@ app.controller('LayoutChangesLossWarningDialogController', ['$scope', 'data', '$
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 app.controller('RenameFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameFieldDialogController')]);
+app.controller('ResizeFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/resizeFieldDialogController')]);
 app.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveConfigurationExportLayoutDialogController')]);
 app.controller('ActionsNotificationsSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/actionsNotificationsSettingsDialogController')]);
 app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', 'data', require('./app/controllers/dialogs/exportPdfDialogController')]);

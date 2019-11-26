@@ -589,7 +589,7 @@
                 result.push({
                     action_notes: 'General',
                     key: 'display_expr',
-                    name: 'Complex Transaction Date',
+                    name: 'Display Expression',
                     value: entity.display_expr
                 })
             }
@@ -598,7 +598,7 @@
                 result.push({
                     action_notes: 'General',
                     key: 'date_expr',
-                    name: 'Display Expression',
+                    name: 'Complex Transaction Date',
                     value: entity.date_expr
                 })
             }
@@ -2335,7 +2335,6 @@
 
             vm.layoutAttrs = layoutService.getLayoutAttrs();
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
-
 
         };
 

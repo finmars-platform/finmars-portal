@@ -21,7 +21,8 @@
                     return value;
                     break;
                 case 1:
-                    return parseInt(value, 10);
+                    //return parseInt(value, 10);
+                    return parseFloat(value).toFixed(0);
                     break;
                 case 2:
                     return parseFloat(value).toFixed(1);
@@ -170,7 +171,7 @@
                     return value;
                     break;
                 case 1:
-                    return (parseInt(value) * 100) + '%';
+                    return (parseFloat(value) * 100).toFixed(0) + '%';
                     break;
                 case 2:
                     return (parseFloat(value) * 100).toFixed(1) + '%';
@@ -179,7 +180,7 @@
                     return (parseFloat(value) * 100).toFixed(2) + '%';
                     break;
                 case 4:
-                    return parseInt(value) * 10000 + ' bps';
+                    return (parseFloat(value) * 10000).toFixed(0) + ' bps';
                     break;
                 case 5:
                     return (parseFloat(value) * 10000).toFixed(1) + ' bps';
