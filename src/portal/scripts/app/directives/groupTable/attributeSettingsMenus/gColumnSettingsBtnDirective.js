@@ -59,9 +59,37 @@
 
                         if (res.status === 'agree') {
                             updateColumn();
+                            scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                         }
 
                     });
+
+                };
+
+                scope.resizeColumn = function ($mdMenu, $event) {
+
+                    $mdMenu.close();
+
+                    $mdDialog.show({
+                        controller: 'ResizeFieldDialogController as vm',
+                        templateUrl: 'views/dialogs/resize-field-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: scope.column
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            updateColumn();
+
+                            scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        }
+
+                    })
 
                 };
 

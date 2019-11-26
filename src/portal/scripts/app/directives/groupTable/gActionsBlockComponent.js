@@ -1384,6 +1384,7 @@
                         skipHide: true,
                         locals: {
                             attributeDataService: scope.attributeDataService,
+                            entityViewerEventService: scope.evEventService,
                             data: {
                                 entityType: scope.entityType
                             }

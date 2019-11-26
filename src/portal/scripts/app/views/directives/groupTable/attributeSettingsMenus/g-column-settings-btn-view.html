@@ -19,6 +19,15 @@
                 </md-menu-item>
 
                 <md-menu-item>
+                    <md-button ng-click="resizeColumn($mdMenu, $event)"
+                               class="g-settings-option-btn">
+                        <ng-md-icon icon="visibility_off"
+                                    style="visibility: hidden;"></ng-md-icon>
+                        <span>Resize</span>
+                    </md-button>
+                </md-menu-item>
+
+                <md-menu-item>
 
                     <md-menu>
 
@@ -277,6 +286,15 @@
                     <md-menu-content style="display: none"></md-menu-content>
                 </md-menu-item>
 
+                <md-menu-item>
+                    <md-button ng-click="resizeColumn($mdMenu, $event)"
+                               class="g-settings-option-btn">
+                        <ng-md-icon icon="visibility_off"
+                                    style="visibility: hidden;"></ng-md-icon>
+                        <span>Resize</span>
+                    </md-button>
+                </md-menu-item>
+
             </md-menu-content>
         </md-menu>
     </div>
@@ -301,6 +319,15 @@
                     <span>Rename column</span>
                 </md-button>
                 <md-menu-content style="display: none"></md-menu-content>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button ng-click="resizeColumn($mdMenu, $event)"
+                           class="g-settings-option-btn">
+                    <ng-md-icon icon="visibility_off"
+                                style="visibility: hidden;"></ng-md-icon>
+                    <span>Resize</span>
+                </md-button>
             </md-menu-item>
 
         </md-menu-content>

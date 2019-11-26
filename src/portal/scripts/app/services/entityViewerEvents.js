@@ -10,6 +10,7 @@ module.exports = {
 
     'PAGE_CHANGE': 'PAGE_CHANGE',
     'ADDITIONS_CHANGE': 'ADDITIONS_CHANGE',
+    'DYNAMIC_ATTRIBUTES_CHANGE': 'DYNAMIC_ATTRIBUTES_CHANGE',
 
     'RESIZE_COLUMNS_START': 'RESIZE_COLUMNS_START',
     'RESIZE_COLUMNS_END': 'RESIZE_COLUMNS_END',
@@ -23,7 +24,6 @@ module.exports = {
 
 
     'ACTIVE_OBJECT_CHANGE': 'ACTIVE_OBJECT_CHANGE', // right click on object info
-
     'ACTIVE_OBJECT_FROM_ABOVE_CHANGE': 'ACTIVE_OBJECT_FROM_ABOVE_CHANGE', // for active object for split panel from root entity viewer
 
 

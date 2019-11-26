@@ -774,6 +774,11 @@
 
             });
 
+            vm.entityViewerEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
+                vm.updateAttrs(vm.custom);
+                //$scope.$apply();
+            });
+
         };
 
         init();
