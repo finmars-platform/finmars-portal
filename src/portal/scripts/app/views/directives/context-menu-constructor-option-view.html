@@ -1,0 +1,47 @@
+<div>
+
+    <div layout="row" layout-align="space-between center" class="context-menu-option">
+        <div>
+            {{item.name}}
+        </div>
+
+        <div>
+            <md-button class="md-raised" data-ng-click="addOption($event, item)">
+                <ng-md-icon icon="add">
+                    <md-tooltip md-direction="bottom">Add Sub Option</md-tooltip>
+                </ng-md-icon>
+            </md-button>
+            <md-button class="md-raised" data-ng-click="editOption($event, item)">
+                <ng-md-icon icon="edit">
+                    <md-tooltip md-direction="bottom">Edit Option</md-tooltip>
+                </ng-md-icon>
+            </md-button>
+            <md-button class="md-raised "
+                       data-ng-click="deleteOption($event, parent, $index)">
+                <ng-md-icon icon="close">
+                    <md-tooltip md-direction="bottom">Delete Option</md-tooltip>
+                </ng-md-icon>
+
+            </md-button>
+        </div>
+    </div>
+
+    <div style="padding-left: 80px; background: #f1f1f1;">
+        <div data-ng-repeat="subitem in item.items track by $index"
+             layout="row">
+
+            <div class="context-menu-block">
+                <context-menu-constructor-option
+                        parent="item"
+                        item="subitem"
+                        add-callback="addOption(event, item)"
+                        edit-callback="editOption(event, item)"
+                        delete-callback="deleteOption(event, item, index)"
+                ></context-menu-constructor-option>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
