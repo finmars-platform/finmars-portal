@@ -31,8 +31,6 @@
 
     module.exports = function ($scope, $mdDialog, $state, entityType, entity) {
 
-        console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
-
         var vm = this;
         vm.readyStatus = {content: false, entity: true, permissions: true};
         vm.entityType = entityType;
@@ -53,8 +51,8 @@
         vm.specialRulesReady = true;
 
         vm.attrs = [];
+        var complexTransactionsAttrs = [];
         vm.entityAttrs = [];
-        vm.userInputs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
 
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
@@ -208,6 +206,12 @@
                 })
 
             });
+
+            attributeTypeService.getList('complex-transaction').then(function (data) {
+                complexTransactionsAttrs = data.results;
+            });
+
+
         };
 
         vm.checkReadyStatus = function () {
@@ -384,7 +388,7 @@
                 result.push({
                     action_notes: 'General',
                     key: 'display_expr',
-                    name: 'Complex Transaction Date',
+                    name: 'Display Expression',
                     value: entity.display_expr
                 })
             }
@@ -393,7 +397,7 @@
                 result.push({
                     action_notes: 'General',
                     key: 'date_expr',
-                    name: 'Display Expression',
+                    name: 'Complex Transaction Date',
                     value: entity.date_expr
                 })
             }
@@ -409,6 +413,165 @@
 
 
             return result;
+
+        };
+
+        var getUserInputs = function (inputs) {
+
+            var userInputs = [];
+
+            inputs.forEach(function (input) {
+
+                var input_value_type = input.value_type;
+                if (input.value_type === 100) {
+                    input_value_type = 'field'
+                }
+
+                var contentType;
+
+                if (input.content_type && input.content_type !== undefined) {
+
+                    contentType = input.content_type.split('.')[1];
+
+                    if (contentType === 'eventclass') {
+                        contentType = 'event_class';
+                    }
+
+                    if (contentType === 'notificationclass') {
+                        contentType = 'notification_class';
+                    }
+
+                    if (contentType === 'accrualcalculationmodel') {
+                        contentType = 'accrual_calculation_model';
+                    }
+
+                    if (contentType === 'pricingpolicy') {
+                        contentType = 'pricing_policy';
+                    }
+
+                } else {
+
+                    contentType = input.name.split(' ').join('_').toLowerCase();
+
+                }
+
+                userInputs.push({
+                    key: contentType,
+                    name: input.name,
+                    reference_table: input.reference_table,
+                    verbose_name: input.verbose_name,
+                    content_type: input.content_type,
+                    value_type: input_value_type
+                });
+
+            });
+
+            return userInputs;
+
+        };
+
+        var doNotUseForEditLayoutAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
+            'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
+            'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
+            'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
+            'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
+            'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6','user_number_7',
+            'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
+            'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
+            'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
+
+        var createDefaultEditLayout = function (ttypeData) {
+
+            var instanceId = ttypeData.id;
+            var elFields = [];
+            var elAttrIndex = 0;
+            var complTransactionAttrs = metaService.getEntityAttrs('complex-transaction');
+
+            var editLayoutEntityAttrs = complTransactionAttrs.filter(function (entity) {
+                return doNotUseForEditLayoutAttrs.indexOf(entity.key) === -1;
+            });
+            var userInputs = getUserInputs(ttypeData.inputs);
+
+            var addFields = function (attrType) {
+
+                var attributes = [];
+                var attributeClass = '';
+
+                switch (attrType) {
+                    case 'attrs':
+                        attributes = complexTransactionsAttrs;
+                        attributeClass = 'attr';
+                        break;
+                    case 'entityAttrs':
+                        attributes = editLayoutEntityAttrs;
+                        attributeClass = 'entityAttr';
+                        break;
+                    case 'userInputs':
+                        attributes = userInputs;
+                        attributeClass = 'userInput';
+                        break;
+                    case 'layoutAttrs':
+                        attributes = vm.layoutAttrs;
+                        attributeClass = 'decorationAttr';
+                        break;
+                }
+
+                attributes.forEach(function (attribute) {
+
+                    if (attribute.key !== 'object_permissions_user' &&
+                        attribute.key !== 'object_permissions_group') {
+
+                        elAttrIndex += 1;
+
+                        var fieldData = {
+                            "type": "field",
+                            "row": elAttrIndex,
+                            "attribute": {
+                                "value_type": attribute.value_type,
+                                "content_type": attribute.content_type,
+                                "editable": true,
+                                "key": attribute.key,
+                                "name": attribute.name
+                            },
+                            "column": 1,
+                            "attribute_class": attributeClass,
+                            "editable": true,
+                            "name": attribute.name,
+                            "colspan": 1
+                        };
+
+                        if (attrType === 'attrs') {
+                            fieldData.attribute.id = attribute.id;
+                        }
+
+                        elFields.push(fieldData);
+
+                    }
+
+                });
+
+            };
+
+            addFields("attrs");
+            addFields("entityAttrs");
+            addFields("userInputs");
+            addFields("layoutAttrs");
+
+            var editLayoutData = {
+                "data": [
+                    {
+                        "layout": {
+                            "rows": elAttrIndex,
+                            "columns": 1,
+                            "fields": elFields
+                        },
+                        "id": 1,
+                        "name": "Transaction Inputs"
+                    }
+                ]
+            };
+
+            return uiService.updateEditLayoutByInstanceId('complex-transaction', instanceId, editLayoutData);
 
         };
 
@@ -450,11 +613,13 @@
 
                     entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
 
-                        vm.processing = false;
+                        createDefaultEditLayout(data).then(function () {
+                            vm.processing = false;
 
-                        $scope.$apply();
+                            $scope.$apply();
 
-                        resolve();
+                            resolve();
+                        });
 
                     }).catch(function (data) {
 
@@ -1166,35 +1331,6 @@
 
                 setDefaultValueForRelation(item, propertyName, fieldName);
 
-                /*vm.loadRelation(relationType).then(function (data) {
-
-                    var defaultPropertyName = 'name';
-                    if (fieldName === 'price_download_scheme') {
-                        defaultPropertyName = 'scheme_name';
-                    }
-
-                    vm.relationItems[relationType].forEach(function (relation) {
-
-                        if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
-                            item[propertyName][fieldName] = relation.id;
-
-                            item[propertyName][fieldName + '_object'] = {};
-                            item[propertyName][fieldName + '_object']['name'] = relation[defaultPropertyName];
-
-                        }
-
-                    });
-
-                    $scope.$apply(function () {
-                        setTimeout(function () {
-                            $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                                ev.stopPropagation();
-                            });
-                        }, 100);
-                    });
-
-                });*/
-
             }
 
         };
@@ -1686,11 +1822,7 @@
                                 if (action[key].hasOwnProperty(actionItemKey + '_input')) {
 
                                     if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
-                                        /*if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
-                                            action[key][actionItemKey + '_toggle'] = true;
 
-                                            setDefaultValueForRelation(action, key, actionItemKey); // set default values for 'relation' fields
-                                        }*/
                                         action[key][actionItemKey + '_toggle'] = true;
 
                                         setDefaultValueForRelation(action, key, actionItemKey);

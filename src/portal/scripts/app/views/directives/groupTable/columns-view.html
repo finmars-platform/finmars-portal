@@ -338,6 +338,15 @@
                                             </md-button>
                                         </md-menu-item>
 
+                                        <md-menu-item>
+                                            <md-button ng-click="resizeColumn(column, $mdMenu, $event)"
+                                                       class="g-settings-option-btn">
+                                                <ng-md-icon icon="visibility_off"
+                                                            style="visibility: hidden;"></ng-md-icon>
+                                                <span>Resize</span>
+                                            </md-button>
+                                        </md-menu-item>
+
                                         <md-menu-item data-ng-if="checkReportRemoveButton(column, $index)">
                                             <md-button ng-click="removeColumn(column)"
                                                        class="g-settings-option-btn">
@@ -380,6 +389,15 @@
                                                 </md-button>
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
+                                        </md-menu-item>
+
+                                        <md-menu-item>
+                                            <md-button ng-click="resizeColumn(column, $mdMenu, $event)"
+                                                       class="g-settings-option-btn">
+                                                <ng-md-icon icon="visibility_off"
+                                                            style="visibility: hidden;"></ng-md-icon>
+                                                <span>Resize</span>
+                                            </md-button>
                                         </md-menu-item>
 
                                         <md-menu-item data-ng-if="!checkForExistingGroupingColumn(column.key)">
@@ -426,6 +444,15 @@
                                                 </md-button>
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
+                                        </md-menu-item>
+
+                                        <md-menu-item>
+                                            <md-button ng-click="resizeColumn(column, $mdMenu, $event)"
+                                                       class="g-settings-option-btn">
+                                                <ng-md-icon icon="visibility_off"
+                                                            style="visibility: hidden;"></ng-md-icon>
+                                                <span>Resize</span>
+                                            </md-button>
                                         </md-menu-item>
 
                                         <md-menu-item data-ng-if="checkForExistingGroupingColumn(column.key)">

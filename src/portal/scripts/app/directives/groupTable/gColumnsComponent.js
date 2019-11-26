@@ -23,6 +23,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.columns = scope.evDataService.getColumns();
+
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
                 scope.groups = scope.evDataService.getGroups();
@@ -267,6 +268,30 @@
                         locals: {
                             data: column
                         }
+                    })
+
+                };
+
+                scope.resizeColumn = function (column, $mdMenu, $event) {
+
+                    $mdMenu.close();
+
+                    $mdDialog.show({
+                        controller: 'ResizeFieldDialogController as vm',
+                        templateUrl: 'views/dialogs/resize-field-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: column
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        }
+
                     })
 
                 };

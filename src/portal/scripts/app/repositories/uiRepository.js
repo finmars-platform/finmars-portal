@@ -299,11 +299,11 @@
                 },
                 "grouping": [],
                 "columns": [
-                    {
+                    /*{
                         "value_type": 10,
                         "name": "Name",
                         "key": "name"
-                    }
+                    }*/
                 ],
                 "filters": [],
                 "additions": {},

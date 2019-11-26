@@ -217,19 +217,18 @@
                         if (scope.tab.layout.fields[i].row === scope.item.row &&
                             scope.tab.layout.fields[i].column === scope.item.column) {
 
-                            scope.tab.layout.fields[i].attribute_class = 'userInput';
-
-                            if (scope.item.attribute.hasOwnProperty('id')) {
-                                scope.tab.layout.fields[i].attribute_class = 'attr';
-                                scope.tab.layout.fields[i].id = scope.item.attribute.id;
-                            }
-
-                            if (entityAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
-                                scope.tab.layout.fields[i].attribute_class = 'entityAttr';
-                            }
-
                             if (layoutAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
                                 scope.tab.layout.fields[i].attribute_class = 'decorationAttr';
+
+                            } else if (entityAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
+                                scope.tab.layout.fields[i].attribute_class = 'entityAttr';
+
+                            } else if (scope.item.attribute.id) {
+                                scope.tab.layout.fields[i].attribute_class = 'attr';
+                                scope.tab.layout.fields[i].id = scope.item.attribute.id;
+
+                            } else {
+                                scope.tab.layout.fields[i].attribute_class = 'userInput';
                             }
 
                             if (scope.item.options) {
