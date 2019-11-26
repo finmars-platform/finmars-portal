@@ -39,18 +39,28 @@
             var keys = [];
 
             if (options.hasOwnProperty('filters')) {
+
                 keys = Object.keys(options.filters);
+
                 keys.forEach(function (keysItem) {
+
                     if (options.filters[keysItem]) {
                         var filterItems = options.filters[keysItem];
                         if (typeof filterItems === 'string' || typeof filterItems === 'number') {
                             url = url + '&' + entityPluralToSingular(keysItem) + '=' + filterItems;
                         } else {
-                            filterItems.map(function (filterItem, index) {
-                                url = url + '&' + entityPluralToSingular(keysItem) + '=' + filterItem;
-                            })
+
+                            if (typeof filterItems === 'boolean') {
+                                url = url + '&' + keysItem + '=' + filterItems;
+                            } else {
+
+                                filterItems.map(function (filterItem, index) {
+                                    url = url + '&' + entityPluralToSingular(keysItem) + '=' + filterItem;
+                                })
+                            }
                         }
                     }
+
                 })
             }
 

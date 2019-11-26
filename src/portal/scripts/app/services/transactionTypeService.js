@@ -21,6 +21,10 @@
         return transactionTypeRepository.getByKey(id);
     };
 
+    var getByKeyLight = function (id) {
+        return transactionTypeRepository.getByKeyLight(id);
+    };
+
     var create = function (transaction) {
         return transactionTypeRepository.create(transaction);
     };
@@ -66,6 +70,7 @@
         getListLight: getListLight,
         getListLightWithInputs: getListLightWithInputs,
         getByKey: getByKey,
+        getByKeyLight: getByKeyLight,
         create: create,
         update: update,
         deleteByKey: deleteByKey,

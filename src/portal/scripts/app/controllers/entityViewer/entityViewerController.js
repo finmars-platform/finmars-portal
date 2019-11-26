@@ -95,6 +95,7 @@
                         }).then(function (res) {
 
                             vm.entityViewerDataService.setActiveObjectAction(null);
+                            vm.entityViewerDataService.setActiveObjectActionData(null);
 
                             if (res.status === 'agree') {
 
@@ -141,6 +142,7 @@
                             }).then(function (res) {
 
                                 vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                 if (res && res.res === 'agree') {
 
@@ -212,6 +214,7 @@
                                 }).then(function (res) {
 
                                     vm.entityViewerDataService.setActiveObjectAction(null);
+                                    vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                     if (res && res.res === 'agree') {
 
@@ -278,6 +281,7 @@
                                 }).then(function (res) {
 
                                     vm.entityViewerDataService.setActiveObjectAction(null);
+                                    vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                     if (res && res.res === 'agree') {
 
@@ -351,6 +355,7 @@
                         }).then(function (res) {
 
                             vm.entityViewerDataService.setActiveObjectAction(null);
+                            vm.entityViewerDataService.setActiveObjectActionData(null);
 
                             if (res && res.res === 'agree') {
 

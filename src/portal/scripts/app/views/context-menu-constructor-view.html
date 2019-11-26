@@ -1,0 +1,64 @@
+<div class="context-menu-constructor">
+
+    <div data-ng-if="vm.readyStatus.data && vm.readyStatus.transactionTypes">
+
+        <div class="p-24">
+
+            <div>
+
+                <md-input-container style="width: 200px;">
+                    <label for="">Context Menu Layout Name</label>
+                    <input type="text" data-ng-model="vm.layout.name">
+                </md-input-container>
+
+            </div>
+
+            <div class="context-menu-holder">
+
+                <div class="context-menu-root-title">Root</div>
+
+                <div class="context-menu-block">
+
+                    <div data-ng-repeat="item in vm.layout.data.menu.root.items track by $index"
+
+                         layout="row">
+
+                        <context-menu-constructor-option item="item"
+                                                         parent="vm.layout.data.menu.root"
+                                                         add-callback="vm.addOption(event, item)"
+                                                         edit-callback="vm.editOption(event, item)"
+                                                         delete-callback="vm.deleteOption(event, item, index)"
+                        ></context-menu-constructor-option>
+
+                    </div>
+
+
+                </div>
+                <div>
+                    <md-button class="md-raised" data-ng-click="vm.addOption($event, vm.layout.data.menu.root)">
+                        Add Option
+                    </md-button>
+                </div>
+
+            </div>
+
+            <div>
+
+                <md-button ng-click="vm.saveLayout($event)" ng-class="{'disabled-btn': !vm.layout.name}"
+                           class="md-raised">
+                    Save
+                </md-button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data || !vm.readyStatus.transactionTypes">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+            <md-progress-circular md-mode="indeterminate" md-diameter="120"></md-progress-circular>
+        </div>
+    </div>
+
+</div>

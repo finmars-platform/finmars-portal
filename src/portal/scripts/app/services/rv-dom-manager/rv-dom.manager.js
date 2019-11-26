@@ -6,6 +6,9 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
 
+    var transactionTypeService = require('../../services/transactionTypeService');
+    var uiService = require('../../services/uiService');
+
     var RvScrollManager = require('./rv-scroll.manager');
 
     var rvScrollManager = new RvScrollManager();
@@ -735,178 +738,452 @@
 
     };
 
-    var initContextMenuEventDelegation = function (elem, evDataService, evEventService) {
+    var getTransactionTypesMenu = function (ttypes, objectId, parentGroupHashId) {
 
-        elem.addEventListener('contextmenu', function (ev) {
+        var result = '';
 
-            var objectId;
-            var parentGroupHashId;
+        result = result + '<div class="ev-dropdown-option ev-dropdown-menu-holder"><div class="ev-dropdown-submenu">';
 
-            if (event.target.offsetParent.classList.contains('ev-viewport')) {
+        result = result + '<div class="ev-dropdown-option" ' +
+            ' data-ev-dropdown-action="book_transaction"' +
+            ' data-object-id="' + objectId + '"' +
+            ' data-parent-group-hash-id="' + parentGroupHashId + '">Open Booking Manager </div>';
 
-                objectId = event.target.dataset.objectId;
-                parentGroupHashId = event.target.dataset.parentGroupHashId;
+        ttypes.forEach(function (item) {
 
-            } else {
+            result = result + '<div class="ev-dropdown-option" ' +
+                ' data-ev-dropdown-action="book_transaction_specific"' +
+                ' data-ev-dropdown-action-data-id="' + item.id + '"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + '</div>';
 
-                if (event.target.offsetParent.classList.contains('g-row')) {
-
-                    objectId = event.target.offsetParent.dataset.objectId;
-                    parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
-
-                }
-
-            }
-
-            console.log('initContextMenuEventDelegation.event', event);
-
-            console.log('initContextMenuEventDelegation.objectId', objectId);
-
-            if (objectId) {
-
-                ev.preventDefault();
-                ev.stopPropagation();
-
-                clearDropdowns();
-
-                var popup = document.createElement('div');
-
-                clearActivated(evDataService);
-
-                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                obj.___is_activated = true;
-
-                evDataService.setObject(obj);
-
-                console.log('obj', obj);
-
-
-                popup.id = 'dropdown-' + objectId;
-                popup.classList.add('ev-dropdown');
-
-                popup.innerHTML = '<div>';
-
-
-                if (obj['instrument.id']) {
-                    popup.innerHTML = popup.innerHTML + '<div>' +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="edit_instrument"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
-                }
-
-                if (obj['account.id']) {
-                    popup.innerHTML = popup.innerHTML +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="edit_account"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Account</div>'
-                }
-
-                if (obj['portfolio.id']) {
-                    popup.innerHTML = popup.innerHTML +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="edit_portfolio"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Portfolio</div>';
-                }
-
-                if (obj['instrument.id']) {
-                    popup.innerHTML = popup.innerHTML +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="edit_price"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Price</div>'
-                }
-
-                if (obj['currency.id']) {
-                    popup.innerHTML = popup.innerHTML +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="edit_fx_rate"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit FX Rate</div>'
-                }
-
-                if(obj['item_type'] === 1) { // item_type: 1 == Instrument
-
-                    popup.innerHTML = popup.innerHTML +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="edit_pricing_currency"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Pricing FX Rate</div>';
-
-                    popup.innerHTML = popup.innerHTML +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="edit_accrued_currency"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Accrued FX Rate</div>';
-
-                }
-
-                if(obj['item_type'] === 2) { // item_type: 1 == Instrument
-
-                    popup.innerHTML = popup.innerHTML +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="edit_currency"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Currency</div>';
-                }
-
-                popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="book_transaction"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Book Transaction</div>' +
-                    '</div>';
-
-                popup.style.position = 'absolute';
-                popup.style.left = event.pageX + 'px';
-                popup.style.top = event.pageY + 'px';
-
-                document.body.appendChild(popup);
-
-                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                return false;
-
-            }
-
-        }, false);
-
-        window.addEventListener('contextmenu', function () {
-            clearDropdowns();
         });
 
-        window.addEventListener('click', function (event) {
+        result = result + '</div></div>';
 
-            var objectId = event.target.dataset.objectId;
-            var parentGroupHashId = event.target.dataset.parentGroupHashId;
-            var dropdownAction = event.target.dataset.evDropdownAction;
+        console.log('getTransactionTypesMenu result', result);
 
-            if (objectId && dropdownAction && parentGroupHashId) {
+        return result
 
-                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+    };
 
-                if (!obj) {
-                    obj = {}
+    var checkContextMenuOptionVisibility = function (obj, option) {
+
+        if (obj['instrument.id'] && option.action === 'edit_instrument') {
+            return true;
+        }
+
+        if (obj['account.id'] && option.action === 'edit_account') {
+            return true;
+        }
+
+        if (obj['portfolio.id'] && option.action === 'edit_portfolio') {
+            return true;
+        }
+
+        if (obj['instrument.id'] && option.action === 'edit_price') {
+            return true;
+        }
+
+        if (obj['currency.id'] && option.action === 'edit_fx_rate') {
+            return true;
+        }
+
+        if (obj['item_type'] === 1 && option.action === 'edit_pricing_currency') { // item_type = 1 - instrument
+            return true;
+        }
+
+        if (obj['item_type'] === 1 && option.action === 'edit_accrued_currency') { // item_type = 1 - instrument
+            return true;
+        }
+
+        if (obj['item_type'] === 2 && option.action === 'edit_currency') { // item_type = 2 - currency
+            return true;
+        }
+
+        if (option.action === 'book_transaction_specific') {
+            return true;
+        }
+
+        if (option.action === 'book_transaction') {
+            return true;
+        }
+
+        return false;
+    };
+
+    var getContextMenuTtypeId = function (ttypes, option) {
+
+        var result = null;
+
+        console.log('option.action_data', option.action_data);
+        console.log('option.ttypes', ttypes);
+
+        ttypes.forEach(function (item) {
+
+            if (item.user_code === option.action_data) {
+
+                result = item.id
+
+            }
+
+        });
+
+        console.log('option.result', result);
+
+        return result
+
+    };
+
+    var generateContextMenuItems = function (parentOption, ttypes, obj, objectId, parentGroupHashId) {
+
+        var result = '<div class="ev-dropdown-submenu">';
+
+        parentOption.items.forEach(function (item) {
+
+            if (checkContextMenuOptionVisibility(obj, item)) {
+
+                var ttype_specific_attr = '';
+                var additional_text = '';
+                var is_disabled = '';
+
+                if (item.action === 'book_transaction_specific') {
+                    item.id = getContextMenuTtypeId(ttypes, item);
+
+                    if (item.id) {
+                        ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
+                    } else {
+                        additional_text = ' (Not Found)';
+                        is_disabled = 'disabled-btn';
+                    }
                 }
 
-                obj.event = event;
+                result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : ' ') + '" ' +
+                    ' data-ev-dropdown-action="' + item.action + '"' +
+                    ttype_specific_attr +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
 
-                evDataService.setActiveObject(obj);
-                evDataService.setActiveObjectAction(dropdownAction);
 
-                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                if (item.items && item.items.length) {
 
-                clearDropdowns();
+                    result = result + generateContextMenuItems(item, ttypes, obj, objectId, parentGroupHashId)
 
-            } else {
+                }
 
-                if (!event.target.classList.contains('ev-dropdown-option')) {
-                    clearDropdowns();
+                result = result + '</div>';
+
+            }
+
+        });
+
+        result = result + '</div>';
+
+        return result
+
+    };
+
+    var generateContextMenu = function (menu, ttypes, obj, objectId, parentGroupHashId) {
+
+        var result = '<div>';
+
+        menu.root.items.forEach(function (item) {
+
+            if (checkContextMenuOptionVisibility(obj, item)) {
+
+                var ttype_specific_attr = '';
+                var additional_text = '';
+                var is_disabled = '';
+
+                if (item.action === 'book_transaction_specific') {
+                    item.id = getContextMenuTtypeId(ttypes, item);
+
+                    if (item.id) {
+                        ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
+                    } else {
+                        additional_text = ' (Not Found)'
+                    }
+
+                }
+
+                result = result + '<div class="ev-dropdown-option ' + is_disabled +  (item.items ? ' ev-dropdown-menu-holder' : ' ') + '"' +
+                    ' data-ev-dropdown-action="' + item.action + '"' +
+
+                    ttype_specific_attr +
+
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
+
+                if (item.items && item.items.length) {
+
+                    result = result + generateContextMenuItems(item, ttypes, obj, objectId, parentGroupHashId)
+
                 }
 
             }
+
+
+            result = result + '</div>'
+
+        });
+
+        result = result + '</div>';
+
+        console.log("generateContextMenu.result", result);
+
+        return result;
+
+    };
+
+    var initContextMenuEventDelegation = function (elem, evDataService, evEventService) {
+
+        transactionTypeService.getListLight({
+            pageSize: 1000
+        }).then(function (data) {
+
+            uiService.getContextMenuLayoutList().then(function (contextMenuData) {
+
+                var contextMenu = {};
+
+                if (contextMenuData.results.length) {
+
+                    var contextMenuLayout = contextMenuData.results[0];
+                    contextMenu = contextMenuLayout.data.menu
+
+                } else {
+
+                    contextMenu = {
+                        root: {
+                            items: [
+                                {
+                                    name: 'Edit Instrument',
+                                    action: 'edit_instrument'
+                                },
+                                {
+                                    name: 'Edit Account',
+                                    action: 'edit_account'
+                                },
+                                {
+                                    name: 'Edit Portfolio',
+                                    action: 'edit_portfolio'
+                                },
+                                {
+                                    name: 'Edit Price',
+                                    action: 'edit_price'
+                                },
+                                {
+                                    name: 'Edit FX Rate',
+                                    action: 'edit_fx_rate'
+                                },
+                                {
+                                    name: 'Edit Pricing FX Rate',
+                                    action: 'edit_pricing_currency'
+                                },
+                                {
+                                    name: 'Edit Accrued FX Rate',
+                                    action: 'edit_accrued_currency'
+                                },
+                                {
+                                    name: 'Edit Currency',
+                                    action: 'edit_currency'
+                                },
+                                {
+                                    name: 'Open Book Manager',
+                                    action: 'book_transaction'
+                                }
+                            ]
+                        }
+                    };
+                }
+
+                var ttypes = data.results;
+
+
+                elem.addEventListener('contextmenu', function (ev) {
+
+                    var objectId;
+                    var parentGroupHashId;
+
+                    if (event.target.offsetParent.classList.contains('ev-viewport')) {
+
+                        objectId = event.target.dataset.objectId;
+                        parentGroupHashId = event.target.dataset.parentGroupHashId;
+
+                    } else {
+
+                        if (event.target.offsetParent.classList.contains('g-row')) {
+
+                            objectId = event.target.offsetParent.dataset.objectId;
+                            parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
+
+                        }
+
+                    }
+
+                    console.log('initContextMenuEventDelegation.event', event);
+
+                    console.log('initContextMenuEventDelegation.objectId', objectId);
+
+                    if (objectId) {
+
+                        ev.preventDefault();
+                        ev.stopPropagation();
+
+                        clearDropdowns();
+
+                        var popup = document.createElement('div');
+
+                        clearActivated(evDataService);
+
+                        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                        obj.___is_activated = true;
+
+                        evDataService.setObject(obj);
+
+                        console.log('obj', obj);
+
+
+                        popup.id = 'dropdown-' + objectId;
+                        popup.classList.add('ev-dropdown');
+
+                        popup.innerHTML = generateContextMenu(contextMenu, ttypes, obj, objectId, parentGroupHashId)
+
+                        // popup.innerHTML = '<div>';
+                        //
+                        //
+                        // if (obj['instrument.id']) {
+                        //     popup.innerHTML = popup.innerHTML + '<div>' +
+                        //         '<div class="ev-dropdown-option"' +
+                        //         ' data-ev-dropdown-action="edit_instrument"' +
+                        //         ' data-object-id="' + objectId + '"' +
+                        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
+                        // }
+                        //
+                        // if (obj['account.id']) {
+                        //     popup.innerHTML = popup.innerHTML +
+                        //         '<div class="ev-dropdown-option"' +
+                        //         ' data-ev-dropdown-action="edit_account"' +
+                        //         ' data-object-id="' + objectId + '"' +
+                        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Account</div>'
+                        // }
+                        //
+                        // if (obj['portfolio.id']) {
+                        //     popup.innerHTML = popup.innerHTML +
+                        //         '<div class="ev-dropdown-option"' +
+                        //         ' data-ev-dropdown-action="edit_portfolio"' +
+                        //         ' data-object-id="' + objectId + '"' +
+                        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Portfolio</div>';
+                        // }
+                        //
+                        // if (obj['instrument.id']) {
+                        //     popup.innerHTML = popup.innerHTML +
+                        //         '<div class="ev-dropdown-option"' +
+                        //         ' data-ev-dropdown-action="edit_price"' +
+                        //         ' data-object-id="' + objectId + '"' +
+                        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Price</div>'
+                        // }
+                        //
+                        // if (obj['currency.id']) {
+                        //     popup.innerHTML = popup.innerHTML +
+                        //         '<div class="ev-dropdown-option"' +
+                        //         ' data-ev-dropdown-action="edit_fx_rate"' +
+                        //         ' data-object-id="' + objectId + '"' +
+                        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit FX Rate</div>'
+                        // }
+                        //
+                        // if (obj['item_type'] === 1) { // item_type: 1 == Instrument
+                        //
+                        //     popup.innerHTML = popup.innerHTML +
+                        //         '<div class="ev-dropdown-option"' +
+                        //         ' data-ev-dropdown-action="edit_pricing_currency"' +
+                        //         ' data-object-id="' + objectId + '"' +
+                        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Pricing FX Rate</div>';
+                        //
+                        //     popup.innerHTML = popup.innerHTML +
+                        //         '<div class="ev-dropdown-option"' +
+                        //         ' data-ev-dropdown-action="edit_accrued_currency"' +
+                        //         ' data-object-id="' + objectId + '"' +
+                        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Accrued FX Rate</div>';
+                        //
+                        // }
+                        //
+                        // if (obj['item_type'] === 2) { // item_type: 1 == Instrument
+                        //
+                        //     popup.innerHTML = popup.innerHTML +
+                        //         '<div class="ev-dropdown-option"' +
+                        //         ' data-ev-dropdown-action="edit_currency"' +
+                        //         ' data-object-id="' + objectId + '"' +
+                        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Currency</div>';
+                        // }
+                        //
+                        // popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option ev-dropdown-menu-holder">Book Transaction' + getTransactionTypesMenu(ttypes, objectId, parentGroupHashId) + '</div>' +
+                        //     '</div>';
+
+
+                        popup.style.position = 'absolute';
+                        popup.style.left = event.pageX + 'px';
+                        popup.style.top = event.pageY + 'px';
+
+                        document.body.appendChild(popup);
+
+                        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                        return false;
+
+                    }
+
+                }, false);
+
+                window.addEventListener('contextmenu', function () {
+                    clearDropdowns();
+                });
+
+                window.addEventListener('click', function (event) {
+
+                    var objectId = event.target.dataset.objectId;
+                    var parentGroupHashId = event.target.dataset.parentGroupHashId;
+                    var dropdownAction = event.target.dataset.evDropdownAction;
+
+                    var dropdownActionData = {};
+
+                    console.log('event.target.dataset', event.target.dataset);
+
+                    if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
+                        dropdownActionData.id = event.target.dataset.evDropdownActionDataId
+                    }
+
+                    if (objectId && dropdownAction && parentGroupHashId) {
+
+                        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                        if (!obj) {
+                            obj = {}
+                        }
+
+                        obj.event = event;
+
+                        console.log('dropdownActionData', dropdownActionData);
+
+                        evDataService.setActiveObject(obj);
+                        evDataService.setActiveObjectAction(dropdownAction);
+                        evDataService.setActiveObjectActionData(dropdownActionData);
+
+                        evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                        clearDropdowns();
+
+                    } else {
+
+                        if (!event.target.classList.contains('ev-dropdown-option')) {
+                            clearDropdowns();
+                        }
+
+                    }
+
+                });
+
+            });
 
         });
 

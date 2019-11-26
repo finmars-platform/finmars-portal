@@ -38,6 +38,18 @@
             controller: 'DashboardLayoutManagerController as vm'
         });
 
+        $stateProvider.state('app.context-menu-constructor', {
+            url: '/context-menu-constructor/:id',
+            templateUrl: 'views/context-menu-constructor-view.html',
+            controller: 'ContextMenuConstructorController as vm'
+        });
+
+        $stateProvider.state('app.context-menu-layout-manager', {
+            url: '/context-menu-layouts',
+            templateUrl: 'views/context-menu-layout-manager-view.html',
+            controller: 'ContextMenuLayoutManagerController as vm'
+        });
+
 
 
         $stateProvider.state('app.home', {

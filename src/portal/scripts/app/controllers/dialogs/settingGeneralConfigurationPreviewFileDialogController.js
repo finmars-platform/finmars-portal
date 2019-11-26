@@ -278,6 +278,8 @@
                     return "Dashboard layouts";
                 case 'ui.templatelayout':
                     return 'Template Layout';
+                case 'ui.contextmenulayout':
+                    return 'Context Menu Layout';
                 case 'ui.bookmark':
                     return "Bookmarks";
                 case 'reference_tables.referencetable':
