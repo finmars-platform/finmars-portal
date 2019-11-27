@@ -54,6 +54,8 @@
         vm.lastAccountType = null;
         vm.lastInstrumentType = null;
 
+        vm.canManagePermissions = false;
+
         vm.generateAttributesFromLayoutFields = function () {
 
             var tabResult;
@@ -153,6 +155,11 @@
 
                 }
 
+                if (vm.currentMember && vm.currentMember.is_admin) {
+                    vm.canManagePermissions = true;
+                }
+
+
                 $scope.$apply();
 
             });
@@ -193,6 +200,8 @@
             // console.log('vm.groups', vm.groups);
             // console.log('vm.currentMember.groups', vm.currentMember.groups);
 
+
+
             vm.groups.forEach(function (group) {
 
                 if (group.permission_table && group.permission_table.data) {
@@ -209,6 +218,8 @@
 
                         if (table.creator_manage) {
                             group.objectPermissions.manage = true;
+
+                            vm.canManagePermissions  = true;
                         }
 
                         if (table.creator_change) {
@@ -224,6 +235,8 @@
 
                         if (table.other_manage) {
                             group.objectPermissions.manage = true;
+
+                            vm.canManagePermissions  = true;
                         }
 
                         if (table.other_change) {

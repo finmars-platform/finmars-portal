@@ -7,6 +7,7 @@
 
     var uiService = require('../services/uiService');
     var usersService = require('../services/usersService');
+    var usersGroupService = require('../services/usersGroupService');
 
     var configurationImportService = require('../services/configuration-import/configurationImportService');
 
@@ -14,7 +15,7 @@
 
         var vm = this;
 
-        vm.readyStatus = {content: false};
+        vm.readyStatus = {content: false, member: false, groups: false};
 
         vm.currentStep = 1;
         vm.totalSteps = 2;
@@ -73,14 +74,36 @@
 
         vm.getMember = function () {
 
-            usersService.getOwnMemberSettings().then(function (data) {
-                vm.member = data.results[0];
+            return usersService.getMyCurrentMember().then(function (data) {
+
+                vm.currentMember = data;
+
+                usersService.getOwnMemberSettings().then(function (data) {
+                    vm.member = data.results[0];
 
 
-                console.log('vm.member', vm.member);
+                    console.log('vm.member', vm.member);
 
-                vm.readyStatus.member = true;
-                $scope.$apply();
+                    vm.readyStatus.member = true;
+                    $scope.$apply();
+                });
+
+            });
+
+        };
+
+        vm.getGroupList = function () {
+
+            return usersGroupService.getList().then(function (data) {
+
+                vm.groups = data.results.filter(function (item) {
+
+                    return item.role === 2;
+
+                });
+
+                vm.readyStatus.groups = true;
+
             });
 
         };
@@ -138,6 +161,9 @@
             //
             // });
 
+            settings.member = vm.currentMember;
+            settings.groups = vm.groups;
+
             configurationImportService.importConfiguration(items, settings).then(function () {
 
                 $state.go('app.home');
@@ -149,6 +175,7 @@
         vm.init = function () {
 
             vm.getMember();
+            vm.getGroupList();
             vm.getList();
 
         };

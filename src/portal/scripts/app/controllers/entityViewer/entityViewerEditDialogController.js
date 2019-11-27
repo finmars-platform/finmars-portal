@@ -61,6 +61,7 @@
         vm.currentMember = null;
 
         vm.hasEditPermission = false;
+        vm.canManagePermissions = false;
 
         vm.generateAttributesFromLayoutFields = function () {
 
@@ -165,6 +166,7 @@
 
                 if (vm.currentMember && vm.currentMember.is_admin) {
                     vm.hasEditPermission = true;
+                    vm.canManagePermissions = true;
                 }
 
                 vm.readyStatus.permissions = true;
@@ -196,6 +198,9 @@
 
                                 if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
                                     group.objectPermissions.manage = true;
+
+                                    vm.canManagePermissions = true;
+
                                 }
                                 if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
                                     group.objectPermissions.change = true;

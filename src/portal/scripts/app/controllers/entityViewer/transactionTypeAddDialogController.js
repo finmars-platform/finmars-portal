@@ -67,20 +67,45 @@
 
         vm.formIsFilled = false;
 
+        vm.canManagePermissions = false;
+
         var ecosystemDefaultData = {};
 
         vm.loadPermissions = function () {
 
             var promises = [];
 
+            promises.push(vm.getCurrentMember());
             promises.push(vm.getGroupList());
 
             Promise.all(promises).then(function (data) {
 
                 vm.readyStatus.permissions = true;
+
+                vm.setPermissionsDefaults();
+
+                if (vm.currentMember && vm.currentMember.is_admin) {
+                    vm.canManagePermissions = true;
+                }
+
                 $scope.$apply();
             });
 
+        };
+
+        vm.getCurrentMember = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                usersService.getMyCurrentMember().then(function (data) {
+
+                    vm.currentMember = data;
+
+                    resolve(vm.currentMember);
+
+                });
+
+            })
         };
 
         vm.getGroupList = function () {
@@ -93,32 +118,72 @@
 
                 });
 
+            });
 
-                vm.groups.forEach(function (group) {
+        };
 
-                    if (vm.entity.object_permissions) {
-                        vm.entity.object_permissions.forEach(function (permission) {
+        vm.setPermissionsDefaults = function () {
 
-                            if (permission.group === group.id) {
+            var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType);
+            var table;
+            var isCreator;
 
-                                if (!group.hasOwnProperty('objectPermissions')) {
-                                    group.objectPermissions = {};
-                                }
-                                if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                    group.objectPermissions.manage = true;
-                                }
-                                if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                    group.objectPermissions.change = true;
-                                }
-                                if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
-                                    group.objectPermissions.view = true;
-                                }
+            // console.log('vm.groups', vm.groups);
+            // console.log('vm.currentMember.groups', vm.currentMember.groups);
 
-                            }
-                        })
+
+
+            vm.groups.forEach(function (group) {
+
+                if (group.permission_table && group.permission_table.data) {
+
+                    table = group.permission_table.data.find(function (item) {
+                        return item.content_type === contentType
+                    }).data;
+
+                    isCreator = vm.currentMember.groups.indexOf(group.id) !== -1;
+
+                    group.objectPermissions = {};
+
+                    if (isCreator) {
+
+                        if (table.creator_manage) {
+                            group.objectPermissions.manage = true;
+
+                            vm.canManagePermissions  = true;
+                        }
+
+                        if (table.creator_change) {
+                            group.objectPermissions.change = true;
+                        }
+
+                        if (table.creator_view) {
+                            group.objectPermissions.view = true;
+                        }
+
+
+                    } else {
+
+                        if (table.other_manage) {
+                            group.objectPermissions.manage = true;
+
+                            vm.canManagePermissions  = true;
+                        }
+
+                        if (table.other_change) {
+                            group.objectPermissions.change = true;
+                        }
+
+                        if (table.other_view) {
+                            group.objectPermissions.view = true;
+                        }
+
+
                     }
 
-                });
+                }
+
+
             });
 
         };

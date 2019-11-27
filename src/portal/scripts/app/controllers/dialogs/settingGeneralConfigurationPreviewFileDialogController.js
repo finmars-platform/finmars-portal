@@ -7,6 +7,8 @@
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var metaService = require('../../services/metaService');
+    var usersService = require('../../services/usersService');
+    var usersGroupService = require('../../services/usersGroupService');
     var configurationImportService = require('../../services/configuration-import/configurationImportService');
     var mappingsImportService = require('../../services/mappings-import/mappingsImportService');
 
@@ -24,7 +26,7 @@
         vm.selectAllState = false;
         vm.counter = 0;
 
-        vm.readyStatus = {duplicates: false};
+        vm.readyStatus = {duplicates: false, member: false, groups: false};
 
         vm.toggleMode = function (mode) {
 
@@ -699,6 +701,35 @@
             return mappings;
         };
 
+        vm.getCurrentMember = function () {
+
+            return usersService.getMyCurrentMember().then(function (data) {
+
+                vm.currentMember = data;
+
+                vm.readyStatus.member = true;
+
+                $scope.$apply();
+
+            });
+        };
+
+        vm.getGroupList = function () {
+
+            return usersGroupService.getList().then(function (data) {
+
+                vm.groups = data.results.filter(function (item) {
+
+                    return item.role === 2;
+
+                });
+
+                vm.readyStatus.groups = true;
+
+            });
+
+        };
+
         vm.agree = function ($event) {
 
             vm.processing = true;
@@ -756,6 +787,9 @@
                     $scope.$apply();
 
                 }, 1000);
+
+                vm.settings.member = vm.currentMember;
+                vm.settings.groups = vm.groups;
 
                 configurationImportService.importConfiguration(vm.items, vm.settings).then(function (configurationData) {
 
@@ -906,6 +940,9 @@
         vm.init = function () {
 
             vm.sections = vm.file.body;
+
+            vm.getCurrentMember();
+            vm.getGroupList();
 
             vm.items = [];
             var mappingItems = [];
