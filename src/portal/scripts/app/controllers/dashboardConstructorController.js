@@ -734,7 +734,7 @@
             vm.updateDrakeContainers();
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
-        }
+        };
 
         vm.insertRow = function (tab, row) {
 
@@ -866,6 +866,23 @@
                 })
 
             }
+
+        };
+
+        vm.makeCopy = function ($event) {
+
+            var layout = JSON.parse(JSON.stringify(vm.layout));
+
+            delete layout.id;
+            layout.name = layout.name + ' (Copy)';
+
+            uiService.createDashboardLayout(layout).then(function (data) {
+
+                $state.go('app.dashboard-constructor', {
+                    id: data.id
+                })
+
+            })
 
         };
 

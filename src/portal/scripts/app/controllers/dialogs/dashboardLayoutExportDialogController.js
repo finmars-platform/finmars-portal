@@ -28,11 +28,7 @@
 
             var link = document.querySelector('.export-classifier-link');
 
-            var contentType = "ui.listlayout";
-
-            if (vm.isReport){
-                contentType = 'ui.reportlayout';
-            }
+            var contentType = 'ui.dashboardlayout';
 
             var date = new Date().toISOString().slice(0,10); // yyyy-mm-dd
 
