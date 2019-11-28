@@ -17,6 +17,7 @@
 
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
+        var currentMember = evDataService.getCurrentMember();
 
         var previousRow = null;
 
@@ -33,7 +34,7 @@
                     renderedRow = groupRender.render(item, groups);
                     break;
                 case 'object':
-                    renderedRow = objectRender.render(item, columns);
+                    renderedRow = objectRender.render(item, columns, currentMember);
                     break;
                 case 'control':
                     renderedRow = controlRender.render(item, evDataService, previousRow);
