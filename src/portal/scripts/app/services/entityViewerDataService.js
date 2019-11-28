@@ -1044,6 +1044,14 @@
             return data.viewContext;
         }
 
+        function setCurrentMember(member) {
+            data.currentMember = member;
+        }
+
+        function getCurrentMember() {
+            return data.currentMember
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1214,7 +1222,10 @@
             getLastViewSettings: getLastViewSettings,
 
             setViewContext: setViewContext,
-            getViewContext: getViewContext
+            getViewContext: getViewContext,
+
+            setCurrentMember: setCurrentMember,
+            getCurrentMember: getCurrentMember
 
         }
     }
