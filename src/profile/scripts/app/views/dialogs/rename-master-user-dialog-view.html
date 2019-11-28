@@ -1,0 +1,24 @@
+<md-dialog aria-label="" ng-cloak class="warning-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Rename Database</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar">
+        <div class="warning-text">
+            <md-input-container style="width: 90%;">
+                <label>Name</label>
+                <input type="text" data-ng-model="vm.name">
+            </md-input-container>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()" style="margin-right:20px;">
+            Close
+        </md-button>
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
