@@ -63,6 +63,28 @@
 
         };
 
+        vm.renameMasterUser = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'RenameMasterUserDialogController as vm',
+                templateUrl: 'views/dialogs/rename-master-user-dialog-view.html',
+                parent: angular.element(document.body),
+                locals: {
+                    data: {
+                        master_user: Object.assign({}, item)
+                    }
+                },
+                targetEvent: $event
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.getMasterUsersList();
+                }
+
+            })
+
+        };
+
         vm.activateDatabase = function (item) {
 
             // console.log('item', item);

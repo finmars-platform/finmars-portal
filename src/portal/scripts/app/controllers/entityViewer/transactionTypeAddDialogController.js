@@ -23,6 +23,7 @@
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var tagService = require('../../services/tagService');
+    var usersService = require('../../services/usersService');
 
 
     var uiService = require('../../services/uiService');
