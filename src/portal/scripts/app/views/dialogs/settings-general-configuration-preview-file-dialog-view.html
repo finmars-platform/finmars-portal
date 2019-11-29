@@ -247,7 +247,9 @@
                 Close
             </md-button>
 
-            <md-button class="md-raised {{vm.processing ? 'disabled-btn': ''}}" ng-click="vm.agree($event)"
+            <md-button class="md-raised" data-ng-class="{'disabled-btn': vm.processing || !vm.readyStatus.member || !vm.readyStatus.groups}"
+
+                       ng-click="vm.agree($event)"
                        style="margin-right:20px;" aria-label="import button">
                 Import
             </md-button>

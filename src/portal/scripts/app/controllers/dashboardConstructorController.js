@@ -32,6 +32,7 @@
         vm.layout = {
             name: '',
             data: {
+                layout_type: null,
                 fixed_area: {
                     status: 'disabled',
                     position: 'top',
@@ -46,6 +47,37 @@
             }
         };
 
+        vm.selectLayoutType = function (layoutType) {
+
+            vm.layout.data.layout_type = layoutType
+
+        };
+
+        vm.getColumnsCount = function () {
+
+            var result = 10;
+
+            if (vm.layout.data.layout_type) {
+
+                if (vm.layout.data.layout_type === 'desktop') {
+                    result = 10;
+                }
+
+                if (vm.layout.data.layout_type === 'tablet') {
+                    result = 6;
+                }
+
+                if (vm.layout.data.layout_type === 'mobile') {
+                    result = 4;
+                }
+
+            }
+
+            return result;
+
+
+        };
+
         vm.activateTopPanel = function ($event) {
 
             vm.layout.data.fixed_area.status = 'active';
@@ -55,7 +87,7 @@
                 rows: []
             };
 
-            var columns_count = 10;
+            var columns_count = vm.getColumnsCount();
             var rows_count = 1;
 
             for (var r = 0; r < rows_count; r = r + 1) {
@@ -168,7 +200,7 @@
                 }
             };
 
-            var columns_count = 10;
+            var columns_count = vm.getColumnsCount();
             var rows_count = 10;
 
             for (var r = 0; r < rows_count; r = r + 1) {
@@ -976,6 +1008,23 @@
                 })
 
             }
+
+        };
+
+        vm.makeCopy = function ($event) {
+
+            var layout = JSON.parse(JSON.stringify(vm.layout));
+
+            delete layout.id;
+            layout.name = layout.name + ' (Copy)';
+
+            uiService.createDashboardLayout(layout).then(function (data) {
+
+                $state.go('app.dashboard-constructor', {
+                    id: data.id
+                })
+
+            })
 
         };
 
