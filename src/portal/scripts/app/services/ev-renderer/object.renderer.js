@@ -10,37 +10,41 @@
 
         var result = '';
 
-        var hasChange = false;
-        var hasManage = false;
+        if (obj.object_permissions) {
 
-        result = lockIcon; // lock
+            var hasChange = false;
+            var hasManage = false;
 
-        obj.object_permissions.forEach(function (perm) {
+            result = lockIcon; // lock
 
-            if (currentMember.groups.indexOf(perm.group) !== -1) {
+            obj.object_permissions.forEach(function (perm) {
 
-                if (perm.permission.indexOf('change_') !== -1) {
-                    hasChange = true
+                if (currentMember.groups.indexOf(perm.group) !== -1) {
+
+                    if (perm.permission.indexOf('change_') !== -1) {
+                        hasChange = true
+                    }
+
+                    if (perm.permission.indexOf('manage_') !== -1) {
+                        hasManage = true
+                    }
+
                 }
 
-                if (perm.permission.indexOf('manage_') !== -1) {
-                    hasManage = true
-                }
+            });
 
+            if (hasChange) {
+                result = ''
             }
 
-        });
+            if (hasManage) {
+                result = starIcon
+            }
 
-        if (hasChange) {
-            result = ''
-        }
+            if (obj.___is_activated && result !== '') { // Be aware of specific mutation
+                classList.push('selected-blue')
+            }
 
-        if (hasManage) {
-            result = starIcon
-        }
-
-        if (obj.___is_activated && result !== '') { // Be aware of specific mutation
-            classList.push('selected-blue')
         }
 
         // if (currentMember.is_admin) {
