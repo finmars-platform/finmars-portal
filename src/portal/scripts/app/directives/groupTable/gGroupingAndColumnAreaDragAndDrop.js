@@ -119,7 +119,7 @@
                                         };
                                         break;
                                 }
-                                // console.log("drag n drop htmlElems", htmlElems);
+
                                 for (var i = 0; i < htmlElems.length; i = i + 1) {
 
                                     for (var x = 0; x < GCFitems.length; x = x + 1) {
@@ -132,7 +132,7 @@
                                     }
 
                                 }
-                                // console.log("drag n drop itemsAfterDragging", itemsAfterDragging);
+
                                 var isChanged = false;
 
                                 for (var i = 0; i < itemsAfterDragging.length; i++) {

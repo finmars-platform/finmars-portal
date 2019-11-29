@@ -252,6 +252,36 @@
 
         };
 
+        vm.getCustomAttrs = function () {
+
+            vm.attrsList = vm.attrsList.concat(vm.balanceAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationDynamicAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.balancePerformanceAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.balanceMismatchAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.custom);
+
+            vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.instrumentDynamicAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.portfolioDynamicAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.strategy1attrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
+
+            vm.updateAttrs(vm.custom);
+
+        };
+
         vm.checkAreaAccessibility = function (item, type) {
             if (type === 'group') {
                 if (['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'tags', 'content_types'].indexOf(item.key) !== -1) {
@@ -666,6 +696,10 @@
                 vm.syncAttrs();
                 getSelectedAttrs();
 
+            });
+
+            vm.entityViewerEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
+                vm.getCustomAttrs();
             });
 
         };

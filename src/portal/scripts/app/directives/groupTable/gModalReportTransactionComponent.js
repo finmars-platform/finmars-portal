@@ -241,7 +241,7 @@
             vm.attrsList = vm.attrsList.concat(vm.transactionTypeDynamicAttrs);
             vm.attrsList = vm.attrsList.concat(vm.responsibleDynamicAttrs);
             vm.attrsList = vm.attrsList.concat(vm.counterpartyDynmicAttrs);
-
+            vm.attrsList = vm.attrsList.concat(vm.custom);
 
             // instruments
 
@@ -278,10 +278,81 @@
             vm.attrsList = vm.attrsList.concat(vm.strategy3cashAttrs);
             vm.attrsList = vm.attrsList.concat(vm.strategy3positionAttrs);
 
+
             vm.syncAttrs();
             getSelectedAttrs();
 
             vm.readyStatus.content = true;
+
+        };
+
+        vm.getCustomAttrs = function () {
+
+            vm.custom = attributeDataService.getCustomFieldsByEntityType(vm.entityType);
+            vm.custom = vm.custom.map(function (customItem) {
+
+                customItem.custom_field = Object.assign({}, customItem);
+
+                customItem.key = 'custom_fields.' + customItem.user_code;
+                customItem.name = 'Custom Field. ' + customItem.name;
+
+                return customItem
+
+            });
+
+            vm.attrsList = [];
+
+            vm.attrsList = vm.attrsList.concat(vm.transactionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.complexTransactionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.transactionTypeAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.responsibleAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.counterpartyAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.portfolioDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.complexTransactionDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.transactionTypeDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.responsibleDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.counterpartyDynmicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.custom);
+
+            // instruments
+
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationBalanceAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationPlAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.instrumentDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationBalanceDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationPlDnymaicAttrs);
+
+            // currencies
+
+            vm.attrsList = vm.attrsList.concat(vm.transactionCurrencyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.settlementCurrencyAttrs);
+
+            // accounts
+
+            vm.attrsList = vm.attrsList.concat(vm.accountPositionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountCashAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountInterimAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.accountPositionDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountCashDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountInterimDynamicAttrs);
+
+            // strategies
+
+            vm.attrsList = vm.attrsList.concat(vm.strategy1cashAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy1positionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy2cashAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy2positionAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy3cashAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy3positionAttrs);
+
+            vm.updateAttrs(vm.custom);
 
         };
 
@@ -298,11 +369,6 @@
                 return false;
             }
         };
-
-        /*vm.bindReportItemName = function (item) {
-
-            return item.name;
-        };*/
 
         vm.syncAttrs = function () {
 
@@ -775,8 +841,7 @@
             });
 
             vm.entityViewerEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
-                vm.updateAttrs(vm.custom);
-                //$scope.$apply();
+                vm.getCustomAttrs();
             });
 
         };

@@ -78,7 +78,7 @@
                         item.___flat_list_index = i;
                         return item
                     });
-
+                    console.log("flat list", flatList);
                     scope.evDataService.setFlatList(flatList);
 
                     projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
@@ -113,7 +113,7 @@
                                 if ((filterValues.min_value || filterValues.min_value === 0) &&
                                     (filterValues.max_value || filterValues.max_value === 0)) {
                                     return true;
-                                };
+                                }
 
                             } else if (Array.isArray(filterValues)) {
 
@@ -450,9 +450,7 @@
                         var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
 
                         if (isRootEntityViewer && splitPanelIsActive) {
-
                             scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
-
                         }
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);

@@ -59,6 +59,10 @@
 
                     if (scope.tabFieldsTree) {
                         findItem();
+
+                        setTimeout(function () { // set min height to prevent row disappearance on card drag
+                            setCardContainerMinHeight();
+                        }, 100);
                     }
 
                 });
@@ -129,7 +133,16 @@
                             }
                         }
                     }
-                };
+                }
+
+                function setCardContainerMinHeight () {
+                    var draggableCardContainer = elem[0].querySelector('.form-constructor-draggable-card');
+
+                    if (draggableCardContainer) {
+                        var dccHeight = draggableCardContainer.clientHeight;
+                        draggableCardContainer.style.minHeight = dccHeight + 'px';
+                    }
+                }
 
                 scope.increaseColspan = function (item) {
                     var colspansList = scope.getCols();
@@ -137,7 +150,6 @@
 
                     if (item.colspan < maxColspan) {
                         item.colspan += 1;
-                        console.log("change colspan scope.increaseColspan", item.colspan);
                         scope.changeFieldColspan(item.colspan);
                     }
                 };
@@ -145,7 +157,6 @@
                 scope.decreaseColspan = function (item) {
                     if (item.colspan > 1) {
                         item.colspan -= 1;
-                        console.log("change colspan decreaseColspan", item.colspan);
                         scope.changeFieldColspan(item.colspan);
                     }
                 };
