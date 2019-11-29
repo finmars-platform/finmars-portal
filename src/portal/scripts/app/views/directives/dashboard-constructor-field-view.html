@@ -1,44 +1,51 @@
 <div class="height-100 width-100 dashboard-constructor-field-holder">
 
-    <md-card data-ng-show="!item.editMode" class="dashboard-field-card height-100 width-100">
-        <div layout="row">
+    <div class="dashboard-constructor-draggable-card"
+         data-ng-class="{'height-100': !item.editMode, 'width-100': !item.editMode}">
+        <md-card data-ng-show="!item.editMode"
+                 class="dashboard-field-card dashboard-socket-card height-100 width-100"
+                 data-tab-number="{{tabNumber}}"
+                 data-row="{{rowNumber}}"
+                 data-column="{{columnNumber}}">
+            <div layout="row">
 
-            <div class="dc-extend-btns-holder" layout="row" style="margin-right: 5px">
-                <button class="md-button md-raised" ng-click="decreaseRowspan(item)">
-                    <ng-md-icon icon="expand_less" size="16"></ng-md-icon>
-                </button>
+                <div class="dc-extend-btns-holder" layout="row" style="margin-right: 5px">
+                    <button class="md-button md-raised" ng-click="decreaseRowspan(item)">
+                        <ng-md-icon icon="expand_less" size="16"></ng-md-icon>
+                    </button>
 
-                <button class="md-button md-raised" ng-click="increaseRowspan(item)">
-                    <ng-md-icon icon="expand_more" size="16"></ng-md-icon>
-                </button>
+                    <button class="md-button md-raised" ng-click="increaseRowspan(item)">
+                        <ng-md-icon icon="expand_more" size="16"></ng-md-icon>
+                    </button>
+                </div>
+
+                <div class="dc-extend-btns-holder" layout="row">
+                    <button class="md-button md-raised" ng-click="decreaseColspan(item)">
+                        <ng-md-icon icon="chevron_left" size="16"></ng-md-icon>
+                    </button>
+
+                    <button class="md-button md-raised" ng-click="increaseColspan(item)">
+                        <ng-md-icon icon="chevron_right" size="16"></ng-md-icon>
+                    </button>
+                </div>
+
+                <p class="name-holder">
+                    <b><span data-ng-bind="item.data.name"></span></b> (<span
+                        data-ng-bind="getVerboseType()"></span>)
+                </p>
+                <div class="dashboard-field-card-options">
+                    <md-button aria-label="delete attribute" class=""
+                               data-ng-click="deleteField()">
+                        <ng-md-icon icon="delete"  size="14"></ng-md-icon>
+                    </md-button>
+                    <md-button aria-label="edit attribute" class=""
+                               data-ng-click="toggleFieldEditMode()">
+                        <ng-md-icon icon="mode_edit" size="14"></ng-md-icon>
+                    </md-button>
+                </div>
             </div>
-
-            <div class="dc-extend-btns-holder" layout="row">
-                <button class="md-button md-raised" ng-click="decreaseColspan(item)">
-                    <ng-md-icon icon="chevron_left" size="16"></ng-md-icon>
-                </button>
-
-                <button class="md-button md-raised" ng-click="increaseColspan(item)">
-                    <ng-md-icon icon="chevron_right" size="16"></ng-md-icon>
-                </button>
-            </div>
-
-            <p class="name-holder">
-                <b><span data-ng-bind="item.data.name"></span></b> (<span
-                    data-ng-bind="getVerboseType()"></span>)
-            </p>
-            <div class="dashboard-field-card-options">
-                <md-button aria-label="delete attribute" class=""
-                           data-ng-click="deleteField()">
-                    <ng-md-icon icon="delete"  size="14"></ng-md-icon>
-                </md-button>
-                <md-button aria-label="edit attribute" class=""
-                           data-ng-click="toggleFieldEditMode()">
-                    <ng-md-icon icon="mode_edit" size="14"></ng-md-icon>
-                </md-button>
-            </div>
-        </div>
-    </md-card>
+        </md-card>
+    </div>
 
     <md-card data-ng-if="item.editMode" class="dashboard-field-card {{item.editMode ? 'active' : ''}}">
 

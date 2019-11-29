@@ -1,7 +1,10 @@
 <div>
     <div data-ng-show="!item.editMode">
-        <div data-ng-if="item.attribute">
-            <md-card class="ec-attr-card">
+        <div data-ng-if="item.attribute" class="form-constructor-draggable-card">
+            <md-card class="ec-attr-card ec-attr-occupied"
+                     data-col="{{column}}"
+                     data-row="{{row}}"
+                     data-tab-id="{{tab.id}}">
                 <div layout="row">
                     <div class="ec-extend-btns-holder" layout="row">
                         <button class="md-button md-raised" ng-click="decreaseColspan(item)">
@@ -31,8 +34,12 @@
         </div>
 
         <div data-ng-if="!item.attribute">
-            <div class="ec-attr-card ec-attr-empty" data-col="{{column}}" data-row="{{row}}" data-tab-name="{{tab.name}}">
-                <md-button aria-label="add field" data-ng-click="toggleEditMode()" class="width-100">
+            <div class="ec-attr-card ec-attr-empty"
+                 data-col="{{column}}"
+                 data-row="{{row}}"
+                 data-tab-name="{{tab.name}}"
+                 data-colspan="{{item.colspan}}">
+                <md-button aria-label="add field" data-ng-click="toggleEditMode()" class="width-100 ec-attr-empty-btn">
                     <ng-md-icon icon="add_circle"></ng-md-icon>
                 </md-button>
             </div>

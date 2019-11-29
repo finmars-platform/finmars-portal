@@ -270,11 +270,15 @@
 
                         for (var c = scope.columnNumber; c < scope.columnNumber + scope.item.colspan; c = c + 1) {
 
-                            item = row.columns[c];
-                            item.is_hidden = true;
-                            item.hidden_by = {
-                                row_number: scope.rowNumber,
-                                column_number: scope.columnNumber
+                            if (r !== scope.rowNumber || c !== scope.columnNumber) { // prevent from hiding spanning socket itself
+
+                                item = row.columns[c];
+                                item.is_hidden = true;
+                                item.hidden_by = {
+                                    row_number: scope.rowNumber,
+                                    column_number: scope.columnNumber
+                                }
+
                             }
 
                         }

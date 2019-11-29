@@ -58,9 +58,10 @@
             }).then(function (res) {
                 if (res && res.status === 'agree') {
 
-                    vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType);
-                    vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
-                    vm.getList();
+                    vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType).then(function () {
+                        vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
+                        vm.getList();
+                    });
 
                 }
             });
@@ -88,9 +89,10 @@
             }).then(function (res) {
                 if (res && res.status === 'agree') {
 
-                    vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType);
-                    vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
-                    vm.getList();
+                    vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType).then(function () {
+                        vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
+                        vm.getList();
+                    });
 
                 }
             });
@@ -138,9 +140,10 @@
                             })
                         } else {
 
-                            vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType);
-                            vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
-                            vm.getList();
+                            vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType).then(function () {
+                                vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
+                                vm.getList();
+                            });
 
                         }
                     });

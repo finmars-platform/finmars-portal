@@ -119,6 +119,10 @@
 
         vm.checkColspan = function (tab, row, column) {
 
+            if (!tab.id) { // TODO remove later
+                tab.id = 1
+            }
+
             var fieldsTree = vm.fieldsTree[tab.id];
             var fieldRow = fieldsTree[row];
             var colspanSizeToHide = 2;
@@ -189,17 +193,20 @@
         vm.setLayoutColumns = function (tab, columns, ev) {
 
             if (columns < tab.layout.columns) {
+
                 var losedColumns = [];
                 var i;
                 for (i = columns; i < tab.layout.columns; i = i + 1) {
                     losedColumns.push(i + 1);
                 }
+
                 var description;
                 if (losedColumns.length > 1) {
                     description = 'If you switch to less number of columns you lose data of ' + losedColumns.join(', ') + ' columns'
                 } else {
                     description = 'If you switch to less number of columns you lose data of ' + losedColumns.join(', ') + ' column'
                 }
+
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/warning-dialog-view.html',
@@ -232,6 +239,7 @@
                         tab.layout.columns = columns;
                     }
                 });
+
             } else {
 
                 var r, c;
@@ -246,6 +254,7 @@
                         })
                     }
                 }
+
                 tab.layout.columns = columns;
             }
 
@@ -289,6 +298,10 @@
         };
 
         vm.isRowEmpty = function (tabId, rowNumber, columnsNumber) {
+
+            if (!tabId) { // TODO remove later
+                tabId = 1;
+            }
 
             var isEmpty = true;
             for (var i = 1; i <= columnsNumber; i++) {
@@ -412,6 +425,10 @@
             var totalColspans = 0;
             var i;
             var field;
+
+            if (!tab.id) { // TODO remove later
+                tab.id = 1;
+            }
             /*for (i = 0; i < tab.layout.fields.length; i = i + 1) {
                 if (tab.layout.fields[i].row === row) {
                     if (tab.layout.fields[i].column === column) {
@@ -468,9 +485,19 @@
 
                 if (!notSavedTabExist) {
 
+                    var lastTab = vm.tabs[vm.tabs.length - 1];
+                    var newTabId;
+
+                    if (lastTab && lastTab.id) {
+                        newTabId = lastTab.id + 1;
+                    } else {
+                        newTabId = vm.tabs.length + 1;
+                    }
+
                     vm.tabs.push({
                         name: '',
                         editState: true,
+                        id: newTabId,
                         layout: {
                             rows: 0,
                             columns: 1,
@@ -596,6 +623,7 @@
         };
 
         vm.editLayout = function () {
+
             var entityAddress = {entityType: vm.entityType};
             if (vm.fromEntityType) {
 
@@ -606,6 +634,7 @@
                 entityAddress = {entityType: entityType, from: vm.fromEntityType, instanceId: vm.instanceId};
             }
             $state.go('app.data-constructor', entityAddress);
+
         };
 
         vm.getItems = function () {
@@ -761,7 +790,11 @@
 
             vm.fieldsTree = {};
 
-            tabs.forEach(function (tab) {
+            tabs.forEach(function (tab, index) {
+
+                if (!tab.id) { // TODO remove later
+                    tab.id = index + 1;
+                }
 
                 vm.fieldsTree[tab.id] = {};
                 var f;
@@ -794,13 +827,12 @@
             var items = [];
 
             var emptyFieldsElem = document.querySelectorAll('.ec-attr-empty');
-            for (i = 0; i < emptyFieldsElem.length; i = i + 1) {
+            for (var i = 0; i < emptyFieldsElem.length; i = i + 1) {
                 items.push(emptyFieldsElem[i]);
             }
 
-            var i;
             var cardsElem = document.querySelectorAll('.form-constructor-draggable-card');
-            for (i = 0; i < cardsElem.length; i = i + 1) {
+            for (var i = 0; i < cardsElem.length; i = i + 1) {
                 items.push(cardsElem[i]);
             }
 
@@ -812,148 +844,188 @@
 
         vm.dragAndDrop = {
 
-            drake: null,
-
             init: function () {
+                this.selectDragulaContainers();
+                this.eventListeners();
+            },
 
+            selectDragulaContainers: function () {
                 var items = vm.getDrakeContainers();
 
-                this.drake = dragula(items,
+                this.dragula = dragula(items,
                     {
-                        accepts: function (el, target, source, sibling) {
-
-                            if (target.classList.contains('.form-constructor-draggable-card')) {
+                        moves: function (el, target, source, sibling) {
+                            if (el.classList.contains('ec-attr-empty-btn')) {
                                 return false;
                             }
 
                             return true;
                         },
-                        copy: true
-                    });
+                        accepts: function (el, target, source, sibling) {
+                            if (target.classList.contains('ec-attr-empty')) {
+                                return true;
+                            }
 
-                this.eventListeners();
+                            return false;
+                        },
+                        copy: function (el, source) {
+                            return !el.classList.contains('ec-attr-occupied');
+                        },
+                        revertOnSpill: true
+                    });
             },
 
             eventListeners: function () {
-                var that = this;
-                this.drake.on('over', function (elem, container, source) {
+
+                var drake = this.dragula;
+
+                drake.on('over', function (elem, container, source) {
+
                     $(container).addClass('active');
                     $(container).on('mouseleave', function () {
                         $(this).removeClass('active');
-                    })
+                    });
 
                 });
 
-                this.drake.on('out', function (elem, container, source) {
-                    $(container).removeClass('active')
-
+                drake.on('out', function (elem, container, source) {
+                    $(container).removeClass('active');
                 });
-                this.drake.on('drop', function (elem, target) {
 
-                    console.log('target', target);
-
-                    var entityAttrsKeys = [];
-                    vm.entityAttrs.forEach(function (entityAttr) {
-                        entityAttrsKeys.push(entityAttr.key);
-                    });
-                    var layoutAttrsKeys = [];
-                    vm.layoutAttrs.forEach(function (layoutAttr) {
-                        layoutAttrsKeys.push(layoutAttr.key);
-                    });
+                drake.on('drop', function (elem, target) {
 
                     $(target).removeClass('active');
-                    var name = $(elem).html();
 
                     if (target) {
-                        var a;
-
-                        var nodes = Array.prototype.slice.call(target.children);
-                        var index = nodes.indexOf(elem);
 
                         if (target.classList.contains('ec-attr-empty')) {
 
-                            console.log('target.data', target.dataset);
-                            console.log('target.data', elem.dataset);
+                            var targetTabName = target.dataset.tabName;
+                            var targetColspan = parseInt(target.dataset.colspan, 10);
+                            var targetColumn = parseInt(target.dataset.col, 10);
+                            var targetRow = parseInt(target.dataset.row, 10);
 
-                            var tabIndex = 0;
-                            var tabName = target.dataset.tabName;
-                            var column = parseInt(target.dataset.col, 10);
-                            var row = parseInt(target.dataset.row, 10);
-                            var itemIndex = parseInt(elem.dataset.index, 10);
+                            if (elem.classList.contains('ec-attr-occupied')) { // dragging from socket
+                                var dElemTabId = elem.dataset.tabId;
+                                var dElemColumn = parseInt(elem.dataset.col, 10);
+                                var dElemRow = parseInt(elem.dataset.row, 10);
 
-                            vm.tabs.forEach(function (tab) {
+                                var occupiedFieldData = JSON.parse(JSON.stringify(vm.fieldsTree[dElemTabId][dElemRow][dElemColumn]));
+                            }
+
+                            var i, a;
+                            for (i = 0; i < vm.tabs.length; i++) {
+                                var tab = vm.tabs[i];
 
                                 // if (!tab.hasOwnProperty('editState') || (tab.hasOwnProperty('editState') && tab.editState)) {
-                                if (tab.name === tabName) {
-                                    console.log('target active tab', tab);
-                                    tab.layout.fields.forEach(function (field) {
+                                if (tab.name === targetTabName) {
 
-                                        if (field.column === column && field.row === row) {
+                                    for (a = 0; a < tab.layout.fields.length; a++) {
+                                        var field = tab.layout.fields[a];
 
-                                            field.attribute = vm.items[itemIndex];
-                                            field.editable = vm.items[itemIndex].editable;
-                                            field.name = field.attribute.name;
-                                            field.attribute_class = 'userInput';
-                                            field.type = 'field';
-                                            field.colspan = 1;
+                                        if (elem.classList.contains('ec-attr-occupied')) { // dragging from socket
 
-                                            if (field.attribute.hasOwnProperty('id')) {
-                                                field.attribute_class = 'attr';
-                                                field.id = field.attribute.id;
+                                            if (field.column === targetColumn && field.row === targetRow) {
+                                                vm.tabs[i].layout.fields[a] = occupiedFieldData;
+                                                vm.tabs[i].layout.fields[a].colspan = targetColspan;
+                                                vm.tabs[i].layout.fields[a].column = targetColumn;
+                                                vm.tabs[i].layout.fields[a].row = targetRow;
                                             }
 
-                                            if (entityAttrsKeys.indexOf(field.attribute.key) !== -1) {
-                                                field.attribute_class = 'entityAttr';
+                                            if (field.column === dElemColumn && field.row === dElemRow) { // make dragged from socket empty
+
+                                                var emptyFieldData = {
+                                                    colspan: field.colspan,
+                                                    column: dElemColumn,
+                                                    editMode: false,
+                                                    row: dElemRow,
+                                                    type: "empty"
+                                                };
+
+                                                vm.tabs[i].layout.fields[a] = emptyFieldData;
                                             }
-                                            if (layoutAttrsKeys.indexOf(field.attribute.key) !== -1) {
-                                                field.attribute_class = 'decorationAttr';
+
+                                        } else { // dragging from attributes list
+
+                                            if (field.column === targetColumn && field.row === targetRow) {
+
+                                                var entityAttrsKeys = [];
+                                                vm.entityAttrs.forEach(function (entityAttr) {
+                                                    entityAttrsKeys.push(entityAttr.key);
+                                                });
+
+                                                var layoutAttrsKeys = [];
+                                                vm.layoutAttrs.forEach(function (layoutAttr) {
+                                                    layoutAttrsKeys.push(layoutAttr.key);
+                                                });
+
+                                                var itemIndex = parseInt(elem.dataset.index, 10);
+
+                                                field.attribute = vm.items[itemIndex];
+                                                field.editable = vm.items[itemIndex].editable;
+                                                field.name = field.attribute.name;
+                                                field.attribute_class = 'userInput';
+                                                field.type = 'field';
+                                                field.colspan = 1;
+
+                                                if (field.attribute.hasOwnProperty('id')) {
+                                                    field.attribute_class = 'attr';
+                                                    field.id = field.attribute.id;
+                                                }
+                                                if (entityAttrsKeys.indexOf(field.attribute.key) !== -1) {
+                                                    field.attribute_class = 'entityAttr';
+                                                }
+                                                if (layoutAttrsKeys.indexOf(field.attribute.key) !== -1) {
+                                                    field.attribute_class = 'decorationAttr';
+                                                }
+
+                                                break;
+
                                             }
 
                                         }
-                                    });
 
-                                    if (row === tab.layout.rows) {
+                                    }
+
+                                    if (targetRow === tab.layout.rows) {
                                         addRows(tab);
                                     }
-                                }
 
-                            });
+                                    break;
+                                }
+                            }
 
                             vm.createFieldsTree();
                             vm.syncItems();
 
                             $scope.$apply();
 
-
                         }
 
                     }
 
-
-                    $scope.$apply();
                 });
 
-                this.drake.on('dragend', function (el) {
+                drake.on('dragend', function (el) {
                     $scope.$apply();
-                    $(el).remove();
-                })
+                    drake.remove();
+                });
             },
 
             destroy: function () {
                 // console.log('this.dragula', this.dragula)
                 this.drake.destroy();
-
             }
         };
 
         vm.updateDrakeContainers = function () {
 
-            if (vm.dragAndDrop.drake) {
+            if (vm.dragAndDrop.dragula) {
 
                 setTimeout(function () {
 
-                    vm.dragAndDrop.drake.containers = [];
-                    vm.dragAndDrop.drake.containers = vm.getDrakeContainers();
+                    vm.dragAndDrop.dragula.containers = [];
+                    vm.dragAndDrop.dragula.containers = vm.getDrakeContainers();
 
                 }, 500);
 
@@ -1091,6 +1163,10 @@
         };
 
         vm.init();
+
+        $scope.$on("$destroy", function () {
+            vm.dragAndDrop.destroy();
+        });
     }
 
 }());

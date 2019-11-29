@@ -524,7 +524,7 @@
                                     }
 
                                 }
-                                console.log("drag n drop elemsAfterDragging", elemsAfterDragging, orderOf);
+
                                 var isChanged = false;
 
                                 for (var i = 0; i < elemsAfterDragging.length; i++) {

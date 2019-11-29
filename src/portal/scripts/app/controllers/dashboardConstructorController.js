@@ -313,85 +313,189 @@
             $state.go('app.dashboard')
         };
 
-        vm.initDragAndDrop = function () {
+        var emptySocketInsideTab = function (tabNumber, rowNumber, columnNumber) {
 
-            vm.dragAndDrop = {
+            var dcRow = vm.layout.data.tabs[tabNumber].layout.rows[rowNumber];
 
-                drake: null,
+            /*var dcColspan = dcRow.columns[columnNumber].colspan;
+            var dcRowspan = dcRow.columns[columnNumber].rowspan;
 
-                init: function () {
+            dcRow.columns[columnNumber] = {
+                cell_type: "empty",
+                colspan: dcColspan,
+                column_number: columnNumber,
+                data: {},
+                editMode: false,
+                rowspan: dcRowspan
+            }*/
+            dcRow.columns[columnNumber].cell_type = "empty";
+            dcRow.columns[columnNumber].data = {};
 
-                    var items = vm.getDrakeContainers();
+        };
 
-                    this.drake = dragula(items,
-                        {
-                            accepts: function (el, target, source, sibling) {
+        var emptySocketInsideFixedArea = function (rowNumber, columnNumber) {
 
-                                if (target.classList.contains('.dashboard-constructor-draggable-card')) {
-                                    return false;
-                                }
+            var dcRow = vm.layout.data.fixed_area.layout.rows[rowNumber];
 
-                                return true;
-                            },
-                            copy: true
-                        });
+            /*var dcColspan = dcRow.columns[columnNumber].colspan;
+            var dcRowspan = dcRow.columns[columnNumber].rowspan;
 
-                    this.eventListeners();
-                },
+            dcRow.columns[columnNumber] = {
+                cell_type: "empty",
+                colspan: dcColspan,
+                column_number: columnNumber,
+                data: {},
+                editMode: false,
+                rowspan: dcRowspan
+            }*/
+            dcRow.columns[columnNumber].cell_type = "empty";
+            dcRow.columns[columnNumber].data = {};
 
-                eventListeners: function () {
-                    var that = this;
-                    this.drake.on('over', function (elem, container, source) {
+        };
+
+        vm.dragAndDrop = {
+
+            init: function () {
+                this.selectDragulaContainers();
+                this.eventListeners();
+            },
+
+            selectDragulaContainers: function () {
+                var items = vm.getDrakeContainers();
+
+                this.dragula = dragula(items,
+                    {
+                        accepts: function (el, target, source, sibling) {
+
+                            if (target.classList.contains('dashboard-constructor-draggable-card')) {
+                                return false;
+                            }
+
+                            return true;
+                        },
+                        copy: true
+                    });
+            },
+
+            eventListeners: function () {
+                var drake = this.dragula;
+
+                drake.on('over', function (elem, container, source) {
+
+                    if (!container.classList.contains('dashboard-constructor-draggable-card')) {
                         $(container).addClass('active');
                         $(container).on('mouseleave', function () {
                             $(this).removeClass('active');
                         })
+                    }
 
-                    });
+                });
 
-                    this.drake.on('out', function (elem, container, source) {
-                        $(container).removeClass('active')
+                drake.on('out', function (elem, container, source) {
+                    $(container).removeClass('active')
+                });
 
-                    });
-                    this.drake.on('drop', function (elem, target) {
+                drake.on('drop', function (elem, target) {
 
-                        console.log('target', {target: target});
-                        console.log('elem', {elem: elem});
+                    console.log('target', {target: target});
+                    console.log('elem', {elem: elem});
+                    var draggedFromSocket = false;
 
-                        $(target).removeClass('active');
+                    $(target).removeClass('active');
 
-                        if (target) {
+                    if (target) {
 
-                            if (target.classList.contains('dashboard-constructor-empty-cell')) {
+                        if (target.classList.contains('dashboard-constructor-empty-cell')) {
 
-                                var component_id = elem.dataset.componentId;
+                            draggedFromSocket = true;
 
-                                var component = vm.layout.data.components_types.find(function (item) {
+                            var component_id = elem.dataset.componentId;
+                            var data_source = target.parentElement.parentElement; // root of the cell (.dashboard-constructor-cell)
+                            var tab_number;
 
-                                    return item.id === component_id
+                            if (data_source.dataset.tab == 'fixed_area') {
+                                tab_number = data_source.dataset.tab;
+                            } else {
+                                tab_number = parseInt(data_source.dataset.tab, 10);
+                            }
 
-                                });
+                            var row_number = parseInt(data_source.dataset.row, 10);
+                            var column_number = parseInt(data_source.dataset.column, 10);
 
-                                var data_source = target.parentElement.parentElement; // root of the cell (.dashboard-constructor-cell)
+                            if (elem.classList.contains('dashboard-socket-card')) { // when dragged from socket
 
-                                var tab_number;
+                                var dc_row_number = parseInt(elem.dataset.row, 10);
+                                var dc_column_number = parseInt(elem.dataset.column, 10);
+                                var dc_tab_number = elem.dataset.tabNumber;
 
-                                if (data_source.dataset.tab == 'fixed_area') {
-                                    tab_number = data_source.dataset.tab;
+                                if (dc_tab_number === 'fixed_area') {
+
+                                    var dcRow = vm.layout.data.fixed_area.layout.rows[dc_row_number];
+                                    var deColData = dcRow.columns[dc_column_number].data;
+
                                 } else {
-                                    tab_number = parseInt(data_source.dataset.tab, 10);
+                                    dc_tab_number = parseInt(elem.dataset.tabNumber, 10);
+
+                                    var dcRow = vm.layout.data.tabs[dc_tab_number].layout.rows[dc_row_number];
+                                    var deColData = dcRow.columns[dc_column_number].data;
                                 }
 
-                                var row_number = parseInt(data_source.dataset.row, 10);
-                                var column_number = parseInt(data_source.dataset.column, 10);
-
-                                console.log('tab_number', tab_number);
-                                console.log('row_number', row_number);
-                                console.log('column_number', column_number);
+                                var newColData = JSON.parse(JSON.stringify(deColData));
 
                                 if (tab_number === 'fixed_area') {
 
-                                    vm.layout.data.fixed_area.layout.rows.forEach(function (row) {
+                                    var targetRow = vm.layout.data.fixed_area.layout.rows[row_number];
+
+                                    /*var targetColspan = targetRow.columns[column_number].colspan;
+                                    var targetRowspan = targetRow.columns[column_number].rowspan;*/
+
+                                    targetRow.columns[column_number].cell_type = 'component';
+                                    targetRow.columns[column_number].data = newColData;
+                                    /*targetRow.columns[column_number].column_number = column_number;
+                                    targetRow.columns[column_number].colspan = targetColspan;
+                                    targetRow.columns[column_number].rowspan = targetRowspan;*/
+
+                                    if (dc_tab_number === 'fixed_area') {
+                                        emptySocketInsideFixedArea(dc_row_number, dc_column_number);
+                                    } else {
+                                        emptySocketInsideTab(dc_tab_number, dc_row_number, dc_column_number);
+                                    }
+
+                                } else { // when dragged from area with available cards
+
+                                    var targetRow = vm.layout.data.tabs[tab_number].layout.rows[row_number];
+
+                                    /*var targetColspan = targetRow.columns[column_number].colspan;
+                                    var targetRowspan = targetRow.columns[column_number].rowspan;*/
+
+                                    targetRow.columns[column_number].cell_type = 'component';
+                                    targetRow.columns[column_number].data = newColData;
+                                    /*targetRow.columns[column_number].column_number = column_number;
+                                    targetRow.columns[column_number].colspan = targetColspan;
+                                    targetRow.columns[column_number].rowspan = targetRowspan;*/
+
+                                    if (dc_tab_number === 'fixed_area') {
+                                        emptySocketInsideFixedArea(dc_row_number, dc_column_number);
+                                    } else {
+                                        emptySocketInsideTab(dc_tab_number, dc_row_number, dc_column_number);
+                                    }
+
+                                }
+
+                            } else {
+
+                                var component = vm.layout.data.components_types.find(function (item) {
+                                    return item.id === component_id
+                                });
+
+                                if (tab_number === 'fixed_area') {
+
+                                    var targetRow = vm.layout.data.fixed_area.layout.rows[row_number];
+
+                                    targetRow.columns[column_number].cell_type = 'component';
+                                    targetRow.columns[column_number].data = component;
+
+                                    /*vm.layout.data.fixed_area.layout.rows.forEach(function (row) {
 
                                         row.columns.forEach(function (column) {
 
@@ -405,12 +509,16 @@
 
                                         })
 
+                                    });*/
 
-                                    });
+                                } else { // when dragged from area with available cards
 
-                                } else {
+                                    var targetRow = vm.layout.data.tabs[tab_number].layout.rows[row_number];
 
-                                    vm.layout.data.tabs.forEach(function (tab) {
+                                    targetRow.columns[column_number].cell_type = 'component';
+                                    targetRow.columns[column_number].data = component;
+
+                                    /*vm.layout.data.tabs.forEach(function (tab) {
 
                                         if (tab.tab_number === tab_number) {
 
@@ -421,8 +529,7 @@
                                                     if (column.column_number === column_number && row.row_number === row_number) {
 
                                                         column.cell_type = 'component';
-
-                                                        column.data = component
+                                                        column.data = component;
 
                                                     }
 
@@ -433,36 +540,38 @@
 
                                         }
 
-                                    });
+                                    });*/
 
                                 }
 
-                                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-
-                                $scope.$apply();
-
                             }
+
+
+                            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+
+                            if (draggedFromSocket) {
+                                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+                            }
+
+                            $scope.$apply();
 
                         }
 
-                        $scope.$apply();
-                    });
+                    }
 
-                    this.drake.on('dragend', function (el) {
-                        $scope.$apply();
-                        $(el).remove();
-                    })
-                },
+                    $scope.$apply();
+                });
 
-                destroy: function () {
-                    // console.log('this.dragula', this.dragula)
-                    this.drake.destroy();
+                drake.on('dragend', function (el) {
+                    $scope.$apply();
+                    $(el).remove();
+                })
+            },
 
-                }
-            };
-
-            vm.dragAndDrop.init();
-
+            destroy: function () {
+                // console.log('this.dragula', this.dragula)
+                this.drake.destroy();
+            }
         };
 
         vm.getDrakeContainers = function () {
@@ -486,12 +595,12 @@
 
         vm.updateDrakeContainers = function () {
 
-            if (vm.dragAndDrop.drake) {
+            if (vm.dragAndDrop.dragula) {
 
                 setTimeout(function () {
 
-                    vm.dragAndDrop.drake.containers = [];
-                    vm.dragAndDrop.drake.containers = vm.getDrakeContainers();
+                    vm.dragAndDrop.dragula.containers = [];
+                    vm.dragAndDrop.dragula.containers = vm.getDrakeContainers();
 
                 }, 500);
 
@@ -734,7 +843,7 @@
             vm.updateDrakeContainers();
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
-        }
+        };
 
         vm.insertRow = function (tab, row) {
 
@@ -798,14 +907,15 @@
 
                 vm.readyStatus.data = true;
 
-                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE)
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
-                console.log('vm.layout', vm.layout);
+                console.log('vm.layout', JSON.parse(angular.toJson(vm.layout)));
 
                 $scope.$apply(function () {
 
                     setTimeout(function () {
-                        vm.initDragAndDrop();
+                        // vm.initDragAndDrop();
+                        vm.dragAndDrop.init();
                     }, 500);
 
 
@@ -1111,7 +1221,7 @@
 
         };
 
-        var openDashboardComponentEditor = function ($event, contrName, templateUrl, locals) {
+        /*var openDashboardComponentEditor = function ($event, contrName, templateUrl, locals) {
             $mdDialog.show({
                 controller: contrName,
                 templateUrl: templateUrl,
@@ -1131,7 +1241,7 @@
                 vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
             })
-        };
+        };*/
 
         vm.editComponentType = function ($event, item) {
 
@@ -1331,7 +1441,8 @@
                 vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE)
 
                 setTimeout(function () {
-                    vm.initDragAndDrop();
+                    // vm.initDragAndDrop();
+                    vm.dragAndDrop.init();
                 }, 500);
 
                 console.log('vm.layout', vm.layout)
@@ -1341,6 +1452,10 @@
         };
 
         vm.init();
+
+        $scope.$on("$destroy", function () {
+            vm.dragAndDrop.destroy();
+        });
 
     }
 
