@@ -106,6 +106,10 @@
                                    data-ng-click="vm.deleteMasterUser($event, item)">Delete
                         </md-button>
 
+                        <md-button data-ng-if="item.is_admin" class="md-raised"
+                                   data-ng-click="vm.renameMasterUser($event, item)">Rename
+                        </md-button>
+
                         <md-button class="md-raised md-primary" data-ng-click="vm.activateDatabase(item)">Open
                         </md-button>
                     </md-card-actions>

@@ -251,24 +251,51 @@
                 scope.getData = function () {
 
                     console.log('getData.key', scope.item.key);
+                    console.log('getData.scope', scope);
 
-                    fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
+                    if (scope.entityType === 'complex-transaction') {
 
-                        scope.type = res.type;
-                        scope.fields = res.data;
-                        scope.readyStatus.content = true;
+                        fieldResolverService.getFieldsByContentType(scope.item.content_type, scope.options).then(function (res) {
 
-                        scope.getFieldsGrouped();
+                            scope.type = res.type;
+                            scope.fields = res.data;
+                            scope.readyStatus.content = true;
 
-                        scope.$apply(function () {
+                            console.log('getData', res);
 
-                            setTimeout(function () {
-                                $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                    ev.stopPropagation();
-                                });
-                            }, 100);
+                            scope.getFieldsGrouped();
+
+                            scope.$apply(function () {
+
+                                setTimeout(function () {
+                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                        ev.stopPropagation();
+                                    });
+                                }, 100);
+                            });
                         });
-                    });
+
+                    } else {
+
+                        fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
+
+                            scope.type = res.type;
+                            scope.fields = res.data;
+                            scope.readyStatus.content = true;
+
+                            scope.getFieldsGrouped();
+
+                            scope.$apply(function () {
+
+                                setTimeout(function () {
+                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                        ev.stopPropagation();
+                                    });
+                                }, 100);
+                            });
+                        });
+
+                    }
                 };
 
                 scope.$watch('item', function () {
@@ -301,7 +328,7 @@
                 });
 
                 scope.changeHandler = function () {
-                    if(scope.itemChange) {
+                    if (scope.itemChange) {
                         scope.itemChange()
                     }
                 };

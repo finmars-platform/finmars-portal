@@ -282,6 +282,11 @@
 
             });
 
+
+        };
+
+        vm.syncInterfaceSectionsAccess = function(){
+
             vm.accessSectionTable.history =
                 vm.accessTable.data_transaction ||
                 vm.accessTable.data_price_history ||
@@ -320,12 +325,156 @@
                 vm.accessTable.configuration_complex_import_scheme;
 
 
-
             vm.accessSectionTable.settings_administration =
                 vm.accessTable.settings_provider ||
                 vm.accessTable.settings_init_configuration ||
                 vm.accessTable.settings_users_groups_permission ||
                 vm.accessTable.settings_ecosystem_default
+
+        };
+
+        vm.applyMemberInterfacePermissions = function () {
+
+            console.log('currentMember', vm.currentMember);
+
+            if (!vm.currentMember.is_admin && !vm.currentMember.is_owner) {
+
+                console.log("Applying Member Interface Permissions");
+
+                vm.currentMember.groups_object.forEach(function (group) {
+
+                    console.log(' group.permission_table',  group.permission_table);
+
+                    if (group.permission_table) {
+
+                        if (group.permission_table.function) {
+
+                            group.permission_table.function.forEach(function (item) {
+
+                                console.log('function item', item);
+
+                                if (item.content_type === 'function.import_data') {
+
+                                    if (vm.accessTable.data_simple_import) { // because possibly we dont have access to this menu via interface complexity level
+                                        vm.accessTable.data_simple_import = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'function.import_transactions') {
+                                    if (vm.accessTable.data_transaction_import) {
+                                        vm.accessTable.data_transaction_import = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'function.import_complex') {
+                                    if (vm.accessTable.data_complex_import) {
+                                        vm.accessTable.data_complex_import = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'function.provider_download_instrument') {
+                                    if (vm.accessTable.data_instrument_download) {
+                                        vm.accessTable.data_instrument_download = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'function.provider_download_price') {
+                                    if (vm.accessTable.data_prices_download) {
+                                        vm.accessTable.data_prices_download = item.data.creator_view
+                                    }
+                                }
+
+
+                            })
+
+                        }
+
+
+                        if (group.permission_table.configuration) {
+
+                            group.permission_table.configuration.forEach(function (item) {
+
+                                if (item.content_type === 'obj_attrs.attributetype') {
+
+                                    if (vm.accessTable.configuration_user_attributes) { // because possibly we dont have access to this menu via interface complexity level
+                                        vm.accessTable.configuration_user_attributes = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'reference_tables.referencetable') {
+
+                                    if (vm.accessTable.configuration_reference_table) {
+                                        vm.accessTable.configuration_reference_table = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'ui.templatelayout') {
+
+                                    if (vm.accessTable.configuration_template) {
+                                        vm.accessTable.configuration_template = item.data.creator_view
+                                    }
+
+                                }
+
+                                if (item.content_type === 'integrations.mappingtable') {
+
+                                    if (vm.accessTable.configuration_mapping_tables) {
+                                        vm.accessTable.configuration_mapping_tables = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'integrations.pricedownloadscheme') {
+
+                                    if (vm.accessTable.configuration_price_download_scheme) {
+                                        vm.accessTable.configuration_price_download_scheme = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'integrations.instrumentdownloadscheme') {
+
+                                    if (vm.accessTable.configuration_instrument_download_scheme) {
+                                        vm.accessTable.configuration_instrument_download_scheme = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'csv_import.csvimportscheme') {
+
+                                    if (vm.accessTable.configuration_simple_import_scheme) {
+                                        vm.accessTable.configuration_simple_import_scheme = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'integrations.complextransactionimportscheme') {
+
+                                    if (vm.accessTable.configuration_transaction_import_scheme) {
+                                        vm.accessTable.configuration_transaction_import_scheme = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'complex_import.compleximportscheme') {
+
+                                    if (vm.accessTable.configuration_complex_import_scheme) {
+                                        vm.accessTable.configuration_complex_import_scheme = item.data.creator_view
+                                    }
+                                }
+
+                                if (item.content_type === 'ui.userfield') {
+
+                                    if (vm.accessTable.configuration_aliases) {
+                                        vm.accessTable.configuration_aliases = item.data.creator_view
+                                    }
+                                }
+
+
+                            })
+
+                        }
+
+                    }
+
+                });
+
+            }
 
         };
 
@@ -338,6 +487,8 @@
                 vm.interfaceAccess = data;
 
                 vm.syncInterfaceAccess();
+                vm.applyMemberInterfacePermissions();
+                vm.syncInterfaceSectionsAccess();
 
                 vm.readyStatus.access = true;
 
@@ -349,13 +500,19 @@
 
         vm.getMember = function () {
 
-            usersService.getOwnMemberSettings().then(function (data) {
+            usersService.getMyCurrentMember().then(function (data) {
 
-                console.log('vm.getMember.data', data);
+                vm.currentMember = data;
 
-                vm.member = data.results[0];
+                usersService.getOwnMemberSettings().then(function (data) {
 
-                vm.getInterfaceAccess();
+                    console.log('vm.getMember.data', data);
+
+                    vm.member = data.results[0];
+
+                    vm.getInterfaceAccess();
+
+                })
 
             })
 

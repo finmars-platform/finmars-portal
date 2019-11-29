@@ -323,6 +323,40 @@
             ]
         };
 
+        vm.checkConfigurationSection = function () {
+
+            var result = true;
+
+            vm.permissionTable.configuration.forEach(function (item) {
+
+                Object.keys(item.data).forEach(function (key) {
+
+                    if (!item.data[key]) {
+                        result = false;
+                    }
+
+                })
+
+            });
+
+            return result;
+
+        };
+
+        vm.allowConfigurationSection = function () {
+
+            vm.permissionTable.configuration.forEach(function (item) {
+
+                Object.keys(item.data).forEach(function (key) {
+
+                    item.data[key] = true
+
+                })
+
+            })
+
+        };
+
         vm.presetChange = function ($event) {
 
             console.log('activePreset', vm.activePresetId);

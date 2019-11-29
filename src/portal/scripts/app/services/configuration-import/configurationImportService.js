@@ -30,9 +30,104 @@
 
     var referenceTablesService = require('../../services/referenceTablesService');
 
+    var assignPermissions = function (contentType, item, settings) {
+
+        return new Promise(function (resolve, reject) {
+
+            item.object_permissions = [];
+
+            var currentMember = settings.member;
+            var groups = JSON.parse(JSON.stringify(settings.groups));
+
+            var entityType = metaContentTypesService.findEntityByContentType(contentType);
+            var table;
+            var isCreator;
+
+            groups.forEach(function (group) {
+
+                if (group.permission_table && group.permission_table.data) {
+
+                    table = group.permission_table.data.find(function (item) {
+                        return item.content_type === contentType
+                    }).data;
+
+                    isCreator = currentMember.groups.indexOf(group.id) !== -1;
+
+                    group.objectPermissions = {};
+
+                    if (isCreator) {
+
+                        if (table.creator_manage) {
+                            group.objectPermissions.manage = true;
+                        }
+
+                        if (table.creator_change) {
+                            group.objectPermissions.change = true;
+                        }
+
+                        if (table.creator_view) {
+                            group.objectPermissions.view = true;
+                        }
+
+
+                    } else {
+
+                        if (table.other_manage) {
+                            group.objectPermissions.manage = true;
+                        }
+
+                        if (table.other_change) {
+                            group.objectPermissions.change = true;
+                        }
+
+                        if (table.other_view) {
+                            group.objectPermissions.view = true;
+                        }
+
+                    }
+
+                }
+
+            });
+
+            groups.forEach(function (group) {
+
+                if (group.objectPermissions && group.objectPermissions.manage === true) {
+                    item.object_permissions.push({
+                        member: null,
+                        group: group.id,
+                        permission: "manage_" + entityType.split('-').join('')
+                    })
+                }
+
+                if (group.objectPermissions && group.objectPermissions.change === true) {
+                    item.object_permissions.push({
+                        member: null,
+                        group: group.id,
+                        permission: "change_" + entityType.split('-').join('')
+                    })
+                }
+                if (group.objectPermissions && group.objectPermissions.view === true) {
+                    item.object_permissions.push({
+                        member: null,
+                        group: group.id,
+                        permission: "view_" + entityType.split('-').join('')
+                    })
+                }
+
+            });
+
+            console.log('assignPermissions', item);
+
+            resolve()
+
+        })
+
+    };
+
     // Overwrite handler start
 
-    var recursiveOverwriteItem = function (resolve, index, entityItem, cacheContainer, errors) {
+    var recursiveOverwriteItem = function (resolve, index, entityItem, settings, cacheContainer, errors) {
 
         var item = entityItem.content[index];
 
@@ -40,14 +135,14 @@
 
         if (item.active) {
 
-            overwriteItem(item, entityItem.entity, cacheContainer, errors).then(function () {
+            overwriteItem(item, entityItem.entity, settings, cacheContainer, errors).then(function () {
 
                 window.importConfigurationCounter = window.importConfigurationCounter + 1;
 
                 if (index === entityItem.content.length) {
                     resolve(item);
                 } else {
-                    recursiveOverwriteItem(resolve, index, entityItem, cacheContainer, errors)
+                    recursiveOverwriteItem(resolve, index, entityItem, settings, cacheContainer, errors)
                 }
 
             })
@@ -56,14 +151,14 @@
             if (index === entityItem.content.length) {
                 resolve(item);
             } else {
-                recursiveOverwriteItem(resolve, index, entityItem, cacheContainer, errors)
+                recursiveOverwriteItem(resolve, index, entityItem, settings, cacheContainer, errors)
             }
 
         }
 
     };
 
-    var getAndUpdate = function (contentType, item, cacheContainer) {
+    var getAndUpdate = function (contentType, item, settings, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
 
@@ -78,6 +173,12 @@
             entityResolverService.getList(entityType, options).then(function (data) {
 
                 var result;
+
+                console.log("GET AND UPDATE ", contentType);
+
+                if (['transactions.transactiontype', 'accounts.accounttype', 'instruments.instrumenttype'].indexOf(contentType) !== -1) {
+                    assignPermissions(contentType, item, settings);
+                }
 
                 if (data.results.length) {
 
@@ -137,6 +238,9 @@
 
                     var result;
 
+                    if (['transactions.transactiontype', 'accounts.accounttype', 'instruments.instrumenttype'].indexOf(contentType) !== -1) {
+                        assignPermissions(contentType, item, settings);
+                    }
                     if (data.results.length) {
 
                         data.results.forEach(function (resultItem) {
@@ -329,7 +433,7 @@
 
     };
 
-    var overwriteItem = function (item, contentType, cacheContainer, errors) {
+    var overwriteItem = function (item, contentType, settings, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -343,19 +447,19 @@
                     switch (contentType) {
 
                         case 'transactions.transactiontype':
-                            resolve(getAndUpdate(contentType, item, cacheContainer));
+                            resolve(getAndUpdate(contentType, item, settings, cacheContainer));
                             break;
                         case 'accounts.accounttype':
-                            resolve(getAndUpdate(contentType, item, cacheContainer));
+                            resolve(getAndUpdate(contentType, item, settings, cacheContainer));
                             break;
                         case 'currencies.currency':
-                            resolve(getAndUpdate(contentType, item, cacheContainer));
+                            resolve(getAndUpdate(contentType, item, settings, cacheContainer));
                             break;
                         case 'instruments.pricingpolicy':
-                            resolve(getAndUpdate(contentType, item, cacheContainer));
+                            resolve(getAndUpdate(contentType, item, settings, cacheContainer));
                             break;
                         case 'instruments.instrumenttype':
-                            resolve(getAndUpdate(contentType, item, cacheContainer));
+                            resolve(getAndUpdate(contentType, item, settings, cacheContainer));
                             break;
                         case 'integrations.pricingautomatedschedule':
                             resolve(pricingAutomatedScheduleService.updateSchedule(item));
@@ -1272,7 +1376,7 @@
 
     };
 
-    var overwriteEntityItems = function (entities, cacheContainer, errors) {
+    var overwriteEntityItems = function (entities, settings, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -1286,7 +1390,7 @@
 
                     var startIndex = 0;
 
-                    recursiveOverwriteItem(resolveItem, startIndex, entityItem, cacheContainer, errors)
+                    recursiveOverwriteItem(resolveItem, startIndex, entityItem, settings, cacheContainer, errors)
                 }))
 
             });
@@ -1347,7 +1451,7 @@
                     item.entity !== 'ui.editlayout' &&
                     item.entity !== 'ui.listlayout' &&
                     item.entity !== 'ui.templatelayout' &&
-                    item.entity !== 'ui.reportlayout'&&
+                    item.entity !== 'ui.reportlayout' &&
                     item.entity !== 'ui.dashboardlayout'
             });
 
@@ -1368,35 +1472,35 @@
 
             });
 
-            overwriteEntityItems(instrumentTypes, cacheContainer, errors).then(function (data) {
+            overwriteEntityItems(instrumentTypes, settings, cacheContainer, errors).then(function (data) {
 
                 console.log("Overwrite Instrument Types", data);
 
-                overwriteEntityItems(transactionTypeGroups, cacheContainer, errors).then(function (data) {
+                overwriteEntityItems(transactionTypeGroups, settings, cacheContainer, errors).then(function (data) {
 
                     console.log("Overwrite Transaction Types Groups", data);
 
-                    overwriteEntityItems(transactionTypes, cacheContainer, errors).then(function (data) {
+                    overwriteEntityItems(transactionTypes, settings, cacheContainer, errors).then(function (data) {
 
                         console.log("Overwrite Transaction Types", data);
 
-                        overwriteEntityItems(attributeTypes, cacheContainer, errors).then(function (data) {
+                        overwriteEntityItems(attributeTypes, settings, cacheContainer, errors).then(function (data) {
 
                             console.log("Overwrite (create attributes if not exists)", data);
 
-                            overwriteEntityItems(otherEntities, cacheContainer, errors).then(function (data) {
+                            overwriteEntityItems(otherEntities, settings, cacheContainer, errors).then(function (data) {
 
                                 console.log("Overwrite Other Entities success", data);
 
-                                overwriteEntityItems(layoutEntities, cacheContainer, errors).then(function (data) {
+                                overwriteEntityItems(layoutEntities, settings, cacheContainer, errors).then(function (data) {
 
                                     console.log("Overwrite Layouts success", data);
 
-                                    overwriteEntityItems(dashboardLayoutEntities, cacheContainer, errors).then(function (data) {
+                                    overwriteEntityItems(dashboardLayoutEntities, settings, cacheContainer, errors).then(function (data) {
 
                                         console.log("Overwrite Dashboard Layouts success", data);
 
-                                        overwriteEntityItems(complexImportSchemes, cacheContainer, errors).then(function (data) {
+                                        overwriteEntityItems(complexImportSchemes, settings, cacheContainer, errors).then(function (data) {
 
                                             console.log("Overwrite Complex Import Scheme success", data);
 

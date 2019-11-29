@@ -105,6 +105,20 @@
 
         };
 
+        vm.exportDashboardLayout = function($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardLayoutExportDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-layout-export-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {layout: vm.layout}
+                }
+            })
+
+        };
+
         vm.refreshActiveTab = function () {
 
             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ACTIVE_TAB)

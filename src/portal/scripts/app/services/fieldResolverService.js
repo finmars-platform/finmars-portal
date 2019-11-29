@@ -411,7 +411,7 @@
                     break;
                 case 'instruments.instrumenttype':
                     instrumentTypeRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instruments.instrumenttype', data: data});
+                        resolve({type: 'id', key: 'instruments.instrumenttype', data: data.results});
                     });
                     break;
                 case 'currencies.currency':
@@ -437,6 +437,11 @@
                 case 'accounts.account':
                     accountRepository.getList({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'accounts.account', data: data.results});
+                    });
+                    break;
+                case 'accounts.accounttype':
+                    accountTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'accounts.accounttype', data: data.results});
                     });
                     break;
                 case 'strategies.strategy1':

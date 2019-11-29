@@ -85,7 +85,7 @@
                             </md-tab-body>
                         </md-tab>
 
-                        <md-tab>
+                        <md-tab data-ng-if="vm.canManagePermissions">
                             <md-tab-label>
                                 <span class="colored-tab">Permissions</span>
                             </md-tab-label>
@@ -164,14 +164,17 @@
                                                              layout-align="space-between center">
                                                             <div flex="33" layout="center center">
                                                                 <md-checkbox class="md-secondary"
+                                                                             data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin && !vm.currentMember.is_owner}"
                                                                              ng-model="group.objectPermissions.manage"></md-checkbox>
                                                             </div>
                                                             <div flex="33" layout="center center">
                                                                 <md-checkbox class="md-secondary"
+                                                                             data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin && !vm.currentMember.is_owner}"
                                                                              ng-model="group.objectPermissions.change"></md-checkbox>
                                                             </div>
                                                             <div flex="33" layout="center center">
                                                                 <md-checkbox class="md-secondary"
+                                                                             data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin && !vm.currentMember.is_owner}"
                                                                              ng-model="group.objectPermissions.view"></md-checkbox>
                                                             </div>
                                                         </div>

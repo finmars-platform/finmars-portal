@@ -110,7 +110,8 @@
                     middlewareService.masterUserChanged();
                     $state.go('app.home');
                     vm.getMasterUsersList();
-                };
+                }
+                ;
 
                 if (ev.data.event === crossTabEvents.LOGOUT) {
 
@@ -124,7 +125,8 @@
                         cookiesService.deleteCookie();
                     });
 
-                };
+                }
+                ;
 
 
             }
@@ -186,7 +188,8 @@
 
                 });
 
-            };
+            }
+            ;
 
         };
 
@@ -196,11 +199,11 @@
                 return 'profile'
             }
 
-            if($state.current.name.indexOf('app.setup') !== -1) {
+            if ($state.current.name.indexOf('app.setup') !== -1) {
                 return 'setup';
             }
 
-            if($state.current.name.indexOf('app.new-database') !== -1) {
+            if ($state.current.name.indexOf('app.new-database') !== -1) {
                 return 'new-database';
             }
 
@@ -220,7 +223,7 @@
 
         var showLayoutName = false;
 
-        vm.initTransitionListener = function(){
+        vm.initTransitionListener = function () {
 
             $transitions.onStart({}, function () {
                 $mdDialog.hide();
@@ -492,7 +495,8 @@
 
                     if (vm.broadcastManager) {
                         vm.broadcastManager.postMessage({event: crossTabEvents.LOGOUT});
-                    };
+                    }
+                    ;
 
                     middlewareService.initLogOut();
 

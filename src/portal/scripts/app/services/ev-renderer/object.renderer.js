@@ -3,6 +3,61 @@
     var renderHelper = require('../../helpers/render.helper');
 
     var checkIcon = renderHelper.getCheckIcon();
+    var lockIcon = renderHelper.getLockIcon();
+    var starIcon = renderHelper.getStarIcon();
+
+    var getIcon = function (obj, currentMember, classList) {
+
+        var result = '';
+
+        if (obj.object_permissions) {
+
+            var hasChange = false;
+            var hasManage = false;
+
+            result = lockIcon; // lock
+
+            obj.object_permissions.forEach(function (perm) {
+
+                if (currentMember.groups.indexOf(perm.group) !== -1) {
+
+                    if (perm.permission.indexOf('change_') !== -1) {
+                        hasChange = true
+                    }
+
+                    if (perm.permission.indexOf('manage_') !== -1) {
+                        hasManage = true
+                    }
+
+                }
+
+            });
+
+            if (hasChange) {
+                result = ''
+            }
+
+            if (hasManage) {
+                result = starIcon
+            }
+
+            if (obj.___is_activated && result !== '') { // Be aware of specific mutation
+                classList.push('selected-blue')
+            }
+
+        }
+
+        // if (currentMember.is_admin) {
+        //     result = starIcon
+        // }
+
+        if (obj.___is_activated) {
+            result = checkIcon
+        }
+
+        return result
+
+    };
 
     var getValue = function (obj, column) {
 
@@ -103,7 +158,7 @@
 
     };
 
-    var render = function (obj, columns) {
+    var render = function (obj, columns, currentMember) {
 
         var classList = ['g-row'];
 
@@ -111,10 +166,9 @@
 
         if (obj.___is_activated) {
             classList.push('selected');
-            rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
-        } else {
-            rowSelection = '<div class="g-row-selection"></div>';
         }
+
+        rowSelection = '<div class="g-row-selection">' + getIcon(obj, currentMember, classList) + '</div>';
 
         if (obj.___is_activated) {
             classList.push('activated');

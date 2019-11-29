@@ -9,6 +9,7 @@
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
         var evHelperService = require('../../services/entityViewerHelperService');
+        var usersService = require('../../services/usersService');
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -388,6 +389,7 @@
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
+                vm.entityViewerDataService.setCurrentMember(vm.currentMember);
 
                 vm.downloadAttributes();
 
@@ -468,6 +470,17 @@
 
             };
 
+            vm.getCurrentMember = function () {
+
+                return usersService.getMyCurrentMember().then(function (data) {
+
+                    vm.currentMember = data;
+
+                    $scope.$apply();
+
+                });
+            };
+
             vm.init = function () {
 
                 middlewareService.onMasterUserChanged(function () {
@@ -484,7 +497,11 @@
 
                 });
 
-                vm.getView();
+                vm.getCurrentMember().then(function (value) {
+
+                    vm.getView();
+
+                })
 
 
             };

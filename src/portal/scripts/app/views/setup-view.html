@@ -1,6 +1,6 @@
 <div class="p-16 setup-page">
 
-    <div data-ng-if="vm.readyStatus.content && vm.readyStatus.member">
+    <div data-ng-if="vm.readyStatus.content && vm.readyStatus.member && vm.readyStatus.groups">
 
         <div data-ng-if="!vm.finishingSetup">
 
@@ -140,7 +140,7 @@
     </div>
 
 
-    <div data-ng-if="!vm.readyStatus.content || !vm.readyStatus.member">
+    <div data-ng-if="!vm.readyStatus.content || !vm.readyStatus.member || !vm.readyStatus.groups">
         <div class="m-l-16" layout="row" layout-sm="column" layout-align="space-around">
             <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
         </div>
