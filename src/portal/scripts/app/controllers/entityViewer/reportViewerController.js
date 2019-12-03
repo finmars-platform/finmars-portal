@@ -202,6 +202,68 @@
 
                         }
 
+                        if (action === 'edit_pricing_currency') {
+
+                            $mdDialog.show({
+                                controller: 'EntityViewerEditDialogController as vm',
+                                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: activeObject.event,
+                                locals: {
+                                    entityType: 'currency',
+                                    entityId: activeObject['pricing_currency.id']
+                                }
+                            }).then(function (res) {
+
+                                vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                                if (res && res.res === 'agree') {
+
+                                    vm.entityViewerDataService.resetData();
+                                    vm.entityViewerDataService.resetRequestParameters();
+
+                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                }
+                            });
+
+                        }
+
+                        if (action === 'edit_accrued_currency') {
+
+                            $mdDialog.show({
+                                controller: 'EntityViewerEditDialogController as vm',
+                                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: activeObject.event,
+                                locals: {
+                                    entityType: 'currency',
+                                    entityId: activeObject['accrued_currency.id']
+                                }
+                            }).then(function (res) {
+
+                                vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                                if (res && res.res === 'agree') {
+
+                                    vm.entityViewerDataService.resetData();
+                                    vm.entityViewerDataService.resetRequestParameters();
+
+                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                }
+                            });
+
+                        }
+
                         if (action === 'edit_price') {
 
                             var filters = {
@@ -421,7 +483,7 @@
 
                         }
 
-                        if (action === 'edit_pricing_currency' && activeObject.id) {
+                        if (action === 'edit_pricing_currency_price' && activeObject.id) {
 
                             console.log('activeObject', activeObject);
 
@@ -533,7 +595,7 @@
 
                         }
 
-                        if (action === 'edit_accrued_currency' && activeObject.id) {
+                        if (action === 'edit_accrued_currency_fx_rate' && activeObject.id) {
 
                             var filters = {
                                 currency: activeObject['accrued_currency.id'],
@@ -1018,6 +1080,38 @@
                                 locals: {
                                     entityType: 'complex-transaction',
                                     entity: entity
+                                }
+                            }).then(function (res) {
+
+                                vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                                if (res && res.res === 'agree') {
+
+                                    vm.entityViewerDataService.resetData();
+                                    vm.entityViewerDataService.resetRequestParameters();
+
+                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                }
+                            });
+
+                        }
+
+                        if (action === 'rebook_transaction') {
+
+                            $mdDialog.show({
+                                controller: 'ComplexTransactionEditDialogController as vm',
+                                templateUrl: 'views/entity-viewer/complex-transaction-edit-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: activeObject.event,
+                                //clickOutsideToClose: false,
+                                locals: {
+                                    entityType: 'complex-transaction',
+                                    entityId: activeObject['complex_transaction.id']
                                 }
                             }).then(function (res) {
 

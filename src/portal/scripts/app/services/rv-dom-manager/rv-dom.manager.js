@@ -789,11 +789,20 @@
             return true;
         }
 
-        if (obj['item_type'] === 1 && option.action === 'edit_pricing_currency') { // item_type = 1 - instrument
+        if (obj['item_type'] === 1 && obj['pricing_currency.id'] && option.action === 'edit_pricing_currency') { // item_type = 1 - instrument
             return true;
         }
 
-        if (obj['item_type'] === 1 && option.action === 'edit_accrued_currency') { // item_type = 1 - instrument
+        if (obj['item_type'] === 1 && obj['accrued_currency.id'] && option.action === 'edit_accrued_currency') { // item_type = 1 - instrument
+            return true;
+        }
+
+
+        if (obj['item_type'] === 1 && option.action === 'edit_pricing_currency_price') { // item_type = 1 - instrument
+            return true;
+        }
+
+        if (obj['item_type'] === 1 && option.action === 'edit_accrued_currency_fx_rate') { // item_type = 1 - instrument
             return true;
         }
 
@@ -806,6 +815,10 @@
         }
 
         if (option.action === 'book_transaction') {
+            return true;
+        }
+
+        if (obj['complex_transaction.id'] && option.action === 'rebook_transaction') {
             return true;
         }
 
