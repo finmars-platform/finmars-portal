@@ -23,8 +23,6 @@
 
                 <div data-ng-repeat="item in vm.twoFactorItems" layout="row">
 
-                    {{item.name}}
-
                     <md-button class="md-raised md-warn" style="margin: 0"  data-ng-click="vm.revokeTwoFactor($event, item)">Revoke Linked Device
                     </md-button>
 
