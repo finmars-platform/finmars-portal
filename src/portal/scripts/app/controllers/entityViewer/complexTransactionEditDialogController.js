@@ -324,10 +324,11 @@
                 transaction_type: vm.entity.transaction_type,
                 recalculate_inputs: [item.name],
                 process_mode: 'recalculate',
+                complex_transaction: vm.entity,
                 values: values
             };
 
-            var handler = function (data) {
+            complexTransactionService.rebookComplexTransaction(book.id, book).then(function (data) {
 
                 // vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
                 vm.transactionTypeId = data.transaction_type;
@@ -406,34 +407,7 @@
 
                 $scope.$apply();
 
-            };
-
-            complexTransactionService.initRebookComplexTransaction(book.id).then(function (data) {
-
-                var originValues = JSON.parse(JSON.stringify(book.values));
-
-                // entity.transactions = data.transactions;
-                book.values = data.values;
-                book.complex_transaction = data.complex_transaction; // ?
-
-                var originValuesKeys = Object.keys(originValues);
-                var defaultValuesKeys = Object.keys(book.values);
-
-                originValuesKeys.forEach(function (originVal) {
-                    defaultValuesKeys.forEach(function (defaultVal) {
-
-                        if (originVal === defaultVal) {
-                            book.values[defaultVal] = originValues[originVal];
-                        }
-
-                    })
-                });
-
-                book.process_mode = 'recalculate';
-
-                complexTransactionService.rebookComplexTransaction(book.id, book).then(handler);
-
-            })
+            });
 
         };
 
