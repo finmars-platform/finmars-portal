@@ -1,0 +1,50 @@
+<div>
+
+    <div style="max-width: 960px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">
+
+
+        <div layout="row">
+            <div>Two-step verification</div>
+
+            <md-checkbox style="margin-left: 16px;" data-ng-model="vm.user.profile.two_factor_verification"
+                         data-ng-change="vm.updateUser()" aria-label="member permission">
+
+                <span data-ng-if="vm.user.profile.two_factor_verification"><b>On</b></span>
+                <span data-ng-if="!vm.user.profile.two_factor_verification"><b>Off</b></span>
+
+            </md-checkbox>
+
+        </div>
+
+        <div data-ng-if="vm.user.profile.two_factor_verification">
+
+
+            <div data-ng-if="vm.twoFactorItems.length">
+
+                <div data-ng-repeat="item in vm.twoFactorItems" layout="row">
+
+                    {{item.name}}
+
+                    <md-button class="md-raised md-warn" style="margin: 0"  data-ng-click="vm.revokeTwoFactor($event, item)">Revoke Linked Device
+                    </md-button>
+
+                </div>
+
+            </div>
+
+            <div data-ng-if="!vm.twoFactorItems.length">
+                No Linked Devices Found
+            </div>
+
+            <div class="m-t-16" data-ng-if="!vm.twoFactorItems.length" >
+
+                <md-button class="md-primary md-raised"  style="margin: 0" data-ng-click="vm.addDevice($event)">Add Device</md-button>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>

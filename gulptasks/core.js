@@ -38,6 +38,8 @@
 
             'node_modules/whatwg-fetch/fetch.js',
 
+            'node_modules/qrious/dist/qrious.js',
+
             'node_modules/moment/moment.js',
 
             'node_modules/dragula/dist/dragula.js',
@@ -216,7 +218,8 @@
             'node_modules/jstree/dist/jstree.js',
             'node_modules/toastr/build/toastr.min.js',
             'src/core/datepicker/pickmeup.js',
-            'node_modules/d3/dist/d3.js'
+            'node_modules/d3/dist/d3.js',
+            'node_modules/qrious/dist/qrious.js'
         ];
 
         return gulp.src(pathToJS)
