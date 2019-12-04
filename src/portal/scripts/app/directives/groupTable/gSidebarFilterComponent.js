@@ -7,6 +7,8 @@
 
     var fieldResolverService = require('../../services/fieldResolverService');
     var evEvents = require('../../services/entityViewerEvents');
+    var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
+    var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
@@ -298,6 +300,27 @@
 
                     });
 
+
+                };
+
+                scope.openContextMenu = function ($event) {
+
+                    var lastClickedRow = scope.evDataService.getActiveObject();
+
+                    if (lastClickedRow) {
+
+                        var objectId = lastClickedRow.___id;
+                        var parentGroupHashId = lastClickedRow.___parentId;
+
+                        var contextMenuPosition = 'top: ' + $event.pageY + 'px; right: 0;';
+
+                        if (scope.isReport) {
+                            rvDomManager.createPopupMenu(objectId, parentGroupHashId, scope.evDataService, scope.evEventService, contextMenuPosition);
+                        } else {
+                            evDomManager.createPopupMenu(objectId, parentGroupHashId, scope.evDataService, scope.evEventService, contextMenuPosition);
+                        }
+
+                    }
 
                 };
 

@@ -797,12 +797,12 @@
 
                         clearInterval(timeout);
 
-                        $mdDialog.hide({status: 'agree', data: {}});
-
                         console.log('mappingsData', configurationData);
                         console.log('mappingsData', mappingsData);
 
                         if (configurationData.errors.length) {
+
+                            $mdDialog.hide({status: 'errors_occured', data: {}});
 
                             $mdDialog.show({
                                 controller: 'SettingGeneralConfigurationPreviewFileErrorsDialogController as vm',
@@ -838,6 +838,10 @@
                                     }
                                 }
 
+                            }).then(function () {
+
+                                $mdDialog.hide({status: 'agree', data: {}});
+
                             });
 
 
@@ -866,7 +870,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.checkForDuplicates = function () {

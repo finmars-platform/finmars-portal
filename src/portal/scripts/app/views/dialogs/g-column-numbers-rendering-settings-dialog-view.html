@@ -114,6 +114,23 @@
                 </div>
 
             </fieldset>
+
+            <div flex="50" class="column-nrs-modification-fields-container">
+                <md-input-container class="no-error-spacer m-b-16">
+                    <label for="">Suffix , default = ""</label>
+                    <input type="text" ng-model="vm.reportSettings.number_suffix">
+                </md-input-container>
+
+                <md-input-container class="no-error-spacer m-b-16">
+                    <label for="">Prefix, default = ""</label>
+                    <input type="text"  ng-model="vm.reportSettings.number_prefix">
+                </md-input-container>
+
+                <md-input-container class="no-error-spacer">
+                    <label for="">Multiplier,  default = "1.0"</label>
+                    <input type="number" ng-model="vm.reportSettings.number_multiplier" class="no-input-arrows">
+                </md-input-container>
+            </div>
         </div>
 
     </md-dialog-content>

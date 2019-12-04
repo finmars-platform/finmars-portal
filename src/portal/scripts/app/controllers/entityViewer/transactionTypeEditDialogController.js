@@ -71,6 +71,8 @@
         vm.hasEditPermission = false;
         vm.canManagePermissions = false;
 
+        var inputsToDeleteList = [];
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -624,8 +626,7 @@
 
             vm.processing = true;
 
-            return new Promise(function (resolve, reject) {
-
+            var saveTTypePrimise = new Promise(function (resolve, reject) {
 
                 if (!entityToSave) {
                     entityToSave = vm.entity;
@@ -669,6 +670,8 @@
 
                         console.log('data', data);
 
+                        originalEntityInputs = JSON.parse(JSON.stringify(data.inputs));
+
                         vm.processing = false;
                         $scope.$apply();
 
@@ -697,9 +700,11 @@
 
                 }
 
-            })
+            });
 
+            var removeDeletedInputsPromise = removeInputFromEditLayout();
 
+            return Promise.all([saveTTypePrimise, removeDeletedInputsPromise]);
         };
 
         vm.saveAndExit = function () {
@@ -758,6 +763,39 @@
 
         };
 
+        var openEditLayoutDialog = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityDataConstructorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                targetEvent: ev,
+                preserveScope: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: 'complex-transaction',
+                        fromEntityType: vm.entityType,
+                        instanceId: vm.entityId
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.readyStatus.attrs = false;
+                    vm.readyStatus.entity = false;
+                    vm.readyStatus.layout = false;
+
+                    vm.getItem();
+                    vm.getAttrs();
+
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+                }
+
+            });
+        };
 
         vm.editLayout = function (ev) {
 
@@ -765,36 +803,7 @@
 
             if (objectComparisonHelper.comparePropertiesOfObjects(originalEntityInputs, entityInputs)) {
 
-                $mdDialog.show({
-                    controller: 'EntityDataConstructorDialogController as vm',
-                    templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
-                    targetEvent: ev,
-                    preserveScope: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            entityType: 'complex-transaction',
-                            fromEntityType: vm.entityType,
-                            instanceId: vm.entityId
-                        }
-                    }
-                }).then(function (res) {
-
-                    if (res.status === "agree") {
-
-                        vm.readyStatus.attrs = false;
-                        vm.readyStatus.entity = false;
-                        vm.readyStatus.layout = false;
-
-                        vm.getItem();
-                        vm.getAttrs();
-
-                        vm.layoutAttrs = layoutService.getLayoutAttrs();
-                        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
-
-                    }
-
-                });
+                openEditLayoutDialog(ev);
 
             } else {
 
@@ -813,7 +822,7 @@
                                 response: {status: 'agree'}
                             },
                                 {
-                                    name: "Close",
+                                    name: "Cancel",
                                     response: false
                                 }]
                         }
@@ -823,7 +832,11 @@
 
                     if (res.status === 'agree') {
 
-                        vm.save();
+                        vm.save().then(function () {
+
+                            openEditLayoutDialog(ev);
+
+                        });
 
                     }
 
@@ -831,8 +844,6 @@
 
             }
 
-            /*$state.go('app.data-constructor', {entityType: vm.entityType});
-            $mdDialog.hide();*/
         };
 
         // Transaction type General Controller start
@@ -1249,11 +1260,103 @@
 
         };
 
-        vm.deleteItem = function (item, index) {
+        var removeInputFromActions = function (deletedInputName) {
+
+            inputsToDeleteList.push(deletedInputName);
+
+            vm.entity.actions.forEach(function (action) {
+
+                var actionKeys = Object.keys(action);
+
+                actionKeys.forEach(function (actionKey) {
+
+                    if (typeof action[actionKey] === 'object' && action[actionKey]) { // check if it is property that contains actions field data
+
+                        var actionType = action[actionKey];
+                        var actionTypeKeys = Object.keys(actionType);
+
+                        actionTypeKeys = actionTypeKeys.filter(function (key) {
+                            if (key.length > 7 && key.indexOf('_input') === key.length - 6) {
+                                return true;
+                            }
+                            return false;
+                        });
+
+                        actionTypeKeys.forEach(function (actionTypeKey) {
+
+                            var actionField = actionType[actionTypeKey];
+
+                            if (actionField === deletedInputName) {
+                                actionType[actionTypeKey] = null;
+                            }
+
+                        });
+
+                    }
+
+                });
+
+            });
+
+        };
+
+        var removeInputFromEditLayout = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                if (inputsToDeleteList.length > 0) {
+
+                    uiService.getEditLayoutByInstanceId('complex-transaction', vm.entityId).then(function (editLayoutData) {
+
+                        if (editLayoutData) {
+                            var editLayout = editLayoutData;
+
+                            editLayout.data.forEach(function (tab) {
+
+                                for (var i = 0; i < tab.layout.fields.length; i++) {
+                                    var field = tab.layout.fields[i];
+
+                                    if (field.attribute_class === "userInput" && inputsToDeleteList.indexOf(field.name) !== -1) {
+                                        tab.layout.fields[i] = {
+                                            colspan: field.colspan,
+                                            column: field.column,
+                                            editMode: false,
+                                            row: field.row,
+                                            type: "empty"
+                                        }
+                                    }
+
+                                }
+
+                            });
+
+                            uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, editLayout).then(function () {
+                                resolve();
+                            }).catch(function (error) {
+                                reject(error);
+                            });
+
+                        } else {
+                            reject();
+                        }
+
+                    });
+
+                } else {
+                    resolve();
+                }
+
+            });
+
+        };
+
+        vm.deleteInput = function (item, index) {
 
             vm.entity.inputs.splice(index, 1);
 
             vm.updateInputFunctions();
+
+            removeInputFromActions(item.name);
 
         };
 

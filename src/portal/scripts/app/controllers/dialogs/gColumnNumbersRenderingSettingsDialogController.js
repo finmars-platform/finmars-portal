@@ -44,15 +44,48 @@
             vm.reportSettings.percentage_format_id = 0;
         }
 
+        if (!vm.reportSettings.number_multiplier) {
+            vm.reportSettings.number_multiplier = null;
+        }
+
+        if (!vm.reportSettings.number_suffix) {
+            vm.reportSettings.number_suffix = "";
+        }
+
+        if (!vm.reportSettings.number_prefix) {
+            vm.reportSettings.number_prefix = "";
+        }
+
         vm.onRoundingChange = function () {
             if (vm.reportSettings.round_format_id !== 0) {
                 vm.reportSettings.percentage_format_id = 0;
+
+                vm.reportSettings.number_multiplier = null;
+                vm.reportSettings.number_suffix = "";
+                vm.reportSettings.number_prefix = "";
             }
         };
 
         vm.onPercentageChange = function () {
             if (vm.reportSettings.percentage_format_id !== 0) {
-                vm.reportSettings.round_format_id = 0
+                vm.reportSettings.round_format_id = 0;
+            } else {
+                vm.reportSettings.number_multiplier = null;
+                vm.reportSettings.number_suffix = "";
+                vm.reportSettings.number_prefix = "";
+            }
+
+            if (vm.reportSettings.percentage_format_id > 0 &&
+                vm.reportSettings.percentage_format_id < 4) {
+                vm.reportSettings.number_multiplier = 100;
+                vm.reportSettings.number_suffix = "%";
+                vm.reportSettings.number_prefix = "";
+            }
+
+            if (vm.reportSettings.percentage_format_id > 3) {
+                vm.reportSettings.number_multiplier = 10000;
+                vm.reportSettings.number_suffix = "bps";
+                vm.reportSettings.number_prefix = "";
             }
         };
 

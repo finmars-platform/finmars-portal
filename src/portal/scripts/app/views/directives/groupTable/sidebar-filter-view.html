@@ -7,7 +7,6 @@
                          content-wrap-element="contentWrapElement"></group-actions-block>
 
     <div data-ng-if="isReport" layout="column">
-
         <div data-ng-if="entityType === 'balance-report' || entityType === 'pl-report'">
             <md-card class="g-sidebar-report-card">
 
@@ -93,6 +92,7 @@
 
             </md-card>
         </div>
+
         <div data-ng-if="entityType === 'transaction-report'">
             <md-card class="g-sidebar-report-card">
 
@@ -155,6 +155,7 @@
 
             </md-card>
         </div>
+
         <div data-ng-if="entityType == 'cash-flow-projection-report'">
             <md-card class="g-sidebar-report-card">
 
@@ -213,6 +214,7 @@
 
             </md-card>
         </div>
+
         <div data-ng-if="entityType == 'performance-report'">
             <md-card class="g-sidebar-report-card">
 
@@ -307,6 +309,10 @@
             </md-card>
         </div>
     </div>
+
+    <md-button ng-hide="sideNavCollapsed"
+               class="md-button md-raised viewer-table-toggle-contextmenu-btn"
+               data-ng-click="openContextMenu($event)">Selected Item(s)</md-button>
 
     <div layout="row" layout-align="space-between center">
         <p class="area-title g-section-title"><span class="g-meta-circle blue">F</span><span class="after-text">ILTER AREA</span>

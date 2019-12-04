@@ -361,7 +361,13 @@
                 for (var i = 0; i < vm.tabs.length; i = i + 1) {
                     removeLastRow(vm.tabs[i]);
                 }
-                vm.ui.data = vm.tabs;
+
+                if (vm.tabs) {
+                    vm.ui.data = JSON.parse(angular.toJson(vm.tabs));
+                } else {
+                    vm.ui.data = vm.tabs;
+                }
+
 
                 if (vm.uiIsDefault) {
                     if (vm.instanceId) {
@@ -643,7 +649,7 @@
 
                 vm.attrs = data.results;
                 var entityAttrs = metaService.getEntityAttrs(vm.entityType);
-                console.log("data constructor entityAttrs", entityAttrs, vm.entityType);
+
                 /*if (vm.entityType === 'transaction-type') {
 
                     var doNotShowAttrs = ['code', 'date', 'status', 'text'];
@@ -905,14 +911,6 @@
                             var targetColumn = parseInt(target.dataset.col, 10);
                             var targetRow = parseInt(target.dataset.row, 10);
 
-                            if (elem.classList.contains('ec-attr-occupied')) { // dragging from socket
-                                var dElemTabId = elem.dataset.tabId;
-                                var dElemColumn = parseInt(elem.dataset.col, 10);
-                                var dElemRow = parseInt(elem.dataset.row, 10);
-
-                                var occupiedFieldData = JSON.parse(JSON.stringify(vm.fieldsTree[dElemTabId][dElemRow][dElemColumn]));
-                            }
-
                             var i, a;
                             for (i = 0; i < vm.tabs.length; i++) {
                                 var tab = vm.tabs[i];
@@ -924,6 +922,12 @@
                                         var field = tab.layout.fields[a];
 
                                         if (elem.classList.contains('ec-attr-occupied')) { // dragging from socket
+
+                                            var dElemTabId = elem.dataset.tabId;
+                                            var dElemColumn = parseInt(elem.dataset.col, 10);
+                                            var dElemRow = parseInt(elem.dataset.row, 10);
+
+                                            var occupiedFieldData = JSON.parse(JSON.stringify(vm.fieldsTree[dElemTabId][dElemRow][dElemColumn]));
 
                                             if (field.column === targetColumn && field.row === targetRow) {
                                                 vm.tabs[i].layout.fields[a] = occupiedFieldData;

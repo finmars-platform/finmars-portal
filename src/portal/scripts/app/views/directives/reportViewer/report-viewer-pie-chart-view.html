@@ -15,10 +15,10 @@
             <ul class="pie-chart-legends-ul" style="{{setLegendsUlStyle()}}">
                 <li ng-repeat="legend in chartDataWithPosNums" class="pie-chart-legend">
                     <div class="pie-chart-legend-color" style="{{getLegendBackgroundColor(legend.colorNumber)}}"></div>
-                    <span class="pie-chart-legend-value">- <span class="text-weight-bold">Name:</span> {{legend.name}}; <span class="text-weight-bold">Percentage:</span> {{legend.percentage}}%</span>
-                    <md-tooltip class="tooltip_1"
+                    <span class="pie-chart-legend-value">{{legend.name}}: {{formatValue(legend.numericValue)}}; {{legend.percentage}}%</span>
+                    <!--<md-tooltip class="tooltip_1"
                                 md-direction="top"
-                                style="{{getTooltipStyle()}}">{{formatValue(legend.numericValue)}}</md-tooltip>
+                                style="{{getTooltipStyle()}}">{{formatValue(legend.numericValue)}}</md-tooltip>-->
                 </li>
 
                 <li ng-repeat="legend in chartDataWithNegNums" class="pie-chart-legend">

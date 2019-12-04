@@ -549,7 +549,7 @@
 
     };
 
-    var clearActivated = function (evDataService) {
+    /*var clearActivated = function (evDataService) {
 
         var objects = evDataService.getObjects();
 
@@ -560,6 +560,55 @@
             evDataService.setObject(item);
 
         });
+
+    };*/
+
+    var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
+
+        var entityType = evDataService.getEntityType();
+
+        clearDropdowns();
+
+        var popup = document.createElement('div');
+
+        // clearActivated(evDataService);
+
+        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+        obj.___is_activated = true;
+
+        evDataService.setObject(obj);
+
+        popup.id = 'dropdown-' + objectId;
+        popup.classList.add('ev-dropdown');
+        popup.innerHTML = '<div>' +
+            '<div class="ev-dropdown-option"' +
+            ' data-ev-dropdown-action="edit"' +
+            ' data-object-id="' + objectId + '"' +
+            ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>' +
+            '<div class="ev-dropdown-option"' +
+            ' data-ev-dropdown-action="delete"' +
+            ' data-object-id="' + objectId + '"' +
+            ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
+
+
+        if (entityType === 'price-history') {
+
+            popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="edit_instrument"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
+
+        }
+
+        popup.innerHTML = popup.innerHTML + '</div>';
+
+        popup.style.cssText = menuPosition;
+        popup.style.position = 'absolute';
+
+        document.body.appendChild(popup);
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 
@@ -599,49 +648,9 @@
                     ev.preventDefault();
                     ev.stopPropagation();
 
-                    clearDropdowns();
+                    var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
 
-                    var popup = document.createElement('div');
-
-                    // clearActivated(evDataService);
-
-                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                    obj.___is_activated = true;
-
-                    evDataService.setObject(obj);
-
-                    popup.id = 'dropdown-' + objectId;
-                    popup.classList.add('ev-dropdown');
-                    popup.innerHTML = '<div>' +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="edit"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>' +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="delete"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
-
-
-                    if (entityType === 'price-history') {
-
-                        popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
-                            ' data-ev-dropdown-action="edit_instrument"' +
-                            ' data-object-id="' + objectId + '"' +
-                            ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
-
-                    }
-
-                    popup.innerHTML = popup.innerHTML + '</div>';
-
-                    popup.style.position = 'absolute';
-                    popup.style.left = event.pageX + 'px';
-                    popup.style.top = event.pageY + 'px';
-
-                    document.body.appendChild(popup);
-
-                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
                     return false;
 
@@ -655,31 +664,35 @@
 
             window.addEventListener('click', function (event) {
 
-                var objectId = event.target.dataset.objectId;
-                var parentGroupHashId = event.target.dataset.parentGroupHashId;
-                var dropdownAction = event.target.dataset.evDropdownAction;
+                if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
 
-                if (objectId && dropdownAction && parentGroupHashId) {
+                    var objectId = event.target.dataset.objectId;
+                    var parentGroupHashId = event.target.dataset.parentGroupHashId;
+                    var dropdownAction = event.target.dataset.evDropdownAction;
 
-                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+                    if (objectId && dropdownAction && parentGroupHashId) {
 
-                    if (!obj) {
-                        obj = {}
-                    }
+                        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-                    obj.event = event;
+                        if (!obj) {
+                            obj = {}
+                        }
 
-                    evDataService.setActiveObject(obj);
-                    evDataService.setActiveObjectAction(dropdownAction);
+                        obj.event = event;
 
-                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                        evDataService.setActiveObject(obj);
+                        evDataService.setActiveObjectAction(dropdownAction);
 
-                    clearDropdowns();
+                        evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
-                } else {
-
-                    if (!event.target.classList.contains('ev-dropdown-option')) {
                         clearDropdowns();
+
+                    } else {
+
+                        if (!event.target.classList.contains('ev-dropdown-option')) {
+                            clearDropdowns();
+                        }
+
                     }
 
                 }
@@ -852,6 +865,7 @@
     module.exports = {
         initEventDelegation: initEventDelegation,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
+        createPopupMenu: createPopupMenu,
         calculateContentWrapHeight: calculateContentWrapHeight,
         calculateVirtualStep: calculateVirtualStep,
         calculateScroll: calculateScroll,

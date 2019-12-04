@@ -32,6 +32,10 @@
         vm.attrs = [];
         vm.entityAttrs = [];
 
+        vm.userTextFields = [];
+        vm.userNumberFields = [];
+        vm.userDateFields = [];
+
         vm.cardsDividedIntoTabs = true;
 
         var columns = vm.entityViewerDataService.getColumns();
@@ -75,38 +79,68 @@
 
             vm.entityAttrs = attributeDataService.getEntityAttributesByEntityType(vm.entityType);
 
-            vm.entityAttrs.forEach(function (item) {
-                if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
-                    item.name = 'Group';
-                }
-                item.entity = vm.entityType;
-            });
-
             var instrumentUserFields = attributeDataService.getInstrumentUserFields();
             var transactionUserFields = attributeDataService.getTransactionUserFields();
 
             instrumentUserFields.forEach(function (field) {
 
-                vm.entityAttrs.forEach(function (entityAttr) {
+                for (var i = 0; i < instrumentUserFields.length; i++) {
+                    var entityAttr = instrumentUserFields[i];
+
+                    if (entityAttr.key === field.key) {
+                        entityAttr.name = field.name;
+                        break;
+                    }
+                }
+                /*vm.entityAttrs.forEach(function (entityAttr) {
 
                     if (entityAttr.key === field.key) {
                         entityAttr.name = field.name;
                     }
 
-                })
+                })*/
 
             });
 
             transactionUserFields.forEach(function (field) {
 
-                vm.entityAttrs.forEach(function (entityAttr) {
+                for (var i = 0; i < instrumentUserFields.length; i++) {
+                    var entityAttr = instrumentUserFields[i];
+
+                    if (entityAttr.key === field.key) {
+                        entityAttr.name = field.name;
+                        break;
+                    }
+                }
+                /*vm.entityAttrs.forEach(function (entityAttr) {
 
                     if (entityAttr.key === field.key) {
                         entityAttr.name = field.name;
                     }
 
-                })
+                })*/
 
+            });
+
+            vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
+
+                if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                    item.name = 'Group';
+                }
+                item.entity = vm.entityType;
+
+                if (item.key.indexOf("user_text_") !== -1) {
+                    vm.userTextFields.push(item);
+                    return false;
+                } else if (item.key.indexOf("user_number_") !== -1) {
+                    vm.userNumberFields.push(item);
+                    return false;
+                } else if (item.key.indexOf("user_date_") !== -1) {
+                    vm.userDateFields.push(item);
+                    return false;
+                }
+
+                return true;
             });
 
             vm.attrs = attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
@@ -128,6 +162,9 @@
             });
 
             vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.userTextFields);
+            vm.attrsList = vm.attrsList.concat(vm.userNumberFields);
+            vm.attrsList = vm.attrsList.concat(vm.userDateFields);
             vm.attrsList = vm.attrsList.concat(vm.attrs);
 
             syncAttrs();
@@ -493,7 +530,7 @@
                             evDataHelper.updateColumnsIds(vm.entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
                             vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        };
+                        }
 
                         if (target === contentWrapElement.querySelector('#groupsbag') ||
                             target === contentWrapElement.querySelector('.g-groups-holder')) {

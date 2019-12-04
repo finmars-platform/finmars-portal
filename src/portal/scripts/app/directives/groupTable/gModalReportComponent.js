@@ -111,7 +111,7 @@
 
         vm.getAttributes = function () {
 
-            // needed to display hided attributes inside selected Tab
+            // contains attributes to show inside tab
             vm.balanceAttrsFiltered = [];
             vm.balanceMismatchAttrsFiltered = [];
             vm.balancePerformanceAttrsFiltered = [];
