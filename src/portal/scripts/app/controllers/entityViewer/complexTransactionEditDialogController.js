@@ -171,7 +171,7 @@
 
                 vm.complexTransactionData.transaction_type_object.object_permissions.forEach(function (perm) {
 
-                    if (perm.permission === "change_transactiontype" || perm.permission === "view_transactiontype") {
+                    if (perm.permission === "change_transactiontype") {
 
                         if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
                             hasTransactionTypeEditAccess = true;
