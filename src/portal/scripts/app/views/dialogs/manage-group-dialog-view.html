@@ -61,12 +61,13 @@
                         <div style="width: 110px; margin-right: 10px;">
                             Create Objects
                         </div>
-                        <div style="width: 95px; margin-right: 10px;">
-                            Inherit Rights
-                        </div>
-                        <div style="width: 135px; margin-right: 25px;">
+                        <div style="width: 135px; margin-right: 10px;">
                             Manage Attributes
                         </div>
+                        <div style="width: 95px; margin-right: 25px;">
+                            Inherit Rights
+                        </div>
+
                     </div>
 
                     <div layout="row">
@@ -115,18 +116,18 @@
                             </md-checkbox>
                         </div>
 
-                        <div style="width: 95px; margin-right: 10px;">
+                        <div style="width: 95px; margin-right: 50px;">
                             <md-checkbox class="checkbox-center"
-                                         ng-class="{'disabled-btn': !vm.canInheritRight(item.content_type)}"
-                                         data-ng-checked="item.data.inherit_rights"
-                                         data-ng-click="vm.updateCheckbox(item, 'inherit_rights')">
+                                         data-ng-checked="item.data.manage_attributes"
+                                         data-ng-click="vm.updateCheckbox(item, 'manage_attributes')">
                             </md-checkbox>
                         </div>
 
                         <div style="width: 95px; margin-right: 25px;">
                             <md-checkbox class="checkbox-center"
-                                         data-ng-checked="item.data.manage_attributes"
-                                         data-ng-click="vm.updateCheckbox(item, 'manage_attributes')">
+                                         ng-class="{'disabled-btn': !vm.canInheritRight(item.content_type)}"
+                                         data-ng-checked="item.data.inherit_rights"
+                                         data-ng-click="vm.updateCheckbox(item, 'inherit_rights')">
                             </md-checkbox>
                         </div>
 
@@ -148,6 +149,7 @@
 
                         <div style="width: 40px; margin-right: 25px;">
                             <md-checkbox class="checkbox-center"
+                                         data-ng-if="item.content_type != 'currencies.currency'"
                                          ng-class="{'disabled-btn': item.data.inherit_rights || !item.data.create_objects}"
                                          data-ng-checked="item.data.creator_view"
                                          data-ng-click="vm.updateCheckbox(item, 'creator_view')">
@@ -172,6 +174,7 @@
 
                         <div style="width: 40px; margin-right: 80px;">
                             <md-checkbox class="checkbox-center"
+                                         data-ng-if="item.content_type != 'currencies.currency'"
                                          ng-class="{'disabled-btn': item.data.inherit_rights}"
                                          data-ng-checked="item.data.other_view"
                                          data-ng-click="vm.updateCheckbox(item, 'other_view')">
