@@ -1074,7 +1074,7 @@
             item.editStatus = false;
         };
 
-        vm.deleteItem = function (item, index) {
+        vm.deleteInput = function (item, index) {
 
             vm.entity.inputs.splice(index, 1);
 

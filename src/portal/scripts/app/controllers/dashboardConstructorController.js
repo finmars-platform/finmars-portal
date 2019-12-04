@@ -361,7 +361,9 @@
                 rowspan: dcRowspan
             }*/
             dcRow.columns[columnNumber].cell_type = "empty";
+            dcRow.columns[columnNumber].colspan = 1;
             dcRow.columns[columnNumber].data = {};
+            dcRow.columns[columnNumber].rowspan = 1;
 
         };
 
@@ -381,7 +383,48 @@
                 rowspan: dcRowspan
             }*/
             dcRow.columns[columnNumber].cell_type = "empty";
+            dcRow.columns[columnNumber].colspan = 1;
             dcRow.columns[columnNumber].data = {};
+            dcRow.columns[columnNumber].rowspan = 1;
+
+        };
+
+        var clearSocketSpan = function (tabNumber, rowNumber, rowSpan, colNumber, colSpan) {
+
+            var tab;
+            var row;
+            var item;
+
+            if (tabNumber === 'fixed_area') {
+                tab = vm.layout.data.fixed_area;
+            } else {
+                tab = vm.layout.data.tabs[tabNumber];
+            }
+
+            for (var r = rowNumber; r < rowNumber + rowSpan; r = r + 1) {
+
+                row = tab.layout.rows[r];
+
+                for (var c = colNumber; c < colNumber + colSpan; c = c + 1) {
+
+                    item = row.columns[c];
+
+                    if (item.is_hidden === true) {
+
+                        if (item.hidden_by.row_number === rowNumber &&
+                            item.hidden_by.column_number === colNumber) {
+
+                            delete item.is_hidden;
+                            delete item.hidden_by;
+
+                        }
+
+
+                    }
+
+                }
+
+            }
 
         };
 
@@ -462,14 +505,18 @@
 
                                 if (dc_tab_number === 'fixed_area') {
 
-                                    var dcRow = vm.layout.data.fixed_area.layout.rows[dc_row_number];
-                                    var deColData = dcRow.columns[dc_column_number].data;
+                                    var dcTab = vm.layout.data.fixed_area;
+                                    var dcRow = dcTab.layout.rows[dc_row_number];
+                                    var dcCol = dcRow.columns[dc_column_number];
+                                    var deColData = dcCol.data;
 
                                 } else {
                                     dc_tab_number = parseInt(elem.dataset.tabNumber, 10);
 
-                                    var dcRow = vm.layout.data.tabs[dc_tab_number].layout.rows[dc_row_number];
-                                    var deColData = dcRow.columns[dc_column_number].data;
+                                    var dcTab = vm.layout.data.tabs[dc_tab_number];
+                                    var dcRow = dcTab.layout.rows[dc_row_number];
+                                    var dcCol = dcRow.columns[dc_column_number];
+                                    var deColData = dcCol.data;
                                 }
 
                                 var newColData = JSON.parse(JSON.stringify(deColData));
@@ -487,12 +534,6 @@
                                     targetRow.columns[column_number].colspan = targetColspan;
                                     targetRow.columns[column_number].rowspan = targetRowspan;*/
 
-                                    if (dc_tab_number === 'fixed_area') {
-                                        emptySocketInsideFixedArea(dc_row_number, dc_column_number);
-                                    } else {
-                                        emptySocketInsideTab(dc_tab_number, dc_row_number, dc_column_number);
-                                    }
-
                                 } else { // when dragged from area with available cards
 
                                     var targetRow = vm.layout.data.tabs[tab_number].layout.rows[row_number];
@@ -506,12 +547,17 @@
                                     targetRow.columns[column_number].colspan = targetColspan;
                                     targetRow.columns[column_number].rowspan = targetRowspan;*/
 
-                                    if (dc_tab_number === 'fixed_area') {
-                                        emptySocketInsideFixedArea(dc_row_number, dc_column_number);
-                                    } else {
-                                        emptySocketInsideTab(dc_tab_number, dc_row_number, dc_column_number);
-                                    }
+                                }
 
+                                var dcRowspan = dcCol.rowspan;
+                                var dcColspan = dcCol.colspan;
+
+                                clearSocketSpan(dc_tab_number, dc_row_number, dcRowspan, dc_column_number, dcColspan);
+
+                                if (dc_tab_number === 'fixed_area') {
+                                    emptySocketInsideFixedArea(dc_row_number, dc_column_number);
+                                } else {
+                                    emptySocketInsideTab(dc_tab_number, dc_row_number, dc_column_number);
                                 }
 
                             } else {

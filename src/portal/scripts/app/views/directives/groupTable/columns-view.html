@@ -66,6 +66,7 @@
                                 <div ng-if="!column.layout_name" class="caption">
                                     <span ng-bind="column.name" class="column-name-span"></span>
                                 </div>
+
                                 <div ng-if="column.layout_name" class="caption">
                                     <span ng-bind="column.layout_name" class="column-name-span"></span>
                                 </div>
@@ -504,7 +505,7 @@
                     </md-card>
                 </div>
 
-                <div data-ng-if="!isItemAddition"
+                <div data-ng-if="viewContext !== 'dashboard'"
                      class="drop-new-field"
                      id="columnsbag">
                     Drop New Column

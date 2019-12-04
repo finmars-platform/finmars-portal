@@ -20,7 +20,7 @@
             };
 
             var regularFilters = filterService.getRegularFilters(options);
-            console.log("filtering regularFilters", options, regularFilters);
+
             var reportOptions = entityViewerDataService.getReportOptions();
 
             if (reportOptions.hasOwnProperty("items") && reportOptions.items.length > 0) {

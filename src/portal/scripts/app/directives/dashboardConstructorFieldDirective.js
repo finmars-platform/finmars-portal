@@ -235,8 +235,8 @@
                                 if (item.hidden_by.row_number === scope.rowNumber &&
                                     item.hidden_by.column_number === scope.columnNumber) {
 
-                                    delete item.is_hidden
-                                    delete item.hidden_by
+                                    delete item.is_hidden;
+                                    delete item.hidden_by;
 
                                 }
 

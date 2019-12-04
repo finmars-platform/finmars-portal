@@ -51,9 +51,109 @@
 
         $('body').addClass('drag-dialog'); // hide backdrop
 
+        var complexTransactionAttrsComp = [
+            'complex_transaction.code', 'complex_transaction.date', 'complex_transaction.status', 'complex_transaction.text'
+        ];
+
+        var userFieldsComp = [
+            'complex_transaction.user_text_1', 'complex_transaction.user_text_2', 'complex_transaction.user_text_3', 'complex_transaction.user_text_4', 'complex_transaction.user_text_5',
+            'complex_transaction.user_text_6', 'complex_transaction.user_text_7', 'complex_transaction.user_text_8', 'complex_transaction.user_text_9', 'complex_transaction.user_text_10',
+            'complex_transaction.user_text_11', 'complex_transaction.user_text_12', 'complex_transaction.user_text_13', 'complex_transaction.user_text_14', 'complex_transaction.user_text_15',
+            'complex_transaction.user_text_16', 'complex_transaction.user_text_17', 'complex_transaction.user_text_18', 'complex_transaction.user_text_19', 'complex_transaction.user_text_20',
+            'complex_transaction.user_number_1', 'complex_transaction.user_number_2', 'complex_transaction.user_number_3', 'complex_transaction.user_number_4',
+            'complex_transaction.user_number_5', 'complex_transaction.user_number_6', 'complex_transaction.user_number_7', 'complex_transaction.user_number_8',
+            'complex_transaction.user_number_9', 'complex_transaction.user_number_10', 'complex_transaction.user_number_11', 'complex_transaction.user_number_12',
+            'complex_transaction.user_number_13', 'complex_transaction.user_number_14', 'complex_transaction.user_number_15', 'complex_transaction.user_number_16',
+            'complex_transaction.user_number_17', 'complex_transaction.user_number_18', 'complex_transaction.user_number_19', 'complex_transaction.user_number_20',
+            'complex_transaction.user_date_1', 'complex_transaction.user_date_2', 'complex_transaction.user_date_3', 'complex_transaction.user_date_4', 'complex_transaction.user_date_5'
+        ];
+
+        var transactionAttrsComp = [
+            'transaction_code', 'transaction_class.name', 'position_size_with_sign', 'cash_consideration', 'principal_with_sign', 'carry_with_sign', 'overheads_with_sign',
+            'accounting_date', 'cash_date', 'reference_fx_rate', 'is_locked', 'is_canceled', 'factor', 'trade_price'
+        ];
+
+        var transactionTypeAttrsComp = [
+            'complex_transaction.transaction_type.name', 'complex_transaction.transaction_type.short_name', 'complex_transaction.transaction_type.user_code',
+            'complex_transaction.transaction_type.group'
+        ];
+
+        var instrumentAttrsComp = [
+            'instrument.name', 'instrument.short_name', 'instrument.user_code', 'instrument.public_name', 'instrument.instrument_type.name', 'instrument.instrument_type.short_name',
+            'instrument.instrument_type.user_code', 'instrument.instrument_type.public_name', 'instrument.is_active', 'instrument.price_multiplier',
+            'instrument.accrued_currency.name', 'instrument.accrued_currency.short_name', 'instrument.accrued_currency.user_code', 'instrument.maturity_date',
+            'instrument.maturity_price', 'instrument.accrued_multiplier', 'instrument.user_text_1', 'instrument.user_text_2', 'instrument.user_text_3'
+        ];
+
+        var linkedInstrumentAttrsComp = [
+            'linked_instrument.name', 'linked_instrument.short_name', 'linked_instrument.user_code', 'linked_instrument.user_text_1', 'linked_instrument.user_text_2', 'linked_instrument.user_text_3'
+        ];
+
+        var accountAttrsComp = [
+            'account_position.name', 'account_position.short_name', 'account_position.user_code', 'account_position.public_name', 'account_position.type.name',
+            'account_position.type.short_name', 'account_position.type.public_name', 'account_position.type.user_code', 'account_cash.name', 'account_cash.short_name',
+            'account_cash.user_code', 'account_cash.public_name', 'account_cash.type.name', 'account_cash.type.short_name', 'account_cash.type.public_name',
+            'account_cash.type.user_code', 'account_interim.name', 'account_interim.short_name', 'account_interim.user_code', 'account_interim.public_name',
+            'account_interim.type.name', 'account_interim.type.short_name', 'account_interim.type.public_name', 'account_interim.type.user_code'
+        ];
+
+        var currenciesAttrsComp = [
+            'transaction_currency.name', 'transaction_currency.short_name', 'transaction_currency.user_code', 'settlement_currency.name', 'settlement_currency.short_name', 'settlement_currency.user_code'
+        ];
+
+        var strategiesAttrsComp = [
+            'strategy1_cash.name', 'strategy1_cash.short_name', 'strategy1_cash.user_code', 'strategy1_cash.subgroup.name', 'strategy1_position.name', 'strategy1_position.short_name',
+            'strategy1_position.user_code', 'strategy1_position.subgroup.name', 'strategy2_cash.name', 'strategy2_cash.short_name', 'strategy2_cash.user_code',
+            'strategy2_cash.subgroup.name', 'strategy2_position.name', 'strategy2_position.short_name', 'strategy2_position.user_code', 'strategy2_position.subgroup.name',
+            'strategy3_cash.name', 'strategy3_cash.short_name', 'strategy3_cash.user_code', 'strategy3_cash.subgroup.name', 'strategy3_position.name', 'strategy3_position.short_name',
+            'strategy3_position.user_code', 'strategy3_position.subgroup.name'
+        ];
+
+        var composeAttrsInsideTab = function (vmAttrsKey, attrsToShow, filteredAttrsKey) {
+
+            vm[vmAttrsKey].forEach(function (attr) {
+                if (attrsToShow.indexOf(attr.key) !== -1) {
+                    attr.orderNumber__ = attrsToShow.indexOf(attr.key);
+
+                    if (filteredAttrsKey) {
+                        vm[filteredAttrsKey].push(attr);
+                    } else {
+                        vm[vmAttrsKey + 'Filtered'].push(attr);
+                    }
+                }
+            });
+
+        };
+
         vm.getAttributes = function () {
 
-            //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+            // contains attributes to show inside tab
+            vm.transactionAttrsFiltered= [];
+            vm.complexTransactionAttrsFiltered = [];
+            vm.transactionTypeAttrsFiltered = [];
+            vm.userFieldsFiltered = [];
+            vm.portfolioAttrsFiltered = [];
+            vm.instrumentAttrsFiltered = [];
+            vm.responsibleAttrsFiltered = [];
+            vm.counterpartyAttrsFiltered = [];
+            // instruments
+            vm.linkedInstrumentAttrsFiltered = [];
+            vm.allocationBalanceAttrsFiltered = [];
+            vm.allocationPlAttrsFiltered = [];
+            // currencies
+            vm.transactionCurrencyAttrsFiltered = [];
+            vm.settlementCurrencyAttrsFiltered = [];
+            // accounts
+            vm.accountPositionAttrsFiltered = [];
+            vm.accountCashAttrsFiltered = [];
+            vm.accountInterimAttrsFiltered = [];
+            // strategies
+            vm.strategy1cashAttrsFiltered = [];
+            vm.strategy1positionAttrsFiltered = [];
+            vm.strategy2cashAttrsFiltered = [];
+            vm.strategy2positionAttrsFiltered = [];
+            vm.strategy3cashAttrsFiltered = [];
+            vm.strategy3positionAttrsFiltered = [];
 
             vm.transactionAttrs = attributeDataService.getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
 
@@ -278,6 +378,27 @@
             vm.attrsList = vm.attrsList.concat(vm.strategy3cashAttrs);
             vm.attrsList = vm.attrsList.concat(vm.strategy3positionAttrs);
 
+            composeAttrsInsideTab('complexTransactionAttrs', complexTransactionAttrsComp);
+            composeAttrsInsideTab('complexTransactionAttrs', userFieldsComp, 'userFieldsFiltered');
+            composeAttrsInsideTab('transactionAttrs', transactionAttrsComp);
+            composeAttrsInsideTab('transactionTypeAttrs', transactionTypeAttrsComp);
+            // instrument
+            composeAttrsInsideTab('instrumentAttrs', instrumentAttrsComp);
+            composeAttrsInsideTab('linkedInstrumentAttrs', linkedInstrumentAttrsComp);
+            // account
+            composeAttrsInsideTab('accountPositionAttrs', accountAttrsComp);
+            composeAttrsInsideTab('accountCashAttrs', accountAttrsComp);
+            composeAttrsInsideTab('accountInterimAttrs', accountAttrsComp);
+            // currency
+            composeAttrsInsideTab('transactionCurrencyAttrs', currenciesAttrsComp);
+            composeAttrsInsideTab('settlementCurrencyAttrs', strategiesAttrsComp);
+            // strategies
+            composeAttrsInsideTab('strategy1cashAttrs', strategiesAttrsComp);
+            composeAttrsInsideTab('strategy1positionAttrs', strategiesAttrsComp);
+            composeAttrsInsideTab('strategy2cashAttrs', strategiesAttrsComp);
+            composeAttrsInsideTab('strategy2positionAttrs', strategiesAttrsComp);
+            composeAttrsInsideTab('strategy3cashAttrs', strategiesAttrsComp);
+            composeAttrsInsideTab('strategy3positionAttrs', strategiesAttrsComp);
 
             vm.syncAttrs();
             getSelectedAttrs();

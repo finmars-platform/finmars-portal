@@ -144,9 +144,9 @@
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
-                if (parts[1]) { // fraction digits
+                /*if (parts[1]) { // fraction digits
                     parts[1] = parts[1].replace(/(\d{3})(?=\d)/g, "$1 ")
-                }
+                }*/
 
                 return parts.join(".");
 
@@ -157,9 +157,9 @@
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "'");
 
-                if (parts[1]) { // fraction digits
+                /*if (parts[1]) { // fraction digits
                     parts[1] = parts[1].replace(/(\d{3})(?=\d)/g, "$1'")
-                }
+                }*/
 
                 return parts.join(".");
 
@@ -173,9 +173,30 @@
 
     var formatPercentage = function (value, column) {
 
+        var number = value;
+
         if (column.report_settings) {
 
-            switch (column.report_settings.percentage_format_id) {
+            if (column.report_settings.number_multiplier || column.report_settings.number_multiplier === 0) {
+                number = parseFloat(number) * column.report_settings.number_multiplier;
+            }
+
+            switch (number) {
+
+                case 1:
+                case 4:
+                    number = (parseFloat(number)).toFixed(0);
+                    break;
+                case 2:
+                case 5:
+                    number = (parseFloat(number)).toFixed(1);
+                    break;
+                case 3:
+                    number = (parseFloat(number)).toFixed(2);
+                    break;
+            }
+
+            /*switch (column.report_settings.percentage_format_id) {
 
                 case 0:
                     return value;
@@ -196,11 +217,19 @@
                     return (parseFloat(value) * 10000).toFixed(1) + ' bps';
                     break;
 
+            }*/
+
+            if (column.report_settings.number_prefix) {
+                number = column.report_settings.number_prefix + number;
+            }
+
+            if (column.report_settings.number_suffix) {
+                number = number + column.report_settings.number_suffix;
             }
 
         }
 
-        return value;
+        return number;
 
     };
 

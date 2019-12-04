@@ -496,7 +496,6 @@
                     if (vm.broadcastManager) {
                         vm.broadcastManager.postMessage({event: crossTabEvents.LOGOUT});
                     }
-                    ;
 
                     middlewareService.initLogOut();
 
@@ -512,6 +511,153 @@
                 }
 
             });
+        };
+
+        var openImportConfigurationManager = function (fileToRead) {
+
+            var reader = new FileReader();
+
+            reader.readAsText(fileToRead);
+
+            reader.onload = function (evt) {
+
+                try {
+
+                    var file = JSON.parse(evt.target.result);
+
+                    $mdDialog.show({
+                        controller: 'SettingGeneralConfigurationPreviewFileDialogController as vm',
+                        templateUrl: 'views/dialogs/settings-general-configuration-preview-file-dialog-view.html',
+                        parent: angular.element(document.body),
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: {
+                                file: file,
+                                rawFile: fileToRead
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            $state.reload();
+                        }
+
+                    });
+
+                } catch (error) {
+
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: 'Error',
+                                description: 'Unable to read it. This file is corrupted.'
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    });
+
+
+                }
+
+            }
+
+        };
+
+        vm.importOnDragListeners = function () {
+
+            var shellViewContainer = document.querySelector('.shell-view-container');
+
+            var dragBackdropElem = document.createElement("div");
+            dragBackdropElem.classList.add("drag-file-backdrop");
+            dragBackdropElem.appendChild(document.createElement("div"));
+
+            var dragBackdropTextHolder = dragBackdropElem.querySelector("div");
+            dragBackdropTextHolder.appendChild(document.createElement("span")).textContent = "Drop File Here";
+
+            shellViewContainer.addEventListener('dragenter', function (ev) {
+
+                ev.preventDefault();
+
+                if (vm.currentGlobalState === 'profile' || vm.currentGlobalState === 'portal') {
+                    if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
+
+                        if (ev.dataTransfer.items[0].kind === 'file') {
+                            if (!shellViewContainer.contains(dragBackdropElem)) {
+                                shellViewContainer.appendChild(dragBackdropElem);
+                            }
+                        }
+
+                    }
+                }
+
+            });
+
+            dragBackdropElem.addEventListener('dragleave', function (ev) {
+                ev.preventDefault();
+                if (ev.target === dragBackdropElem) {
+                    shellViewContainer.removeChild(dragBackdropElem);
+                }
+            });
+
+            window.addEventListener("dragover",function(ev){
+                ev.preventDefault();
+            },false);
+
+            window.addEventListener('drop', function (ev) {
+
+                ev.preventDefault();
+
+                if (vm.currentGlobalState === 'profile' || vm.currentGlobalState === 'portal') {
+
+                    if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
+
+                        if (ev.dataTransfer.items[0].kind === 'file') {
+                            var file = ev.dataTransfer.items[0].getAsFile();
+
+                            var fileNameParts = file.name.split('.');
+                            var fileExt = fileNameParts.pop();
+
+                            if (fileExt !== 'fcfg') {
+
+                                $mdDialog.show({
+                                    controller: 'WarningDialogController as vm',
+                                    templateUrl: 'views/warning-dialog-view.html',
+                                    parent: angular.element(document.body),
+                                    targetEvent: ev,
+                                    clickOutsideToClose: false,
+                                    locals: {
+                                        warning: {
+                                            title: 'Warning',
+                                            description: "Wrong file extension. Drop configuration file to start import."
+                                        }
+                                    },
+                                    autoWrap: true,
+                                    multiple: true
+                                })
+
+                            } else {
+                                openImportConfigurationManager(file);
+                            }
+
+                        }
+
+                    }
+
+                    shellViewContainer.removeChild(dragBackdropElem);
+
+                }
+
+            });
+
         };
 
         vm.init = function () {
@@ -536,6 +682,8 @@
                 showLayoutName = true;
                 vm.getActiveLayoutName();
             }
+
+            vm.importOnDragListeners();
 
         };
 
