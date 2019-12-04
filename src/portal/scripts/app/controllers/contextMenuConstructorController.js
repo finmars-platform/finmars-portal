@@ -55,15 +55,19 @@
                     },
                     {
                         name: 'Edit Pricing FX Rate',
-                        action: 'edit_pricing_currency'
+                        action: 'edit_pricing_currency_price'
                     },
                     {
                         name: 'Edit Accrued FX Rate',
-                        action: 'edit_accrued_currency'
+                        action: 'edit_accrued_currency_fx_rate'
                     },
                     {
                         name: 'Edit Currency',
                         action: 'edit_currency'
+                    },
+                    {
+                        name: 'Edit Transaction',
+                        action: 'rebook_transaction'
                     },
                     {
                         name: 'Open Book Manager',
