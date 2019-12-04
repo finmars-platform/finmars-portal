@@ -388,96 +388,89 @@
                 values: values
             };
 
+            transactionTypeService.bookComplexTransaction(book.transaction_type, book).then(function (data) {
 
-            transactionTypeService.initBookComplexTransaction(book.transaction_type, {}).then(function (data) {
+                console.log('data', data);
 
-                var res = Object.assign(data, book);
+                // vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
+                vm.transactionTypeId = data.transaction_type;
+                vm.editLayoutEntityInstanceId = data.transaction_type;
 
-                transactionTypeService.bookComplexTransaction(book.transaction_type, res).then(function (data) {
+                vm.entity = data.complex_transaction;
 
-                    console.log('data', data);
+                var inputsWithCalculations = data.transaction_type_object.inputs;
 
-                    // vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
-                    vm.transactionTypeId = data.transaction_type;
-                    vm.editLayoutEntityInstanceId = data.transaction_type;
+                vm.transactionType = data.transaction_type_object;
 
-                    vm.entity = data.complex_transaction;
+                vm.specialRulesReady = true;
+                vm.readyStatus.entity = true;
 
-                    var inputsWithCalculations = data.transaction_type_object.inputs;
+                var keys = Object.keys(data.values);
 
-                    vm.transactionType = data.transaction_type_object;
+                keys.forEach(function (key) {
+                    vm.entity[key] = data.values[key];
+                });
 
-                    vm.specialRulesReady = true;
-                    vm.readyStatus.entity = true;
+                data.complex_transaction.attributes.forEach(function (item) {
+                    if (item.attribute_type_object.value_type === 10) {
+                        vm.entity[item.attribute_type_object.name] = item.value_string;
+                    }
+                    if (item.attribute_type_object.value_type === 20) {
+                        vm.entity[item.attribute_type_object.name] = item.value_float;
+                    }
+                    if (item.attribute_type_object.value_type === 30) {
+                        vm.entity[item.attribute_type_object.name] = item.classifier;
+                    }
+                    if (item.attribute_type_object.value_type === 40) {
+                        vm.entity[item.attribute_type_object.name] = item.value_date;
+                    }
+                });
 
-                    var keys = Object.keys(data.values);
-
-                    keys.forEach(function (key) {
-                        vm.entity[key] = data.values[key];
-                    });
-
-                    data.complex_transaction.attributes.forEach(function (item) {
-                        if (item.attribute_type_object.value_type === 10) {
-                            vm.entity[item.attribute_type_object.name] = item.value_string;
+                vm.tabs = data.book_transaction_layout.data;
+                vm.userInputs = [];
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        if (field.attribute_class === 'userInput') {
+                            vm.userInputs.push(field.attribute);
                         }
-                        if (item.attribute_type_object.value_type === 20) {
-                            vm.entity[item.attribute_type_object.name] = item.value_float;
-                        }
-                        if (item.attribute_type_object.value_type === 30) {
-                            vm.entity[item.attribute_type_object.name] = item.classifier;
-                        }
-                        if (item.attribute_type_object.value_type === 40) {
-                            vm.entity[item.attribute_type_object.name] = item.value_date;
-                        }
                     });
+                });
 
-                    vm.tabs = data.book_transaction_layout.data;
-                    vm.userInputs = [];
-                    vm.tabs.forEach(function (tab) {
-                        tab.layout.fields.forEach(function (field) {
-                            if (field.attribute_class === 'userInput') {
-                                vm.userInputs.push(field.attribute);
-                            }
-                        });
-                    });
+                vm.tabs = vm.tabs.map(function (item, index) {
 
-                    vm.tabs = vm.tabs.map(function (item, index) {
+                    item.index = index;
 
-                        item.index = index;
-
-                        return item
-
-                    });
-
-                    vm.generateAttributesFromLayoutFields();
-
-                    inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                        vm.userInputs.forEach(function (userInput) {
-                            if (userInput.name === inputWithCalc.name) {
-                                if (inputWithCalc.can_recalculate === true) {
-                                    userInput.buttons = [
-                                        {
-                                            icon: 'iso',
-                                            tooltip: 'Recalculate',
-                                            caption: '',
-                                            classes: 'md-raised',
-                                            action: vm.recalculate
-                                        }
-                                    ]
-                                }
-                            }
-                        })
-
-                    });
-
-                    console.log('vm.entity', vm.entity);
-
-                    vm.recalculating = false;
-
-                    $scope.$apply();
+                    return item
 
                 });
+
+                vm.generateAttributesFromLayoutFields();
+
+                inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                    vm.userInputs.forEach(function (userInput) {
+                        if (userInput.name === inputWithCalc.name) {
+                            if (inputWithCalc.can_recalculate === true) {
+                                userInput.buttons = [
+                                    {
+                                        icon: 'iso',
+                                        tooltip: 'Recalculate',
+                                        caption: '',
+                                        classes: 'md-raised',
+                                        action: vm.recalculate
+                                    }
+                                ]
+                            }
+                        }
+                    })
+
+                });
+
+                console.log('vm.entity', vm.entity);
+
+                vm.recalculating = false;
+
+                $scope.$apply();
 
             });
 

@@ -103,7 +103,7 @@
                                                                 </md-tooltip>
                                                             </ng-md-icon>
                                                         </div>
-                                                        <div class="permissions-columns" flex="33">
+                                                        <div class="permissions-columns" flex="33" data-ng-if="vm.entityType !== 'currency'"    >
                                                             Read
                                                             <ng-md-icon class="tooltip-inline-block"
                                                                         icon="info"
@@ -140,7 +140,7 @@
                                                                          data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin && !vm.currentMember.is_owner}"
                                                                          ng-model="group.objectPermissions.change"></md-checkbox>
                                                         </div>
-                                                        <div flex="33" layout="center center">
+                                                        <div flex="33" layout="center center" data-ng-if="vm.entityType !== 'currency'">
                                                             <md-checkbox class="md-secondary"
                                                                          data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin && !vm.currentMember.is_owner}"
                                                                          ng-model="group.objectPermissions.view"></md-checkbox>

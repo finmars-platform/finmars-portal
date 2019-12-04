@@ -1,5 +1,8 @@
 # Changelog
 
+## 03.12.2019
+- Two Factor Auth
+
 # 26.11.2019
 - Context Menu Update
 
