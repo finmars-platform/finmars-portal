@@ -822,6 +822,10 @@
             return true;
         }
 
+        if (option.action === 'open_layout') {
+            return true;
+        }
+
         return false;
     };
 
@@ -835,7 +839,7 @@
         for (var i = 0; i < ttypes.length; i++) {
 
             if (ttypes[i].user_code === option.action_data) {
-                result = item.id;
+                result = ttypes[i].id;
                 break;
             }
         }
@@ -843,6 +847,45 @@
         console.log('option.result', result);
 
         return result
+
+    };
+
+    var getContextMenuActionLink = function (option) {
+
+        var result = '';
+
+        console.log('getContextMenuActionLink.option', option);
+
+        var urlMap = {
+
+            'reports.balancereport': 'reports/balance',
+            'reports.plreport': 'reports/profit-and-lost',
+            'reports.transactionreport': 'reports/transaction',
+
+            'portfolios.portfolio': 'data/portfolios',
+            'accounts.account': 'data/accounts',
+            'accounts.accounttype': 'data/account-types',
+            'counterparties.counterparty': 'data/counterparty',
+            'counterparties.responsible': 'data/responsibles',
+            'instrumets.instrument': 'data/instruments',
+            'instrumets.instrumenttype': 'data/instrument-types',
+            'instruments.pricingpolicy': 'data/pricing-policy',
+            'currencies.currency': 'data/currency',
+            'strategies.strategy1': 'data/strategy/1',
+            'strategies.strategy2': 'data/strategy/3',
+            'strategies.strategy3': 'data/strategy/3',
+            'transactions.complextransaction': 'data/complex-transactions',
+            'transactions.transactiontype': 'data/transaction-types',
+        };
+
+        result = window.location.href.split("#!")[0];
+
+        result = result + '#!/';
+        result = result + urlMap[option.action_data.content_type];
+        result = result + '?layout=' + option.action_data.name;
+
+        return result
+
 
     };
 
@@ -917,24 +960,48 @@
 
                 }
 
-                result = result + '<div class="ev-dropdown-option ' + is_disabled +  (item.items ? ' ev-dropdown-menu-holder' : ' ') + '"' +
-                    ' data-ev-dropdown-action="' + item.action + '"' +
+                if (item.action === 'open_layout') {
 
-                    ttype_specific_attr +
+                    result = result + '<a class="ev-dropdown-option ' + (item.items ? ' ev-dropdown-menu-holder' : ' ') + '"' +
+                        ' href="' + getContextMenuActionLink(item) + '" target="_blank"' +
+                        ' data-ev-dropdown-action="' + item.action + '"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">' +
 
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
+                         item.name;
 
-                if (item.items && item.items.length) {
+                    if (item.items && item.items.length) {
 
-                    result = result + generateContextMenuItems(item, ttypes, obj, objectId, parentGroupHashId)
+                        result = result + generateContextMenuItems(item, ttypes, obj, objectId, parentGroupHashId)
+
+                    }
+
+                    result = result + '</a>'
+
+
+                } else {
+
+                    result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : ' ') + '"' +
+                        ' data-ev-dropdown-action="' + item.action + '"' +
+
+                        ttype_specific_attr +
+
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
+
+                    if (item.items && item.items.length) {
+
+                        result = result + generateContextMenuItems(item, ttypes, obj, objectId, parentGroupHashId)
+
+                    }
+
+                    result = result + '</div>'
 
                 }
 
+
             }
 
-
-            result = result + '</div>'
 
         });
 
@@ -946,7 +1013,7 @@
 
     };
 
-    var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
+    var createPopupMenu = function (objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
         clearDropdowns();
 
@@ -968,77 +1035,6 @@
 
         popup.innerHTML = generateContextMenu(contextMenu, ttypes, obj, objectId, parentGroupHashId);
 
-        // popup.innerHTML = '<div>';
-        //
-        //
-        // if (obj['instrument.id']) {
-        //     popup.innerHTML = popup.innerHTML + '<div>' +
-        //         '<div class="ev-dropdown-option"' +
-        //         ' data-ev-dropdown-action="edit_instrument"' +
-        //         ' data-object-id="' + objectId + '"' +
-        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
-        // }
-        //
-        // if (obj['account.id']) {
-        //     popup.innerHTML = popup.innerHTML +
-        //         '<div class="ev-dropdown-option"' +
-        //         ' data-ev-dropdown-action="edit_account"' +
-        //         ' data-object-id="' + objectId + '"' +
-        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Account</div>'
-        // }
-        //
-        // if (obj['portfolio.id']) {
-        //     popup.innerHTML = popup.innerHTML +
-        //         '<div class="ev-dropdown-option"' +
-        //         ' data-ev-dropdown-action="edit_portfolio"' +
-        //         ' data-object-id="' + objectId + '"' +
-        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Portfolio</div>';
-        // }
-        //
-        // if (obj['instrument.id']) {
-        //     popup.innerHTML = popup.innerHTML +
-        //         '<div class="ev-dropdown-option"' +
-        //         ' data-ev-dropdown-action="edit_price"' +
-        //         ' data-object-id="' + objectId + '"' +
-        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Price</div>'
-        // }
-        //
-        // if (obj['currency.id']) {
-        //     popup.innerHTML = popup.innerHTML +
-        //         '<div class="ev-dropdown-option"' +
-        //         ' data-ev-dropdown-action="edit_fx_rate"' +
-        //         ' data-object-id="' + objectId + '"' +
-        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit FX Rate</div>'
-        // }
-        //
-        // if (obj['item_type'] === 1) { // item_type: 1 == Instrument
-        //
-        //     popup.innerHTML = popup.innerHTML +
-        //         '<div class="ev-dropdown-option"' +
-        //         ' data-ev-dropdown-action="edit_pricing_currency"' +
-        //         ' data-object-id="' + objectId + '"' +
-        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Pricing FX Rate</div>';
-        //
-        //     popup.innerHTML = popup.innerHTML +
-        //         '<div class="ev-dropdown-option"' +
-        //         ' data-ev-dropdown-action="edit_accrued_currency"' +
-        //         ' data-object-id="' + objectId + '"' +
-        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Accrued FX Rate</div>';
-        //
-        // }
-        //
-        // if (obj['item_type'] === 2) { // item_type: 1 == Instrument
-        //
-        //     popup.innerHTML = popup.innerHTML +
-        //         '<div class="ev-dropdown-option"' +
-        //         ' data-ev-dropdown-action="edit_currency"' +
-        //         ' data-object-id="' + objectId + '"' +
-        //         ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Currency</div>';
-        // }
-        //
-        // popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option ev-dropdown-menu-holder">Book Transaction' + getTransactionTypesMenu(ttypes, objectId, parentGroupHashId) + '</div>' +
-        //     '</div>';
-
         popup.style.cssText = menuPosition;
         popup.style.position = 'absolute';
 
@@ -1048,10 +1044,11 @@
 
     };
 
-    var contextMenu = {};
-    var ttypes = null;
 
     var initContextMenuEventDelegation = function (elem, evDataService, evEventService) {
+
+        var contextMenu = {};
+        var ttypes = null;
 
         transactionTypeService.getListLight({
             pageSize: 1000
@@ -1114,7 +1111,6 @@
                 //var ttypes = data.results;
                 ttypes = data.results;
 
-
                 elem.addEventListener('contextmenu', function (ev) {
 
                     var objectId;
@@ -1147,7 +1143,7 @@
 
                         var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
 
-                        createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+                        createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
                         return false;
 
@@ -1204,7 +1200,6 @@
                         }
 
                     }
-
 
 
                 });

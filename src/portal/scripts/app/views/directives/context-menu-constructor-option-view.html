@@ -17,7 +17,7 @@
                 </ng-md-icon>
             </md-button>
             <md-button class="md-raised "
-                       data-ng-click="deleteOption($event, parent, $index)">
+                       data-ng-click="deleteOption($event, parent, index)">
                 <ng-md-icon icon="close">
                     <md-tooltip md-direction="bottom">Delete Option</md-tooltip>
                 </ng-md-icon>
@@ -34,8 +34,9 @@
                 <context-menu-constructor-option
                         parent="item"
                         item="subitem"
-                        add-callback="addOption(event, item)"
-                        edit-callback="editOption(event, item)"
+                        index="$index"
+                        add-callback="addOption(event, subitem)"
+                        edit-callback="editOption(event, subitem)"
                         delete-callback="deleteOption(event, item, index)"
                 ></context-menu-constructor-option>
             </div>
