@@ -60,26 +60,26 @@
                         var areaItemsChanged;
                         var drake = this.dragula;
 
-                        this.dragula.on('dragstart', function () {
+                        drake.on('dragstart', function () {
                             areaItemsChanged = false;
                         });
 
-                        this.dragula.on('over', function (elem, container, source) {
+                        drake.on('over', function (elem, container, source) {
                             areaItemsChanged = false;
                             $(container).addClass('active');
                         });
 
-                        this.dragula.on('out', function (elem, container, source) {
+                        drake.on('out', function (elem, container, source) {
                             $(container).removeClass('active');
                         });
 
-                        this.dragula.on('shadow', function (elem, container) { // used to prevent showing shadow of card in deletion area
+                        drake.on('shadow', function (elem, container) { // used to prevent showing shadow of card in deletion area
                             if ($(container).attr('id') === 'gc-delete-area') {
                                 $(elem).remove(); // removing only shadow of the dragged element
                             }
                         });
 
-                        this.dragula.on('drop', function (elem, target, source, nextSibling) {
+                        drake.on('drop', function (elem, target, source, nextSibling) {
 
                             $(target).removeClass('active');
 
@@ -518,7 +518,7 @@
 
                         });
 
-                        this.dragula.on('dragend', function (element) {
+                        drake.on('dragend', function (element) {
 
                             if (areaItemsChanged) {
                                 scope.$apply();
