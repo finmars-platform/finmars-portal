@@ -14,6 +14,7 @@
             scope: {
                 item: '=',
                 parent: '=',
+                index: '=',
                 addCallback: '&',
                 editCallback: '&',
                 deleteCallback: '&'
