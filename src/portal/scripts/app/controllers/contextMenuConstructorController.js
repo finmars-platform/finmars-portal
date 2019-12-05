@@ -6,6 +6,7 @@
     'use strict';
 
     var uiService = require('../services/uiService');
+    var metaContentTypesService = require('../services/metaContentTypesService');
 
     var transactionTypeService = require('../services/transactionTypeService');
 
@@ -15,6 +16,7 @@
 
         vm.readyStatus = {
             transactionTypes: false,
+            layouts: false,
             data: false
         };
 
@@ -94,6 +96,7 @@
                 locals: {
                     data: {
                         transactionTypes: vm.transactionTypes,
+                        layoutsGrouped: vm.layoutsGrouped,
                         item: Object.assign({}, item)
                     }
                 }
@@ -129,6 +132,7 @@
                 locals: {
                     data: {
                         transactionTypes: vm.transactionTypes,
+                        layoutsGrouped: vm.layoutsGrouped,
                         item: {}
                     }
                 }
@@ -151,6 +155,7 @@
         vm.deleteOption = function ($event, parentOption, $index) {
 
             console.log("Controller delete option", parentOption)
+            console.log("Controller delete $index", $index)
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -189,6 +194,42 @@
                 vm.transactionTypes = data.results;
 
                 vm.readyStatus.transactionTypes = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getLayouts = function () {
+
+            uiService.getListLayoutDefault({pageSize: 1000}).then(function (data) {
+
+                vm.layouts = data.results;
+
+                vm.contentTypes = metaContentTypesService.getListForUi();
+
+                vm.layoutsGrouped = vm.contentTypes.map(function (contentType) {
+
+                    contentType.items = [];
+
+                    vm.layouts.forEach(function (item) {
+
+                        if (item.content_type === contentType.key) {
+
+                            contentType.items.push(item)
+
+                        }
+
+                    });
+
+                    return contentType
+
+                });
+
+                console.log('vm.layoutsGrouped', vm.layoutsGrouped);
+
+                vm.readyStatus.layouts = true;
 
                 $scope.$apply();
 
@@ -269,6 +310,7 @@
         vm.init = function () {
 
             vm.getTransactionTypes();
+            vm.getLayouts();
 
             if ($stateParams.id && $stateParams.id !== 'new') {
 

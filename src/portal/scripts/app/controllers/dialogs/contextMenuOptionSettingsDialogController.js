@@ -6,13 +6,13 @@
     'use strict';
 
 
-
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
         vm.item = {};
         vm.transactionTypes = [];
+        vm.layoutsGrouped = [];
 
 
         if (data.item) {
@@ -21,6 +21,10 @@
 
         if (data.transactionTypes) {
             vm.transactionTypes = data.transactionTypes;
+        }
+
+        if (data.layoutsGrouped) {
+            vm.layoutsGrouped = data.layoutsGrouped;
         }
 
         vm.actions = [
@@ -75,9 +79,24 @@
             {
                 name: 'Book Specific Transaction Type',
                 action: 'book_transaction_specific'
+            },
+            {
+                name: 'Open Layout',
+                action: 'open_layout'
             }
         ];
 
+        vm.updateLayout = function (item) {
+
+            if (!vm.item.hasOwnProperty('action_data')) {
+                vm.item.action_data = {}
+            }
+
+            vm.item.action_data.content_type = item.content_type;
+
+            console.log("Update Layout", vm.item);
+
+        };
 
 
         vm.cancel = function () {
