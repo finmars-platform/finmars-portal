@@ -1,6 +1,6 @@
 <div class="context-menu-constructor">
 
-    <div data-ng-if="vm.readyStatus.data && vm.readyStatus.transactionTypes">
+    <div data-ng-if="vm.readyStatus.data && vm.readyStatus.transactionTypes && vm.readyStatus.layouts">
 
         <div class="p-24">
 
@@ -24,6 +24,7 @@
                          layout="row">
 
                         <context-menu-constructor-option item="item"
+                                                         index="$index"
                                                          parent="vm.layout.data.menu.root"
                                                          add-callback="vm.addOption(event, item)"
                                                          edit-callback="vm.editOption(event, item)"
@@ -55,7 +56,7 @@
 
     </div>
 
-    <div data-ng-if="!vm.readyStatus.data || !vm.readyStatus.transactionTypes">
+    <div data-ng-if="!vm.readyStatus.data || !vm.readyStatus.transactionTypes || !vm.readyStatus.layouts">
         <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
             <md-progress-circular md-mode="indeterminate" md-diameter="120"></md-progress-circular>
         </div>
