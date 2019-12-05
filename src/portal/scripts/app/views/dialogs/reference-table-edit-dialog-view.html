@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="reference-table draggable-dialog" drag-dialog>
+<md-dialog aria-label="reference table edit dialog"class="reference-table draggable-dialog" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
@@ -6,42 +6,56 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content class="custom-scrollbar p-24">
-        <div>
+    <md-dialog-content class="custom-scrollbar p-24 dndScrollableElem">
+        <div class="referenceTableRowsHolder">
 
-            <div data-ng-repeat="item in vm.referenceTable.rows track by $index">
+            <div data-ng-repeat="item in vm.referenceTable.rows track by item.order"
+                 data-ng-init="$last && !vm.dragAndDropInited && vm.dragAndDrop.init()"
+                 data-row-order="{{item.order}}">
 
-                <div layout="row">
+                <!--<div layout="row">
 
-                    <md-input-container >
-                        <label>Key</label>
-                        <input type="text" data-ng-class="{'key-duplicate': item.is_duplicate && vm.validationEnabled}" data-ng-model="item.key" data-ng-keyup="vm.checkForDuplicates()">
-                    </md-input-container>
+                </div>-->
+                <md-card class="p-t-16 p-l-16 position-relative e-reference-table-row-card">
+                    <div layout="row">
 
-                    <md-input-container>
-                        <label>Value</label>
-                        <input type="text" data-ng-model="item.value">
-                    </md-input-container>
+                        <md-input-container class="no-error-spacer">
+                            <label>Key</label>
+                            <input type="text"
+                                   data-ng-class="{'key-duplicate': item.is_duplicate && vm.validationEnabled}"
+                                   data-ng-model="item.key"
+                                   data-ng-keyup="vm.checkForDuplicates()">
+                        </md-input-container>
 
-                    <md-button class="md-button md-warn" ng-click="vm.deleteRow($event, $index)">
-                        Delete
-                    </md-button>
+                        <md-input-container class="no-error-spacer">
+                            <label>Value</label>
+                            <input type="text" data-ng-model="item.value">
+                        </md-input-container>
 
-                </div>
+                        <md-button class="md-button md-warn"
+                                   ng-click="vm.deleteRow($event, $index)">
+                            Delete
+                        </md-button>
 
-            </div>
+                    </div>
 
-            <div>
-
-                <md-button class="md-raised md-primary" ng-click="vm.createRow($event)">
-                    Add New Row
-                </md-button>
+                    <div class="e-reference-table-drag-icon-holder ert-grab-place"
+                         data-ng-mousedown="vm.turnOnDragging()">
+                        <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+                    </div>
+                </md-card>
 
             </div>
 
         </div>
+
+        <div>
+            <md-button class="md-raised md-primary" ng-click="vm.createRow($event)">
+                Add New Row
+            </md-button>
+        </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row">
+    <md-dialog-actions layout="row" layout-align="space-between center">
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>

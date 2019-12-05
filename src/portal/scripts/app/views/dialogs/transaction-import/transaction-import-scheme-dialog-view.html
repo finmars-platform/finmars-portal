@@ -73,112 +73,235 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div layout="row">
+                                        <md-button class="md-raised" ng-click="vm.addProviderField()">
+                                            Add field
+                                        </md-button>
+                                    </div>
                                 </md-card-content>
+
                             </md-card>
-                        </div>
-                        <div layout="row">
-                            <md-button class="md-raised" ng-click="vm.addProviderField()">
-                                Add field
-                            </md-button>
                         </div>
 
                     </div>
                     <div layout="column" flex="66">
                         <div layout="row">
-                            <h4 style="padding-left: 10px">Transaction type matching</h4>
+                            <h4 style="padding-left: 10px">Transaction Type Matching Scenarios</h4>
                         </div>
-                        <div layout="column">
-                            <md-card flex="100">
-                                <md-card-content class="instrument-scheme-fields-holder">
-                                    <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">
-                                        <div layout="row" flex="100">
-                                            <div flex="30">
-                                                <div layout="row">
-                                                    <div>
-                                                        <md-input-container>
-                                                            <label for="">Selector Value</label>
-                                                            <input type="text" data-ng-model="item.value">
-                                                        </md-input-container>
+
+                        <md-card flex="100">
+                            <md-card-content class="instrument-scheme-fields-holder p-0">
+
+                                <md-tabs md-dynamic-height id="transaction-import-scheme">
+
+                                    <md-tab label="Booking">
+                                        <md-content class="md-padding">
+
+                                            <div layout="column">
+                                                <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">
+                                                    <div layout="row" flex="100">
+                                                        <div flex="30">
+                                                            <div layout="row">
+                                                                <div>
+                                                                    <md-input-container>
+                                                                        <label for="">Selector Value</label>
+                                                                        <input type="text" data-ng-model="item.value">
+                                                                    </md-input-container>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div flex="40">
+                                                            <md-input-container style="width: 80%" aria-label="select with filter">
+
+                                                                <label for="">Transaction type</label>
+                                                                <md-select ng-model="item.transaction_type"
+                                                                           md-container-class="common-select-container"
+                                                                           md-on-close="searchTerm = ''">
+
+                                                                    <md-select-header>
+                                                                        <input data-ng-model="searchTerm"
+                                                                               type="search"
+                                                                               placeholder="Search for a ..."
+                                                                               class="md-text md-select-search-pattern select-input-filter"
+                                                                               ng-keydown="$event.stopPropagation()">
+                                                                    </md-select-header>
+
+                                                                    <div class="select-options-holder">
+
+                                                                        <md-option
+                                                                                data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
+                                                                                ng-value="transactionType.id"
+                                                                                ng-bind="transactionType.name">
+                                                                        </md-option>
+
+                                                                    </div>
+
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <!--<div flex="20">
+                                                            <md-button
+                                                                    class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
+                                                                    ng-click="vm.openInputs(item, $event)">
+                                                                Inputs
+                                                            </md-button>
+                                                        </div>
+                                                        <div flex="10">
+                                                            <md-button
+                                                                    class="custom-small-icon-btn md-raised"
+                                                                    ng-click="vm.removeMappingField(item, $index)"
+                                                                    data-ng-if="!item.required"
+                                                                    class="md-raised"
+                                                                    style="line-height: 1">x
+                                                            </md-button>
+                                                        </div>-->
+                                                        <div flex="30">
+
+                                                            <md-button
+                                                                    class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
+                                                                    ng-click="vm.openInputs(item, $event)">
+                                                                Inputs
+                                                            </md-button>
+
+                                                            <md-button class="md-raised md-primary import-mapping-small-btn"
+                                                                       ng-class="{'disabled-btn': !item.transaction_type}"
+                                                                       ng-click="vm.editTransactionType(item.transaction_type, $event)">
+                                                                <ng-md-icon icon="mode_edit" size="20"></ng-md-icon>
+                                                                <md-tooltip class="tooltip_1" md-direction="top">Edit transaction type</md-tooltip>
+                                                            </md-button>
+
+                                                            <md-button
+                                                                    class="custom-small-icon-btn md-raised"
+                                                                    ng-click="vm.removeMappingField(item, $index)"
+                                                                    data-ng-if="!item.required"
+                                                                    class="md-raised"
+                                                                    style="line-height: 1">x
+                                                            </md-button>
+
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div flex="40">
-                                                <md-input-container style="width: 80%" aria-label="select with filter">
 
-                                                    <label for="">Transaction type</label>
-                                                    <md-select ng-model="item.transaction_type"
-                                                               md-container-class="common-select-container"
-                                                               md-on-close="searchTerm = ''">
+                                            <div layout="row">
+                                                <md-button class="md-raised" ng-click="vm.addMapField()">Add field</md-button>
+                                            </div>
 
-                                                            <md-select-header>
-                                                                <input data-ng-model="searchTerm"
-                                                                       type="search"
-                                                                       placeholder="Search for a ..."
-                                                                       class="md-text md-select-search-pattern select-input-filter"
-                                                                       ng-keydown="$event.stopPropagation()">
-                                                            </md-select-header>
+                                        </md-content>
+                                    </md-tab>
 
-                                                            <div class="select-options-holder">
+                                    <md-tab label="Reconciliation">
+                                        <md-content class="md-padding">
 
-                                                                <md-option
-                                                                        data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
-                                                                        ng-value="transactionType.id"
-                                                                        ng-bind="transactionType.name">
-                                                                </md-option>
-
+                                            <div layout="column">
+                                                <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">
+                                                    <div layout="row" flex="100">
+                                                        <div flex="20">
+                                                            <div layout="row">
+                                                                <div>
+                                                                    <md-input-container>
+                                                                        <label for="">Scenario Name</label>
+                                                                        <input type="text">
+                                                                    </md-input-container>
+                                                                </div>
                                                             </div>
+                                                        </div>
 
-                                                    </md-select>
-                                                </md-input-container>
+                                                        <div flex="20">
+                                                            <div layout="row">
+                                                                <two-fields-multiselect title="Selected value"
+                                                                                        items=""
+                                                                                        model=""
+                                                                                        nothing-selected-text=" "
+                                                                                        name-property="name"
+                                                                                        class="table-filter-input-container"></two-fields-multiselect>
+                                                            </div>
+                                                        </div>
+
+                                                        <div flex="30">
+                                                            <md-input-container style="width: 80%" aria-label="select with filter">
+
+                                                                <label for="">Transaction type</label>
+                                                                <md-select ng-model="item.transaction_type"
+                                                                           md-container-class="common-select-container"
+                                                                           md-on-close="searchTerm = ''">
+
+                                                                    <md-select-header>
+                                                                        <input data-ng-model="searchTerm"
+                                                                               type="search"
+                                                                               placeholder="Search for a ..."
+                                                                               class="md-text md-select-search-pattern select-input-filter"
+                                                                               ng-keydown="$event.stopPropagation()">
+                                                                    </md-select-header>
+
+                                                                    <div class="select-options-holder">
+
+                                                                        <md-option
+                                                                                data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
+                                                                                ng-value="transactionType.id"
+                                                                                ng-bind="transactionType.name">
+                                                                        </md-option>
+
+                                                                    </div>
+
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <!--<div flex="20">
+                                                            <md-button
+                                                                    class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
+                                                                    ng-click="vm.openInputs(item, $event)">
+                                                                Inputs
+                                                            </md-button>
+                                                        </div>
+                                                        <div flex="10">
+                                                            <md-button
+                                                                    class="custom-small-icon-btn md-raised"
+                                                                    ng-click="vm.removeMappingField(item, $index)"
+                                                                    data-ng-if="!item.required"
+                                                                    class="md-raised"
+                                                                    style="line-height: 1">x
+                                                            </md-button>
+                                                        </div>-->
+                                                        <div flex="30">
+
+                                                            <md-button
+                                                                    class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
+                                                                    ng-click="vm.openInputs(item, $event)">
+                                                                Inputs
+                                                            </md-button>
+
+                                                            <md-button class="md-raised md-primary"
+                                                                       ng-click="console.log('reconciliate')">
+                                                                A. Recon
+                                                            </md-button>
+
+                                                            <md-button
+                                                                    class="custom-small-icon-btn md-raised"
+                                                                    ng-click="console.log('remove reconciliation field')"
+                                                                    data-ng-if="!item.required"
+                                                                    class="md-raised"
+                                                                    style="line-height: 1">x
+                                                            </md-button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <!--<div flex="20">
-                                                <md-button
-                                                        class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
-                                                        ng-click="vm.openInputs(item, $event)">
-                                                    Inputs
-                                                </md-button>
+
+                                            <div layout="row">
+                                                <md-button class="md-raised" ng-click="console.log('add field for reconciliation')">Add field</md-button>
                                             </div>
-                                            <div flex="10">
-                                                <md-button
-                                                        class="custom-small-icon-btn md-raised"
-                                                        ng-click="vm.removeMappingField(item, $index)"
-                                                        data-ng-if="!item.required"
-                                                        class="md-raised"
-                                                        style="line-height: 1">x
-                                                </md-button>
-                                            </div>-->
-                                            <div flex="30">
 
-                                                <md-button
-                                                        class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
-                                                        ng-click="vm.openInputs(item, $event)">
-                                                    Inputs
-                                                </md-button>
+                                        </md-content>
+                                    </md-tab>
 
-                                                <md-button class="md-raised md-primary import-mapping-small-btn"
-                                                           ng-class="{'disabled-btn': !item.transaction_type}"
-                                                           ng-click="vm.editTransactionType(item.transaction_type, $event)">
-                                                    <ng-md-icon icon="mode_edit" size="20"></ng-md-icon>
-                                                    <md-tooltip class="tooltip_1" md-direction="top">Edit transaction type</md-tooltip>
-                                                </md-button>
+                                </md-tabs>
 
-                                                <md-button
-                                                        class="custom-small-icon-btn md-raised"
-                                                        ng-click="vm.removeMappingField(item, $index)"
-                                                        data-ng-if="!item.required"
-                                                        class="md-raised"
-                                                        style="line-height: 1">x
-                                                </md-button>
+                            </md-card-content>
+                        </md-card>
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </md-card-content>
-                            </md-card>
-                        </div>
-                        <div layout="row">
-                            <md-button class="md-raised" ng-click="vm.addMapField()">Add field</md-button>
-                        </div>
                     </div>
                 </div>
             </div>
