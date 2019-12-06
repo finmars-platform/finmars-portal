@@ -29,6 +29,9 @@
     };
 
     var getListLayout = function (entity, options) {
+
+        console.trace();
+
         return uiRepository.getListLayout(entity, options);
     };
 
@@ -60,6 +63,9 @@
     };
 
     var getDefaultListLayout = function (entityType) {
+
+        console.trace();
+
         return uiRepository.getDefaultListLayout(entityType);
     };
 

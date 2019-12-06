@@ -461,11 +461,21 @@
                     }
                 }).then(function (activeLayoutData) {
 
+                    var activeLayout = null;
+
                     if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
 
-                        var activeLayout = activeLayoutData.results[0];
-                        activeLayout.is_active = false;
-                        uiService.updateListLayout(activeLayout.id, activeLayout);
+                        activeLayoutData.results.forEach(function (item) {
+
+                            if (item.name === name) {
+                                activeLayout = item
+                            }
+
+                        });
+
+                    }
+
+                    if (activeLayout) {
 
                         vm.setLayout(activeLayout);
 
