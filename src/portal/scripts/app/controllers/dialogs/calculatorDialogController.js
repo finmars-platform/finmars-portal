@@ -312,12 +312,12 @@
                             vm.deleteLastChar();
                             $scope.$apply();
                             break;
-                    };
+                    }
 
-                };
+                }
 
-            };
-        };
+            }
+        }
 
         document.addEventListener('keydown', inputDataFromKeyboard);
 
