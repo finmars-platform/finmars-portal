@@ -8,6 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
         var usersService = require('../../services/usersService');
 
@@ -376,6 +377,7 @@
             vm.setLayout = function (layoutData) {
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layoutData, uiService, false);
+                vm.setFiltersValuesFromQueryParameters();
                 vm.readyStatus.layout = true;
                 console.log('vm', vm);
                 evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
@@ -389,6 +391,56 @@
 
             };
 
+            vm.getActiveObjectFromQueryParameters = function () {
+
+                var queryParameters = window.location.href.split('?')[1];
+
+                var result = null;
+
+                if (queryParameters) {
+
+                    var parameters = queryParameters.split('&');
+
+                    result = {};
+
+                    parameters.forEach(function (parameter) {
+
+                        var pieces = parameter.split('=');
+                        var key = pieces[0];
+                        var value = pieces[1];
+
+                        result[key] = decodeURI(value);
+
+                    });
+
+                    return result;
+
+                }
+
+            };
+
+            vm.setFiltersValuesFromQueryParameters = function () {
+
+                var activeObject = vm.getActiveObjectFromQueryParameters();
+
+                console.log('vm.getView activeObject', activeObject);
+
+                if (activeObject) {
+
+                    var filters = vm.entityViewerDataService.getFilters();
+
+                    filters.forEach(function (item) {
+
+                        if (activeObject.hasOwnProperty(item.key)) {
+                            item.options.filter_values = [activeObject[item.key]]
+                        }
+
+                    })
+                }
+
+
+            };
+
             vm.isLayoutFromUrl = function () {
 
                 return window.location.href.indexOf('?layout=') !== -1
@@ -399,17 +451,31 @@
 
                 console.log('vm.getLayoutByName.name', name);
 
+                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
+
                 uiService.getListLayoutDefault({
+                    pageSize: 1000,
                     filters: {
+                        content_type: contentType,
                         name: name
                     }
                 }).then(function (activeLayoutData) {
 
+                    var activeLayout = null;
+
                     if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
 
-                        var activeLayout = activeLayoutData.results[0];
-                        activeLayout.is_active = false;
-                        uiService.updateListLayout(activeLayout.id, activeLayout);
+                        activeLayoutData.results.forEach(function (item) {
+
+                            if (item.name === name) {
+                                activeLayout = item
+                            }
+
+                        });
+
+                    }
+
+                    if (activeLayout) {
 
                         vm.setLayout(activeLayout);
 
@@ -432,15 +498,7 @@
                             }
                         }).then(function (value) {
 
-                            uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-                                var defaultLayout = null;
-                                if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-                                    defaultLayout = defaultLayoutData.results[0];
-                                }
-
-                                vm.setLayout(defaultLayout);
-
-                            });
+                            vm.getLayoutActiveOrDefault();
 
                         })
 
@@ -451,7 +509,7 @@
             };
 
 
-            vm.getLayoutActiveOrDefault = function(){
+            vm.getLayoutActiveOrDefault = function () {
 
                 uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
 
