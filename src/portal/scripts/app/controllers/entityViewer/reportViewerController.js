@@ -8,6 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
 
         var priceHistoryService = require('../../services/priceHistoryService');
@@ -1187,17 +1188,33 @@
 
                 console.log('vm.getLayoutByName.name', name);
 
+                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
+
                 uiService.getListLayoutDefault({
+                    pageSize: 1000,
                     filters: {
+                        content_type: contentType,
                         name: name
                     }
                 }).then(function (activeLayoutData) {
 
+                    console.log('vm.getLayoutByName.activeLayoutData1', activeLayoutData);
+
+                    var activeLayout = null;
+
                     if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
 
-                        var activeLayout = activeLayoutData.results[0];
-                        activeLayout.is_active = false;
-                        uiService.updateListLayout(activeLayout.id, activeLayout);
+                        activeLayoutData.results.forEach(function (item) {
+
+                            if (item.name === name) {
+                                activeLayout = item
+                            }
+
+                        });
+
+                    }
+
+                    if (activeLayout) {
 
                         vm.setLayout(activeLayout);
 
@@ -1220,15 +1237,7 @@
                             }
                         }).then(function (value) {
 
-                            uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-                                var defaultLayout = null;
-                                if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-                                    defaultLayout = defaultLayoutData.results[0];
-                                }
-
-                                vm.setLayout(defaultLayout);
-
-                            });
+                            vm.getLayoutActiveOrDefault()
 
                         })
 
@@ -1239,6 +1248,8 @@
             };
 
             vm.getLayoutActiveOrDefault = function () {
+
+                console.log('vm.getLayoutActiveOrDefault');
 
                 uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
 
@@ -1268,9 +1279,60 @@
 
             }
 
+            vm.getActiveObjectFromQueryParameters = function () {
+
+                var queryParameters = window.location.href.split('?')[1];
+
+                var result = null;
+
+                if (queryParameters) {
+
+                    var parameters = queryParameters.split('&');
+
+                    result = {};
+
+                    parameters.forEach(function (parameter) {
+
+                        var pieces = parameter.split('=');
+                        var key = pieces[0];
+                        var value = pieces[1];
+
+                        result[key] = decodeURI(value);
+
+                    });
+
+                    return result;
+
+                }
+
+            };
+
+            vm.setFiltersValuesFromQueryParameters = function () {
+
+                var activeObject = vm.getActiveObjectFromQueryParameters();
+
+                if (activeObject) {
+
+                    console.log('vm.getView activeObject', activeObject);
+
+                    var filters = vm.entityViewerDataService.getFilters();
+
+                    filters.forEach(function (item) {
+
+                        if (activeObject.hasOwnProperty(item.key)) {
+                            item.options.filter_values = [activeObject[item.key]]
+                        }
+
+                    })
+
+                }
+
+            };
+
             vm.setLayout = function (layout) {
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+                vm.setFiltersValuesFromQueryParameters();
 
                 var reportOptions = vm.entityViewerDataService.getReportOptions();
                 var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
@@ -1353,8 +1415,6 @@
             };
 
             vm.getView = function () {
-
-                console.log('here?');
 
                 middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 

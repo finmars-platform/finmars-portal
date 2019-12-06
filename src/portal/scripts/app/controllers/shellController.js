@@ -298,6 +298,12 @@
             return showLayoutName;
         };
 
+        vm.isLayoutFromUrl = function () {
+
+            return window.location.href.indexOf('?layout=') !== -1
+
+        };
+
         vm.getActiveLayoutName = function (newLayoutName) {
 
             if (typeof newLayoutName === "string") {
@@ -305,6 +311,7 @@
                 vm.activeLayoutName = newLayoutName;
 
             } else {
+
 
                 var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams);
 
@@ -320,27 +327,66 @@
                     $scope.$apply();
                 };
 
-                uiService.getActiveListLayout(entityType).then(function (activeLayoutData) {
+                if (vm.isLayoutFromUrl()) {
 
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+                    var queryParams = window.location.href.split('?')[1];
+                    var params = queryParams.split('&');
+
+                    var layoutName;
+
+                    params.forEach(function (param) {
+
+                        var pieces = param.split('=');
+                        var key = pieces[0];
+                        var value = pieces[1];
+
+                        if (key === 'layout') {
+                            layoutName = value
+                        }
+
+                    });
+
+                    var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+
+                    uiService.getListLayoutDefault({
+                        pageSize: 1000,
+                        filters: {
+                            content_type: contentType,
+                            name: layoutName
+                        }
+                    }).then(function (activeLayoutData) {
 
                         var activeLayoutRes = activeLayoutData.results;
 
                         setLayoutName(activeLayoutRes);
 
-                    } else {
+                    })
 
-                        uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+                } else {
 
-                            var defaultLayoutRes = defaultLayoutData.results;
+                    uiService.getActiveListLayout(entityType).then(function (activeLayoutData) {
 
-                            setLayoutName(defaultLayoutRes);
+                        if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
 
-                        });
+                            var activeLayoutRes = activeLayoutData.results;
 
-                    }
+                            setLayoutName(activeLayoutRes);
 
-                });
+                        } else {
+
+                            uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+
+                                var defaultLayoutRes = defaultLayoutData.results;
+
+                                setLayoutName(defaultLayoutRes);
+
+                            });
+
+                        }
+
+                    });
+
+                }
 
             }
 
@@ -608,9 +654,9 @@
                 }
             });
 
-            window.addEventListener("dragover",function(ev){
+            window.addEventListener("dragover", function (ev) {
                 ev.preventDefault();
-            },false);
+            }, false);
 
             window.addEventListener('drop', function (ev) {
 
