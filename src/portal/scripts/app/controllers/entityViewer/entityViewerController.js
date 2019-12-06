@@ -376,6 +376,7 @@
             vm.setLayout = function (layoutData) {
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layoutData, uiService, false);
+                vm.setFiltersValuesFromQueryParameters();
                 vm.readyStatus.layout = true;
                 console.log('vm', vm);
                 evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
@@ -386,6 +387,46 @@
                 }
 
                 $scope.$apply();
+
+            };
+
+            vm.getActiveObjectFromQueryParameters = function(){
+
+                var queryParameters =  window.location.href.split('?')[1];
+
+                var parameters = queryParameters.split('&');
+
+                var result = {};
+
+                parameters.forEach(function (parameter) {
+
+                    var pieces = parameter.split('=');
+                    var key = pieces[0];
+                    var value = pieces[1];
+
+                    result[key] = decodeURI(value);
+
+                });
+
+                return result;
+
+            };
+
+            vm.setFiltersValuesFromQueryParameters = function(){
+
+                var activeObject = vm.getActiveObjectFromQueryParameters();
+
+                console.log('vm.getView activeObject', activeObject);
+
+                var filters = vm.entityViewerDataService.getFilters();
+
+                filters.forEach(function (item) {
+
+                    if(activeObject.hasOwnProperty(item.key)) {
+                        item.options.filter_values = [activeObject[item.key]]
+                    }
+
+                })
 
             };
 
