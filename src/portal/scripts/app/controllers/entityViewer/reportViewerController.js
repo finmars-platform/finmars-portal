@@ -1268,9 +1268,50 @@
 
             }
 
+            vm.getActiveObjectFromQueryParameters = function(){
+
+                var queryParameters =  window.location.href.split('?')[1];
+
+                var parameters = queryParameters.split('&');
+
+                var result = {};
+
+                parameters.forEach(function (parameter) {
+
+                    var pieces = parameter.split('=');
+                    var key = pieces[0];
+                    var value = pieces[1];
+
+                    result[key] = decodeURI(value);
+
+                });
+
+                return result;
+
+            };
+
+            vm.setFiltersValuesFromQueryParameters = function(){
+
+                var activeObject = vm.getActiveObjectFromQueryParameters();
+
+                console.log('vm.getView activeObject', activeObject);
+
+                var filters = vm.entityViewerDataService.getFilters();
+
+                filters.forEach(function (item) {
+
+                    if(activeObject.hasOwnProperty(item.key)) {
+                        item.options.filter_values = [activeObject[item.key]]
+                    }
+
+                })
+
+            };
+
             vm.setLayout = function (layout) {
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+                vm.setFiltersValuesFromQueryParameters();
 
                 var reportOptions = vm.entityViewerDataService.getReportOptions();
                 var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
@@ -1353,8 +1394,6 @@
             };
 
             vm.getView = function () {
-
-                console.log('here?');
 
                 middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 

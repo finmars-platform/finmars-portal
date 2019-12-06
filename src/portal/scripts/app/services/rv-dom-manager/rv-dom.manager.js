@@ -850,7 +850,7 @@
 
     };
 
-    var getContextMenuActionLink = function (option) {
+    var getContextMenuActionLink = function (evDataService, option) {
 
         var result = '';
 
@@ -883,6 +883,20 @@
         result = result + '#!/';
         result = result + urlMap[option.action_data.content_type];
         result = result + '?layout=' + option.action_data.name;
+
+        var activeObject = evDataService.getActiveObject();
+
+        if (activeObject) {
+            Object.keys(activeObject).forEach(function (key) {
+
+                var propType = typeof activeObject[key];
+
+                if (['string', 'number', 'boolean'].indexOf(propType) !== -1) {
+                    result = result + '&' + key + '=' + encodeURI(activeObject[key]);
+                }
+
+            });
+        }
 
         return result
 
@@ -937,7 +951,7 @@
 
     };
 
-    var generateContextMenu = function (menu, ttypes, obj, objectId, parentGroupHashId) {
+    var generateContextMenu = function (evDataService, menu, ttypes, obj, objectId, parentGroupHashId) {
 
         var result = '<div>';
 
@@ -963,12 +977,12 @@
                 if (item.action === 'open_layout') {
 
                     result = result + '<a class="ev-dropdown-option ' + (item.items ? ' ev-dropdown-menu-holder' : ' ') + '"' +
-                        ' href="' + getContextMenuActionLink(item) + '" target="_blank"' +
+                        ' href="' + getContextMenuActionLink(evDataService, item) + '" target="_blank"' +
                         ' data-ev-dropdown-action="' + item.action + '"' +
                         ' data-object-id="' + objectId + '"' +
                         ' data-parent-group-hash-id="' + parentGroupHashId + '">' +
 
-                         item.name;
+                        item.name;
 
                     if (item.items && item.items.length) {
 
@@ -1033,7 +1047,7 @@
         popup.id = 'dropdown-' + objectId;
         popup.classList.add('ev-dropdown');
 
-        popup.innerHTML = generateContextMenu(contextMenu, ttypes, obj, objectId, parentGroupHashId);
+        popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
 
         popup.style.cssText = menuPosition;
         popup.style.position = 'absolute';
