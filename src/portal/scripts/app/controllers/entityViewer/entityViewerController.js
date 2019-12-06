@@ -8,6 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
         var usersService = require('../../services/usersService');
 
@@ -450,8 +451,12 @@
 
                 console.log('vm.getLayoutByName.name', name);
 
+                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
+
                 uiService.getListLayoutDefault({
+                    pageSize: 1000,
                     filters: {
+                        content_type: contentType,
                         name: name
                     }
                 }).then(function (activeLayoutData) {
@@ -483,15 +488,7 @@
                             }
                         }).then(function (value) {
 
-                            uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-                                var defaultLayout = null;
-                                if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-                                    defaultLayout = defaultLayoutData.results[0];
-                                }
-
-                                vm.setLayout(defaultLayout);
-
-                            });
+                            vm.getLayoutActiveOrDefault();
 
                         })
 
