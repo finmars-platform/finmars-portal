@@ -6,7 +6,8 @@
       "ui.listlayout",
       "ui.reportlayout",
       "ui.dashboardlayout",
-      "ui.bookmark"
+      "ui.bookmark",
+      "ui.contextmenulayout"
     ],
     "firstLevelGroup": "User Interface",
     "firstElementExist": false,
@@ -200,7 +201,8 @@
     "entities": [
       "transactions.transactiontype",
       "transactions.transactiontypegroup",
-      "ui.transactionuserfieldmodel"
+      "ui.transactionuserfieldmodel",
+      "ui.templatelayout"
     ],
     "firstLevelGroup": "Database Configuration",
     "firstElementExist": false
@@ -212,7 +214,8 @@
       "accounts.accounttype",
       "currencies.currency",
       "instruments.pricingpolicy",
-      "ui.instrumentuserfieldmodel"
+      "ui.instrumentuserfieldmodel",
+      "reference_tables.referencetable"
     ],
     "firstLevelGroup": "Database Configuration",
     "firstElementExist": false
@@ -246,7 +249,8 @@
     "name": "Schemes: Import from File",
     "entities": [
       "csv_import.csvimportscheme",
-      "integrations.complextransactionimportscheme"
+      "integrations.complextransactionimportscheme",
+      "complex_import.compleximportscheme"
     ],
     "firstLevelGroup": "Database Configuration",
     "firstElementExist": false

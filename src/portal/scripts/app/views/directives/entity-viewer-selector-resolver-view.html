@@ -17,7 +17,7 @@
             </md-select-header>
             <div class="select-options-holder">
                 <md-option
-                        data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{key: searchTerm} as results track by field.id "
+                        data-ng-repeat="field in fields | orderBy: resolveSort(field) | filter:{key: searchTerm} as results track by field.id "
                         ng-value="field.value">
                    {{field.key}}
                 </md-option>

@@ -20,7 +20,7 @@
             },
             templateUrl: 'views/directives/entity-viewer-selector-resolver-view.html',
             link: function (scope, elem, attrs) {
-
+                console.log("drag n drop evResolver scope", scope.item, scope.content_type, scope.options);
                 scope.readyStatus = {content: false, tags: false};
 
                 scope.fields = [];
@@ -28,17 +28,29 @@
                 scope.searchTerm = '';
 
                 scope.resolveSort = function (field) {
-                    if (field) {
-                        if (field.hasOwnProperty('name')) {
-                            return field.name
-                        }
-                        if (field.hasOwnProperty('user_code')) {
-                            return field.user_code
-                        }
+
+                    if (scope.item && scope.item.value_type === 110) {
+
+                        return 'order'
+
+                    } else if (field) {
+
                         if (field.hasOwnProperty('public_name')) {
-                            return field.public_name
+
+                            return '-' + field.public_name
+
+                        } else if (field.hasOwnProperty('user_code')) {
+
+                            return '-' + field.user_code
+
+                        } else if (field.hasOwnProperty('name')) {
+
+                            return '-' + field.name
+
                         }
+
                     }
+
                 };
 
 
@@ -101,11 +113,11 @@
 
                 scope.init = function () {
 
-                    if (entity[item.name]) {
+                    if (scope.entity[scope.item.name]) {
                         scope.fields = [];
 
                         var obj = {};
-                        obj[entity[item.name]] = entity[item.name];
+                        obj[scope.entity[scope.item.name]] = scope.entity[scope.item.name];
 
                         scope.fields.push(obj)
                     }

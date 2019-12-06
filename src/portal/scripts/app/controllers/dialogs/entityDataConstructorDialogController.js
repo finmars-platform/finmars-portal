@@ -1018,7 +1018,7 @@
 
             destroy: function () {
                 // console.log('this.dragula', this.dragula)
-                this.drake.destroy();
+                this.dragula.destroy();
             }
         };
 

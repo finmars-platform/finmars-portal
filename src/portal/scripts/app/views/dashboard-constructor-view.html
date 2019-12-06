@@ -135,7 +135,7 @@
                     <md-tabs md-border-bottom md-dynamic-height>
                         <md-tab data-ng-repeat="tab in vm.layout.data.tabs">
                             <md-tab-label>
-                                <div data-ng-if="!tab.editState" data-ng-click="">
+                                <div data-ng-if="!tab.editState">
                                     <span class="ec-tab-item-name">{{tab.name}}</span>
                                     <md-button class="ec-tab-btn"
                                                data-ng-click="vm.toggleEditTab(tab)">
@@ -146,10 +146,11 @@
                                         <ng-md-icon icon="delete"></ng-md-icon>
                                     </md-button>
                                 </div>
+
                                 <div data-ng-if="tab.editState">
                                     <md-input-container class="ec-tab-item-edit">
                                         <label>Tab name</label>
-                                        <input ng-model="tab.captionName">
+                                        <input type="text" ng-model="tab.captionName" class="tabNameInput">
                                     </md-input-container>
                                     <md-button class="ec-tab-btn"
                                                data-ng-click="vm.saveEditedTab(tab)">
@@ -161,6 +162,7 @@
                                     </md-button>
                                 </div>
                             </md-tab-label>
+
                             <md-tab-body>
                                 <div class="ec-md-content ec-layout-tab dashboard-layout-holder"
                                      dashboard-constructor-grid-aligner

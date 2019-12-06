@@ -232,21 +232,35 @@
             vm.dashboardConstructorDataService.setData(vm.layout);
 
 
-            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
             setTimeout(function () {
                 vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
-            }, 0)
+            }, 0);
+        };
+
+        var tabNameInput = null;
+
+        var removeKeydownListener = function () {
+            document.removeEventListener('keydown', allowSpaceInTabName);
+        };
+
+        var allowSpaceInTabName = function (kDownEv) {
+            if (kDownEv.key === ' ') {
+                var tabNameValue = tabNameInput.value;
+                tabNameInput.value = tabNameValue + ' ';
+            }
         };
 
         vm.toggleEditTab = function (tab, action, $index) {
             if (!tab.editState) {
                 tab.editState = false;
             }
+
             if (!tab.captionName) {
                 tab.captionName = tab.name;
             }
-            if (action === 'back') {
 
+            if (action === 'back') {
                 if (!tab.captionName && tab.name === '') {
                     vm.layout.data.tabs.splice($index, 1);
                 } else {
@@ -254,10 +268,25 @@
                 }
             }
             tab.editState = !tab.editState;
+
+            if (tab.editState) {
+
+                setTimeout(function () {
+                    tabNameInput = document.querySelector('.tabNameInput');
+
+                    tabNameInput.addEventListener('focus', function () {
+                        document.addEventListener('keydown', allowSpaceInTabName);
+                    });
+
+                    tabNameInput.addEventListener('blur', removeKeydownListener, {once: true})
+                }, 100);
+
+            }
+
         };
 
         vm.saveEditedTab = function (tab) {
-            console.log(tab);
+
             var tabIsReadyToSave = true;
 
             if (tab.captionName && tab.captionName !== '') {
@@ -648,7 +677,7 @@
 
             destroy: function () {
                 // console.log('this.dragula', this.dragula)
-                this.drake.destroy();
+                this.dragula.destroy();
             }
         };
 
