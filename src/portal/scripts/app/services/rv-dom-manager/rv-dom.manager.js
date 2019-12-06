@@ -850,7 +850,7 @@
 
     };
 
-    var getContextMenuActionLink = function (evDataService, option) {
+    var getContextMenuActionLink = function (evDataService, option, obj) {
 
         var result = '';
 
@@ -884,15 +884,14 @@
         result = result + urlMap[option.action_data.content_type];
         result = result + '?layout=' + option.action_data.name;
 
-        var activeObject = evDataService.getActiveObject();
 
-        if (activeObject) {
-            Object.keys(activeObject).forEach(function (key) {
+        if (obj) {
+            Object.keys(obj).forEach(function (key) {
 
-                var propType = typeof activeObject[key];
+                var propType = typeof obj[key];
 
                 if (['string', 'number', 'boolean'].indexOf(propType) !== -1) {
-                    result = result + '&' + key + '=' + encodeURI(activeObject[key]);
+                    result = result + '&' + key + '=' + encodeURI(obj[key]);
                 }
 
             });
@@ -977,7 +976,7 @@
                 if (item.action === 'open_layout') {
 
                     result = result + '<a class="ev-dropdown-option ' + (item.items ? ' ev-dropdown-menu-holder' : ' ') + '"' +
-                        ' href="' + getContextMenuActionLink(evDataService, item) + '" target="_blank"' +
+                        ' href="' + getContextMenuActionLink(evDataService, item, obj) + '" target="_blank"' +
                         ' data-ev-dropdown-action="' + item.action + '"' +
                         ' data-object-id="' + objectId + '"' +
                         ' data-parent-group-hash-id="' + parentGroupHashId + '">' +
