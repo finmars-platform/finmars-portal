@@ -8,6 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
 
         var priceHistoryService = require('../../services/priceHistoryService');
@@ -1187,11 +1188,17 @@
 
                 console.log('vm.getLayoutByName.name', name);
 
+                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
+
                 uiService.getListLayoutDefault({
+                    pageSize: 1000,
                     filters: {
+                        content_type: contentType,
                         name: name
                     }
                 }).then(function (activeLayoutData) {
+
+                    console.log('vm.getLayoutByName.activeLayoutData1', activeLayoutData);
 
                     if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
 
@@ -1220,15 +1227,7 @@
                             }
                         }).then(function (value) {
 
-                            uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-                                var defaultLayout = null;
-                                if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-                                    defaultLayout = defaultLayoutData.results[0];
-                                }
-
-                                vm.setLayout(defaultLayout);
-
-                            });
+                            vm.getLayoutActiveOrDefault()
 
                         })
 
