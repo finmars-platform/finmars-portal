@@ -390,43 +390,53 @@
 
             };
 
-            vm.getActiveObjectFromQueryParameters = function(){
+            vm.getActiveObjectFromQueryParameters = function () {
 
-                var queryParameters =  window.location.href.split('?')[1];
+                var queryParameters = window.location.href.split('?')[1];
 
-                var parameters = queryParameters.split('&');
+                var result = null;
 
-                var result = {};
+                if (queryParameters) {
 
-                parameters.forEach(function (parameter) {
+                    var parameters = queryParameters.split('&');
 
-                    var pieces = parameter.split('=');
-                    var key = pieces[0];
-                    var value = pieces[1];
+                    result = {};
 
-                    result[key] = decodeURI(value);
+                    parameters.forEach(function (parameter) {
 
-                });
+                        var pieces = parameter.split('=');
+                        var key = pieces[0];
+                        var value = pieces[1];
 
-                return result;
+                        result[key] = decodeURI(value);
+
+                    });
+
+                    return result;
+
+                }
 
             };
 
-            vm.setFiltersValuesFromQueryParameters = function(){
+            vm.setFiltersValuesFromQueryParameters = function () {
 
                 var activeObject = vm.getActiveObjectFromQueryParameters();
 
                 console.log('vm.getView activeObject', activeObject);
 
-                var filters = vm.entityViewerDataService.getFilters();
+                if (activeObject) {
 
-                filters.forEach(function (item) {
+                    var filters = vm.entityViewerDataService.getFilters();
 
-                    if(activeObject.hasOwnProperty(item.key)) {
-                        item.options.filter_values = [activeObject[item.key]]
-                    }
+                    filters.forEach(function (item) {
 
-                })
+                        if (activeObject.hasOwnProperty(item.key)) {
+                            item.options.filter_values = [activeObject[item.key]]
+                        }
+
+                    })
+                }
+
 
             };
 
@@ -492,7 +502,7 @@
             };
 
 
-            vm.getLayoutActiveOrDefault = function(){
+            vm.getLayoutActiveOrDefault = function () {
 
                 uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
 
