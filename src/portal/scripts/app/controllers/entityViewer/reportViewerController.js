@@ -1200,11 +1200,21 @@
 
                     console.log('vm.getLayoutByName.activeLayoutData1', activeLayoutData);
 
+                    var activeLayout = null;
+
                     if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
 
-                        var activeLayout = activeLayoutData.results[0];
-                        activeLayout.is_active = false;
-                        uiService.updateListLayout(activeLayout.id, activeLayout);
+                        activeLayoutData.results.forEach(function (item) {
+
+                            if (item.name === name) {
+                                activeLayout = item
+                            }
+
+                        });
+
+                    }
+
+                    if (activeLayout) {
 
                         vm.setLayout(activeLayout);
 
@@ -1238,6 +1248,8 @@
             };
 
             vm.getLayoutActiveOrDefault = function () {
+
+                console.log('vm.getLayoutActiveOrDefault');
 
                 uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
 
