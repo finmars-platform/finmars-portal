@@ -35,6 +35,12 @@
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
                 var chartHolderElem = elem[0].querySelector('.report-viewer-chart-holder');
 
+                if (scope.rvChartsSettings.chart_custom_name) {
+                    scope.chartName = scope.rvChartsSettings.chart_custom_name;
+                } else {
+                    scope.chartName = scope.rvChartsSettings.component_name;
+                }
+
                 var componentHeight = mainElem.clientHeight;
                 var componentWidth = mainElem.offsetWidth;
 

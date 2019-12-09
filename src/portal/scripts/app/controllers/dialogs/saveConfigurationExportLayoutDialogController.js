@@ -19,11 +19,11 @@
 
         vm.delete = function () {
 
-            uiRepository.deleteConfigurationExportLayoutByKey(vm.layout.id);
+            uiRepository.deleteConfigurationExportLayoutByKey(vm.layout.id).then(function () {
 
-            setTimeout(function () {
                 $mdDialog.hide({status: 'agree'});
-            }, 100);
+
+            });
 
         };
 

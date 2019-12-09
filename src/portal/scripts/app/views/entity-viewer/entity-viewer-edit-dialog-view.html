@@ -1,6 +1,6 @@
 <md-dialog class="entity-editor-dialog draggable-dialog"
            drag-dialog
-           aria-label="entity edit"
+           aria-label="entity viewer edit dialog"
            style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools"  data-ng-if="vm.checkReadyStatus()" data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
@@ -21,7 +21,7 @@
             <div data-ng-if="vm.checkReadyStatus()">
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
-                    <md-tab data-ng-repeat="tab in vm.tabs">
+                    <md-tab data-ng-repeat="tab in vm.tabs track by tab.id">
                         <md-tab-label>
                             <span>{{tab.name}}</span>
                         </md-tab-label>
@@ -193,6 +193,7 @@
                     </md-tab>
                 </md-tabs>
             </div>
+
             <div data-ng-if="!vm.checkReadyStatus()">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
                     <progress-circular diameter="100"></progress-circular>

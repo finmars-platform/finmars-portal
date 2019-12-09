@@ -452,9 +452,11 @@
             field = vm.fieldsTree[tab.id][row][column];
 
             var flexUnit = 100 / tab.layout.columns;
+
             if (field) {
                 return Math.floor(field.colspan * flexUnit);
             }
+
             return Math.floor(flexUnit);
         };
 
@@ -939,7 +941,7 @@
                                             if (field.column === dElemColumn && field.row === dElemRow) { // make dragged from socket empty
 
                                                 var emptyFieldData = {
-                                                    colspan: field.colspan,
+                                                    colspan: 1,
                                                     column: dElemColumn,
                                                     editMode: false,
                                                     row: dElemRow,

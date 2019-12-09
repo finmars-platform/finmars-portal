@@ -33,7 +33,7 @@
         vm.layouts = [];
 
         var deleteChartTypeBasedProps = function () {
-            delete vm.item.settings.bar_name_key;
+            /*delete vm.item.settings.bar_name_key;
             delete vm.item.settings.bar_number_key;
             delete vm.item.settings.min_bar_width;
             delete vm.item.settings.max_bar_width;
@@ -50,7 +50,9 @@
             delete vm.item.settings.show_legends;
             delete vm.item.settings.legends_position;
             delete vm.item.settings.legends_columns_number;
-            delete vm.item.settings.chart_form;
+            delete vm.item.settings.chart_form;*/
+
+            vm.item.settings = {};
         };
 
         vm.reportTypeChange = function() {
