@@ -1,4 +1,4 @@
-<md-dialog aria-label="entity edit" class="entity-editor-dialog draggable-dialog" drag-dialog
+<md-dialog aria-label="add complex transaction dialog" class="entity-editor-dialog draggable-dialog" drag-dialog
            style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -143,7 +143,7 @@
 								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
                                                  data-ng-repeat="field in tab.layout.fields track by $index"
                                                  flex="{{vm.bindFlex(tab, row, field)}}"
-                                                 data-ng-if="vm.checkFieldRender(tab, row, field)">
+                                                 data-ng-if="vm.checkFieldRender(tab, row, field)" data-row="{{row}}" data-column="{{field.column}}">
                                                 <bind-field-control
                                                         entity-type="vm.entityType"
                                                         entity="vm.entity"

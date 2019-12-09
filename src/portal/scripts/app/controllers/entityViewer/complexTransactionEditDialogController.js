@@ -562,7 +562,7 @@
                         if (item.type === 'field' && item.colspan > 1) {
                             var columnsToSpan = item.column + item.colspan - 1;
 
-                            for (var i = item.column; i < columnsToSpan; i = i + 1) {
+                            for (var i = item.column; i <= columnsToSpan; i = i + 1) {
                                 spannedCols.push(i);
                             }
 
