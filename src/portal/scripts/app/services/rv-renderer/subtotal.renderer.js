@@ -44,7 +44,8 @@
 
         var result = {
             'html_result': '',
-            'numeric_result': null
+            'numeric_result': null,
+            'raw_text_result': ''
         };
 
         if (column.id && obj[column.entity + '_object']) {
@@ -57,23 +58,27 @@
 
                         result.html_result = item.value_float.toString();
                         result.numeric_result = item.value_float;
+                        result.raw_text_result = item.value_float.toString();
 
                     }
 
                     if (column.value_type === 10 && item.value_string) {
 
                         result.html_result = item.value_string;
+                        result.raw_text_result = item.value_string;
 
                     }
 
                     if (column.value_type === 30 && item.classifier_object) {
 
                         result.html_result = item.classifier_object.name;
+                        result.raw_text_result = item.classifier_object.name;
                     }
 
                     if (column.value_type === 40 && item.value_date) {
 
                         result.html_result = item.value_date;
+                        result.raw_text_result = item.value_date;
 
                     }
                 }
@@ -90,10 +95,11 @@
 
         var result = {
             html_result: '',
-            numeric_result: null
+            numeric_result: null,
+            raw_text_result: ''
         };
 
-        var isFirst = rvHelper.isFirst(evDataService, obj);
+        //var isFirst = rvHelper.isFirst(evDataService, obj);
 
         if (columnNumber < obj.___level - 1) {
 
@@ -146,6 +152,7 @@
                         }
 
                         result.html_result = foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span>';
+                        result.raw_text_result = currentGroup.___group_name;
 
                     }
 
@@ -180,6 +187,7 @@
                 }
 
                 result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="text-bold">' + obj.___group_name + '</span></span>';
+                result.raw_text_result = obj.___group_name;
 
             }
 
@@ -192,6 +200,7 @@
                 if (obj.hasOwnProperty(column.key)) {
                     result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
                     result.numeric_result = obj[column.key];
+                    result.raw_text_result = renderHelper.formatValue(obj, column);
                 } else {
                     result = getDynamicAttributeValue(obj, column);
                 }
@@ -205,7 +214,8 @@
         var grandTotalIsActive = rootGroupOptions.subtotal_type;
 
         if (obj.___level === 0 && grandTotalIsActive && columnNumber === 1) {
-            result.html_result = '<span class="text-bold">Grand Total</span>'
+            result.html_result = '<span class="text-bold">Grand Total</span>';
+            result.raw_text_result = 'Grand Total';
         }
 
         return result;
@@ -369,14 +379,19 @@
                 value: value_obj.html_result
             });
 
+            var gCellTitle = '';
             var resultValue = '';
 
             if (value_obj.html_result) {
                 resultValue = '<span class="g-cell-content">' + value_obj.html_result + '</span>';
             }
 
+            if (value_obj.raw_text_result) {
+                gCellTitle = ' title="' + value_obj.raw_text_result + '"';
+            }
+
             cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + ' ">' +
+                '<div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
                 resultValue +
                 '</div>' +

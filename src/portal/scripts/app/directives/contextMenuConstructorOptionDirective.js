@@ -17,11 +17,11 @@
                 index: '=',
                 addCallback: '&',
                 editCallback: '&',
-                deleteCallback: '&'
+                deleteCallback: '&',
+                moveUpCallback: '&',
+                moveDownCallback: '&'
             },
             link: function (scope, elem, attrs, ngModelCtrl) {
-
-                console.log('scope', scope);
 
                 scope.editOption = function ($event, item) {
 
@@ -29,6 +29,16 @@
 
                     scope.editCallback({event: $event, item: item})
 
+                };
+
+                scope.moveUp = function (itemIndex) {
+                    console.log("sorting moveUp itemIndex", itemIndex);
+                    scope.moveUpCallback({itemIndex: itemIndex});
+                };
+
+                scope.moveDown = function (itemIndex) {
+                    console.log("sorting moveDown itemIndex", itemIndex);
+                    scope.moveDownCallback({itemIndex: itemIndex});
                 };
 
                 scope.addOption = function ($event, item) {

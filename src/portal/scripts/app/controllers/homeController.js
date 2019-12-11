@@ -7,14 +7,16 @@
 
     var afterLoginEventsService = require('../services/afterLoginEventsService');
     var usersService = require('../services/usersService');
+    var uiService = require('../services/uiService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $state, $mdDialog) {
 
         var vm = this;
 
         vm.masters = [];
         vm.currentMasterUser = null;
         vm.eventsProcessing = false;
+        vm.dashboardsListReady = false;
 
         vm.getMasterUsersList = function () {
 
@@ -32,9 +34,8 @@
 
         };
 
-        vm.init = function () {
-
-            vm.getMasterUsersList().then(function () {
+        var processEventsPromise = function () {
+            return new Promise(function (resolve, reject) {
 
                 usersService.getOwnMemberSettings().then(function (data) {
 
@@ -63,13 +64,13 @@
 
                         vm.eventsProcessing = true;
 
-                        $scope.$apply();
-
                         afterLoginEventsService.getAndShowEvents($mdDialog).then(function (value) {
 
                             vm.eventsProcessing = false;
-                            $scope.$apply();
+                            resolve();
 
+                        }).catch(function () {
+                            resolve();
                         });
 
                         if (info) {
@@ -83,11 +84,46 @@
 
                     } else {
                         vm.eventsProcessing = false;
-                        $scope.$apply();
+                        resolve();
                     }
 
                 });
 
+            });
+
+        };
+
+        var getDashboardsList = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                uiService.getDashboardLayoutList().then(function (data) {
+
+                    vm.dashboardsList = data.results;
+                    vm.dashboardsListReady = true;
+
+                    resolve();
+
+                });
+
+            });
+
+        };
+
+        vm.init = function () {
+
+            vm.getMasterUsersList().then(function () {
+
+                var promises = [];
+
+                promises.push(processEventsPromise());
+                promises.push(getDashboardsList());
+
+                Promise.all(promises).then(function () {
+                    $scope.$apply();
+                }).catch(function () {
+                    $scope.$apply();
+                });
 
             })
 

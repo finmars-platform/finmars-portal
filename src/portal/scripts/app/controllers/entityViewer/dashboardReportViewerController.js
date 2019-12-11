@@ -669,6 +669,7 @@
                         max_bar_width: vm.componentType.data.settings.max_bar_width,
                         sorting_value_type: vm.componentType.data.settings.sorting_value_type,
                         sorting_type: vm.componentType.data.settings.sorting_type,
+                        autocalc_ticks_number: vm.componentType.data.settings.autocalc_ticks_number,
                         ticks_number: vm.componentType.data.settings.ticks_number,
                         crop_tick_text: vm.componentType.data.settings.crop_tick_text,
                         tooltip_font_size: vm.componentType.data.settings.tooltip_font_size,
