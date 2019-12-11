@@ -37,43 +37,53 @@
                 items: [
                     {
                         name: 'Edit Instrument',
-                        action: 'edit_instrument'
+                        action: 'edit_instrument',
+                        order: '0'
                     },
                     {
                         name: 'Edit Account',
-                        action: 'edit_account'
+                        action: 'edit_account',
+                        order: '1'
                     },
                     {
                         name: 'Edit Portfolio',
-                        action: 'edit_portfolio'
+                        action: 'edit_portfolio',
+                        order: '2'
                     },
                     {
                         name: 'Edit Price',
-                        action: 'edit_price'
+                        action: 'edit_price',
+                        order: '3'
                     },
                     {
                         name: 'Edit FX Rate',
-                        action: 'edit_fx_rate'
+                        action: 'edit_fx_rate',
+                        order: '4'
                     },
                     {
                         name: 'Edit Pricing FX Rate',
-                        action: 'edit_pricing_currency_price'
+                        action: 'edit_pricing_currency_price',
+                        order: '5'
                     },
                     {
                         name: 'Edit Accrued FX Rate',
-                        action: 'edit_accrued_currency_fx_rate'
+                        action: 'edit_accrued_currency_fx_rate',
+                        order: '6'
                     },
                     {
                         name: 'Edit Currency',
-                        action: 'edit_currency'
+                        action: 'edit_currency',
+                        order: '7'
                     },
                     {
                         name: 'Edit Transaction',
-                        action: 'rebook_transaction'
+                        action: 'rebook_transaction',
+                        order: '8'
                     },
                     {
                         name: 'Open Book Manager',
-                        action: 'book_transaction'
+                        action: 'book_transaction',
+                        order: '9'
                     }
                 ]
             }
@@ -152,10 +162,40 @@
 
         };
 
+        vm.moveUp = function (itemIndex) {
+            var prevItemIndex = itemIndex - 1;
+            var menuRoot = vm.layout.data.menu.root;
+
+            if (prevItemIndex >= 0) {
+                var itemToMove = JSON.parse(JSON.stringify(menuRoot.items[itemIndex]));
+                itemToMove.order = itemToMove.order - 1;
+
+                menuRoot.items[itemIndex] = menuRoot.items[prevItemIndex];
+                menuRoot.items[itemIndex].order += 1;
+                menuRoot.items[prevItemIndex] = itemToMove;
+            }
+
+        };
+
+        vm.moveDown = function (itemIndex) {
+            var nextItemIndex = itemIndex + 1;
+            var menuRoot = vm.layout.data.menu.root;
+
+            if (menuRoot.items[nextItemIndex]) {
+                var itemToMove = JSON.parse(JSON.stringify(menuRoot.items[itemIndex]));
+                itemToMove.order = itemToMove.order + 1;
+
+                menuRoot.items[itemIndex] = menuRoot.items[nextItemIndex];
+                menuRoot.items[itemIndex].order -= 1;
+                menuRoot.items[nextItemIndex] = itemToMove;
+            }
+
+        };
+
         vm.deleteOption = function ($event, parentOption, $index) {
 
-            console.log("Controller delete option", parentOption)
-            console.log("Controller delete $index", $index)
+            console.log("Controller delete option", parentOption);
+            console.log("Controller delete $index", $index);
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -244,6 +284,15 @@
             uiService.getContextMenuLayoutByKey(vm.layout.id).then(function (data) {
 
                 vm.layout = data;
+
+                if (vm.layout && vm.layout.data && // TODO delete later, needed to work with old context menus
+                    !vm.layout.data.menu.root.items[0].hasOwnProperty('order')) {
+
+                    vm.layout.data.menu.root.items.forEach(function (item, index) {
+                        item.order = index;
+                    });
+
+                }
 
                 vm.readyStatus.data = true;
 

@@ -19,7 +19,7 @@
 
                 <div class="context-menu-block">
 
-                    <div data-ng-repeat="item in vm.layout.data.menu.root.items track by $index"
+                    <div data-ng-repeat="item in vm.layout.data.menu.root.items | orderBy: 'order' track by $index"
 
                          layout="row">
 
@@ -29,6 +29,8 @@
                                                          add-callback="vm.addOption(event, item)"
                                                          edit-callback="vm.editOption(event, item)"
                                                          delete-callback="vm.deleteOption(event, item, index)"
+                                                         move-up-callback="vm.moveUp(itemIndex)"
+                                                         move-down-callback="vm.moveDown(itemIndex)"
                         ></context-menu-constructor-option>
 
                     </div>

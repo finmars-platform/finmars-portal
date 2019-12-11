@@ -19,6 +19,15 @@
                 </md-menu-item>
 
                 <md-menu-item>
+                    <md-button ng-click="renameColumn($mdMenu, $event)"
+                               class="g-settings-option-btn">
+                        <ng-md-icon icon="visibility_off"
+                                    style="visibility: hidden;"></ng-md-icon>
+                        <span>Rename</span>
+                    </md-button>
+                </md-menu-item>
+
+                <md-menu-item>
                     <md-button ng-click="resizeColumn($mdMenu, $event)"
                                class="g-settings-option-btn">
                         <ng-md-icon icon="visibility_off"

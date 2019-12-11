@@ -50,7 +50,7 @@
                                                   ev-data-service="evDataService"
                                                   ev-event-service="evEventService"></report-viewer-matrix>
 
-                            <div grouping-and-column-area-drag-and-drop
+                            <div g-c-areas-drag-and-drop
                                  ev-data-service="evDataService"
                                  ev-event-service="evEventService"
                                  content-wrap-element="contentWrapElem"
@@ -64,10 +64,9 @@
             </div>
         </div>
 
-        <div class="g-dashboard-filter-holder">
+        <div data-ng-if="isInsideDashboard" class="g-dashboard-filter-holder">
 
-            <md-button data-ng-if="isInsideDashboard"
-                       class="toggle-dashboard-filter-btn"
+            <md-button class="toggle-dashboard-filter-btn"
                        ng-click="toggleDashboardFilter()">
                 <ng-md-icon ng-hide="dashboardFilterCollapsed"
                             icon="keyboard_arrow_left"></ng-md-icon>

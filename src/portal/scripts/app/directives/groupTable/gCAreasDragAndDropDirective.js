@@ -8,6 +8,7 @@
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -23,31 +24,6 @@
 
                 var entityType = scope.evDataService.getEntityType();
                 var isReport = metaService.isReport(entityType);
-
-                var createTableItemFromAnotherItem = function (item) {
-
-                    var itemToCreate = {};
-
-                    itemToCreate.groups = true;
-
-                    if (item.hasOwnProperty('key')) {
-                        itemToCreate.key = item.key;
-                    }
-
-                    if (item.hasOwnProperty('entity')) {
-                        itemToCreate.entity = item.entity;
-                    }
-
-                    if (item.hasOwnProperty('id')) {
-                        itemToCreate.id = item.id;
-                    }
-
-                    itemToCreate.name = item.name;
-                    itemToCreate.value_type = item.value_type;
-
-                    return itemToCreate;
-
-                };
 
                 var dragAndDrop = {
 
@@ -255,7 +231,7 @@
                                             }
                                         }
 
-                                        var groupToAdd = createTableItemFromAnotherItem(activeColumn);
+                                        var groupToAdd = evHelperService.getTableAttrInFormOf('group', activeColumn);;
 
                                         groups.push(groupToAdd);
 

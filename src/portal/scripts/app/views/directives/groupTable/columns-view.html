@@ -99,6 +99,16 @@
                                             </md-button>
                                         </md-menu-item>
 
+                                        <md-menu-item data-ng-if="checkForFilteringBySameAttr(column.key)">
+                                            <md-button data-ng-click="addFiltersWithColAttr(column)"
+                                                       class="g-settings-option-btn">
+                                                <ng-md-icon icon="visibility_off"
+                                                            style="visibility: hidden;"></ng-md-icon>
+                                                <span>Add to Filters</span>
+                                            </md-button>
+                                            <md-menu-content style="display: none"></md-menu-content>
+                                        </md-menu-item>
+
                                         <md-menu-item>
                                             <!--<md-button class="g-settings-option-btn"
                                                        ng-click="openColumnNumbersRenderingSettings(column, $event)">
@@ -381,12 +391,32 @@
                                         </md-menu-item>
 
                                         <md-menu-item data-ng-if="checkForExistingGroupingColumn(column.key)">
+                                            <md-button data-ng-click="addColumnEntityToGrouping(column)"
+                                                       class="g-settings-option-btn">
+                                                <ng-md-icon icon="visibility_off"
+                                                            style="visibility: hidden;"></ng-md-icon>
+                                                <span>Add to grouping</span>
+                                            </md-button>
+                                            <md-menu-content style="display: none"></md-menu-content>
+                                        </md-menu-item>
+
+                                        <md-menu-item data-ng-if="checkForFilteringBySameAttr(column.key)">
+                                            <md-button data-ng-click="addFiltersWithColAttr(column)"
+                                                       class="g-settings-option-btn">
+                                                <ng-md-icon icon="visibility_off"
+                                                            style="visibility: hidden;"></ng-md-icon>
+                                                <span>Add to Filters</span>
+                                            </md-button>
+                                            <md-menu-content style="display: none"></md-menu-content>
+                                        </md-menu-item>
+
+                                        <md-menu-item data-ng-if="checkForFilteringBySameAttr(column.key)">
                                             <md-menu>
-                                                <md-button data-ng-click="addColumnEntityToGrouping(column)"
+                                                <md-button data-ng-click="addFiltersWithColAttr(column)"
                                                            class="g-settings-option-btn">
                                                     <ng-md-icon icon="visibility_off"
                                                                 style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Add to grouping</span>
+                                                    <span>Add to Filters</span>
                                                 </md-button>
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
@@ -457,15 +487,23 @@
                                         </md-menu-item>
 
                                         <md-menu-item data-ng-if="checkForExistingGroupingColumn(column.key)">
-                                            <md-menu>
-                                                <md-button data-ng-click="addColumnEntityToGrouping(column)"
+                                            <md-button data-ng-click="addColumnEntityToGrouping(column)"
+                                                       class="g-settings-option-btn">
+                                                <ng-md-icon icon="visibility_off"
+                                                            style="visibility: hidden;"></ng-md-icon>
+                                                <span>Add to grouping</span>
+                                            </md-button>
+                                            <md-menu-content style="display: none"></md-menu-content>
+                                        </md-menu-item>
+
+                                        <md-menu-item data-ng-if="checkForFilteringBySameAttr(column.key)">
+                                                <md-button data-ng-click="addFiltersWithColAttr(column)"
                                                            class="g-settings-option-btn">
                                                     <ng-md-icon icon="visibility_off"
                                                                 style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Add to grouping</span>
+                                                    <span>Add to Filters</span>
                                                 </md-button>
                                                 <md-menu-content style="display: none"></md-menu-content>
-                                            </md-menu>
                                         </md-menu-item>
 
                                         <md-menu-item>

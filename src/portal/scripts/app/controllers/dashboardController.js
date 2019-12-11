@@ -13,7 +13,7 @@
     var dashboardEvents = require('../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $stateParams, $mdDialog) {
 
         var vm = this;
 
@@ -58,7 +58,6 @@
             vm.readyStatus.data = false;
 
             uiService.getDefaultDashboardLayout().then(function (data) {
-                // uiService.getDashboardLayoutList().then(function (data) {
 
                 if (data.results.length) {
                     vm.layout = data.results[0];
@@ -74,8 +73,49 @@
 
                 $scope.$apply();
 
-
             })
+
+        };
+
+        vm.openDashboardLayout = function () {
+
+            vm.readyStatus.data = false;
+            var activeLayoutName = $stateParams.layoutName;
+
+            if (activeLayoutName) {
+
+                uiService.getDashboardLayoutList().then(function (data) {
+
+                    if (data.results.length) {
+                        var layouts = data.results;
+
+                        for (var i = 0; i < layouts.length; i++) {
+                            if (layouts[i].name === activeLayoutName) {
+                                vm.layout = layouts[i];
+                                break;
+                            }
+                        }
+                    }
+
+                    console.log('vm.layout', vm.layout);
+
+                    vm.dashboardDataService.setData(vm.layout);
+
+                    vm.readyStatus.data = true;
+
+                    vm.initDashboardComponents();
+
+                    $scope.$apply();
+
+                }).catch(function (error) {
+                    vm.getDefaultLayout();
+                });
+
+            } else {
+
+                vm.getDefaultLayout();
+
+            }
 
         };
 
@@ -232,7 +272,7 @@
             vm.dashboardDataService = new DashboardDataService();
             vm.dashboardEventService = new DashboardEventService();
 
-            vm.getDefaultLayout();
+            vm.openDashboardLayout();
             vm.initEventListeners();
 
 

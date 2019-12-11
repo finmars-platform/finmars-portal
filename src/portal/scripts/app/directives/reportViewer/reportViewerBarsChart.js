@@ -40,7 +40,11 @@
                 var barsMaxWidth = scope.rvChartsSettings.max_bar_width;
                 var barWidth; // used for words wrap function
 
-                var ticksNumber = scope.rvChartsSettings.ticks_number;
+                var ticksNumber;
+                if (!scope.rvChartsSettings.autocalc_ticks_number) {
+                    ticksNumber = scope.rvChartsSettings.ticks_number;
+                }
+
                 var cropTickText = scope.rvChartsSettings.crop_tick_text;
 
                 var nameKey = scope.rvChartsSettings.bar_name_key;
