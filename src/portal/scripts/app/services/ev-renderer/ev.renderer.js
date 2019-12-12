@@ -21,6 +21,9 @@
 
         var previousRow = null;
 
+        var verticalAdditions = evDataService.getVerticalAdditions();
+        var viewContext = evDataService.getViewContext();
+
         var rows = projection.map(function (item, index) {
 
             var renderedRow = null;
@@ -34,7 +37,7 @@
                     renderedRow = groupRender.render(item, groups);
                     break;
                 case 'object':
-                    renderedRow = objectRender.render(item, columns, currentMember);
+                    renderedRow = objectRender.render(item, columns, currentMember, viewContext, verticalAdditions);
                     break;
                 case 'control':
                     renderedRow = controlRender.render(item, evDataService, previousRow);

@@ -4,7 +4,8 @@
 
         <div ng-if="!isReport">
 
-            <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport && hasCreatePermission">
+            <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row"
+                 data-ng-if="!isReport && hasCreatePermission">
                 <button class="md-raised clear-all full-width md-button md-ink-ripple md-primary" type="button"
                         data-ng-click="addEntity($event)">Add {{getEntityNameByState()}}
                 </button>
@@ -12,7 +13,8 @@
 
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport">
                 <button class="md-raised clear-all full-width md-button md-ink-ripple md-primary" type="button"
-                        data-ng-click="applyFilters()">Refresh Database Filters</button>
+                        data-ng-click="applyFilters()">Refresh Database Filters
+                </button>
             </div>
 
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
@@ -52,7 +54,8 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="exportLayout($event)" class="g-settings-option-btn" ng-class="{'disabled-btn': !layout.id  }">
+                            <md-button ng-click="exportLayout($event)" class="g-settings-option-btn"
+                                       ng-class="{'disabled-btn': !layout.id  }">
                                 <span>Export Layout</span>
                             </md-button>
                         </md-menu-item>
@@ -69,6 +72,12 @@
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
                 <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
                         data-ui-sref="app.attributesManager({entityType: entityType})">Manage Attributes
+                </button>
+            </div>
+            <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row"
+                 data-ng-if="entityType === 'complex-transaction'">
+                <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                        data-ng-click="openReconDialog($event)">Reconciliation
                 </button>
             </div>
 
@@ -111,7 +120,8 @@
                     </md-button>
                     <md-menu-content width="4">
                         <md-menu-item data-ng-if="!isReport && entityType !== 'complex-transaction'">
-                            <md-button ng-click="toggleSplitPanel($event, 'permission-editor')" class="g-settings-option-btn">
+                            <md-button ng-click="toggleSplitPanel($event, 'permission-editor')"
+                                       class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
                                             data-ng-show="currentAdditions.type !== 'permission-editor'"
                                             class="z-menu-icon"
@@ -123,7 +133,8 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item data-ng-if="isReport">
-                            <md-button ng-click="toggleSplitPanel($event, 'balance-report')" class="g-settings-option-btn">
+                            <md-button ng-click="toggleSplitPanel($event, 'balance-report')"
+                                       class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
                                             data-ng-show="currentAdditions.type !== 'balance-report'"
                                             class="z-menu-icon"
@@ -179,7 +190,8 @@
                  layout="row"
                  class="filters-control-btn s-f-expanded-btns layout-row">
                 <md-button class="md-raised md-button full-width"
-                           ng-click="openInputFormEditor($event)">Edit form</md-button>
+                           ng-click="openInputFormEditor($event)">Edit form
+                </md-button>
             </div>
 
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
@@ -291,7 +303,8 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="exportLayout($event)" class="g-settings-option-btn" ng-class="{'disabled-btn': !layout.id  }">
+                                <md-button ng-click="exportLayout($event)" class="g-settings-option-btn"
+                                           ng-class="{'disabled-btn': !layout.id  }">
                                     <span>Export Layout</span>
                                 </md-button>
                             </md-menu-item>
@@ -349,7 +362,8 @@
                         </md-button>
                         <md-menu-content width="4">
                             <md-menu-item>
-                                <md-button ng-click="toggleSplitPanel($event, 'balance-report')" class="g-settings-option-btn">
+                                <md-button ng-click="toggleSplitPanel($event, 'balance-report')"
+                                           class="g-settings-option-btn">
                                     <ng-md-icon icon="done"
                                                 data-ng-show="currentAdditions.type !== 'balance-report'"
                                                 class="z-menu-icon"
@@ -361,7 +375,8 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="toggleSplitPanel($event, 'pl-report')" class="g-settings-option-btn">
+                                <md-button ng-click="toggleSplitPanel($event, 'pl-report')"
+                                           class="g-settings-option-btn">
                                     <ng-md-icon icon="done"
                                                 data-ng-show="currentAdditions.type !== 'pl-report'"
                                                 class="z-menu-icon"

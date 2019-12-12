@@ -47,9 +47,9 @@
 
         }
 
-        // if (currentMember.is_admin) {
-        //     result = starIcon
-        // }
+        if (currentMember && currentMember.is_admin) {
+            result = starIcon
+        }
 
         if (obj.___is_activated) {
             result = checkIcon
@@ -158,7 +158,63 @@
 
     };
 
-    var render = function (obj, columns, currentMember) {
+    var addReconColorization = function (obj, classList, viewContext, verticalAdditions) {
+
+        if (verticalAdditions.isOpen && verticalAdditions.type === 'reconciliation' || viewContext === 'reconciliation_viewer') {
+
+            var status = '';
+
+            if (obj.hasOwnProperty('fields') && obj.fields.length) {
+
+                status = 'row-recon-matched';
+
+                // 1 - matched
+                // 2 - conflict
+                // 3 - resolved
+
+                for (var i = 0; i < obj.fields.length; i = i + 1) {
+
+                    if (!obj.fields[i].status) {
+                        status = 'row-recon-new';
+                        break;
+                    }
+
+                    if (obj.fields[i].status === 2) {
+                        status = 'row-recon-conflict';
+                        break;
+                    }
+
+                }
+
+            }
+
+            if (obj.hasOwnProperty('recon_fields') && obj.recon_fields.length) {
+
+                status = 'row-recon-matched';
+
+                // 1 - matched
+                // 2 - unmatched
+
+                for (var i = 0; i < obj.recon_fields.length; i = i + 1) {
+
+                    if (obj.recon_fields[i].status !== 1) {
+                        status = 'row-recon-unmatched';
+                        break;
+                    }
+
+
+                }
+
+
+            }
+
+            classList.push(status)
+
+        }
+
+    };
+
+    var render = function (obj, columns, currentMember, viewContext, verticalAdditions) {
 
         var classList = ['g-row'];
 
@@ -173,6 +229,8 @@
         if (obj.___is_activated) {
             classList.push('activated');
         }
+
+        addReconColorization(obj, classList, viewContext, verticalAdditions);
 
         var classes = classList.join(' ');
 

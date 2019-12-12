@@ -133,7 +133,6 @@
             // console.log('vm.currentMember.groups', vm.currentMember.groups);
 
 
-
             vm.groups.forEach(function (group) {
 
                 if (group.permission_table && group.permission_table.data) {
@@ -151,7 +150,7 @@
                         if (table.creator_manage) {
                             group.objectPermissions.manage = true;
 
-                            vm.canManagePermissions  = true;
+                            vm.canManagePermissions = true;
                         }
 
                         if (table.creator_change) {
@@ -168,7 +167,7 @@
                         if (table.other_manage) {
                             group.objectPermissions.manage = true;
 
-                            vm.canManagePermissions  = true;
+                            vm.canManagePermissions = true;
                         }
 
                         if (table.other_change) {
@@ -541,7 +540,7 @@
             'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
             'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
             'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
-            'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6','user_number_7',
+            'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6', 'user_number_7',
             'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
             'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
             'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
@@ -1164,6 +1163,24 @@
         };
 
         // Transaction Type Input Controller end
+
+        // Transaction Type Recon start
+
+        vm.addReconField = function () {
+
+            vm.entity.recon_fields.push(Object.assign({}, vm.newReconField));
+
+            vm.newReconField = {};
+
+        };
+
+        vm.deleteReconField = function ($event, $index) {
+
+            vm.entity.recon_fields.splice($index, 1);
+
+        };
+
+        // Transaction Type Recon end
 
         // Transaction type Actions controller start
 
@@ -2020,7 +2037,6 @@
                                         if (actionItemKey.indexOf('_object') !== -1) {
                                             delete result[key][actionItemKey]
                                         }
-
 
 
                                     })

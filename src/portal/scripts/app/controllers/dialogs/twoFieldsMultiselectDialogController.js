@@ -33,6 +33,9 @@
 
         var separateUnselectedItems = function (items, selectedItems) {
 
+            console.log('separateUnselectedItems.items', items);
+            console.log('separateUnselectedItems.selectedItems', selectedItems);
+
             selectedItems.map(function (selItem) {
 
                 items.map(function (item, itemIndex) {

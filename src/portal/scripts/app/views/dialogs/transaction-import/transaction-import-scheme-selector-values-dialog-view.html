@@ -1,0 +1,65 @@
+<md-dialog class="draggable-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2>Selector Values Manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+
+        <div class="p-24">
+
+            <div layout="row" style="margin-bottom: 15px;">
+
+                <div style="width: 325px; padding-left: 10px;">
+                    Value
+                </div>
+
+                <div style="width: 340px">
+                    Notes
+                </div>
+
+            </div>
+
+            <div data-ng-repeat="selector in vm.scheme.selector_values track by $index" layout="row">
+
+                <div>
+                    <md-input-container class="md-block" style="width: 300px">
+                        <input type="text" data-ng-model="selector.value">
+                    </md-input-container>
+                </div>
+
+                <div>
+                    <md-input-container class="md-block" style="width: 300px">
+                        <input type="text" data-ng-model="selector.notes">
+                    </md-input-container>
+                </div>
+
+                <div>
+                    <md-button class="md-raised" style="min-width: 42px" data-ng-click="vm.deleteSelector($event, $index)">
+                        <ng-md-icon icon="delete"></ng-md-icon>
+                    </md-button>
+                </div>
+
+            </div>
+
+            <div style="margin-top: 10px;">
+
+                <md-button class="md-raised" data-ng-click="vm.addSelector()">Add Selector</md-button>
+
+            </div>
+
+        </div>
+
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Close
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Ok
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

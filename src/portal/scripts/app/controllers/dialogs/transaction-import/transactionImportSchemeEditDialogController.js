@@ -20,6 +20,7 @@
         };
 
         vm.inputsFunctions = [];
+        vm.selector_values_projection = [];
 
         vm.getFunctions = function () {
 
@@ -52,7 +53,88 @@
             }
         ];
 
-        vm.getScheme = function(){
+        vm.reconFields = [
+            {
+                name: '',
+                selector_values: [],
+                line_reference_id: '',
+                reference_date: '',
+                fields: []
+            }
+        ];
+
+        vm.openSelectorManager = function ($event) {
+
+            // Open Selector Dialog Here
+
+            $mdDialog.show({
+                controller: 'TransactionImportSchemeSelectorValuesDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-selector-values-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        scheme: vm.scheme
+                    }
+                }
+            }).then(function (res) {
+
+                if(res && res.status === 'agree') {
+
+                    vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                        return {
+                            id: item.value,
+                            value: item.value
+                        }
+                    });
+
+                }
+
+            })
+
+        };
+
+        vm.openScenarioFieldsManager = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'TransactionImportSchemeScenarioFieldsDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-scenario-fields-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: item
+                    }
+                }
+            })
+
+        };
+
+        vm.addScenario = function ($event) {
+
+            vm.reconFields.push({
+                scenario_name: '',
+                selector_values: [],
+                line_reference_id: '',
+                reference_date: '',
+                fields: []
+            })
+
+        };
+
+        vm.deleteScenario = function (item, $index) {
+            vm.reconFields.splice($index, 1);
+        };
+
+        vm.getScheme = function () {
 
             transactionSchemeService.getByKey(schemeId).then(function (data) {
                 vm.scheme = data;
@@ -80,14 +162,35 @@
 
                 }
 
-                if (vm.scheme.rules.length) {
+                if (vm.scheme.rule_scenarios.length) {
                     vm.mapFields = [];
 
-                    vm.scheme.rules.forEach(function (rule) {
-                        vm.mapFields.push(rule);
+                    vm.scheme.rule_scenarios.forEach(function (item) {
+                        vm.mapFields.push(item);
                     })
 
                 }
+
+                if (vm.scheme.recon_scenarios.length) {
+                    vm.reconFields = [];
+
+                    vm.scheme.recon_scenarios.forEach(function (item) {
+                        vm.reconFields.push(item)
+                    })
+                }
+
+
+
+                vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                    return {
+                        id: item.value,
+                        value: item.value
+                    }
+                });
+
+                console.log('selector_values_projection', vm.selector_values_projection);
+                console.log('mapFields', vm.mapFields);
+                console.log('reconFields', vm.reconFields);
 
                 vm.readyStatus.scheme = true;
                 $scope.$apply();
@@ -217,7 +320,8 @@
         vm.agree = function ($event) {
 
             vm.scheme.inputs = vm.providerFields;
-            vm.scheme.rules = vm.mapFields;
+            vm.scheme.rule_scenarios = vm.mapFields;
+            vm.scheme.recon_scenarios = vm.reconFields;
 
             var warningMessage = '';
             var warningTitle = '';

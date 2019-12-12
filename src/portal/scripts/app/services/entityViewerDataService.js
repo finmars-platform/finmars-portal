@@ -280,6 +280,19 @@
             return data.additions
         }
 
+        function setVerticalAdditions(additions) {
+            data.verticalAdditions = additions;
+        }
+
+        function getVerticalAdditions() {
+
+            if (!data.verticalAdditions) {
+                return {};
+            }
+
+            return data.verticalAdditions
+        }
+
         function setEditorTemplateUrl(templateUrl) {
             data.editorTemplateUrl = templateUrl;
         }
@@ -1051,6 +1064,14 @@
         function getCurrentMember() {
             return data.currentMember
         }
+        
+        function setReconciliationData(reconData) {
+            data.reconciliation = reconData
+        }
+        
+        function getReconciliationData() {
+            return data.reconciliation
+        }
 
         return {
 
@@ -1083,6 +1104,9 @@
 
             setAdditions: setAdditions,
             getAdditions: getAdditions,
+
+            setVerticalAdditions: setVerticalAdditions,
+            getVerticalAdditions: getVerticalAdditions,
 
             setEditorTemplateUrl: setEditorTemplateUrl,
             getEditorTemplateUrl: getEditorTemplateUrl,
@@ -1225,7 +1249,10 @@
             getViewContext: getViewContext,
 
             setCurrentMember: setCurrentMember,
-            getCurrentMember: getCurrentMember
+            getCurrentMember: getCurrentMember,
+
+            setReconciliationData: setReconciliationData,
+            getReconciliationData: getReconciliationData
 
         }
     }

@@ -353,7 +353,7 @@
             };
 
 
-            item.rules.forEach(function (rule) {
+            item.rule_scenarios.forEach(function (rule) {
 
                 if (rule.hasOwnProperty('___transaction_type__user_code')) {
 

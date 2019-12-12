@@ -1476,6 +1476,24 @@
 
         // Transaction Type Input Controller end
 
+        // Transaction Type Recon start
+
+        vm.addReconField = function () {
+
+            vm.entity.recon_fields.push(Object.assign({}, vm.newReconField));
+
+            vm.newReconField = {};
+
+        };
+
+        vm.deleteReconField = function ($event, $index) {
+
+            vm.entity.recon_fields.splice($index, 1);
+
+        };
+
+        // Transaction Type Recon end
+
         // Transaction type Actions controller start
 
         vm.relationItems = {};

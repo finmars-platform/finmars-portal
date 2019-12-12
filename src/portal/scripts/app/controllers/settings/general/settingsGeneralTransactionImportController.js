@@ -31,7 +31,12 @@
             $mdDialog.show({
                 controller: 'TransactionImportSchemeAddDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
-                targetEvent: $event
+                targetEvent: $event,
+                locals: {
+                    data: {
+
+                    }
+                }
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);
