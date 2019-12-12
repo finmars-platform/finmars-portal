@@ -186,9 +186,10 @@
 
                 item.___parentId = obj.___id;
                 item.___type = 'object';
-                item.___id = evRvCommonHelper.getId(item);
+
                 item.___level = obj.___level + 1;
-                item.___index = index
+                item.___index = index;
+                item.___id = evRvCommonHelper.getId(item);
 
             }
 

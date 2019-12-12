@@ -563,6 +563,49 @@
 
                 };
 
+                scope.openReconDialog = function ($event) {
+
+                    var additions = scope.evDataService.getVerticalAdditions();
+
+                    if (additions.type === 'reconciliation') {
+
+                        scope.evDataService.setVerticalAdditions({});
+
+                        scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
+
+                    } else {
+
+                        $mdDialog.show({
+                            controller: 'ReconProcessBankFileDialogController as vm',
+                            templateUrl: 'views/dialogs/reconciliation/recon-process-bank-file-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            preserveScope: false,
+                            locals: {
+                                data: {}
+                            }
+                        }).then(function (res) {
+
+                            if (res.status === 'agree') {
+
+                                scope.evDataService.setReconciliationData(res.data.results);
+
+                                additions.isOpen = true;
+                                additions.type = 'reconciliation';
+
+                                scope.evDataService.setVerticalAdditions(additions);
+
+                                scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
+                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
                 // show indicator if table layout changed
                 scope.layoutChanged = false;
 
