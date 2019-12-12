@@ -151,7 +151,7 @@
                 vm.attributesLayout.push(tabResult);
 
             });
-
+            console.log("inputs flex vm.tabs", vm.tabs);
             console.log('vm.attributesLayout', vm.attributesLayout);
 
         };
@@ -522,7 +522,7 @@
                         if (item.type === 'field' && item.colspan > 1) {
                             var columnsToSpan = item.column + item.colspan - 1;
 
-                            for (var i = item.column; i < columnsToSpan; i = i + 1) {
+                            for (var i = item.column; i <= columnsToSpan; i = i + 1) {
                                 spannedCols.push(i);
                             }
 
@@ -530,8 +530,11 @@
 
                     });
 
-
+                    if (row === 1 && field.column === 6) {
+                        console.log("inputs flex spannedCols", spannedCols);
+                    }
                     if (spannedCols.indexOf(field.column) !== -1) {
+                        console.log("input flex hide field", row, field.column);
                         return false
                     }
 

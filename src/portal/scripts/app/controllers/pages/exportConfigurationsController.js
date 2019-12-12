@@ -323,24 +323,26 @@
 
             var result = {};
 
-            if (item.hasOwnProperty('name')) {
-                result.name = item.name
-            }
-
-            if (item.hasOwnProperty('content_type')) {
-                result.content_type = item.content_type
-            }
-
-            if (item.hasOwnProperty('user_code')) {
-                result.user_code = item.user_code
-            }
-
-            if (item.hasOwnProperty('scheme_name')) {
-                result.scheme_name = item.scheme_name
-            }
-
             if (item.hasOwnProperty('cron_expr')) {
-                result.cron_expr = item.cron_expr
+
+                result.cron_expr = item.cron_expr;
+
+            } else if (item.hasOwnProperty('scheme_name')) {
+
+                result.scheme_name = item.scheme_name
+
+            } else if (item.hasOwnProperty('user_code')) {
+
+                result.user_code = item.user_code
+
+            } else if (item.hasOwnProperty('content_type')) {
+
+                result.content_type = item.content_type
+
+            } else if (item.hasOwnProperty('name')) {
+
+                result.name = item.name
+
             }
 
             return result;
@@ -363,6 +365,11 @@
                             vm.activeLayout = item;
                         }
                     });
+
+                } else if (typeof vm.activeLayout === 'object') {
+                    delete vm.activeLayout.id;
+                    delete vm.activeLayout.name;
+                    delete vm.activeLayout.is_default;
                 }
 
                 if (vm.activeLayout) {
@@ -400,7 +407,11 @@
 
                 entityItem.content.forEach(function (childItem) {
 
-                    var searchItem = vm.getECProperties(childItem);
+                    if (itemType === 'statuses') {
+                        var searchItem = vm.getECProperties(childItem);
+                    } else {
+                        var searchItem = childItem.value;
+                    }
 
                     // console.log('searchItem', searchItem);
 
@@ -438,7 +449,6 @@
                     if (!item.active) {
                         entityItem.active = false;
                     }
-                    ;
 
                 });
 
@@ -468,13 +478,13 @@
 
             if (!vm.activeLayout.data.statuses) {
                 vm.activeLayout.data.statuses = {};
-            };
+            }
 
             vm.items.forEach(syncConfigItemsWithLayout);
 
             if (!vm.activeLayout.data.mappingsStatuses) {
                 vm.activeLayout.data.mappingsStatuses = {};
-            };
+            }
 
             // syncing mappings with layout
             vm.dataSettings.forEach(syncMappingItemsWithLayout);
@@ -490,7 +500,6 @@
             if (!vm.activeLayout.data.statuses) {
                 vm.activeLayout.data.statuses = {};
             }
-            ;
 
             vm.activeLayout.data.filename = vm.filename;
 
@@ -507,7 +516,6 @@
                         if (result || typeof result === "string") {
                             vm.activeLayout.data.statuses[item.entity].push(result);
                         }
-                        ;
                     }
 
                 });
@@ -519,7 +527,6 @@
             if (!vm.activeLayout.data.mappingsStatuses) {
                 vm.activeLayout.data.mappingsStatuses = {};
             }
-            ;
 
             mappingsItems.forEach(function (item) {
 
@@ -529,12 +536,11 @@
 
                     if (child.active) {
 
-                        var result = vm.getECProperties(child);
+                        var result = child.value;
 
                         if (result || typeof result === "string") {
                             vm.activeLayout.data.mappingsStatuses[item.entity].push(result);
                         }
-                        ;
                     }
 
                 });
@@ -622,7 +628,7 @@
                         })
 
                     });
-                };
+                }
 
             });
 
@@ -953,7 +959,6 @@
                     items: configurationResults
                 });
             }
-            ;
 
             if (mappingsResults.length) {
                 vm.file.body.push({
@@ -961,7 +966,6 @@
                     items: mappingsResults
                 });
             }
-            ;
 
             var resultFile = JSON.stringify(vm.file);
 
@@ -1029,11 +1033,11 @@
 
                     if (child.hasOwnProperty('user_code') && child.user_code === '-') {
                         return false
-                    };
+                    }
 
                     if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
                         return false
-                    };
+                    }
 
                     return true;
 
@@ -1044,12 +1048,12 @@
                     if (mappingGroups[i].entities.indexOf(parent.entity) !== -1) {
                         vm[mappingGroups[i].groupKey].push(parent);
                         break;
-                    };
+                    }
 
                     if (i === mappingGroups.length - 1) {
                         vm.systemElements.push(parent);
-                    };
-                };
+                    }
+                }
 
             });
         };

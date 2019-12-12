@@ -23,7 +23,8 @@
 
         var result = {
             'html_result': '',
-            'numeric_result': null
+            'numeric_result': null,
+            'raw_text_result': ''
         };
 
         if (column.id && obj[column.entity + '_object']) {
@@ -36,23 +37,27 @@
 
                         result.html_result = item.value_float.toString();
                         result.numeric_result = item.value_float;
+                        result.raw_text_result = item.value_float.toString();
 
                     }
 
                     if (column.value_type === 10 && item.value_string) {
 
                         result.html_result = item.value_string;
+                        result.raw_text_result = item.value_string;
 
                     }
 
                     if (column.value_type === 30 && item.classifier_object) {
 
                         result.html_result = item.classifier_object.name;
+                        result.raw_text_result = item.classifier_object.name;
                     }
 
                     if (column.value_type === 40 && item.value_date) {
 
                         result.html_result = item.value_date;
+                        result.raw_text_result = item.value_date;
 
                     }
                 }
@@ -75,11 +80,13 @@
 
         var result = {
             'html_result': '',
-            'numeric_result': null
+            'numeric_result': null,
+            'raw_text_result': ''
         };
 
         if (typeof obj[column.key] === 'string') {
-            result.html_result = obj[column.key]
+            result.html_result = obj[column.key];
+            result.raw_text_result = obj[column.key];
         } else {
 
             // Works only for 1 level entities
@@ -91,11 +98,13 @@
                 if (obj[column.key + '_object'] && obj[column.key + '_object'].name) {
 
                     result.html_result = obj[column.key + '_object'].name;
+                    result.raw_text_result = obj[column.key + '_object'].name;
 
                 } else {
 
                     result.html_result = renderHelper.formatValue(obj, column);
                     result.numeric_result = obj[column.key];
+                    result.raw_text_result = renderHelper.formatValue(obj, column);
 
                 }
 
@@ -104,6 +113,7 @@
                 if (Array.isArray(obj[column.key])) {
 
                     result.html_result = '[' + obj[column.key].length + ']';
+                    result.raw_text_result = '[' + obj[column.key].length + ']';
 
                 }
 
@@ -119,7 +129,8 @@
 
         var result = {
             html_result: '',
-            numeric_result: null
+            numeric_result: null,
+            raw_text_result: ''
         };
         var groups = evDataService.getGroups();
 
@@ -169,6 +180,7 @@
                     }
 
                     result.html_result = foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span>';
+                    result.raw_text_result = currentGroup.___group_name;
 
                 }
             }
@@ -183,7 +195,8 @@
 
         var result = {
             html_result: '',
-            numeric_result: null
+            numeric_result: null,
+            raw_text_result: ''
         };
 
 
@@ -224,6 +237,7 @@
 
                         if (!isNaN(subtotalValue)) {
                             result.html_result = '<span class="text-bold">' + subtotalValue + '</span>';
+                            result.raw_text_result = subtotalValue;
                         }
 
                         result.numeric_result = subtotal[column.key];
@@ -364,6 +378,7 @@
         var colorNegative = '';
         var borderBottomTransparent = '';
         var value_obj;
+        var gCellTitle = '';
         var resultValue;
 
         result = result + rowSelection;
@@ -395,8 +410,12 @@
                 resultValue = '<span class="g-cell-content">' + value_obj.html_result + '</span>';
             }
 
+            if (value_obj.raw_text_result) {
+                gCellTitle = ' title="' + value_obj.raw_text_result + '"'
+            }
+
             cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' +
+                '<div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
                 resultValue +
                 '</div>' +

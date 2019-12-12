@@ -2,8 +2,8 @@
 
     'use strict';
 
-    var dashboardEvents = require('../../services/dashboard/dashboardEvents')
-    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses')
+    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
 
     module.exports = function () {

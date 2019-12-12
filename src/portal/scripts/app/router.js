@@ -21,7 +21,7 @@
         });
 
         $stateProvider.state('app.dashboard', {
-            url: '/dashboard',
+            url: '/dashboard?layoutName',
             templateUrl: 'views/dashboard-view.html',
             controller: 'DashboardController as vm'
         });

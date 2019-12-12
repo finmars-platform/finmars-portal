@@ -144,27 +144,55 @@
                     }
                 }
 
+                var saveColspanTimeOutId;
+
+                var saveColspanChanges = function (colspan) {
+
+                    if (saveColspanTimeOutId) {
+                        clearTimeout(saveColspanTimeOutId);
+                    }
+
+                    saveColspanTimeOutId = setTimeout(function () {
+                        for (var i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
+                            if (scope.tab.layout.fields[i].row === scope.item.row &&
+                                scope.tab.layout.fields[i].column === scope.item.column) {
+
+                                scope.tab.layout.fields[i].colspan = JSON.parse(JSON.stringify(colspan));
+                                saveColspanTimeOutId = null;
+                                break;
+
+                            }
+                        }
+                    }, 400);
+
+                };
+
                 scope.increaseColspan = function (item) {
                     var colspansList = scope.getCols();
                     var maxColspan = colspansList[colspansList.length - 1];
 
                     if (item.colspan < maxColspan) {
+
                         item.colspan += 1;
                         scope.changeFieldColspan(item.colspan);
+                        saveColspanChanges(item.colspan);
+
                     }
                 };
 
                 scope.decreaseColspan = function (item) {
+
                     if (item.colspan > 1) {
+
                         item.colspan -= 1;
                         scope.changeFieldColspan(item.colspan);
+                        saveColspanChanges(item.colspan);
+
                     }
                 };
 
                 scope.changeFieldColspan = function (colspan) {
-
                     scope.tabFieldsTree[scope.row][scope.column].colspan = colspan;
-
                 };
 
                 function addRow() {

@@ -112,9 +112,64 @@
         return layoutChanged;
     };
 
+    /**
+     * Turn table attribute into group, column or filter
+     * @param {string} form - In what form get attribute
+     * @param {object} attrInstance - Object with attribute data on which attribute form will be based
+     * @memberOf module:EntityViewerHelperService
+     * @return {object} Return attribute in form of group, column or filter
+     */
+    var getTableAttrInFormOf = function (form, attrInstance) {
+        console.log("add filter getTableAttrInFormOf attrInstance", attrInstance);
+        var attrTypeToAdd = {};
+
+        attrTypeToAdd.key = attrInstance.key;
+
+        if (form === 'group' || form === 'column') {
+            if (attrInstance.hasOwnProperty('entity')) {
+                attrTypeToAdd.entity = attrInstance.entity;
+            }
+
+            if (attrInstance.hasOwnProperty('id')) {
+                attrTypeToAdd.id = attrInstance.id;
+            }
+        }
+
+        if (attrInstance.hasOwnProperty('groups')) {
+            attrTypeToAdd.groups = attrInstance.groups;
+        }
+
+        if (attrInstance.hasOwnProperty('columns')) {
+            attrTypeToAdd.columns = attrInstance.columns;
+        }
+
+        if (attrInstance.hasOwnProperty('filters')) {
+            attrTypeToAdd.filters = attrInstance.filters;
+        }
+
+        switch (form) {
+            case 'group':
+                attrTypeToAdd.groups = true;
+                break;
+            case 'column':
+                attrTypeToAdd.columns = true;
+                break;
+            case 'filter':
+                attrTypeToAdd.filters = true;
+                break;
+        }
+
+        attrTypeToAdd.name = attrInstance.name;
+        attrTypeToAdd.value_type = attrInstance.value_type;
+
+        return attrTypeToAdd;
+
+    };
+
     module.exports = {
         transformItem: transformItem,
-        checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges
+        checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
+        getTableAttrInFormOf: getTableAttrInFormOf
     }
 
 }());

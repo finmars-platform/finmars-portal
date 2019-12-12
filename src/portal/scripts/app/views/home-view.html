@@ -1,16 +1,51 @@
 <div class="p-16">
 
-    <h1 class="m-0">Homepage</h1>
+<!--    <h1 class="m-0">Homepage</h1>-->
+    <div layout="row" class="m-b-35">
+        <fieldset class="homepage-dashboards-fieldset" flex="50" style="margin-right: 15px">
+            <legend>Dashboard</legend>
 
-    <div class="m-t-12 overflow-scroll-x width-100 p-b-24 p-t-24 margin-bottom-20">
-        <div>
-            <div data-ng-include="'views/check-events-view.html'"></div>
-        </div>
+            <div data-ng-if="vm.dashboardsList.length > 0" layout="column">
+
+                <div data-ng-repeat="dashboard in vm.dashboardsList">
+                    <md-button class="md-raised md-button"
+                               ui-sref="app.dashboard({layoutName: dashboard.name})"
+                               ng-bind="dashboard.name"></md-button>
+                </div>
+
+            </div>
+        </fieldset>
+
+        <fieldset flex="50" style="margin-left: 15px">
+            <legend>Messages</legend>
+
+            <div>
+
+            </div>
+        </fieldset>
     </div>
 
     <div layout="row">
-        <a data-ui-sref="app.dashboard" class="md-button md-raised md-primary">Dashboard</a>
+        <fieldset flex="100">
+            <legend>Events</legend>
+
+            <div class="m-t-12 overflow-scroll-x width-100 p-b-24 p-t-24 margin-bottom-20">
+                <div>
+                    <div data-ng-include="'views/check-events-view.html'"></div>
+                </div>
+            </div>
+        </fieldset>
     </div>
+
+    <!--<div class="m-t-12 overflow-scroll-x width-100 p-b-24 p-t-24 margin-bottom-20">
+        <div>
+            <div data-ng-include="'views/check-events-view.html'"></div>
+        </div>
+    </div>-->
+
+    <!--<div layout="row">
+        <a data-ui-sref="app.dashboard" class="md-button md-raised md-primary">Dashboard</a>
+    </div>-->
 
 </div>
 

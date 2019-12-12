@@ -65,6 +65,8 @@
 
         vm.generateAttributesFromLayoutFields = function () {
 
+            vm.attributesLayout = [];
+
             var tabResult;
             var fieldResult;
             var i, l, e;
@@ -345,7 +347,7 @@
 
         };
 
-        vm.getItem = function (fromChild) {
+        vm.getItem = function () {
             return new Promise(function (res, rej) {
 
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
@@ -421,7 +423,7 @@
                         if (item.type === 'field' && item.colspan > 1) {
                             var columnsToSpan = item.column + item.colspan - 1;
 
-                            for (var i = item.column; i < columnsToSpan; i = i + 1) {
+                            for (var i = item.column; i <= columnsToSpan; i = i + 1) {
                                 spannedCols.push(i);
                             }
 

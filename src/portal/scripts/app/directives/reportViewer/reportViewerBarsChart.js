@@ -28,13 +28,23 @@
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
                 var chartHolderElem = elem[0].querySelector('.report-viewer-chart-holder');
 
+                if (scope.rvChartsSettings.chart_custom_name) {
+                    scope.chartName = scope.rvChartsSettings.chart_custom_name;
+                } else {
+                    scope.chartName = scope.rvChartsSettings.component_name;
+                }
+
                 var componentHeight = mainElem.clientHeight;
                 var componentWidth = mainElem.offsetWidth;
                 var barsMinWidth = scope.rvChartsSettings.min_bar_width;
                 var barsMaxWidth = scope.rvChartsSettings.max_bar_width;
                 var barWidth; // used for words wrap function
 
-                var ticksNumber = scope.rvChartsSettings.ticks_number;
+                var ticksNumber;
+                if (!scope.rvChartsSettings.autocalc_ticks_number) {
+                    ticksNumber = scope.rvChartsSettings.ticks_number;
+                }
+
                 var cropTickText = scope.rvChartsSettings.crop_tick_text;
 
                 var nameKey = scope.rvChartsSettings.bar_name_key;

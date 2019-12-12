@@ -150,12 +150,14 @@
                                 <div data-ng-if="tab.editState">
                                     <md-input-container class="ec-tab-item-edit">
                                         <label>Tab name</label>
-                                        <input type="text" ng-model="tab.captionName" class="tabNameInput">
+                                        <input type="text" ng-model="tab.captionName" class="tabNameInput" data-tab-id="{{tab.id}}">
                                     </md-input-container>
+
                                     <md-button class="ec-tab-btn"
                                                data-ng-click="vm.saveEditedTab(tab)">
                                         <ng-md-icon icon="save"></ng-md-icon>
                                     </md-button>
+
                                     <md-button class="ec-tab-btn"
                                                data-ng-click="vm.toggleEditTab(tab, 'back', $index)">
                                         <ng-md-icon icon="cancel"></ng-md-icon>

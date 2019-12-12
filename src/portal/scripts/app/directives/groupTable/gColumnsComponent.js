@@ -9,6 +9,7 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
 
     var metaService = require('../../services/metaService');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -23,7 +24,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.columns = scope.evDataService.getColumns();
-
+                console.log("add filter columns", scope.columns);
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
                 scope.groups = scope.evDataService.getGroups();
@@ -41,7 +42,7 @@
                 var allAttrsList = [];
 
                 var getAttributes = function () {
-                    console.log("add column scope.entityType", scope.entityType);
+
                     switch (scope.entityType) {
                         case 'balance-report':
                             allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
@@ -431,29 +432,6 @@
 
                 };
 
-                var createGroupFromColumn = function (column) {
-
-                    var groupToAdd = {};
-
-                    if (column.hasOwnProperty('key')) {
-                        groupToAdd.key = column.key;
-                    }
-
-                    if (column.hasOwnProperty('entity')) {
-                        groupToAdd.entity = column.entity;
-                    }
-
-                    if (column.hasOwnProperty('id')) {
-                        groupToAdd.id = column.id;
-                    }
-
-                    groupToAdd.name = column.name;
-                    groupToAdd.value_type = column.value_type;
-
-                    return groupToAdd;
-
-                };
-
                 scope.isSortable = function (column) {
 
                     if (column.hasOwnProperty('key')) {
@@ -556,18 +534,13 @@
                     }
 
                     return true;
-                    /*if (groups.length > 0 && index <= groups.length - 1) {
-                        return false;
-                    } else {
-                        return true;
-                    }*/
 
                 };
 
                 scope.addColumnEntityToGrouping = function (column) {
 
                     var groups = scope.evDataService.getGroups();
-                    var groupToAdd = createGroupFromColumn(column);
+                    var groupToAdd = evHelperService.getTableAttrInFormOf('group', column);
 
                     groups.push(groupToAdd);
                     scope.evDataService.setGroups(groups);
@@ -575,6 +548,29 @@
                     scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
+                };
+
+                scope.checkForFilteringBySameAttr = function (columnKey) {
+                    var filters = scope.evDataService.getFilters();
+
+                    for (var i = 0; i < filters.length; i++) {
+                        if (filters[i].key === columnKey) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                };
+
+                scope.addFiltersWithColAttr = function (column) {
+                    var filters = scope.evDataService.getFilters();
+                    var filterToAdd = evHelperService.getTableAttrInFormOf('filter', column);
+
+                    filters.push(filterToAdd);
+
+                    scope.evDataService.setFilters(filters);
+
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
                 };
 
                 scope.removeGroup = function (columnTableId) {
@@ -797,7 +793,7 @@
                         evDataHelper.setColumnsDefaultWidth(scope.evDataService);
 
                         scope.columns = scope.evDataService.getColumns();
-                        console.log("add column scope.columns", scope.columns);
+
                     });
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, function () {
