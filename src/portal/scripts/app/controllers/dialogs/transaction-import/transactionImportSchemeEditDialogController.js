@@ -20,6 +20,7 @@
         };
 
         vm.inputsFunctions = [];
+        vm.selector_values_projection = [];
 
         vm.getFunctions = function () {
 
@@ -80,6 +81,19 @@
                         scheme: vm.scheme
                     }
                 }
+            }).then(function (res) {
+
+                if(res && res.status === 'agree') {
+
+                    vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                        return {
+                            id: item.value,
+                            value: item.value
+                        }
+                    });
+
+                }
+
             })
 
         };
@@ -164,6 +178,19 @@
                         vm.reconFields.push(item)
                     })
                 }
+
+
+
+                vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                    return {
+                        id: item.value,
+                        value: item.value
+                    }
+                });
+
+                console.log('selector_values_projection', vm.selector_values_projection);
+                console.log('mapFields', vm.mapFields);
+                console.log('reconFields', vm.reconFields);
 
                 vm.readyStatus.scheme = true;
                 $scope.$apply();
