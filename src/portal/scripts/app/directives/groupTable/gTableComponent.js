@@ -22,6 +22,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.additions = scope.evDataService.getAdditions();
+                scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
                 scope.components = scope.evDataService.getComponents();
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.activeObject = scope.evDataService.getActiveObject();
@@ -54,6 +55,12 @@
 
                 scope.splitPanelIsActive = scope.evDataService.isSplitPanelActive();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+
+                scope.isRecon = false;
+
+                if(scope.evDataService.getViewContext() === 'reconciliation_viewer') {
+                    scope.isRecon = true;
+                }
 
                 setTimeout(function () {
 
@@ -113,6 +120,7 @@
                 };
 
                 scope.init = function () {
+
                     scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
 
                         scope.additions = scope.evDataService.getAdditions();
@@ -120,6 +128,14 @@
                         console.log('scope.additions', scope.additions);
 
                         scope.activeObject = scope.evDataService.getActiveObject();
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
+
+                        scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
+
+                        console.log("VERTICAL ADDITIONS CHANGE", scope.verticalAdditions)
 
                     });
 
