@@ -242,12 +242,20 @@
         columns.forEach(function (column) {
 
             var cellValue = getValue(obj, column);
+            var gCellTitle = '';
 
             if (cellValue !== '') {
-                cellValue = '<span class="g-cell-content">' + cellValue + '</span>'
+                gCellTitle = ' title="' + cellValue + '"';
+                cellValue = '<span class="g-cell-content">' + cellValue + '</span>';
             }
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell"><div class="g-cell-content-wrap">' + cellValue + '</div></div></div>';
+            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '">' +
+                '<div class="g-cell"' + gCellTitle + '>' +
+                '<div class="g-cell-content-wrap">' +
+                cellValue +
+                '</div>' +
+                '</div>' +
+                '</div>';
 
             result = result + cell
 

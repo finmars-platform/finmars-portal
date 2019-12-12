@@ -371,26 +371,31 @@
     <!--<div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">-->
     <div data-ng-if="isReport">
         <div class="g-filters-holder g-filters-holder-container">
-            <div data-ng-repeat="filter in filters">
-                <div ng-if="filter['value_type'] === 10 || filter['value_type'] === 30">
-                    <rv-text-filter filter="filter"
-                                    ev-data-service="evDataService"
-                                    ev-event-service="evEventService"
-                                    attribute-data-service="attributeDataService"></rv-text-filter>
-                </div>
+            <div data-ng-repeat="filter in filters track by filter.key">
+                <div class="filterCardHolder"
+                     data-filter-key="{{filter.key}}">
 
-                <div ng-if="filter['value_type'] === 20">
-                    <rv-number-filter filter="filter"
-                                      ev-data-service="evDataService"
-                                      ev-event-service="evEventService"
-                                      attribute-data-service="attributeDataService"></rv-number-filter>
-                </div>
+                    <div ng-if="filter['value_type'] === 10 || filter['value_type'] === 30">
+                        <rv-text-filter filter="filter"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        attribute-data-service="attributeDataService"></rv-text-filter>
+                    </div>
 
-                <div ng-if="filter['value_type'] === 40">
-                    <rv-date-filter filter="filter"
-                                    ev-data-service="evDataService"
-                                    ev-event-service="evEventService"
-                                    attribute-data-service="attributeDataService"></rv-date-filter>
+                    <div ng-if="filter['value_type'] === 20">
+                        <rv-number-filter filter="filter"
+                                          ev-data-service="evDataService"
+                                          ev-event-service="evEventService"
+                                          attribute-data-service="attributeDataService"></rv-number-filter>
+                    </div>
+
+                    <div ng-if="filter['value_type'] === 40">
+                        <rv-date-filter filter="filter"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        attribute-data-service="attributeDataService"></rv-date-filter>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -398,26 +403,31 @@
 
     <div data-ng-if="!isReport">
         <div class="g-filters-holder g-filters-holder-container">
-            <div data-ng-repeat="filter in filters">
-                <div ng-if="filter['value_type'] === 10 || filter['value_type'] === 30 || filter['value_type'] === 'field'">
-                    <ev-text-filter filter="filter"
-                                    ev-data-service="evDataService"
-                                    ev-event-service="evEventService"
-                                    attribute-data-service="attributeDataService"></ev-text-filter>
-                </div>
+            <div data-ng-repeat="filter in filters track by filter.key">
+                <div class="filterCardHolder"
+                     data-filter-key="{{filter.key}}">
 
-                <div ng-if="filter['value_type'] === 20">
-                    <ev-number-filter filter="filter"
-                                      ev-data-service="evDataService"
-                                      ev-event-service="evEventService"
-                                      attribute-data-service="attributeDataService"></ev-number-filter>
-                </div>
+                    <div ng-if="filter['value_type'] === 10 || filter['value_type'] === 30 || filter['value_type'] === 'field'">
+                        <ev-text-filter filter="filter"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        attribute-data-service="attributeDataService"></ev-text-filter>
+                    </div>
 
-                <div ng-if="filter['value_type'] === 40">
-                    <ev-date-filter filter="filter"
-                                    ev-data-service="evDataService"
-                                    ev-event-service="evEventService"
-                                    attribute-data-service="attributeDataService"></ev-date-filter>
+                    <div ng-if="filter['value_type'] === 20">
+                        <ev-number-filter filter="filter"
+                                          ev-data-service="evDataService"
+                                          ev-event-service="evEventService"
+                                          attribute-data-service="attributeDataService"></ev-number-filter>
+                    </div>
+
+                    <div ng-if="filter['value_type'] === 40">
+                        <ev-date-filter filter="filter"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        attribute-data-service="attributeDataService"></ev-date-filter>
+                    </div>
+
                 </div>
             </div>
         </div>

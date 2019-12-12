@@ -10,9 +10,10 @@
     var evLoaderHelper = require('../../helpers/ev-loader.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
-    var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager')
+    var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
 
     var metaService = require('../../services/metaService');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -213,7 +214,6 @@
 
                     $mdMenu.close();
 
-
                     $mdDialog.show({
                         controller: 'RenameFieldDialogController as vm',
                         templateUrl: 'views/dialogs/rename-field-dialog-view.html',
@@ -224,7 +224,29 @@
                         }
                     })
 
+                };
 
+                scope.checkForFilteringBySameAttr = function (groupKey) {
+                    var filters = scope.evDataService.getFilters();
+
+                    for (var i = 0; i < filters.length; i++) {
+                        if (filters[i].key === groupKey) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                };
+
+                scope.addFiltersWithGroupAttr = function (group) {
+                    var filters = scope.evDataService.getFilters();
+                    var filterToAdd = evHelperService.getTableAttrInFormOf('filter', group);
+
+                    filters.push(filterToAdd);
+
+                    scope.evDataService.setFilters(filters);
+
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
                 };
 
                 scope.removeGroup = function (group) {

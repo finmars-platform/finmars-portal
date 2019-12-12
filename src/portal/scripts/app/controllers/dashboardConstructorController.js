@@ -235,20 +235,52 @@
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
             setTimeout(function () {
                 vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
-            }, 0);
+
+                allowSpacesInTabName();
+            }, 100);
+
+
         };
 
         var tabNameInput = null;
 
         var removeKeydownListener = function () {
-            document.removeEventListener('keydown', allowSpaceInTabName);
+            document.removeEventListener('keydown', addSpaceIntoTabName);
         };
 
-        var allowSpaceInTabName = function (kDownEv) {
+        var addSpaceIntoTabName = function (kDownEv) {
+
             if (kDownEv.key === ' ') {
-                var tabNameValue = tabNameInput.value;
-                tabNameInput.value = tabNameValue + ' ';
+
+                var selStart = tabNameInput.selectionStart;
+                var firstStringPart = tabNameInput.value.substring(0, selStart);
+                var selEnd = tabNameInput.selectionEnd;
+                var lastStringPart = tabNameInput.value.substring(selEnd, tabNameInput.value.length);
+                var tabNewName = firstStringPart + ' ' + lastStringPart;
+
+                tabNameInput.value = tabNewName;
+                tabNameInput.selectionEnd = selStart + 1; // set text cursor after added space
+
+                var tabId = tabNameInput.dataset.tabId;
+                for (var i = 0; i < vm.layout.data.tabs.length; i++) {
+                    if (vm.layout.data.tabs[i].id === tabId) {
+                        vm.layout.data.tabs[i].captionName = tabNewName;
+                        console.log("space tab tabNewName", tabNewName, vm.layout.data.tabs[i]);
+                        break;
+                    }
+                }
             }
+
+        };
+
+        var allowSpacesInTabName = function () {
+            tabNameInput = document.querySelector('input.tabNameInput');
+
+            tabNameInput.addEventListener('focus', function () {
+                document.addEventListener('keydown', addSpaceIntoTabName);
+                tabNameInput.addEventListener('blur', removeKeydownListener, {once: true});
+            });
+
         };
 
         vm.toggleEditTab = function (tab, action, $index) {
@@ -270,15 +302,9 @@
             tab.editState = !tab.editState;
 
             if (tab.editState) {
-
+                console.log("space tab editTabInit");
                 setTimeout(function () {
-                    tabNameInput = document.querySelector('.tabNameInput');
-
-                    tabNameInput.addEventListener('focus', function () {
-                        document.addEventListener('keydown', allowSpaceInTabName);
-                    });
-
-                    tabNameInput.addEventListener('blur', removeKeydownListener, {once: true})
+                    allowSpacesInTabName();
                 }, 100);
 
             }
@@ -288,21 +314,25 @@
         vm.saveEditedTab = function (tab) {
 
             var tabIsReadyToSave = true;
-
+            console.log("tab space tab.captionName", tab.captionName, tab);
             if (tab.captionName && tab.captionName !== '') {
 
                 vm.layout.data.tabs.forEach(function (singleTab) {
 
                     if (tab.captionName.toLowerCase() === singleTab.name.toLowerCase()) {
                         tabIsReadyToSave = false;
+                        console.log("tab space tab with same name", singleTab, singleTab.name);
                     }
+
                 });
 
                 if (tabIsReadyToSave) {
                     tab.name = tab.captionName;
                     tab.editState = !tab.editState;
                 }
+
             } else {
+                console.log("tab space empty tab.captionName");
                 tabIsReadyToSave = false;
             }
 

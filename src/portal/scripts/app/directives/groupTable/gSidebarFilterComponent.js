@@ -40,7 +40,7 @@
                     scope.reportLayoutOptions = {};
                 }
 
-                scope.isReport = metaService.isReport(scope.evDataService.getEntityType());
+                scope.isReport = metaService.isReport(scope.entityType);
 
                 scope.fields = {};
 
@@ -521,7 +521,7 @@
                 var dragAndDrop = {
 
                     init: function () {
-                        this.dragula();
+                        this.dragulaInit();
                         this.eventListeners();
                     },
 
@@ -533,26 +533,41 @@
                                 $(this).removeClass('active');
                             })
                         });
+
                         this.dragula.on('drop', function (elem, target) {
+
                             $(target).removeClass('active');
+
+                            var filterCards = target.querySelectorAll('.filterCardHolder');
+                            var newFiltersOrder = [];
+
+                            filterCards.forEach(function (filter) {
+
+                                var filterKey = filter.dataset.filterKey;
+
+                                for (var i = 0; i < scope.filters.length; i++) {
+
+                                    if (scope.filters[i].key === filterKey) {
+                                        newFiltersOrder.push(scope.filters[i]);
+                                        break;
+                                    }
+
+                                }
+
+                            });
+
+                            scope.evDataService.setFilters(newFiltersOrder);
+                            scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
                         });
-
-                        this.dragula.on('dragend', function (el) {
-
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
-
-                        })
                     },
 
-                    dragula: function () {
+                    dragulaInit: function () {
                         var items = [document.querySelector('.g-filters-holder')];
-                        var i;
-                        //var itemsElem = document.querySelectorAll('.g-columns-holder md-card');
-                        //for (i = 0; i < itemsElem.length; i = i + 1) {
-                        //    items.push(itemsElem[i]);
-                        //}
 
-                        this.dragula = dragula(items);
+                        this.dragula = dragula(items, {
+                            revertOnSpill: true
+                        });
                     }
                 };
 
