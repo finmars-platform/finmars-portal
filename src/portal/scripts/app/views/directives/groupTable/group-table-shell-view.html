@@ -1,8 +1,8 @@
-<div class="g-wrapper" data-ng-class="{'g-root-wrapper': isRootEntityViewer}">
+<div class="g-wrapper position-relative" data-ng-class="{'g-root-wrapper': isRootEntityViewer, 'g-reconciliation-wrapper': isRecon}">
 
     <div class="g-content-wrap">
 
-        <div class="g-workarea-wrap" >
+        <div class="g-workarea-wrap">
             <div class="g-workarea main-area"
                  data-ng-if="contentWrapElem"
                  ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
@@ -132,8 +132,8 @@
         <div class="g-additions-workarea" data-ng-if="additions.type === 'permission-editor'">
 
             <group-permission-editor-binder class="display-block height-100" ev-data-service="evDataService"
-                                         ev-event-service="evEventService"
-                                         sp-exchange-service="spExchangeService"></group-permission-editor-binder>
+                                            ev-event-service="evEventService"
+                                            sp-exchange-service="spExchangeService"></group-permission-editor-binder>
 
         </div>
         <div class="g-additions-workarea"
@@ -156,6 +156,18 @@
                                              ev-event-service="evEventService"
                                              sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
         </div>
+    </div>
+
+    <div class="g-recon" data-ng-if="isRootEntityViewer && verticalAdditions.isOpen">
+
+        <div class="g-width-slider"></div>
+
+        <div class="g-additions-workarea" data-ng-if="verticalAdditions.type === 'reconciliation'">
+            <group-vertical-split-panel-report-binder ev-data-service="evDataService" class="display-block height-100"
+                                                      ev-event-service="evEventService"
+                                             sp-exchange-service="spExchangeService"></group-vertical-split-panel-report-binder>
+        </div>
+
     </div>
 
     <div ng-if="contentWrapElem">

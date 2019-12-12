@@ -1,0 +1,146 @@
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50 recon-match-dialog" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2>Reconciliation Matching</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="p-24 recon-match-dialog-content">
+
+            <div layout="row">
+
+                <div class="width-50" style="padding: 0 10px">
+
+                    <div class="text-center m-b-16 recon-match-section-title">
+                        Bank File Fields
+                    </div>
+
+                    <div class="recon-match-bank-lines-holder">
+
+                        <div data-ng-repeat="item in vm.bankLinesList" class="recon-match-dialog-bank-line">
+
+                            <div class="recon-match-dialog-line-title">
+                                Line Source Id: <b>{{item.source_id}}</b>
+                            </div>
+
+                            <div style="padding-left: 20px;">
+
+                                <md-card data-ng-repeat="field in item.fields" layout="column" class="recon-match-field">
+
+                                    <div class="recon-match-dialog-field-title">
+                                        Field name: <b>{{field.reference_name}}</b>
+                                    </div>
+
+                                    <div layout="column" style="padding-left: 20px;" class="recon-match-field-values-holder">
+                                        <div>Value text: <b>{{field.value_string}}</b></div>
+                                        <div>Value float: <b>{{field.value_float}}</b></div>
+                                        <div>Value date: <b>{{field.value_date}}</b></div>
+                                    </div>
+
+                                    <div style="margin-top: 20px; margin-left: 6px;" layout="row" class="recon-match-field-status-holder">
+                                        <md-input-container style="height: 56px;" class="width-100">
+                                            <label>Status</label>
+                                            <md-select data-ng-model="field.status"
+                                                       data-ng-change="vm.bankFieldStatusChange($event, field)">
+                                                <md-option class="disabled-btn"
+                                                           ng-value="undefined">
+                                                    New
+                                                </md-option>
+                                                <md-option data-ng-repeat="item in vm.bankFieldStatuses"
+                                                           ng-value="item.id">
+                                                    {{item.name}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+
+                                        <div data-ng-if="field.processing" layout="row" layout-sm="column"
+                                             layout-align="space-around">
+                                            <progress-circular diameter="20"></progress-circular>
+                                        </div>
+                                    </div>
+
+                                </md-card>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <div class="width-50" style="padding: 0 10px">
+
+                    <div class="text-center m-b-16 recon-match-section-title">
+                        Complex Transaction Fields
+                    </div>
+
+                    <div>
+                        <div data-ng-repeat="item in vm.complexTransactionList" class="recon-match-dialog-transaction-line">
+
+                            <div class="recon-match-dialog-line-title">
+                                Complex Transaction Code: <b>{{item.code}}</b>
+                            </div>
+
+                            <div style="padding-left: 20px;">
+
+                                <md-card data-ng-repeat="field in item.recon_fields" layout="column" class="recon-match-field">
+
+                                    <div class="recon-match-dialog-field-title">
+                                        Field name: <b>{{field.reference_name}}</b>
+                                    </div>
+
+                                    <div layout="column" style="padding-left: 20px" class="recon-match-field-values-holder">
+                                        <div>Value text: <b>{{field.value_string}}</b></div>
+                                        <div>Value float: <b>{{field.value_float}}</b></div>
+                                        <div>Value date: <b>{{field.value_date}}</b></div>
+                                    </div>
+
+                                    <div style="margin-top: 20px; margin-left: 6px;" layout="row" class="recon-match-field-status-holder">
+
+                                        <md-input-container style="height: 56px;" class="width-100">
+                                            <label>Status</label>
+                                            <md-select data-ng-model="field.status"
+                                                       data-ng-change="vm.complexTransactionStatusChange($event, field)">
+                                                <md-option data-ng-repeat="item in vm.complexTransactionFieldStatus"
+                                                           ng-value="item.id">
+                                                    {{item.name}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+
+                                        <div data-ng-if="field.processing" layout="row" layout-sm="column"
+                                             layout-align="space-around">
+                                            <progress-circular diameter="20"></progress-circular>
+                                        </div>
+                                    </div>
+
+                                </md-card>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <!--<div>-->
+        <!--<md-button ng-click="vm.cancel()">-->
+        <!--Close-->
+        <!--</md-button>-->
+        <!--</div>-->
+        <div>
+            <md-button ng-click="vm.agree()">
+                Ok
+            </md-button>
+        </div>
+    </md-dialog-actions>
+</md-dialog>

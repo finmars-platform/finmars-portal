@@ -327,7 +327,9 @@
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
 
-        // console.log('getFlatStructure.tree', tree);
+        console.log('getFlatStructure.data', data);
+        console.log('getFlatStructure.rootGroup', rootGroup);
+        console.log('getFlatStructure.tree', tree);
 
         var list = utilsHelper.convertTreeToList(tree);
 
@@ -353,6 +355,10 @@
         var to = from + step;
 
         console.timeEnd('Creating projection');
+
+        console.log('flatList length', flatList.length);
+        console.log('from', from);
+        console.log('to', to);
 
         return flatList.slice(from, to);
 

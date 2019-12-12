@@ -55,6 +55,7 @@
 
                 var projection;
                 var entityType = scope.evDataService.getEntityType();
+                var viewContext = scope.evDataService.getViewContext();
 
                 var isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
@@ -139,6 +140,8 @@
                         return item
                     });
 
+                    console.log('renderEntityViewer.flatlist', flatList);
+
                     scope.evDataService.setUnfilteredFlatList(flatList);
 
                     var filters = scope.evDataService.getFilters();
@@ -177,6 +180,8 @@
                     evDomManager.calculateVirtualStep(elements, scope.evDataService);
 
                     projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
+
+                    console.log('renderEntityViewer.projection', projection);
 
                     scope.evDataService.setProjection(projection);
 
@@ -335,7 +340,7 @@
                     }
                     updateTableContent();
 
-                    if (!activeLayoutConfigIsSet) {
+                    if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
                         activeLayoutConfigIsSet = true;
                         scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
                         scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
