@@ -24,7 +24,9 @@
         vm.inputsFunctions = [];
         vm.selector_values_projection = [];
 
-        vm.scheme = {};
+        vm.scheme = {
+            selector_values: []
+        };
 
         vm.mapFields = [
             {
