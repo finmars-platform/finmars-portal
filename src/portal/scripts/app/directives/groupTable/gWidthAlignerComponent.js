@@ -21,6 +21,53 @@
                 scope.additions = scope.evDataService.getAdditions();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
+                scope.activateWidthSlider = function() {
+
+                    console.log('activateWidthSlider');
+
+                    var splitPanelResizer = $('.g-width-slider')
+
+                    $(splitPanelResizer).bind('mousedown', function (e) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        var mouseMoveX;
+
+                        var verticalSplitPanelElem = $('.g-recon');
+
+                        var verticalSplitPanelWidth;
+
+                        var rootWidth = $(scope.rootWrapElem).width();
+
+                        var windowXcorrection = document.body.clientWidth - rootWidth;
+
+                        var handler = function (e) {
+
+                            mouseMoveX = e.clientX - windowXcorrection;
+
+                            verticalSplitPanelWidth = rootWidth - mouseMoveX;
+
+                            $(verticalSplitPanelElem).width(verticalSplitPanelWidth);
+                            $(verticalSplitPanelElem)[0].style.left = (rootWidth - verticalSplitPanelWidth) + 'px';
+                            $(scope.contentWrapElem).width(rootWidth - verticalSplitPanelWidth);
+
+                            window.dispatchEvent(new Event('resize'))
+
+
+                        };
+
+                        $(window).bind('mousemove', function (e) {
+                            handler(e);
+                            $(window).bind('mouseup', function () {
+                                $(window).unbind('mousemove');
+                            })
+                        });
+
+
+                    });
+                };
+
 
                 scope.defaultWidths = function(){
 
@@ -47,6 +94,7 @@
                 scope.init = function () {
 
                     scope.defaultSplitWidths();
+                    scope.activateWidthSlider();
 
                     scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
 
