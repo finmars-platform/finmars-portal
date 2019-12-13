@@ -159,6 +159,12 @@
 
     <div class="g-recon" data-ng-if="isRootEntityViewer && verticalAdditions.isOpen">
 
+        <div group-width-aligner
+             root-wrap-elem="rootWrapElem"
+             content-wrap-elem="contentWrapElem"
+             ev-data-service="evDataService"
+             ev-event-service="evEventService"></div>
+
         <div class="g-width-slider"></div>
 
         <div class="g-additions-workarea" data-ng-if="verticalAdditions.type === 'reconciliation'">
