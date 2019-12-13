@@ -673,7 +673,9 @@
                         ticks_number: vm.componentType.data.settings.ticks_number,
                         crop_tick_text: vm.componentType.data.settings.crop_tick_text,
                         tooltip_font_size: vm.componentType.data.settings.tooltip_font_size,
-                        number_format: vm.componentType.data.settings.number_format
+                        number_format: vm.componentType.data.settings.number_format,
+                        abscissa_position: vm.componentType.data.settings.abscissa_position,
+                        ordinate_position: vm.componentType.data.settings.ordinate_position,
                     };
 
                     if (vm.componentType.data.settings.abscissa || vm.componentType.data.settings.ordinate) {
