@@ -1,9 +1,29 @@
 <div layout="row" class="m-t-16 m-b-24">
     <md-input-container class="dashboard-constructor-field1">
         <label for="">Bars Direction</label>
-        <md-select data-ng-model="vm.item.settings.bars_direction" ng-change="vm.getAxisInputsNames()">
+        <md-select data-ng-model="vm.item.settings.bars_direction" ng-change="vm.chartBarsDirectionChanged()">
             <md-option value="bottom-top">Vertical</md-option>
             <md-option value="left-right">Horizontal</md-option>
+        </md-select>
+    </md-input-container>
+</div>
+
+<div layout="row" class="m-t-16 m-b-24">
+    <md-input-container data-ng-if="vm.item.settings.bars_direction === 'left-right'"
+                        class="dashboard-constructor-field1">
+        <label for="">Abscissa Position</label>
+        <md-select data-ng-model="vm.item.settings.abscissa_position">
+            <md-option value="top">Top</md-option>
+            <md-option value="bottom">Bottom</md-option>
+        </md-select>
+    </md-input-container>
+
+    <md-input-container data-ng-if="vm.item.settings.bars_direction === 'bottom-top'"
+                        class="dashboard-constructor-field1">
+        <label for="">Ordinate Position</label>
+        <md-select data-ng-model="vm.item.settings.ordinate_position">
+            <md-option value="left">Left</md-option>
+            <md-option value="right">Right</md-option>
         </md-select>
     </md-input-container>
 </div>

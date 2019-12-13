@@ -33,7 +33,7 @@
         vm.layouts = [];
 
         var deleteChartTypeBasedProps = function () {
-            /*delete vm.item.settings.bar_name_key;
+            delete vm.item.settings.bar_name_key;
             delete vm.item.settings.bar_number_key;
             delete vm.item.settings.min_bar_width;
             delete vm.item.settings.max_bar_width;
@@ -43,6 +43,8 @@
             delete vm.item.settings.crop_tick_text;
             delete vm.item.settings.auto_refresh;
             delete vm.item.settings.tooltip_font_size;
+            delete vm.item.settings.abscissa_position;
+            delete vm.item.settings.ordinate_position;
             // properties for pie chart
             //delete vm.item.settings.fieldsKeys;
             delete vm.item.settings.group_attr;
@@ -50,15 +52,14 @@
             delete vm.item.settings.show_legends;
             delete vm.item.settings.legends_position;
             delete vm.item.settings.legends_columns_number;
-            delete vm.item.settings.chart_form;*/
+            delete vm.item.settings.chart_form;
 
-            vm.item.settings = {};
         };
 
         vm.reportTypeChange = function() {
 
             vm.item.settings.layout = null;
-            vm.item.settings.linked_components= {};
+            vm.item.settings.linked_components = {};
 
             deleteChartTypeBasedProps();
 
@@ -77,7 +78,6 @@
                     vm.item.settings.show_legends = false;
                     vm.item.settings.legends_position = 'right';
                     vm.item.settings.legends_columns_number = 1;
-                    vm.item.settings.chart_form = 'doughnut';
                     break;
             }
 
@@ -107,6 +107,8 @@
                     vm.item.settings = {
                         bar_name_key: '',
                         bar_number_key: '',
+                        abscissa_position: 'bottom',
+                        ordinate_position: 'left',
                         bars_direction: 'bottom-top',
                         group_number_calc_formula: 1,
                         min_bar_width: 50,
@@ -132,14 +134,18 @@
 
         };
 
-        vm.getAxisInputsNames = function () {
+        vm.chartBarsDirectionChanged = function () {
 
             if (vm.item.settings.bars_direction === 'bottom-top') {
                 vm.barsNamesAttrSelectorTitle = 'Bars Names (Abscissa)';
                 vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Ordinate)';
+
+                vm.item.settings.abscissa_position = 'bottom';
             } else {
                 vm.barsNamesAttrSelectorTitle = 'Bars Names (Ordinate)';
                 vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Abscissa)';
+
+                vm.item.settings.ordinate_position = 'left';
             }
 
         };
@@ -256,14 +262,14 @@
                 delete vm.item.settings.sorting_type;
             }
 
-            if (!vm.item.settings.autocalc_ticks_number) {
+            if (vm.item.settings.autocalc_ticks_number) {
                 delete vm.item.settings.ticks_number;
             }
 
             vm.layouts.forEach(function (layout) {
 
                 if (layout.id === vm.item.settings.layout) {
-                    layoutName = layout.name
+                    layoutName = layout.name;
                 }
 
             });
@@ -299,7 +305,14 @@
 
         vm.init = function () {
 
-            vm.getAxisInputsNames();
+            if (vm.item.settings.bars_direction === 'bottom-top') {
+                vm.barsNamesAttrSelectorTitle = 'Bars Names (Abscissa)';
+                vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Ordinate)';
+            } else {
+                vm.barsNamesAttrSelectorTitle = 'Bars Names (Ordinate)';
+                vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Abscissa)';
+            }
+
             vm.componentsTypes = dataService.getComponentsTypes();
 
             if (vm.item.id) {

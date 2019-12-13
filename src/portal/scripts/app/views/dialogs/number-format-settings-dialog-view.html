@@ -115,6 +115,30 @@
                 </div>
 
             </fieldset>
+
+            <div flex="50" class="column-nrs-modification-fields-container">
+                <md-input-container class="no-error-spacer m-b-16">
+                    <label for="">Suffix , default = ""</label>
+                    <input type="text"
+                           ng-model="vm.settings.number_suffix"
+                           data-ng-change="vm.onInputsChange()">
+                </md-input-container>
+
+                <md-input-container class="no-error-spacer m-b-16">
+                    <label for="">Prefix, default = ""</label>
+                    <input type="text"
+                           ng-model="vm.settings.number_prefix"
+                           data-ng-change="vm.onInputsChange()">
+                </md-input-container>
+
+                <md-input-container class="no-error-spacer">
+                    <label for="">Multiplier,  default = "1.0"</label>
+                    <input type="number"
+                           ng-model="vm.settings.number_multiplier"
+                           data-ng-change="vm.onInputsChange()"
+                           class="no-input-arrows">
+                </md-input-container>
+            </div>
         </div>
 
     </md-dialog-content>
