@@ -39,6 +39,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.entityType = scope.evDataService.getEntityType();
+                scope.viewContext = scope.evDataService.getViewContext();
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
@@ -46,6 +47,8 @@
 
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
+
+                var dleEventIndex;
 
                 var checkLayoutExistence = function () {
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
@@ -1499,20 +1502,24 @@
 
                 };
 
-                checkLayoutExistence();
 
-                var dleEventIndex = scope.evEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
-                    removeChangesTrackingEventListeners();
-                    changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
-                    didLayoutChanged();
-                });
 
                 scope.init = function () {
 
                     scope.getCurrentMember();
 
-                    scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+                    if (scope.viewContext !== 'reconciliation_viewer') {
 
+                        checkLayoutExistence();
+
+                        dleEventIndex = scope.evEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+                            removeChangesTrackingEventListeners();
+                            changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
+                            didLayoutChanged();
+                        });
+
+                        scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+                    }
                 };
 
                 scope.init()
