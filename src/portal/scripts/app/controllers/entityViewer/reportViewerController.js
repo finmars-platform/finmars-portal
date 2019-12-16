@@ -1407,8 +1407,9 @@
 
                 }
 
+                var additions = vm.entityViewerDataService.getAdditions();
                 var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
-                if (interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+                if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
                     vm.entityViewerDataService.setSplitPanelStatus(true);
                 }
 

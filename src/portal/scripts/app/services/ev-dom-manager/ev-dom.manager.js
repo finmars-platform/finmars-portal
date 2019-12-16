@@ -740,7 +740,7 @@
             contentWrapElement.style.height = contentWrapElementHeight + "px";
         } else {
             contentWrapElement.style.height = "";
-        };
+        }
 
     };
 

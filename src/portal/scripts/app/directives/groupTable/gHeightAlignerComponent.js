@@ -83,7 +83,7 @@
 
 
                     });
-                };
+                }
 
                 function setDefaultHeights() {
 
@@ -92,7 +92,7 @@
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-                };
+                }
 
                 function setSplitHeights() {
 
@@ -114,7 +114,7 @@
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                };
+                }
 
                 function gHeightAlignerMethodToTriggerOnWindowResize() {
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);

@@ -1,9 +1,18 @@
 <div ng-class="{'disabled-field': !isEditableField()}">
     <div data-ng-if="fieldType['display_name'] === 'Number'" class="bind-field-number-field-container">
 
-        <md-input-container class="md-block no-error-spacer">
+        <md-input-container class="md-block no-error-spacer bfNumberInputContainer">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-model="entity[getModelKey()]"
+
+            <input type="text"
+                   data-ng-model="numericInputValue.numberVal"
+                   data-ng-focus="onNumericInputFocus()"
+                   data-ng-change="numericItemChange()"
+                   data-ng-blur="onNumericInputBlur()"
+                   class="no-input-arrows bfNumberInput"
+                   style="{{styleForInputsWithButtons()}}">
+
+            <!--<input data-ng-model="entity[getModelKey()]"
                    type="number"
                    data-ng-change="itemChange()"
                    data-ng-if="!item.options.onlyPositive"
@@ -15,7 +24,7 @@
                    data-ng-if="item.options.onlyPositive"
                    data-ng-change="itemChange()"
                    class="no-input-arrows"
-                   style="{{styleForInputsWithButtons()}}">
+                   style="{{styleForInputsWithButtons()}}">-->
 
             <div class="bind-field-buttons-block">
                 <md-button class="bind-field-calculator-btn" ng-click="openCalculatorDialog($event)">
@@ -89,9 +98,9 @@
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'Float'">
-        <md-input-container class="md-block">
+        <md-input-container class="md-block bfNumberInputContainer">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-model="entity[getModelKey()]"
+            <!--<input data-ng-model="entity[getModelKey()]"
                    data-ng-change="itemChange()"
                    data-float-numbers
                    data-ng-if="!item.options.onlyPositive"
@@ -101,6 +110,13 @@
                    data-float-numbers
                    data-only-positive="true"
                    data-ng-if="item.options.onlyPositive"
+                   style="{{styleForInputsWithButtons()}}">-->
+            <input type="text"
+                   data-ng-model="numericInputValue.numberVal"
+                   data-ng-focus="onNumericInputFocus()"
+                   data-ng-change="numericItemChange()"
+                   data-ng-blur="onNumericInputBlur()"
+                   class="no-input-arrows bfNumberInput"
                    style="{{styleForInputsWithButtons()}}">
 
             <div class="bind-field-buttons-block">
