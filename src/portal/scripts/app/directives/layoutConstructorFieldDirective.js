@@ -8,7 +8,7 @@
     var metaService = require('../services/metaService');
     var layoutService = require('../services/layoutService');
 
-    module.exports = function () {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
@@ -85,6 +85,10 @@
                         } else {
                             scope.item.editable = true;
                         }
+                    }
+
+                    if (!scope.item.options) {
+                        scope.item.options = {};
                     }
 
                     findAttribute();
@@ -615,6 +619,31 @@
                     }
 
                     return false;
+                };
+
+                scope.openNumberFormatSettings = function ($event) {
+
+                    $mdDialog.show({
+                        controller: 'NumberFormatSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                settings: scope.item.options.number_format
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.item.options.number_format = res.data.settings;
+                            console.log("number format scope.item", scope.item);
+                        }
+
+                    });
+
                 };
 
             }

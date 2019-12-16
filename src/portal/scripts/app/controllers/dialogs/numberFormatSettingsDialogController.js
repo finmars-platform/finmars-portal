@@ -40,67 +40,67 @@
             vm.settings.percentage_format_id = 0;
         }
 
-        if (!vm.reportSettings.number_multiplier) {
-            vm.reportSettings.number_multiplier = null;
+        if (!vm.settings.number_multiplier) {
+            vm.settings.number_multiplier = null;
         }
 
-        if (!vm.reportSettings.number_suffix) {
-            vm.reportSettings.number_suffix = "";
+        if (!vm.settings.number_suffix) {
+            vm.settings.number_suffix = "";
         }
 
-        if (!vm.reportSettings.number_prefix) {
-            vm.reportSettings.number_prefix = "";
+        if (!vm.settings.number_prefix) {
+            vm.settings.number_prefix = "";
         }
 
         vm.onRoundingChange = function () {
-            if (vm.reportSettings.round_format_id !== 0) {
-                vm.reportSettings.percentage_format_id = 0;
+            if (vm.settings.round_format_id !== 0) {
+                vm.settings.percentage_format_id = 0;
 
-                vm.reportSettings.number_multiplier = null;
-                vm.reportSettings.number_suffix = "";
-                vm.reportSettings.number_prefix = "";
+                vm.settings.number_multiplier = null;
+                vm.settings.number_suffix = "";
+                vm.settings.number_prefix = "";
             }
         };
 
         vm.onPercentageChange = function () {
-            if (vm.reportSettings.percentage_format_id !== 0) {
-                vm.reportSettings.round_format_id = 0;
+            if (vm.settings.percentage_format_id !== 0) {
+                vm.settings.round_format_id = 0;
             } else {
-                vm.reportSettings.number_multiplier = null;
-                vm.reportSettings.number_suffix = "";
-                vm.reportSettings.number_prefix = "";
+                vm.settings.number_multiplier = null;
+                vm.settings.number_suffix = "";
+                vm.settings.number_prefix = "";
             }
 
-            if (vm.reportSettings.percentage_format_id > 0 &&
-                vm.reportSettings.percentage_format_id < 4) {
-                vm.reportSettings.number_multiplier = 100;
-                vm.reportSettings.number_suffix = "%";
-                vm.reportSettings.number_prefix = "";
+            if (vm.settings.percentage_format_id > 0 &&
+                vm.settings.percentage_format_id < 4) {
+                vm.settings.number_multiplier = 100;
+                vm.settings.number_suffix = "%";
+                vm.settings.number_prefix = "";
             }
 
-            if (vm.reportSettings.percentage_format_id > 3) {
-                vm.reportSettings.number_multiplier = 10000;
-                vm.reportSettings.number_suffix = "bps";
-                vm.reportSettings.number_prefix = "";
+            if (vm.settings.percentage_format_id > 3) {
+                vm.settings.number_multiplier = 10000;
+                vm.settings.number_suffix = "bps";
+                vm.settings.number_prefix = "";
             }
         };
 
         vm.onInputsChange = function () {
 
-            if (vm.reportSettings.number_multiplier === 100 &&
-                vm.reportSettings.number_prefix === "" &&
-                vm.reportSettings.number_suffix === "%") {
+            if (vm.settings.number_multiplier === 100 &&
+                vm.settings.number_prefix === "" &&
+                vm.settings.number_suffix === "%") {
 
-                vm.reportSettings.percentage_format_id = 1;
+                vm.settings.percentage_format_id = 1;
 
-            } else if (vm.reportSettings.number_multiplier === 10000 &&
-                       vm.reportSettings.number_prefix === "" &&
-                       vm.reportSettings.number_suffix === "bps") {
+            } else if (vm.settings.number_multiplier === 10000 &&
+                       vm.settings.number_prefix === "" &&
+                       vm.settings.number_suffix === "bps") {
 
-                vm.reportSettings.percentage_format_id = 4;
+                vm.settings.percentage_format_id = 4;
 
             } else {
-                vm.reportSettings.percentage_format_id = 0;
+                vm.settings.percentage_format_id = 0;
             }
 
         };

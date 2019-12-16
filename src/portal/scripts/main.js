@@ -411,7 +411,7 @@ app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
 app.directive('sidenavDropdownMenu', [require('./app/directives/sidenavDropdownMenuDirective')]);
 
 app.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
-app.directive('layoutConstructorField', [require('./app/directives/layoutConstructorFieldDirective')]);
+app.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 
 app.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);

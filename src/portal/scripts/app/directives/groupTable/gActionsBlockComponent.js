@@ -411,6 +411,10 @@
                     if (scope.currentAdditions.type === type) {
 
                         clearAdditions();
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                        interfaceLayout.splitPanel.height = 0;
+
+                        scope.evDataService.setInterfaceLayout(interfaceLayout);
                         middlewareService.setNewSplitPanelLayoutName(false);
 
                     } else {
