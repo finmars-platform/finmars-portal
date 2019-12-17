@@ -603,7 +603,7 @@
                                 scope.evDataService.setVerticalAdditions(additions);
 
                                 scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
-                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                //scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                             }
 

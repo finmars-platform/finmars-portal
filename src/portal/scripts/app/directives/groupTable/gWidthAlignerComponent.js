@@ -25,7 +25,7 @@
 
                     console.log('activateWidthSlider');
 
-                    var splitPanelResizer = $('.g-width-slider')
+                    var splitPanelResizer = $('.g-width-slider');
 
                     $(splitPanelResizer).bind('mousedown', function (e) {
 
@@ -52,8 +52,9 @@
                             $(verticalSplitPanelElem)[0].style.left = (rootWidth - verticalSplitPanelWidth) + 'px';
                             $(scope.contentWrapElem).width(rootWidth - verticalSplitPanelWidth);
 
-                            window.dispatchEvent(new Event('resize'))
-
+                            //window.dispatchEvent(new Event('resize'))
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT);
 
                         };
 
@@ -100,7 +101,10 @@
 
                         scope.defaultWidths();
 
-                    })
+                    });
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
                 };
 
                 scope.init()

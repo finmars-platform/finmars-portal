@@ -579,7 +579,7 @@
 
         var viewportTop;
         var viewportWidth;
-        // var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height);
+
         var viewportHeight;
 
         // console.log('calculateScroll components', components);
@@ -638,7 +638,7 @@
         }
 
         var paddingTop = calculatePaddingTop(evDataService);
-        var totalHeight = calculateTotalHeight(evDataService);
+        //var totalHeight = calculateTotalHeight(evDataService);
 
         //rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
         rvScrollManager.setContentElemPaddingTop(paddingTop);
