@@ -235,13 +235,20 @@
 
                                                         <div flex="20">
                                                             <div layout="row">
-                                                                <two-fields-multiselect title="Selector values"
-                                                                                        items="vm.selector_values_projection"
-                                                                                        model="item.selector_values"
-                                                                                        ng-model="item.selector_values"
-                                                                                        nothing-selected-text=" "
-                                                                                        name-property="value"
-                                                                                        class="table-filter-input-container"></two-fields-multiselect>
+                                                                <two-fields-multiselect ng-model="item.selector_values"
+                                                                                        data-title="Selector values"
+                                                                                        data-items="vm.selector_values_projection"
+                                                                                        data-model="item.selector_values"
+                                                                                        data-nothing-selected-text=" "
+                                                                                        data-selected-items-indication="array"
+                                                                                        data-name-property="value"
+                                                                                        class="table-filter-input-container">
+                                                                </two-fields-multiselect>
+
+                                                                <md-tooltip data-ng-if="item.selector_values && item.selector_values.length > 0"
+                                                                            class="tooltip_1"
+                                                                            md-direction="top"
+                                                                            ng-bind="vm.selectedValuesTooltipName(item.selector_values)"></md-tooltip>
                                                             </div>
                                                         </div>
 
