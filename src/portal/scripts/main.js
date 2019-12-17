@@ -455,7 +455,7 @@ app.controller('ExportConfigurationsController', ['$scope', '$mdDialog', require
 
 app.controller('ReconProcessBankFileDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/reconciliation/reconProcessBankFileDialogController')]);
 app.controller('ReconMatchDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/reconciliation/reconMatchDialogController')]);
-
+app.directive('matchReconCard', [require('./app/directives/reconciliation/matchReconCardDirective')]);
 
 // Controls
 
