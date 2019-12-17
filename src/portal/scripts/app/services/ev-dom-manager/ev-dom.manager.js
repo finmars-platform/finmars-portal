@@ -755,10 +755,12 @@
         var interfaceLayout = evDataService.getInterfaceLayout();
 
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
+        var contentWrapElemWidth = evScrollManager.getContentWrapElemWidth();
 
         var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-        var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
-        // var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height - interfaceLayout.splitPanel.height);
+        //var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
+        var viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
+
         var viewportHeight;
 
         if (!isRootEntityViewer) {
@@ -784,6 +786,76 @@
         evScrollManager.setContentElemPaddingTop(paddingTop);
 
     };
+
+    /*var calculateScroll = function (elements, evDataService) {
+
+        evScrollManager.setViewportElem(elements.viewportElem);
+        evScrollManager.setContentElem(elements.contentElem);
+        evScrollManager.setContentWrapElem(elements.contentWrapElem);
+        evScrollManager.setRootWrapElem(elements.rootWrapElem);
+
+        var isRootEntityViewer = evDataService.isRootEntityViewer();
+
+        var interfaceLayout = evDataService.getInterfaceLayout();
+        var components = evDataService.getComponents();
+
+        var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
+        var contentWrapElemWidth = rvScrollManager.getContentWrapElemWidth();
+
+        var viewportTop,
+            viewportWidth,
+            viewportHeight;
+
+        viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
+
+        viewportTop = interfaceLayout.progressBar.height;
+
+        if (isRootEntityViewer) {
+
+            if (components.groupingArea) {
+                viewportTop = viewportTop + interfaceLayout.groupingArea.height
+            }
+
+            if (components.columnArea) {
+                viewportTop = viewportTop + interfaceLayout.columnArea.height
+            }
+
+            // console.log('contentWrapElemHeight', contentWrapElemHeight);
+            // console.log('viewportTop', viewportTop);
+            // console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
+
+
+            // viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
+            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+
+        } else {
+
+            if (components.columnArea) {
+                viewportTop = viewportTop + interfaceLayout.columnArea.height
+            }
+
+            if (components.groupingArea) {
+                viewportTop = viewportTop + interfaceLayout.groupingArea.height;
+            }
+
+            console.log('rootviewer split', viewportTop);
+
+            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+
+        }
+
+        evScrollManager.setViewportHeight(viewportHeight);
+        if (viewportWidth) {
+            evScrollManager.setViewportWidth(viewportWidth);
+        }
+
+        var paddingTop = calculatePaddingTop(evDataService);
+        var totalHeight = calculateTotalHeight(evDataService);
+
+        evScrollManager.setContentElemHeight(totalHeight);
+        evScrollManager.setContentElemPaddingTop(paddingTop);
+
+    };*/
 
     var calculateVirtualStep = function (elements, evDataService) {
 
