@@ -50,16 +50,16 @@
 
                     } else if (number !== "." || currentNumber.indexOf(".") === -1) { // prevent adding more than one "." to a number
                         currentNumber += number;
-                    };
+                    }
 
                 } else {
 
                     currentNumber += number;
 
-                };
+                }
 
 
-            };
+            }
 
             if (currentNumber === ".") {
                 currentNumber = "0."
@@ -160,7 +160,7 @@
                 case "/":
                     digitsQuantity = numXDigitsQuantity - numYDigitsQuantity;
                     break;
-            };
+            }
 
             return digitsQuantity;
 

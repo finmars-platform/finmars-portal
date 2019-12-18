@@ -530,11 +530,7 @@
 
                     });
 
-                    if (row === 1 && field.column === 6) {
-                        console.log("inputs flex spannedCols", spannedCols);
-                    }
                     if (spannedCols.indexOf(field.column) !== -1) {
-                        console.log("input flex hide field", row, field.column);
                         return false
                     }
 

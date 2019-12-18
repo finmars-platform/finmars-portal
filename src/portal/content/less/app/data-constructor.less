@@ -64,17 +64,18 @@ md-optgroup.bold-field-select > label {
 .ec-attr-card {
   overflow: hidden;
   fill: #898989;
-
   padding-left: 1em;
   padding-right: 1em;
-  .ec-attr-row {
-    margin-bottom: 20px;
-  }
   &.active {
     background: #f3d074;
     box-shadow: 0 0 30px rgba(255, 187, 0, .5);
     padding-top: 2em;
   }
+
+  .ec-attr-row {
+    margin-bottom: 20px;
+  }
+
   .options-holder {
     button {
       float: right;
@@ -84,6 +85,17 @@ md-optgroup.bold-field-select > label {
       margin-left: 0;
       min-width: 36px;
     }
+  }
+}
+
+.ec-attr-options-btn-holder {
+  padding: 0 10px;
+  margin-bottom: 20px;
+
+  .ec-attr-options-btn {
+    margin: 0;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -423,6 +435,7 @@ md-checkbox.checkbox-bind-field {
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 1;
 }
 
 .w-rp {

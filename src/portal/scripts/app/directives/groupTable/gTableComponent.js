@@ -58,7 +58,7 @@
 
                 scope.isRecon = false;
 
-                if(scope.evDataService.getViewContext() === 'reconciliation_viewer') {
+                if (scope.evDataService.getViewContext() === 'reconciliation_viewer') {
                     scope.isRecon = true;
                 }
 
@@ -134,6 +134,18 @@
                     scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
 
                         scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
+
+                        if (!scope.verticalAdditions || !scope.verticalAdditions.isOpen) {
+
+                            setTimeout(function () { // wait for angular to remove vertical split panel
+
+                                scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                            }, 200);
+
+
+                        }
 
                         console.log("VERTICAL ADDITIONS CHANGE", scope.verticalAdditions)
 

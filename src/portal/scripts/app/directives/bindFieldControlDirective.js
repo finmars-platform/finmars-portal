@@ -9,6 +9,8 @@
     var layoutService = require('../services/layoutService');
     var attributeTypeService = require('../services/attributeTypeService');
 
+    var renderHelper = require('../helpers/render.helper');
+
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
@@ -28,9 +30,14 @@
                 var choices = metaService.getValueTypes() || [];
                 var entityAttrs = metaService.getEntityAttrs(scope.entityType) || [];
 
+                var numberInputElem = null;
+                var numberInputContainerElem = null;
+
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
                 scope.isRecalculate = false;
+
+                scope.numericInputValue = {};
 
                 scope.isEditableField = function () {
 
@@ -196,7 +203,7 @@
                         scope.findNodeItem().then(function () {
                             classifierTree.classifiers.forEach(findNodeInChildren);
                             scope.$apply();
-                        })
+                        });
 
                         if (scope.entityChange) {
                             scope.entityChange();
@@ -258,55 +265,6 @@
                     return styleValue;
                 };
 
-                /*scope.styleForDateInputContainer = function () {
-                    var styleValue = '';
-
-                    if (scope.item.options) {
-
-                        var optionsKeys = Object.keys(scope.item.options);
-
-                        var optionButtonsCount = 0;
-
-                        if (optionsKeys && optionsKeys.length > 0) {
-
-                            optionsKeys.forEach(function (key) {
-                                if (scope.item.options[key]) {
-                                    optionButtonsCount = optionButtonsCount + 1;
-                                }
-                            });
-
-                            if (optionButtonsCount > 0) {
-                                styleValue = 'padding-right: ' + (optionButtonsCount * 34) + 'px;';
-                            }
-
-                        }
-
-                    }
-
-                    return styleValue;
-                };
-
-                scope.styleForInputWithButtons = function () {
-
-                    var styleValue = '';
-
-                    if (scope.item.buttons && scope.item.buttons.length > 0) {
-                        styleValue = 'width: ' + (100 - scope.item.buttons.length * 10) + '%;';
-                    }
-
-                    if (scope.item.backgroundColor) {
-
-                        if (styleValue) {
-                            styleValue = styleValue + ' ';
-                        }
-
-                        styleValue = styleValue + 'background-color: ' + scope.item.backgroundColor + ';'
-                    }
-
-                    return styleValue;
-
-                };*/
-
                 scope.inputBackgroundColor = function () {
                     var backgroundColor = '';
 
@@ -339,11 +297,87 @@
                         if (res.status === 'agree') {
 
                             scope.entity[scope.getModelKey()] = res.numberValue;
+                            scope.numericInputValue.numberVal = formatNumber(res.numberValue);
 
                         }
 
                     });
 
+                };
+
+                var formatNumber = function (numberVal) {
+
+                    if (scope.item.options && scope.item.options.number_format) {
+
+                        return renderHelper.formatValue({
+                            value: numberVal
+                        }, {
+                            key: 'value',
+                            report_settings: scope.item.options.number_format
+                        });
+
+                    } else {
+                        return numberVal
+                    }
+
+                };
+
+                scope.onNumericInputFocus = function () {
+                    if (!numberIsInvalid) {
+                        scope.numericInputValue.numberVal = JSON.parse(JSON.stringify(scope.entity[scope.getModelKey()]));
+                    }
+                };
+
+                var numberIsInvalid;
+
+                scope.numericItemChange = function () {
+
+                    numberIsInvalid = false;
+                    var changedValue = scope.numericInputValue.numberVal;
+
+                    if (!isNaN(changedValue) &&
+                        changedValue !== null) {
+
+                        if (Number.isInteger(changedValue)) {
+                            changedValue = parseInt(changedValue);
+                        } else {
+                            changedValue = parseFloat(changedValue);
+                        }
+
+                        if (scope.item.options.onlyPositive) {
+
+                            if (parseFloat(changedValue) < 0) {
+                                numberIsInvalid = true;
+                            } else {
+                                scope.entity[scope.getModelKey()] = JSON.parse(JSON.stringify(changedValue));
+                            }
+
+                        } else {
+                            scope.entity[scope.getModelKey()] = JSON.parse(JSON.stringify(changedValue));
+                        }
+
+                    } else if (changedValue !== '') {
+                        numberIsInvalid = true;
+                    }
+
+                    if (numberIsInvalid) {
+
+                        scope.entity[scope.getModelKey()] = null;
+                        numberInputElem.classList.add('ng-invalid', 'ng-invalid-number');
+                        numberInputContainerElem.classList.add('md-input-invalid');
+
+                    } else {
+                        numberInputElem.classList.remove('ng-invalid', 'ng-invalid-number');
+                        numberInputContainerElem.classList.remove('md-input-invalid');
+                    }
+
+                };
+
+                scope.onNumericInputBlur = function () {
+                    if (!numberIsInvalid) {
+                        var itemNumberValue = JSON.parse(JSON.stringify(scope.entity[scope.getModelKey()]));
+                        scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
+                    }
                 };
 
                 scope.init = function () {
@@ -396,6 +430,23 @@
                                 scope.$apply();
                             })
                         }
+                    }
+
+                    if (scope.fieldType && scope.fieldType.value === 20) {
+
+                        scope.numericInputValue.numberVal = null;
+                        setTimeout(function () {
+                            numberInputContainerElem = elem[0].querySelector('.bfNumberInputContainer');
+                            numberInputElem = elem[0].querySelector('.bfNumberInput');
+                        }, 500);
+
+                        if (scope.entity[scope.getModelKey()] || scope.entity[scope.getModelKey()] === 0) {
+
+                            var itemNumberValue = JSON.parse(JSON.stringify(scope.entity[scope.getModelKey()]));
+                            scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
+
+                        }
+
                     }
 
                 };

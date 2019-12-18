@@ -414,6 +414,10 @@
                     if (scope.currentAdditions.type === type) {
 
                         clearAdditions();
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                        interfaceLayout.splitPanel.height = 0;
+
+                        scope.evDataService.setInterfaceLayout(interfaceLayout);
                         middlewareService.setNewSplitPanelLayoutName(false);
 
                     } else {
@@ -599,7 +603,7 @@
                                 scope.evDataService.setVerticalAdditions(additions);
 
                                 scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
-                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                //scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                             }
 

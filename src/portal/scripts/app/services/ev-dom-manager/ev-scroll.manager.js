@@ -8,6 +8,10 @@
         var viewportHeight;
         var viewportWidth;
 
+        var rootWrapElem;
+        var rootWrapElemHeight;
+        var rootWrapElemWidth;
+
         var contentElem;
         var contentElemHeight;
         var contentElemPaddingTop;
@@ -101,6 +105,41 @@
             return contentWrapElemWidth;
         }
 
+        // root wrapper elem
+
+        function setRootWrapElem(elem) {
+
+            // console.log('setContentWrapElem elem.clientWidth', elem.clientWidth);
+
+            rootWrapElem = elem;
+            rootWrapElemHeight = elem.clientHeight;
+            rootWrapElemWidth = elem.clientWidth;
+        }
+
+        function getRootWrapElem() {
+            return rootWrapElem;
+        }
+
+        function setRootWrapElemHeight(height) {
+
+            rootWrapElemHeight = height;
+            rootWrapElem.style.height = height + 'px';
+        }
+
+        function getRootWrapElemHeight() {
+            return rootWrapElemHeight;
+        }
+
+        function setRootWrapElemWidth(width) {
+
+            rootWrapElemWidth = width;
+            rootWrapElem.style.width = width + 'px';
+        }
+
+        function getRootWrapElemWidth() {
+            return rootWrapElemWidth;
+        }
+
         return {
 
             // viewport elem
@@ -135,7 +174,18 @@
             getContentWrapElemHeight: getContentWrapElemHeight,
 
             setContentWrapElemWidth: setContentWrapElemWidth,
-            getContentWrapElemWidth: getContentWrapElemWidth
+            getContentWrapElemWidth: getContentWrapElemWidth,
+
+            // root wrapper elem
+
+            setRootWrapElem: setRootWrapElem,
+            getRootWrapElem: getRootWrapElem,
+
+            setRootWrapElemHeight: setRootWrapElemHeight,
+            getRootWrapElemHeight: getRootWrapElemHeight,
+
+            setRootWrapElemWidth: setRootWrapElemWidth,
+            getRootWrapElemWidth: getRootWrapElemWidth
 
         }
 
