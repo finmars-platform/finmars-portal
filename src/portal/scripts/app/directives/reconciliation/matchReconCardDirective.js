@@ -18,7 +18,7 @@
 
                 scope.statusClass = '';
 
-                scope.resolveStatus = function(){
+                scope.resolveStatus = function () {
 
                     // type === 'complex-transaction'
                     // MATCHED = 1
@@ -34,7 +34,8 @@
                             scope.statusClass = 'recon-card-unmatched'
                         } else if (scope.field.status === 3) {
                             scope.statusClass = 'recon-card-auto-matched'
-                        } if (scope.field.status === 4) {
+                        }
+                        if (scope.field.status === 4) {
                             scope.statusClass = 'recon-card-ignore'
                         }
 
@@ -66,6 +67,51 @@
                     }
 
                     return scope.statusClass
+                };
+
+                scope.showDetails = function ($event) {
+
+                    if (scope.type === 'complex-transaction') {
+
+                        $mdDialog.show({
+                            controller: 'ReconMatchViewComplexTransactionFieldDialogController as vm',
+                            templateUrl: 'views/dialogs/reconciliation/recon-match-complex-transaction-field-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                data: {
+                                    item: scope.item,
+                                    field: scope.field
+                                }
+                            }
+                        })
+
+                    }
+
+                    if (scope.type === 'bank-file') {
+
+                        $mdDialog.show({
+                            controller: 'ReconMatchViewFileFieldDialogController as vm',
+                            templateUrl: 'views/dialogs/reconciliation/recon-match-file-field-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                data: {
+                                    item: scope.item,
+                                    field: scope.field
+                                }
+                            }
+                        })
+
+                    }
                 };
 
                 scope.init = function () {

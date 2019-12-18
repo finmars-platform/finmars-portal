@@ -54,6 +54,10 @@
   background: #8fbc8f;
 }
 
+.g-row.row-recon-auto-matched {
+  background: #add8e6;
+}
+
 .g-row.row-recon-new {
   background: #f0e68c;
 }
@@ -63,6 +67,7 @@
 }
 
 .recon-match-dialog {
+
   .recon-match-dialog-content {
     background: #ddd;
   }
@@ -98,6 +103,19 @@
     margin-top: 10px;
   }
 
+  .recon-match-fields-container {
+    position: relative;
+    margin: 10px 0;
+    padding: 5px;
+    border: 1px solid #9f9f9f;
+  }
+
+  .draggable-dialog-sign {
+    position: absolute;
+    cursor: pointer;
+    top: 7px;
+  }
+
 }
 
 .recon-match-dialog-content {
@@ -105,19 +123,20 @@
 }
 
 .recon-header-box {
-  width: 150px;
+  width: 130px;
   height: 60px;
-  border: 1px solid #000;
+  border-right: 1px solid #9f9f9f;
   margin: 1px;
+  font-size: 14px;
   text-align: center;
   padding-top: 20px;
   box-sizing: border-box;
 }
 
 .recon-body-box {
-  width: 150px;
+  width: 130px;
   min-height: 100px;
-  border: 1px solid #000;
+  border: 1px dotted #000;
   margin: 1px;
   text-align: center;
   box-sizing: border-box;
@@ -135,7 +154,9 @@
   text-overflow: ellipsis;
   overflow: hidden;
   margin-bottom: 5px;
+  font-size: 13px;
 }
+
 .match-recon-card-values {
   font-size: 12px;
 }
@@ -167,4 +188,37 @@
 
 .recon-card-conflict {
   background: #f08080;
+}
+
+.recon-match-line-title {
+
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  //width: 100%;
+  width: 465px;
+  white-space: pre;
+  height: 20px;
+  margin: 5px;
+
+}
+
+.recon-match-body-complex-transactions {
+  padding: 10px;
+}
+
+.recon-match-body-file-transactions {
+  padding: 10px;
+}
+
+.match-recon-card-details-button {
+  &:hover {
+    opacity: .5;
+  }
+}
+
+md-menu.match-recon-body-line-settings-button.md-menu {
+  position: absolute;
+  top: -3px;
+  left: 17px;
 }

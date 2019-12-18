@@ -1,0 +1,29 @@
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50  " drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2>View Bank File Line</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+
+        <div class="p-24">
+
+            <div data-ng-repeat="item in vm.attributes" class="m-8">
+
+                <b>{{item.key}}</b>: {{item.value}}
+
+            </div>
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <div>
+            <md-button ng-click="vm.agree()">
+                Close
+            </md-button>
+        </div>
+    </md-dialog-actions>
+</md-dialog>
