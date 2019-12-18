@@ -22,12 +22,13 @@
                 var lastMouseMoveEvent = null;
 
                 var contentWrapElem = $('.g-content-wrap').first();
+                var verticalSPElem = document.querySelector('.verticalSplitPanelWrapper');
 
                 function activateHeightSlider() {
 
                     console.log('activateHeightSlider');
 
-                    var splitPanelResizer = $('.g-height-slider')
+                    var splitPanelResizer = $('.g-height-slider');
 
                     $(splitPanelResizer).bind('mousedown', function (e) {
 
@@ -62,10 +63,11 @@
                                 splitPanelWrapperElem.height(splitPanelHeight);
                             }
 
-                            /*workAreaElem.height(bodyHeight - splitPanelHeight - headerHeight);
-                            sidebarElem.height(bodyHeight - splitPanelHeight - headerHeight);
-                            wrapperElem.height(bodyHeight - headerHeight - headerHeight);*/
                             contentWrapElem.height(bodyHeight - headerHeight - splitPanelHeight);
+
+                            if (verticalSPElem) {
+                                verticalSPElem.style.height = (bodyHeight - headerHeight - splitPanelHeight) + 'px';
+                            }
 
                             scope.evDataService.setInterfaceLayout(interfaceLayout);
 
@@ -83,7 +85,7 @@
 
 
                     });
-                };
+                }
 
                 function setDefaultHeights() {
 
@@ -92,7 +94,7 @@
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-                };
+                }
 
                 function setSplitHeights() {
 
@@ -112,9 +114,13 @@
                     contentWrapElem.height(bodyHeight - headerToolbarHeight - splitPanelHeight);
                     splitPanelElem.height(splitPanelHeight);
 
+                    if (verticalSPElem) {
+                        verticalSPElem.style.height = (bodyHeight - headerToolbarHeight - splitPanelHeight) + 'px';
+                    }
+
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                };
+                }
 
                 function gHeightAlignerMethodToTriggerOnWindowResize() {
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
@@ -128,16 +134,13 @@
                     setSplitHeights()
                 });
 
-                /*var redrawTableCallbackIndex = scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+                var verticalAdditionsChangeCallbackIndex = scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
 
-                    setSplitHeights()
+                    setTimeout(function () { // wait for angular to remove or add vertical split panel
+                        verticalSPElem = document.querySelector('.verticalSplitPanelWrapper');
+                    }, 100);
+
                 });
-
-                var updateTableCallbackIndex = scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
-
-                    setSplitHeights()
-
-                });*/
 
                 scope.init = function () {
 
@@ -153,8 +156,8 @@
 
                     window.removeEventListener('resize', gHeightAlignerMethodToTriggerOnWindowResize);
                     scope.evEventService.removeEventListener(evEvents.ADDITIONS_CHANGE, additionsChangeCallbackIndex);
-                    /*scope.evEventService.removeEventListener(evEvents.REDRAW_TABLE, redrawTableCallbackIndex);
-                    scope.evEventService.removeEventListener(evEvents.UPDATE_TABLE, updateTableCallbackIndex);*/
+                    scope.evEventService.removeEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, verticalAdditionsChangeCallbackIndex);
+
                     setDefaultHeights();
                 })
 

@@ -23,8 +23,6 @@
 
             var vm = this;
 
-            console.log("Split Panel Report Viewer Controller init");
-
             console.log('parentEntityViewerDataService', parentEntityViewerDataService);
             console.log('parentEntityViewerEventService', parentEntityViewerEventService);
 

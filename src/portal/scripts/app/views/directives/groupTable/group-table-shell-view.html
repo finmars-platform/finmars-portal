@@ -157,7 +157,8 @@
         </div>
     </div>
 
-    <div class="g-recon" data-ng-if="isRootEntityViewer && verticalAdditions.isOpen">
+    <div class="g-recon verticalSplitPanelWrapper"
+         data-ng-if="isRootEntityViewer && verticalAdditions.isOpen">
 
         <div group-width-aligner
              root-wrap-elem="rootWrapElem"
@@ -168,9 +169,12 @@
         <div class="g-width-slider"></div>
 
         <div class="g-additions-workarea" data-ng-if="verticalAdditions.type === 'reconciliation'">
-            <group-vertical-split-panel-report-binder ev-data-service="evDataService" class="display-block height-100"
+            <group-vertical-split-panel-report-binder ev-data-service="evDataService"
                                                       ev-event-service="evEventService"
-                                             sp-exchange-service="spExchangeService"></group-vertical-split-panel-report-binder>
+                                                      sp-exchange-service="spExchangeService"
+                                                      root-wrap-elem="rootWrapElem"
+                                                      class="display-block height-100"
+            ></group-vertical-split-panel-report-binder>
         </div>
 
     </div>

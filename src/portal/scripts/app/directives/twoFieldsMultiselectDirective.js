@@ -14,6 +14,7 @@
                 model: '=',
                 title: "@",
                 nothingSelectedText: "@",
+                selectedItemsIndication: "@",
                 nameProperty: "@",
                 onChangeCallback: '&?'
             },
@@ -27,7 +28,7 @@
                     scope.nameProperty = 'name';
                 }
 
-                var setInputText = function () {
+                var defaultInputText = function () {
 
                     var selElemNumber = 0;
                     if (scope.model && scope.model.length > 0) {
@@ -44,6 +45,40 @@
 
                     } else {
                         scope.inputText = selElemNumber + " " + "items selected";
+                    }
+
+                };
+
+                var arrayLikeInputText = function () {
+
+                    if (scope.model && scope.model.length > 0) {
+
+                        scope.inputText = '[' + scope.model.join(', ') + ']';
+
+                    } else if (scope.nothingSelectedText) {
+
+                        scope.inputText = scope.nothingSelectedText;
+
+                    } else {
+
+                        scope.inputText = "[ ]";
+
+                    }
+
+                };
+
+                var setInputText = function () {
+
+                    if (scope.selectedItemsIndication) {
+
+                        switch (scope.selectedItemsIndication) {
+                            case "array":
+                                arrayLikeInputText();
+                                break;
+                        }
+
+                    } else {
+                        defaultInputText();
                     }
 
                 };

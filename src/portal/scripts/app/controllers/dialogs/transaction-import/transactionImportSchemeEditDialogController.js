@@ -472,6 +472,17 @@
 
         };
 
+        vm.selectedValuesTooltipName = function (selectedVals) {
+            var tooltipName = null;
+
+            if (selectedVals && selectedVals.length > 0) {
+                tooltipName = "Values selected: " + selectedVals.join(', ');
+            }
+
+            return tooltipName;
+
+        };
+
         vm.init = function () {
 
             vm.getScheme();

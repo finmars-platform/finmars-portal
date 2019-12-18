@@ -12,7 +12,8 @@
             scope: {
                 evDataService: '=',
                 evEventService: '=',
-                spExchangeService: '='
+                spExchangeService: '=',
+                rootWrapElem: '='
             },
             restrict: 'AE',
             template: '<div class="vertical-split-panel-controller-container"></div>',
@@ -60,7 +61,23 @@
 
                 }
 
-                createController();
+                var init = function () {
+
+                    var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
+
+                    if (splitPanelIsActive) {
+                        var verticalSPWrapper = document.querySelector('.verticalSplitPanelWrapper');
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                        var verticalSPHeight = scope.rootWrapElem.clientHeight - interfaceLayout.splitPanel.height;
+
+                        verticalSPWrapper.style.height = verticalSPHeight + 'px';
+                    }
+
+
+                    createController();
+                };
+
+                init();
 
             }
         }
