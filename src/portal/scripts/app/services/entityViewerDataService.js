@@ -1073,6 +1073,22 @@
             return data.reconciliation
         }
 
+        function setReconciliationDataService(service) {
+            data.reconciliationDataService = service
+        }
+
+        function getReconciliationDataService() {
+            return data.reconciliationDataService
+        }
+
+        function setReconciliationEventService(service) {
+            data.reconciliationEventService = service
+        }
+
+        function getReconciliationEventService(){
+            return data.reconciliationEventService
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1252,7 +1268,13 @@
             getCurrentMember: getCurrentMember,
 
             setReconciliationData: setReconciliationData,
-            getReconciliationData: getReconciliationData
+            getReconciliationData: getReconciliationData,
+
+            setReconciliationDataService: setReconciliationDataService,
+            getReconciliationDataService: getReconciliationDataService,
+
+            setReconciliationEventService: setReconciliationEventService,
+            getReconciliationEventService: getReconciliationEventService
 
         }
     }

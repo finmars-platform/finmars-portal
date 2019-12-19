@@ -266,7 +266,7 @@ app.controller('EntityTypeClassifierMappingDialogController', ['$scope', '$mdDia
 app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$transitions', '$customDialog', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('ReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
 app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
-app.controller('VerticalSplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/verticalSplitPanelReportViewerController')]);
+app.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
@@ -458,6 +458,10 @@ app.controller('ReconMatchDialogController', ['$scope', '$mdDialog', 'data', req
 app.controller('ReconMatchViewComplexTransactionFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/reconciliation/reconMatchViewComplexTransactionFieldDialogController')]);
 app.controller('ReconMatchViewFileFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/reconciliation/reconMatchViewFileFieldDialogController')]);
 app.controller('ReconMatchViewLineDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/reconciliation/reconMatchViewLineDialogController')]);
+
+app.controller('ReconciliationMatchEditorController', ['$scope', '$mdDialog', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationMatchEditorController')]);
+
+
 app.directive('matchReconCard', ['$mdDialog', require('./app/directives/reconciliation/matchReconCardDirective')]);
 
 // Controls
@@ -491,6 +495,7 @@ app.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller',
 app.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
 app.directive('groupVerticalSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gVerticalSplitPanelReportBinderComponent')]);
 app.directive('groupPermissionEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gPermissionEditorBinderComponent')]);
+app.directive('groupReconciliationMatchEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gReconciliationMatchEditorBinderComponent')]);
 app.directive('gCAreasDragAndDrop', ['$mdDialog', require('./app/directives/groupTable/gCAreasDragAndDropDirective')]);
 app.directive('viewConstructorDragAndDrop', ['$mdDialog', require('./app/directives/viewConstructorDragAndDropDirective')]);
 

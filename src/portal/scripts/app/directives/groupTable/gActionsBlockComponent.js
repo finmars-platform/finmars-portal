@@ -48,6 +48,8 @@
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
 
+                scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
+
                 var dleEventIndex;
 
                 var checkLayoutExistence = function () {
@@ -1519,7 +1521,18 @@
                         });
 
                         scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+
+                        scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
+
+                            scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
+
+                        })
+
                     }
+
+
+
                 };
 
                 scope.init()
