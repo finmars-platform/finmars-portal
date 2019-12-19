@@ -1350,13 +1350,44 @@
 
         };
 
-        vm.deleteInput = function (item, index) {
+        vm.deleteInput = function (item, index, $event) {
 
-            vm.entity.inputs.splice(index, 1);
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Please note that in Action all links to this input will be deleted. Expressions will not be affected, so you would need to amend them manually.",
+                        actionsButtons: [
+                            {
+                                name: "OK, PROCEED",
+                                response: {status: 'agree'}
+                            },
+                            {
+                                name: "CANCEL",
+                                response: {status: 'disagree'}
+                            }
+                        ]
+                    }
+                }
+            }).then(function (res) {
 
-            vm.updateInputFunctions();
+                if (res.status === 'agree') {
 
-            removeInputFromActions(item.name);
+                    vm.entity.inputs.splice(index, 1);
+                    vm.updateInputFunctions();
+                    removeInputFromActions(item.name);
+
+                }
+
+            });
 
         };
 

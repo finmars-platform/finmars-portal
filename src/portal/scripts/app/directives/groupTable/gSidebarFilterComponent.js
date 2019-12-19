@@ -16,6 +16,7 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaService = require('../../services/metaService');
 
+    var transactionTypeService = require('../../services/transactionTypeService');
     var uiService = require('../../services/uiService');
 
     module.exports = function ($mdDialog) {
@@ -47,6 +48,9 @@
                 var entityAttrs = [];
                 var dynamicAttrs = [];
                 var allAttrsList = [];
+
+                var contextMenu = {};
+                var ttypes = null;
 
                 var getAttributes = function () {
 
@@ -315,7 +319,9 @@
                         var contextMenuPosition = 'top: ' + $event.pageY + 'px; right: 0;';
 
                         if (scope.isReport) {
-                            rvDomManager.createPopupMenu(objectId, parentGroupHashId, scope.evDataService, scope.evEventService, contextMenuPosition);
+
+                            rvDomManager.createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, scope.evDataService, scope.evEventService, contextMenuPosition);
+
                         } else {
                             evDomManager.createPopupMenu(objectId, parentGroupHashId, scope.evDataService, scope.evEventService, contextMenuPosition);
                         }
@@ -326,23 +332,14 @@
 
                 scope.resizeFilterSideNav = function (actionType) {
 
-                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
                     if (actionType === 'collapse') {
                         $('body').addClass('filter-side-nav-collapsed');
-                        scope.sideNavCollapsed = true;
-                        interfaceLayout.filterArea.width = 55;
                     } else {
                         $('body').removeClass('filter-side-nav-collapsed');
-                        scope.sideNavCollapsed = false;
-                        interfaceLayout.filterArea.width = 239;
                     }
-
-                    scope.evDataService.setInterfaceLayout(interfaceLayout);
 
                     scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_AREA);
 
-                    window.dispatchEvent(new Event('resize'));
                 };
 
                 scope.openFilterSettings = function ($mdOpenMenu, ev) {
@@ -667,6 +664,69 @@
                     /*scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     });*/
+
+                    transactionTypeService.getListLight({
+                        pageSize: 1000
+                    }).then(function (data) {
+
+                        uiService.getContextMenuLayoutList().then(function (contextMenuData) {
+
+                            if (contextMenuData.results.length) {
+
+                                var contextMenuLayout = contextMenuData.results[0];
+                                contextMenu = contextMenuLayout.data.menu
+
+                            } else {
+
+                                contextMenu = {
+                                    root: {
+                                        items: [
+                                            {
+                                                name: 'Edit Instrument',
+                                                action: 'edit_instrument'
+                                            },
+                                            {
+                                                name: 'Edit Account',
+                                                action: 'edit_account'
+                                            },
+                                            {
+                                                name: 'Edit Portfolio',
+                                                action: 'edit_portfolio'
+                                            },
+                                            {
+                                                name: 'Edit Price',
+                                                action: 'edit_price'
+                                            },
+                                            {
+                                                name: 'Edit FX Rate',
+                                                action: 'edit_fx_rate'
+                                            },
+                                            {
+                                                name: 'Edit Pricing FX Rate',
+                                                action: 'edit_pricing_currency'
+                                            },
+                                            {
+                                                name: 'Edit Accrued FX Rate',
+                                                action: 'edit_accrued_currency'
+                                            },
+                                            {
+                                                name: 'Edit Currency',
+                                                action: 'edit_currency'
+                                            },
+                                            {
+                                                name: 'Open Book Manager',
+                                                action: 'book_transaction'
+                                            }
+                                        ]
+                                    }
+                                };
+                            }
+
+                            ttypes = data.results;
+
+                        });
+
+                    });
 
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
                         syncFilters();

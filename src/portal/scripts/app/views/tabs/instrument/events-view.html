@@ -2,7 +2,7 @@
     <div data-ng-if="vm.checkReadyStatus()">
         <table class="bordered margin-bottom-20">
             <thead>
-            <tr>
+                <tr>
                 <th data-ng-click="vm.setSort('name')">Name<span class="sortorder"
                                                                  data-ng-show="vm.sort === 'name'"
                                                                  data-ng-class="{reverse: vm.direction}"></span>
@@ -49,7 +49,8 @@
                     </md-button>
                 </th>
             </tr>
-            <tr data-ng-if="vm.queryStatus" class="filter-row-holder">
+
+                <tr data-ng-if="vm.queryStatus" class="filter-row-holder">
                 <th>
                     <md-input-container>
                         <ng-md-icon icon="search"></ng-md-icon>
@@ -108,380 +109,384 @@
                 <th></th>
             </tr>
             </thead>
+
             <tbody>
-            <tr data-ng-repeat="item in vm.entity.event_schedules | filter:vm.query | orderBy:vm.sort:vm.direction as results track by item.id">
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.name"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.description"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.effective_date"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.final_date"></td>
-                <td data-ng-if="!item.editStatus" class="event-schedule-checkbox-td">
-                    <md-checkbox data-ng-model="item.is_auto_generated" class="margin-0" data-ng-disabled="true"
-                                 aria-label="not-edited-is_auto_generated-checkbox"></md-checkbox>
-                </td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindNotificationClass(item)"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindEventClass(item)"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="[item.actions.length]"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.notify_in_n_days"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindPeriodicity(item)"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.periodicity_n"></td>
-                </td>
-                <td data-ng-if="!item.editStatus" class="table-misc-cell">
-                    <md-menu>
-                        <!-- Trigger element is a md-button with an icon -->
-                        <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
-                            <ng-md-icon icon="settings"></ng-md-icon>
+                <tr data-ng-repeat="item in vm.entity.event_schedules | filter:vm.query | orderBy:vm.sort:vm.direction as results track by item.id">
+
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="item.name"
+                        class="ES-input-name-container"></td>
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="item.description"
+                        class="ES-input-description-container"></td>
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="item.effective_date"
+                        class="ES-input-effective-date-container"></td>
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="item.final_date"
+                        class="ES-input-final-date-container"></td>
+                    <td data-ng-if="!item.editStatus" class="event-schedule-checkbox-td">
+                        <md-checkbox data-ng-model="item.is_auto_generated" class="margin-0" data-ng-disabled="true"
+                                     aria-label="not-edited-is_auto_generated-checkbox"></md-checkbox>
+                    </td>
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="vm.bindNotificationClass(item)"
+                        class="ES-input-notification-class-container"></td>
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="vm.bindEventClass(item)"
+                        class="ES-input-event-class-container"></td>
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="[item.actions.length]"
+                        class="ES-row-btn-width"></td>
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="item.notify_in_n_days"
+                        class="ES-notify-in-n-container"></td>
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="vm.bindPeriodicity(item)"
+                        class="ES-periodicity-container"></td>
+                    <td data-ng-if="!item.editStatus"
+                        data-ng-bind="item.periodicity_n"
+                        class="ES-periodicity-n-container"></td>
+                    <td data-ng-if="!item.editStatus" class="table-misc-cell">
+                        <md-menu>
+                            <!-- Trigger element is a md-button with an icon -->
+                            <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
+                                <ng-md-icon icon="settings"></ng-md-icon>
+                            </md-button>
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button ng-click="vm.editItem(item)">
+                                        <ng-md-icon icon="mode_edit" class="dialog-table-settings-btns-icons"></ng-md-icon>
+                                        Edit
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="vm.deleteItem(item, $index)">
+                                        <ng-md-icon icon="delete" class="dialog-table-settings-btns-icons"></ng-md-icon>
+                                        Delete
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </td>
+
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container class="no-error-spacer ES-input-name-container">
+                            <label for=""></label>
+                            <input type="text" data-ng-model="item.name">
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container class="no-error-spacer ES-input-description-container">
+                            <label for=""></label>
+                            <input type="text" data-ng-model="item.description">
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container class="no-error-spacer ES-input-effective-date-container">
+                            <label for=""></label>
+                            <zh-date-picker data-date-value="item.effective_date"></zh-date-picker>
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container class="no-error-spacer ES-input-final-date-container">
+                            <label for=""></label>
+                            <zh-date-picker data-date-value="item.final_date"></zh-date-picker>
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td event-schedule-checkbox-td">
+                        <md-checkbox data-ng-model="vm.item.is_auto_generated"
+                                     aria-lable="edited-is_auto_generated-checkbox" data-ng-disabled="true"></md-checkbox>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container class="no-error-spacer ES-input-notification-class-container" aria-label="select with filter">
+                            <!--<label for="">Notification class</label>
+                            <md-select data-ng-model="item.notification_class" style="max-width: 195px">
+                                <md-option data-ng-repeat="model in vm.notificationClasses" ng-value="model.id">
+                                    {{model.name}}
+                                </md-option>
+                            </md-select>-->
+
+                            <label></label>
+                            <md-select ng-model="item.notification_class"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
+
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
+
+                                    <div class="select-options-holder">
+
+                                        <md-option
+                                                data-ng-repeat="model in vm.notificationClasses | filter: {name: searchTerm}"
+                                                ng-value="model.id"
+                                                ng-bind="model.name">
+                                        </md-option>
+
+                                    </div>
+
+                            </md-select>
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container class="no-error-spacer ES-input-event-class-container" aria-label="select with filter">
+                            <!--<label for="">Event class</label>
+                            <md-select data-ng-model="item.event_class">
+                                <md-option data-ng-repeat="model in vm.eventClasses" ng-value="model.id">
+                                    {{model.name}}
+                                </md-option>
+                            </md-select>-->
+
+                            <label></label>
+                            <md-select ng-model="item.event_class"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
+
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
+
+                                    <div class="select-options-holder">
+
+                                        <md-option
+                                                data-ng-repeat="model in vm.eventClasses | filter: {name: searchTerm}"
+                                                ng-value="model.id"
+                                                ng-bind="model.name">
+                                        </md-option>
+
+                                    </div>
+
+                            </md-select>
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus">
+                        <md-button data-ng-click="vm.createActions($event, item.actions)"
+                                   class="ES-row-btn"
+                                   style="width: 65px;">
+                            Edit
                         </md-button>
-                        <md-menu-content>
-                            <md-menu-item>
-                                <md-button ng-click="vm.editItem(item)">
-                                    <ng-md-icon icon="mode_edit" class="dialog-table-settings-btns-icons"></ng-md-icon>
-                                    Edit
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="vm.deleteItem(item, $index)">
-                                    <ng-md-icon icon="delete" class="dialog-table-settings-btns-icons"></ng-md-icon>
-                                    Delete
-                                </md-button>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
-                        <label for="">Name</label>
-                        <input type="text" data-ng-model="item.name">
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
-                        <label for="">Description</label>
-                        <input type="text" data-ng-model="item.description">
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
-                        <label for="">Effective date</label>
-                        <zh-date-picker data-date-value="item.effective_date"></zh-date-picker>
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
-                        <label for="">Final date</label>
-                        <zh-date-picker data-date-value="item.final_date"></zh-date-picker>
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td event-schedule-checkbox-td">
-                    <md-checkbox data-ng-model="vm.item.is_auto_generated"
-                                 aria-lable="edited-is_auto_generated-checkbox" data-ng-disabled="true"></md-checkbox>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container style="margin-bottom: 21px;" aria-label="select with filter">
-                        <!--<label for="">Notification class</label>
-                        <md-select data-ng-model="item.notification_class" style="max-width: 195px">
-                            <md-option data-ng-repeat="model in vm.notificationClasses" ng-value="model.id">
-                                {{model.name}}
-                            </md-option>
-                        </md-select>-->
+                    </td>
 
-                        <label>Notification class</label>
-                        <md-select ng-model="item.notification_class"
-                                   md-container-class="common-select-container"
-                                   md-on-close="searchTerm = ''">
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container class="no-error-spacer ES-notify-in-n-container">
+                            <!--<label for="">Notify in N days</label>-->
+                            <input type="text" data-ng-model="item.notify_in_n_days">
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container class="no-error-spacer ES-periodicity-container"
+                                            aria-label="select with filter">
+                            <label></label>
+                            <md-select ng-model="item.periodicity"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
 
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
 
-                                <div class="select-options-holder">
+                                    <div class="select-options-holder">
 
-                                    <md-option
-                                            data-ng-repeat="model in vm.notificationClasses | filter: {name: searchTerm}"
-                                            ng-value="model.id"
-                                            ng-bind="model.name">
-                                    </md-option>
+                                        <md-option
+                                                data-ng-repeat="model in vm.periodicityItems | filter: {name: searchTerm}"
+                                                ng-value="model.id"
+                                                ng-bind="model.name">
+                                        </md-option>
 
-                                </div>
+                                    </div>
 
-                        </md-select>
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container style="margin-bottom: 21px;" aria-label="select with filter">
-                        <!--<label for="">Event class</label>
-                        <md-select data-ng-model="item.event_class">
-                            <md-option data-ng-repeat="model in vm.eventClasses" ng-value="model.id">
-                                {{model.name}}
-                            </md-option>
-                        </md-select>-->
+                            </md-select>
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container class="ES-periodicity-n-container">
+                            <label for=""></label>
+                            <input type="text" data-ng-model="item.periodicity_n">
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-button data-ng-click="vm.saveItem(item)"
+                                   class="ES-row-btn"
+                                   style="width: 65px;">
+                            Ok
+                        </md-button>
+                    </td>
+                </tr>
 
-                        <label>Event class</label>
-                        <md-select ng-model="item.event_class"
-                                   md-container-class="common-select-container"
-                                   md-on-close="searchTerm = ''">
+                <tr class="tab-input-row ES-input-row">
+                    <td>
+                        <md-input-container class="no-error-spacer ES-input-name-container"
+                                            style="width: 80px">
+                            <!--<label for="">Periodicity</label>-->
+                            <input type="text" data-ng-model="vm.newItem.name">
+                        </md-input-container>
+                    </td>
+                    <td>
+                        <md-input-container class="no-error-spacer ES-input-description-container">
+                            <!--<label for="">Periodicity</label>-->
+                            <input type="text" data-ng-model="vm.newItem.description">
+                        </md-input-container>
+                    </td>
+                    <td>
+                        <md-input-container class="no-error-spacer ES-input-effective-date-container">
+                            <!--<label for="">Effective date</label>-->
+                            <zh-date-picker data-date-value="vm.newItem.effective_date"></zh-date-picker>
+                        </md-input-container>
+                    </td>
+                    <td>
+                        <md-input-container class="no-error-spacer ES-input-final-date-container">
+                            <!--<label for="">Final date</label>-->
+                            <zh-date-picker data-date-value="vm.newItem.final_date"></zh-date-picker>
+                        </md-input-container>
+                    </td>
+                    <td class="event-schedule-checkbox-td">
+                        <md-checkbox data-ng-model="vm.newItem.is_auto_generated"
+                                     class="ES-add-new-checkbox"
+                                     data-ng-disabled="true"
+                                     aria-lable="is_auto_generated-checkbox"></md-checkbox>
+                    </td>
 
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
+                    <td>
+                        <md-input-container class="no-error-spacer ES-input-notification-class-container"
+                                            aria-label="select with filter">
 
-                                <div class="select-options-holder">
+                            <label></label>
+                            <md-select ng-model="vm.newItem.notification_class"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
 
-                                    <md-option
-                                            data-ng-repeat="model in vm.eventClasses | filter: {name: searchTerm}"
-                                            ng-value="model.id"
-                                            ng-bind="model.name">
-                                    </md-option>
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
 
-                                </div>
+                                    <div class="select-options-holder">
 
-                        </md-select>
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" style="padding-top: 12px">
-                    <md-button data-ng-click="vm.createActions($event, item.actions)" class="ES-create-actions-btn">
-                        Edit
-                    </md-button>
-                </td>
-                <!--<td data-ng-if="item.editStatus" style="padding-top: 12px">
-                    <md-input-container class="md-block">
-                        <label data-ng-bind="getName()"></label>
-                        <md-select data-ng-model="item.actions"
-                                   md-container-class="h-instrument-select"
-                                   data-instrument-event-action-resolver
-                                   md-selected-text="{{[item.actions.length]}}">
-                            <md-option data-ng-repeat="field in fields track by field.id" ng-value="field.id">
-                                {{field.name}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
-                </td>-->
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
-                        <!--<label for="">Notify in N days</label>-->
-                        <input type="text" data-ng-model="item.notify_in_n_days">
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
-                    <md-input-container aria-label="select with filter">
-                        <!--<label for="">Periodicity</label>
-                        <md-select data-ng-model="item.periodicity">
-                            <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
-                            </md-option>
-                        </md-select>-->
+                                        <md-option
+                                                data-ng-repeat="model in vm.notificationClasses | filter: {name: searchTerm}"
+                                                ng-value="model.id"
+                                                ng-bind="model.name">
+                                        </md-option>
 
-                        <label>Periodicity</label>
-                        <md-select ng-model="item.periodicity"
-                                   md-container-class="common-select-container"
-                                   md-on-close="searchTerm = ''">
+                                    </div>
 
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
+                            </md-select>
+                        </md-input-container>
+                    </td>
 
-                                <div class="select-options-holder">
+                    <td>
+                        <md-input-container class="no-error-spacer ES-input-event-class-container">
+                            <!--<md-select data-ng-model="vm.newItem.event_class">
+                                <md-option data-ng-repeat="model in vm.eventClasses" ng-value="model.id">
+                                    {{model.name}}
+                                </md-option>
+                            </md-select>-->
 
-                                    <md-option
-                                            data-ng-repeat="model in vm.periodicityItems | filter: {name: searchTerm}"
-                                            ng-value="model.id"
-                                            ng-bind="model.name">
-                                    </md-option>
+                            <label></label>
+                            <md-select ng-model="vm.newItem.event_class"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
 
-                                </div>
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
 
-                        </md-select>
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
-                        <label for="">Periodicity N</label>
-                        <input type="text" data-ng-model="item.periodicity_n">
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-button data-ng-click="vm.saveItem(item)">
-                        Ok
-                    </md-button>
-                </td>
-            </tr>
-            <tr class="tab-input-row">
-                <td>
-                    <md-input-container>
-                        <!--<label for="">Periodicity</label>-->
-                        <input type="text" data-ng-model="vm.newItem.name">
-                    </md-input-container>
-                </td>
-                <td>
-                    <md-input-container>
-                        <!--<label for="">Periodicity</label>-->
-                        <input type="text" data-ng-model="vm.newItem.description">
-                    </md-input-container>
-                </td>
-                <td>
-                    <md-input-container>
-                        <!--<label for="">Effective date</label>-->
-                        <zh-date-picker data-date-value="vm.newItem.effective_date"></zh-date-picker>
-                    </md-input-container>
-                </td>
-                <td>
-                    <md-input-container>
-                        <!--<label for="">Final date</label>-->
-                        <zh-date-picker data-date-value="vm.newItem.final_date"></zh-date-picker>
-                    </md-input-container>
-                </td>
-                <td class="event-schedule-checkbox-td">
-                    <md-checkbox data-ng-model="vm.newItem.is_auto_generated" class="ES-add-new-checkbox" data-ng-disabled="true" aria-lable="is_auto_generated-checkbox"></md-checkbox>
-                </td>
-                <td style="padding-top: 12px">
-                    <md-input-container style="margin-bottom: 18px" aria-label="select with filter">
-                        <!--<md-select data-ng-model="vm.newItem.notification_class" style="max-width: 195px">
-                            <md-option data-ng-repeat="model in vm.notificationClasses" ng-value="model.id">
-                                {{model.name}}
-                            </md-option>
-                        </md-select>-->
+                                    <div class="select-options-holder">
 
-                        <label></label>
-                        <md-select ng-model="vm.newItem.notification_class"
-                                   md-container-class="common-select-container"
-                                   md-on-close="searchTerm = ''">
+                                        <md-option
+                                                data-ng-repeat="model in vm.eventClasses | filter: {name: searchTerm}"
+                                                ng-value="model.id"
+                                                ng-bind="model.name">
+                                        </md-option>
 
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
+                                    </div>
 
-                                <div class="select-options-holder">
+                            </md-select>
+                        </md-input-container>
+                    </td>
 
-                                    <md-option
-                                            data-ng-repeat="model in vm.notificationClasses | filter: {name: searchTerm}"
-                                            ng-value="model.id"
-                                            ng-bind="model.name">
-                                    </md-option>
+                    <td>
+                        <md-button data-ng-click="vm.createActions($event, vm.newItem.actions)"
+                                   class="ES-row-btn">Create
+                        </md-button>
+                    </td>
 
-                                </div>
+                    <td>
+                        <md-input-container class="no-error-spacer ES-notify-in-n-container">
+                            <!--<label for="">Periodicity</label>-->
+                            <input type="text" data-ng-model="vm.newItem.notify_in_n_days">
+                        </md-input-container>
+                    </td>
 
-                        </md-select>
-                    </md-input-container>
-                </td>
-                <td style="padding-top: 12px">
-                    <md-input-container style="margin-bottom: 21px;">
-                        <!--<md-select data-ng-model="vm.newItem.event_class">
-                            <md-option data-ng-repeat="model in vm.eventClasses" ng-value="model.id">
-                                {{model.name}}
-                            </md-option>
-                        </md-select>-->
+                    <td>
+                        <md-input-container class="no-error-spacer ES-periodicity-container"
+                                            aria-label="select with filter">
+                            <!--<md-select data-ng-model="vm.newItem.periodicity">
+                                <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
+                                </md-option>
+                            </md-select>-->
 
-                        <label></label>
-                        <md-select ng-model="vm.newItem.event_class"
-                                   md-container-class="common-select-container"
-                                   md-on-close="searchTerm = ''">
+                            <label></label>
+                            <md-select ng-model="vm.newItem.periodicity"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
 
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
 
-                                <div class="select-options-holder">
+                                    <div class="select-options-holder">
 
-                                    <md-option
-                                            data-ng-repeat="model in vm.eventClasses | filter: {name: searchTerm}"
-                                            ng-value="model.id"
-                                            ng-bind="model.name">
-                                    </md-option>
+                                        <md-option
+                                                data-ng-repeat="model in vm.periodicityItems | filter: {name: searchTerm}"
+                                                ng-value="model.id"
+                                                ng-bind="model.name">
+                                        </md-option>
 
-                                </div>
+                                    </div>
 
-                        </md-select>
-                    </md-input-container>
-                </td>
-                <td style="padding-top: 12px">
-                    <md-button data-ng-click="vm.createActions($event, vm.newItem.actions)"
-                               class="ES-create-actions-btn">Create
-                    </md-button>
-                </td>
+                            </md-select>
+                        </md-input-container>
+                    </td>
 
-                <!--<td style="padding-top: 12px">
-                    <md-input-container class="md-block">
-                        <label data-ng-bind="getName()"></label>
-                        <md-select data-ng-model="item.actions"
-                                   md-container-class="h-instrument-select"
-                                   data-instrument-event-action-resolver
-                                   md-selected-text="{{[vm.newItem.actions.length]}}">
-                            <md-option data-ng-repeat="field in fields track by field.id" ng-value="field.id">
-                                {{field.name}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
-                </td>-->
-                <td>
-                    <md-input-container>
-                        <!--<label for="">Periodicity</label>-->
-                        <input type="text" data-ng-model="vm.newItem.notify_in_n_days">
-                    </md-input-container>
-                </td>
-                <td>
-                    <md-input-container style="margin-bottom: 24px;" aria-label="select with filter">
-                        <!--<md-select data-ng-model="vm.newItem.periodicity">
-                            <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
-                            </md-option>
-                        </md-select>-->
+                    <td>
+                        <md-input-container class="no-error-spacer ES-periodicity-n-container">
+                            <!--<label for="">Periodicity N</label>-->
+                            <input type="text" data-ng-model="vm.newItem.periodicity_n">
+                        </md-input-container>
+                    </td>
 
-                        <label></label>
-                        <md-select ng-model="vm.newItem.periodicity"
-                                   md-container-class="common-select-container"
-                                   md-on-close="searchTerm = ''">
-
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
-
-                                <div class="select-options-holder">
-
-                                    <md-option
-                                            data-ng-repeat="model in vm.periodicityItems | filter: {name: searchTerm}"
-                                            ng-value="model.id"
-                                            ng-bind="model.name">
-                                    </md-option>
-
-                                </div>
-
-                        </md-select>
-                    </md-input-container>
-                </td>
-                <td>
-                    <md-input-container>
-                        <!--<label for="">Periodicity N</label>-->
-                        <input type="text" data-ng-model="vm.newItem.periodicity_n">
-                    </md-input-container>
-                </td>
-                <td>
-                    <md-button data-ng-click="vm.addRow()">
-                        Add
-                    </md-button>
-                </td>
-            </tr>
-
+                    <td>
+                        <md-button data-ng-click="vm.addRow()"
+                                   class="ES-row-btn">
+                            Add
+                        </md-button>
+                    </td>
+                </tr>
             </tbody>
         </table>
         <div layout="row" layout-align="end center" data-ng-if="vm.entity.id">

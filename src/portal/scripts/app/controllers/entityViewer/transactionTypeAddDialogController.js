@@ -1073,11 +1073,82 @@
             item.editStatus = false;
         };
 
-        vm.deleteInput = function (item, index) {
+        var removeInputFromActions = function (deletedInputName) {
 
-            vm.entity.inputs.splice(index, 1);
+            vm.entity.actions.forEach(function (action) {
 
-            vm.updateInputFunctions();
+                var actionKeys = Object.keys(action);
+
+                actionKeys.forEach(function (actionKey) {
+
+                    if (typeof action[actionKey] === 'object' && action[actionKey]) { // check if it is property that contains actions field data
+
+                        var actionType = action[actionKey];
+                        var actionTypeKeys = Object.keys(actionType);
+
+                        actionTypeKeys = actionTypeKeys.filter(function (key) {
+                            if (key.length > 7 && key.indexOf('_input') === key.length - 6) {
+                                return true;
+                            }
+                            return false;
+                        });
+
+                        actionTypeKeys.forEach(function (actionTypeKey) {
+
+                            var actionField = actionType[actionTypeKey];
+
+                            if (actionField === deletedInputName) {
+                                actionType[actionTypeKey] = null;
+                            }
+
+                        });
+
+                    }
+
+                });
+
+            });
+
+        };
+
+        vm.deleteInput = function (item, index, $event) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Please note that in Action all links to this input will be deleted. Expressions will not be affected, so you would need to amend them manually.",
+                        actionsButtons: [
+                            {
+                                name: "OK, PROCEED",
+                                response: 'agree'
+                            },
+                            {
+                               name: "CANCEL",
+                               response: 'disagree'
+                            }
+                        ]
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.entity.inputs.splice(index, 1);
+                    vm.updateInputFunctions();
+                    removeInputFromActions(item.name);
+
+                }
+
+            });
 
         };
 
