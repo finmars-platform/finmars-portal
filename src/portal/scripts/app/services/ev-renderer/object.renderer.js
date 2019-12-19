@@ -168,9 +168,11 @@
 
                 status = 'row-recon-matched';
 
-                // 1 - matched
-                // 2 - conflict
-                // 3 - resolved
+                // MATCHED = 1
+                // CONFLICT = 2
+                // RESOLVED = 3
+                // IGNORE = 4
+                // AUTO_MATCHED = 5
 
                 for (var i = 0; i < obj.fields.length; i = i + 1) {
 
@@ -184,6 +186,11 @@
                         break;
                     }
 
+                    if (obj.fields[i].status === 5) {
+                        status = 'row-recon-auto-matched';
+                        break;
+                    }
+
                 }
 
             }
@@ -192,8 +199,10 @@
 
                 status = 'row-recon-matched';
 
-                // 1 - matched
-                // 2 - unmatched
+                // MATCHED = 1
+                // UNMATCHED = 2
+                // AUTO_MATCHED = 3
+                // IGNORE = 4
 
                 for (var i = 0; i < obj.recon_fields.length; i = i + 1) {
 
@@ -202,7 +211,10 @@
                         break;
                     }
 
-
+                    if (obj.recon_fields[i].status === 3) {
+                        status = 'row-recon-auto-matched';
+                        break;
+                    }
                 }
 
 
