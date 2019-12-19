@@ -574,6 +574,7 @@
         // clearActivated(evDataService);
 
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+        var viewContext = evDataService.getViewContext();
 
         obj.___is_activated = true;
 
@@ -581,27 +582,42 @@
 
         popup.id = 'dropdown-' + objectId;
         popup.classList.add('ev-dropdown');
-        popup.innerHTML = '<div>' +
-            '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="edit"' +
-            ' data-object-id="' + objectId + '"' +
-            ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>' +
-            '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="delete"' +
-            ' data-object-id="' + objectId + '"' +
-            ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
 
+        if (viewContext === 'reconciliation_viewer') {
 
-        if (entityType === 'price-history') {
-
-            popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="edit_instrument"' +
+            popup.innerHTML = '<div>' +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="recon_view_bank_file_line"' +
                 ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>'
+
+            popup.innerHTML = popup.innerHTML + '</div>';
+
+        } else {
+
+            popup.innerHTML = '<div>' +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="edit"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>' +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="delete"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
+
+
+            if (entityType === 'price-history') {
+
+                popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="edit_instrument"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
+
+            }
+
+            popup.innerHTML = popup.innerHTML + '</div>';
 
         }
-
-        popup.innerHTML = popup.innerHTML + '</div>';
 
         popup.style.cssText = menuPosition;
         popup.style.position = 'absolute';

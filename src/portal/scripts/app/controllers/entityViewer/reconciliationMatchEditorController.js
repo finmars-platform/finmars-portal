@@ -1,19 +1,23 @@
 /**
- * Created by szhitenev on 11.12.2019.
+ * Created by szhitenev on 18.12.2019.
  */
 (function () {
 
     'use strict';
 
-    var reconciliationBankFieldService = require('../../../services/reconciliation/reconciliationBankFieldService');
-    var reconciliationComplexTransactionFieldService = require('../../../services/reconciliation/reconciliationComplexTransactionFieldService');
+    var reconciliationBankFieldService = require('../../services/reconciliation/reconciliationBankFieldService');
+    var reconciliationComplexTransactionFieldService = require('../../services/reconciliation/reconciliationComplexTransactionFieldService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var evEvents = require('../../services/entityViewerEvents');
+
+    module.exports = function ($scope, $mdDialog, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
         var vm = this;
 
-        vm.parentEntityViewerDataService = data.parentEntityViewerDataService;
-        vm.entityViewerDataService = data.entityViewerDataService;
+        vm.parentEntityViewerDataService = parentEntityViewerDataService;
+        vm.parentEntityViewerEventService = parentEntityViewerEventService;
+        vm.reconViewerDataService = parentEntityViewerDataService.getReconciliationDataService();
+        vm.reconciliationEventService = parentEntityViewerDataService.getReconciliationEventService();
 
         vm.dragIconGrabbed = false;
 
@@ -325,7 +329,7 @@
 
         vm.initDragula = function () {
 
-            var dragAndDropBankFileLines = {
+            vm.dragAndDropBankFileLines = {
 
                 init: function () {
                     this.dragulaInit();
@@ -364,10 +368,14 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
                 }
             };
 
-            var dragAndDropBankFileFields = {
+            vm.dragAndDropBankFileFields = {
 
                 init: function () {
                     this.dragulaInit();
@@ -492,10 +500,14 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
                 }
             };
 
-            var dragAndDropComplexTransactionLines = {
+            vm.dragAndDropComplexTransactionLines = {
 
                 init: function () {
                     this.dragulaInit();
@@ -532,10 +544,14 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
                 }
             };
 
-            var dragAndDropComplexTransactionFields = {
+            vm.dragAndDropComplexTransactionFields = {
 
                 init: function () {
                     this.dragulaInit();
@@ -656,15 +672,39 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
                 }
             };
 
             setTimeout(function () {
-                dragAndDropBankFileLines.init();
-                dragAndDropBankFileFields.init();
-                dragAndDropComplexTransactionLines.init();
-                dragAndDropComplexTransactionFields.init();
+                vm.dragAndDropBankFileLines.init();
+                vm.dragAndDropBankFileFields.init();
+                vm.dragAndDropComplexTransactionLines.init();
+                vm.dragAndDropComplexTransactionFields.init();
             }, 500);
+
+        };
+
+        vm.destroyDragula = function () {
+
+            if (vm.dragAndDropBankFileLines) {
+                vm.dragAndDropBankFileLines.destroy()
+            }
+
+            if (vm.dragAndDropBankFileFields) {
+                vm.dragAndDropBankFileFields.destroy()
+            }
+
+            if (vm.dragAndDropComplexTransactionLines) {
+                vm.dragAndDropComplexTransactionLines.destroy()
+            }
+
+            if (vm.dragAndDropComplexTransactionFields) {
+                vm.dragAndDropComplexTransactionFields.destroy()
+            }
 
         };
 
@@ -744,15 +784,15 @@
                 return item;
             });
 
+            vm.initDragula();
+
         };
 
-        vm.init = function () {
-
-            console.log("vm", vm);
+        vm.getLists = function () {
 
             var parentFlatList = vm.parentEntityViewerDataService.getFlatList();
 
-            var flatList = vm.entityViewerDataService.getFlatList();
+            var flatList = vm.reconViewerDataService.getFlatList();
 
             console.log('parentFlatList', parentFlatList);
             console.log('flatList', flatList);
@@ -766,13 +806,33 @@
                 return item.___is_activated;
             });
 
-
             vm.syncStatuses();
+
+        };
+
+        vm.init = function () {
+
+            vm.parentEntityViewerEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+
+                vm.destroyDragula();
+
+                vm.getLists();
+            });
+
+            vm.reconciliationEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+
+                vm.destroyDragula();
+
+                vm.getLists();
+            });
+
+            vm.getLists();
+
+            console.log("vm", vm);
 
             console.log('parentSelectedList', vm.complexTransactionList);
             console.log('selectedList', vm.bankLinesList);
 
-            vm.initDragula();
 
         };
 

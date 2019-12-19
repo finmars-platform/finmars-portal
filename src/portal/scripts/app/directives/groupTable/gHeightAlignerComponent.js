@@ -21,7 +21,8 @@
 
                 var lastMouseMoveEvent = null;
 
-                var contentWrapElem = $('.g-content-wrap').first();
+                // var contentWrapElem = $('.g-content-wrap').first();
+                var contentWrapElem = $('.g-root-content-wrap').first();
                 var verticalSPElem = document.querySelector('.verticalSplitPanelWrapper');
 
                 function activateHeightSlider() {
@@ -131,7 +132,20 @@
                 var additionsChangeCallbackIndex = scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
                     scope.additions = scope.evDataService.getAdditions();
 
-                    setSplitHeights()
+                    if (verticalSPElem) {
+                        scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
+
+                        console.log('VERTICAL_ADDITIONS_CHANGE', scope.verticalAdditions)
+
+                        if (!scope.additions.isOpen) {
+                            verticalSPElem.style.height = '100%'
+                        }
+
+                    } else {
+                        setSplitHeights()
+                    }
+
+
                 });
 
                 var verticalAdditionsChangeCallbackIndex = scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
@@ -139,6 +153,7 @@
                     setTimeout(function () { // wait for angular to remove or add vertical split panel
                         verticalSPElem = document.querySelector('.verticalSplitPanelWrapper');
                     }, 100);
+
 
                 });
 

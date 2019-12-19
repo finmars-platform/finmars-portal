@@ -81,6 +81,35 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
+                    var activeObject = vm.entityViewerDataService.getActiveObject();
+                    var action = vm.entityViewerDataService.getActiveObjectAction();
+
+                    if (action === 'recon_view_bank_file_line' && activeObject) {
+
+                        $mdDialog.show({
+                            controller: 'ReconMatchViewLineDialogController as vm',
+                            templateUrl: 'views/dialogs/reconciliation/recon-match-view-line-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: activeObject.event,
+                            clickOutsideToClose: false,
+                            locals: {
+                                data: {
+                                    item: activeObject
+                                }
+                            },
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true
+                        }).then(function (res) {
+
+                            vm.entityViewerDataService.setActiveObjectAction(null);
+                            vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                        });
+
+                    }
+
                     vm.checkMatchAvailability();
 
                 });
@@ -165,12 +194,15 @@
                 vm.entityViewerEventService = new EntityViewerEventService();
                 vm.attributeDataService = new AttributeDataService();
 
+                parentEntityViewerDataService.setReconciliationDataService(vm.entityViewerDataService);
+                parentEntityViewerDataService.setReconciliationEventService(vm.entityViewerEventService);
+
                 console.log('scope, ', $scope);
 
-                vm.entityType = $scope.$parent.vm.entityType;
+                vm.entityType = 'reconciliation';
 
 
-                vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
                 vm.entityViewerDataService.setViewContext('reconciliation_viewer');
 
