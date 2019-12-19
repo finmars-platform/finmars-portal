@@ -148,11 +148,11 @@
         setActiveRequestParametersId(defaultRootGroup.___id);
 
         function getInterfaceLayout() {
-            return data.interfaceLayout
+            return data.interfaceLayout;
         }
 
         function setInterfaceLayout(interfaceLayout) {
-            data.interfaceLayout = interfaceLayout
+            data.interfaceLayout = interfaceLayout;
         }
 
         function setRootEntityViewer(isRootEntityViewer) {
