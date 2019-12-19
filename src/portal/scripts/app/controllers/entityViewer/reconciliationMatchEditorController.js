@@ -371,7 +371,9 @@
                 },
 
                 destroy: function () {
-                    this.dragula.destroy();
+                    if (this.dragula) {
+                        this.dragula.destroy();
+                    }
                 }
             };
 
@@ -503,7 +505,9 @@
                 },
 
                 destroy: function () {
-                    this.dragula.destroy();
+                    if (this.dragula) {
+                        this.dragula.destroy();
+                    }
                 }
             };
 
@@ -547,7 +551,9 @@
                 },
 
                 destroy: function () {
-                    this.dragula.destroy();
+                    if (this.dragula) {
+                        this.dragula.destroy();
+                    }
                 }
             };
 
@@ -635,14 +641,6 @@
                         }
 
                     });
-
-                    drake.on('dragend', function (element) {
-
-                        if (areaItemsChanged) {
-                            $scope.$apply();
-                        }
-
-                    });
                 },
 
                 dragulaInit: function () {
@@ -675,7 +673,9 @@
                 },
 
                 destroy: function () {
-                    this.dragula.destroy();
+                    if (this.dragula) {
+                        this.dragula.destroy();
+                    }
                 }
             };
 

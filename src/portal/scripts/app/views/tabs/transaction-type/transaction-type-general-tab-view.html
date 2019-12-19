@@ -2,7 +2,7 @@
     <div data-ng-if="vm.checkReadyStatus()">
 
 
-        <div layout="row" style="margin-bottom: 10px; padding-left: 12px; font-size: 16px;">
+        <div layout="row" style="margin-bottom: 20px; padding-left: 12px; font-size: 16px;" >
 
             <div data-ng-if="vm.entity.type == 1"><b>Type</b>: Transaction</div>
             <div data-ng-if="vm.entity.type == 2"><b>Type</b>: Procedure</div>
@@ -10,7 +10,7 @@
         </div>
 
         <div layout="row">
-            <md-input-container>
+            <md-input-container style="width: 300px">
                 <label for="">User code</label>
                 <input type="text" data-ng-model="vm.entity.user_code">
             </md-input-container>
@@ -20,13 +20,13 @@
 
         </div>
         <div layout="row">
-            <md-input-container>
+            <md-input-container style="width: 300px">
                 <label for="">Name</label>
                 <input type="text" data-ng-model="vm.entity.name">
             </md-input-container>
         </div>
         <div layout="row">
-            <md-input-container>
+            <md-input-container class="overflow-hidden">
                 <label for="">Notes</label>
                 <textarea data-ng-model="vm.entity.notes" cols="30" rows="10"></textarea>
             </md-input-container>
