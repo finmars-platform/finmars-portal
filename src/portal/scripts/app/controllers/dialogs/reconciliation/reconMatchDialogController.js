@@ -15,6 +15,8 @@
         vm.parentEntityViewerDataService = data.parentEntityViewerDataService;
         vm.entityViewerDataService = data.entityViewerDataService;
 
+        vm.dragIconGrabbed = false;
+
         vm.bankFieldStatuses = [
             {
                 name: 'Conflicts',
@@ -145,7 +147,7 @@
 
         };
 
-        vm.updateComplexTransactionFieldStatus = function(field) {
+        vm.updateComplexTransactionFieldStatus = function (field) {
 
             reconciliationComplexTransactionFieldService.update(field.id, field).then(function (data) {
 
@@ -157,11 +159,174 @@
 
             })
 
-        }
+        };
+
+
+        vm.viewBankLine = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'ReconMatchViewLineDialogController as vm',
+                templateUrl: 'views/dialogs/reconciliation/recon-match-view-line-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    data: {
+                        item: item
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            })
+
+        };
+
+        vm.removeBankLine = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure you want to delete this line?"
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    item.fields.forEach(function (field) {
+
+                        if (field.type === 'existing') {
+                            reconciliationBankFieldService.deleteByKey(field.id)
+                        }
+
+                    });
+
+                    vm.bankLinesList = vm.bankLinesList.filter(function (line) {
+
+                        return item.___match_index !== line.___match_index
+
+                    })
+
+                }
+
+            })
+
+        };
+
+        vm.viewComplexTransaction = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'ComplexTransactionEditDialogController as vm',
+                templateUrl: 'views/entity-viewer/complex-transaction-edit-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    entityType: 'complex-transaction',
+                    entityId: item.id
+                }
+            })
+
+        };
+
+        vm.setAllMatchedComplexTransaction = function ($event, item) {
+
+            var promises = [];
+
+            item.recon_fields.forEach(function (field) {
+
+                field.status = 1;
+
+                promises.push(reconciliationComplexTransactionFieldService.update(field.id, field))
+
+            });
+
+            Promise.all(promises).then(function (value) {
+
+                vm.complexTransactionList = vm.complexTransactionList.map(function (item, index) {
+
+                    item.recon_fields = item.recon_fields.map(function (field) {
+
+                        field.status = 1;
+
+                        return field;
+
+                    });
+
+                    return item
+
+                });
+
+                vm.syncStatuses();
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.setAllUnmatchedComplexTransaction = function ($event, item) {
+
+            var promises = [];
+
+            item.recon_fields.forEach(function (field) {
+
+                field.status = 2;
+
+                promises.push(reconciliationComplexTransactionFieldService.update(field.id, field))
+
+            });
+
+            Promise.all(promises).then(function (value) {
+
+                vm.complexTransactionList = vm.complexTransactionList.map(function (item, index) {
+
+                    item.recon_fields = item.recon_fields.map(function (field) {
+
+                        field.status = 2;
+
+                        return field;
+
+                    });
+
+                    return item
+
+                });
+
+                vm.syncStatuses();
+
+            });
+
+        };
+
+
+        var turnOffDragging = function () {
+            vm.dragIconGrabbed = false;
+        };
+
+        vm.turnOnDragging = function () {
+            vm.dragIconGrabbed = true;
+            document.body.addEventListener('mouseup', turnOffDragging, {once: true});
+        };
 
         vm.initDragula = function () {
 
-            var dragAndDropBankFile = {
+            var dragAndDropBankFileLines = {
 
                 init: function () {
                     this.dragulaInit();
@@ -169,15 +334,53 @@
                 },
 
                 eventListeners: function () {
-                    var areaItemsChanged;
+
                     var drake = this.dragula;
 
-                    drake.on('dragstart', function () {
-                        areaItemsChanged = false;
+                    drake.on('over', function (elem, container, source) {
+                        $(container).addClass('active');
                     });
 
+                    drake.on('out', function (elem, container, source) {
+                        $(container).removeClass('active');
+                    });
+
+
+                },
+
+                dragulaInit: function () {
+
+                    var items = [];
+
+                    var elements = document.querySelectorAll('.recon-match-body-file-transactions');
+
+                    for (var i = 0; i < elements.length; i = i + 1) {
+                        items.push(elements[i])
+                    }
+
+                    this.dragula = dragula(items, {
+                        revertOnSpill: true,
+                        moves: function (elem, target, source, sibling) {
+                            return vm.dragIconGrabbed
+                        }
+                    });
+
+                }
+            };
+
+            var dragAndDropBankFileFields = {
+
+                init: function () {
+                    this.dragulaInit();
+                    this.eventListeners();
+                },
+
+                eventListeners: function () {
+
+                    var drake = this.dragula;
+
                     drake.on('over', function (elem, container, source) {
-                        areaItemsChanged = false;
+
                         $(container).addClass('active');
                     });
 
@@ -256,13 +459,6 @@
 
                     });
 
-                    drake.on('dragend', function (element) {
-
-                        if (areaItemsChanged) {
-                            $scope.$apply();
-                        }
-
-                    });
                 },
 
                 dragulaInit: function () {
@@ -285,6 +481,10 @@
                                 return false;
                             }
 
+                            if (target.dataset.status === 'auto_matched') {
+                                return false;
+                            }
+
                             if (target.classList.contains(elClass)) {
                                 return true;
                             }
@@ -295,7 +495,48 @@
 
                 }
             };
-            var dragAndDropComplexTransaction = {
+
+            var dragAndDropComplexTransactionLines = {
+
+                init: function () {
+                    this.dragulaInit();
+                    this.eventListeners();
+                },
+
+                eventListeners: function () {
+
+                    var drake = this.dragula;
+
+                    drake.on('over', function (elem, container, source) {
+                        $(container).addClass('active');
+                    });
+
+                    drake.on('out', function (elem, container, source) {
+                        $(container).removeClass('active');
+                    });
+
+                },
+
+                dragulaInit: function () {
+
+                    var elements = document.querySelectorAll('.recon-match-body-complex-transactions');
+                    var items = [];
+
+                    for (var i = 0; i < elements.length; i = i + 1) {
+                        items.push(elements[i])
+                    }
+
+                    this.dragula = dragula(items, {
+                        revertOnSpill: true,
+                        moves: function (elem, target, source, sibling) {
+                            return vm.dragIconGrabbed
+                        }
+                    });
+
+                }
+            };
+
+            var dragAndDropComplexTransactionFields = {
 
                 init: function () {
                     this.dragulaInit();
@@ -404,6 +645,10 @@
 
                             var elClass = 'complexTransactionLineContainer-' + el.dataset.parentIndex;
 
+                            if (target.dataset.status === 'auto_matched') {
+                                return false;
+                            }
+
                             if (target.classList.contains(elClass)) {
                                 return true;
                             }
@@ -416,8 +661,10 @@
             };
 
             setTimeout(function () {
-                dragAndDropBankFile.init();
-                dragAndDropComplexTransaction.init();
+                dragAndDropBankFileLines.init();
+                dragAndDropBankFileFields.init();
+                dragAndDropComplexTransactionLines.init();
+                dragAndDropComplexTransactionFields.init();
             }, 500);
 
         };
@@ -430,25 +677,7 @@
             $mdDialog.hide({status: 'agree'});
         };
 
-        vm.init = function () {
-
-            console.log("vm", vm);
-
-            var parentFlatList = vm.parentEntityViewerDataService.getFlatList();
-
-            var flatList = vm.entityViewerDataService.getFlatList();
-
-            console.log('parentFlatList', parentFlatList);
-            console.log('flatList', flatList);
-
-
-            vm.complexTransactionList = parentFlatList.filter(function (item) {
-                return item.___is_activated
-            });
-
-            vm.bankLinesList = flatList.filter(function (item) {
-                return item.___is_activated;
-            });
+        vm.syncStatuses = function () {
 
             vm.complexTransactionList = vm.complexTransactionList.map(function (item, index) {
 
@@ -515,6 +744,31 @@
 
                 return item;
             });
+
+        };
+
+        vm.init = function () {
+
+            console.log("vm", vm);
+
+            var parentFlatList = vm.parentEntityViewerDataService.getFlatList();
+
+            var flatList = vm.entityViewerDataService.getFlatList();
+
+            console.log('parentFlatList', parentFlatList);
+            console.log('flatList', flatList);
+
+
+            vm.complexTransactionList = parentFlatList.filter(function (item) {
+                return item.___is_activated
+            });
+
+            vm.bankLinesList = flatList.filter(function (item) {
+                return item.___is_activated;
+            });
+
+
+            vm.syncStatuses();
 
             console.log('parentSelectedList', vm.complexTransactionList);
             console.log('selectedList', vm.bankLinesList);

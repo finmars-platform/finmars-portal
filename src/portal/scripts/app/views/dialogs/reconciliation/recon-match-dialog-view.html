@@ -11,7 +11,7 @@
 
             <div class="recon-match-header" layout="row">
 
-                <div layout="row" style="margin-right: 20px">
+                <div layout="row" style="margin-right: 20px; padding: 15px;">
 
                     <div class="recon-header-box">
                         Ignore
@@ -33,13 +33,13 @@
                         Conflicts
                     </div>
 
-                    <div class="recon-header-box">
+                    <div class="recon-header-box" style="border:  0">
                         New
                     </div>
 
                 </div>
 
-                <div layout="row">
+                <div layout="row" style="padding: 15px;">
 
                     <div class="recon-header-box">
                         Unmatched
@@ -53,7 +53,7 @@
                         Auto-Matched
                     </div>
 
-                    <div class="recon-header-box">
+                    <div class="recon-header-box" style="border: 0;">
                         Ignore
                     </div>
 
@@ -63,13 +63,37 @@
 
             <div class="recon-match-body" layout="row">
 
-                <div class="recon-match-body-file-transactions" layout="column" style="margin-right: 20px">
+                <div class="recon-match-body-file-transactions" layout="column" style="margin-right: 20px; width: 825px;">
 
+                    <div data-ng-repeat="item in vm.bankLinesList track by $index" class="recon-match-fields-container">
 
-                    <div data-ng-repeat="item in vm.bankLinesList track by $index">
+                        <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"
+                                    data-ng-mousedown="vm.turnOnDragging()"></ng-md-icon>
 
-                        <div class="text-center">
-                            {{item.___index + 1}} : {{item.source_id}}
+                        <md-menu class="match-recon-body-line-settings-button">
+                            <md-button data-ng-click="$mdOpenMenu($event)"
+                                       class="md-icon-button"
+                                       aria-label="datepicker settings menu">
+                                <ng-md-icon icon="list"></ng-md-icon>
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button data-ng-click="vm.viewBankLine($event, item)">View File Line</md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button data-ng-click="vm.removeBankLine($event, item)">Remove</md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+
+                        <div style="padding-left: 50px">
+
+                            <div class="recon-match-line-title"
+                                 title="{{(item.___index + 1) + ' : ' + item.source_id}}">
+                                {{item.___index + 1}} : {{item.source_id}}
+                            </div>
+
                         </div>
 
                         <div layout="row">
@@ -179,12 +203,43 @@
 
                 <div class="recon-match-body-complex-transactions" layout="column">
 
-                    <div data-ng-repeat="item in vm.complexTransactionList track by $index">
+                    <div data-ng-repeat="item in vm.complexTransactionList track by $index"
+                         class="recon-match-fields-container">
 
-                        <div class="text-center overflow-hidden">
-                            {{item.code}} : {{item.text}}
+                        <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"
+                                    data-ng-mousedown="vm.turnOnDragging()"></ng-md-icon>
+
+                        <md-menu class="match-recon-body-line-settings-button">
+                            <md-button data-ng-click="$mdOpenMenu($event)"
+                                       class="md-icon-button"
+                                       aria-label="datepicker settings menu">
+                                <ng-md-icon icon="list"></ng-md-icon>
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button data-ng-click="vm.viewComplexTransaction($event, item)">View
+                                        Transaction
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button data-ng-click="vm.setAllMatchedComplexTransaction($event, item)">Set All
+                                        Matched
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button data-ng-click="vm.setAllUnmatchedComplexTransaction($event, item)">Set
+                                        All Unmatched
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+
+                        <div style="padding-left: 50px">
+                            <div class="recon-match-line-title" title="{{item.code + ' : ' + item.text}}">
+                                {{item.code}} : {{item.text}}
+                            </div>
                         </div>
-
 
                         <div layout="row">
 
@@ -256,135 +311,10 @@
 
             </div>
 
-
-            <!--<div layout="row">-->
-
-            <!--<div class="width-50" style="padding: 0 10px">-->
-
-            <!--<div class="text-center m-b-16 recon-match-section-title">-->
-            <!--Bank File Fields-->
-            <!--</div>-->
-
-            <!--<div class="recon-match-bank-lines-holder">-->
-
-            <!--<div data-ng-repeat="item in vm.bankLinesList" class="recon-match-dialog-bank-line">-->
-
-            <!--<div class="recon-match-dialog-line-title">-->
-            <!--Line Source Id: <b>{{item.source_id}}</b>-->
-            <!--</div>-->
-
-            <!--<div style="padding-left: 20px;">-->
-
-            <!--<md-card data-ng-repeat="field in item.fields" layout="column" class="recon-match-field">-->
-
-            <!--<div class="recon-match-dialog-field-title">-->
-            <!--Field name: <b>{{field.reference_name}}</b>-->
-            <!--</div>-->
-
-            <!--<div layout="column" style="padding-left: 20px;" class="recon-match-field-values-holder">-->
-            <!--<div>Value text: <b>{{field.value_string}}</b></div>-->
-            <!--<div>Value float: <b>{{field.value_float}}</b></div>-->
-            <!--<div>Value date: <b>{{field.value_date}}</b></div>-->
-            <!--</div>-->
-
-            <!--<div style="margin-top: 20px; margin-left: 6px;" layout="row" class="recon-match-field-status-holder">-->
-            <!--<md-input-container style="height: 56px;" class="width-100">-->
-            <!--<label>Status</label>-->
-            <!--<md-select data-ng-model="field.status"-->
-            <!--data-ng-change="vm.bankFieldStatusChange($event, field)">-->
-            <!--<md-option class="disabled-btn"-->
-            <!--ng-value="undefined">-->
-            <!--New-->
-            <!--</md-option>-->
-            <!--<md-option data-ng-repeat="item in vm.bankFieldStatuses"-->
-            <!--ng-value="item.id">-->
-            <!--{{item.name}}-->
-            <!--</md-option>-->
-            <!--</md-select>-->
-            <!--</md-input-container>-->
-
-            <!--<div data-ng-if="field.processing" layout="row" layout-sm="column"-->
-            <!--layout-align="space-around">-->
-            <!--<progress-circular diameter="20"></progress-circular>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--</md-card>-->
-
-            <!--</div>-->
-
-            <!--</div>-->
-
-
-            <!--</div>-->
-
-            <!--</div>-->
-
-            <!--<div class="width-50" style="padding: 0 10px">-->
-
-            <!--<div class="text-center m-b-16 recon-match-section-title">-->
-            <!--Complex Transaction Fields-->
-            <!--</div>-->
-
-            <!--<div>-->
-            <!--<div data-ng-repeat="item in vm.complexTransactionList" class="recon-match-dialog-transaction-line">-->
-
-            <!--<div class="recon-match-dialog-line-title">-->
-            <!--Complex Transaction Code: <b>{{item.code}}</b>-->
-            <!--</div>-->
-
-            <!--<div style="padding-left: 20px;">-->
-
-            <!--<md-card data-ng-repeat="field in item.recon_fields" layout="column" class="recon-match-field">-->
-
-            <!--<div class="recon-match-dialog-field-title">-->
-            <!--Field name: <b>{{field.reference_name}}</b>-->
-            <!--</div>-->
-
-            <!--<div layout="column" style="padding-left: 20px" class="recon-match-field-values-holder">-->
-            <!--<div>Value text: <b>{{field.value_string}}</b></div>-->
-            <!--<div>Value float: <b>{{field.value_float}}</b></div>-->
-            <!--<div>Value date: <b>{{field.value_date}}</b></div>-->
-            <!--</div>-->
-
-            <!--<div style="margin-top: 20px; margin-left: 6px;" layout="row" class="recon-match-field-status-holder">-->
-
-            <!--<md-input-container style="height: 56px;" class="width-100">-->
-            <!--<label>Status</label>-->
-            <!--<md-select data-ng-model="field.status"-->
-            <!--data-ng-change="vm.complexTransactionStatusChange($event, field)">-->
-            <!--<md-option data-ng-repeat="item in vm.complexTransactionFieldStatus"-->
-            <!--ng-value="item.id">-->
-            <!--{{item.name}}-->
-            <!--</md-option>-->
-            <!--</md-select>-->
-            <!--</md-input-container>-->
-
-            <!--<div data-ng-if="field.processing" layout="row" layout-sm="column"-->
-            <!--layout-align="space-around">-->
-            <!--<progress-circular diameter="20"></progress-circular>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--</md-card>-->
-            <!--</div>-->
-
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--</div>-->
-
-
-            <!--</div>-->
-
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <!--<div>-->
-        <!--<md-button ng-click="vm.cancel()">-->
-        <!--Close-->
-        <!--</md-button>-->
-        <!--</div>-->
+
         <div>
             <md-button ng-click="vm.agree()">
                 Ok
