@@ -77,100 +77,122 @@
 
         vm.getAttributes = function () {
 
-            vm.entityAttrs = attributeDataService.getEntityAttributesByEntityType(vm.entityType);
+            var viewContext = vm.entityViewerDataService.getViewContext();
 
-            var instrumentUserFields = attributeDataService.getInstrumentUserFields();
-            var transactionUserFields = attributeDataService.getTransactionUserFields();
+            if (viewContext === 'reconciliation_viewer') {
 
-            instrumentUserFields.forEach(function (field) {
+                var columns = vm.entityViewerDataService.getColumns();
 
-                for (var i = 0; i < instrumentUserFields.length; i++) {
-                    var entityAttr = instrumentUserFields[i];
+                console.log('columns', columns);
 
-                    if (entityAttr.key === field.key) {
-                        entityAttr.name = field.name;
-                        break;
+                vm.entityAttrs = columns.map(function (item) {
+                    return item
+                });
+
+                syncAttrs();
+                getSelectedAttrs();
+
+                vm.readyStatus.content = true;
+
+
+            } else {
+
+                vm.entityAttrs = attributeDataService.getEntityAttributesByEntityType(vm.entityType);
+
+                var instrumentUserFields = attributeDataService.getInstrumentUserFields();
+                var transactionUserFields = attributeDataService.getTransactionUserFields();
+
+                instrumentUserFields.forEach(function (field) {
+
+                    for (var i = 0; i < instrumentUserFields.length; i++) {
+                        var entityAttr = instrumentUserFields[i];
+
+                        if (entityAttr.key === field.key) {
+                            entityAttr.name = field.name;
+                            break;
+                        }
                     }
-                }
-                /*vm.entityAttrs.forEach(function (entityAttr) {
+                    /*vm.entityAttrs.forEach(function (entityAttr) {
 
-                    if (entityAttr.key === field.key) {
-                        entityAttr.name = field.name;
+                        if (entityAttr.key === field.key) {
+                            entityAttr.name = field.name;
+                        }
+
+                    })*/
+
+                });
+
+                transactionUserFields.forEach(function (field) {
+
+                    for (var i = 0; i < instrumentUserFields.length; i++) {
+                        var entityAttr = instrumentUserFields[i];
+
+                        if (entityAttr.key === field.key) {
+                            entityAttr.name = field.name;
+                            break;
+                        }
+                    }
+                    /*vm.entityAttrs.forEach(function (entityAttr) {
+
+                        if (entityAttr.key === field.key) {
+                            entityAttr.name = field.name;
+                        }
+
+                    })*/
+
+                });
+
+                vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
+
+                    if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                        item.name = 'Group';
+                    }
+                    item.entity = vm.entityType;
+
+                    if (item.key.indexOf("user_text_") !== -1) {
+                        vm.userTextFields.push(item);
+                        return false;
+                    } else if (item.key.indexOf("user_number_") !== -1) {
+                        vm.userNumberFields.push(item);
+                        return false;
+                    } else if (item.key.indexOf("user_date_") !== -1) {
+                        vm.userDateFields.push(item);
+                        return false;
                     }
 
-                })*/
+                    return true;
+                });
 
-            });
+                vm.attrs = attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
 
-            transactionUserFields.forEach(function (field) {
+                console.log('vm.attrs', vm.attrs);
 
-                for (var i = 0; i < instrumentUserFields.length; i++) {
-                    var entityAttr = instrumentUserFields[i];
+                vm.attrs = vm.attrs.map(function (attribute) {
 
-                    if (entityAttr.key === field.key) {
-                        entityAttr.name = field.name;
-                        break;
-                    }
-                }
-                /*vm.entityAttrs.forEach(function (entityAttr) {
+                    var result = {};
 
-                    if (entityAttr.key === field.key) {
-                        entityAttr.name = field.name;
-                    }
+                    result.attribute_type = Object.assign({}, attribute);
+                    result.value_type = attribute.value_type;
+                    result.content_type = vm.contentType;
+                    result.key = 'attributes.' + attribute.user_code;
+                    result.name = attribute.name;
 
-                })*/
+                    return result
 
-            });
+                });
 
-            vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
+                vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
+                vm.attrsList = vm.attrsList.concat(vm.userTextFields);
+                vm.attrsList = vm.attrsList.concat(vm.userNumberFields);
+                vm.attrsList = vm.attrsList.concat(vm.userDateFields);
+                vm.attrsList = vm.attrsList.concat(vm.attrs);
 
-                if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
-                    item.name = 'Group';
-                }
-                item.entity = vm.entityType;
+                syncAttrs();
+                getSelectedAttrs();
 
-                if (item.key.indexOf("user_text_") !== -1) {
-                    vm.userTextFields.push(item);
-                    return false;
-                } else if (item.key.indexOf("user_number_") !== -1) {
-                    vm.userNumberFields.push(item);
-                    return false;
-                } else if (item.key.indexOf("user_date_") !== -1) {
-                    vm.userDateFields.push(item);
-                    return false;
-                }
+                vm.readyStatus.content = true;
 
-                return true;
-            });
-
-            vm.attrs = attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
-
-            console.log('vm.attrs', vm.attrs);
-
-            vm.attrs = vm.attrs.map(function (attribute) {
-
-                var result = {};
-
-                result.attribute_type = Object.assign({}, attribute);
-                result.value_type = attribute.value_type;
-                result.content_type = vm.contentType;
-                result.key = 'attributes.' + attribute.user_code;
-                result.name = attribute.name;
-
-                return result
-
-            });
-
-            vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.userTextFields);
-            vm.attrsList = vm.attrsList.concat(vm.userNumberFields);
-            vm.attrsList = vm.attrsList.concat(vm.userDateFields);
-            vm.attrsList = vm.attrsList.concat(vm.attrs);
-
-            syncAttrs();
-            getSelectedAttrs();
-
-            vm.readyStatus.content = true;
+            }
 
         };
 
@@ -632,7 +654,8 @@
 
                 for (i = 0; i < itemsElem.length; i = i + 1) {
                     items.push(itemsElem[i]);
-                };
+                }
+                ;
 
                 this.dragula = dragula(items,
                     {
@@ -739,20 +762,26 @@
                                     case 'groups':
                                         vm[attrsVmKey][i].groups = true;
                                         GCFItems = groups;
-                                        updateGCFMethod = function () {vm.entityViewerDataService.setGroups(GCFItems);};
+                                        updateGCFMethod = function () {
+                                            vm.entityViewerDataService.setGroups(GCFItems);
+                                        };
                                         break;
                                     case 'columns':
                                         vm[attrsVmKey][i].groups = false;
                                         vm[attrsVmKey][i].columns = true;
                                         GCFItems = columns;
-                                        updateGCFMethod = function () {vm.entityViewerDataService.setColumns(GCFItems);};
+                                        updateGCFMethod = function () {
+                                            vm.entityViewerDataService.setColumns(GCFItems);
+                                        };
                                         break;
                                     case 'filters':
                                         vm[attrsVmKey][i].groups = false;
                                         vm[attrsVmKey][i].columns = false;
                                         vm[attrsVmKey][i].filters = true;
                                         GCFItems = filters;
-                                        updateGCFMethod = function () {vm.entityViewerDataService.setFilters(GCFItems);};
+                                        updateGCFMethod = function () {
+                                            vm.entityViewerDataService.setFilters(GCFItems);
+                                        };
                                         break;
                                 }
 
@@ -862,7 +891,7 @@
                         // dragged to filters
                         if (target.classList.contains('vcSelectedFilters')) {
                             changeSelectedGroup('filters');
-                        // < dragged to filters >
+                            // < dragged to filters >
 
                             // If column's order changed
                         } else if (target.classList.contains('vcSelectedColumns')) {
@@ -871,18 +900,18 @@
                         }
                         // < dragging from columns >
 
-                    // dragging from filters
+                        // dragging from filters
                     } else if (source.classList.contains('vcSelectedFilters')) {
 
                         // dragged to columns
                         if (target.classList.contains('vcSelectedColumns')) {
                             changeSelectedGroup('columns');
-                        // < dragged to columns >
+                            // < dragged to columns >
 
-                        // If filter's order changed
+                            // If filter's order changed
                         } else if (target.classList.contains('vcSelectedFilters')) {
                             changeOrder('filters');
-                        // < If filter's order changed >
+                            // < If filter's order changed >
                         }
 
                     }

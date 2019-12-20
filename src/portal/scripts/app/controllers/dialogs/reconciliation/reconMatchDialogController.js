@@ -351,7 +351,7 @@
 
                     var items = [];
 
-                    var elements = document.querySelectorAll('.recon-match-body-file-transactions');
+                    var elements = document.querySelectorAll('.dialogBankLineContainerHolder');
 
                     for (var i = 0; i < elements.length; i = i + 1) {
                         items.push(elements[i])
@@ -464,7 +464,7 @@
 
                     var items = [];
 
-                    var elements = document.querySelectorAll('.bankLineContainer');
+                    var elements = document.querySelectorAll('.dialogBankLineContainer');
 
                     for (var i = 0; i < elements.length; i = i + 1) {
                         items.push(elements[i])
@@ -474,7 +474,7 @@
                         revertOnSpill: true,
                         accepts: function (el, target, source, sibling) {
 
-                            var elClass = 'bankLineContainer-' + el.dataset.parentIndex;
+                            var elClass = 'dialogBankLineContainer-' + el.dataset.parentIndex;
 
                             if (target.dataset.status === 'new') {
                                 return false;
@@ -518,7 +518,7 @@
 
                 dragulaInit: function () {
 
-                    var elements = document.querySelectorAll('.recon-match-body-complex-transactions');
+                    var elements = document.querySelectorAll('.dialogComplexTransactionLineContainerHolder');
                     var items = [];
 
                     for (var i = 0; i < elements.length; i = i + 1) {
@@ -631,7 +631,7 @@
 
                 dragulaInit: function () {
 
-                    var elements = document.querySelectorAll('.complexTransactionLineContainer');
+                    var elements = document.querySelectorAll('.dialogComplexTransactionLineContainer');
                     var items = [];
 
                     for (var i = 0; i < elements.length; i = i + 1) {
@@ -642,7 +642,7 @@
                         revertOnSpill: true,
                         accepts: function (el, target, source, sibling) {
 
-                            var elClass = 'complexTransactionLineContainer-' + el.dataset.parentIndex;
+                            var elClass = 'dialogComplexTransactionLineContainer-' + el.dataset.parentIndex;
 
                             if (target.dataset.status === 'auto_matched') {
                                 return false;

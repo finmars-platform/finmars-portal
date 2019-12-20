@@ -197,6 +197,9 @@
                 parentEntityViewerDataService.setReconciliationDataService(vm.entityViewerDataService);
                 parentEntityViewerDataService.setReconciliationEventService(vm.entityViewerEventService);
 
+                vm.entityViewerDataService.setParentDataService(parentEntityViewerDataService);
+                vm.entityViewerDataService.setParentEventService(parentEntityViewerEventService);
+
                 console.log('scope, ', $scope);
 
                 vm.entityType = 'reconciliation';
@@ -274,30 +277,6 @@
                     $scope.$apply();
 
                 }, 0)
-
-            };
-
-            vm.matchLines = function($event) {
-
-                console.log("Match lines!");
-
-                $mdDialog.show({
-                    controller: 'ReconMatchDialogController as vm',
-                    templateUrl: 'views/dialogs/reconciliation/recon-match-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            parentEntityViewerDataService: parentEntityViewerDataService,
-                            entityViewerDataService: vm.entityViewerDataService
-                        }
-                    }
-                })
 
             };
 

@@ -355,7 +355,7 @@
 
                     var items = [];
 
-                    var elements = document.querySelectorAll('.recon-match-body-file-transactions');
+                    var elements = document.querySelectorAll('.bankLineContainerHolder');
 
                     for (var i = 0; i < elements.length; i = i + 1) {
                         items.push(elements[i])
@@ -534,7 +534,7 @@
 
                 dragulaInit: function () {
 
-                    var elements = document.querySelectorAll('.recon-match-body-complex-transactions');
+                    var elements = document.querySelectorAll('.complexTransactionLineContainerHolder');
                     var items = [];
 
                     for (var i = 0; i < elements.length; i = i + 1) {
