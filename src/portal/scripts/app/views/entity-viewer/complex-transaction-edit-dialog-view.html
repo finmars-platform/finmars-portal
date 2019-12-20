@@ -63,6 +63,52 @@
                             </md-content>
                         </md-tab-body>
                     </md-tab>
+
+                    <md-tab>
+                        <md-tab-lable>
+                            <span class="grey-tab">Fields</span>
+                        </md-tab-lable>
+                        <md-tab-body>
+                            <md-content class="md-padding p-t-26">
+                                <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-fields-tab.html'"></div>
+                            </md-content>
+                        </md-tab-body>
+                    </md-tab>
+
+                    <md-tab>
+                        <md-tab-lable>
+                            <span class="grey-tab">Inputs</span>
+                        </md-tab-lable>
+                        <md-tab-body>
+                            <md-content class="md-padding p-t-26">
+                                <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-inputs-tab.html'"></div>
+                            </md-content>
+                        </md-tab-body>
+                    </md-tab>
+
+                    <md-tab>
+                        <md-tab-lable>
+                            <span class="grey-tab">Base Transactions</span>
+                        </md-tab-lable>
+                        <md-tab-body>
+                            <md-content class="md-padding p-t-26">
+                                <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-base-transactions-tab.html'"></div>
+                            </md-content>
+                        </md-tab-body>
+                    </md-tab>
+
+                    <md-tab>
+                        <md-tab-lable>
+                            <span class="grey-tab">Reconciliation</span>
+                        </md-tab-lable>
+                        <md-tab-body>
+                            <md-content class="md-padding p-t-26">
+                                <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-reconciliation-tab.html'"></div>
+                            </md-content>
+                        </md-tab-body>
+                    </md-tab>
+
+
                 </md-tabs>
             </div>
             <div data-ng-if="!vm.checkReadyStatus()">
