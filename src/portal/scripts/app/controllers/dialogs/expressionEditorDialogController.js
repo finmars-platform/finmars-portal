@@ -111,6 +111,31 @@
             $scope.$apply();
         });
 
+        /*vm.insertAttrKey = function ($event) {
+
+            $mdDialog.show({
+                controller: "TableAttributeSelectorDialogController as vm",
+                templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    data: {
+                        availableAttrs: availableAttrs,
+                        title: "Choose column's key to add it at the end of the expression"
+                    }
+                }
+            }).then(function (res) {
+
+                if (res && res.status === 'agree') {
+                    vm.item.expression += res.data.key;
+                    console.log("add attribute vm.item.expression", vm.item.expression, res.data);
+                    $scope.$apply();
+                }
+
+            });
+
+        };*/
+
         vm.selectHelpItem = function (item) {
 
             vm.expressions.forEach(function (expr) {

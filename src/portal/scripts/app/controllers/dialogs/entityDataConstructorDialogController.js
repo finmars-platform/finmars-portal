@@ -72,7 +72,9 @@
                         }
 
                         vm.tabs = vm.ui.data || [];
-                        vm.tabs.forEach(function (tab) {
+                        vm.tabs.forEach(function (tab, index) {
+                            tab.tabOrder = index;
+
                             tab.layout.fields.forEach(function (field) {
                                 field.editMode = false;
                             })
@@ -94,8 +96,11 @@
                             vm.uiIsDefault = true;
                             vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
                         }
+
                         vm.tabs = vm.ui.data || [];
-                        vm.tabs.forEach(function (tab) {
+                        vm.tabs.forEach(function (tab, index) {
+                            tab.tabOrder = index;
+
                             tab.layout.fields.forEach(function (field) {
                                 field.editMode = false;
                             })
@@ -119,11 +124,7 @@
 
         vm.checkColspan = function (tab, row, column) {
 
-            if (!tab.id) { // TODO remove later
-                tab.id = 1
-            }
-
-            var fieldsTree = vm.fieldsTree[tab.id];
+            var fieldsTree = vm.fieldsTree[tab.tabOrder];
             var fieldRow = fieldsTree[row];
             var colspanSizeToHide = 2;
 
@@ -297,15 +298,11 @@
 
         };
 
-        vm.isRowEmpty = function (tabId, rowNumber, columnsNumber) {
-
-            if (!tabId) { // TODO remove later
-                tabId = 1;
-            }
+        vm.isRowEmpty = function (tabOrder, rowNumber, columnsNumber) {
 
             var isEmpty = true;
             for (var i = 1; i <= columnsNumber; i++) {
-                var socket = vm.fieldsTree[tabId][rowNumber][i];
+                var socket = vm.fieldsTree[tabOrder][rowNumber][i];
 
                 if (socket && socket.type !== 'empty') {
                     isEmpty = false;
@@ -432,9 +429,6 @@
             var i;
             var field;
 
-            if (!tab.id) { // TODO remove later
-                tab.id = 1;
-            }
             /*for (i = 0; i < tab.layout.fields.length; i = i + 1) {
                 if (tab.layout.fields[i].row === row) {
                     if (tab.layout.fields[i].column === column) {
@@ -444,12 +438,12 @@
                     totalColspans = totalColspans + parseInt(tab.layout.fields[i].colspan, 10);
                 }
             }*/
-            for (i = 0; i < vm.fieldsTree[tab.id][row].length; i++) {
-                var colFromRow = vm.fieldsTree[tab.id][row][i];
+            for (i = 0; i < vm.fieldsTree[tab.tabOrder][row].length; i++) {
+                var colFromRow = vm.fieldsTree[tab.tabOrder][row][i];
                 totalColspans = totalColspans + parseInt(colFromRow.colspan, 10);
             }
 
-            field = vm.fieldsTree[tab.id][row][column];
+            field = vm.fieldsTree[tab.tabOrder][row][column];
 
             var flexUnit = 100 / tab.layout.columns;
 
@@ -493,19 +487,9 @@
 
                 if (!notSavedTabExist) {
 
-                    var lastTab = vm.tabs[vm.tabs.length - 1];
-                    var newTabId;
-
-                    if (lastTab && lastTab.id) {
-                        newTabId = lastTab.id + 1;
-                    } else {
-                        newTabId = vm.tabs.length + 1;
-                    }
-
                     vm.tabs.push({
                         name: '',
                         editState: true,
-                        id: newTabId,
                         layout: {
                             rows: 0,
                             columns: 1,
@@ -798,17 +782,13 @@
 
             vm.fieldsTree = {};
 
-            tabs.forEach(function (tab, index) {
+            tabs.forEach(function (tab) {
 
-                if (!tab.id) { // TODO remove later
-                    tab.id = index + 1;
-                }
-
-                vm.fieldsTree[tab.id] = {};
+                vm.fieldsTree[tab.tabOrder] = {};
                 var f;
                 for (f = 0; f < tab.layout.fields.length; f++) {
 
-                    var treeTab = vm.fieldsTree[tab.id];
+                    var treeTab = vm.fieldsTree[tab.tabOrder];
 
                     var field = tab.layout.fields[f];
                     var fRow = field.row;
@@ -925,11 +905,11 @@
 
                                         if (elem.classList.contains('ec-attr-occupied')) { // dragging from socket
 
-                                            var dElemTabId = elem.dataset.tabId;
+                                            var dElemTabOrder = elem.dataset.tabOrder;
                                             var dElemColumn = parseInt(elem.dataset.col, 10);
                                             var dElemRow = parseInt(elem.dataset.row, 10);
 
-                                            var occupiedFieldData = JSON.parse(JSON.stringify(vm.fieldsTree[dElemTabId][dElemRow][dElemColumn]));
+                                            var occupiedFieldData = JSON.parse(JSON.stringify(vm.fieldsTree[dElemTabOrder][dElemRow][dElemColumn]));
 
                                             if (field.column === targetColumn && field.row === targetRow) {
                                                 vm.tabs[i].layout.fields[a] = occupiedFieldData;
@@ -1092,44 +1072,6 @@
 
             console.log('vm.items', vm.items);
             console.log('vm.entityType', vm.entityType);
-
-            /*if (vm.entityType === 'instrument') {
-
-                vm.items = vm.items.filter(function (item) {
-
-                    if (['accrued_currency', 'payment_size_detail',
-                        'accrued_multiplier', 'default_accrued',
-                        'pricing_currency', 'price_multiplier',
-                        'default_price', 'daily_pricing_model',
-                        'price_download_scheme', 'reference_for_pricing'].indexOf(item.key) === -1) {
-                        return true
-                    }
-
-                    return false;
-
-                });
-
-            }
-
-            if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
-
-                vm.items = vm.items.filter(function (item) {
-
-                    if (['user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5',
-                        'user_text_6', 'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10',
-                        'user_number_1', 'user_number_2', 'user_number_3', 'user_number_4', 'user_number_5',
-                        'user_number_6', 'user_number_7', 'user_number_8', 'user_number_9', 'user_number_10',
-                        'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'
-                    ].indexOf(item.key) === -1) {
-                        return true
-                    }
-
-                    return false;
-
-                });
-
-
-            }*/
 
             vm.updateDrakeContainers();
 

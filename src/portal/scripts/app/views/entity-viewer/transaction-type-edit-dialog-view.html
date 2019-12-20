@@ -213,8 +213,9 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
         <div layout="row">
-            <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary"
-                       ng-disabled="!vm.checkReadyStatus()">
+            <md-button ng-click="vm.editLayout($event)"
+                       class="md-raised md-primary"
+                       ng-disabled="!vm.checkReadyStatus() || vm.processing">
                 Edit transaction form
             </md-button>
             <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
@@ -235,8 +236,10 @@
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised m-r-24" ng-click="vm.save()" style="margin-left:20px;"
-                       ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">
+            <md-button class="md-raised m-r-24"
+                       ng-click="vm.save()"
+                       ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}"
+                       style="margin-left:20px;">
                 Save
             </md-button>
             <md-button class="md-raised" ng-click="vm.saveAndExit()" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">

@@ -51,7 +51,7 @@
                     schemeId: item.id
                 }
             }).then(function (res) {
-                if (res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     console.log('res', res.data);
                     instrumentSchemeService.update(item.id, res.data).then(function () {
                         vm.getList();

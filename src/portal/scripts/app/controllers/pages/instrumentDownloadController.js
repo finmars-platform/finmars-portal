@@ -261,7 +261,7 @@
                     schemeId: vm.config.instrument_download_scheme
                 }
             }).then(function (res) {
-                if (res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     console.log('res', res.data);
                     instrumentSchemeService.update(vm.config.instrument_download_scheme, res.data).then(function () {
                         //vm.getList();

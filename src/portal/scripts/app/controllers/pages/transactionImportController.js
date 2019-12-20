@@ -501,7 +501,7 @@
                 autoWrap: true,
                 skipHide: true
             }).then(function (res) {
-                if (res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     console.log('res', res.data);
                     transactionSchemeService.update(vm.config.scheme, res.data).then(function () {
                         //vm.getList();

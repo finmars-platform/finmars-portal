@@ -106,7 +106,10 @@
                                         <div>
                                             <md-button class="md-raised"
                                                        ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
-                                                       style="min-width: 40px;">f(x)</md-button>
+                                                       ng-class="{'md-primary': item.name && item.name_expr && item.name === item.name_expr}"
+                                                       style="min-width: 40px;">
+                                                f(x)
+                                            </md-button>
                                         </div>
                                     </div>
                                 </div>
