@@ -162,7 +162,7 @@
 
         if (verticalAdditions.isOpen && verticalAdditions.type === 'reconciliation' || viewContext === 'reconciliation_viewer') {
 
-            var status = '';
+            var status = 'no-recon-fields-row';
 
             if (obj.hasOwnProperty('fields') && obj.fields.length) {
 

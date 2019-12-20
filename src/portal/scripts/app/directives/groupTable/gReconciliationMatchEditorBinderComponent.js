@@ -12,14 +12,13 @@
             scope: {
                 evDataService: '=',
                 evEventService: '=',
-                spExchangeService: '=',
-                rootWrapElem: '='
+                spExchangeService: '='
             },
             restrict: 'AE',
-            template: '<div class="vertical-split-panel-controller-container"></div>',
+            template: '<div class="reconciliation-match-editor-controller-container height-100 recon-match-holder" style="overflow: auto;"></div>',
             link: function (scope, elem, attrs) {
 
-                var container = $(elem).find('.vertical-split-panel-controller-container');
+                var container = $(elem).find('.reconciliation-match-editor-controller-container');
 
                 function createController() {
 
@@ -34,7 +33,7 @@
 
                     $(container).html('');
 
-                    editorTemplateUrl = 'views/entity-viewer/reconciliation-viewer-view.html';
+                    editorTemplateUrl = 'views/entity-viewer/reconciliation-match-editor-view.html';
                     tpl = $templateCache.get(editorTemplateUrl);
 
                     templateScope = scope.$new();
@@ -42,10 +41,9 @@
                     templateScope.$parent.vm = {};
                     templateScope.$parent.vm.entityType = additions.type;
 
-                    ctrl = $controller('ReconciliationViewerController as vm', {
+                    ctrl = $controller('ReconciliationMatchEditorController as vm', {
                         '$scope': templateScope,
                         '$mdDialog': $mdDialog,
-                        '$transitions': $transitions,
                         'parentEntityViewerDataService': scope.evDataService,
                         'parentEntityViewerEventService': scope.evEventService,
                         'splitPanelExchangeService': scope.spExchangeService
@@ -61,23 +59,7 @@
 
                 }
 
-                var init = function () {
-
-                    var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
-
-                    if (splitPanelIsActive) {
-                        var verticalSPWrapper = document.querySelector('.verticalSplitPanelWrapper');
-                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
-                        var verticalSPHeight = scope.rootWrapElem.clientHeight - interfaceLayout.splitPanel.height;
-
-                        verticalSPWrapper.style.height = verticalSPHeight + 'px';
-                    }
-
-
-                    createController();
-                };
-
-                init();
+                createController();
 
             }
         }

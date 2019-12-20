@@ -19,9 +19,10 @@
             link: function (scope, elem, attrs) {
 
                 scope.additions = scope.evDataService.getAdditions();
+                scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
-                scope.activateWidthSlider = function() {
+                scope.activateWidthSlider = function () {
 
                     console.log('activateWidthSlider');
 
@@ -36,7 +37,8 @@
 
                         var verticalSplitPanelElem = $('.g-recon');
 
-                        var verticalSplitPanelWidth;
+                        // var verticalSplitPanelWidth;
+                        var contentWrapWidth;
 
                         var rootWidth = $(scope.rootWrapElem).width();
 
@@ -46,11 +48,18 @@
 
                             mouseMoveX = e.clientX - windowXcorrection;
 
-                            verticalSplitPanelWidth = rootWidth - mouseMoveX;
+                            // verticalSplitPanelWidth = rootWidth - mouseMoveX;
+                            //
+                            // $(verticalSplitPanelElem).width(verticalSplitPanelWidth);
+                            // $(verticalSplitPanelElem)[0].style.left = (rootWidth - verticalSplitPanelWidth) + 'px';
+                            // $(scope.contentWrapElem).width(rootWidth - verticalSplitPanelWidth);
 
-                            $(verticalSplitPanelElem).width(verticalSplitPanelWidth);
-                            $(verticalSplitPanelElem)[0].style.left = (rootWidth - verticalSplitPanelWidth) + 'px';
-                            $(scope.contentWrapElem).width(rootWidth - verticalSplitPanelWidth);
+                            contentWrapWidth = rootWidth - mouseMoveX;
+
+                            $(scope.contentWrapElem).width(contentWrapWidth);
+                            $(scope.contentWrapElem)[0].style.left = (rootWidth - contentWrapWidth) + 'px';
+                            $(verticalSplitPanelElem).width(rootWidth - contentWrapWidth);
+
 
                             //window.dispatchEvent(new Event('resize'))
                             scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
@@ -70,26 +79,28 @@
                 };
 
 
-                scope.defaultWidths = function(){
+                scope.defaultWidths = function () {
 
                     console.log('Width Aligner - Set Default Width');
 
                     var rootWidth = $(scope.rootWrapElem).width();
 
-                    $(scope.contentWrapElem)[0].style.width = Math.floor(rootWidth) + 'px';
+                    $(scope.contentWrapElem)[0].style.width = 'initial';
+                    $(scope.contentWrapElem)[0].style.left = '0px';
+
 
                 };
 
-                scope.defaultSplitWidths = function(){
+                scope.defaultSplitWidths = function () {
 
                     console.log('Width Aligner - Set Split Width');
 
                     var rootWidth = $(scope.rootWrapElem).width();
 
                     $(scope.contentWrapElem)[0].style.width = Math.floor(rootWidth / 2) + 'px';
+                    $(scope.contentWrapElem)[0].style.left = '50%';
 
                 };
-
 
 
                 scope.init = function () {
@@ -99,8 +110,13 @@
 
                     scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
 
-                        scope.defaultWidths();
+                        scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
 
+                        if (!scope.verticalAdditions.isOpen) {
+                            scope.defaultWidths();
+                        } else {
+                            scope.defaultSplitWidths();
+                        }
                     });
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);

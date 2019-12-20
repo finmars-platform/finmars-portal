@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog width-90  recon-match-dialog" drag-dialog>
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-90  recon-match-holder" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
@@ -7,7 +7,7 @@
         </div>
     </md-toolbar>
     <md-dialog-content>
-        <div class="p-24 recon-match-dialog-content">
+        <div class="p-24 recon-match-content-holder">
 
             <div class="recon-match-header" layout="row">
 
@@ -63,7 +63,7 @@
 
             <div class="recon-match-body" layout="row">
 
-                <div class="recon-match-body-file-transactions" layout="column" style="margin-right: 20px; width: 825px;">
+                <div class="recon-match-body-file-transactions dialogBankLineContainerHolder" layout="column" style="margin-right: 20px; width: 825px;">
 
                     <div data-ng-repeat="item in vm.bankLinesList track by $index" class="recon-match-fields-container">
 
@@ -98,7 +98,7 @@
 
                         <div layout="row">
 
-                            <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
                                  data-status="ignore">
 
                                 <match-recon-card data-ng-repeat="field in item.ignore_fields"
@@ -114,7 +114,7 @@
 
                             </div>
 
-                            <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
                                  data-status="auto_matched">
 
                                 <match-recon-card data-ng-repeat="field in item.auto_matched_fields"
@@ -130,7 +130,7 @@
 
                             </div>
 
-                            <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
                                  data-status="matched">
 
                                 <match-recon-card data-ng-repeat="field in item.matched_fields"
@@ -146,7 +146,7 @@
 
                             </div>
 
-                            <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
                                  data-status="resolved">
 
                                 <match-recon-card data-ng-repeat="field in item.resolved_fields"
@@ -163,7 +163,7 @@
 
                             </div>
 
-                            <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
                                  data-status="conflict">
 
                                 <match-recon-card data-ng-repeat="field in item.conflicts_fields"
@@ -179,7 +179,7 @@
 
                             </div>
 
-                            <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
                                  data-status="new">
 
                                 <match-recon-card data-ng-repeat="field in item.new_fields"
@@ -201,7 +201,7 @@
 
                 </div>
 
-                <div class="recon-match-body-complex-transactions" layout="column">
+                <div class="recon-match-body-complex-transactions dialogComplexTransactionLineContainerHolder" layout="column">
 
                     <div data-ng-repeat="item in vm.complexTransactionList track by $index"
                          class="recon-match-fields-container">
@@ -243,7 +243,7 @@
 
                         <div layout="row">
 
-                            <div class="recon-body-box complexTransactionLineContainer {{'complexTransactionLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogComplexTransactionLineContainer {{'dialogComplexTransactionLineContainer-' + item.___match_index}}"
                                  data-status="unmatched">
 
                                 <match-recon-card data-ng-repeat="field in item.unmatched_fields"
@@ -258,7 +258,7 @@
 
                             </div>
 
-                            <div class="recon-body-box complexTransactionLineContainer {{'complexTransactionLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogComplexTransactionLineContainer {{'dialogComplexTransactionLineContainer-' + item.___match_index}}"
                                  data-status="matched">
 
                                 <match-recon-card data-ng-repeat="field in item.matched_fields"
@@ -273,7 +273,7 @@
 
                             </div>
 
-                            <div class="recon-body-box complexTransactionLineContainer {{'complexTransactionLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogComplexTransactionLineContainer {{'dialogComplexTransactionLineContainer-' + item.___match_index}}"
                                  data-status="auto_matched">
 
                                 <match-recon-card data-ng-repeat="field in item.auto_matched_fields"
@@ -288,7 +288,7 @@
 
                             </div>
 
-                            <div class="recon-body-box complexTransactionLineContainer {{'complexTransactionLineContainer-' + item.___match_index}}"
+                            <div class="recon-body-box dialogComplexTransactionLineContainer {{'dialogComplexTransactionLineContainer-' + item.___match_index}}"
                                  data-status="ignore">
 
                                 <match-recon-card data-ng-repeat="field in item.ignore_fields"

@@ -1,4 +1,4 @@
-    /**
+/**
  * Created by szhitenev on 05.05.2016.
  */
 (function () {
@@ -50,6 +50,15 @@
         vm.attributesLayout = [];
 
         vm.hasEditPermission = false;
+
+        vm.textFields = [];
+        vm.numberFields = [];
+        vm.dateFields = [];
+
+        vm.transactionInputs = [];
+
+        vm.baseTransactions = [];
+        vm.reconFields = [];
 
         vm.generateAttributesFromLayoutFields = function () {
 
@@ -411,6 +420,132 @@
 
         };
 
+        vm.fillUserFields = function () {
+
+            vm.textFields = [];
+            vm.numberFields = [];
+            vm.dateFields = [];
+
+            for (var i = 1; i < 21; i = i + 1) {
+
+                if (vm.entity['user_text_' + i]) {
+                    vm.textFields.push({
+                        name: 'User Text ' + i,
+                        value: vm.entity['user_text_' + i]
+                    })
+                }
+
+            }
+
+            for (var i = 1; i < 21; i = i + 1) {
+
+                if (vm.entity['user_number_' + i] || vm.entity['user_number_' + i] === 0) {
+                    vm.numberFields.push({
+                        name: 'User Number ' + i,
+                        value: vm.entity['user_number_' + i]
+                    })
+                }
+
+            }
+
+            for (var i = 1; i < 6; i = i + 1) {
+
+                if (vm.entity['user_date_' + i]) {
+
+                    vm.dateFields.push({
+                        name: 'User Date ' + i,
+                        value: vm.entity['user_date_' + i]
+                    })
+
+                }
+
+            }
+
+        };
+
+        vm.viewBaseTransaction = function ($event, item) {
+
+            console.log("View Base Transaction ", item);
+
+            $mdDialog.show({
+                controller: 'EntityViewerEditDialogController as vm',
+                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    entityType: 'transaction',
+                    entityId: item.id
+                }
+            })
+        };
+
+        vm.fillTransactionInputs = function () {
+
+            vm.transactionInputs = [];
+
+            Object.keys(vm.complexTransactionData.values).forEach(function (key) {
+
+                var input = {};
+
+                var exists_in_ttype = false;
+
+                if (vm.transactionType.inputs) {
+                    vm.transactionType.inputs.forEach(function (ttypeInput) {
+
+                        if (ttypeInput.name === key) {
+
+                            exists_in_ttype = true;
+
+                            input.name = key;
+                            input.verbose_name = ttypeInput.verbose_name;
+                            input.value_type = ttypeInput.value_type;
+
+
+                            if (input.value_type === 10) {
+                                input.verbose_value_type = 'Text'
+                            }
+
+                            if (input.value_type === 20) {
+                                input.verbose_value_type = 'Number'
+                            }
+
+                            if (input.value_type === 40) {
+                                input.verbose_value_type = 'Date'
+                            }
+
+                            if (input.value_type === 100) {
+                                input.verbose_value_type = 'Relation';
+
+                                if (vm.complexTransactionData.values[key + '_object'].name) {
+                                    input.value = vm.complexTransactionData.values[key + '_object'].name
+                                } else {
+                                    input.value = vm.complexTransactionData.values[key + '_object'].public_name
+                                }
+
+                            }
+
+                        }
+
+                    });
+
+                }
+
+                if (exists_in_ttype) {
+
+                    input.value = vm.complexTransactionData.values[key];
+
+                    vm.transactionInputs.push(input)
+
+                }
+
+            })
+
+        };
+
         vm.getItem = function (fromChild) {
             return new Promise(function (res, rej) {
 
@@ -419,8 +554,16 @@
                     vm.complexTransactionData = complexTransactionData;
 
                     vm.transactionTypeId = complexTransactionData.transaction_type;
+                    vm.transactionType = complexTransactionData.transaction_type_object;
                     vm.editLayoutEntityInstanceId = complexTransactionData.complex_transaction.id;
                     vm.entity = complexTransactionData.complex_transaction;
+
+                    vm.baseTransactions = vm.entity.transactions_object;
+                    vm.reconFields = vm.entity.recon_fields;
+
+                    vm.fillUserFields();
+                    vm.fillTransactionInputs();
+
 
                     console.log('vm.entity', vm.entity);
 
