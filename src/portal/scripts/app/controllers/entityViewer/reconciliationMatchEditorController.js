@@ -118,7 +118,7 @@
 
         };
 
-        vm.createBankField = function (field) {
+        vm.createBankField = function (bankLine, field) {
 
             delete field.id;
 
@@ -130,6 +130,20 @@
 
                 field = data;
 
+                var data = vm.reconViewerDataService.getData(bankLine.___parentId);
+
+                data.results = data.results.map(function (item) {
+
+                    if(item.___id === bankLine.___id) {
+                        return bankLine;
+                    }
+
+                    return item
+
+                });
+
+                vm.reconViewerDataService.setData(data);
+
                 $scope.$apply();
 
             })
@@ -137,7 +151,7 @@
 
         };
 
-        vm.updateBankFieldStatus = function (field) {
+        vm.updateBankFieldStatus = function (bankLine, field) {
 
             reconciliationBankFieldService.update(field.id, field).then(function (data) {
 
@@ -145,19 +159,47 @@
 
                 field.processing = false;
 
+                var data = vm.reconViewerDataService.getData(bankLine.___parentId);
+
+                data.results = data.results.map(function (item) {
+
+                    if(item.___id === bankLine.___id) {
+                        return bankLine;
+                    }
+
+                    return item
+
+                });
+
+                vm.reconViewerDataService.setData(data);
+
+                vm.reconciliationEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                 $scope.$apply();
 
             })
 
         };
 
-        vm.updateComplexTransactionFieldStatus = function (field) {
+        vm.updateComplexTransactionFieldStatus = function (complexTransaction, field) {
 
             reconciliationComplexTransactionFieldService.update(field.id, field).then(function (data) {
 
                 console.log('complex transaction field updated', data);
 
                 field.processing = false;
+
+                var data = vm.parentEntityViewerDataService.getData(complexTransaction.___parentId);
+
+                data.results = data.results.map(function (item) {
+
+                    if(item.___id === complexTransaction.___id) {
+                        return complexTransaction;
+                    }
+
+                    return item
+
+                });
 
                 $scope.$apply();
 
@@ -416,6 +458,7 @@
                         console.log('parentIndex', parentIndex);
 
                         var field;
+                        var bankLine;
 
                         vm.bankLinesList.forEach(function (item) {
 
@@ -424,6 +467,7 @@
 
                                     if (itemField.id === fieldId) {
                                         field = itemField;
+                                        bankLine = item
                                     }
 
                                 })
@@ -459,9 +503,9 @@
                             field.status = statusInt;
 
                             if (fieldType === 'new') {
-                                vm.createBankField(field)
+                                vm.createBankField(bankLine, field)
                             } else {
-                                vm.updateBankFieldStatus(field)
+                                vm.updateBankFieldStatus(bankLine, field)
                             }
                         }
 
@@ -598,6 +642,7 @@
                         console.log('parentIndex', parentIndex);
 
                         var field;
+                        var complexTransaction;
 
                         vm.complexTransactionList.forEach(function (item) {
 
@@ -606,6 +651,7 @@
 
                                     if (itemField.id === fieldId) {
                                         field = itemField;
+                                        complexTransaction = item
                                     }
 
                                 })
@@ -637,7 +683,7 @@
 
                             field.status = statusInt;
 
-                            vm.updateComplexTransactionFieldStatus(field)
+                            vm.updateComplexTransactionFieldStatus(complexTransaction, field)
                         }
 
                     });
