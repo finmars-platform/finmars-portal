@@ -18,16 +18,26 @@
     margin: 16px;
 
     .expression-editor-column {
-
       margin-right: 16px;
-
       height: 320px;
       overflow-y: auto;
       overflow-x: hidden;
+      margin-right: 16px;
 
       &:last-of-type {
         margin-right: 0;
       }
+    }
+
+    .expression-editor-groups-col {
+      width: 230px;
+      padding-right: 16px;
+    }
+
+    .expression-editor-exprs-col {
+      min-width: 150px;
+      width: 250px;
+      margin-right: 16px;
     }
 
     .help-item-menu-item {
@@ -48,6 +58,14 @@
       }
     }
 
+  }
+
+  .expression-editor-cols-resizer {
+    background-color: #4C334D;
+    height: 320px;
+    width: 3px;
+    cursor: col-resize;
+    margin-right: 16px;
   }
 
   .description-column-header {
@@ -109,6 +127,7 @@
 
   .description-column {
     max-width: 750px;
+    width: 750px;
     height: 200px;
     box-shadow: 0 0 4px rgba(0, 0, 0, .54);
     padding: 0px;
