@@ -1587,7 +1587,8 @@ md-input-container.SC-entity-select-container {
     span {
       padding-left: 20px;
       cursor: text;
-    };
+    }
+  ;
   }
 
   &.active {
@@ -1758,7 +1759,8 @@ md-menu-content md-menu.md-menu {
 
     textarea {
       border-bottom: 1px solid #000;
-    };
+    }
+  ;
 
   }
 }
@@ -2392,6 +2394,7 @@ button.md-button.toggle-calculator-block-btn {
 
   thead {
     padding: 20px;
+
     td {
       font-weight: 600;
       padding: 5px 20px;
@@ -2399,17 +2402,20 @@ button.md-button.toggle-calculator-block-btn {
 
     .cise-action-hCol-1 {
       text-align: center;
-    };
+    }
+  ;
 
     .cise-action-hCol-2 {
       width: 200px;
-    };
+    }
+  ;
 
     .cise-action-hCol-3 {
       width: 700px;
     }
 
-  };
+  }
+;
 
   tbody {
     td {
@@ -2445,8 +2451,10 @@ button.md-button.toggle-calculator-block-btn {
   md-input-container {
     label:not(.md-no-float):not(.md-container-ignore) {
       pointer-events: none;
-    };
-  };
+    }
+  ;
+  }
+;
 }
 
 .shell-view > div {
@@ -2556,6 +2564,7 @@ md-checkbox.checkbox-center {
   min-height: 24px;
   line-height: 1;
 }
+
 .permission-editor-controller-container {
   height: 100%;
   display: block;
@@ -2588,5 +2597,33 @@ md-checkbox.checkbox-center {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+}
+
+.input-form-complex-transaction-recon-field {
+  position: relative;
+  margin: 20px 10px;
+  width: 600px;
+  padding: 20px;
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+
+}
+
+.input-form-complex-transaction-recon-field-property-name {
+  display: inline-block;
+  width: 200px;
+}
+
+.input-form-complex-transaction-recon-field-status {
+  position: absolute;
+  width: 150px;
+  background: yellow;
+  text-align: center;
+  top: 30px;
+  right: 30px;
+
+  & > div {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 }
