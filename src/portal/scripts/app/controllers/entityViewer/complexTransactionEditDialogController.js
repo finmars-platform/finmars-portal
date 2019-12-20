@@ -493,44 +493,46 @@
 
                 var exists_in_ttype = false;
 
-                vm.transactionType.inputs.forEach(function (ttypeInput) {
+                if (vm.transactionType.inputs) {
+                    vm.transactionType.inputs.forEach(function (ttypeInput) {
 
-                    if (ttypeInput.name === key) {
+                        if (ttypeInput.name === key) {
 
-                        exists_in_ttype = true;
+                            exists_in_ttype = true;
 
-                        input.name = key;
-                        input.verbose_name = ttypeInput.verbose_name;
-                        input.value_type = ttypeInput.value_type;
+                            input.name = key;
+                            input.verbose_name = ttypeInput.verbose_name;
+                            input.value_type = ttypeInput.value_type;
 
 
-                        if (input.value_type === 10) {
-                            input.verbose_value_type = 'Text'
-                        }
+                            if (input.value_type === 10) {
+                                input.verbose_value_type = 'Text'
+                            }
 
-                        if (input.value_type === 20) {
-                            input.verbose_value_type = 'Number'
-                        }
+                            if (input.value_type === 20) {
+                                input.verbose_value_type = 'Number'
+                            }
 
-                        if (input.value_type === 40) {
-                            input.verbose_value_type = 'Date'
-                        }
+                            if (input.value_type === 40) {
+                                input.verbose_value_type = 'Date'
+                            }
 
-                        if (input.value_type === 100) {
-                            input.verbose_value_type = 'Relation';
+                            if (input.value_type === 100) {
+                                input.verbose_value_type = 'Relation';
 
-                            if (vm.complexTransactionData.values[key + '_object'].name) {
-                                input.value = vm.complexTransactionData.values[key + '_object'].name
-                            } else {
-                                input.value = vm.complexTransactionData.values[key + '_object'].public_name
+                                if (vm.complexTransactionData.values[key + '_object'].name) {
+                                    input.value = vm.complexTransactionData.values[key + '_object'].name
+                                } else {
+                                    input.value = vm.complexTransactionData.values[key + '_object'].public_name
+                                }
+
                             }
 
                         }
 
-                    }
+                    });
 
-                });
-
+                }
 
                 if (exists_in_ttype) {
 
