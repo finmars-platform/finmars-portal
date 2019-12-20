@@ -53,7 +53,7 @@
 
     <div class="recon-match-body" layout="row">
 
-        <div class="recon-match-body-file-transactions" layout="column" style="margin-right: 20px; width: 825px;">
+        <div class="recon-match-body-file-transactions bankLineContainerHolder" layout="column" style="margin-right: 20px; width: 825px;">
 
             <div data-ng-repeat="item in vm.bankLinesList track by $index" class="recon-match-fields-container">
 
@@ -191,7 +191,7 @@
 
         </div>
 
-        <div class="recon-match-body-complex-transactions" layout="column">
+        <div class="recon-match-body-complex-transactions complexTransactionLineContainerHolder" layout="column">
 
             <div data-ng-repeat="item in vm.complexTransactionList track by $index"
                  class="recon-match-fields-container">
