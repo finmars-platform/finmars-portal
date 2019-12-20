@@ -47,70 +47,6 @@
 
         };
 
-        helpService.getFunctionsItems().then(function (data) {
-
-            vm.expressions = data;
-
-            vm.readyStatus.expressions = true;
-
-            if (vm.data && vm.data.functions) {
-
-                console.log('data.functions', vm.data.functions);
-
-                vm.data.functions.forEach(function (items) {
-                    vm.expressions = vm.expressions.concat(items)
-                })
-
-            }
-
-            vm.expressions = vm.expressions.map(function (item) {
-
-                item.search_index = item.name + ' ' + item.func;
-
-                return item;
-
-            });
-
-            console.log('expressions', vm.expressions);
-
-            vm.selectedHelpItem = vm.expressions[0];
-            $scope.$apply();
-        });
-
-        helpService.getFunctionsGroups().then(function (data) {
-
-            vm.groups = data;
-
-            vm.readyStatus.groups = true;
-
-            vm.selectedHelpGroup = vm.groups[0];
-
-            if (vm.data && vm.data.groups) {
-
-                vm.groups.shift();
-
-                var result = [];
-
-                vm.data.groups.forEach(function (group) {
-
-                    result = result.concat(group)
-
-                });
-
-                result = result.concat(vm.groups);
-
-                result.unshift({
-                    "name": "All",
-                    "key": "all"
-                });
-
-                vm.groups = result;
-
-            }
-
-            $scope.$apply();
-        });
-
         /*vm.insertAttrKey = function ($event) {
 
             $mdDialog.show({
@@ -128,7 +64,7 @@
 
                 if (res && res.status === 'agree') {
                     vm.item.expression += res.data.key;
-                    console.log("add attribute vm.item.expression", vm.item.expression, res.data);
+
                     $scope.$apply();
                 }
 
@@ -748,6 +684,7 @@
 
         };
 
+
         vm.validate = function () {
 
             return expressionService.validate(vm.item).then(function (data) { // may be useless
@@ -779,6 +716,133 @@
             })
 
         };
+
+        var getFunctionItems = new Promise(function (resolve, reject) {
+
+                helpService.getFunctionsItems().then(function (data) {
+
+                    vm.expressions = data;
+
+                    vm.readyStatus.expressions = true;
+
+                    if (vm.data && vm.data.functions) {
+
+                        console.log('data.functions', vm.data.functions);
+
+                        vm.data.functions.forEach(function (items) {
+                            vm.expressions = vm.expressions.concat(items)
+                        })
+
+                    }
+
+                    vm.expressions = vm.expressions.map(function (item) {
+
+                        item.search_index = item.name + ' ' + item.func;
+
+                        return item;
+
+                    });
+
+                    console.log('expressions', vm.expressions);
+
+                    vm.selectedHelpItem = vm.expressions[0];
+
+                    resolve();
+
+                });
+
+            });
+
+        var getFunctionsGroups = new Promise(function (resolve, reject) {
+
+                helpService.getFunctionsGroups().then(function (data) {
+
+                    vm.groups = data;
+
+                    vm.readyStatus.groups = true;
+
+                    vm.selectedHelpGroup = vm.groups[0];
+
+                    if (vm.data && vm.data.groups) {
+
+                        vm.groups.shift();
+
+                        var result = [];
+
+                        vm.data.groups.forEach(function (group) {
+
+                            result = result.concat(group)
+
+                        });
+
+                        result = result.concat(vm.groups);
+
+                        result.unshift({
+                            "name": "All",
+                            "key": "all"
+                        });
+
+                        vm.groups = result;
+
+                    }
+
+                    resolve();
+
+                });
+
+            });
+
+        var init = function () {
+            var promises = [getFunctionItems, getFunctionsGroups];
+
+            Promise.all(promises).then(function () {
+
+                $scope.$apply();
+
+                var resizerElem = document.querySelector('.exprEditorColsResizer');
+                var leftColToResize = document.querySelector('.exprEditorExprsCol');
+                var rightColToResize = document.querySelector('.exprEditorDescriptionCol');
+
+                resizerElem.addEventListener('mousedown', function (event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    var mouseDownLeft = event.clientX;
+                    var cursorDistance;
+                    var newLeftColWidth;
+                    var newRightColWidth;
+
+                    var leftColWidth = leftColToResize.clientWidth;
+                    var rightColWidth = rightColToResize.clientWidth;
+
+                    var resizeColsOnMousemove = function (event) {
+
+                        var eventClientX = event.clientX;
+                        cursorDistance = eventClientX - mouseDownLeft;
+
+                        newLeftColWidth = leftColWidth + cursorDistance;
+                        newRightColWidth = rightColWidth - cursorDistance;
+
+                        if (newLeftColWidth > 150 && newRightColWidth > 150) {
+                            leftColToResize.style.width = newLeftColWidth + 'px';
+                            rightColToResize.style.width = newRightColWidth + 'px';
+                        }
+
+                    };
+
+                    window.addEventListener('mousemove', resizeColsOnMousemove);
+
+                    window.addEventListener('mouseup', function () {
+                        window.removeEventListener('mousemove', resizeColsOnMousemove);
+                    }, {once: true});
+
+                });
+
+            });
+        };
+
+        init();
 
         vm.agree = function () {
 

@@ -73,7 +73,7 @@
 
         <div class="expression-functions-block" layout="row">
 
-            <div class="expression-editor-column expression-editor-groups-column" layout="column" flex="20">
+            <div class="expression-editor-column expression-editor-groups-col" layout="column">
 
                 <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
                      data-ng-repeat="item in vm.groups"
@@ -81,10 +81,12 @@
                 </div>
             </div>
 
-            <div class="expression-editor-column p-t-8" layout="column" flex="20">
+            <div class="expression-editor-column expression-editor-exprs-col exprEditorExprsCol p-t-8" layout="column">
+
                 <md-input-container class="help-search-control">
                     <input type="text" data-ng-model="vm.searchExpr" placeholder="Search">
                 </md-input-container>
+
                 <div class="help-functions-holder">
                     <div>
                         <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
@@ -94,12 +96,14 @@
                         </div>
                     </div>
                 </div>
+
             </div>
-            <div class="expression-editor-column description-column" layout="column" flex="60">
 
-                <div class="description-column-header" data-ng-bind-html="vm.selectedHelpItem.func">
+            <div class="expression-editor-cols-resizer exprEditorColsResizer"></div>
 
-                </div>
+            <div class="expression-editor-column description-column exprEditorDescriptionCol" layout="column">
+
+                <div class="description-column-header" data-ng-bind-html="vm.selectedHelpItem.func"></div>
 
                 <div class="description-column-body"
                      data-ng-bind-html="vm.selectedHelpItem.description | trustAsHtml">
