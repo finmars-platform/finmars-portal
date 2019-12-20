@@ -74,8 +74,11 @@
                     var actionData = vm.entityViewerDataService.getActiveObjectActionData();
                     var reportOptions = vm.entityViewerDataService.getReportOptions();
 
+                    var currencies = reportOptions.item_currencies;
+
                     console.log('activeObject', activeObject);
                     console.log('actionData', actionData);
+                    console.log('action', action);
 
                     if (activeObject) {
 
@@ -447,10 +450,7 @@
                                                     entity: {
                                                         currency: activeObject['currency.id'],
                                                         currency_object: {
-                                                            id: activeObject['currency.id'],
-                                                            name: activeObject['currency.name'],
-                                                            user_code: activeObject['currency.user_code'],
-                                                            short_name: activeObject['currency.short_name']
+                                                            id: activeObject['currency.id']
                                                         },
                                                         pricing_policy: reportOptions.pricing_policy,
                                                         pricing_policy_object: reportOptions.pricing_policy_object,
@@ -489,7 +489,7 @@
                             console.log('activeObject', activeObject);
 
                             var filters = {
-                                currency: activeObject['pricing_currency.id'],
+                                currency: activeObject['instrument.pricing_currency'],
                                 instrument: activeObject['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
@@ -549,6 +549,19 @@
                                     }).then(function (res) {
                                         if (res.status === 'agree') {
 
+                                            var currency_object = {};
+
+                                            currencies.forEach(function (item) {
+
+                                                if(item.id === activeObject['instrument.pricing_currency']) {
+                                                    currency_object.id = item.id;
+                                                    currency_object.name = item.name;
+                                                    currency_object.short_name = item.short_name;
+                                                    currency_object.user_code = item.user_code;
+                                                }
+
+                                            });
+
                                             $mdDialog.show({
                                                 controller: 'EntityViewerAddDialogController as vm',
                                                 templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
@@ -557,13 +570,8 @@
                                                 locals: {
                                                     entityType: 'currency-history',
                                                     entity: {
-                                                        currency: activeObject['pricing_currency.id'],
-                                                        currency_object: {
-                                                            id: activeObject['pricing_currency.id'],
-                                                            name: activeObject['pricing_currency.name'],
-                                                            user_code: activeObject['pricing_currency.user_code'],
-                                                            short_name: activeObject['pricing_currency.short_name']
-                                                        },
+                                                        currency: activeObject['instrument.pricing_currency'],
+                                                        currency_object: currency_object,
                                                         pricing_policy: reportOptions.pricing_policy,
                                                         pricing_policy_object: reportOptions.pricing_policy_object,
                                                         date: reportOptions.report_date
@@ -599,7 +607,7 @@
                         if (action === 'edit_accrued_currency_fx_rate' && activeObject.id) {
 
                             var filters = {
-                                currency: activeObject['accrued_currency.id'],
+                                currency: activeObject['instrument.accrued_currency'],
                                 instrument: activeObject['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
@@ -659,6 +667,19 @@
                                     }).then(function (res) {
                                         if (res.status === 'agree') {
 
+                                            var currency_object = {};
+
+                                            currencies.forEach(function (item) {
+
+                                                if(item.id === activeObject['instrument.accrued_currency']) {
+                                                    currency_object.id = item.id;
+                                                    currency_object.name = item.name;
+                                                    currency_object.short_name = item.short_name;
+                                                    currency_object.user_code = item.user_code;
+                                                }
+
+                                            });
+
                                             $mdDialog.show({
                                                 controller: 'EntityViewerAddDialogController as vm',
                                                 templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
@@ -667,13 +688,8 @@
                                                 locals: {
                                                     entityType: 'currency-history',
                                                     entity: {
-                                                        currency: activeObject['accrued_currency.id'],
-                                                        currency_object: {
-                                                            id: activeObject['accrued_currency.id'],
-                                                            name: activeObject['accrued_currency.name'],
-                                                            user_code: activeObject['accrued_currency.user_code'],
-                                                            short_name: activeObject['accrued_currency.short_name']
-                                                        },
+                                                        currency: activeObject['instrument.accrued_currency'],
+                                                        currency_object: currency_object,
                                                         pricing_policy: reportOptions.pricing_policy,
                                                         pricing_policy_object: reportOptions.pricing_policy_object,
                                                         date: reportOptions.report_date
