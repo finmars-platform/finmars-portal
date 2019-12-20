@@ -52,7 +52,7 @@
                     schemeId: item.id
                 }
             }).then(function (res) {
-                if (res.status === 'agree') {
+                if (res && res.status === 'agree') {
                     console.log('res', res.data);
                     /*csvImportSchemeService.update(item.id, res.data).then(function () {
                         vm.getList();

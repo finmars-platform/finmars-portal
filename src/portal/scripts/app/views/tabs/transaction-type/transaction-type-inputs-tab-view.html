@@ -355,9 +355,6 @@
                     <md-input-container class="no-error-spacer m-0" data-ng-if="vm.newItem.value_type == 100">
                         <md-checkbox data-ng-model="vm.newItem.is_fill_from_context"></md-checkbox>
                     </md-input-container>
-                    <div data-ng-if="vm.newItem.value_type != 100">
-                        &nbsp;
-                    </div>
                 </td>
 
                 <td>
@@ -390,7 +387,7 @@
 
                     </div>
 
-                    <div data-ng-if="!item.is_fill_from_context && vm.newItem.value_type == 100">
+                    <div data-ng-if="!vm.newItem.is_fill_from_context && vm.newItem.value_type == 100">
 
                         <md-input-container
                                 class="m-0"

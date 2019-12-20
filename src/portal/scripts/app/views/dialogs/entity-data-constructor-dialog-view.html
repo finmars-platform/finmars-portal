@@ -86,7 +86,7 @@
                                                     <layout-constructor-field tab="tab"
                                                                               row="row"
                                                                               column="column"
-                                                                              tab-fields-tree="vm.fieldsTree[tab.id]"></layout-constructor-field>
+                                                                              tab-fields-tree="vm.fieldsTree[tab.tabOrder]"></layout-constructor-field>
                                                 </div>
 
                                                 <md-button class="md-button ec-manage-row-btn"
@@ -98,14 +98,14 @@
                                                            class="md-button ec-manage-row-btn"
                                                            ng-click="vm.deleteRow(tab, row)"
                                                            style="right: 10px;"
-                                                           data-ng-disabled="!vm.isRowEmpty(tab.id, row, tab.layout.columns)">
+                                                           data-ng-disabled="!vm.isRowEmpty(tab.tabOrder, row, tab.layout.columns)">
                                                     -
                                                     <md-tooltip class="tooltip_1"
                                                                 md-direction="top"
-                                                                data-ng-hide="!vm.isRowEmpty(tab.id, row, tab.layout.columns)">Remove row</md-tooltip>
+                                                                data-ng-hide="!vm.isRowEmpty(tab.tabOrder, row, tab.layout.columns)">Remove row</md-tooltip>
                                                     <md-tooltip class="tooltip_1"
                                                                 md-direction="top"
-                                                                data-ng-hide="vm.isRowEmpty(tab.id, row, tab.layout.columns)">Empty row before removing it</md-tooltip>
+                                                                data-ng-hide="vm.isRowEmpty(tab.tabOrder, row, tab.layout.columns)">Empty row before removing it</md-tooltip>
                                                 </md-button>
 
                                             </div>

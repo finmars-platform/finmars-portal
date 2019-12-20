@@ -281,10 +281,6 @@
 
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
 
-                    if (data.inputs) {
-                        originalEntityInputs = JSON.parse(JSON.stringify(data.inputs));
-                    }
-
                     vm.entity = data;
 
                     vm.inputsGroup = {
@@ -323,7 +319,11 @@
                     };
 
 
-                    originalEntity = JSON.parse(JSON.stringify(vm.entity));
+                    originalEntity = JSON.parse(angular.toJson(vm.entity));
+
+                    if (originalEntity.inputs) {
+                        originalEntityInputs = originalEntity.inputs;
+                    }
 
                     vm.getTransactionUserFields().then(function () {
 
@@ -629,7 +629,7 @@
             var saveTTypePrimise = new Promise(function (resolve, reject) {
 
                 if (!entityToSave) {
-                    entityToSave = vm.entity;
+                    entityToSave = JSON.parse(angular.toJson(vm.entity));
                 }
 
                 if (!withoutUpdating) {
@@ -665,12 +665,12 @@
                     reject();
 
                 } else {
-
+                    console.log('ttype inputs vm.save entity', JSON.parse(JSON.stringify(vm.entity)));
                     entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
 
                         console.log('data', data);
-
-                        originalEntityInputs = JSON.parse(JSON.stringify(data.inputs));
+                        originalEntity = JSON.parse(angular.toJson(vm.entity));
+                        originalEntityInputs = originalEntity.inputs;
 
                         vm.processing = false;
                         $scope.$apply();
@@ -690,7 +690,7 @@
 
                         console.log('error', error);
 
-                        vm.processing = false
+                        vm.processing = false;
 
                         $scope.$apply();
 
@@ -987,7 +987,7 @@
                 return true;
             }
             return false;
-        }
+        };
 
 
         // Transaction Type General Controller end
@@ -1127,18 +1127,16 @@
         };
 
         vm.resolveRelation = function (item) {
-            var relation;
+            var entityKey;
 
-            //console.log('item', item);
-            vm.contentTypes.forEach(function (contentType) {
-                if (contentType.key == item.content_type) {
-                    relation = contentType.entity;
+            for (var i = 0; i < vm.contentTypes.length; i++) {
+                if (vm.contentTypes[i].key == item.content_type) {
+                    entityKey = vm.contentTypes[i].entity;
+                    entityKey = entityKey.replace(/-/g, '_');
+
+                    return entityKey;
                 }
-            });
-
-            //console.log('relation', relation);
-
-            return relation
+            }
         };
 
         vm.resolveDefaultValue = function (item) {
@@ -1475,7 +1473,7 @@
                 value_expr: vm.newItem.value_expr
             });
 
-            originalEntityInputs = JSON.parse(JSON.stringify(originalEntity.inputs));
+            originalEntityInputs = originalEntity.inputs;
             vm.save(originalEntity, true);
 
             vm.newItem.name = null;
@@ -2122,8 +2120,11 @@
             console.log("loadrelation2");
             console.log('field', field);
 
+            field = field.replace(/-/g, "_"); // replace all '_' with '-'
+
             return new Promise(function (resolve, reject) {
                 if (!vm.relationItems[field]) {
+
                     fieldResolverService.getFields(field).then(function (data) {
                         vm.relationItems[field] = data.data;
 

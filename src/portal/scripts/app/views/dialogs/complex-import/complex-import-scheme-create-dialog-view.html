@@ -1,4 +1,5 @@
-<md-dialog aria-label="data mapping" ng-cloak class="transaction-scheme-manager-dialog-view draggable-dialog"
+<md-dialog aria-label="complex import scheme creation dialog"
+           class="transaction-scheme-manager-dialog-view draggable-dialog"
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -48,12 +49,15 @@
                                                        data-ng-click="vm.deleteAction(item, $index)">
                                                 Delete
                                             </md-button>
-                                            <md-button class="md-raised" data-ng-class="{'disabled-btn': $index == 0}"
-                                                       data-ng-click="vm.moveUp(item, $index)">Move up
+                                            <md-button class="md-raised"
+                                                       data-ng-class="{'disabled-btn': $index == 0}"
+                                                       data-ng-click="vm.moveUp(item, $index)">
+                                                Move up
                                             </md-button>
                                             <md-button class="md-raised"
                                                        data-ng-class="{'disabled-btn': $index == vm.scheme.actions.length - 1}"
-                                                       data-ng-click="vm.moveDown(item, $index)">Move down
+                                                       data-ng-click="vm.moveDown(item, $index)">
+                                                Move down
                                             </md-button>
                                         </div>
                                     </div>

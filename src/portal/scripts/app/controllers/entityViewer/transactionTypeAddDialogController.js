@@ -982,18 +982,17 @@
         };
 
         vm.resolveRelation = function (item) {
-            var relation;
+            var entityKey;
 
-            //console.log('item', item);
-            vm.contentTypes.forEach(function (contentType) {
-                if (contentType.key == item.content_type) {
-                    relation = contentType.entity;
+            for (var i = 0; i < vm.contentTypes.length; i++) {
+                if (vm.contentTypes[i].key == item.content_type) {
+                    entityKey = vm.contentTypes[i].entity;
+                    entityKey = entityKey.replace(/-/g, '_');
+
+                    return entityKey;
                 }
-            });
+            }
 
-            //console.log('relation', relation);
-
-            return relation
         };
 
         vm.resolveDefaultValue = function (item) {
@@ -1813,9 +1812,11 @@
         vm.loadRelation = function (field) {
 
             console.log('field', field);
+            field = field.replace(/-/g, "_");
 
             return new Promise(function (resolve, reject) {
                 if (!vm.relationItems[field]) {
+
                     fieldResolverService.getFields(field).then(function (data) {
                         vm.relationItems[field] = data.data;
 
