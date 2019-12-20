@@ -48,6 +48,8 @@
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
 
+                scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
+
                 var dleEventIndex;
 
                 var checkLayoutExistence = function () {
@@ -579,6 +581,7 @@
                         scope.evDataService.setVerticalAdditions({});
 
                         scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
+                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                     } else {
 
@@ -603,7 +606,7 @@
                                 scope.evDataService.setVerticalAdditions(additions);
 
                                 scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
-                                //scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                             }
 
@@ -1502,7 +1505,28 @@
 
                 };
 
+                scope.matchReconciliationLines = function($event){
 
+                    $mdDialog.show({
+                        controller: 'ReconMatchDialogController as vm',
+                        templateUrl: 'views/dialogs/reconciliation/recon-match-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                parentEntityViewerDataService: scope.evDataService.getParentDataService(),
+                                entityViewerDataService: scope.evDataService
+                            }
+                        }
+                    })
+
+
+                };
 
                 scope.init = function () {
 
@@ -1519,7 +1543,18 @@
                         });
 
                         scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+
+                        scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
+
+                            scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
+
+                        })
+
                     }
+
+
+
                 };
 
                 scope.init()

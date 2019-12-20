@@ -703,7 +703,13 @@
 
             vm.getFormLayout();
 
-            vm.loadPermissions();
+
+            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
+                vm.readyStatus.permissions = true;
+            } else {
+                vm.loadPermissions();
+            }
+
 
         };
 

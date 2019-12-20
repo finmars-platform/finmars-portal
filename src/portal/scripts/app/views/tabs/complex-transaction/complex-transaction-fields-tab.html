@@ -1,0 +1,39 @@
+<div>
+
+    <div data-ng-if="vm.textFields.length">
+
+        <h4>Text</h4>
+
+        <div data-ng-repeat="item in vm.textFields" class="m-8">
+
+            {{item.name}}: {{item.value}}
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="vm.numberFields.length">
+
+        <h4>Numbers</h4>
+
+        <div data-ng-repeat="item in vm.numberFields" class="m-8">
+
+            {{item.name}}: {{item.value}}
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="vm.dateFields.length">
+
+        <h4>Dates</h4>
+
+        <div data-ng-repeat="item in vm.dateFields" class="m-8">
+
+            {{item.name}}: {{item.value}}
+
+        </div>
+
+    </div>
+
+</div>

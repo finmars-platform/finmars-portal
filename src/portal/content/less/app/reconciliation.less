@@ -3,7 +3,7 @@
   height: 100%;
   background: #ddd;
   position: absolute;
-  left: 50%;
+  left: 0;
   top: 0;
 
   &::after {
@@ -13,7 +13,7 @@
     top: 0;
     z-index: 10;
     position: absolute;
-    left: 0;
+    left: 100%;
     background: #4C334D;
     width: 6px;
     height: 100%;
@@ -26,9 +26,9 @@
   //left: 50%;
   //margin-left: -235px;
   //width: 25px;
-  left: 0;
   height: 100%;
   top: 0;
+  left: 100%;
   width: 3px;
   cursor: col-resize;
   //background: #fff;
@@ -37,17 +37,6 @@
 
 .g-reconciliation-wrapper {
   height: 100%;
-}
-
-.g-vertical-split-panel-control-holder {
-  position: absolute;
-  bottom: 49px;
-  left: -100px;
-  z-index: 1001;
-  background: #fff;
-  width: 200px;
-  border: 1px solid #9f9f9f;
-  text-align: center;
 }
 
 .g-row.row-recon-matched {
@@ -66,10 +55,11 @@
   background: #f08080;
 }
 
-.recon-match-dialog {
+.recon-match-holder {
 
-  .recon-match-dialog-content {
+  .recon-match-content-holder {
     background: #ddd;
+    min-height: 100%;
   }
 
   .recon-match-dialog-field-title {
@@ -221,4 +211,12 @@ md-menu.match-recon-body-line-settings-button.md-menu {
   position: absolute;
   top: -3px;
   left: 17px;
+}
+
+.no-recon-fields-row {
+
+  background-size: auto auto;
+  background-color: rgba(255, 255, 255, 1);
+  background-image: repeating-linear-gradient(135deg, transparent, transparent 10px, rgba(143, 188, 143, .4) 10px, rgba(143, 188, 143, .4) 17px );
+
 }

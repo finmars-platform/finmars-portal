@@ -1064,13 +1064,45 @@
         function getCurrentMember() {
             return data.currentMember
         }
-        
+
         function setReconciliationData(reconData) {
             data.reconciliation = reconData
         }
-        
+
         function getReconciliationData() {
             return data.reconciliation
+        }
+
+        function setReconciliationDataService(service) {
+            data.reconciliationDataService = service
+        }
+
+        function getReconciliationDataService() {
+            return data.reconciliationDataService
+        }
+
+        function setReconciliationEventService(service) {
+            data.reconciliationEventService = service
+        }
+
+        function getReconciliationEventService() {
+            return data.reconciliationEventService
+        }
+
+        function setParentDataService(dataService) {
+            data.parentDataService = dataService
+        }
+
+        function getParentDataService() {
+            return data.parentDataService
+        }
+
+        function setParentEventService(eventService) {
+            data.parentEventService = eventService
+        }
+
+        function getParentEventService() {
+            return data.parentEventService
         }
 
         return {
@@ -1252,7 +1284,19 @@
             getCurrentMember: getCurrentMember,
 
             setReconciliationData: setReconciliationData,
-            getReconciliationData: getReconciliationData
+            getReconciliationData: getReconciliationData,
+
+            setReconciliationDataService: setReconciliationDataService,
+            getReconciliationDataService: getReconciliationDataService,
+
+            setReconciliationEventService: setReconciliationEventService,
+            getReconciliationEventService: getReconciliationEventService,
+
+            setParentDataService: setParentDataService,
+            getParentDataService: getParentDataService,
+
+            setParentEventService: setParentEventService,
+            getParentEventService: getParentEventService
 
         }
     }
