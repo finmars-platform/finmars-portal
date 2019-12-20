@@ -367,12 +367,22 @@
 
         function updateItemInFlatList(item) {
 
-            data.flatList.forEach(function (row) {
+            // data.flatList.forEach(function (row) {
+            //
+            //     if (row.___id === item.___id) {
+            //         row = item;
+            //     }
+            //
+            // })
 
-                if (row.___id === item.___id) {
-                    row = item;
+
+            data.flatList = data.flatList.map(function (row) {
+
+                if(row.___id === item.___id) {
+                    return item
                 }
 
+                return row
             })
 
         }
