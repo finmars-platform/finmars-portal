@@ -188,11 +188,13 @@
 
     </div>
 
-    <div ng-if="contentWrapElem && !isRecon">
+    <div ng-if="workareaWrapElem">
 
-        <div group-layout-resizer ev-data-service="evDataService"
-             workarea-wrap-element="workareaWrapElem"
-             ev-event-service="evEventService"></div>
+        <div group-layout-resizer
+             ev-data-service="evDataService"
+             ev-event-service="evEventService"
+             content-wrap-element="contentWrapElem"
+             workarea-wrap-element="workareaWrapElem"></div>
 
     </div>
 </div>
