@@ -729,7 +729,7 @@
         vm.entity.actions = vm.entity.actions || [];
         vm.entity.inputs = vm.entity.inputs || [];
 
-        vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false, tags: false};
+        vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false};
 
         vm.getTransactionTypeGroups = function () {
             transactionTypeGroupService.getList().then(function (data) {
@@ -755,14 +755,14 @@
             })
         };
 
-        vm.getTags = function () {
+        /*vm.getTags = function () {
             tagService.getListByContentType('transaction-type').then(function (data) {
                 vm.tags = data.results;
                 vm.readyStatus.tags = true;
                 $scope.$apply();
             });
 
-        };
+        };*/
 
         vm.unselectAllEntities = function (entity) {
 
@@ -795,6 +795,8 @@
                 }
 
             }
+
+            $scope.$apply();
         };
 
         vm.bindSelectedText = function (entity, fallback) {
@@ -826,7 +828,7 @@
             });
         };
 
-        vm.tagTransform = function (newTag) {
+        /*vm.tagTransform = function (newTag) {
             //console.log('newTag', newTag);
             var item = {
                 name: newTag,
@@ -834,13 +836,12 @@
             };
 
             return item;
-        };
+        };*/
 
         vm.checkReadyStatus = function () {
             if (vm.readyStatus.transactionTypeGroups == true &&
                 vm.readyStatus.portfolios == true &&
-                vm.readyStatus.instrumentTypes == true &&
-                vm.readyStatus.tags == true) {
+                vm.readyStatus.instrumentTypes == true) {
                 return true;
             }
             return false;
@@ -2171,13 +2172,13 @@
             vm.getTransactionTypeGroups();
             vm.getPortfolios();
             vm.getInstrumentTypes();
-            vm.getTags();
+            // vm.getTags();
 
             vm.getInputTemplates();
             vm.getFieldTemplates();
             vm.getActionTemplates();
 
-            $scope.$watch('vm.entity.tags', function () {
+            /*$scope.$watch('vm.entity.tags', function () {
 
                 if (vm.entity.tags) {
                     vm.entity.tags.forEach(function (item) {
@@ -2190,7 +2191,7 @@
                     })
 
                 }
-            });
+            });*/
 
         };
 

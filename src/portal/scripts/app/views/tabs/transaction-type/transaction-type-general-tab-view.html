@@ -46,7 +46,7 @@
             </md-input-container>
         </div>
         <div layout="row" style="margin-bottom: 15px">
-            <md-input-container style="min-width: 200px">
+            <!--<md-input-container style="min-width: 200px">
                 <label for="instrument-types-ms">Instrument types</label>
                 <md-select data-ng-model="vm.entity.instrument_types"
                            id="instrument-types-ms"
@@ -55,8 +55,16 @@
                            data-ng-change="vm.notValidForAll('instruments')">
                     <md-option ng-value="item.id" ng-repeat="item in vm.instrumentTypes">{{item.name}}</md-option>
                 </md-select>
-            </md-input-container>
-            <md-input-container style="min-width: 200px">
+            </md-input-container>-->
+            <two-fields-multiselect data-ng-model="vm.entity.instrument_types"
+                                    title="Instrument types"
+                                    items="vm.instrumentTypes"
+                                    model="vm.entity.instrument_types"
+                                    name-property="name"
+                                    on-change-callback="vm.notValidForAll('instruments')"
+                                    class="ttype-general-multiselectors"></two-fields-multiselect>
+
+            <!--<md-input-container style="min-width: 200px">
                 <label for="portfolios-ms">Portfolios</label>
                 <md-select data-ng-model="vm.entity.portfolios"
                            id="portfolios-ms"
@@ -65,7 +73,14 @@
                            data-ng-change="vm.notValidForAll('portfolios')">
                     <md-option ng-value="item.id" ng-repeat="item in vm.portfolios">{{item.name}}</md-option>
                 </md-select>
-            </md-input-container>
+            </md-input-container>-->
+            <two-fields-multiselect ng-model="vm.entity.portfolios"
+                                    title="Portfolios"
+                                    items="vm.portfolios"
+                                    model="vm.entity.portfolios"
+                                    name-property="name"
+                                    on-change-callback="vm.notValidForAll('portfolios')"
+                                    class="ttype-general-multiselectors"></two-fields-multiselect>
         </div>
 
         <div layout="row">
@@ -87,7 +102,7 @@
             <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.display_expr"></expression-editor-button>
         </div>
 
-        <div layout="row">
+        <!--<div layout="row">
             <md-input-container>
                 <label for="">Tags</label>
                 <ui-select multiple tagging="vm.tagTransform" ng-model="vm.entity.tags" theme="bootstrap"
@@ -100,13 +115,7 @@
                 </ui-select>
             </md-input-container>
 
-            <!--<md-input-container>-->
-            <!--<label for="">Tags</label>-->
-            <!--<md-select data-ng-model="vm.entity.tags" multiple>-->
-            <!--<md-option ng-value="item.id" ng-repeat="item in vm.tags">{{item.name}}</md-option>-->
-            <!--</md-select>-->
-            <!--</md-input-container>-->
-        </div>
+        </div>-->
 
         <div>
             <md-input-container>

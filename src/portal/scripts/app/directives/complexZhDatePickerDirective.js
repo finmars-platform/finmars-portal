@@ -5,6 +5,7 @@
 
     'use strict';
 
+    var metaService = require('../services/metaService');
     var expressionService = require('../services/expression.service');
     var evEvents = require('../services/entityViewerEvents');
 
@@ -18,12 +19,16 @@
                 datepickerOptions: '=',
                 date: '=',
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                attributeDataService: '='
             },
             templateUrl: 'views/directives/complex-zh-date-picker-view.html',
             link: function (scope, elem, attrs) {
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+
+                var entityType = scope.evDataService.getEntityType();
+                var isReport = metaService.isReport(entityType);
 
                 // var input = $(elem).find('.complex-datepicker-input');
                 var input = elem[0].querySelector('.complex-datepicker-input');
@@ -195,6 +200,13 @@
 
                     var datepickerOptionsCopy = JSON.parse(JSON.stringify(scope.datepickerOptions));
 
+                    var eeData = {returnExpressionResult: true};
+
+                    if (isReport) {
+                        eeData.entityType = entityType;
+                        eeData.attributeDataService = scope.attributeDataService;
+                    }
+
                     $mdDialog.show({
                         controller: 'ExpressionEditorDialogController as vm',
                         templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
@@ -202,9 +214,9 @@
                         autoWrap: true,
                         locals: {
                             item: {expression: datepickerOptionsCopy.expression},
-                            data: {returnExpressionResult: true}
-
+                            data: eeData
                         }
+
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
@@ -292,7 +304,7 @@
 
                             columnKey = res.data.item;
 
-                        };
+                        }
 
                     })
 

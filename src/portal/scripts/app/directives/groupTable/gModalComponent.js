@@ -99,48 +99,7 @@
 
                 vm.entityAttrs = attributeDataService.getEntityAttributesByEntityType(vm.entityType);
 
-                var instrumentUserFields = attributeDataService.getInstrumentUserFields();
                 var transactionUserFields = attributeDataService.getTransactionUserFields();
-
-                instrumentUserFields.forEach(function (field) {
-
-                    for (var i = 0; i < instrumentUserFields.length; i++) {
-                        var entityAttr = instrumentUserFields[i];
-
-                        if (entityAttr.key === field.key) {
-                            entityAttr.name = field.name;
-                            break;
-                        }
-                    }
-                    /*vm.entityAttrs.forEach(function (entityAttr) {
-
-                        if (entityAttr.key === field.key) {
-                            entityAttr.name = field.name;
-                        }
-
-                    })*/
-
-                });
-
-                transactionUserFields.forEach(function (field) {
-
-                    for (var i = 0; i < instrumentUserFields.length; i++) {
-                        var entityAttr = instrumentUserFields[i];
-
-                        if (entityAttr.key === field.key) {
-                            entityAttr.name = field.name;
-                            break;
-                        }
-                    }
-                    /*vm.entityAttrs.forEach(function (entityAttr) {
-
-                        if (entityAttr.key === field.key) {
-                            entityAttr.name = field.name;
-                        }
-
-                    })*/
-
-                });
 
                 vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
 
@@ -148,6 +107,15 @@
                         item.name = 'Group';
                     }
                     item.entity = vm.entityType;
+
+                    for (var i = 0; i < transactionUserFields.length; i++) {
+                        var transField = transactionUserFields[i];
+
+                        if (item.key === transField.key) {
+                            item.name = transField.name;
+                            break;
+                        }
+                    }
 
                     if (item.key.indexOf("user_text_") !== -1) {
                         vm.userTextFields.push(item);

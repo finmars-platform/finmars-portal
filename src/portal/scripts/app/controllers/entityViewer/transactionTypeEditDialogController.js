@@ -72,6 +72,7 @@
         vm.canManagePermissions = false;
 
         var inputsToDeleteList = [];
+        var exprsUsesDeletedInput = [];
 
         vm.loadPermissions = function () {
 
@@ -626,7 +627,7 @@
 
             vm.processing = true;
 
-            var saveTTypePrimise = new Promise(function (resolve, reject) {
+            var saveTTypePromise = new Promise(function (resolve, reject) {
 
                 if (!entityToSave) {
                     entityToSave = JSON.parse(angular.toJson(vm.entity));
@@ -639,12 +640,7 @@
                 var actionsErrors = vm.checkActionsForEmptyFields(entityToSave.actions);
                 var entityErrors = vm.checkEntityForEmptyFields(entityToSave);
 
-                console.log('vm.entity', vm.entity);
-
-                console.log('actionsErrors', actionsErrors);
-                console.log('entityErrors', entityErrors);
-
-                if (actionsErrors.length || entityErrors.length) {
+                if (actionsErrors.length || entityErrors.length || exprsUsesDeletedInput.length > 0) {
 
                     $mdDialog.show({
                         controller: 'TransactionTypeValidationErrorsDialogController as vm',
@@ -655,6 +651,7 @@
                         locals: {
                             data: {
                                 actionErrors: actionsErrors,
+                                expressionsUsesDeletedInput: exprsUsesDeletedInput,
                                 entityErrors: entityErrors
                             }
                         }
@@ -704,7 +701,7 @@
 
             var removeDeletedInputsPromise = removeInputFromEditLayout();
 
-            return Promise.all([saveTTypePrimise, removeDeletedInputsPromise]);
+            return Promise.all([saveTTypePromise, removeDeletedInputsPromise]);
         };
 
         vm.saveAndExit = function () {
@@ -852,7 +849,7 @@
         vm.entity.actions = vm.entity.actions || [];
         vm.entity.inputs = vm.entity.inputs || [];
 
-        vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false, tags: false};
+        vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false};
 
         vm.getTransactionTypeGroups = function () {
             transactionTypeGroupService.getList().then(function (data) {
@@ -878,21 +875,21 @@
             })
         };
 
-        vm.getTags = function () {
+        /*vm.getTags = function () {
             tagService.getListByContentType('transaction-type').then(function (data) {
                 vm.tags = data.results;
                 vm.readyStatus.tags = true;
                 $scope.$apply();
             });
 
-        };
+        };*/
 
         vm.unselectAllEntities = function (entity) {
 
             if (entity === 'instruments') {
 
                 if (vm.entity.is_valid_for_all_instruments) {
-                    v.entity.instrument_types = [];
+                    vm.entity.instrument_types = [];
                 }
 
             } else if (entity === 'portfolios') {
@@ -918,14 +915,16 @@
                 }
 
             }
+
+            $scope.$apply();
         };
 
-        vm.bindSelectedText = function (entity, fallback) {
+        /*vm.bindSelectedText = function (entity, fallback) {
             if (entity) {
                 return '[' + entity.length + ']';
             }
             return fallback;
-        };
+        };*/
 
         vm.openExpressionDialog = function ($event, item, options) {
 
@@ -952,9 +951,9 @@
         vm.getTransactionTypeGroups();
         vm.getPortfolios();
         vm.getInstrumentTypes();
-        vm.getTags();
+        //vm.getTags();
 
-        vm.tagTransform = function (newTag) {
+/*        vm.tagTransform = function (newTag) {
             //console.log('newTag', newTag);
             var item = {
                 name: newTag,
@@ -962,9 +961,9 @@
             };
 
             return item;
-        };
+        };*/
 
-        $scope.$watch('vm.entity.tags', function () {
+        /*$scope.$watch('vm.entity.tags', function () {
 
             if (vm.entity.tags) {
                 vm.entity.tags.forEach(function (item) {
@@ -977,13 +976,12 @@
                 })
 
             }
-        });
+        });*/
 
         vm.checkReadyStatus = function () {
             if (vm.readyStatus.transactionTypeGroups == true &&
                 vm.readyStatus.portfolios == true &&
-                vm.readyStatus.instrumentTypes == true &&
-                vm.readyStatus.tags == true) {
+                vm.readyStatus.instrumentTypes == true) {
                 return true;
             }
             return false;
@@ -1262,6 +1260,8 @@
 
             inputsToDeleteList.push(deletedInputName);
 
+            exprsUsesDeletedInput = [];
+
             vm.entity.actions.forEach(function (action) {
 
                 var actionKeys = Object.keys(action);
@@ -1273,28 +1273,66 @@
                         var actionType = action[actionKey];
                         var actionTypeKeys = Object.keys(actionType);
 
-                        actionTypeKeys = actionTypeKeys.filter(function (key) {
+                        /*actionTypeKeys = actionTypeKeys.filter(function (key) {
                             if (key.length > 7 && key.indexOf('_input') === key.length - 6) {
                                 return true;
                             }
                             return false;
-                        });
+                        });*/
 
-                        actionTypeKeys.forEach(function (actionTypeKey) {
+                        var i;
+                        for (i = 0; i < actionTypeKeys.length; i++) {
 
-                            var actionField = actionType[actionTypeKey];
+                            var key = actionTypeKeys[i];
+                            var actionFieldValue = actionType[key];
 
-                            if (actionField === deletedInputName) {
-                                actionType[actionTypeKey] = null;
+                            if (key.length > 7 &&
+                                key.indexOf('_input') === key.length - 6 &&
+                                actionFieldValue === deletedInputName) { // if field is input fields
+
+                                actionType[key] = null;
+
+                            } else {
+
+                                console.log("input deletion actionFieldValue", actionFieldValue);
+                                for (var a = 0; a < inputsToDeleteList.length; a++) {
+                                    var dInputName = inputsToDeleteList[a];
+
+                                    var propWithSameName = '.' + dInputName;
+
+                                    if (actionFieldValue && typeof actionFieldValue === 'string' &&
+                                        actionFieldValue.indexOf(dInputName) !== -1 &&
+                                        actionFieldValue.indexOf(propWithSameName) === -1) { // check whether expression refers to input and not property with same name
+
+                                        var actionFieldLocation = {
+                                            action_notes: "",
+                                            key: key
+                                        };
+
+                                        if (action.action_notes) { // set action name
+                                            actionFieldLocation.action_notes = JSON.parse(JSON.stringify(action.action_notes));
+                                        }
+
+                                        exprsUsesDeletedInput.push(actionFieldLocation);
+                                        break;
+
+                                    }
+                                }
+
+
                             }
 
-                        });
+
+                        }
+
 
                     }
 
                 });
 
             });
+
+            console.log("input deletion exprsUsesDeletedInput", exprsUsesDeletedInput);
 
         };
 
@@ -1472,6 +1510,15 @@
                 value: vm.newItem.value,
                 value_expr: vm.newItem.value_expr
             });
+
+            for (var i = 0; i < inputsToDeleteList.length; i++) {
+                var inputToDelete = inputsToDeleteList[i];
+
+                if (inputToDelete === vm.newItem.name) {
+                    inputsToDeleteList.splice(i, 1);
+                    break;
+                }
+            }
 
             originalEntityInputs = originalEntity.inputs;
             vm.save(originalEntity, true);

@@ -738,7 +738,7 @@
 
     };
 
-    var getTransactionTypesMenu = function (ttypes, objectId, parentGroupHashId) {
+    /*var getTransactionTypesMenu = function (ttypes, objectId, parentGroupHashId) {
 
         var result = '';
 
@@ -765,7 +765,7 @@
 
         return result
 
-    };
+    };*/
 
     var checkContextMenuOptionVisibility = function (obj, option) {
 

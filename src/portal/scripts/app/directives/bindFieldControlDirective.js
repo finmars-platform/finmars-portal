@@ -37,6 +37,11 @@
 
                 scope.isRecalculate = false;
 
+                scope.numberFormat = null;
+                if (scope.item.options && scope.item.options.number_format) {
+                    scope.numberFormat = scope.item.options.number_format;
+                }
+
                 scope.numericInputValue = {};
 
                 scope.isEditableField = function () {
@@ -307,13 +312,13 @@
 
                 var formatNumber = function (numberVal) {
 
-                    if (scope.item.options && scope.item.options.number_format) {
+                    if (scope.numberFormat) {
 
                         return renderHelper.formatValue({
                             value: numberVal
                         }, {
                             key: 'value',
-                            report_settings: scope.item.options.number_format
+                            report_settings: scope.numberFormat
                         });
 
                     } else {
@@ -344,7 +349,8 @@
                             changedValue = parseFloat(changedValue);
                         }
 
-                        if (scope.item.options.onlyPositive) {
+                        // negative numbers processing
+                        /*if (scope.item.options.onlyPositive) {
 
                             if (parseFloat(changedValue) < 0) {
                                 numberIsInvalid = true;
@@ -353,8 +359,27 @@
                             }
 
                         } else {
+
+                            scope.entity[scope.getModelKey()] = JSON.parse(JSON.stringify(changedValue));
+                        }*/
+
+                        if (parseFloat(changedValue) < 0) {
+
+                            if (scope.numberFormat.negative_color_format_id === 1) {
+                                numberInputElem.classList.add('negative-red');
+                            }
+
+                            if (scope.item.options.onlyPositive) {
+                                numberIsInvalid = true;
+                            } else {
+                                scope.entity[scope.getModelKey()] = JSON.parse(JSON.stringify(changedValue));
+                            }
+
+                        } else {
+                            numberInputElem.classList.remove('negative-red');
                             scope.entity[scope.getModelKey()] = JSON.parse(JSON.stringify(changedValue));
                         }
+                        // < negative numbers processing >
 
                     } else if (changedValue !== '') {
                         numberIsInvalid = true;
@@ -363,12 +388,12 @@
                     if (numberIsInvalid) {
 
                         scope.entity[scope.getModelKey()] = null;
-                        numberInputElem.classList.add('ng-invalid', 'ng-invalid-number');
                         numberInputContainerElem.classList.add('md-input-invalid');
+                        numberInputElem.classList.add('ng-invalid', 'ng-invalid-number');
 
                     } else {
-                        numberInputElem.classList.remove('ng-invalid', 'ng-invalid-number');
                         numberInputContainerElem.classList.remove('md-input-invalid');
+                        numberInputElem.classList.remove('ng-invalid', 'ng-invalid-number');
                     }
 
                 };

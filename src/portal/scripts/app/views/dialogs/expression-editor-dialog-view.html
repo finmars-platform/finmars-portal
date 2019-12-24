@@ -66,8 +66,9 @@
             <div flex="100" class="position-relative">
                 <h2 class="text-center">Available functions</h2>
 
-                <!--<md-button class="md-raised md-raised eb-insert-col-btn"
-                           data-ng-click="vm.insertAttrKey($event)">Insert column key</md-button>-->
+                <md-button data-ng-if="vm.insideReport"
+                           class="md-raised md-raised eb-insert-col-btn"
+                           data-ng-click="vm.insertAttrKey($event)">Column Selector</md-button>
             </div>
         </div>
 

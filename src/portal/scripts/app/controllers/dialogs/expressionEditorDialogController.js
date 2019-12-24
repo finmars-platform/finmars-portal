@@ -16,12 +16,20 @@
 
         vm.showValidation = false;
 
+        vm.insideReport = false;
+
         if (data) {
 
             vm.data = data;
 
             if (vm.data.returnExpressionResult) { // check if expression editor should return expression result
                 vm.item.is_eval = true;
+            }
+
+            if (vm.data.entityType) {
+                vm.insideReport = true;
+                vm.attributeDataService = vm.data.attributeDataService;
+                var availableAttrs = vm.attributeDataService.getAllAttributesByEntityType(vm.data.entityType);
             }
 
         }
@@ -47,7 +55,7 @@
 
         };
 
-        /*vm.insertAttrKey = function ($event) {
+        vm.insertAttrKey = function ($event) {
 
             $mdDialog.show({
                 controller: "TableAttributeSelectorDialogController as vm",
@@ -63,14 +71,17 @@
             }).then(function (res) {
 
                 if (res && res.status === 'agree') {
-                    vm.item.expression += res.data.key;
 
-                    $scope.$apply();
+                    if (!vm.item.expression) {
+                        vm.item.expression = "";
+                    }
+
+                    vm.item.expression += res.data.key;
                 }
 
             });
 
-        };*/
+        };
 
         vm.selectHelpItem = function (item) {
 

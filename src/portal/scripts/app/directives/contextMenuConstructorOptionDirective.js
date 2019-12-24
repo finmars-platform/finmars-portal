@@ -32,12 +32,10 @@
                 };
 
                 scope.moveUp = function (itemIndex) {
-                    console.log("sorting moveUp itemIndex", itemIndex);
                     scope.moveUpCallback({itemIndex: itemIndex});
                 };
 
                 scope.moveDown = function (itemIndex) {
-                    console.log("sorting moveDown itemIndex", itemIndex);
                     scope.moveDownCallback({itemIndex: itemIndex});
                 };
 
@@ -49,12 +47,36 @@
 
                 };
 
+                scope.moveChildUp = function (itemIndex) {
+                    var prevItemIndex = itemIndex - 1;
+
+                    if (prevItemIndex >= 0) {
+                        var itemToMove = JSON.parse(JSON.stringify(scope.item.items[itemIndex]));
+                        itemToMove.order = itemToMove.order - 1;
+
+                        scope.item.items[itemIndex] = scope.item.items[prevItemIndex];
+                        scope.item.items[itemIndex].order += 1;
+                        scope.item.items[prevItemIndex] = itemToMove;
+                    }
+
+                };
+
+                scope.moveChildDown = function (itemIndex) {
+                    var nextItemIndex = itemIndex + 1;
+
+                    if (scope.item.items[nextItemIndex]) {
+                        var itemToMove = JSON.parse(JSON.stringify(scope.item.items[itemIndex]));
+                        itemToMove.order = itemToMove.order + 1;
+
+                        scope.item.items[itemIndex] = scope.item.items[nextItemIndex];
+                        scope.item.items[itemIndex].order -= 1;
+                        scope.item.items[nextItemIndex] = itemToMove;
+                    }
+
+                };
+
                 scope.deleteOption = function ($event, item, $index) {
-
-                    console.log("Directive delete", item);
-
                     scope.deleteCallback({event: $event, item: item, index: $index})
-
                 }
 
 

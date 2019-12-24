@@ -761,7 +761,7 @@
     };
 
     var calculateScroll = function (elements, evDataService) {
-
+        console.log("collapse button elements", elements.contentWrapElem, elements.contentWrapElem.clientWidth);
         evScrollManager.setViewportElem(elements.viewportElem);
         evScrollManager.setContentElem(elements.contentElem);
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
@@ -772,11 +772,11 @@
 
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = evScrollManager.getContentWrapElemWidth();
-
+        console.log("collapse button viewportWidth", contentWrapElemWidth, interfaceLayout);
         var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
         //var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
         var viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
-
+        console.log("collapse button viewportWidth", viewportWidth);
         var viewportHeight;
 
         if (!isRootEntityViewer) {
@@ -792,6 +792,7 @@
 
         evScrollManager.setViewportHeight(viewportHeight);
         if (viewportWidth) {
+            console.log("collapse button viewportWidth", viewportWidth);
             evScrollManager.setViewportWidth(viewportWidth);
         }
 
