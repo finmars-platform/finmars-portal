@@ -1,4 +1,4 @@
-<div class="recon-match-content-holder">
+<div class="recon-match-content-holder" >
     <div class="recon-match-header" layout="row">
 
         <div layout="row" style="margin-right: 20px; padding: 15px;">
@@ -89,7 +89,7 @@
                 <div layout="row">
 
                     <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
-                         data-status="ignore">
+                         data-status="ignore" data-type="bank-file">
 
                         <match-recon-card data-ng-repeat="field in item.ignore_fields"
                                           data-field-id="{{field.id}}"
@@ -105,7 +105,7 @@
                     </div>
 
                     <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
-                         data-status="auto_matched">
+                         data-status="auto_matched" data-type="bank-file">
 
                         <match-recon-card data-ng-repeat="field in item.auto_matched_fields"
                                           data-field-id="{{field.id}}"
@@ -121,7 +121,7 @@
                     </div>
 
                     <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
-                         data-status="matched">
+                         data-status="matched" data-type="bank-file">
 
                         <match-recon-card data-ng-repeat="field in item.matched_fields"
                                           data-field-id="{{field.id}}"
@@ -137,7 +137,7 @@
                     </div>
 
                     <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
-                         data-status="resolved">
+                         data-status="resolved" data-type="bank-file">
 
                         <match-recon-card data-ng-repeat="field in item.resolved_fields"
                                           data-field-id="{{field.id}}"
@@ -154,7 +154,7 @@
                     </div>
 
                     <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
-                         data-status="conflict">
+                         data-status="conflict" data-type="bank-file">
 
                         <match-recon-card data-ng-repeat="field in item.conflicts_fields"
                                           data-field-id="{{field.id}}"
@@ -170,7 +170,7 @@
                     </div>
 
                     <div class="recon-body-box bankLineContainer {{'bankLineContainer-' + item.___match_index}}"
-                         data-status="new">
+                         data-status="new" data-type="bank-file">
 
                         <match-recon-card data-ng-repeat="field in item.new_fields"
                                           data-field-id="{{field.id}}"
@@ -234,7 +234,7 @@
                 <div layout="row">
 
                     <div class="recon-body-box complexTransactionLineContainer {{'complexTransactionLineContainer-' + item.___match_index}}"
-                         data-status="unmatched">
+                         data-status="unmatched" data-type="complex-transaction">
 
                         <match-recon-card data-ng-repeat="field in item.unmatched_fields"
                                           data-field-id="{{field.id}}"
@@ -249,7 +249,7 @@
                     </div>
 
                     <div class="recon-body-box complexTransactionLineContainer {{'complexTransactionLineContainer-' + item.___match_index}}"
-                         data-status="matched">
+                         data-status="matched" data-type="complex-transaction">
 
                         <match-recon-card data-ng-repeat="field in item.matched_fields"
                                           data-field-id="{{field.id}}"
@@ -264,7 +264,7 @@
                     </div>
 
                     <div class="recon-body-box complexTransactionLineContainer {{'complexTransactionLineContainer-' + item.___match_index}}"
-                         data-status="auto_matched">
+                         data-status="auto_matched" data-type="complex-transaction">
 
                         <match-recon-card data-ng-repeat="field in item.auto_matched_fields"
                                           data-field-id="{{field.id}}"
@@ -279,7 +279,7 @@
                     </div>
 
                     <div class="recon-body-box complexTransactionLineContainer {{'complexTransactionLineContainer-' + item.___match_index}}"
-                         data-status="ignore">
+                         data-status="ignore" data-type="complex-transaction">
 
                         <match-recon-card data-ng-repeat="field in item.ignore_fields"
                                           data-field-id="{{field.id}}"

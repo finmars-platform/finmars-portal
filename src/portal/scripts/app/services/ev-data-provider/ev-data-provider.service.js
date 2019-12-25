@@ -362,6 +362,10 @@
             var pagination = entityViewerDataService.getPagination();
             var itemsPerPage = pagination.page_size;
             console.log("ev events");
+
+
+            var activeColumnSort = entityViewerDataService.getActiveColumnSort();
+
             var pagesToRequest = requestParameters.requestedPages.filter(function (page) {
 
                 return requestParameters.processedPages.indexOf(page) === -1
@@ -370,67 +374,77 @@
 
             //if (requestParameters.body.frontend_filter_changed) {
 
-                pagesToRequest.forEach(function (pageToRequest) {
+            pagesToRequest.forEach(function (pageToRequest) {
 
-                    promises.push(new Promise(function (resolveLocal) {
+                promises.push(new Promise(function (resolveLocal) {
 
-                        var options = Object.assign({}, requestParameters.body);
+                    var options = Object.assign({}, requestParameters.body);
 
-                        options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
-                            if (!optionsFilter.is_frontend_filter) {
-                                return true;
-                            };
-
-                            return false;
-                        });
-
-                        options.page = pageToRequest;
-                        options.page_size = itemsPerPage;
-                        options.is_enabled = 'any';
-
-                        if (options.groups_types) {
-
-                            options.groups_types = options.groups_types.map(function (groupType) {
-
-                                return groupType.key;
-
-                            })
-
+                    options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
+                        if (!optionsFilter.is_frontend_filter) {
+                            return true;
                         }
+                        ;
 
-                        evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+                        return false;
+                    });
 
-                        requestParameters.pagination.page = pageToRequest;
-                        entityViewerDataService.setRequestParameters(requestParameters);
+                    options.page = pageToRequest;
+                    options.page_size = itemsPerPage;
+                    options.is_enabled = 'any';
 
-                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                        objectsService.getFilteredList(entityType, options).then(function (data) {
-
-
-                            requestParameters.pagination.count = data.count;
-                            requestParameters.processedPages.push(pageToRequest);
-
-                            entityViewerDataService.setRequestParameters(requestParameters);
-
-                            deserializeObjects(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
-
-                            resolveLocal()
-
-                        });
-
-                    }));
-
-                });
+                    if (activeColumnSort) {
+                        if (activeColumnSort.options.sort === 'ASC') {
+                            options.ordering = activeColumnSort.key
+                        } else {
+                            options.ordering = '-' + activeColumnSort.key
+                        }
+                    }
 
 
-                Promise.all(promises).then(function () {
+                    if (options.groups_types) {
 
-                    resolve();
+                        options.groups_types = options.groups_types.map(function (groupType) {
+
+                            return groupType.key;
+
+                        })
+
+                    }
+
+                    evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+
+                    requestParameters.pagination.page = pageToRequest;
+                    entityViewerDataService.setRequestParameters(requestParameters);
 
                     entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                })
+                    objectsService.getFilteredList(entityType, options).then(function (data) {
+
+
+                        requestParameters.pagination.count = data.count;
+                        requestParameters.processedPages.push(pageToRequest);
+
+                        entityViewerDataService.setRequestParameters(requestParameters);
+
+                        deserializeObjects(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
+
+                        resolveLocal()
+
+                    });
+
+                }));
+
+            });
+
+
+            Promise.all(promises).then(function () {
+
+                resolve();
+
+                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+            })
             //};
         });
 
@@ -466,7 +480,8 @@
                     options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
                         if (!optionsFilter.is_frontend_filter) {
                             return true;
-                        };
+                        }
+                        ;
 
                         return false;
                     });
@@ -571,6 +586,8 @@
         var unfoldedGroups = evDataHelper.getUnfoldedGroupsByLevel(level, entityViewerDataService);
 
         var activeColumnSort = entityViewerDataService.getActiveColumnSort();
+
+        console.log('activeColumnSort.sortObjects', activeColumnSort);
 
         var requestsParameters = entityViewerDataService.getAllRequestParameters();
 
