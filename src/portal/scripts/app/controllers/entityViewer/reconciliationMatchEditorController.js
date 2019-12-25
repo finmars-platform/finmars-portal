@@ -144,6 +144,8 @@
 
                 vm.reconViewerDataService.setData(data);
 
+                vm.reconciliationEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                 $scope.$apply();
 
             })
@@ -200,6 +202,10 @@
                     return item
 
                 });
+
+                vm.reconViewerDataService.setData(data);
+
+                vm.reconciliationEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 $scope.$apply();
 
