@@ -378,7 +378,7 @@
 
             data.flatList = data.flatList.map(function (row) {
 
-                if(row.___id === item.___id) {
+                if (row.___id === item.___id) {
                     return item
                 }
 
@@ -998,6 +998,15 @@
             }
 
             setListLayout(listLayout);
+
+            data.columns.forEach(function (column) {
+
+                if (column.options && column.options.sort) {
+
+                    setActiveColumnSort(column);
+                }
+
+            });
 
             listLayout.data.components = {
                 columnArea: true,

@@ -15,7 +15,7 @@
                 spExchangeService: '='
             },
             restrict: 'AE',
-            template: '<div class="reconciliation-match-editor-controller-container height-100 recon-match-holder" style="overflow: auto;"></div>',
+            template: '<div class="reconciliation-match-editor-controller-container height-100 recon-match-holder dndScrollableElem" style="overflow: auto;"></div>',
             link: function (scope, elem, attrs) {
 
                 var container = $(elem).find('.reconciliation-match-editor-controller-container');

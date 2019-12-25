@@ -377,6 +377,38 @@
             document.body.addEventListener('mouseup', vm.turnOffDragging, {once: true});
         };
 
+        // scroll while dragging
+        var DnDScrollElem;
+        var DnDScrollTimeOutId;
+        var scrollSize = null;
+
+        var DnDWheel = function (event) {
+            event.preventDefault();
+
+            var scrolled = DnDScrollElem.scrollTop;
+
+            if (scrollSize === null) {
+                scrollSize = scrolled
+            }
+
+            if (event.deltaY > 0) {
+                scrollSize = scrollSize + 100;
+            } else {
+                scrollSize = scrollSize - 100;
+            }
+
+            clearTimeout(DnDScrollTimeOutId);
+
+            DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
+                DnDScrollElem.scroll({
+                    top: Math.max(0, scrollSize)
+                });
+                scrollSize = null;
+            }, 30);
+
+        };
+        // < scroll while dragging >
+
         vm.initDragula = function () {
 
             vm.dragAndDropBankFileLines = {
@@ -486,6 +518,16 @@
 
                     drake.on('dragstart', function () {
                         areaItemsChanged = false;
+                    });
+
+                    drake.on('drag', function () {
+                        document.addEventListener('wheel', DnDWheel);
+                    });
+
+                    drake.on('dragend', function (elem) {
+
+                        document.removeEventListener('wheel', DnDWheel);
+
                     });
 
                     drake.on('over', function (elem, container, source) {
@@ -856,6 +898,7 @@
             };
 
             setTimeout(function () {
+                DnDScrollElem = document.querySelector('.dndScrollableElem');
                 vm.dragAndDropBankFileLines.init();
                 vm.dragAndDropComplexTransactionLines.init();
                 vm.dragAndDropFields.init();
