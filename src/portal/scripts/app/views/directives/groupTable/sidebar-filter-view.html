@@ -23,8 +23,9 @@
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
                                                     data-display-options="datepickerFromDisplayOptions"
                                                     data-callback-method="updateReportOptions()"
-                                                    ev-data-service="evDataService"
-                                                    ev-event-service="evEventService">
+                                                    data-ev-data-service="evDataService"
+                                                    data-ev-event-service="evEventService"
+                                                    data-attribute-data-service="attributeDataService">
                             </complex-zh-date-picker>
                         </div>
 
@@ -33,7 +34,8 @@
                                                 data-display-options="datepickerToDisplayOptions"
                                                 data-callback-method="updateReportOptions()"
                                                 ev-data-service="evDataService"
-                                                ev-event-service="evEventService">
+                                                ev-event-service="evEventService"
+                                                data-attribute-data-service="attributeDataService">
                         </complex-zh-date-picker>
 
                         <md-input-container style="margin-bottom: 20px;">
@@ -77,7 +79,8 @@
 
                                 <div class="select-options-holder">
 
-                                    <md-option ng-repeat="item in pricingPolicies | filter:{name: searchTerm}" ng-value="item.id">
+                                    <md-option ng-repeat="item in pricingPolicies | filter:{name: searchTerm}"
+                                               ng-value="item.id">
                                         {{item.name}}
                                     </md-option>
 
@@ -135,7 +138,8 @@
                                                     data-display-options="datepickerFromDisplayOptions"
                                                     data-callback-method="updateReportOptions()"
                                                     ev-data-service="evDataService"
-                                                    ev-event-service="evEventService">
+                                                    ev-event-service="evEventService"
+                                                    data-attribute-data-service="attributeDataService">
                             </complex-zh-date-picker>
                         </div>
 
@@ -145,7 +149,8 @@
                                                     data-display-options="datepickerToDisplayOptions"
                                                     data-callback-method="updateReportOptions()"
                                                     ev-data-service="evDataService"
-                                                    ev-event-service="evEventService">
+                                                    ev-event-service="evEventService"
+                                                    data-attribute-data-service="attributeDataService">
                             </complex-zh-date-picker>
                         </div>
 

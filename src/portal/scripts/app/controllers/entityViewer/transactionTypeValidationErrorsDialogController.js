@@ -11,7 +11,7 @@
 
         vm.actionErrors = data.actionErrors;
         vm.entityErrors = data.entityErrors;
-
+        vm.exprsUsesDeletedInput = data.expressionsUsesDeletedInput;
 
         vm.agree = function () {
             $mdDialog.hide({status: 'agree'});

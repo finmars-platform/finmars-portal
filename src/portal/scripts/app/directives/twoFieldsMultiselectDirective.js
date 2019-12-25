@@ -28,6 +28,10 @@
                     scope.nameProperty = 'name';
                 }
 
+                scope.$watch('model', function () {
+                    setInputText();
+                });
+
                 var defaultInputText = function () {
 
                     var selElemNumber = 0;
@@ -39,8 +43,10 @@
 
                         scope.inputText = "";
 
-                        if (scope.nothingSelectedText) {
+                        if (scope.nothingSelectedText || typeof scope.nothingSelectedText === "string") {
                             scope.inputText = scope.nothingSelectedText;
+                        } else {
+                            scope.inputText = "0 items selected"
                         }
 
                     } else {
@@ -83,7 +89,7 @@
 
                 };
 
-                setInputText();
+                //setInputText();
 
                 $(elem).click(function (event) {
 
@@ -127,7 +133,7 @@
                            }
 
 
-                           setInputText();
+                           //setInputText();
 
                        }
 

@@ -42,7 +42,7 @@
     </div>
 
     <div style="padding-left: 80px; background: #f1f1f1;">
-        <div data-ng-repeat="subitem in item.items track by $index"
+        <div data-ng-repeat="subitem in item.items | orderBy: 'order' track by $index"
              layout="row">
 
             <div class="context-menu-block">
@@ -53,6 +53,8 @@
                         add-callback="addOption(event, subitem)"
                         edit-callback="editOption(event, subitem)"
                         delete-callback="deleteOption(event, item, index)"
+                        move-up-callback="moveChildUp(itemIndex)"
+                        move-down-callback="moveChildDown(itemIndex)"
                 ></context-menu-constructor-option>
             </div>
 
