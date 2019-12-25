@@ -99,13 +99,14 @@
                         <div layout="row">
 
                             <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
-                                 data-status="ignore">
+                                 data-status="ignore" data-type="bank-file">
 
                                 <match-recon-card data-ng-repeat="field in item.ignore_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-field-type="{{field.type}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'bank-file'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="bank-file"
                                                   item="item"
                                                   field="field"
                                 >
@@ -115,13 +116,14 @@
                             </div>
 
                             <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
-                                 data-status="auto_matched">
+                                 data-status="auto_matched" data-type="bank-file">
 
                                 <match-recon-card data-ng-repeat="field in item.auto_matched_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-field-type="{{field.type}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'bank-file'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="bank-file"
                                                   item="item"
                                                   field="field"
                                 >
@@ -131,13 +133,14 @@
                             </div>
 
                             <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
-                                 data-status="matched">
+                                 data-status="matched" data-type="bank-file">
 
                                 <match-recon-card data-ng-repeat="field in item.matched_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-field-type="{{field.type}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'bank-file'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="bank-file"
                                                   item="item"
                                                   field="field"
                                 >
@@ -147,13 +150,14 @@
                             </div>
 
                             <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
-                                 data-status="resolved">
+                                 data-status="resolved" data-type="bank-file">
 
                                 <match-recon-card data-ng-repeat="field in item.resolved_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-field-type="{{field.type}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'bank-file'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="bank-file"
                                                   item="item"
                                                   field="field"
                                 >
@@ -164,13 +168,14 @@
                             </div>
 
                             <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
-                                 data-status="conflict">
+                                 data-status="conflict" data-type="bank-file">
 
                                 <match-recon-card data-ng-repeat="field in item.conflicts_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-field-type="{{field.type}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'bank-file'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="bank-file"
                                                   item="item"
                                                   field="field"
                                 >
@@ -180,13 +185,14 @@
                             </div>
 
                             <div class="recon-body-box dialogBankLineContainer {{'dialogBankLineContainer-' + item.___match_index}}"
-                                 data-status="new">
+                                 data-status="new" data-type="bank-file">
 
                                 <match-recon-card data-ng-repeat="field in item.new_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-field-type="{{field.type}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'bank-file'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="bank-file"
                                                   item="item"
                                                   field="field"
                                 >
@@ -244,12 +250,13 @@
                         <div layout="row">
 
                             <div class="recon-body-box dialogComplexTransactionLineContainer {{'dialogComplexTransactionLineContainer-' + item.___match_index}}"
-                                 data-status="unmatched">
+                                 data-status="unmatched" data-type="complex-transaction">
 
                                 <match-recon-card data-ng-repeat="field in item.unmatched_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'complex-transaction'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="complex-transaction"
                                                   item="item"
                                                   field="field"
                                 >
@@ -259,12 +266,13 @@
                             </div>
 
                             <div class="recon-body-box dialogComplexTransactionLineContainer {{'dialogComplexTransactionLineContainer-' + item.___match_index}}"
-                                 data-status="matched">
+                                 data-status="matched" data-type="complex-transaction">
 
                                 <match-recon-card data-ng-repeat="field in item.matched_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'complex-transaction'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="complex-transaction"
                                                   item="item"
                                                   field="field"
                                 >
@@ -274,12 +282,13 @@
                             </div>
 
                             <div class="recon-body-box dialogComplexTransactionLineContainer {{'dialogComplexTransactionLineContainer-' + item.___match_index}}"
-                                 data-status="auto_matched">
+                                 data-status="auto_matched" data-type="complex-transaction">
 
                                 <match-recon-card data-ng-repeat="field in item.auto_matched_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'complex-transaction'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="complex-transaction"
                                                   item="item"
                                                   field="field"
                                 >
@@ -289,12 +298,13 @@
                             </div>
 
                             <div class="recon-body-box dialogComplexTransactionLineContainer {{'dialogComplexTransactionLineContainer-' + item.___match_index}}"
-                                 data-status="ignore">
+                                 data-status="ignore" data-type="complex-transaction">
 
                                 <match-recon-card data-ng-repeat="field in item.ignore_fields"
                                                   data-field-id="{{field.id}}"
                                                   data-parent-index="{{item.___match_index}}"
-                                                  type="'complex-transaction'"
+                                                  data-field-index="{{$index}}"
+                                                  data-type="complex-transaction"
                                                   item="item"
                                                   field="field"
                                 >
