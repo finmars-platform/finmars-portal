@@ -28,11 +28,9 @@
         vm.getList = function () {
 
             attributeTypeService.getList(vm.entityType).then(function (data) {
-
                 vm.attrs = data.results;
 
                 $scope.$apply();
-
             });
         };
 

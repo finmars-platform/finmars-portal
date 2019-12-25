@@ -34,7 +34,10 @@
             </div>
         </div>
         <div data-ng-if="vm.attrs.length">
-            <md-card data-ng-repeat="item in vm.attrs" class="am-attr-card" data-ng-if="vm.checkIsHidden(item)">
+            <md-card data-ng-if="vm.checkIsHidden(item)"
+                     data-ng-repeat="item in vm.attrs"
+                     class="am-attr-card"
+                     data-ng-class="{'attribute-with-recalculation': item.can_recalculate}">
                 <div class="am-attr-card__wrapper">
                     <div class="am-attr-card__left-side">
                         <ng-md-icon class="am-attr-card__status" data-ng-if="!item.is_hidden"
