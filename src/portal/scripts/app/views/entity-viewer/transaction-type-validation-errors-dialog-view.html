@@ -23,7 +23,9 @@
                         <tbody>
 
                         <tr data-ng-repeat="item in vm.entityErrors track by $index">
-                            <td>{{item.action_notes}}</td>
+                            <td>
+                                {{item.action_notes}}
+                            </td>
                             <td>
                                 {{item.name}}
                             </td>
@@ -33,7 +35,9 @@
                         </tr>
 
                         <tr data-ng-repeat="item in vm.actionErrors track by $index">
-                            <td>{{item.action_notes}}</td>
+                            <td>
+                                {{item.action_notes}}
+                            </td>
                             <td>
                                 {{item.key}}
                             </td>
@@ -42,7 +46,17 @@
                             </td>
                         </tr>
 
-
+                        <tr data-ng-repeat="item in vm.exprsUsesDeletedInput track by item.key">
+                            <td>
+                                {{item.action_notes}}
+                            </td>
+                            <td>
+                                {{item.key}}
+                            </td>
+                            <td>
+                                The deleted input is used in the Expression.
+                            </td>
+                        </tr>
                         </tbody>
 
                     </table>
@@ -52,11 +66,10 @@
 
         </md-content>
     </md-dialog-content>
-    <md-dialog-actions layout="row">
 
+    <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.agree()">
             Ok
         </md-button>
-
     </md-dialog-actions>
 </md-dialog>

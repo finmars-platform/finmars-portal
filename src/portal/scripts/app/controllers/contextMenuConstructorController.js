@@ -129,8 +129,6 @@
 
         vm.addOption = function ($event, parentOption) {
 
-            console.log("Controller add option", parentOption)
-
             $mdDialog.show({
                 controller: 'ContextMenuOptionSettingsDialogController as vm',
                 templateUrl: 'views/dialogs/context-menu-option-settings-dialog-view.html',
@@ -154,6 +152,7 @@
                         parentOption.items = [];
                     }
 
+                    res.data.item.order = parentOption.items.length;
                     parentOption.items.push(res.data.item)
 
                 }
@@ -194,9 +193,6 @@
 
         vm.deleteOption = function ($event, parentOption, $index) {
 
-            console.log("Controller delete option", parentOption);
-            console.log("Controller delete $index", $index);
-
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/warning-dialog-view.html',
@@ -218,6 +214,7 @@
                 if (res && res.status === 'agree') {
 
                     parentOption.items.splice($index, 1);
+                    setItemsOrder(parentOption.items, true);
 
                 }
 
@@ -277,6 +274,24 @@
 
         };
 
+        var setItemsOrder = function (itemsList, onlyOneLevel) {
+
+            for (var i = 0; i < itemsList.length; i++) {
+
+                itemsList[i].order = i;
+
+                if (!onlyOneLevel) {
+
+                    if (itemsList[i].items && itemsList[i].items.length > 0) {
+                        setItemsOrder(itemsList[i].items);
+                    }
+
+                }
+
+            }
+
+        };
+
         vm.getLayout = function () {
 
             vm.readyStatus.data = false;
@@ -285,14 +300,11 @@
 
                 vm.layout = data;
 
-                if (vm.layout && vm.layout.data && // TODO delete later, needed to work with old context menus
-                    !vm.layout.data.menu.root.items[0].hasOwnProperty('order')) {
-
-                    vm.layout.data.menu.root.items.forEach(function (item, index) {
-                        item.order = index;
-                    });
-
+                if (vm.layout && vm.layout.data) { // TODO delete later, needed to work with old databases
+                    setItemsOrder(vm.layout.data.menu.root.items);
                 }
+
+                setItemsOrder(vm.layout.data.menu.root.items);
 
                 vm.readyStatus.data = true;
 

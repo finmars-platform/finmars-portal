@@ -6,8 +6,6 @@
     'use strict';
 
     var evEvents = require('../../services/entityViewerEvents');
-    var metaService = require('../../services/metaService');
-    var utilsHelper = require('../../helpers/utils.helper');
 
     module.exports = function () {
         return {

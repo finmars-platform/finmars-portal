@@ -13,6 +13,7 @@
             scope: {
                 evDataService: '=',
                 evEventService: '=',
+                contentWrapElement: '=',
                 workareaWrapElement: '='
             },
             link: function (scope, elem, attr) {
@@ -30,7 +31,7 @@
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
                         var width;
-                        var viewerHolder = elem.parents(".entity-viewer-holder");
+                        /*var viewerHolder = elem.parents(".entity-viewer-holder");
 
                         if (viewerHolder.length === 0) {
                             viewerHolder = elem.parents(".report-viewer-holder");
@@ -39,18 +40,21 @@
 
                         var viewerHolderWidth = viewerHolder.width();
 
-                        console.log('viewerHolderWidth', viewerHolderWidth);
-                        console.log('interfaceLayout.filterArea.width', interfaceLayout.filterArea.width);
-                        console.log('scope.components', scope.components);
-
                         if (scope.components.sidebar) {
                             width = viewerHolderWidth - interfaceLayout.filterArea.width;
                         } else {
                             width = viewerHolderWidth
+                        }*/
+
+                        var contentWrapWidth = scope.contentWrapElement.clientWidth;
+
+                        if (scope.components.sidebar) {
+                            width = contentWrapWidth - interfaceLayout.filterArea.width;
+                        } else {
+                            width = contentWrapWidth;
                         }
 
                         console.log('width', width);
-                        console.log('workareaWrapElement', scope.workareaWrapElement);
 
                         $(scope.workareaWrapElement).width(width);
                         var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
