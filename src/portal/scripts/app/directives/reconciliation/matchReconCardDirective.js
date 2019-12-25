@@ -12,7 +12,7 @@
             scope: {
                 item: '=',
                 field: '=',
-                type: '='
+                type: '@'
             },
             link: function (scope, elem, attr) {
 
