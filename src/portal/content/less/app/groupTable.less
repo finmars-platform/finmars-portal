@@ -464,13 +464,24 @@
   .filters-control-btn {
     position: relative;
 
+
     .full-width {
       width: 100%;
     }
 
-    // button {
-    //   min-width: 100px;
-    // }
+    .filters-management-btn {
+      min-width: 36px;
+      width: 36px;
+      min-height: 36px;
+      height: 36px;
+      padding: 0;
+
+      ng-md-icon {
+        fill: #777777;
+        margin: 0;
+      }
+    }
+
   }
 
   .layout-change-indicator {
@@ -1701,7 +1712,7 @@ md-checkbox.g-filter-options-checkbox {
 
       .md-button {
         background-color: #fff;
-        fill: #363636;
+        fill: #777777;
         line-height: 1;
         min-height: 36px;
         margin: 6px 8px;
@@ -2086,4 +2097,22 @@ button.md-button.toggle-dashboard-filter-btn {
     opacity: 1;
   }
 }
+
+// test top-right menu
+.top-right-menu-btns {
+  .md-button {
+    min-width: 103px;
+    width: 103px;
+  }
+}
+
+.test-margin-left {
+  margin: 2px 2px 2px 5px !important;
+}
+
+.test-margin-right {
+  margin: 2px 5px 2px 2px !important;
+}
+// < test top-right menu >
+
 
