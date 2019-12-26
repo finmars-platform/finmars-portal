@@ -59,6 +59,159 @@
 
     };
 
+    var useShortNameAttrs = ['instrument', 'instrument_type'];
+
+    var getEntityViewerDynamicAttrCellVal = function (flatListItem, column) {
+
+        var daKey = column.key.slice(11);
+        var cellValue = '';
+
+        for (var da = 0; da < flatListItem.attributes.length; da++) {
+            var daObject = flatListItem.attributes[da];
+
+            if (daObject.attribute_type_object.user_code === daKey) {
+
+                if (daObject.attribute_type_object.value_type === 30) {
+
+                    if (daObject.classifier_object) {
+                        cellValue = daObject.classifier_object.name;
+                    }
+
+                    break;
+
+                } else {
+
+                    switch (daObject.attribute_type_object.value_type) {
+                        case 10:
+                            cellValue = daObject.value_string;
+                            break;
+                        case 40:
+                            cellValue = daObject.value_date;
+                            break;
+                    }
+
+                    break;
+
+                }
+
+            }
+
+        }
+
+        return cellValue;
+    };
+
+    var getReportViewerCellVal = function (flatListItem, column, columnOrder, numberOfGroups, proxylineGroupData) {
+
+        var cellText = '';
+        var resetPLGD = false;
+
+        if (flatListItem.___type === 'subtotal') {
+
+            var columnWithGroupName = flatListItem.___level - 2; // group level count starts from 1 and we omit root group
+
+            if (columnWithGroupName < 0 && columnOrder === 0) { // to show grand total
+
+                cellText = 'Grand Total'
+
+            } else if (columnOrder === columnWithGroupName) {
+
+                cellText = String(flatListItem.___group_name);
+
+            } else if ((flatListItem[column.key] || flatListItem[column.key] === 0) && columnOrder >= numberOfGroups) {
+
+                cellText = String(flatListItem[column.key]);
+
+            }
+
+        } else {
+
+            if (proxylineGroupData.level && columnOrder === proxylineGroupData.level - 2) {
+
+                cellText = proxylineGroupData.group_name;
+                resetPLGD = true;
+
+            } else if ((flatListItem[column.key]) && columnOrder >= numberOfGroups) {
+
+                cellText = String(flatListItem[column.key]);
+
+            }
+
+        }
+
+        var result = {
+            cellText: cellText,
+            resetPLGD: resetPLGD
+        };
+
+        return result;
+
+    };
+
+    var getEntityViewerCellVal = function (flatListItem, column, columnOrder) {
+
+        var cellText = '';
+
+        if (flatListItem.___type === 'group') {
+
+            var columnWithGroupName = flatListItem.___level - 1; // group level count starts from 1 and we omit root group
+
+            if (columnOrder === 0) {
+
+                if (columnWithGroupName > 0) {
+                    cellText = '&nbsp;&nbsp;'.repeat(columnWithGroupName) + String(flatListItem.___group_name); // distinguish group level by spaces
+                } else {
+                    cellText = String(flatListItem.___group_name);
+                }
+
+            }
+
+        } else if (flatListItem.hasOwnProperty('attributes') &&
+            column.key.indexOf("attributes.") === 0) {  // for dynamic attributes
+
+            cellText = getEntityViewerDynamicAttrCellVal(flatListItem, column);
+
+            if ((cellText || cellText === 0) && typeof cellText !== 'string') {
+
+                cellText = String(cellText);
+
+            } else {
+                cellText = '';
+            }
+
+        } else if (flatListItem[column.key]) {
+
+            var colValueType = column.value_type;
+
+            if (colValueType === 'field') {
+
+                var attrObjName = column.key + '_object';
+                var attrObj = flatListItem[attrObjName];
+
+                if (useShortNameAttrs.indexOf(column.key) === -1) {
+
+                    if (column.key === "price_download_scheme") {
+                        cellText = flatListItem["price_download_scheme_object"].scheme_name;
+                    } else {
+                        cellText = attrObj.name;
+                    }
+
+                } else { // use short name for relation attributes
+                    cellText = attrObj.short_name;
+                }
+
+
+            } else {
+                cellText = String(flatListItem[column.key]);
+            }
+
+        }
+
+        return cellText;
+
+    };
+
+
     var convertFlatListToExcel = function (flatList, columns, isReport, numberOfGroups) {
 
         var table = '<table><thead><tr>';
@@ -88,7 +241,7 @@
             var c;
             for (c = 0; c < columns.length; c++) {
 
-                var columnKey = columns[c].key;
+                /*var columnKey = columns[c].key;
                 var cellText = '';
 
                 if (flatList[r].___type === 'subtotal') {
@@ -122,9 +275,15 @@
 
                     }
 
+                }*/
+
+                var resultObj = getReportViewerCellVal(flatList[r], columns[c], c, numberOfGroups, proxylineGroupData);
+
+                if (resultObj.resetPLGD) {
+                    proxylineGroupData = {}; // resetting after group name got rendered in row that goes after proxyline
                 }
 
-                td = td + '<td>' + cellText + '</td>';
+                td = td + '<td>' + resultObj.cellText + '</td>';
 
             }
 
@@ -139,11 +298,10 @@
             var c;
             for (c = 0; c < columns.length; c++) {
 
-                var columnKey = columns[c].key;
+                /*var columnKey = columns[c].key;
                 var cellText = '';
 
                 if (flatList[r].___type === 'group') {
-
 
                     var columnWithGroupName = flatList[r].___level - 1; // group level count starts from 1 and we omit root group
 
@@ -157,6 +315,11 @@
 
                     }
 
+                } else if (flatList[r].hasOwnProperty('attributes') &&
+                           columnKey.indexOf("attributes.") === 0) {  // for dynamic attributes
+
+                    cellText = getEntityViewerDynamicAttrCellVal(flatList[r], columns[c]);
+
                 } else if (flatList[r][columnKey]) {
 
                     var colValueType = columns[c].value_type;
@@ -165,13 +328,24 @@
 
                         var attrObjName = columnKey + '_object';
                         var attrObj = flatList[r][attrObjName];
-                        cellText = attrObj.name;
+
+                        if (useShortNameAttrs.indexOf(columnKey) === -1) {
+
+                            cellText = attrObj.name;
+
+                        } else { // use short name for relation attributes
+
+                            cellText = attrObj.short_name;
+                        }
+
 
                     } else {
                         cellText = String(flatList[r][columnKey]);
                     }
 
-                }
+                }*/
+
+                var cellText = getEntityViewerCellVal(flatList[r], columns[c], c);
 
                 td = td + '<td>' + cellText + '</td>';
 
@@ -270,7 +444,7 @@
             var c;
             for (c = 0; c < columns.length; c++) {
 
-                var columnKey = columns[c].key;
+                /*var columnKey = columns[c].key;
                 var cellText = '';
 
                 if (flatList[r].___type === 'subtotal') {
@@ -304,6 +478,14 @@
 
                     }
 
+                }*/
+
+                var resultObj = getReportViewerCellVal(flatList[r], columns[c], c, numberOfGroups, proxylineGroupData);
+
+                var cellText = resultObj.cellText;
+
+                if (resultObj.resetPLGD) {
+                    proxylineGroupData = {}; // resetting after group name got rendered in row that goes after proxyline
                 }
 
                 // Escaping double quotes and commas
@@ -323,7 +505,7 @@
             var c;
             for (c = 0; c < columns.length; c++) {
 
-                var columnKey = columns[c].key;
+                /*var columnKey = columns[c].key;
                 var cellText = '';
 
                 if (flatList[r].___type === 'group') {
@@ -340,11 +522,37 @@
 
                     }
 
+                } else if (flatList[r].hasOwnProperty('attributes') &&
+                    columnKey.indexOf("attributes.") === 0) {  // for dynamic attributes
+
+                    cellText = getEntityViewerDynamicAttrCellVal(flatList[r], columns[c]);
+
                 } else if (flatList[r][columnKey]) {
 
-                    cellText = String(flatList[r][columnKey]);
+                    var colValueType = columns[c].value_type;
 
-                }
+                    if (colValueType === 'field') {
+
+                        var attrObjName = columnKey + '_object';
+                        var attrObj = flatList[r][attrObjName];
+
+                        if (useShortNameAttrs.indexOf(columnKey) === -1) {
+
+                            cellText = attrObj.name;
+
+                        } else { // use short name for relation attributes
+
+                            cellText = attrObj.short_name;
+                        }
+
+
+                    } else {
+                        cellText = String(flatList[r][columnKey]);
+                    }
+
+                }*/
+
+                var cellText = getEntityViewerCellVal(flatList[r], columns[c], c);
 
                 // Escaping double quotes and commas
                 if (cellText.indexOf('"') !== -1) {
