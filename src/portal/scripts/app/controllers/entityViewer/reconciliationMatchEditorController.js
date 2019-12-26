@@ -297,6 +297,130 @@
 
         };
 
+        vm.activateBankCard = function ($event, field, line) {
+
+            var status = !field.active;
+
+            vm.bankLinesList = vm.bankLinesList.map(function (line) {
+
+                line.fields = line.fields.map(function (reconField) {
+
+                    reconField.active = false;
+
+                    return reconField
+
+                });
+
+                return line;
+
+            });
+
+            vm.complexTransactionList = vm.complexTransactionList.map(function (line) {
+
+                line.recon_fields = line.recon_fields.map(function (reconField) {
+
+                    reconField.active = false;
+
+                    return reconField
+
+                });
+
+                return line;
+
+            });
+
+            field.active = status;
+
+            if (field.active && field.linked_complex_transaction_field) {
+
+                vm.complexTransactionList = vm.complexTransactionList.map(function (line) {
+
+                    line.recon_fields = line.recon_fields.map(function (reconField) {
+
+                        if (reconField.id === field.linked_complex_transaction_field) {
+                            reconField.active = true
+                        }
+
+                        return reconField
+
+                    });
+
+                    return line;
+
+                });
+
+            }
+
+            console.log('vm.activateBankCard.$event', $event);
+            console.log('vm.activateBankCard.field', field);
+            console.log('vm.activateBankCard.line', line);
+
+        };
+
+        vm.activateComplexTransactionCard = function ($event, field, line) {
+
+            var status = !field.active;
+
+            vm.bankLinesList = vm.bankLinesList.map(function (line) {
+
+                line.fields = line.fields.map(function (reconField) {
+
+                    reconField.active = false;
+
+                    return reconField
+
+                });
+
+                return line;
+
+            });
+
+            vm.complexTransactionList = vm.complexTransactionList.map(function (line) {
+
+                line.recon_fields = line.recon_fields.map(function (reconField) {
+
+                    reconField.active = false;
+
+                    return reconField
+
+                });
+
+                return line;
+
+            });
+
+            field.active = status;
+
+            if (field.active) {
+
+                vm.bankLinesList = vm.bankLinesList.map(function (line) {
+
+                    line.fields = line.fields.map(function (reconField) {
+
+                        if (reconField.linked_complex_transaction_field) {
+
+                            if (reconField.linked_complex_transaction_field === field.id) {
+                                reconField.active = true
+                            }
+
+                        }
+
+                        return reconField
+
+                    });
+
+                    return line;
+
+                });
+
+            }
+
+            console.log('vm.activateComplexTransactionCard.$event', $event);
+            console.log('vm.activateComplexTransactionCard.field', field);
+            console.log('vm.activateComplexTransactionCard.line', line);
+
+        };
+
         vm.setAllMatchedComplexTransaction = function ($event, item) {
 
             var promises = [];

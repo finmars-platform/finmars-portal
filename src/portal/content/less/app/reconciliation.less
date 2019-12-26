@@ -134,7 +134,7 @@
 
 .match-recon-card {
   background: #fff;
-  margin: 5px;
+
   padding: 5px;
   cursor: pointer;
 }
@@ -227,4 +227,14 @@ md-menu.match-recon-body-line-settings-button.md-menu {
   max-height: 110px;
   max-width: 150px;
   box-sizing: border-box;
+}
+
+match-recon-card {
+  display: block;
+  border: 1px solid transparent;
+  margin: 5px;
+
+  &.active {
+    border: 1px solid #000;
+  }
 }
