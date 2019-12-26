@@ -6,6 +6,7 @@
     'use strict';
 
     var reconciliationBankFieldService = require('../../../services/reconciliation/reconciliationBankFieldService');
+    var reconciliationNewBankFieldService = require('../../../services/reconciliation/reconciliationNewBankFieldService');
     var reconciliationComplexTransactionFieldService = require('../../../services/reconciliation/reconciliationComplexTransactionFieldService');
 
     var reconMatchHelper = require('../../../helpers/reconMatchHelper');
@@ -103,6 +104,54 @@
 
             })
 
+
+        };
+
+        vm.createNewBankField = function(bankLine, field) {
+
+
+            var oldField = Object.assign({}, field)
+            var newField = Object.assign({}, field);
+
+            delete newField.id;
+            delete newField.linked_complex_transaction_field;
+            delete newField.status;
+
+            reconciliationNewBankFieldService.create(newField).then(function (data) {
+
+                reconciliationBankFieldService.deleteByKey(field.id).then(function (value) {
+
+                    field = data;
+                    field.status = undefined;
+
+                    vm.bankLinesList = vm.bankLinesList.map(function (line) {
+
+                        if (line.___match_index === bankLine.___match_index) {
+
+                            line.fields = line.fields.map(function (lineField) {
+
+                                if (lineField.id === oldField.id) {
+                                    return field
+                                }
+
+                                return lineField
+
+                            })
+
+                        }
+
+                        return line
+                    });
+
+
+                    vm.syncStatuses();
+
+
+                    $scope.$apply();
+
+                })
+
+            })
 
         };
 
@@ -608,9 +657,9 @@
 
                     drake.on('over', function (elem, container, source) {
 
-                        console.log('over.elem',elem);
-                        console.log('over.container',container);
-                        console.log('over.source',source);
+                        console.log('over.elem', elem);
+                        console.log('over.container', container);
+                        console.log('over.source', source);
 
                         areaItemsChanged = false;
                         $(container).addClass('active');
@@ -805,13 +854,22 @@
 
                                 } else {
 
-                                    bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
+                                    if (targetStatus === 'new') {
 
-                                    if (bankFileFieldStatus === 'new') {
-                                        vm.createBankField(bankFileLine, bankFileField)
+                                        vm.createNewBankField(bankFileLine, bankFileField)
+
                                     } else {
-                                        vm.updateBankFieldStatus(bankFileLine, bankFileField)
+
+                                        bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
+
+                                        if (bankFileFieldStatus === 'new') {
+                                            vm.createBankField(bankFileLine, bankFileField)
+                                        } else {
+                                            vm.updateBankFieldStatus(bankFileLine, bankFileField)
+                                        }
+
                                     }
+
 
                                 }
 
@@ -990,6 +1048,7 @@
                 dragAndDropBankFileLines.init();
                 dragAndDropComplexTransactionLines.init();
                 dragAndDropFields.init();
+
             }, 500);
 
         };
