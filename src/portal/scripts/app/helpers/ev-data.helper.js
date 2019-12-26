@@ -356,9 +356,9 @@
 
         console.timeEnd('Creating projection');
 
-        console.log('flatList length', flatList.length);
-        console.log('from', from);
-        console.log('to', to);
+        console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
+        console.log('View Context ' + evDataService.getViewContext() + ' from', from);
+        console.log('View Context '  + evDataService.getViewContext() + ' to', to);
 
         return flatList.slice(from, to);
 
