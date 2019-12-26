@@ -340,7 +340,8 @@
             <ng-md-icon icon="chevron_left"></ng-md-icon>
         </md-button>
     </div>
-    <div layout="row" class="filters-control-btn s-f-expanded-btns">
+
+    <!--<div layout="row" class="filters-control-btn s-f-expanded-btns">
         <md-button class="md-raised" data-ng-click="selectAll()">
             Select all
         </md-button>
@@ -348,25 +349,50 @@
             Deselect all
         </md-button>
     </div>
-
-    <div class="s-f-collapsed-btns" layout="column">
-        <md-button class="md-raised to-small-btn" data-ng-click="selectAll()">
-            <ng-md-icon icon="select_all"></ng-md-icon>
-            <md-tooltip md-direction="top">Select all</md-tooltip>
-        </md-button>
-        <md-button class="md-raised to-small-btn" data-ng-click="deselectAll()">
-            <ng-md-icon icon="highlight_off"></ng-md-icon>
-            <md-tooltip md-direction="top">Deselect all</md-tooltip>
-        </md-button>
-        <md-button class="md-raised to-small-btn clear-all" data-ng-click="clearAll()">
-            <ng-md-icon icon="clear_all"></ng-md-icon>
-            <md-tooltip md-direction="top">Clear all</md-tooltip>
-        </md-button>
-    </div>
-
     <div layout="row" class="filters-control-btn s-f-expanded-btns">
         <md-button class="md-raised clear-all full-width" data-ng-click="clearAll()">
             Clear all
+        </md-button>
+    </div>-->
+
+    <div layout="row" layout-align="space-between center" class="filters-control-btn s-f-expanded-btns">
+        <md-button class="md-button md-raised filters-management-btn" data-ng-click="selectAll()">
+            <ng-md-icon class="tooltip-inline-block"
+                        icon="check_box"
+                        size="30">
+            </ng-md-icon>
+            <md-tooltip class="tooltip_2" md-direction="top">Select all</md-tooltip>
+        </md-button>
+
+        <md-button class="md-raised filters-management-btn" data-ng-click="deselectAll()">
+            <ng-md-icon class="tooltip-inline-block"
+                        icon="check_box_outline_blank"
+                        size="30">
+            </ng-md-icon>
+            <md-tooltip class="tooltip_2" md-direction="top">Deselect all</md-tooltip>
+        </md-button>
+
+        <md-button class="md-raised clear-all full-width filters-management-btn" data-ng-click="clearAll()">
+            <ng-md-icon class="tooltip-inline-block"
+                        icon="cancel"
+                        size="30">
+            </ng-md-icon>
+            <md-tooltip class="tooltip_2" md-direction="top">Clear all</md-tooltip>
+        </md-button>
+    </div>
+
+    <div class="s-f-collapsed-btns" layout="column">
+        <md-button class="md-raised to-small-btn filters-management-btn" data-ng-click="selectAll()">
+            <ng-md-icon icon="check_box"></ng-md-icon>
+            <md-tooltip md-direction="top">Select all</md-tooltip>
+        </md-button>
+        <md-button class="md-raised to-small-btn filters-management-btn" data-ng-click="deselectAll()">
+            <ng-md-icon icon="check_box_outline_blank"></ng-md-icon>
+            <md-tooltip md-direction="top">Deselect all</md-tooltip>
+        </md-button>
+        <md-button class="md-raised to-small-btn clear-all filters-management-btn" data-ng-click="clearAll()">
+            <ng-md-icon icon="cancel"></ng-md-icon>
+            <md-tooltip md-direction="top">Clear all</md-tooltip>
         </md-button>
     </div>
 
