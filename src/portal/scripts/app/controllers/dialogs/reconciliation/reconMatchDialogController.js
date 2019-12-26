@@ -779,6 +779,16 @@
 
                                     }
 
+                                    if (bankFileFieldStatus === 'ignore' && nextSiblingBankFileFieldStatus === 'new' && targetStatus === 'new') {
+
+                                        bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+
+                                        vm.updateBankFieldStatus(bankFileLine, bankFileField);
+                                        vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField);
+
+                                    }
+
                                     if (bankFileFieldStatus === 'auto_matched' && nextSiblingBankFileFieldStatus === 'new' && targetStatus === 'new') {
 
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
@@ -1017,24 +1027,38 @@
                             var complexTransactionElClass = 'dialogComplexTransactionLineContainer-' + el.dataset.parentIndex;
                             var bankLineElClass = 'dialogBankLineContainer-' + el.dataset.parentIndex;
 
+                            var elemType = el.dataset.type;
+
                             if (target.dataset.status === 'auto_matched') {
                                 return false;
                             }
 
-                            if (target.classList.contains(complexTransactionElClass)) {
-                                return true;
-                            }
+                            if (target.className.indexOf('dialogBankLineContainer') !== -1 && elemType === 'bank-line') {
 
-                            if (target.classList.contains(bankLineElClass)) {
+                                // allow move bank file fields only in bank file line
 
-                                if (target.dataset.status === 'matched') {
-                                    return false;
+                                if (target.classList.contains(bankLineElClass)) {
+                                    return true
+                                } else {
+                                    return false
                                 }
 
-                                return true;
                             }
 
-                            return false;
+
+                            if (target.className.indexOf('dialogComplexTransactionLineContainer') !== -1 && elemType === 'complex-transaction') {
+
+                                // allow move bank file fields only in bank file line
+
+                                if (target.classList.contains(complexTransactionElClass)) {
+                                    return true
+                                } else {
+                                    return false
+                                }
+
+                            }
+
+                            return true;
 
                         }
                     });
