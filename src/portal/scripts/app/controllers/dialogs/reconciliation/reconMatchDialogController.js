@@ -607,6 +607,11 @@
                     });
 
                     drake.on('over', function (elem, container, source) {
+
+                        console.log('over.elem',elem);
+                        console.log('over.container',container);
+                        console.log('over.source',source);
+
                         areaItemsChanged = false;
                         $(container).addClass('active');
                     });
@@ -616,6 +621,8 @@
                     });
 
                     drake.on('shadow', function (elem, container) { // used to prevent showing shadow of card in deletion area
+
+                        console.log('elem', {elem: elem});
 
                         var cardType = elem.dataset.type;
                         var containerType;
@@ -781,6 +788,17 @@
 
                                         vm.updateBankFieldStatus(nextSiblingBankFileLine, nextSiblingBankFileField);
                                         vm.updateBankFieldStatus(bankFileField, bankFileLine);
+
+                                    }
+
+                                    if (targetStatus === 'ignore') {
+                                        bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
+
+                                        if (bankFileFieldStatus === 'new') {
+                                            vm.createBankField(bankFileLine, bankFileField)
+                                        } else {
+                                            vm.updateBankFieldStatus(bankFileLine, bankFileField)
+                                        }
 
                                     }
 
