@@ -155,6 +155,54 @@
 
         };
 
+        vm.createNewBankField = function(bankLine, field) {
+
+
+            var oldField = Object.assign({}, field)
+            var newField = Object.assign({}, field);
+
+            delete newField.id;
+            delete newField.linked_complex_transaction_field;
+            delete newField.status;
+
+            reconciliationNewBankFieldService.create(newField).then(function (data) {
+
+                reconciliationBankFieldService.deleteByKey(field.id).then(function (value) {
+
+                    field = data;
+                    field.status = undefined;
+
+                    vm.bankLinesList = vm.bankLinesList.map(function (line) {
+
+                        if (line.___match_index === bankLine.___match_index) {
+
+                            line.fields = line.fields.map(function (lineField) {
+
+                                if (lineField.id === oldField.id) {
+                                    return field
+                                }
+
+                                return lineField
+
+                            })
+
+                        }
+
+                        return line
+                    });
+
+
+                    vm.syncStatuses();
+
+
+                    $scope.$apply();
+
+                })
+
+            })
+
+        };
+
         vm.updateBankFieldStatus = function (bankLine, field) {
 
             reconciliationBankFieldService.update(field.id, field).then(function (data) {
@@ -781,6 +829,16 @@
 
                                     }
 
+                                    if (bankFileFieldStatus === 'ignore' && nextSiblingBankFileFieldStatus === 'new' && targetStatus === 'new') {
+
+                                        bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+
+                                        vm.updateBankFieldStatus(bankFileLine, bankFileField);
+                                        vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField);
+
+                                    }
+
 
                                     if (bankFileFieldStatus === 'matched' && nextSiblingBankFileFieldStatus === 'conflict' && targetStatus === 'conflict') {
 
@@ -836,12 +894,20 @@
 
                                 } else {
 
-                                    bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
+                                    if (targetStatus === 'new') {
 
-                                    if (bankFileFieldStatus === 'new') {
-                                        vm.createBankField(bankFileLine, bankFileField)
+                                        vm.createNewBankField(bankFileLine, bankFileField)
+
                                     } else {
-                                        vm.updateBankFieldStatus(bankFileLine, bankFileField)
+
+                                        bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
+
+                                        if (bankFileFieldStatus === 'new') {
+                                            vm.createBankField(bankFileLine, bankFileField)
+                                        } else {
+                                            vm.updateBankFieldStatus(bankFileLine, bankFileField)
+                                        }
+
                                     }
 
                                 }

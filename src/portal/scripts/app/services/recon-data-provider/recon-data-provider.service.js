@@ -328,7 +328,7 @@
 
                             obj = Object.assign({}, data);
                             obj.___group_name = event.groupName ? event.groupName : '-';
-                            obj.___group_identifier = event.groupId ? event.groupId : '-';
+                            obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
                             obj.___is_open = true;
                             // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -592,6 +592,8 @@
 
                 getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
                     resolve(data)
+
+
                 })
             }
 
@@ -607,10 +609,14 @@
 
             injectRegularFilters(requestParameters, evDataService, evEventService);
 
+            console.log('Here?')
+
             if (requestParameters.requestType === 'objects') {
 
                 getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
                     resolve(data)
+
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                 })
 
             }
@@ -619,6 +625,8 @@
 
                 getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
                     resolve(data)
+
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                 })
             }
 

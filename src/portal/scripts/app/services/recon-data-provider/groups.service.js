@@ -44,6 +44,8 @@
 
         var resultGroup;
 
+        console.log("recon heere?");
+
         items.forEach(function (item) {
 
             resultGroup = {
