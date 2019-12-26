@@ -1397,10 +1397,10 @@
 
                 };
 
-                scope.exportAsXls = function () {
+                /*scope.exportAsXls = function () {
                     var blobPart = convertReportHelper.convertToExcel();
                     downloadFileHelper.downloadFile(blobPart, "text/plain", "report.xls");
-                };
+                };*/
 
                 scope.exportAsCSV = function () {
                     /*var rows = document.querySelectorAll('.ev-content .g-row');
