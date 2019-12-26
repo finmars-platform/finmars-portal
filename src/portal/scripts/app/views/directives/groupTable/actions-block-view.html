@@ -1,4 +1,4 @@
-<div class="actions-block-holder">
+<div class="actions-block-holder" data-ng-class="{'overflow-hidden': isReport}">
 
     <div class="actions-block-scrollable-area">
 
@@ -118,6 +118,7 @@
                                ng-click="openActions($mdOpenMenu, $event)">
                         Split Panel
                     </md-button>
+
                     <md-menu-content width="4">
                         <md-menu-item data-ng-if="!isReport && entityType !== 'complex-transaction'">
                             <md-button ng-click="toggleSplitPanel($event, 'permission-editor')"
@@ -262,7 +263,7 @@
 
         <div data-ng-if="isReport">
 
-            <div layout="column">
+            <!--<div layout="column">
 
                 <md-button data-ng-click="calculateReport()" class="md-primary md-raised">Calculate</md-button>
 
@@ -427,6 +428,180 @@
                             </md-menu-item>
                         </md-menu-content>
                     </md-menu>
+                </div>
+
+            </div>-->
+
+            <div layout="column" class="top-right-menu-btns">
+
+                <div layout="row">
+                    <md-button data-ng-click="calculateReport()" class="md-primary md-raised test-margin-left">Calculate</md-button>
+                    <md-button data-ng-click="openReportSettings($event)" class="md-raised test-margin-right">Settings</md-button>
+                </div>
+
+                <div layout="row">
+                    <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                        <span ng-show="layoutChanged"
+                              class="layout-change-indicator">
+                            <ng-md-icon icon="track_changes" size="20">
+                                <md-tooltip class="tooltip_2"
+                                            md-direction="top">layout changed</md-tooltip>
+                            </ng-md-icon>
+                        </span>
+                        <md-menu class="full-width" layout="row">
+                            <md-button class="md-raised clear-all full-width md-button md-ink-ripple test-margin-left" type="button"
+                                       ng-click="$mdOpenMenu($event)">
+                                Layouts
+                            </md-button>
+                            <md-menu-content width="4">
+                                <md-menu-item>
+                                    <md-button ng-click="createNewLayout()" class="g-settings-option-btn">
+                                        <span>Create new layout</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="openLayoutList($event)" class="g-settings-option-btn">
+                                        <span>Open layout</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="saveLayoutList($event)"
+                                               class="g-settings-option-btn"
+                                               ng-disabled="isNewLayout">
+                                        <span>Save</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="saveAsLayoutList($event)" class="g-settings-option-btn">
+                                        <span>Save as</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="exportLayout($event)" class="g-settings-option-btn"
+                                               ng-class="{'disabled-btn': !layout.id  }">
+                                        <span>Export Layout</span>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
+
+                    <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                        <md-menu class="full-width" layout="row">
+                            <md-button class="md-raised clear-all full-width md-button md-ink-ripple test-margin-right" type="button"
+                                       ng-click="$mdOpenMenu($event)">
+                                Export
+                            </md-button>
+                            <md-menu-content width="4">
+                                <md-menu-item>
+                                    <md-button ng-click="exportAsPdf($event)" class="g-settings-option-btn">
+                                        <span>Export to PDF</span>
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button ng-click="exportAsCSV()" class="g-settings-option-btn">
+                                        <span>Export to CSV</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="copyReport()" class="g-settings-option-btn">
+                                        <span>Copy all to buffer</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="copySelectedToBuffer()" class="g-settings-option-btn">
+                                        <span>Copy selected to buffer</span>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
+                </div>
+
+                <div layout="row">
+                        <button class="md-raised clear-all full-width md-button md-ink-ripple test-margin-left"
+                                type="button"
+                                data-ng-click="openViewConstructor($event)">View
+                        </button>
+
+                        <md-button class="md-raised test-margin-right"
+                               ng-click="openCustomFieldsManager()" style="font-size: 9px">Custom Columns</md-button>
+                </div>
+
+                <div data-ng-if="isRootEntityViewer" layout="row">
+                    <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                        <md-menu class="full-width" layout="row">
+                            <md-button class="md-raised clear-all full-width md-button md-ink-ripple test-margin-left" type="button"
+                                       ng-click="openActions($mdOpenMenu, $event)">
+                                Split Panel
+                            </md-button>
+                            <md-menu-content width="4">
+                                <md-menu-item>
+                                    <md-button ng-click="toggleSplitPanel($event, 'balance-report')"
+                                               class="g-settings-option-btn">
+                                        <ng-md-icon icon="done"
+                                                    data-ng-show="currentAdditions.type !== 'balance-report'"
+                                                    class="z-menu-icon"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <ng-md-icon icon="done"
+                                                    data-ng-show="currentAdditions.type == 'balance-report'"
+                                                    class="z-menu-icon"></ng-md-icon>
+                                        <span>Open Balance Report view panel</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="toggleSplitPanel($event, 'pl-report')"
+                                               class="g-settings-option-btn">
+                                        <ng-md-icon icon="done"
+                                                    data-ng-show="currentAdditions.type !== 'pl-report'"
+                                                    class="z-menu-icon"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <ng-md-icon icon="done"
+                                                    data-ng-show="currentAdditions.type === 'pl-report'"
+                                                    class="z-menu-icon"></ng-md-icon>
+                                        <span>Open P&L Report view panel</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="toggleSplitPanel($event, 'transaction-report')"
+                                               class="g-settings-option-btn">
+                                        <ng-md-icon icon="done"
+                                                    data-ng-show="currentAdditions.type !== 'transaction-report'"
+                                                    class="z-menu-icon"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <ng-md-icon icon="done"
+                                                    data-ng-show="currentAdditions.type === 'transaction-report'"
+                                                    class="z-menu-icon"></ng-md-icon>
+                                        <span>Open Transaction Report view panel</span>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
+
+                    <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                        <md-menu class="full-width" layout="row">
+                            <md-button class="md-raised clear-all full-width md-button md-ink-ripple test-margin-right" type="button"
+                                       ng-click="openActions($mdOpenMenu, $event)">
+                                Matrix
+                            </md-button>
+                            <md-menu-content width="4">
+                                <md-menu-item>
+                                    <md-button ng-click="toggleMatrix($event)" class="g-settings-option-btn">
+                                        <ng-md-icon icon="done"
+                                                    data-ng-show="view != 'matrix'"
+                                                    class="z-menu-icon"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <ng-md-icon icon="done"
+                                                    data-ng-show="view == 'matrix'"
+                                                    class="z-menu-icon"></ng-md-icon>
+                                        <span>Open Matrix</span>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
                 </div>
 
             </div>
