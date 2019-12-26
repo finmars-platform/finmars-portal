@@ -17,6 +17,7 @@
     var evFilterService = require('../../services/ev-data-provider/filter.service');
 
     var metaService = require('../../services/metaService');
+    var EvScrollManager = require('../../services/ev-dom-manager/ev-scroll.manager');
 
     module.exports = function () {
         return {
@@ -177,7 +178,7 @@
 
                     scope.evDataService.setFlatList(flatList);
 
-                    evDomManager.calculateVirtualStep(elements, scope.evDataService);
+                    evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
 
                     projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
 
@@ -185,7 +186,7 @@
 
                     scope.evDataService.setProjection(projection);
 
-                    evDomManager.calculateScroll(elements, scope.evDataService);
+                    evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
                     evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 
@@ -317,7 +318,7 @@
                         cellContentOverflow();
 
                     } else {
-                        evDomManager.calculateScroll(elements, scope.evDataService);
+                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
                         evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
                     }
 
@@ -375,7 +376,7 @@
                     if (isReport) {
                         rvDomManager.calculateScroll(elements, scope.evDataService);
                     } else {
-                        evDomManager.calculateScroll(elements, scope.evDataService);
+                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
                     }
 
                 });
@@ -433,12 +434,14 @@
 
                     } else {
 
-                        evDomManager.calculateScroll(elements, scope.evDataService);
+                        scope.scrollManager =  new EvScrollManager();
+
+                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
                         evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
                         evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
-                        evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
+                        evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);
 
                     }
 
@@ -470,7 +473,7 @@
                 //     if (isReport) {
                 //         rvDomManager.calculateScroll(elements, scope.evDataService);
                 //     } else {
-                //         evDomManager.calculateScroll(elements, scope.evDataService);
+                //         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
                 //         evDomManager.calculateVirtualStep(elements, scope.evDataService);
                 //     }
                 //
@@ -486,8 +489,8 @@
                         }
 
                     } else {
-                        evDomManager.calculateScroll(elements, scope.evDataService);
-                        evDomManager.calculateVirtualStep(elements, scope.evDataService);
+                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+                        evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
 
                         if (projection) {
                             evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
