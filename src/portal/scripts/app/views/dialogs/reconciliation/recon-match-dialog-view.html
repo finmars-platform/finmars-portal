@@ -6,7 +6,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content>
+    <md-dialog-content class="dndScrollableElem">
         <div class="p-24 recon-match-content-holder">
 
             <div class="recon-match-header" layout="row">
@@ -109,6 +109,8 @@
                                                   data-type="bank-file"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateBankCard($event, field, item)"
                                 >
 
                                 </match-recon-card>
@@ -126,6 +128,8 @@
                                                   data-type="bank-file"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateBankCard($event, field, item)"
                                 >
 
                                 </match-recon-card>
@@ -143,6 +147,8 @@
                                                   data-type="bank-file"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateBankCard($event, field, item)"
                                 >
 
                                 </match-recon-card>
@@ -160,6 +166,8 @@
                                                   data-type="bank-file"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateBankCard($event, field, item)"
                                 >
 
                                 </match-recon-card>
@@ -178,6 +186,8 @@
                                                   data-type="bank-file"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateBankCard($event, field, item)"
                                 >
 
                                 </match-recon-card>
@@ -195,6 +205,8 @@
                                                   data-type="bank-file"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateBankCard($event, field, item)"
                                 >
 
                                 </match-recon-card>
@@ -259,6 +271,8 @@
                                                   data-type="complex-transaction"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateComplexTransactionCard($event, field, item)"
                                 >
 
                                 </match-recon-card>
@@ -275,6 +289,8 @@
                                                   data-type="complex-transaction"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateComplexTransactionCard($event, field, item)"
                                 >
 
                                 </match-recon-card>
@@ -291,6 +307,8 @@
                                                   data-type="complex-transaction"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateComplexTransactionCard($event, field, item)"
                                 >
 
                                 </match-recon-card>
@@ -307,6 +325,8 @@
                                                   data-type="complex-transaction"
                                                   item="item"
                                                   field="field"
+                                                  data-ng-class="{'active': field.active}"
+                                                  data-ng-click="vm.activateComplexTransactionCard($event, field, item)"
                                 >
 
                                 </match-recon-card>

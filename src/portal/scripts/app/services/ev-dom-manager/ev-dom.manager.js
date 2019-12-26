@@ -5,12 +5,10 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var utilsHelper = require('../../helpers/utils.helper');
     var evEvents = require('../../services/entityViewerEvents');
-    var EvScrollManager = require('./ev-scroll.manager');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
     var metaService = require('../../services/metaService');
 
-    var evScrollManager = new EvScrollManager();
 
     var requestGroups = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
 
@@ -549,20 +547,6 @@
 
     };
 
-    /*var clearActivated = function (evDataService) {
-
-        var objects = evDataService.getObjects();
-
-        objects.forEach(function (item) {
-
-            item.___is_activated = false;
-
-            evDataService.setObject(item);
-
-        });
-
-    };*/
-
     var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
         var entityType = evDataService.getEntityType();
@@ -760,7 +744,7 @@
 
     };
 
-    var calculateScroll = function (elements, evDataService) {
+    var calculateScroll = function (elements, evDataService, evScrollManager) {
         console.log("collapse button elements", elements.contentWrapElem, elements.contentWrapElem.clientWidth);
         evScrollManager.setViewportElem(elements.viewportElem);
         evScrollManager.setContentElem(elements.contentElem);
@@ -804,77 +788,7 @@
 
     };
 
-    /*var calculateScroll = function (elements, evDataService) {
-
-        evScrollManager.setViewportElem(elements.viewportElem);
-        evScrollManager.setContentElem(elements.contentElem);
-        evScrollManager.setContentWrapElem(elements.contentWrapElem);
-        evScrollManager.setRootWrapElem(elements.rootWrapElem);
-
-        var isRootEntityViewer = evDataService.isRootEntityViewer();
-
-        var interfaceLayout = evDataService.getInterfaceLayout();
-        var components = evDataService.getComponents();
-
-        var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
-        var contentWrapElemWidth = rvScrollManager.getContentWrapElemWidth();
-
-        var viewportTop,
-            viewportWidth,
-            viewportHeight;
-
-        viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
-
-        viewportTop = interfaceLayout.progressBar.height;
-
-        if (isRootEntityViewer) {
-
-            if (components.groupingArea) {
-                viewportTop = viewportTop + interfaceLayout.groupingArea.height
-            }
-
-            if (components.columnArea) {
-                viewportTop = viewportTop + interfaceLayout.columnArea.height
-            }
-
-            // console.log('contentWrapElemHeight', contentWrapElemHeight);
-            // console.log('viewportTop', viewportTop);
-            // console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
-
-
-            // viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
-
-        } else {
-
-            if (components.columnArea) {
-                viewportTop = viewportTop + interfaceLayout.columnArea.height
-            }
-
-            if (components.groupingArea) {
-                viewportTop = viewportTop + interfaceLayout.groupingArea.height;
-            }
-
-            console.log('rootviewer split', viewportTop);
-
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
-
-        }
-
-        evScrollManager.setViewportHeight(viewportHeight);
-        if (viewportWidth) {
-            evScrollManager.setViewportWidth(viewportWidth);
-        }
-
-        var paddingTop = calculatePaddingTop(evDataService);
-        var totalHeight = calculateTotalHeight(evDataService);
-
-        evScrollManager.setContentElemHeight(totalHeight);
-        evScrollManager.setContentElemPaddingTop(paddingTop);
-
-    };*/
-
-    var calculateVirtualStep = function (elements, evDataService) {
+    var calculateVirtualStep = function (elements, evDataService, evScrollManager) {
 
         var viewportHeight;
         var isRootEntityViewer = evDataService.isRootEntityViewer();
@@ -892,6 +806,11 @@
             viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
         }
 
+
+        console.log("View context: " + evDataService.getViewContext() + ". viewportHeight", viewportHeight);
+        console.log("View context: " + evDataService.getViewContext() + ". contentWrapElemHeight", contentWrapElemHeight);
+
+
         var step = Math.round(viewportHeight / rowHeight);
 
         evDataService.setVirtualScrollStep(step);
@@ -899,10 +818,11 @@
 
     };
 
-    var addScrollListener = function (elements, evDataService, evEventService) {
+    var addScrollListener = function (elements, evDataService, evEventService, evScrollManager) {
 
         var viewportElem = elements.viewportElem;
         var contentWrapElem = elements.contentWrapElem;
+
 
         var columnBottomRow;
 
@@ -912,6 +832,9 @@
         var paddingTop;
 
         var scrollYHandler = utilsHelper.throttle(function () {
+
+            console.log('View Context: ' + evDataService.getViewContext() + '. addScrollListener.viewportElem', viewportElem);
+            console.log('View Context: ' + evDataService.getViewContext() + '. addScrollListener. contentWrapElem', contentWrapElem);
 
             // if (lastScrollTop && lastScrollTop > viewportElem.scrollTop) {
             //     direction = 'top'
