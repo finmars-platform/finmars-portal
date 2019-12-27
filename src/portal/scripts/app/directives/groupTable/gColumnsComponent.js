@@ -744,7 +744,7 @@
                     getAttributes();
 
                     var availableAttrs;
-
+                    console.log("add column availableAttrs", availableAttrs, JSON.parse(JSON.stringify(scope.columns)));
                     availableAttrs = allAttrsList.filter(function (attr) {
                         for (var i = 0; i < scope.columns.length; i++) {
                             if (scope.columns[i].key === attr.key) {
@@ -754,7 +754,7 @@
 
                         return true;
                     });
-
+                    console.log("add column availableAttrs after", availableAttrs);
                     $mdDialog.show({
                         controller: "TableAttributeSelectorDialogController as vm",
                         templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
@@ -767,12 +767,13 @@
                             }
                         }
                     }).then(function (res) {
-
+                        console.log("add column response", res);
                         if (res && res.status === "agree") {
 
                             res.data.columns = true;
                             scope.columns.push(res.data);
                             scope.evDataService.setColumns(scope.columns);
+                            console.log("add column response", JSON.parse(JSON.stringify(scope.evDataService.getColumns())));
                             scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
