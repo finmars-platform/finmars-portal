@@ -156,7 +156,7 @@
 
         // This controller could be also opened as a dialog
         vm.cancel = function () {
-            $mdDialog.hide();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.downloadAttributes = function(){

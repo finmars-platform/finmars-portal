@@ -25,9 +25,7 @@
         vm.componentsTypes = [];
 
         vm.cancel = function () {
-
-            $mdDialog.hide();
-
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.addNewButton = function () {
