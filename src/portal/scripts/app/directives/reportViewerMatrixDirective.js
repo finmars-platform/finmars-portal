@@ -25,6 +25,8 @@
 
                 scope.processing = true;
 
+                var cellWidth = 0;
+
                 scope.alignGrid = function () {
 
                     var elemWidth = elem.width();
@@ -45,15 +47,20 @@
                     var minWidth = 100;
                     var minHeight = 20;
 
-                    var cellWidth = Math.floor(elemWidth / columnsCount);
+                    cellWidth = Math.floor(elemWidth / columnsCount);
                     var cellHeight = Math.floor(elemHeight / rowsCount);
 
                     // cellHeight = cellHeight - 2; // 1px for border top / border bottom
                     // cellWidth = cellWidth - 2; // 1px for border left / border right
 
-                    var items = elem.querySelectorAll('.report-viewer-matrix-cell');
+                    var items = elem[0].querySelectorAll('.rvMatrixCell');
 
-                    var holder = elem.querySelectorAll('.report-viewer-matrix-holder')[0];
+                    //var holder = elem[0].querySelector('.rvMatrixHolder');
+
+                    var headerScrollableElem = elem[0].querySelector('.rvmScrollableHeaderRow');
+                    var bodyScrollableElem = elem[0].querySelector('.scrollableMatrixBodyColumn');
+                    var rvMatrixValRowsContainer = elem[0].querySelector('.rvMatrixValueRowsHolder');
+                    var rvMatrixRowsNames = elem[0].querySelector('.rvMatrixRowsNames');
 
                     var fontSize = 16;
 
@@ -65,8 +72,23 @@
                         cellHeight = minHeight
                     }
 
-                    holder.style.width = columnsCount * cellWidth + 'px';
-                    holder.style.height = rowsCount * cellHeight + 'px';
+                    var matrixMaxWidth = columnsCount * cellWidth;
+                    var matrixMaxHeight = rowsCount * cellHeight;
+
+                    var matrixVCContainerWidth = matrixMaxWidth - cellWidth; // subtract width of column with names
+                    var matrixVCContainerHeight = matrixMaxHeight - cellHeight; // subtract height of matrix header
+
+                    /*holder.style.width = columnsCount * cellWidth + 'px';
+                    holder.style.height = rowsCount * cellHeight + 'px';*/
+                    headerScrollableElem.style.width = matrixMaxWidth + 'px';
+                    headerScrollableElem.style.left = cellWidth + 'px';
+
+                    // because of children with absolute positioning, elem below requires manual width setting
+                    rvMatrixRowsNames.style.width = cellWidth + 'px';
+
+                    bodyScrollableElem.style.height = matrixVCContainerHeight + 'px';
+                    rvMatrixValRowsContainer.style.width = matrixVCContainerWidth + 'px';
+                    rvMatrixValRowsContainer.style.height = matrixVCContainerHeight + 'px';
 
                     for (var i = 0; i < items.length; i = i + 1) {
 
@@ -75,6 +97,21 @@
                         items[i].style.paddingTop = Math.abs((cellHeight / 2 - fontSize / 2)) + 'px';
 
                     }
+
+                };
+
+                var scrollHeaderAndColumn = function () {
+
+                    var headerScrollableElem = elem[0].querySelector('.rvmScrollableHeaderRow');
+                    var bodyScrollableElem = elem[0].querySelector('.scrollableMatrixBodyColumn');
+                    var bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
+
+                    bodyScrollElem.addEventListener('scroll', function () {
+
+                        headerScrollableElem.style.left = (cellWidth + bodyScrollElem.scrollLeft) + 'px';
+                        bodyScrollableElem.style.top = -bodyScrollElem.scrollTop + 'px';
+
+                    });
 
                 };
 
@@ -234,7 +271,7 @@
 
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa);
                     scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate);
-
+                    console.log('fixed matrix cols and rows', scope.columns, scope.rows);
                     // console.log('scope.columns ', scope.columns);
                     // console.log('scope.rows ', scope.rows);
 
@@ -245,8 +282,8 @@
                         scope.matrixSettings.abscissa,
                         scope.matrixSettings.value_key,
                         scope.matrixSettings.subtotal_formula_id);
-
-                    // console.log('scope.matrix', scope.matrix);
+                    console.log('fixed matrix scope.matrix', scope.matrix);
+                    //console.log('scope.matrix', scope.matrix);
 
                     scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix);
 
@@ -371,6 +408,8 @@
                         scope.$apply();
 
                         scope.alignGrid();
+
+                        scrollHeaderAndColumn();
 
 
                     });
