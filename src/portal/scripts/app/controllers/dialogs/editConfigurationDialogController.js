@@ -14,7 +14,7 @@
         vm.item = Object.assign({}, item);
 
         vm.cancel = function () {
-            $mdDialog.hide();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function () {

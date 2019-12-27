@@ -6,6 +6,7 @@
     'use strict';
 
     var reconciliationBankFieldService = require('../../../services/reconciliation/reconciliationBankFieldService');
+    var reconciliationNewBankFieldService = require('../../../services/reconciliation/reconciliationNewBankFieldService');
     var reconciliationComplexTransactionFieldService = require('../../../services/reconciliation/reconciliationComplexTransactionFieldService');
 
     var reconMatchHelper = require('../../../helpers/reconMatchHelper');
@@ -63,117 +64,181 @@
 
         vm.createBankField = function (bankLine, field) {
 
-            console.trace();
+            return new Promise(function (resolve, reject) {
 
-            var newField = Object.assign({}, field);
+                console.trace();
 
-            delete newField.id;
+                var newField = Object.assign({}, field);
 
-            reconciliationBankFieldService.create(newField).then(function (data) {
+                delete newField.id;
 
-                console.log('bank field created', data);
+                reconciliationBankFieldService.create(newField).then(function (data) {
 
-                field.processing = false;
+                    console.log('bank field created', data);
 
-                field = data;
+                    field.processing = false;
 
-                vm.bankLinesList = vm.bankLinesList.map(function (line) {
+                    field = data;
 
-                    if (line.___match_index === bankLine.___match_index) {
+                    vm.bankLinesList = vm.bankLinesList.map(function (line) {
 
-                        line.fields = line.fields.map(function (lineField) {
+                        if (line.___match_index === bankLine.___match_index) {
 
-                            if (lineField.reference_name === field.reference_name) {
-                                return field
-                            }
+                            line.fields = line.fields.map(function (lineField) {
 
-                            return lineField
+                                if (lineField.reference_name === field.reference_name) {
+                                    return field
+                                }
 
-                        })
+                                return lineField
 
-                    }
+                            })
 
-                    return line
-                });
+                        }
+
+                        return line
+                    });
 
 
-                vm.syncStatuses();
+                    vm.syncStatuses();
 
-                $scope.$apply();
+                    resolve(data);
+
+                })
 
             })
 
 
+        };
+
+        vm.createNewBankField = function (bankLine, field) {
+
+            return new Promise(function (resolve, reject) {
+
+                var oldField = Object.assign({}, field)
+                var newField = Object.assign({}, field);
+
+                delete newField.id;
+                delete newField.linked_complex_transaction_field;
+                delete newField.status;
+
+                reconciliationNewBankFieldService.create(newField).then(function (data) {
+
+                    reconciliationBankFieldService.deleteByKey(field.id).then(function (value) {
+
+                        field = data;
+                        field.status = undefined;
+
+                        vm.bankLinesList = vm.bankLinesList.map(function (line) {
+
+                            if (line.___match_index === bankLine.___match_index) {
+
+                                line.fields = line.fields.map(function (lineField) {
+
+                                    if (lineField.id === oldField.id) {
+                                        return field
+                                    }
+
+                                    return lineField
+
+                                })
+
+                            }
+
+                            return line
+                        });
+
+
+                        vm.syncStatuses();
+
+                        resolve(data);
+
+
+                    })
+
+                })
+
+            })
         };
 
         vm.updateBankFieldStatus = function (bankLine, field) {
 
-            reconciliationBankFieldService.update(field.id, field).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                console.log('bank field updated', data);
+                reconciliationBankFieldService.update(field.id, field).then(function (data) {
 
-                field.processing = false;
+                    console.log('bank field updated', data);
 
-                vm.bankLinesList = vm.bankLinesList.map(function (line) {
+                    field.processing = false;
 
-                    if (line.___match_index === bankLine.___match_index) {
+                    vm.bankLinesList = vm.bankLinesList.map(function (line) {
 
-                        line.fields = line.fields.map(function (lineField) {
+                        if (line.___match_index === bankLine.___match_index) {
 
-                            if (lineField.id === field.id) {
-                                return field
-                            }
+                            line.fields = line.fields.map(function (lineField) {
 
-                            return lineField
+                                if (lineField.id === field.id) {
+                                    return field
+                                }
 
-                        })
+                                return lineField
 
-                    }
+                            })
 
-                    return line
-                });
+                        }
+
+                        return line
+                    });
 
 
-                vm.syncStatuses();
+                    vm.syncStatuses();
 
-                $scope.$apply();
+
+                    resolve(data);
+
+
+                })
 
             })
-
         };
 
         vm.updateComplexTransactionFieldStatus = function (complexTransaction, field) {
 
-            reconciliationComplexTransactionFieldService.update(field.id, field).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                console.log('complex transaction field updated', data);
 
-                field.processing = false;
+                reconciliationComplexTransactionFieldService.update(field.id, field).then(function (data) {
 
-                field = data;
+                    console.log('complex transaction field updated', data);
 
-                vm.complexTransactionList = vm.complexTransactionList.map(function (line) {
+                    field.processing = false;
 
-                    if (line.id === complexTransaction.id) {
+                    field = data;
 
-                        line.recon_fields = line.recon_fields.map(function (lineField) {
+                    vm.complexTransactionList = vm.complexTransactionList.map(function (line) {
 
-                            if (lineField.id === field.id) {
-                                return field
-                            }
+                        if (line.id === complexTransaction.id) {
 
-                            return lineField
+                            line.recon_fields = line.recon_fields.map(function (lineField) {
 
-                        })
+                                if (lineField.id === field.id) {
+                                    return field
+                                }
 
-                    }
+                                return lineField
 
-                    return line
-                });
+                            })
 
-                vm.syncStatuses();
+                        }
 
-                $scope.$apply();
+                        return line
+                    });
+
+                    vm.syncStatuses();
+
+                    resolve(field);
+
+                })
 
             })
 
@@ -608,9 +673,9 @@
 
                     drake.on('over', function (elem, container, source) {
 
-                        console.log('over.elem',elem);
-                        console.log('over.container',container);
-                        console.log('over.source',source);
+                        console.log('over.elem', elem);
+                        console.log('over.container', container);
+                        console.log('over.source', source);
 
                         areaItemsChanged = false;
                         $(container).addClass('active');
@@ -699,95 +764,131 @@
                                     console.log('bankFileFieldStatus', bankFileFieldStatus);
                                     console.log('nextSiblingBankFileFieldStatus', nextSiblingBankFileFieldStatus);
 
+
                                     if (bankFileFieldStatus === 'new' && nextSiblingBankFileFieldStatus === 'new' && targetStatus === 'new') {
 
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
 
-                                        vm.createBankField(bankFileLine, bankFileField);
-                                        vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField);
+                                        vm.createBankField(bankFileLine, bankFileField).then(function (value) {
+
+                                            nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+
+                                            vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField).then(function (value1) {
+
+                                                $scope.$apply();
+
+                                            })
+
+                                        })
+
 
                                     }
 
-
-                                    if (bankFileFieldStatus === 'conflict' && nextSiblingBankFileFieldStatus === 'new' && targetStatus === 'new') {
+                                    if (['ignore', 'matched', 'auto_matched', 'resolved', 'conflict'].indexOf(bankFileFieldStatus) !== -1 && nextSiblingBankFileFieldStatus === 'new' && targetStatus === 'new') {
 
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
 
-                                        vm.updateBankFieldStatus(bankFileLine, bankFileField);
-                                        vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField);
+                                        vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
 
-                                    }
+                                            nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
 
-                                    if (bankFileFieldStatus === 'matched' && nextSiblingBankFileFieldStatus === 'new' && targetStatus === 'new') {
+                                            vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField).then(function (value1) {
 
-                                        bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+                                                $scope.$apply();
 
-                                        vm.updateBankFieldStatus(bankFileLine, bankFileField);
-                                        vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField);
+                                            })
+
+                                        });
 
                                     }
-
-                                    if (bankFileFieldStatus === 'auto_matched' && nextSiblingBankFileFieldStatus === 'new' && targetStatus === 'new') {
-
-                                        bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-
-                                        vm.updateBankFieldStatus(bankFileLine, bankFileField);
-                                        vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField);
-
-                                    }
-
 
                                     if (bankFileFieldStatus === 'matched' && nextSiblingBankFileFieldStatus === 'conflict' && targetStatus === 'conflict') {
 
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
 
-                                        vm.updateBankFieldStatus(bankFileLine, bankFileField);
-                                        vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField);
+                                        vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
+
+                                            nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+
+                                            vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField).then(function (value1) {
+
+                                                $scope.$apply();
+
+                                            })
+
+                                        });
 
                                     }
 
                                     if (bankFileFieldStatus === 'auto_matched' && nextSiblingBankFileFieldStatus === 'conflict' && targetStatus === 'conflict') {
 
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
 
-                                        vm.updateBankFieldStatus(bankFileLine, bankFileField);
-                                        vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField);
+                                        vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
+
+                                            nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+
+                                            vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField).then(function (value1) {
+
+                                                $scope.$apply();
+
+                                            })
+
+                                        });
 
                                     }
 
                                     if (bankFileFieldStatus === 'new' && nextSiblingBankFileFieldStatus === 'conflict' && targetStatus === 'conflict') {
 
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
 
-                                        vm.updateBankFieldStatus(nextSiblingBankFileLine, nextSiblingBankFileField);
-                                        vm.createBankField(bankFileField, bankFileLine);
+                                        vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
+
+                                            nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+
+                                            vm.createBankField(nextSiblingBankFileLine, nextSiblingBankFileField).then(function (value1) {
+
+                                                $scope.$apply();
+
+                                            })
+
+                                        });
 
                                     }
 
                                     if (bankFileFieldStatus === 'conflict' && nextSiblingBankFileFieldStatus === 'conflict' && targetStatus === 'conflict') {
 
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
 
-                                        vm.updateBankFieldStatus(nextSiblingBankFileLine, nextSiblingBankFileField);
-                                        vm.updateBankFieldStatus(bankFileField, bankFileLine);
+                                        vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
+
+                                            nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+
+                                            vm.updateBankFieldStatus(nextSiblingBankFileLine, nextSiblingBankFileField).then(function (value1) {
+
+                                                $scope.$apply();
+
+                                            })
+
+                                        });
 
                                     }
 
                                     if (bankFileFieldStatus === 'ignore' && nextSiblingBankFileFieldStatus === 'conflict' && targetStatus === 'conflict') {
 
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
-                                        nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
 
-                                        vm.updateBankFieldStatus(nextSiblingBankFileLine, nextSiblingBankFileField);
-                                        vm.updateBankFieldStatus(bankFileField, bankFileLine);
+                                        vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
+
+                                            nextSiblingBankFileField.status = reconMatchHelper.getBankFieldStatusIdByName('resolved');
+
+                                            vm.updateBankFieldStatus(nextSiblingBankFileLine, nextSiblingBankFileField).then(function (value1) {
+
+                                                $scope.$apply();
+
+                                            })
+
+                                        });
 
                                     }
 
@@ -795,9 +896,13 @@
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
 
                                         if (bankFileFieldStatus === 'new') {
-                                            vm.createBankField(bankFileLine, bankFileField)
+                                            vm.createBankField(bankFileLine, bankFileField).then(function (value) {
+                                                $scope.$apply();
+                                            })
                                         } else {
-                                            vm.updateBankFieldStatus(bankFileLine, bankFileField)
+                                            vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
+                                                $scope.$apply();
+                                            })
                                         }
 
                                     }
@@ -805,13 +910,28 @@
 
                                 } else {
 
-                                    bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
+                                    if (targetStatus === 'new') {
 
-                                    if (bankFileFieldStatus === 'new') {
-                                        vm.createBankField(bankFileLine, bankFileField)
+                                        vm.createNewBankField(bankFileLine, bankFileField).then(function (value) {
+                                            $scope.$apply();
+                                        })
+
                                     } else {
-                                        vm.updateBankFieldStatus(bankFileLine, bankFileField)
+
+                                        bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
+
+                                        if (bankFileFieldStatus === 'new') {
+                                            vm.createBankField(bankFileLine, bankFileField).then(function (value) {
+                                                $scope.$apply();
+                                            })
+                                        } else {
+                                            vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
+                                                $scope.$apply();
+                                            })
+                                        }
+
                                     }
+
 
                                 }
 
@@ -824,7 +944,9 @@
 
                                 complexTransactionField.status = reconMatchHelper.getComplexTransactionFieldStatusIdByName(targetStatus);
 
-                                vm.updateComplexTransactionFieldStatus(complexTransactionLine, complexTransactionField)
+                                vm.updateComplexTransactionFieldStatus(complexTransactionLine, complexTransactionField).then(function (value) {
+                                    $scope.$apply();
+                                })
 
                             }
 
@@ -901,9 +1023,13 @@
                                     bankFileLine.matched_fields.push(bankFileField);
 
                                     if (bankFileFieldStatus === 'new') {
-                                        vm.createBankField(bankFileLine, bankFileField);
+                                        vm.createBankField(bankFileLine, bankFileField).then(function (value) {
+                                            $scope.$apply();
+                                        })
                                     } else {
-                                        vm.updateBankFieldStatus(bankFileLine, bankFileField);
+                                        vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
+                                            $scope.$apply();
+                                        })
                                     }
 
 
@@ -918,7 +1044,9 @@
                                         return item.id !== complexTransactionField.id
                                     });
 
-                                    vm.updateComplexTransactionFieldStatus(complexTransactionLine, complexTransactionField)
+                                    vm.updateComplexTransactionFieldStatus(complexTransactionLine, complexTransactionField).then(function (value) {
+                                        $scope.$apply();
+                                    })
 
                                 }
 
@@ -959,24 +1087,38 @@
                             var complexTransactionElClass = 'dialogComplexTransactionLineContainer-' + el.dataset.parentIndex;
                             var bankLineElClass = 'dialogBankLineContainer-' + el.dataset.parentIndex;
 
+                            var elemType = el.dataset.type;
+
                             if (target.dataset.status === 'auto_matched') {
                                 return false;
                             }
 
-                            if (target.classList.contains(complexTransactionElClass)) {
-                                return true;
-                            }
+                            if (target.className.indexOf('dialogBankLineContainer') !== -1 && elemType === 'bank-line') {
 
-                            if (target.classList.contains(bankLineElClass)) {
+                                // allow move bank file fields only in bank file line
 
-                                if (target.dataset.status === 'matched') {
-                                    return false;
+                                if (target.classList.contains(bankLineElClass)) {
+                                    return true
+                                } else {
+                                    return false
                                 }
 
-                                return true;
                             }
 
-                            return false;
+
+                            if (target.className.indexOf('dialogComplexTransactionLineContainer') !== -1 && elemType === 'complex-transaction') {
+
+                                // allow move bank file fields only in bank file line
+
+                                if (target.classList.contains(complexTransactionElClass)) {
+                                    return true
+                                } else {
+                                    return false
+                                }
+
+                            }
+
+                            return true;
 
                         }
                     });
@@ -990,6 +1132,7 @@
                 dragAndDropBankFileLines.init();
                 dragAndDropComplexTransactionLines.init();
                 dragAndDropFields.init();
+
             }, 500);
 
         };
