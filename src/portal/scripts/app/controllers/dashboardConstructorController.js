@@ -78,6 +78,31 @@
 
         };
 
+        vm.getRowsCount = function () {
+
+            var result = 10;
+
+            if (vm.layout.data.layout_type) {
+
+                if (vm.layout.data.layout_type === 'desktop') {
+                    result = 20;
+                }
+
+                if (vm.layout.data.layout_type === 'tablet') {
+                    result = 10;
+                }
+
+                if (vm.layout.data.layout_type === 'mobile') {
+                    result = 10;
+                }
+
+            }
+
+            return result;
+
+
+        };
+
         vm.activateTopPanel = function ($event) {
 
             vm.layout.data.fixed_area.status = 'active';
@@ -201,7 +226,9 @@
             };
 
             var columns_count = vm.getColumnsCount();
-            var rows_count = 10;
+            var rows_count = vm.getRowsCount();
+
+            // console.log('rows_count', rows_count);
 
             for (var r = 0; r < rows_count; r = r + 1) {
 
