@@ -91,7 +91,7 @@
         <div>
 
             <div data-ng-if="vm.loaderData.total" class="loader-description">
-                <b>{{vm.loaderData.text}}</b> {{vm.loaderData.current}} / {{vm.loaderData.total}}
+                <b>{{vm.loaderData.text}}</b> {{vm.loaderData.current}} / {{vm.loaderData.total}} <span data-ng-if="vm.loaderData.skippedTotal">({{vm.loaderData.skippedTotal}} steps were skipped)</span>
             </div>
 
             <div data-ng-if="vm.loaderData.additional.length">
