@@ -25,8 +25,7 @@
         vm.copyCallback = ''; // copy callback handler in inner controller;
 
         vm.cancel = function () {
-
-            $mdDialog.hide();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.checkVisibility = function () {

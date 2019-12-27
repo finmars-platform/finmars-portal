@@ -32,6 +32,8 @@
             vm.entityViewerDataService = null;
             vm.entityViewerEventService = null;
 
+            vm.reconciliationData = null; // Needed because of evDataService.resetData;
+
             vm.matchAvailable = false;
 
             vm.setEventListeners = function () {
@@ -110,7 +112,11 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
-                    reconDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                    console.log('vm.reconciliationData', vm.reconciliationData);
+
+                    vm.entityViewerDataService.setReconciliationData(vm.reconciliationData); // needed because on GroupChange we do evDataService.resetData
+
+                    reconDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
                 });
 
@@ -220,6 +226,8 @@
 
 
                 var reconciliationData = parentEntityViewerDataService.getReconciliationData();
+
+                vm.reconciliationData = JSON.parse(JSON.stringify(reconciliationData));
 
                 vm.entityViewerDataService.setReconciliationData(reconciliationData);
 

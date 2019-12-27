@@ -39,9 +39,7 @@
         vm.layouts = [];
 
         vm.cancel = function () {
-
-            $mdDialog.hide();
-
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.getContentTypeByEntityType = function () {
