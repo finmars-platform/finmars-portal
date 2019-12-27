@@ -32,7 +32,7 @@
         vm.priceSettings = {isRange: false};
 
         vm.cancel = function () {
-            $mdDialog.hide();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.automatedUploads = function ($event) {
