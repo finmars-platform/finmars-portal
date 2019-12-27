@@ -171,9 +171,11 @@
 
             cellText = getEntityViewerDynamicAttrCellVal(flatListItem, column);
 
-            if ((cellText || cellText === 0) && typeof cellText !== 'string') {
+            if (cellText || cellText === 0) {
 
-                cellText = String(cellText);
+                if (typeof cellText !== 'string') {
+                    cellText = String(cellText);
+                }
 
             } else {
                 cellText = '';
