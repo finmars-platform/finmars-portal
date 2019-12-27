@@ -5,10 +5,10 @@
             <h2>Complex Import Manager</h2>
             <span flex></span>
             <div class="toolbar-progression-indication" data-ng-if="vm.readyStatus.processing && vm.state === 'validate'">
-                <span>Validate Progress:</span> <span>{{vm.counter}} / {{vm.activeItemTotal}}</span>
+                <span>Validate Progress:</span> <span>{{vm.counter}} / {{vm.activeItemTotal}} <span data-ng-if="vm.skippedItem">({{vm.skippedItem}} steps were skipped)</span></span>
             </div>
             <div class="toolbar-progression-indication" data-ng-if="vm.readyStatus.processing && vm.state === 'import'">
-                <span>Import Progress:</span> <span>{{vm.counter}} / {{vm.activeItemTotal}}</span>
+                <span>Import Progress:</span> <span>{{vm.counter}} / {{vm.activeItemTotal}} <span data-ng-if="vm.skippedItem">({{vm.skippedItem}} steps were skipped)</span></span>
             </div>
         </div>
     </md-toolbar>
