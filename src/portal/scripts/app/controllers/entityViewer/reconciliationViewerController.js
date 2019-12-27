@@ -14,13 +14,7 @@
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var AttributeDataService = require('../../services/attributeDataService');
 
-        var reconDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
         var reconDataProviderService = require('../../services/recon-data-provider/recon-data-provider.service');
-
-        var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-
-        var expressionService = require('../../services/expression.service');
-        var middlewareService = require('../../services/middlewareService');
 
         module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
