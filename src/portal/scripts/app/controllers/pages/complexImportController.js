@@ -30,6 +30,7 @@
         vm.state = null; // validate or import
         vm.counter = 0;
         vm.activeItemTotal = 0;
+        vm.skippedItemTotal = 0;
 
         vm.processing = false;
         vm.loaderData = {};
@@ -106,6 +107,7 @@
 
             vm.loaderData.current = vm.counter;
             vm.loaderData.total = vm.activeItemTotal;
+            vm.loaderData.skippedTotal = vm.skippedItemTotal;
             vm.loaderData.status = vm.status;
 
             vm.loaderData.additional = [
@@ -240,6 +242,11 @@
 
             vm.activeItemTotal = schemeObject.actions.length;
 
+            vm.skippedItemTotal = schemeObject.actions.filter(function (item) {
+                return item.skip
+            }).length;
+
+
             var schemeErrorsInActions = [];
 
             schemeObject.actions.forEach(function (action) {
@@ -308,6 +315,7 @@
                 vm.loaderData = {
                     current: vm.counter,
                     total: vm.activeItemTotal,
+                    skippedTotal: vm.skippedItemTotal,
                     text: 'Validation Progress: Step',
                     status: vm.status,
                     additional: [
@@ -398,6 +406,10 @@
             vm.counter = 0;
             vm.activeItemTotal = schemeObject.actions.length;
 
+            vm.skippedItemTotal = schemeObject.actions.filter(function (item) {
+                return item.skip
+            }).length;
+
             var schemeErrorsInActions = [];
 
             schemeObject.actions.forEach(function (action) {
@@ -466,6 +478,7 @@
                 vm.loaderData = {
                     current: vm.counter,
                     total: vm.activeItemTotal,
+                    skippedTotal: vm.skippedItemTotal,
                     text: 'Validation Progress: Step',
                     status: vm.status,
                     additional: [
@@ -492,7 +505,12 @@
 
                         vm.state = 'import';
                         vm.counter = 0;
-                        vm.activeItemTotal = schemeObject.actions.length;
+
+                        vm.activeItemTotal = schemeObject.actions.length
+
+                        vm.skippedItemTotal = schemeObject.actions.filter(function (item) {
+                            return item.skip
+                        }).length;
 
                         setTimeout(function () {
 
@@ -503,6 +521,7 @@
                             vm.loaderData = {
                                 current: vm.counter,
                                 total: vm.activeItemTotal,
+                                skippedTotal: vm.skippedItemTotal,
                                 text: 'Import Progress: Step',
                                 status: vm.status,
                                 additional: [

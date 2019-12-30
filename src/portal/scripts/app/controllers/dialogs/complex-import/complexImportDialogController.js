@@ -124,7 +124,13 @@
 
             vm.state = 'validate';
             vm.counter = 0;
-            vm.activeItemTotal = schemeObject.actions.length;
+            vm.activeItemTotal = schemeObject.actions.filter(function (item) {
+                return !item.skip
+            }).length;
+
+            vm.skippedItem = schemeObject.actions.filter(function (item) {
+                return item.skip
+            }).length;
 
             complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
@@ -200,7 +206,13 @@
 
             vm.state = 'validate';
             vm.counter = 0;
-            vm.activeItemTotal = schemeObject.actions.length;
+            vm.activeItemTotal = schemeObject.actions.filter(function (item) {
+                return !item.skip
+            }).length;
+
+            vm.skippedItem = schemeObject.actions.filter(function (item) {
+                return item.skip
+            }).length;
 
             complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
@@ -216,7 +228,13 @@
 
                     vm.state = 'import';
                     vm.counter = 0;
-                    vm.activeItemTotal = schemeObject.actions.length;
+                    vm.activeItemTotal = schemeObject.actions.filter(function (item) {
+                        return !item.skip
+                    }).length;
+
+                    vm.skippedItem = schemeObject.actions.filter(function (item) {
+                        return item.skip
+                    }).length;
 
                     complexImportService.startImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
