@@ -18,7 +18,7 @@
                 evEventService: '='
             },
             link: function (scope, elem, attr) {
-                console.log("charts rvChartsSettings", scope.rvChartsSettings);
+
                 scope.activeItem = null;
 
                 scope.readyStatuses = {
@@ -35,11 +35,11 @@
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
                 var chartHolderElem = elem[0].querySelector('.report-viewer-chart-holder');
 
-                if (scope.rvChartsSettings.chart_custom_name) {
+                /*if (scope.rvChartsSettings.chart_custom_name) {
                     scope.chartName = scope.rvChartsSettings.chart_custom_name;
                 } else {
                     scope.chartName = scope.rvChartsSettings.component_name;
-                }
+                }*/
 
                 var componentHeight = mainElem.clientHeight;
                 var componentWidth = mainElem.offsetWidth;
@@ -99,13 +99,6 @@
                     });
 
                     chartData = rvChartsHelper.getDataForChartsFromFlatList(itemList, nameKey, numberKey, fieldValueCalcFormulaId);
-                    /*chartData = [
-                        {name: 'First', numericValue: 12405},
-                        {name: 'Second', numericValue: 43528},
-                        {name: 'Third', numericValue: -3000},
-                        {name: 'Fourth', numericValue: -2345},
-                        {name: 'Fifth', numericValue: -10000}
-                    ];*/
 
                     scope.chartDataWithPosNums = chartData.filter(function (cData) {
                         if (cData.numericValue > 0) {
@@ -388,7 +381,6 @@
                             .attr('d', negArc)
                             .style("stroke-width", "2px")
                             .attr('fill', function (d) {
-                                // return getNegPartColor(d.data.name);
                                 return getPartColor(d.data.colorNumber);
                             });
 

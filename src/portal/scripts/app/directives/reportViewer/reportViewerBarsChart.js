@@ -28,11 +28,11 @@
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
                 var chartHolderElem = elem[0].querySelector('.report-viewer-chart-holder');
 
-                if (scope.rvChartsSettings.chart_custom_name) {
+                /*if (scope.rvChartsSettings.chart_custom_name) {
                     scope.chartName = scope.rvChartsSettings.chart_custom_name;
                 } else {
                     scope.chartName = scope.rvChartsSettings.component_name;
-                }
+                }*/
 
                 var componentHeight = mainElem.clientHeight;
                 var componentWidth = mainElem.offsetWidth;
@@ -340,8 +340,8 @@
 
                 var drawChartWithVerticalCols = function () {
 
-                    var chartNameElemHeight = elem[0].querySelector('.dashboard-chart-name-h').clientHeight;
-                    chartMargin.top += chartNameElemHeight;
+                    /*var chartNameElemHeight = elem[0].querySelector('.dashboard-chart-name-h').clientHeight;
+                    chartMargin.top += chartNameElemHeight;*/
 
                     var chartWidth = componentWidth - chartMargin.right - chartMargin.left;
                     var barPaddingInPx;
@@ -528,8 +528,8 @@
 
                 var drawChartWithHorizontalCols = function () {
 
-                    var chartNameElemHeight = elem[0].querySelector('.dashboard-chart-name-h').clientHeight;
-                    chartMargin.top += chartNameElemHeight;
+                    /*var chartNameElemHeight = elem[0].querySelector('.dashboard-chart-name-h').clientHeight;
+                    chartMargin.top += chartNameElemHeight;*/
 
                     adjustWidthForTicksText();
 

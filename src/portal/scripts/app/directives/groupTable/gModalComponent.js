@@ -81,13 +81,15 @@
 
             if (viewContext === 'reconciliation_viewer') {
 
-                var columns = vm.entityViewerDataService.getColumns();
+                /*var columns = vm.entityViewerDataService.getColumns();
 
                 console.log('columns', columns);
 
                 vm.entityAttrs = columns.map(function (item) {
                     return item
-                });
+                });*/
+
+                vm.entityAttrs = attributeDataService.getReconciliationAttributes();
 
                 syncAttrs();
                 getSelectedAttrs();

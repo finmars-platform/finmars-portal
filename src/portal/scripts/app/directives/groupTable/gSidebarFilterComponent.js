@@ -47,87 +47,99 @@
 
                 var entityAttrs = [];
                 var dynamicAttrs = [];
-                var allAttrsList = [];
 
+                var viewContext = scope.evDataService.getViewContext();
                 var contextMenu = {};
                 var ttypes = null;
 
                 var getAttributes = function () {
 
-                    switch (scope.entityType) {
-                        case 'balance-report':
-                            allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
-                            break;
+                    var allAttrsList = [];
 
-                        case 'pl-report':
-                            allAttrsList = scope.attributeDataService.getPlReportAttributes();
-                            break;
+                    if (viewContext === 'reconciliation_viewer') {
 
-                        case 'transaction-report':
-                            allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
-                            break;
+                        allAttrsList = scope.attributeDataService.getReconciliationAttributes();
 
-                        default:
-                            entityAttrs = [];
-                            dynamicAttrs = [];
-                            allAttrsList = [];
+                    } else {
 
-                            entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(scope.entityType);
+                        switch (scope.entityType) {
+                            case 'balance-report':
+                                allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
+                                break;
 
-                            entityAttrs.forEach(function (item) {
-                                if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
-                                    item.name = 'Group';
-                                }
-                                item.entity = scope.entityType;
-                            });
+                            case 'pl-report':
+                                allAttrsList = scope.attributeDataService.getPlReportAttributes();
+                                break;
 
-                            var instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
-                            var transactionUserFields = scope.attributeDataService.getTransactionUserFields();
+                            case 'transaction-report':
+                                allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
+                                break;
 
-                            instrumentUserFields.forEach(function (field) {
+                            default:
+                                entityAttrs = [];
+                                dynamicAttrs = [];
+                                allAttrsList = [];
 
-                                entityAttrs.forEach(function (entityAttr) {
+                                entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(scope.entityType);
 
-                                    if (entityAttr.key === field.key) {
-                                        entityAttr.name = field.name;
+                                entityAttrs.forEach(function (item) {
+                                    if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                                        item.name = 'Group';
                                     }
+                                    item.entity = scope.entityType;
+                                });
 
-                                })
+                                var instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
+                                var transactionUserFields = scope.attributeDataService.getTransactionUserFields();
 
-                            });
+                                instrumentUserFields.forEach(function (field) {
 
-                            transactionUserFields.forEach(function (field) {
+                                    entityAttrs.forEach(function (entityAttr) {
 
-                                entityAttrs.forEach(function (entityAttr) {
+                                        if (entityAttr.key === field.key) {
+                                            entityAttr.name = field.name;
+                                        }
 
-                                    if (entityAttr.key === field.key) {
-                                        entityAttr.name = field.name;
-                                    }
+                                    })
 
-                                })
+                                });
 
-                            });
+                                transactionUserFields.forEach(function (field) {
 
-                            dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
+                                    entityAttrs.forEach(function (entityAttr) {
+
+                                        if (entityAttr.key === field.key) {
+                                            entityAttr.name = field.name;
+                                        }
+
+                                    })
+
+                                });
+
+                                dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
 
 
-                            dynamicAttrs = dynamicAttrs.map(function (attribute) {
+                                dynamicAttrs = dynamicAttrs.map(function (attribute) {
 
-                                var result = {};
+                                    var result = {};
 
-                                result.attribute_type = Object.assign({}, attribute);
-                                result.value_type = attribute.value_type;
-                                result.content_type = scope.contentType;
-                                result.key = 'attributes.' + attribute.user_code;
-                                result.name = attribute.name;
+                                    result.attribute_type = Object.assign({}, attribute);
+                                    result.value_type = attribute.value_type;
+                                    result.content_type = scope.contentType;
+                                    result.key = 'attributes.' + attribute.user_code;
+                                    result.name = attribute.name;
 
-                                return result
+                                    return result
 
-                            });
+                                });
 
-                            allAttrsList = allAttrsList.concat(entityAttrs);
-                            allAttrsList = allAttrsList.concat(dynamicAttrs);
+                                allAttrsList = allAttrsList.concat(entityAttrs);
+                                allAttrsList = allAttrsList.concat(dynamicAttrs);
+                        }
+
                     }
+
+                    return allAttrsList;
 
                 };
 
@@ -473,7 +485,7 @@
 
                 scope.addFilter = function ($event) {
 
-                    getAttributes();
+                    var allAttrsList = getAttributes();
 
                     var availableAttrs;
 
