@@ -478,7 +478,7 @@
                 vm.loaderData = {
                     current: vm.counter,
                     total: vm.activeItemTotal,
-                    skippedTotal :skippedItemTotal,
+                    skippedTotal: vm.skippedItemTotal,
                     text: 'Validation Progress: Step',
                     status: vm.status,
                     additional: [

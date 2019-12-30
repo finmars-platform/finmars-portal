@@ -51,7 +51,6 @@
         });
 
 
-
         $stateProvider.state('app.home', {
             url: '/',
             templateUrl: 'views/home-view.html',
@@ -548,7 +547,13 @@
                 url: '/audit',
                 templateUrl: 'views/system/audit-view.html',
                 controller: 'AuditController as vm'
+            })
+            .state('app.system.file-reports', {
+                url: '/file-reports',
+                templateUrl: 'views/pages/file-reports-view.html',
+                controller: 'FileReportsController as vm'
             });
+
     }
 
 }());
