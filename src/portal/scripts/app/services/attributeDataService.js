@@ -66,6 +66,8 @@
         var instrumentUserFieldsData = [];
         var transactionUserFieldsData = [];
 
+        var reconciliationAttributes = [];
+
         function _getBalanceReportAttributes() {
 
             var result = [];
@@ -717,6 +719,14 @@
 
         }
 
+        function setReconciliationAttributes (attributesList) {
+            reconciliationAttributes = attributesList;
+        }
+
+        function getReconciliationAttributes () {
+            return reconciliationAttributes;
+        }
+
         return {
 
             // Remember! Download Custom Fields and Dynamic Attributes and User Fields before .get() them
@@ -747,6 +757,8 @@
 
             getAllAttributesAsFlatList: getAllAttributesAsFlatList,
 
+            setReconciliationAttributes: setReconciliationAttributes,
+            getReconciliationAttributes: getReconciliationAttributes,
 
             // Append methods
 

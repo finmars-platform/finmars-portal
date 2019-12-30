@@ -42,7 +42,7 @@
         vm.entityId = entityId;
 
         vm.entity = {};
-        var originalEntity = {};
+        //var originalEntity = {};
         vm.complexTransactionOptions = {};
 
         var originalEntityInputs = null;
@@ -320,10 +320,10 @@
                     };
 
 
-                    originalEntity = JSON.parse(angular.toJson(vm.entity));
+                    //originalEntity = JSON.parse(angular.toJson(vm.entity));
 
-                    if (originalEntity.inputs) {
-                        originalEntityInputs = originalEntity.inputs;
+                    if (vm.entity.inputs) {
+                        originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
                     }
 
                     vm.getTransactionUserFields().then(function () {
@@ -666,8 +666,8 @@
                     entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
 
                         console.log('data', data);
-                        originalEntity = JSON.parse(angular.toJson(vm.entity));
-                        originalEntityInputs = originalEntity.inputs;
+                        //originalEntity = JSON.parse(angular.toJson(vm.entity));
+                        originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
 
                         vm.processing = false;
                         $scope.$apply();
@@ -693,7 +693,7 @@
 
                         reject()
 
-                    })
+                    });
 
                 }
 
@@ -1294,7 +1294,6 @@
 
                             } else {
 
-                                console.log("input deletion actionFieldValue", actionFieldValue);
                                 for (var a = 0; a < inputsToDeleteList.length; a++) {
                                     var dInputName = inputsToDeleteList[a];
 
@@ -1306,7 +1305,8 @@
 
                                         var actionFieldLocation = {
                                             action_notes: "",
-                                            key: key
+                                            key: key,
+                                            inputName: dInputName
                                         };
 
                                         if (action.action_notes) { // set action name
@@ -1331,8 +1331,6 @@
                 });
 
             });
-
-            console.log("input deletion exprsUsesDeletedInput", exprsUsesDeletedInput);
 
         };
 
@@ -1486,7 +1484,7 @@
                 value_expr: vm.newItem.value_expr
             });
 
-            originalEntity.inputs.push({
+            /*originalEntity.inputs.push({
                 name: vm.newItem.name,
                 verbose_name: vm.newItem.verbose_name,
                 value_type: vm.newItem.value_type,
@@ -1509,8 +1507,9 @@
                 pricing_policy: vm.newItem.pricing_policy,
                 value: vm.newItem.value,
                 value_expr: vm.newItem.value_expr
-            });
+            });*/
 
+            // if created input with name of deleted one, remove it from warning
             for (var i = 0; i < inputsToDeleteList.length; i++) {
                 var inputToDelete = inputsToDeleteList[i];
 
@@ -1520,8 +1519,13 @@
                 }
             }
 
-            originalEntityInputs = originalEntity.inputs;
-            vm.save(originalEntity, true);
+            exprsUsesDeletedInput = exprsUsesDeletedInput.filter(function (exprWarning) {
+                return exprWarning.inputName !== vm.newItem.name;
+            });
+            // < if created input with name of deleted one, remove it from warning >
+
+            originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
+            //vm.save(originalEntity, true);
 
             vm.newItem.name = null;
             vm.newItem.verbose_name = null;

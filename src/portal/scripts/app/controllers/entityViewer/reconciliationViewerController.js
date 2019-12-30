@@ -236,6 +236,7 @@
                 var columns = [];
 
                 if (reconciliationData.length) {
+
                     Object.keys(reconciliationData[0]).forEach(function (key) {
 
                         var col = {};
@@ -248,6 +249,8 @@
                     })
                 }
 
+                var attributes = JSON.parse(JSON.stringify(columns)); // prevent creation of reference to columns object
+                vm.attributeDataService.setReconciliationAttributes(attributes);
                 vm.entityViewerDataService.setColumns(columns);
 
                 vm.setEventListeners();

@@ -25,6 +25,10 @@
                     data: false
                 };
 
+                if (scope.item && scope.item.data && scope.item.data.custom_component_name) {
+                    scope.customName = vm.componentType.data.custom_component_name;
+                }
+
                 scope.vm = {
                     tabNumber: scope.tabNumber,
                     rowNumber: scope.rowNumber,

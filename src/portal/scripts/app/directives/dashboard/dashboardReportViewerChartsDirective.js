@@ -24,6 +24,9 @@
                     data: false
                 };
 
+                if (scope.item && scope.item.data && scope.item.data.chart_custom_name) {
+                    scope.customName = scope.item.data.chart_custom_name;
+                }
 
                 scope.vm = {
                     componentType: scope.item,

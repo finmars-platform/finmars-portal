@@ -25,7 +25,7 @@
         var renderHelper = require('../../helpers/render.helper');
 
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
-        var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses')
+        var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
         module.exports = function ($scope, $mdDialog, $transitions) {
 
@@ -659,8 +659,6 @@
 
                 if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
-                        component_name: vm.componentType.data.name,
-                        chart_custom_name: vm.componentType.data.chart_custom_name,
                         bar_name_key: vm.componentType.data.settings.bar_name_key,
                         bar_number_key: vm.componentType.data.settings.bar_number_key,
                         bars_direction: vm.componentType.data.settings.bars_direction,
@@ -688,8 +686,6 @@
                 if (vm.componentType.data.type === 'report_viewer_pie_chart') {
                     vm.rvChartsSettings = {
                         //fieldsKeys: vm.componentType.data.settings.fieldsKeys
-                        component_name: vm.componentType.data.name,
-                        chart_custom_name: vm.componentType.data.chart_custom_name,
                         group_attr: vm.componentType.data.settings.group_attr,
                         number_attr: vm.componentType.data.settings.number_attr,
                         group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula,
