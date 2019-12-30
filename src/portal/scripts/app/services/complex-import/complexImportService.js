@@ -137,12 +137,25 @@
 
         return new Promise(function (resolve, reject) {
 
-            if (action.csv_import_scheme) {
-                resolve(handleCsvImportAction(action.csv_import_scheme, file, delimiter, index, updateCounter))
-            }
+            if (action.skip){
 
-            if (action.complex_transaction_import_scheme) {
-                resolve(handleComplexTransactionImportAction(action.complex_transaction_import_scheme, file, delimiter, index, updateCounter))
+                resolve({
+                    config: {},
+                    data: {
+                        skip: true
+                    }
+                })
+
+            } else {
+
+                if (action.csv_import_scheme) {
+                    resolve(handleCsvImportAction(action.csv_import_scheme, file, delimiter, index, updateCounter))
+                }
+
+                if (action.complex_transaction_import_scheme) {
+                    resolve(handleComplexTransactionImportAction(action.complex_transaction_import_scheme, file, delimiter, index, updateCounter))
+                }
+
             }
 
         })
