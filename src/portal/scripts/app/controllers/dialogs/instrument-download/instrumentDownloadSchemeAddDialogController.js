@@ -333,6 +333,18 @@
 
         };
 
+        vm.checkForUserExpr = function (item) {
+            if (item.name_expr) {
+                if (item.name && item.name === item.name_expr) {
+                    return false;
+                }
+
+                return 'md-primary';
+            }
+
+            return false;
+        };
+
         vm.removeProviderField = function (item, $index) {
             console.log('$index', $index);
 

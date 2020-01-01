@@ -13,6 +13,7 @@
 
         vm.entityType = data.entityType;
         vm.customField = data.customField;
+        vm.attributeDataService = attributeDataService;
 
         vm.readyStatus = {
             content: true
