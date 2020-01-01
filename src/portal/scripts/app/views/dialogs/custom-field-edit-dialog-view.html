@@ -64,8 +64,13 @@
                         <input data-ng-model="vm.customField.expr">
                     </md-input-container>
 
-                    <expression-editor-button data-item="vm.customField.expr" data-ng-if="vm.readyStatus.content"
-                                              data-data="{groups: vm.inputsGroups, functions: vm.inputsFunctions}"></expression-editor-button>
+                    <expression-editor-button data-ng-if="vm.readyStatus.content"
+                                              data-item="vm.customField.expr"
+                                              data-data="{groups: vm.inputsGroups,
+                                                         functions: vm.inputsFunctions,
+                                                         entityType: vm.entityType,
+                                                         attributeDataService: vm.attributeDataService}">
+                    </expression-editor-button>
 
                 </div>
 
