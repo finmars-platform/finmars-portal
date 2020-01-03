@@ -7,6 +7,11 @@
 
     var fileReportsService = require('../../services/fileReportsService');
 
+    var baseUrlService = require('../../services/baseUrlService');
+
+    var baseUrl = baseUrlService.resolve();
+
+
     module.exports = function ($scope, $mdDialog) {
 
 
@@ -29,6 +34,12 @@
 
 
             })
+
+        };
+
+        vm.getFileUrl = function(item) {
+
+            return baseUrl + 'file-reports/file-report/' + item.id + '/view/';
 
         };
 
