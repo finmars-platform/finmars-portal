@@ -11,6 +11,10 @@
     var importTransactionService = require('../../services/import/importTransactionService');
 
 
+    var baseUrlService = require('../../services/baseUrlService');
+
+    var baseUrl = baseUrlService.resolve();
+
     module.exports = function ($scope, $mdDialog) {
 
         logService.controller('TransactionImportController', 'initialized');
@@ -330,6 +334,12 @@
 
         };
 
+        vm.getFileUrl = function(id) {
+
+            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+
+        };
+
         vm.load = function ($event) {
             vm.processing = true;
 
@@ -434,6 +444,8 @@
                         }
 
                         description = description + '<div> You have successfully imported transactions file </div>';
+
+                        description = description + '<div><a href="'+ vm.getFileUrl(data.stats_file_report) +'" download>Download Report File</a></div>';
 
                         $mdDialog.show({
                             controller: 'SuccessDialogController as vm',
