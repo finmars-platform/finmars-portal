@@ -1108,6 +1108,14 @@
             return data.reconciliationEventService
         }
 
+        function setReconciliationImportConfig(config) {
+            data.reconImportConfig = config
+        }
+
+        function getReconciliationImportConfig() {
+            return data.reconImportConfig;
+        }
+
         function setParentDataService(dataService) {
             data.parentDataService = dataService
         }
@@ -1310,6 +1318,9 @@
 
             setReconciliationEventService: setReconciliationEventService,
             getReconciliationEventService: getReconciliationEventService,
+
+            setReconciliationImportConfig: setReconciliationImportConfig,
+            getReconciliationImportConfig: getReconciliationImportConfig,
 
             setParentDataService: setParentDataService,
             getParentDataService: getParentDataService,

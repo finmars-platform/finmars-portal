@@ -273,8 +273,8 @@
                             var filters = {
                                 instrument: activeObject['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
-                                date_0: reportOptions.report_date,
-                                date_1: reportOptions.report_date
+                                date_after: reportOptions.report_date,
+                                date_before: reportOptions.report_date
                             };
 
                             priceHistoryService.getList({filters: filters}).then(function (data) {

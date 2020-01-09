@@ -228,6 +228,10 @@
 
             }
 
+            if (obj.is_canceled) {
+                status = 'row-recon-canceled';
+            }
+
             classList.push(status)
 
         }

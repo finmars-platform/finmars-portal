@@ -599,6 +599,7 @@
                             if (res.status === 'agree') {
 
                                 scope.evDataService.setReconciliationData(res.data.results);
+                                scope.evDataService.setReconciliationImportConfig(res.data.config);
 
                                 additions.isOpen = true;
                                 additions.type = 'reconciliation';
@@ -1505,7 +1506,7 @@
 
                 };
 
-                scope.matchReconciliationLines = function($event){
+                scope.matchReconciliationLines = function ($event) {
 
                     $mdDialog.show({
                         controller: 'ReconMatchDialogController as vm',
@@ -1525,6 +1526,14 @@
                         }
                     })
 
+
+                };
+
+                scope.reconBookSelected = function ($event) {
+
+                    console.log('reconBookSelected');
+
+                    scope.evEventService.dispatchEvent(evEvents.RECON_BOOK_SELECTED)
 
                 };
 
@@ -1552,7 +1561,6 @@
                         })
 
                     }
-
 
 
                 };

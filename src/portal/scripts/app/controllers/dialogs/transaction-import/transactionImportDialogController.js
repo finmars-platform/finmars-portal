@@ -24,6 +24,10 @@
     var instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
 
+    var baseUrlService = require('../../../services/baseUrlService');
+
+    var baseUrl = baseUrlService.resolve();
+
     module.exports = function ($scope, $mdDialog) {
 
         logService.controller('TransactionMappingDialogController', 'initialized');
@@ -362,6 +366,12 @@
 
         };
 
+        vm.getFileUrl = function (id) {
+
+            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+
+        };
+
         vm.validate = function (resolve) {
             vm.readyStatus.processing = true;
 
@@ -497,6 +507,10 @@
 
 
                         description = description + '<div> You have successfully imported transactions file </div>';
+
+                        if (stats_file_report) {
+                            description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
+                        }
 
                         $mdDialog.show({
                             controller: 'SuccessDialogController as vm',
