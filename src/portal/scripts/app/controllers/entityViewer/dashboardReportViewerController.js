@@ -39,6 +39,8 @@
             vm.startupSettings = null;
             vm.dashboardDataService = null;
             vm.dashboardEventService = null;
+            vm.dashboardComponentDataService = null;
+            vm.dashboardComponentEventService = null;
             vm.componentType = null;
             vm.matrixSettings = null;
 
@@ -88,6 +90,10 @@
 
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
 
+                });
+
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
+                    vm.getView();
                 });
 
                 if (vm.componentType.data.type === 'report_viewer_grand_total') {
@@ -604,6 +610,8 @@
 
                 Promise.all(promises).then(function (data) {
 
+                    vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
+
                     vm.readyStatus.attributes = true;
                     $scope.$apply();
 
@@ -630,6 +638,8 @@
                 vm.startupSettings = $scope.$parent.vm.startupSettings;
                 vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
+                vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
+                vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
                 vm.componentType = $scope.$parent.vm.componentType;
                 vm.entityViewerDataService.setViewContext('dashboard');
 

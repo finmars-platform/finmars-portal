@@ -1,0 +1,54 @@
+<md-dialog aria-label="dashboard report viewer component settings dialog"
+           class="draggable-dialog width-50"
+           drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Matrix Component Editor</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="p-16">
+        <div layout="row" data-ng-if="vm.availableAbscissaAttrs && vm.availableAbscissaAttrs.length > 0">
+            <table-attribute-selector title="Abscissa"
+                                      dialog-title="Abscissa"
+                                      available-attrs="vm.availableAbscissaAttrs"
+                                      item="vm.item.data.settings.abscissa"
+                                      class="dashboard-constructor-field1"></table-attribute-selector>
+        </div>
+
+        <div layout="row" data-ng-if="vm.availableOrdinateAttrs && vm.availableOrdinateAttrs.length > 0">
+            <table-attribute-selector title="Ordinate"
+                                      dialog-title="Ordinate"
+                                      available-attrs="vm.availableOrdinateAttrs"
+                                      item="vm.item.data.settings.ordinate"
+                                      class="dashboard-constructor-field1"></table-attribute-selector>
+        </div>
+
+        <div layout="row" data-ng-if="vm.availableValueAttrs && vm.availableValueAttrs.length > 0">
+            <table-attribute-selector title="Value"
+                                      dialog-title="Value"
+                                      available-attrs="vm.availableValueAttrs"
+                                      item="vm.item.data.settings.value_key"
+                                      class="dashboard-constructor-field1"></table-attribute-selector>
+        </div>
+
+        <div layout="row">
+
+            <md-button class="md-raised md-primary"
+                       data-ng-click="vm.openNumberFormatSettings($event)">
+                Format Settings
+            </md-button>
+
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()" style="margin-right:20px;">
+            Cancel
+        </md-button>
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            OK
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

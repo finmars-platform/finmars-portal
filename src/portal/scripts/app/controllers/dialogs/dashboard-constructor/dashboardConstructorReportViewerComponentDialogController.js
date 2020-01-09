@@ -18,10 +18,12 @@
         if (item) {
             vm.item = item;
         } else {
+
             vm.item = {
                 type: 'report_viewer',
                 id: null, // should be generated before create
                 name: '',
+                custom_component_name: '',
                 settings: {
                     components: {
                         addEntityBtn: false,
@@ -36,17 +38,14 @@
                     linked_components: {
                         report_settings: {},
                         filter_links: []
+                    },
+                    user_settings: {
+                        manage_columns: []
                     }
                 }
             }
+
         }
-
-
-        vm.updateFilterLink = function (item) {
-
-            // ?
-
-        };
 
         vm.deleteFilterLink = function (item, $index) {
 
@@ -100,9 +99,13 @@
 
 
         vm.getAttributes = function(){
-
             vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
 
+            vm.multiselectorAttrs = vm.attributes.map(function (attribute) {
+                var multiselectorName = attribute.name;
+                return {id: attribute.key, name: multiselectorName};
+            });
+            console.log("user settings vm.multiselectorAttrs", vm.multiselectorAttrs);
         };
 
         vm.getLayouts = function () {

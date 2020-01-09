@@ -4,7 +4,9 @@
 
     var checkIcon = renderHelper.getCheckIcon();
     var lockIcon = renderHelper.getLockIcon();
+    var lock2Icon = renderHelper.getLock2Icon();
     var starIcon = renderHelper.getStarIcon();
+    var cancelIcon = renderHelper.getCancelIcon();
 
     var getIcon = function (obj, currentMember, classList) {
 
@@ -33,12 +35,10 @@
 
             });
 
-            if (hasChange) {
-                result = ''
-            }
-
             if (hasManage) {
                 result = starIcon
+            } else if (hasChange) {
+                result = ''
             }
 
             if (obj.___is_activated && result !== '') { // Be aware of specific mutation
@@ -49,6 +49,14 @@
 
         if (currentMember && currentMember.is_admin) {
             result = starIcon
+        }
+
+        if (obj.is_canceled) {
+            result = cancelIcon;
+        }
+
+        if (obj.is_locked) {
+            result = lock2Icon;
         }
 
         if (obj.___is_activated) {

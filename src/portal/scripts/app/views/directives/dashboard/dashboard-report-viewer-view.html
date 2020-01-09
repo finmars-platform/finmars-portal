@@ -3,11 +3,32 @@
         <div class="dashboard-component-name">
             <span class data-ng-if="customName" data-ng-bind="customName"></span>
             <span data-ng-if="!customName && item" data-ng-bind="item.data.name"></span>
+
+            <md-tooltip class="tooltip_2"
+                        md-direction="top">
+                <span class data-ng-if="customName" data-ng-bind="customName"></span>
+                <span data-ng-if="!customName && item" data-ng-bind="item.data.name"></span>
+            </md-tooltip>
         </div>
 
-        <md-button class="md-button dashboard-component-settings-btn" aria-label="dashboard component settings btn">
-            <ng-md-icon size="24" icon="menu"></ng-md-icon>
-        </md-button>
+        <md-menu class="dashboard-component-settings-menu">
+            <md-button class="md-button dashboard-component-settings-btn"
+                       aria-label="dashboard component settings btn"
+                       data-ng-click="$mdOpenMenu($event)">
+                <ng-md-icon size="24" icon="menu"></ng-md-icon>
+                <md-tooltip class="tooltip_2"
+                            md-direction="top">Component settings</md-tooltip>
+            </md-button>
+
+            <md-menu-content>
+                <md-menu-item>
+                    <md-button>Save Layout</md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button data-ng-click="vm.removeBankLine($event, item)">Edit Component</md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
     </div>
 
     <div class="dashboard-component-body" flex="grow">
