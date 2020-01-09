@@ -1,13 +1,13 @@
 <div class="p-24">
 
 
-    <div data-ng-if="readyStatus.content">
+    <div data-ng-if="vm.readyStatus.content">
 
         <h4>System Files</h4>
 
         <div>
 
-            <table>
+            <table class="file-reports-table">
 
                 <thead>
                 <tr>
@@ -29,7 +29,7 @@
 
                     <td data-ng-bind="item.name"></td>
                     <td data-ng-bind="item.notes"></td>
-                    <td><a href="{{item.file_url}}" download>Download</a></td>
+                    <td><a href="{{vm.getFileUrl(item)}}" download>Download</a></td>
 
                 </tr>
 
@@ -43,7 +43,7 @@
 
     </div>
 
-    <div data-ng-if="!readyStatus.content">
+    <div data-ng-if="!vm.readyStatus.content">
 
         <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
             <progress-circular diameter="100"></progress-circular>

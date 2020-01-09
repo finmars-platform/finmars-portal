@@ -225,6 +225,7 @@
                         ng-click="openViewConstructor($event)">Columns/Groups/Filters
                 </button>
             </div>
+
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
                 <md-button class="md-raised md-primary full-width" data-ng-click="matchReconciliationLines($event)">Match</md-button>
             </div>
@@ -257,6 +258,10 @@
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
+            </div>
+
+            <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                <md-button class="md-raised full-width" data-ng-click="reconBookSelected($event)">Book Selected</md-button>
             </div>
 
         </div>

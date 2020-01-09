@@ -13,6 +13,9 @@
 
     var importEntityService = require('../../../services/import/importEntityService');
 
+    var baseUrlService = require('../../../services/baseUrlService');
+
+    var baseUrl = baseUrlService.resolve();
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -237,6 +240,12 @@
 
         };
 
+        vm.getFileUrl = function(id) {
+
+            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+
+        };
+
         vm.load = function ($event) {
 
             vm.readyStatus.processing = true;
@@ -309,6 +318,9 @@
                 console.log('description', description);
 
                 description = description + '<div> You have successfully imported csv file </div>';
+
+
+                description = description + '<div><a href="'+ vm.getFileUrl(data.stats_file_report) +'" download>Download Report File</a></div>';
 
                 $mdDialog.show({
                     controller: 'SuccessDialogController as vm',
