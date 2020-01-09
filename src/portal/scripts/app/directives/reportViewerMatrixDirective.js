@@ -300,6 +300,7 @@
                             scope.matrixSettings.number_format.negative_color_format_id = 0;
                             scope.matrixSettings.number_format.negative_format_id = 0;
                             scope.matrixSettings.number_format.round_format_id = 1;
+                            scope.matrixSettings.number_format.percentage_format_id = 0;
                             break;
                         case 'market_value':
                             scope.matrixSettings.number_format.zero_format_id = 1;
@@ -307,6 +308,7 @@
                             scope.matrixSettings.number_format.negative_format_id = 1;
                             scope.matrixSettings.number_format.thousands_separator_format_id = 2;
                             scope.matrixSettings.number_format.round_format_id = 1;
+                            scope.matrixSettings.number_format.percentage_format_id = 0;
                             break;
                         case 'amount':
                             scope.matrixSettings.number_format.zero_format_id = 1;

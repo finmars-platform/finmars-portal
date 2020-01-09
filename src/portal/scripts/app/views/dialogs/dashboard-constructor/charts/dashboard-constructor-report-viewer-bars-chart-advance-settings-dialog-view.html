@@ -71,58 +71,9 @@
 
 <div class="m-b-35" layout="row">
 
-    <md-menu>
-        <md-button class="md-raised"
-                   ng-click="$mdOpenMenu($event)">
-            Tooltips Number Format
-        </md-button>
-
-        <md-menu-content width="4">
-
-            <md-menu-item>
-                <md-button ng-click="vm.setNumberFormatPreset('price')"
-                           class="g-settings-option-btn">
-                    <span>Price (0)</span>
-                </md-button>
-            </md-menu-item>
-
-            <md-menu-item>
-                <md-button ng-click="vm.setNumberFormatPreset('market_value')"
-                           class="g-settings-option-btn">
-                    <span>Market Value (000'000)</span>
-                </md-button>
-            </md-menu-item>
-
-            <md-menu-item>
-                <md-button class="g-settings-option-btn"
-                           ng-click="vm.setNumberFormatPreset('amount')">
-                    <span>Amount (000'000.00)</span>
-                </md-button>
-            </md-menu-item>
-
-            <md-menu-item>
-                <md-button class="g-settings-option-btn"
-                           ng-click="vm.setNumberFormatPreset('exposure')">
-                    <span>Exposure (0.0%)</span>
-                </md-button>
-            </md-menu-item>
-
-            <md-menu-item>
-                <md-button class="g-settings-option-btn"
-                           ng-click="vm.setNumberFormatPreset('return')">
-                    <span>Return (0.00%)</span>
-                </md-button>
-            </md-menu-item>
-
-            <md-menu-item>
-                <md-button class="g-settings-option-btn"
-                           ng-click="vm.openNumberFormatSettings($event)">
-                    <span>Custom</span>
-                </md-button>
-            </md-menu-item>
-
-        </md-menu-content>
-    </md-menu>
+    <number-format-menu data-format-settings="vm.item.settings.number_format"
+                        data-button-name="Tooltips Number Format"
+                        data-button-classes="md-raised"></number-format-menu>
 
 </div>
 

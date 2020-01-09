@@ -7,251 +7,287 @@
             <span flex></span>
         </div>
     </md-toolbar>
+
     <md-dialog-content>
-        <div class="p-24">
+        <md-tabs>
+            <md-tab label="Main">
+                <md-content class="p-16">
 
-            <md-input-container style="width: 200px;">
-                <label for="">Name</label>
-                <input type="text" data-ng-model="vm.item.name">
-            </md-input-container>
+                    <div>
+                        <md-input-container style="width: 200px;">
+                            <label for="">Name</label>
+                            <input type="text" data-ng-model="vm.item.name">
+                        </md-input-container>
 
-            <div class="m-t-16 m-b-16">
+                        <div class="m-t-16 m-b-16">
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Report Type</label>
-                    <md-select data-ng-model="vm.item.settings.entity_type"
-                               data-ng-change="vm.reportTypeChange()">
-                        <md-option value="balance-report">Balance Report</md-option>
-                        <md-option value="pl-report">P&L Report</md-option>
-                        <md-option value="transaction-report">Transaction Report</md-option>
-                    </md-select>
-                </md-input-container>
+                            <md-input-container style="width: 200px;">
+                                <label for="">Report Type</label>
+                                <md-select data-ng-model="vm.item.settings.entity_type"
+                                           data-ng-change="vm.reportTypeChange()">
+                                    <md-option value="balance-report">Balance Report</md-option>
+                                    <md-option value="pl-report">P&L Report</md-option>
+                                    <md-option value="transaction-report">Transaction Report</md-option>
+                                </md-select>
+                            </md-input-container>
 
-            </div>
-            <div class="m-t-16 m-b-16">
+                        </div>
+                        <div class="m-t-16 m-b-16">
 
-                <md-input-container class="dashboard-constructor-field1">
-                    <label for="">Layout</label>
-                    <md-select ng-model="vm.item.settings.layout"
-                               md-container-class="common-select-container"
-                               md-on-open="vm.getLayouts()"
-                               md-on-close="layoutSearchTerm = ''"
-                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                        <div>
-                            <md-select-header>
-                                <input data-ng-model="layoutSearchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
+                            <md-input-container class="dashboard-constructor-field1">
+                                <label for="">Layout</label>
+                                <md-select ng-model="vm.item.settings.layout"
+                                           md-container-class="common-select-container"
+                                           md-on-open="vm.getLayouts()"
+                                           md-on-close="layoutSearchTerm = ''"
+                                           ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                                    <div>
+                                        <md-select-header>
+                                            <input data-ng-model="layoutSearchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
 
-                            <div class="select-options-holder">
+                                        <div class="select-options-holder">
 
-                                <md-option
-                                        data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
-                                        ng-value="layout.id"
-                                        ng-bind="layout.name">
-                                </md-option>
+                                            <md-option
+                                                    data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
+                                                    ng-value="layout.id"
+                                                    ng-bind="layout.name">
+                                            </md-option>
+
+                                        </div>
+                                    </div>
+                                </md-select>
+                            </md-input-container>
+
+                            <!--<md-input-container style="width: 200px;">
+                                <label for="">Layout</label>
+                                <md-select data-ng-model="vm.item.settings.layout"
+                                           ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
+                                           md-on-open="vm.getLayouts()">
+                                    <md-option
+                                            data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
+                                            ng-value="layout.id">
+                                        {{layout.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>-->
+
+                        </div>
+
+                        <div layout="row">
+
+                            <div class="m-t-16 m-b-16">
+
+                                <table-attribute-selector title="Abscissa"
+                                                          dialog-title="Abscissa"
+                                                          available-attrs="vm.attributes"
+                                                          item="vm.item.settings.abscissa"
+                                                          class="dashboard-constructor-field1"></table-attribute-selector>
+
+                                <!--<md-input-container style="width: 200px;">
+                                    <label for="">Abscissa</label>
+                                    <md-select data-ng-model="vm.item.settings.abscissa"
+                                               md-on-close="abscissaSearchTerm = ''"
+                                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                                        <md-select-header>
+                                            <input data-ng-model="abscissaSearchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
+                                        <md-option
+                                                data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: abscissaSearchTerm} track by attribute.key "
+                                                ng-value="attribute.key">
+                                            {{attribute.name}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>-->
 
                             </div>
+
                         </div>
-                    </md-select>
-                </md-input-container>
 
-                <!--<md-input-container style="width: 200px;">
-                    <label for="">Layout</label>
-                    <md-select data-ng-model="vm.item.settings.layout"
-                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
-                               md-on-open="vm.getLayouts()">
-                        <md-option
-                                data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
-                                ng-value="layout.id">
-                            {{layout.name}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>-->
+                        <div class="m-t-16 m-b-16">
 
-            </div>
+                            <table-attribute-selector title="Ordinate"
+                                                      dialog-title="Ordinate"
+                                                      available-attrs="vm.attributes"
+                                                      item="vm.item.settings.ordinate"
+                                                      class="dashboard-constructor-field1 md-block"></table-attribute-selector>
 
-            <div layout="row">
+                            <!--<md-input-container style="width: 200px;">
+                                <label for="">Ordinate</label>
+                                <md-select data-ng-model="vm.item.settings.ordinate"
+                                           md-on-close="ordinateSearchTerm = ''"
+                                           ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                                    <md-select-header>
+                                        <input data-ng-model="ordinateSearchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
+                                    <md-option
+                                            data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: ordinateSearchTerm} track by attribute.key "
+                                            ng-value="attribute.key">
+                                        {{attribute.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>-->
 
-                <div class="m-t-16 m-b-16">
+                        </div>
 
-                    <table-attribute-selector title="Abscissa"
-                                              dialog-title="Abscissa"
-                                              available-attrs="vm.attributes"
-                                              item="vm.item.settings.abscissa"
-                                              class="dashboard-constructor-field1"></table-attribute-selector>
+                        <div layout="row">
 
-                    <!--<md-input-container style="width: 200px;">
-                        <label for="">Abscissa</label>
-                        <md-select data-ng-model="vm.item.settings.abscissa"
-                                   md-on-close="abscissaSearchTerm = ''"
-                                   ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                            <md-select-header>
-                                <input data-ng-model="abscissaSearchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-                            <md-option
-                                    data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: abscissaSearchTerm} track by attribute.key "
-                                    ng-value="attribute.key">
-                                {{attribute.name}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>-->
+                            <div class="m-t-16 m-b-16">
 
-                </div>
+                                <table-attribute-selector title="Value"
+                                                          dialog-title="Value"
+                                                          available-attrs="vm.numericAttributes"
+                                                          item="vm.item.settings.value_key"
+                                                          class="dashboard-constructor-field1"
+                                                          style="margin: 0 10px;"></table-attribute-selector>
 
-            </div>
+                                <!--<md-input-container style="width: 200px;">
+                                    <label for="">Value</label>
+                                    <md-select data-ng-model="vm.item.settings.value_key"
+                                               md-on-close="valueSearchTerm = ''"
+                                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                                        <md-select-header>
+                                            <input data-ng-model="valueSearchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
+                                        <md-option
+                                                data-ng-click="vm.item.settings.top_left_title = attribute.name"
+                                                data-ng-repeat="attribute in vm.numericAttributes | orderBy:'-name' | filter:{name: valueSearchTerm} track by attribute.key "
+                                                ng-value="attribute.key">
+                                            {{attribute.name}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>-->
 
-            <div class="m-t-16 m-b-16">
+                            </div>
 
-                <table-attribute-selector title="Ordinate"
-                                          dialog-title="Ordinate"
-                                          available-attrs="vm.attributes"
-                                          item="vm.item.settings.ordinate"
-                                          class="dashboard-constructor-field1 md-block"></table-attribute-selector>
+                            <div class="m-t-16 m-b-16">
 
-                <!--<md-input-container style="width: 200px;">
-                    <label for="">Ordinate</label>
-                    <md-select data-ng-model="vm.item.settings.ordinate"
-                               md-on-close="ordinateSearchTerm = ''"
-                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                        <md-select-header>
-                            <input data-ng-model="ordinateSearchTerm"
-                                   type="search"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern select-input-filter"
-                                   ng-keydown="$event.stopPropagation()">
-                        </md-select-header>
-                        <md-option
-                                data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: ordinateSearchTerm} track by attribute.key "
-                                ng-value="attribute.key">
-                            {{attribute.name}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>-->
+                                <md-input-container style="width: 200px;">
+                                    <label for="">Formula</label>
+                                    <md-select data-ng-model="vm.item.settings.subtotal_formula_id">
+                                        <md-option ng-value="1">SUM</md-option>
+                                        <md-option ng-value="2">Weighted Market Value</md-option>
+                                        <md-option ng-value="3">Weighted Market Value %</md-option>
+                                        <md-option ng-value="4">Weighted Exposure</md-option>
+                                        <md-option ng-value="5">Weighted Exposure %</md-option>
+                                        <md-option ng-value="6">Avg. Weighted Market Value</md-option>
+                                        <md-option ng-value="7">Avg. Weighted Market Value %</md-option>
+                                        <md-option ng-value="8">Avg. Weighted Exposure</md-option>
+                                        <md-option ng-value="9">Avg. Weighted Exposure %</md-option>
+                                    </md-select>
+                                </md-input-container>
 
-            </div>
+                            </div>
 
-            <div layout="row">
-
-                <div class="m-t-16 m-b-16">
-
-                    <table-attribute-selector title="Value"
-                                              dialog-title="Value"
-                                              available-attrs="vm.numericAttributes"
-                                              item="vm.item.settings.value_key"
-                                              class="dashboard-constructor-field1"
-                                              style="margin: 0 10px;"></table-attribute-selector>
-
-                    <!--<md-input-container style="width: 200px;">
-                        <label for="">Value</label>
-                        <md-select data-ng-model="vm.item.settings.value_key"
-                                   md-on-close="valueSearchTerm = ''"
-                                   ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                            <md-select-header>
-                                <input data-ng-model="valueSearchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-                            <md-option
-                                    data-ng-click="vm.item.settings.top_left_title = attribute.name"
-                                    data-ng-repeat="attribute in vm.numericAttributes | orderBy:'-name' | filter:{name: valueSearchTerm} track by attribute.key "
-                                    ng-value="attribute.key">
-                                {{attribute.name}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>-->
-
-                </div>
-
-                <div class="m-t-16 m-b-16">
-
-                    <md-input-container style="width: 200px;">
-                        <label for="">Formula</label>
-                        <md-select data-ng-model="vm.item.settings.subtotal_formula_id">
-                            <md-option ng-value="1">SUM</md-option>
-                            <md-option ng-value="2">Weighted Market Value</md-option>
-                            <md-option ng-value="3">Weighted Market Value %</md-option>
-                            <md-option ng-value="4">Weighted Exposure</md-option>
-                            <md-option ng-value="5">Weighted Exposure %</md-option>
-                            <md-option ng-value="6">Avg. Weighted Market Value</md-option>
-                            <md-option ng-value="7">Avg. Weighted Market Value %</md-option>
-                            <md-option ng-value="8">Avg. Weighted Exposure</md-option>
-                            <md-option ng-value="9">Avg. Weighted Exposure %</md-option>
-                        </md-select>
-                    </md-input-container>
-
-                </div>
-
-                <md-button class="md-raised md-primary" ng-click="vm.openNumberFormatSettings($event)" style="margin-right:20px;">
-                    Format Settings
-                </md-button>
+                            <md-button class="md-raised md-primary" ng-click="vm.openNumberFormatSettings($event)" style="margin-right:20px;">
+                                Format Settings
+                            </md-button>
 
 
-            </div>
+                        </div>
 
-            <div layout="row">
+                        <div layout="row">
 
-                <div layout="row">
+                            <div layout="row">
 
-                    <md-input-container style="width: 200px;">
-                        <label for="">Matrix Top Left Title</label>
-                        <input type="text" data-ng-model="vm.item.settings.top_left_title">
-                    </md-input-container>
+                                <md-input-container style="width: 200px;">
+                                    <label for="">Matrix Top Left Title</label>
+                                    <input type="text" data-ng-model="vm.item.settings.top_left_title">
+                                </md-input-container>
 
-                </div>
+                            </div>
 
-            </div>
+                        </div>
 
-            <div>
+                        <div>
 
-                <h4>Styles</h4>
+                            <h4>Styles</h4>
 
-                <div>
+                            <div>
 
-                    <md-input-container style="width: 200px; height: 68px">
-                        <label for="">Cell Text Align</label>
-                        <md-select data-ng-model="vm.item.settings.styles.cell.text_align">
-                            <md-option value="left">Left</md-option>
-                            <md-option value="center">Center</md-option>
-                            <md-option value="right">Right</md-option>
-                        </md-select>
-                    </md-input-container>
+                                <md-input-container style="width: 200px; height: 68px">
+                                    <label for="">Cell Text Align</label>
+                                    <md-select data-ng-model="vm.item.settings.styles.cell.text_align">
+                                        <md-option value="left">Left</md-option>
+                                        <md-option value="center">Center</md-option>
+                                        <md-option value="right">Right</md-option>
+                                    </md-select>
+                                </md-input-container>
 
-                </div>
+                            </div>
 
-            </div>
+                        </div>
 
-            <!--<md-input-container style="width: 200px;">-->
-                <!--<label for="">Reference Name (Abscissa)</label>-->
-                <!--<input type="text" data-ng-model="vm.item.settings.abscissa">-->
-            <!--</md-input-container>-->
+                        <!--<md-input-container style="width: 200px;">-->
+                        <!--<label for="">Reference Name (Abscissa)</label>-->
+                        <!--<input type="text" data-ng-model="vm.item.settings.abscissa">-->
+                        <!--</md-input-container>-->
 
-            <!--<md-input-container style="width: 200px;">-->
-                <!--<label for="">Reference Name (Ordinate)</label>-->
-                <!--<input type="text" data-ng-model="vm.item.settings.ordinate">-->
-            <!--</md-input-container>-->
+                        <!--<md-input-container style="width: 200px;">-->
+                        <!--<label for="">Reference Name (Ordinate)</label>-->
+                        <!--<input type="text" data-ng-model="vm.item.settings.ordinate">-->
+                        <!--</md-input-container>-->
 
-            <!--<md-input-container style="width: 200px;">-->
-                <!--<label for="">Reference Name (Value)</label>-->
-                <!--<input type="text" data-ng-model="vm.item.settings.value_key">-->
-            <!--</md-input-container>-->
+                        <!--<md-input-container style="width: 200px;">-->
+                        <!--<label for="">Reference Name (Value)</label>-->
+                        <!--<input type="text" data-ng-model="vm.item.settings.value_key">-->
+                        <!--</md-input-container>-->
 
-            <md-input-container style="height: 58px">
+                        <md-input-container style="height: 58px">
 
-                <md-checkbox data-ng-model="vm.item.settings.auto_refresh" aria-label="member permission">Trigger Refresh on Value Change</md-checkbox>
+                            <md-checkbox data-ng-model="vm.item.settings.auto_refresh"
+                                         aria-label="member permission">Trigger Refresh on Value Change</md-checkbox>
 
-            </md-input-container>
+                        </md-input-container>
 
-        </div>
+                    </div>
+
+                </md-content>
+            </md-tab>
+
+            <md-tab label="USER SETTINGS">
+                <md-content class="p-16">
+
+                    <h3 class="m-t-0">Select available columns for matrix inside dashboard</h3>
+
+                    <two-fields-multiselect ng-model="vm.item.user_settings.available_abscissa_keys"
+                                            title="Abscissa"
+                                            items="vm.attributesForMultiselect"
+                                            model="vm.item.user_settings.available_abscissa_attributes"
+                                            name-property="name"></two-fields-multiselect>
+
+                    <two-fields-multiselect ng-model="vm.item.user_settings.available_ordinate_keys"
+                                            title="Ordinate"
+                                            items="vm.attributesForMultiselect"
+                                            model="vm.item.user_settings.available_ordinate_attributes"
+                                            name-property="name"></two-fields-multiselect>
+
+                    <two-fields-multiselect ng-model="vm.item.user_settings.available_value_keys"
+                                            title="Value"
+                                            items="vm.numericAttributesForMultiselect"
+                                            model="vm.item.user_settings.available_value_attributes"
+                                            name-property="name"></two-fields-multiselect>
+
+                </md-content>
+            </md-tab>
+        </md-tabs>
+
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <md-button ng-click="vm.cancel()" style="margin-right:20px;">

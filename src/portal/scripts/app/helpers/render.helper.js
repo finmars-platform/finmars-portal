@@ -6,8 +6,10 @@
     var evRvCommonHelper = require('./ev-rv-common.helper');
 
     var checkIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>';
-    var lockIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"></path></svg>'
+    var lockIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"></path></svg>';
+    var lock2Icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48"><path d="M18 20H6V10h12zM12 2.9c1.71 0 3.1 1.39 3.1 3.1v2H9V6l-.002-.008C8.998 4.282 10.29 2.9 12 2.9zM18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"></path><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path></svg>';
     var starIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>';
+    var cancelIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"></path></svg>';
 
     var getCheckIcon = function () {
         return checkIcon;
@@ -17,8 +19,16 @@
         return lockIcon
     };
 
+    var getLock2Icon = function () {
+        return lock2Icon
+    };
+
     var getStarIcon = function () {
         return starIcon
+    };
+
+    var getCancelIcon = function () {
+        return cancelIcon;
     };
 
 
@@ -67,7 +77,7 @@
 
         if (column.report_settings) {
 
-            if (parseInt(value, 10) === 0) {
+            if (parseFloat(value) === 0) {
 
                 if (column.report_settings.zero_format_id === 0) {
                     return value
@@ -94,6 +104,10 @@
         if (column.report_settings) {
 
             var localValue = value;
+
+            if (value.toString().indexOf(" ") !== -1) {
+                localValue = value.split(" ").join('')
+            }
 
             if (value.toString().indexOf("'") !== -1) {
                 localValue = value.split("'").join('')
@@ -339,7 +353,10 @@
 
         getCheckIcon: getCheckIcon,
         getLockIcon: getLockIcon,
+        getLock2Icon: getLock2Icon,
         getStarIcon: getStarIcon,
+        getCancelIcon: getCancelIcon,
+
         formatRounding: formatRounding,
         formatNegative: formatNegative,
         formatZero: formatZero,
