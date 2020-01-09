@@ -1,14 +1,14 @@
 /**
  * Created by szhitenev on 10.12.2019.
  */
-(function(){
+(function () {
 
     'use strict';
 
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
     var reconciliationProcessFileService = require('../../../services/reconciliation/reconciliationProcessFileService');
 
-    module.exports = function($scope, $mdDialog, data){
+    module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
@@ -67,7 +67,7 @@
 
         };
 
-        vm.getSchemes = function(){
+        vm.getSchemes = function () {
 
             transactionSchemeService.getList().then(function (data) {
                 vm.schemes = data.results;
@@ -100,7 +100,7 @@
             });
         };
 
-        vm.process = function($event){
+        vm.process = function ($event) {
 
             vm.readyStatus.processing = true;
 
@@ -128,7 +128,12 @@
 
                     console.log('Processing is finished', data);
 
-                    $mdDialog.hide({status: 'agree', data: data});
+                    $mdDialog.hide({
+                        status: 'agree', data: {
+                            config: vm.config,
+                            results: data.results
+                        }
+                    });
 
                 } else {
 

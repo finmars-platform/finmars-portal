@@ -1,5 +1,5 @@
 /**
- * Created by mevstratov on 30.12.2019.
+ * Created by szhitenev on 30.12.2019.
  */
 (function () {
 

@@ -575,6 +575,18 @@
                 ' data-object-id="' + objectId + '"' +
                 ' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>'
 
+            popup.innerHTML = popup.innerHTML + '<div>' +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="recon_book_selected"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>'
+
+            popup.innerHTML = popup.innerHTML + '<div>' +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="recon_hide"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>'
+
             popup.innerHTML = popup.innerHTML + '</div>';
 
         } else {
