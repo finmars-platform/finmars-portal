@@ -366,7 +366,7 @@
 
         };
 
-        vm.getFileUrl = function(id) {
+        vm.getFileUrl = function (id) {
 
             return baseUrl + 'file-reports/file-report/' + id + '/view/';
 
@@ -508,8 +508,9 @@
 
                         description = description + '<div> You have successfully imported transactions file </div>';
 
-                        description = description + '<div><a href="'+ vm.getFileUrl(data.stats_file_report) +'" download>Download Report File</a></div>';
-
+                        if (stats_file_report) {
+                            description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
+                        }
 
                         $mdDialog.show({
                             controller: 'SuccessDialogController as vm',
