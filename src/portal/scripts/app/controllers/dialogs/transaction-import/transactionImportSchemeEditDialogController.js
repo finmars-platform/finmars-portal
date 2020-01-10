@@ -38,37 +38,17 @@
         };
 
         vm.mapFields = [
-            {
-                value: '',
-                transaction_type: null,
-                fields: []
-            }
         ];
 
         vm.providerFields = [
-            {
-                name: '',
-                column: '',
-                name_expr: ''
-            }
+
         ];
 
         vm.calculatedFields = [
-            {
-                name: '',
-                column: '',
-                name_expr: ''
-            }
+
         ];
 
         vm.reconFields = [
-            {
-                name: '',
-                selector_values: [],
-                line_reference_id: '',
-                reference_date: '',
-                fields: []
-            }
         ];
 
         vm.openSelectorManager = function ($event) {
