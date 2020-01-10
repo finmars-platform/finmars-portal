@@ -7,6 +7,11 @@
 
     var processesService = require('../../services/processesService')
 
+    var baseUrlService = require('../../services/baseUrlService');
+
+    var baseUrl = baseUrlService.resolve();
+
+
     module.exports = function ($scope, $mdDialog) {
 
         var vm = this;
@@ -191,6 +196,12 @@
                 }
 
             })
+
+        };
+
+        vm.getFileUrl = function(id) {
+
+            return baseUrl + 'file-reports/file-report/' + id + '/view/';
 
         };
 
