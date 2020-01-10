@@ -24,7 +24,8 @@
                 type: null,
                 id: null, // should be generated before create
                 name: '',
-                settings: {}
+                settings: {},
+                user_settings: {}
             }
         }
 
@@ -62,6 +63,7 @@
             vm.item.settings.linked_components = {};
 
             deleteChartTypeBasedProps();
+            vm.item.user_settings = {};
 
             switch (vm.item.type) {
                 case 'report_viewer_bars_chart':
@@ -92,15 +94,20 @@
                 return item.value_type === 20;
             });
 
-            /*vm.numericAttributesForMultiselect = vm.numericAttributes.map(function (item) {
+            vm.attributesForMultiselect = vm.attributes.map(function (item) {
                 return {name: item.name, id: item.key}
-            });*/
+            });
+
+            vm.numericAttributesForMultiselect = vm.numericAttributes.map(function (item) {
+                return {name: item.name, id: item.key}
+            });
 
         };
 
         vm.chartTypeChanged = function () {
 
             deleteChartTypeBasedProps();
+            vm.item.user_settings = {};
 
             switch (vm.item.type) {
                 case 'report_viewer_bars_chart':
@@ -150,7 +157,7 @@
 
         };
 
-        vm.setNumberFormatPreset = function (preset) {
+        /*vm.setNumberFormatPreset = function (preset) {
 
             if (!vm.item.settings.number_format) {
                 vm.item.settings.number_format = {};
@@ -162,14 +169,16 @@
                     vm.item.settings.number_format.zero_format_id = 1;
                     vm.item.settings.number_format.negative_color_format_id = 0;
                     vm.item.settings.number_format.negative_format_id = 0;
-                    vm.item.settings.round_format_id = 1;
+                    vm.item.settings.number_format.round_format_id = 1;
+                    vm.item.settings.number_format.percentage_format_id = 0;
                     break;
                 case 'market_value':
                     vm.item.settings.number_format.zero_format_id = 1;
                     vm.item.settings.number_format.negative_color_format_id = 1;
                     vm.item.settings.number_format.negative_format_id = 1;
                     vm.item.settings.number_format.thousands_separator_format_id = 2;
-                    vm.item.settings.round_format_id = 1;
+                    vm.item.settings.number_format.round_format_id = 1;
+                    vm.item.settings.number_format.percentage_format_id = 0;
                     break;
                 case 'amount':
                     vm.item.settings.number_format.zero_format_id = 1;
@@ -219,7 +228,7 @@
 
             });
 
-        };
+        };*/
 
         vm.getContentTypeByEntityType = function () {
 

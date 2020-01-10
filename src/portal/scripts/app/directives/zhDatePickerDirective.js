@@ -75,7 +75,7 @@
                         format: 'Y-m-d'
                     });
 
-                };
+                }
 
                 input.addEventListener('pickmeup-change', function (event) {
                     scope.dateValue = event.detail.formatted_date;

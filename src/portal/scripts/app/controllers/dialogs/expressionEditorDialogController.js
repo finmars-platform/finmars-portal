@@ -741,7 +741,11 @@
                         console.log('data.functions', vm.data.functions);
 
                         vm.data.functions.forEach(function (items) {
-                            vm.expressions = vm.expressions.concat(items)
+
+                            if (items) {
+                                vm.expressions = vm.expressions.concat(items)
+                            }
+
                         })
 
                     }
@@ -782,7 +786,9 @@
 
                         vm.data.groups.forEach(function (group) {
 
-                            result = result.concat(group)
+                            if (group) {
+                                result = result.concat(group)
+                            }
 
                         });
 

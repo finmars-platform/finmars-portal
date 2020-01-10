@@ -1,0 +1,67 @@
+<md-dialog aria-label="dashboard report viewer component settings dialog"
+           class="draggable-dialog width-50"
+           drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Chart Component Editor</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="p-16">
+        <div data-ng-if="vm.chartType === 'report_viewer_bars_chart'" layout="row">
+            <table-attribute-selector data-ng-if="vm.availableAttrs"
+                                      title="{{vm.barsNamesAttrSelectorTitle}}"
+                                      dialog-title="{{vm.barsNamesAttrSelectorTitle}}"
+                                      available-attrs="vm.availableAttrs"
+                                      item="vm.item.data.settings.bar_name_key"
+                                      class="dashboard-constructor-field1"
+                                      style="margin: 0 10px;"></table-attribute-selector>
+
+            <table-attribute-selector data-ng-if="vm.availableNumericAttrs"
+                                      title="{{vm.barsNumbersAttrSelectorTitle}}"
+                                      dialog-title="{{vm.barsNumbersAttrSelectorTitle}}"
+                                      available-attrs="vm.availableNumericAttrs"
+                                      item="vm.item.data.settings.bar_number_key"
+                                      class="dashboard-constructor-field1"
+                                      style="margin: 0 10px;"></table-attribute-selector>
+        </div>
+
+        <div data-ng-if="vm.chartType === 'report_viewer_pie_chart'" layout="row">
+
+            <table-attribute-selector data-ng-if="vm.availableAttrs"
+                                      title="Separate Chart By"
+                                      dialog-title="Separate Chart By"
+                                      item="vm.item.data.settings.group_attr"
+                                      available-attrs="vm.availableAttrs"
+                                      class="dashboard-constructor-field1"
+                                      style="margin: 0 10px;"></table-attribute-selector>
+
+            <table-attribute-selector data-ng-if="vm.availableNumericAttrs"
+                                      title="Chart Numeric Value"
+                                      dialog-title="Chart Numeric Value"
+                                      available-attrs="vm.availableNumericAttrs"
+                                      item="vm.item.data.settings.number_attr"
+                                      class="dashboard-constructor-field1"
+                                      style="margin: 0 10px;"></table-attribute-selector>
+
+        </div>
+
+        <div layout="row">
+
+            <number-format-menu data-format-settings="vm.item.data.settings.number_format"
+                                data-button-name="Number Format"
+                                data-button-classes="md-raised md-primary"></number-format-menu>
+
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()" style="margin-right:20px;">
+            Cancel
+        </md-button>
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            OK
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

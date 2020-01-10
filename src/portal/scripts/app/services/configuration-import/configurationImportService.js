@@ -2930,8 +2930,6 @@
 
                                             createEntityItems(dashboardLayoutEntities, settings, cacheContainer, errors).then(function (data) {
 
-                                                console.log("Dashboard Layout import success", data);
-
                                                 createEntityItems(bookmarks, settings, cacheContainer, errors).then(function (data) {
 
                                                     console.log("Bookmark import success", data);

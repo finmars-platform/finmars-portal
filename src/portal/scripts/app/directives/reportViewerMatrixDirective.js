@@ -105,10 +105,10 @@
                     var headerScrollableElem = elem[0].querySelector('.rvmScrollableHeaderRow');
                     var bodyScrollableElem = elem[0].querySelector('.scrollableMatrixBodyColumn');
                     var bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
-
+                    console.log("fixed matrix data", headerScrollableElem, bodyScrollableElem, bodyScrollElem);
                     bodyScrollElem.addEventListener('scroll', function () {
 
-                        headerScrollableElem.style.left = (cellWidth + bodyScrollElem.scrollLeft) + 'px';
+                        headerScrollableElem.style.left = (cellWidth - bodyScrollElem.scrollLeft) + 'px';
                         bodyScrollableElem.style.top = -bodyScrollElem.scrollTop + 'px';
 
                     });
@@ -271,7 +271,7 @@
 
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa);
                     scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate);
-                    console.log('fixed matrix cols and rows', scope.columns, scope.rows);
+                    console.log('fixed matrix test');
                     // console.log('scope.columns ', scope.columns);
                     // console.log('scope.rows ', scope.rows);
 
@@ -282,7 +282,7 @@
                         scope.matrixSettings.abscissa,
                         scope.matrixSettings.value_key,
                         scope.matrixSettings.subtotal_formula_id);
-                    console.log('fixed matrix scope.matrix', scope.matrix);
+
                     //console.log('scope.matrix', scope.matrix);
 
                     scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix);
@@ -300,6 +300,7 @@
                             scope.matrixSettings.number_format.negative_color_format_id = 0;
                             scope.matrixSettings.number_format.negative_format_id = 0;
                             scope.matrixSettings.number_format.round_format_id = 1;
+                            scope.matrixSettings.number_format.percentage_format_id = 0;
                             break;
                         case 'market_value':
                             scope.matrixSettings.number_format.zero_format_id = 1;
@@ -307,6 +308,7 @@
                             scope.matrixSettings.number_format.negative_format_id = 1;
                             scope.matrixSettings.number_format.thousands_separator_format_id = 2;
                             scope.matrixSettings.number_format.round_format_id = 1;
+                            scope.matrixSettings.number_format.percentage_format_id = 0;
                             break;
                         case 'amount':
                             scope.matrixSettings.number_format.zero_format_id = 1;
@@ -369,6 +371,8 @@
                         scope.$apply();
 
                         scope.alignGrid();
+
+                        scrollHeaderAndColumn();
                     }, 0)
 
                 };
@@ -394,6 +398,8 @@
                             scope.$apply();
 
                             scope.alignGrid();
+
+                            scrollHeaderAndColumn();
                         }, 0)
                     }
 

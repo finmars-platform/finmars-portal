@@ -5,6 +5,8 @@
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
+    var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
+    var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
 
     module.exports = function () {
         return {
@@ -20,11 +22,14 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Report Viewer Split Panel Component', scope)
+                console.log('Dashboard Report Viewer Split Panel Component', scope);
 
                 scope.readyStatus = {
                     data: false
                 };
+
+                scope.dashboardComponentDataService = new DashboardComponentDataService;
+                scope.dashboardComponentEventService = new DashboardComponentEventService;
 
                 scope.vm = {
                     tabNumber: scope.tabNumber,
@@ -34,7 +39,9 @@
                     entityType: scope.item.data.settings.entity_type,
                     startupSettings: scope.item.data.settings,
                     dashboardDataService: scope.dashboardDataService,
-                    dashboardEventService: scope.dashboardEventService
+                    dashboardEventService: scope.dashboardEventService,
+                    dashboardComponentDataService: scope.dashboardComponentDataService,
+                    dashboardComponentEventService: scope.dashboardComponentEventService
                 };
 
                 scope.initEventListeners = function () {
