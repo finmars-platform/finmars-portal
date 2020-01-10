@@ -42,21 +42,11 @@
                                 {{item.key}}
                             </td>
                             <td>
-                                Value must be not null.
+                                <span data-ng-if="!item.message">Value must be not null.</span>
+                                <span data-ng-if="item.message" data-ng-bind="item.message"></span>
                             </td>
                         </tr>
 
-                        <tr data-ng-repeat="item in vm.exprsUsesDeletedInput track by item.key">
-                            <td>
-                                {{item.action_notes}}
-                            </td>
-                            <td>
-                                {{item.key}}
-                            </td>
-                            <td>
-                                The deleted input is used in the Expression.
-                            </td>
-                        </tr>
                         </tbody>
 
                     </table>

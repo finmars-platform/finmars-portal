@@ -362,9 +362,8 @@
                 if (vm.tabs) {
                     vm.ui.data = JSON.parse(angular.toJson(vm.tabs));
                 } else {
-                    vm.ui.data = vm.tabs;
+                    vm.ui.data = [];
                 }
-
 
                 if (vm.uiIsDefault) {
                     if (vm.instanceId) {
@@ -490,6 +489,7 @@
                     vm.tabs.push({
                         name: '',
                         editState: true,
+                        tabOrder: vm.tabs.length,
                         layout: {
                             rows: 0,
                             columns: 1,
@@ -524,6 +524,7 @@
                 vm.tabs.push({
                     name: '',
                     editState: true,
+                    tabOrder: vm.tabs.length,
                     layout: {
                         rows: 0,
                         columns: 1,

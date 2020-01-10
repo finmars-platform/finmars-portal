@@ -32,7 +32,8 @@
                             text_align: 'center'
                         }
                     }
-                }
+                },
+                user_settings: {}
             }
         }
 
@@ -96,6 +97,8 @@
             vm.item.settings.ordinate = null;
             vm.item.settings.value_key = null;
 
+            vm.item.user_settings = {};
+
             vm.getAttributes();
 
         };
@@ -118,6 +121,14 @@
 
             vm.numericAttributes = vm.attributes.filter(function (item) {
                 return item.value_type === 20;
+            });
+
+            vm.attributesForMultiselect = vm.attributes.map(function (item) {
+                return {name: item.name, id: item.key}
+            });
+
+            vm.numericAttributesForMultiselect = vm.numericAttributes.map(function (item) {
+                return {name: item.name, id: item.key}
             });
 
         };

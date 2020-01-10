@@ -136,7 +136,7 @@
                                             <div>
                                                 <md-button class="md-raised"
                                                            ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
-                                                           ng-class="{'md-primary': item.name && item.name_expr && item.name === item.name_expr}"
+                                                           ng-class="vm.checkForUserExpr(item)"
                                                            style="min-width: 40px;">f(x)
                                                 </md-button>
                                             </div>

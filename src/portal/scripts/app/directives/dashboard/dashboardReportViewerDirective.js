@@ -2,10 +2,13 @@
 
     'use strict';
 
-    var dashboardEvents = require('../../services/dashboard/dashboardEvents')
-    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses')
+    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    module.exports = function () {
+    var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
+    var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
+
+    module.exports = function ($mdDialog) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-view.html',
@@ -25,6 +28,13 @@
                     data: false
                 };
 
+                if (scope.item && scope.item.data && scope.item.data.custom_component_name) {
+                    scope.customName = scope.item.data.custom_component_name;
+                }
+
+                scope.dashboardComponentDataService = new DashboardComponentDataService;
+                scope.dashboardComponentEventService = new DashboardComponentEventService;
+
                 scope.vm = {
                     tabNumber: scope.tabNumber,
                     rowNumber: scope.rowNumber,
@@ -33,7 +43,9 @@
                     entityType: scope.item.data.settings.entity_type,
                     startupSettings: scope.item.data.settings,
                     dashboardDataService: scope.dashboardDataService,
-                    dashboardEventService: scope.dashboardEventService
+                    dashboardEventService: scope.dashboardEventService,
+                    dashboardComponentDataService: scope.dashboardComponentDataService,
+                    dashboardComponentEventService: scope.dashboardComponentEventService
                 };
 
                 scope.initEventListeners = function () {

@@ -25,7 +25,7 @@
         var renderHelper = require('../../helpers/render.helper');
 
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
-        var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses')
+        var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
         module.exports = function ($scope, $mdDialog, $transitions) {
 
@@ -39,6 +39,8 @@
             vm.startupSettings = null;
             vm.dashboardDataService = null;
             vm.dashboardEventService = null;
+            vm.dashboardComponentDataService = null;
+            vm.dashboardComponentEventService = null;
             vm.componentType = null;
             vm.matrixSettings = null;
 
@@ -88,6 +90,10 @@
 
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
 
+                });
+
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
+                    vm.getView();
                 });
 
                 if (vm.componentType.data.type === 'report_viewer_grand_total') {
@@ -604,6 +610,8 @@
 
                 Promise.all(promises).then(function (data) {
 
+                    vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
+
                     vm.readyStatus.attributes = true;
                     $scope.$apply();
 
@@ -630,6 +638,8 @@
                 vm.startupSettings = $scope.$parent.vm.startupSettings;
                 vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
+                vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
+                vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
                 vm.componentType = $scope.$parent.vm.componentType;
                 vm.entityViewerDataService.setViewContext('dashboard');
 
@@ -659,8 +669,6 @@
 
                 if (vm.componentType.data.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
-                        component_name: vm.componentType.data.name,
-                        chart_custom_name: vm.componentType.data.chart_custom_name,
                         bar_name_key: vm.componentType.data.settings.bar_name_key,
                         bar_number_key: vm.componentType.data.settings.bar_number_key,
                         bars_direction: vm.componentType.data.settings.bars_direction,
@@ -688,8 +696,6 @@
                 if (vm.componentType.data.type === 'report_viewer_pie_chart') {
                     vm.rvChartsSettings = {
                         //fieldsKeys: vm.componentType.data.settings.fieldsKeys
-                        component_name: vm.componentType.data.name,
-                        chart_custom_name: vm.componentType.data.chart_custom_name,
                         group_attr: vm.componentType.data.settings.group_attr,
                         number_attr: vm.componentType.data.settings.number_attr,
                         group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula,

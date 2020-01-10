@@ -106,6 +106,7 @@
                             scope.column.report_settings.negative_color_format_id = 0;
                             scope.column.report_settings.negative_format_id = 0;
                             scope.column.report_settings.round_format_id = 1;
+                            scope.column.report_settings.percentage_format_id = 0;
                             break;
                         case 'market_value':
                             scope.column.report_settings.zero_format_id = 1;
@@ -113,6 +114,7 @@
                             scope.column.report_settings.negative_format_id = 1;
                             scope.column.report_settings.thousands_separator_format_id = 2;
                             scope.column.report_settings.round_format_id = 1;
+                            scope.column.report_settings.percentage_format_id = 0;
                             break;
                         case 'amount':
                             scope.column.report_settings.zero_format_id = 1;

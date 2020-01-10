@@ -16,6 +16,8 @@
             vm.settings = {};
         }
 
+        vm.settings = JSON.parse(JSON.stringify(vm.settings));
+
         if (!vm.settings.zero_format_id) {
             vm.settings.zero_format_id = 0;
         }

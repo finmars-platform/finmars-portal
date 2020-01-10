@@ -71,6 +71,7 @@
         vm.canManagePermissions = false;
 
         var ecosystemDefaultData = {};
+        var inputsToDelete = [];
 
         vm.loadPermissions = function () {
 
@@ -333,6 +334,29 @@
 
         };
 
+        var checkActionsFieldsExpr = function (actionFieldValue, actionItemKey, actionNotes) {
+
+            for (var a = 0; a < inputsToDelete.length; a++) {
+                var dInputName = inputsToDelete[a];
+
+                var propWithSameName = '.' + dInputName;
+
+                if (actionFieldValue.indexOf(dInputName) !== -1 &&
+                    actionFieldValue.indexOf(propWithSameName) === -1) { // check whether expression refers to input and not property with same name
+
+                    var actionFieldLocation = {
+                        action_notes: actionNotes,
+                        key: actionItemKey,
+                        message: "The deleted input is used in the Expression."
+                    };
+
+                    return actionFieldLocation;
+
+                }
+            }
+
+        };
+
         vm.checkActionsForEmptyFields = function (actions) {
 
             var result = [];
@@ -400,13 +424,23 @@
 
                             } else {
 
-                                if (actionItem[actionItemKey] === null || actionItem[actionItemKey] === undefined || actionItem[actionItemKey] === "") {
+                                if (actionItem[actionItemKey] === null ||
+                                    actionItem[actionItemKey] === undefined ||
+                                    actionItem[actionItemKey] === "") {
 
                                     result.push({
                                         action_notes: action.action_notes,
                                         key: actionItemKey,
                                         value: actionItem[actionItemKey]
                                     })
+
+                                } else if (typeof actionItem[actionItemKey] === 'string') {
+
+                                    var fieldWithInvalidExpr = checkActionsFieldsExpr(actionItem[actionItemKey], actionItemKey, action.action_notes);
+
+                                    if (fieldWithInvalidExpr) {
+                                        result.push(fieldWithInvalidExpr);
+                                    }
 
                                 }
 
@@ -806,28 +840,6 @@
             return fallback;
         };
 
-        vm.openExpressionDialog = function ($event, item, options) {
-
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    item: {expression: item[options.key]}
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                    item[options.key] = res.data.item.expression;
-                }
-                // console.log('item', item);
-            });
-        };
-
         /*vm.tagTransform = function (newTag) {
             //console.log('newTag', newTag);
             var item = {
@@ -1053,16 +1065,24 @@
                 "key": 'input'
             };
 
-            vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+            if (vm.entity.inputs && vm.entity.inputs.length > 0) {
 
-                return {
-                    "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                    "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
-                    "groups": "input",
-                    "func": input.name
-                }
+                vm.inputsFunctions = vm.entity.inputs.map(function (input) {
 
-            });
+                    return {
+                        "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                        "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
+                        "groups": "input",
+                        "func": input.name
+                    }
+
+                });
+
+            } else {
+
+                vm.inputsFunctions = null;
+
+            }
 
         };
 
@@ -1075,6 +1095,8 @@
 
         var removeInputFromActions = function (deletedInputName) {
 
+            inputsToDelete.push(deletedInputName);
+
             vm.entity.actions.forEach(function (action) {
 
                 var actionKeys = Object.keys(action);
@@ -1086,22 +1108,23 @@
                         var actionType = action[actionKey];
                         var actionTypeKeys = Object.keys(actionType);
 
-                        actionTypeKeys = actionTypeKeys.filter(function (key) {
-                            if (key.length > 7 && key.indexOf('_input') === key.length - 6) {
-                                return true;
+                        var i;
+                        for (i = 0; i < actionTypeKeys.length; i++) {
+
+                            var key = actionTypeKeys[i];
+                            var actionFieldValue = actionType[key];
+
+                            if (key.length > 7 &&
+                                key.indexOf('_input') === key.length - 6 &&
+                                actionFieldValue === deletedInputName) { // if field is input fields
+
+                                actionType[key] = null;
+
                             }
-                            return false;
-                        });
 
-                        actionTypeKeys.forEach(function (actionTypeKey) {
 
-                            var actionField = actionType[actionTypeKey];
+                        }
 
-                            if (actionField === deletedInputName) {
-                                actionType[actionTypeKey] = null;
-                            }
-
-                        });
 
                     }
 
@@ -1129,11 +1152,11 @@
                         actionsButtons: [
                             {
                                 name: "OK, PROCEED",
-                                response: 'agree'
+                                response: {status: 'agree'}
                             },
                             {
                                name: "CANCEL",
-                               response: 'disagree'
+                               response: {status: 'disagree'}
                             }
                         ]
                     }
@@ -1210,6 +1233,17 @@
                 value_expr: vm.newItem.value_expr
             });
 
+            // if created input with name of deleted one, remove it from warning
+            for (var i = 0; i < inputsToDelete.length; i++) {
+                var inputToDelete = inputsToDelete[i];
+
+                if (inputToDelete === vm.newItem.name) {
+                    inputsToDelete.splice(i, 1);
+                    break;
+                }
+            }
+            // < if created input with name of deleted one, remove it from warning >
+
             vm.newItem.name = null;
             vm.newItem.verbose_name = null;
             vm.newItem.value_type = null;
@@ -1231,6 +1265,8 @@
             vm.newItem.pricing_policy = null;
             vm.newItem.value = null;
             vm.newItem.value_expr = null;
+
+            vm.updateInputFunctions();
         };
 
         // Transaction Type Input Controller end
@@ -2177,6 +2213,8 @@
             vm.getInputTemplates();
             vm.getFieldTemplates();
             vm.getActionTemplates();
+
+            vm.updateInputFunctions();
 
             /*$scope.$watch('vm.entity.tags', function () {
 
