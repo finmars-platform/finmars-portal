@@ -43,6 +43,15 @@
                 name_expr: ''
             }
         ];
+
+        vm.calculatedFields = [
+            {
+                name: '',
+                column: '',
+                name_expr: ''
+            }
+        ];
+
         vm.reconFields = [
             {
                 name: '',
@@ -208,6 +217,29 @@
             })
         };
 
+        vm.addCalculatedField = function(){
+
+            var fieldsLength = vm.calculatedFields.length;
+            var lastFieldNumber;
+            var nextFieldNumber;
+            if (fieldsLength === 0) {
+                nextFieldNumber = 1;
+            } else {
+                lastFieldNumber = parseInt(vm.calculatedFields[fieldsLength - 1].column);
+                if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
+                    lastFieldNumber = 0
+                }
+                nextFieldNumber = lastFieldNumber + 1;
+            }
+
+            vm.calculatedFields.push({
+                name: '',
+                column: nextFieldNumber
+            })
+
+
+        };
+
         vm.addMapField = function () {
             vm.mapFields.push({
                 value: '',
@@ -217,6 +249,15 @@
         };
 
         vm.setProviderFieldExpression = function (item) {
+
+            if (!item.name_expr || item.name_expr === '') {
+                item.name_expr = item.name;
+                vm.inputsFunctions = vm.getFunctions();
+            }
+
+        };
+
+        vm.setCalculatedFieldExpression = function (item) {
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
@@ -254,6 +295,36 @@
 
         };
 
+        vm.openCalculatedFieldExpressionBuilder = function (item, $event) {
+
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: {expression: item.name_expr},
+                    data: {
+                        groups: [vm.inputsGroup],
+                        functions: [vm.inputsFunctions]
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    item.name_expr = res.data.item.expression;
+                    vm.inputsFunctions = vm.getFunctions();
+
+                }
+
+            });
+
+        };
+
+
         vm.checkForUserExpr = function (item) {
             if (item.name_expr) {
                 if (item.name && item.name === item.name_expr) {
@@ -272,6 +343,10 @@
 
         };
 
+        vm.removeCalculatedField = function (item, $index) {
+            vm.calculatedFields.splice($index, 1);
+        };
+
         vm.removeMappingField = function (item, $index) {
             vm.mapFields.splice($index, 1);
         };
@@ -282,6 +357,7 @@
 
         vm.agree = function ($event) {
 
+            vm.scheme.calculated_inputs = vm.calculatedFields;
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.rule_scenarios = vm.mapFields;
             vm.scheme.recon_scenarios = vm.reconFields;
