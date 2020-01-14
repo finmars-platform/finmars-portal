@@ -768,7 +768,6 @@
 
                 var getColsAvailableForAdditions = function () {
                     var availableCols = scope.attributeDataService.getAttributesAvailableForColumns();
-                    console.l
                     scope.colsAvailableForAdditions = availableCols.filter(function (aColumn) {
                         for (var i = 0; i < scope.columns.length; i++) {
                             if (scope.columns[i].key === aColumn.attribute_data.key) {
