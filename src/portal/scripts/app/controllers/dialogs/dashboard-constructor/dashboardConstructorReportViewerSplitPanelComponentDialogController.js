@@ -29,7 +29,8 @@
                         sidebar: false,
                         splitPanel: false
                     },
-                    linked_components: {}
+                    linked_components: {},
+                    user_settings: {}
                 }
             }
         }
@@ -37,10 +38,6 @@
         vm.componentsTypes = [];
 
         vm.layouts = [];
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
 
         vm.getContentTypeByEntityType = function () {
 
@@ -111,6 +108,29 @@
             $mdDialog.hide({status: 'agree'});
         };
 
+        vm.cancel = function () {
+            $mdDialog.hide({status: 'disagree'});
+        };
+
+        vm.getAttributes = function(){
+            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
+
+            vm.multiselectorAttrs = vm.attributes.map(function (attribute) {
+                var multiselectorName = attribute.name;
+                return {id: attribute.key, name: multiselectorName};
+            });
+        };
+
+        vm.reportTypeChange = function() {
+
+            vm.item.settings.layout = null;
+            vm.item.settings.linked_components = {};
+            vm.item.user_settings = {};
+
+            vm.getAttributes();
+
+        };
+
         var componentsForLinking = ['report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'];
 
         vm.init = function () {
@@ -126,8 +146,8 @@
             console.log('vm', vm);
 
             if (vm.item.id) {
-
                 vm.getLayouts();
+                vm.getAttributes();
             }
 
         };

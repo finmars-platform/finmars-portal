@@ -24,12 +24,12 @@
             link: function (scope, elem, attrs) {
 
                 scope.columns = scope.evDataService.getColumns();
-                console.log("add filter columns", scope.columns);
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
                 scope.groups = scope.evDataService.getGroups();
                 scope.downloadedItemsCount = null;
                 scope.contentType = scope.evDataService.getContentType();
+                scope.columnAreaCollapsed = false;
 
                 scope.viewContext = scope.evDataService.getViewContext();
                 scope.isReport = metaService.isReport(scope.entityType);
@@ -148,7 +148,7 @@
 
                 scope.checkReportSortButton = function (column, index) {
 
-                    if (scope.isReport && index < scope.groups.length) {
+                    if (scope.isReport && index < scope.groups.length && scope.viewContext !== "dashboard") {
 
                         if (column.key === scope.groups[index].key) {
                             return false;
@@ -456,6 +456,10 @@
 
                 };
 
+                scope.showColSettingsInsideDashboard = function () {
+
+                };
+
                 scope.openColumnNumbersRenderingSettings = function (column, $event) {
 
                     $mdDialog.show({
@@ -474,7 +478,7 @@
                         if (res.status === 'agree') {
 
                             column.report_settings = res.data.report_settings;
-                            console.log("number format res", res, column.report_settings);
+
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 
@@ -535,17 +539,17 @@
 
                 };
 
-                scope.checkForExistingGroupingColumn = function (columnKey) {
+                scope.columnHasCorrespondingGroup = function (columnKey) {
 
                     var groups = scope.evDataService.getGroups();
 
                     for (var i = 0; i < groups.length; i++) {
                         if (groups[i].key === columnKey) {
-                            return false;
+                            return true;
                         }
                     }
 
-                    return true;
+                    return false;
 
                 };
 
@@ -664,6 +668,18 @@
 
                 };
 
+                /*scope.getColumnContentClasses = function ($index) {
+                    var classes = '';
+
+                    /!*if (scope.viewContext === 'dashboard' && !scope.hasFoldingBtn($index)) {
+                        classes += 'p-r-8';
+                    }*!/
+
+                    if (scope.viewContext === 'dashboard' && scope.hasFoldingBtn($index)) {
+                        classes += 'p-r-8';
+                    }
+                };*/
+
                 scope.hasFoldingBtn = function ($index) {
                     var groups = scope.evDataService.getGroups();
 
@@ -679,7 +695,6 @@
                     scope.groups = scope.evDataService.getGroups();
 
                     var item = scope.groups[$index];
-                    console.log("folding foldLevel data", key, scope.groups, item);
                     item.report_settings.is_level_folded = true;
 
                     for (; $index < scope.groups.length; $index = $index + 1) {
@@ -751,6 +766,21 @@
                     return groups[$index].report_settings.is_level_folded;
                 };
 
+                var getColsAvailableForAdditions = function () {
+                    var availableCols = scope.attributeDataService.getAttributesAvailableForColumns();
+                    console.l
+                    scope.colsAvailableForAdditions = availableCols.filter(function (aColumn) {
+                        for (var i = 0; i < scope.columns.length; i++) {
+                            if (scope.columns[i].key === aColumn.attribute_data.key) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    });
+
+                };
+
                 scope.addColumn = function ($event) {
 
                     var allAttrsList = getAttributes();
@@ -795,10 +825,25 @@
 
                 };
 
+                scope.addColumnToDashboardReport = function (attribute) {
+                    var colData = JSON.parse(JSON.stringify(attribute.attribute_data));
+
+                    colData.columns = true;
+                    if (attribute.layout_name) {
+                        colData.layout_name = JSON.parse(JSON.stringify(attribute.layout_name));
+                    }
+                    scope.columns.push(colData);
+                    scope.evDataService.setColumns(scope.columns);
+
+                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                };
+
                 var init = function () {
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
                     evDataHelper.setColumnsDefaultWidth(scope.evDataService);
+                    getColsAvailableForAdditions();
 
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
@@ -806,6 +851,7 @@
                         evDataHelper.setColumnsDefaultWidth(scope.evDataService);
 
                         scope.columns = scope.evDataService.getColumns();
+                        getColsAvailableForAdditions();
 
                     });
 

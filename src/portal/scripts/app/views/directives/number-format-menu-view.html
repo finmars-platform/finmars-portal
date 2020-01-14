@@ -2,7 +2,7 @@
     <md-button class="number-format-menu-button"
                data-ng-class="getButtonClasses()"
                data-ng-click="$mdOpenMenu($event)"
-               data-ng-bind="buttonName"
+               data-ng-bind-html="buttonContent | trustAsHtml"
                aria-label="open number format menu btn">
     </md-button>
 
@@ -45,7 +45,7 @@
 
         <md-menu-item>
             <md-button class="g-settings-option-btn"
-                       ng-click="openNumberFormatSettings($event)">
+                       ng-click="openNumberFormatSettings($event, $mdMenu)">
                 <span>Custom</span>
             </md-button>
         </md-menu-item>

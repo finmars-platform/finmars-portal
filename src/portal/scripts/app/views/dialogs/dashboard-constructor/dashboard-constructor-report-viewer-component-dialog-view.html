@@ -345,14 +345,10 @@
 
             <md-tab label="USER SETTINGS">
                 <md-content class="p-16">
-
-                    <h3 class="m-t-0">Select columns to manage inside dashboard component</h3>
-
-                    <two-fields-multiselect ng-model="vm.item.user_settings.manage_columns"
-                                            title="Report Columns"
-                                            items="vm.multiselectorAttrs"
-                                            model="vm.item.user_settings.manage_columns"
-                                            name-property="name"></two-fields-multiselect>
+                    <table-attributes-menu-constructor title="Available Columns"
+                                                       dialog-title="Available Columns"
+                                                       model="vm.item.user_settings.manage_columns"
+                                                       available-attrs="vm.attributes"></table-attributes-menu-constructor>
 
                 </md-content>
             </md-tab>

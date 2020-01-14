@@ -1,14 +1,8 @@
 <div class="height-100" data-ng-if="readyStatus.data" layout="column">
     <div class="dashboard-component-header" flex="noshrink">
         <div class="dashboard-component-name">
-            <span class data-ng-if="customName" data-ng-bind="customName"></span>
-            <span data-ng-if="!customName && item" data-ng-bind="item.data.name"></span>
-
-            <md-tooltip class="tooltip_2"
-                        md-direction="top">
-                <span class data-ng-if="customName" data-ng-bind="customName"></span>
-                <span data-ng-if="!customName && item" data-ng-bind="item.data.name"></span>
-            </md-tooltip>
+            <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
+            <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
         </div>
 
         <md-button class="md-button dashboard-component-settings-btn"
