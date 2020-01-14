@@ -25,8 +25,8 @@
                             if (scope.availableAttrs[i].key === scope.item) {
                                 scope.inputText = scope.availableAttrs[i].name;
                                 break;
-                            };
-                        };
+                            }
+                        }
 
                     } else {
                         scope.inputText = '';
@@ -46,7 +46,7 @@
                     var availableAttrs = null;
                     if (scope.availableAttrs) {
                         availableAttrs = JSON.parse(JSON.stringify(scope.availableAttrs));
-                    };
+                    }
 
                     $mdDialog.show({
                         controller: "TableAttributeSelectorDialogController as vm",
@@ -67,9 +67,9 @@
                             scope.inputText = res.data.name;
                             scope.item = res.data.key;
 
-                        };
+                        }
 
-                    });
+                    })
                 });
 
             }

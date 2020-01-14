@@ -3,6 +3,7 @@
     'use strict';
 
     var utilsHelper = require('../utils.helper');
+    var globalConstantsService = require('../../services/globalConstantsService');
 
     var convertToExcel = function () {
 
@@ -59,7 +60,7 @@
 
     };
 
-    var useShortNameAttrs = ['instrument', 'instrument_type'];
+    var useShortNameAttrs = globalConstantsService.getAttributesWithShortNameToUse();
 
     var getEntityViewerDynamicAttrCellVal = function (flatListItem, column) {
 
