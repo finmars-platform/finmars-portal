@@ -53,8 +53,12 @@
                     <b>Status</b>
                 </div>
 
-                <div class="m-16">
+                <div class="m-16" style="min-width: 120px">
                     <b>Info</b>
+                </div>
+
+                <div class="m-16" style="min-width: 120px">
+                    <b>File Report</b>
                 </div>
 
             </div>
@@ -77,8 +81,13 @@
                     {{vm.getStatus(item)}}
                 </div>
 
-                <div class="m-16">
+                <div class="m-16" style="min-width: 120px">
                     {{vm.getInfo(item)}}
+                </div>
+
+                <div style="min-width: 120px">
+                    <a data-ng-if="item.file_report" href="{{vm.getFileUrl(item.file_report)}}" download
+                       style="text-decoration: none; color: #000; display: block; margin-top: 15px; padding: 0 20px;">Download</a>
                 </div>
 
                 <div>
