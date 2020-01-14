@@ -39,9 +39,7 @@
                         report_settings: {},
                         filter_links: []
                     },
-                    user_settings: {
-                        manage_columns: []
-                    }
+                    user_settings: {}
                 }
             }
 
@@ -91,7 +89,7 @@
 
             vm.item.settings.layout = null;
             vm.item.settings.linked_components= {};
-
+            vm.item.user_settings = {};
 
             vm.getAttributes();
 
@@ -101,11 +99,10 @@
         vm.getAttributes = function(){
             vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
 
-            vm.multiselectorAttrs = vm.attributes.map(function (attribute) {
+/*            vm.multiselectorAttrs = vm.attributes.map(function (attribute) {
                 var multiselectorName = attribute.name;
                 return {id: attribute.key, name: multiselectorName};
-            });
-            console.log("user settings vm.multiselectorAttrs", vm.multiselectorAttrs);
+            });*/
         };
 
         vm.getLayouts = function () {
@@ -183,13 +180,7 @@
 
         vm.init = function () {
 
-            console.log('dataService', dataService);
-
-            console.log('attributeDataService', attributeDataService);
-
             vm.componentsTypes = dataService.getComponentsTypes();
-
-            console.log('vm.componentsTypes', vm.componentsTypes);
 
             vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
                 return componentType.type === 'control';
@@ -200,17 +191,20 @@
             });
 
             vm.currencyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' && componentType.settings.value_type === 100 && componentType.settings.content_type === 'currencies.currency'
+                return componentType.type === 'control' &&
+                       componentType.settings.value_type === 100 &&
+                       componentType.settings.content_type === 'currencies.currency'
             });
 
             vm.pricingPolicyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' && componentType.settings.value_type === 100 && componentType.settings.content_type === 'instruments.pricingpolicy'
+                return componentType.type === 'control' &&
+                       componentType.settings.value_type === 100 &&
+                       componentType.settings.content_type === 'instruments.pricingpolicy'
             });
 
             console.log('vm', vm);
 
             if (vm.item.id) {
-
                 vm.getLayouts();
                 vm.getAttributes();
             }

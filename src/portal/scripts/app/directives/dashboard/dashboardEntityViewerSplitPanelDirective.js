@@ -16,8 +16,6 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Entity Viewer Split Panel Component')
-
             }
         }
     }

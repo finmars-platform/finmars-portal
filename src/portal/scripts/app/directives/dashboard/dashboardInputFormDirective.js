@@ -16,7 +16,6 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Input Form Component')
 
             }
         }

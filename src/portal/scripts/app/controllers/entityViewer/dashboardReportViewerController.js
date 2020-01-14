@@ -48,6 +48,8 @@
 
             vm.linkedActiveObjects = {}; // If we have several components linked to spit panel;
             var lastActiveComponentId;
+            var savedInterfaceLayout;
+            var savedAddtions;
 
             var componentsForLinking = [
                 'report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'
@@ -83,17 +85,51 @@
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.ACTIVE)
-
-                    console.log('vm.componentType.ACTIVE');
-                    console.log('vm.componentType.id', vm.componentType.data.id);
-                    console.log('vm.componentType.data', vm.componentType.data.name);
-
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
 
                 });
 
+                vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+                    var columns = vm.entityViewerDataService.getColumns();
+
+                    vm.dashboardComponentDataService.setViewerTableColumns(columns);
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
+
+                });
+
                 vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
-                    vm.getView();
+                    vm.getView()
+                });
+
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
+
+                    var columns = vm.dashboardComponentDataService.getViewerTableColumns();
+                    vm.entityViewerDataService.setColumns(columns);
+
+                    vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                });
+
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.SAVE_VIEWER_TABLE_CONFIGURATION, function () {
+
+                    var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
+                    // revert options that were change because of dashboard
+                    currentLayoutConfig.data.interfaceLayout = savedInterfaceLayout;
+                    currentLayoutConfig.data.additions = savedAddtions;
+
+                    if (currentLayoutConfig.hasOwnProperty('id')) {
+                        uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function () {
+                            vm.entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
+                        });
+                    }
+
+                    $mdDialog.show({
+                        controller: 'SaveLayoutDialogController as vm',
+                        templateUrl: 'views/save-layout-dialog-view.html',
+                        clickOutsideToClose: false
+                    })
                 });
 
                 if (vm.componentType.data.type === 'report_viewer_grand_total') {
@@ -158,8 +194,6 @@
                     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
                         var activeObject = vm.entityViewerDataService.getActiveObject();
-
-                        console.log('click report viewer active object', activeObject);
 
                         var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
                         var compsKeys = Object.keys(componentsOutputs);
@@ -581,39 +615,47 @@
 
             vm.downloadAttributes = function () {
 
-                var promises = [];
+                return new Promise(function (resolve, reject) {
 
-                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
-                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
-                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
+                    var promises = [];
 
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('account'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
+                    promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
+                    promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
+                    promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
 
-                if (vm.entityType === 'balance-report') {
-                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                }
+                    promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
+                    promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('account'));
+                    promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
+                    promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
+                    promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
+                    promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
+                    promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
 
-                if (vm.entityType === 'pl-report') {
-                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                }
+                    if (vm.entityType === 'balance-report') {
+                        promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                    }
 
-                if (vm.entityType === 'transaction-report') {
-                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                    promises.push(vm.attributeDataService.downloadTransactionUserFields());
-                }
+                    if (vm.entityType === 'pl-report') {
+                        promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                    }
 
-                Promise.all(promises).then(function (data) {
+                    if (vm.entityType === 'transaction-report') {
+                        promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+                        promises.push(vm.attributeDataService.downloadTransactionUserFields());
+                    }
 
-                    vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
+                    Promise.all(promises).then(function (data) {
 
-                    vm.readyStatus.attributes = true;
-                    $scope.$apply();
+                        vm.readyStatus.attributes = true;
+                        $scope.$apply();
+
+                        resolve();
+
+                    }).catch(function () {
+
+                        resolve();
+
+                    })
 
                 })
 
@@ -636,14 +678,24 @@
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.startupSettings = $scope.$parent.vm.startupSettings;
+                vm.userSettings = $scope.$parent.vm.userSettings;
                 vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
                 vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
                 vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
                 vm.componentType = $scope.$parent.vm.componentType;
+
+                if (vm.userSettings) {
+
+                    if (vm.userSettings.manage_columns && vm.userSettings.manage_columns.length > 0) {
+                        vm.attributeDataService.setAttributesAvailableForColumns(vm.userSettings.manage_columns);
+                    }
+
+                }
+
                 vm.entityViewerDataService.setViewContext('dashboard');
 
-                vm.downloadAttributes();
+                var downloadAttrsPromise = vm.downloadAttributes();
                 vm.setEventListeners();
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
@@ -708,57 +760,62 @@
                     };
                 }
 
-                uiService.getListLayoutByKey(layoutId).then(function (data) {
+                var setLayoutPromise = new Promise(function (resolve, reject) {
 
-                    vm.layout = data;
+                    uiService.getListLayoutByKey(layoutId).then(function (data) {
 
-                    vm.setLayout(data).then(function () {
+                        vm.layout = data;
 
+                        vm.setLayout(data).then(function () {
 
-                        // if (vm.componentType.data.type === 'report_viewer' ||
-                        //     vm.componentType.data.type === 'report_viewer_grand_total' ||
-                        //     vm.componentType.data.type === 'report_viewer_matrix') {
+                            // needed to prevent saving layout as collapsed when saving it from dashboard
+                            var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+                            savedInterfaceLayout = JSON.parse(JSON.stringify(interfaceLayout));
+                            var additions = vm.entityViewerDataService.getAdditions();
+                            savedAddtions = JSON.parse(JSON.stringify(additions));
 
-                        rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
-                        // }
+                            if (vm.componentType.data.type === 'report_viewer' ||
+                                vm.componentType.data.type === 'report_viewer_split_panel') {
 
+                                var evComponents = vm.entityViewerDataService.getComponents();
 
-                        if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_split_panel') {
+                                Object.keys(vm.startupSettings.components).forEach(function (key) {
 
-                            var evComponents = vm.entityViewerDataService.getComponents();
+                                    evComponents[key] = vm.startupSettings.components[key]
 
-                            Object.keys(vm.startupSettings.components).forEach(function (key) {
+                                });
 
-                                evComponents[key] = vm.startupSettings.components[key]
+                                vm.entityViewerDataService.setComponents(evComponents);
+                            }
 
-                            });
+                            vm.initDashboardExchange();
 
-                            vm.entityViewerDataService.setComponents(evComponents);
-                        }
+                            vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                        // if (vm.componentType.data.type === 'report_viewer_split_panel') {
-                        //
-                        //     var additions = {
-                        //         type: vm.entityType
-                        //     };
-                        //
-                        //     vm.entityViewerDataService.setAdditions(additions)
-                        //
-                        //
-                        // }
+                            vm.readyStatus.layout = true;
 
-                        vm.initDashboardExchange();
+                            resolve();
 
-                        vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                            $scope.$apply();
 
-                        vm.readyStatus.layout = true;
-
-                        $scope.$apply();
+                        })
 
                     })
 
-                })
+                });
+
+                Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
+
+                    vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED);
+
+                    var columns = vm.entityViewerDataService.getColumns();
+                    vm.dashboardComponentDataService.setViewerTableColumns(columns);
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
+
+                });
 
             };
 

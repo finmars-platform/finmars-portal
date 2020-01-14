@@ -22,8 +22,6 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Report Viewer Component', scope);
-
                 scope.readyStatus = {
                     data: false
                 };
@@ -35,6 +33,18 @@
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
+                //var attributesDataService = null;
+                //var columnsToManage = null;
+                // var viewerTableCols = null;
+
+                /*if (scope.item.data.user_settings) {
+
+                    if (scope.item.data.user_settings.manage_columns) {
+                        columnsToManage = scope.item.data.user_settings.manage_columns;
+                    }
+
+                }*/
+
                 scope.vm = {
                     tabNumber: scope.tabNumber,
                     rowNumber: scope.rowNumber,
@@ -42,10 +52,27 @@
                     componentType: scope.item,
                     entityType: scope.item.data.settings.entity_type,
                     startupSettings: scope.item.data.settings,
+                    userSettings: scope.item.data.user_settings,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,
                     dashboardComponentEventService: scope.dashboardComponentEventService
+                };
+
+                /*scope.addColumnToReport = function (attribute) {
+
+                    var colData = JSON.parse(JSON.stringify(attribute));
+
+                    colData.columns = true;
+                    viewerTableCols.push(colData);
+
+                    scope.vm.dashboardComponentDataService.setViewerTableColumns(viewerTableCols);
+                    scope.vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
+
+                };*/
+
+                scope.saveReportLayout = function () {
+                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.SAVE_VIEWER_TABLE_CONFIGURATION);
                 };
 
                 scope.initEventListeners = function () {
@@ -66,6 +93,37 @@
 
                     });
 
+                    /*scope.vm.dashboardComponentEventService.addEventListener(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED, function () {
+                        attributesDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
+                    });*/
+
+                    /*scope.vm.dashboardComponentEventService.addEventListener(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED, function () {
+
+                        var attributes = attributesDataService.getAllAttributesByEntityType(scope.vm.entityType);
+                        viewerTableCols = scope.vm.dashboardComponentDataService.getViewerTableColumns();
+
+                        if (columnsToManage && columnsToManage.length > 0) {
+
+                            scope.availableForAdditionCols = attributes.filter(function (attr) {
+
+                                if (columnsToManage.indexOf(attr.key) !== -1) {
+
+                                    for (var i = 0; i < viewerTableCols.length; i++) {
+                                        if (viewerTableCols[i].key === attr.key) {
+                                            return false;
+                                        }
+                                    }
+
+                                    return true;
+                                }
+
+                                return false;
+
+                            });
+
+                        }
+
+                    });*/
                 };
 
                 scope.init = function () {

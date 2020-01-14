@@ -20,8 +20,6 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Report Viewer Grand Total Component', scope);
-
                 scope.readyStatus = {
                     data: false
                 };

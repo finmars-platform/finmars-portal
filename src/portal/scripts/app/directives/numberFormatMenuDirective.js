@@ -8,13 +8,13 @@
             templateUrl: 'views/directives/number-format-menu-view.html',
             scope: {
                 formatSettings: '=',
-                buttonName: '@',
+                buttonContent: '@',
                 buttonClasses: '@'
             },
             link: function (scope, elem, attr) {
 
-                if (!scope.numberFormatSettings) {
-                    scope.numberFormatSettings = {}
+                if (!scope.formatSettings) {
+                    scope.formatSettings = {}
                 }
 
                 scope.getButtonClasses = function () {
@@ -26,46 +26,48 @@
                     switch (preset) {
 
                         case 'price':
-                            scope.numberFormatSettings.zero_format_id = 1;
-                            scope.numberFormatSettings.negative_color_format_id = 0;
-                            scope.numberFormatSettings.negative_format_id = 0;
-                            scope.numberFormatSettings.round_format_id = 1;
-                            scope.numberFormatSettings.percentage_format_id = 0;
+                            scope.formatSettings.zero_format_id = 1;
+                            scope.formatSettings.negative_color_format_id = 0;
+                            scope.formatSettings.negative_format_id = 0;
+                            scope.formatSettings.round_format_id = 1;
+                            scope.formatSettings.percentage_format_id = 0;
                             break;
                         case 'market_value':
-                            scope.numberFormatSettings.zero_format_id = 1;
-                            scope.numberFormatSettings.negative_color_format_id = 1;
-                            scope.numberFormatSettings.negative_format_id = 1;
-                            scope.numberFormatSettings.thousands_separator_format_id = 2;
-                            scope.numberFormatSettings.round_format_id = 1;
-                            scope.numberFormatSettings.percentage_format_id = 0;
+                            scope.formatSettings.zero_format_id = 1;
+                            scope.formatSettings.negative_color_format_id = 1;
+                            scope.formatSettings.negative_format_id = 1;
+                            scope.formatSettings.thousands_separator_format_id = 2;
+                            scope.formatSettings.round_format_id = 1;
+                            scope.formatSettings.percentage_format_id = 0;
                             break;
                         case 'amount':
-                            scope.numberFormatSettings.zero_format_id = 1;
-                            scope.numberFormatSettings.negative_color_format_id = 1;
-                            scope.numberFormatSettings.negative_format_id = 0;
-                            scope.numberFormatSettings.thousands_separator_format_id = 2;
-                            scope.numberFormatSettings.round_format_id = 3;
-                            scope.numberFormatSettings.percentage_format_id = 0;
+                            scope.formatSettings.zero_format_id = 1;
+                            scope.formatSettings.negative_color_format_id = 1;
+                            scope.formatSettings.negative_format_id = 0;
+                            scope.formatSettings.thousands_separator_format_id = 2;
+                            scope.formatSettings.round_format_id = 3;
+                            scope.formatSettings.percentage_format_id = 0;
                             break;
                         case 'exposure':
-                            scope.numberFormatSettings.zero_format_id = 1;
-                            scope.numberFormatSettings.negative_color_format_id = 1;
-                            scope.numberFormatSettings.negative_format_id = 1;
-                            scope.numberFormatSettings.round_format_id = 0;
-                            scope.numberFormatSettings.percentage_format_id = 2;
+                            scope.formatSettings.zero_format_id = 1;
+                            scope.formatSettings.negative_color_format_id = 1;
+                            scope.formatSettings.negative_format_id = 1;
+                            scope.formatSettings.round_format_id = 0;
+                            scope.formatSettings.percentage_format_id = 2;
                             break;
                         case 'return':
-                            scope.numberFormatSettings.zero_format_id = 1;
-                            scope.numberFormatSettings.negative_color_format_id = 1;
-                            scope.numberFormatSettings.negative_format_id = 0;
-                            scope.numberFormatSettings.percentage_format_id = 3;
+                            scope.formatSettings.zero_format_id = 1;
+                            scope.formatSettings.negative_color_format_id = 1;
+                            scope.formatSettings.negative_format_id = 0;
+                            scope.formatSettings.percentage_format_id = 3;
                             break;
                     }
 
                 };
 
-                scope.openNumberFormatSettings = function($event) {
+                scope.openNumberFormatSettings = function($event, $mdMenu) {
+
+                    $mdMenu.close();
 
                     $mdDialog.show({
                         controller: 'NumberFormatSettingsDialogController as vm',
@@ -74,7 +76,7 @@
                         multiple: true,
                         locals: {
                             data: {
-                                settings: scope.numberFormatSettings
+                                settings: scope.formatSettings
                             }
                         }
 
