@@ -47,6 +47,9 @@
                     interfaceLayout.columnArea.height = 37;
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+                    scope.additions.isOpen = false;
+                    scope.evDataService.setAdditions(scope.additions);
                 }
 
 

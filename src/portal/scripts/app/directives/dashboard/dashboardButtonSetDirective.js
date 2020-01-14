@@ -19,8 +19,6 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('Dashboard Button Set Component');
-
                 scope.grid = [];
 
                 scope.buttons = scope.item.data.settings.buttons;

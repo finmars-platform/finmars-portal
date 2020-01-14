@@ -32,7 +32,7 @@
 
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
-
+                console.log("dashboard scope.item", scope.item);
                 scope.vm = {
                     componentType: scope.item,
                     entityType: scope.item.data.settings.entity_type,
@@ -45,7 +45,7 @@
 
                 scope.openComponentSettingsDialog = function ($event) {
 
-                    var attributeDataService = scope.dashboardComponentDataService.getAttributeDataService();
+                    var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
 
                     $mdDialog.show({
                         controller: 'DashboardReportViewerChartsComponentSettingsDialogController as vm',

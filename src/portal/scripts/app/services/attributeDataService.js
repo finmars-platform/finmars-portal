@@ -68,6 +68,8 @@
 
         var reconciliationAttributes = [];
 
+        var attributesAvailableForColumns = [];
+
         function _getBalanceReportAttributes() {
 
             var result = [];
@@ -727,6 +729,14 @@
             return reconciliationAttributes;
         }
 
+        function setAttributesAvailableForColumns (attributesList) {
+            attributesAvailableForColumns = attributesList;
+        }
+
+        function getAttributesAvailableForColumns () {
+            return attributesAvailableForColumns;
+        }
+
         return {
 
             // Remember! Download Custom Fields and Dynamic Attributes and User Fields before .get() them
@@ -759,6 +769,9 @@
 
             setReconciliationAttributes: setReconciliationAttributes,
             getReconciliationAttributes: getReconciliationAttributes,
+
+            setAttributesAvailableForColumns: setAttributesAvailableForColumns,
+            getAttributesAvailableForColumns: getAttributesAvailableForColumns,
 
             // Append methods
 

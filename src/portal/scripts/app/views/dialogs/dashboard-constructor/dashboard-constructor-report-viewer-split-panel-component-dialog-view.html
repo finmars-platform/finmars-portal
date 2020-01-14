@@ -6,94 +6,115 @@
         </div>
     </md-toolbar>
     <md-dialog-content>
-        <div class="p-24">
 
-            <md-input-container style="width: 200px;">
-                <label for="">Name</label>
-                <input type="text" data-ng-model="vm.item.name">
-            </md-input-container>
-
-            <div class="m-t-16 m-b-16">
-
-                <md-input-container style="width: 200px;">
-                    <label for="">Report Type</label>
-                    <md-select data-ng-model="vm.item.settings.entity_type"
-                               data-ng-change="vm.item.settings.layout = null;vm.item.settings.linked_components= {}">
-                        <md-option value="balance-report">Balance Report</md-option>
-                        <md-option value="pl-report">P&L Report</md-option>
-                        <md-option value="transaction-report">Transaction Report</md-option>
-                    </md-select>
-                </md-input-container>
-
-            </div>
-            <div class="m-t-16 m-b-16">
-
-                <md-input-container class="dashboard-constructor-field1">
-                    <label for="">Layout</label>
-                    <md-select ng-model="vm.item.settings.layout"
-                               md-container-class="common-select-container"
-                               md-on-open="vm.getLayouts()"
-                               md-on-close="layoutSearchTerm = ''"
-                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                        <div>
-                            <md-select-header>
-                                <input data-ng-model="layoutSearchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-
-                            <div class="select-options-holder">
-
-                                <md-option
-                                        data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
-                                        ng-value="layout.id"
-                                        ng-bind="layout.name">
-                                </md-option>
-
-                            </div>
-                        </div>
-                    </md-select>
-                </md-input-container>
-
-                <!--<md-input-container style="width: 200px;">
-                    <label for="">Layout</label>
-                    <md-select data-ng-model="vm.item.settings.layout"
-                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
-                               md-on-open="vm.getLayouts()">
-                        <md-option
-                                data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
-                                ng-value="layout.id">
-                            {{layout.name}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>-->
-
-            </div>
-
-            <h4>Linked Components</h4>
-
-            <div>
-
-                <div class="m-t-16 m-b-16" >
+        <md-tabs>
+            <md-tab label="MAIN">
+                <md-content class="p-16">
 
                     <md-input-container style="width: 200px;">
-                        <label for="">Report Viewer / Report Viewer Matrix</label>
-                        <md-select data-ng-model="vm.item.settings.linked_components.active_object" multiple>
-                            <md-option
-                                    data-ng-repeat="componentType in vm.reportViewerComponentTypes | orderBy:'-name' track by componentType.id "
-                                    ng-value="componentType.id">{{componentType.name}}
-                            </md-option>
-                        </md-select>
+                        <label for="">Name</label>
+                        <input type="text" data-ng-model="vm.item.name">
                     </md-input-container>
 
-                </div>
+                    <div class="m-t-16 m-b-16">
 
-            </div>
+                        <md-input-container style="width: 200px;">
+                            <label for="">Report Type</label>
+                            <md-select data-ng-model="vm.item.settings.entity_type"
+                                       data-ng-change="vm.reportTypeChange()">
+                                <md-option value="balance-report">Balance Report</md-option>
+                                <md-option value="pl-report">P&L Report</md-option>
+                                <md-option value="transaction-report">Transaction Report</md-option>
+                            </md-select>
+                        </md-input-container>
 
+                    </div>
+                    <div class="m-t-16 m-b-16">
 
-        </div>
+                        <md-input-container class="dashboard-constructor-field1">
+                            <label for="">Layout</label>
+                            <md-select ng-model="vm.item.settings.layout"
+                                       md-container-class="common-select-container"
+                                       md-on-open="vm.getLayouts()"
+                                       md-on-close="layoutSearchTerm = ''"
+                                       ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
+                                <div>
+                                    <md-select-header>
+                                        <input data-ng-model="layoutSearchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
+
+                                    <div class="select-options-holder">
+
+                                        <md-option
+                                                data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
+                                                ng-value="layout.id"
+                                                ng-bind="layout.name">
+                                        </md-option>
+
+                                    </div>
+                                </div>
+                            </md-select>
+                        </md-input-container>
+
+                        <!--<md-input-container style="width: 200px;">
+                            <label for="">Layout</label>
+                            <md-select data-ng-model="vm.item.settings.layout"
+                                       ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
+                                       md-on-open="vm.getLayouts()">
+                                <md-option
+                                        data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
+                                        ng-value="layout.id">
+                                    {{layout.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>-->
+
+                    </div>
+
+                    <h4>Linked Components</h4>
+
+                    <div>
+
+                        <div class="m-t-16 m-b-16" >
+
+                            <md-input-container style="width: 200px;">
+                                <label for="">Report Viewer / Report Viewer Matrix</label>
+                                <md-select data-ng-model="vm.item.settings.linked_components.active_object" multiple>
+                                    <md-option
+                                            data-ng-repeat="componentType in vm.reportViewerComponentTypes | orderBy:'-name' track by componentType.id "
+                                            ng-value="componentType.id">{{componentType.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+
+                        </div>
+
+                    </div>
+
+                </md-content>
+            </md-tab>
+
+            <md-tab label="USER SETTINGS">
+                <md-content class="p-16">
+
+                   <!-- <two-fields-multiselect ng-model="vm.item.user_settings.manage_columns"
+                                            title="Report Columns"
+                                            items="vm.multiselectorAttrs"
+                                            model="vm.item.user_settings.manage_columns"
+                                            name-property="name"></two-fields-multiselect>-->
+                    <table-attributes-menu-constructor title="Available Columns"
+                                                       dialog-title="Available Columns"
+                                                       model="vm.item.user_settings.manage_columns"
+                                                       available-attrs="vm.attributes"></table-attributes-menu-constructor>
+
+                </md-content>
+            </md-tab>
+        </md-tabs>
+
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <md-button ng-click="vm.cancel()" style="margin-right:20px;">

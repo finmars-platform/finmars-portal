@@ -646,9 +646,14 @@ md-option.disabled {
   right: 145px;
 }
 
-md-tooltip.tooltip_1 .md-content.md-show {
+md-tooltip.md-tooltip.md-panel.tooltip_1 {
   background-color: rgba(0, 0, 0, 0.78);
+
+  .md-content.md-show {
+    background-color: rgba(0, 0, 0, 0.78);
+  }
 }
+
 
 md-tooltip.md-panel.md-tooltip.md-default-theme, md-tooltip.md-panel.md-tooltip {
   &.red-text {
@@ -671,6 +676,7 @@ md-tooltip.md-panel.md-tooltip.md-default-theme, md-tooltip.md-panel.md-tooltip 
 
 .column-name-tooltip-wrap {
   position: absolute;
+  top: 0;
   left: 50%;
   transition: opacity 0.4s cubic-bezier(.25, .8, .25, 1) 0s;
   opacity: 0;
@@ -2490,47 +2496,6 @@ button.md-button.toggle-calculator-block-btn {
   color: #FA393E;
 }
 
-.attr-selector-dialog {
-  min-width: 500px;
-  min-height: 80%;
-  padding-bottom: 52px;
-}
-
-.attr-selector-btns-holder {
-  padding: 5px 25px 0;
-}
-
-.attr-selector-breadcrumbs {
-  margin-bottom: 10px;
-
-  span {
-    margin-left: 10px;
-  }
-}
-
-.attr-selector-back-btn {
-  position: relative;
-  min-width: 36px;
-  min-height: 36px;
-  height: 36px;
-  width: 36px;
-  fill: #fff;
-  padding-top: 4px;
-  margin-bottom: 25px;
-}
-
-.attr-selector-filter {
-  width: 100%;
-  border: none;
-  border-bottom: 2px solid #000;
-  padding: 0 0 5px 11px;
-}
-
-.attr-selector-btns-container {
-  margin-left: 24px;
-  margin-bottom: 14px;
-}
-
 .processing-overlay {
   position: absolute;
   top: 0px;
@@ -2631,5 +2596,15 @@ md-checkbox.checkbox-center {
   }
   td {
     padding: 10px;
+  }
+}
+
+.button-group1 {
+  button.md-button.md-raised {
+    min-width: 20px;
+    min-height: 29px;
+    margin: 0 4px;
+    height: 26px;
+    width: 33px;
   }
 }
