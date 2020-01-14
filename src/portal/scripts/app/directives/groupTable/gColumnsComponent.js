@@ -767,6 +767,9 @@
                         return true;
                     });
 
+                    console.log('allAttrsList', allAttrsList);
+                    console.log('availableAttrs', availableAttrs);
+
                     $mdDialog.show({
                         controller: "TableAttributeSelectorDialogController as vm",
                         templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",

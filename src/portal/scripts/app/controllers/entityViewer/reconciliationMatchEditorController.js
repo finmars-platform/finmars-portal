@@ -1273,7 +1273,7 @@
 
 
             vm.complexTransactionList = parentFlatList.filter(function (item) {
-                return item.___is_activated
+                return item.___is_activated && !item.is_canceled
             });
 
             vm.bankLinesList = flatList.filter(function (item) {
