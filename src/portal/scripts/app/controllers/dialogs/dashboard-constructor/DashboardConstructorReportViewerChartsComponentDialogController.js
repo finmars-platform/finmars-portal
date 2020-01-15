@@ -94,13 +94,13 @@
                 return item.value_type === 20;
             });
 
-            vm.attributesForMultiselect = vm.attributes.map(function (item) {
+            /*vm.attributesForMultiselect = vm.attributes.map(function (item) {
                 return {name: item.name, id: item.key}
             });
 
             vm.numericAttributesForMultiselect = vm.numericAttributes.map(function (item) {
                 return {name: item.name, id: item.key}
-            });
+            });*/
 
         };
 

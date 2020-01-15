@@ -16,6 +16,13 @@
                         <input type="text" data-ng-model="vm.item.name">
                     </md-input-container>
 
+                    <div>
+                        <md-input-container style="width: 200px;">
+                            <label for="">Report label</label>
+                            <input type="text" data-ng-model="vm.item.custom_component_name">
+                        </md-input-container>
+                    </div>
+
                     <div class="m-t-16 m-b-16">
 
                         <md-input-container style="width: 200px;">
@@ -98,7 +105,7 @@
                 </md-content>
             </md-tab>
 
-            <md-tab label="USER SETTINGS">
+            <md-tab label="MENU SETTINGS">
                 <md-content class="p-16">
 
                    <!-- <two-fields-multiselect ng-model="vm.item.user_settings.manage_columns"

@@ -145,6 +145,32 @@
 
         };
 
+        vm.saveDashboardLayout = function ($event) {
+
+            uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
+
+                vm.layout = data;
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "Dashboard Layout is Saved"
+                        }
+                    }
+                });
+
+                $scope.$apply();
+
+            });
+
+        };
+
         vm.exportDashboardLayout = function($event) {
 
             $mdDialog.show({
@@ -187,12 +213,22 @@
 
 
         vm.setActiveTab = function (tab) {
-
             vm.dashboardDataService.setActiveTab(tab)
-
         };
 
-        vm.saveLayoutList = function ($event) {
+        vm.updateLayoutOnComponentChange = function (tabNumber, rowNumber, socketData) {
+
+            var colNumber = socketData.column_number;
+
+            if (tabNumber === 'fixed_area') {
+
+                vm.layout.data.fixed_area.layout.rows[rowNumber].columns[colNumber] = socketData;
+
+            } else {
+
+                vm.layout.data.tabs[tabNumber].layout.rows[rowNumber].columns[colNumber] = socketData;
+
+            }
 
         };
 

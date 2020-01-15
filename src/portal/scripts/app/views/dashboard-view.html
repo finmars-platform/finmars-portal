@@ -46,6 +46,11 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
+                            <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn">
+                                <span>Save Dashboard Layout</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
                             <md-button data-ui-sref="app.dashboard-constructor({id: vm.layout.id})" class="g-settings-option-btn">
                                 <span>Edit Layout</span>
                             </md-button>
@@ -154,6 +159,20 @@
                                     ></dashboard-report-viewer-grand-total>
                                 </div>
 
+                                <div data-ng-if="item.data.type === 'report_viewer_bars_chart' || item.data.type === 'report_viewer_pie_chart'"
+                                     class="height-100">
+                                    <dashboard-report-viewer-charts
+                                            class="height-100 display-block"
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                            update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
+                                    ></dashboard-report-viewer-charts>
+                                </div>
+
                                 <div data-ng-if="item.data.type == 'report_viewer_matrix'"
                                      class="height-100">
                                     <dashboard-report-viewer-matrix
@@ -164,6 +183,7 @@
                                             item="item"
                                             dashboard-data-service="vm.dashboardDataService"
                                             dashboard-event-service="vm.dashboardEventService"
+                                            update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
                                     ></dashboard-report-viewer-matrix>
                                 </div>
 
@@ -311,6 +331,7 @@
                                                     item="item"
                                                     dashboard-data-service="vm.dashboardDataService"
                                                     dashboard-event-service="vm.dashboardEventService"
+                                                    update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
                                             ></dashboard-report-viewer-charts>
                                         </div>
 
@@ -324,6 +345,7 @@
                                                     item="item"
                                                     dashboard-data-service="vm.dashboardDataService"
                                                     dashboard-event-service="vm.dashboardEventService"
+                                                    update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
                                             ></dashboard-report-viewer-matrix>
                                         </div>
 

@@ -23,7 +23,7 @@
 
             vm.data.name = vm.name;
 
-            $mdDialog.hide({status: 'agree'});
+            $mdDialog.hide({status: 'agree', name: vm.name});
         };
     }
 
