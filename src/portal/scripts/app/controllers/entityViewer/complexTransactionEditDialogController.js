@@ -296,11 +296,6 @@
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
-            entity["user_code"] = vm.entity["user_code"] + '_copy';
-            entity["name"] = vm.entity["name"] + '_copy';
-
-            console.log('copy entity', entity);
-
             $mdDialog.show({
                 controller: 'ComplexTransactionAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
