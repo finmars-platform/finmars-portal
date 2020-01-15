@@ -530,7 +530,7 @@
 
                             scope.evDataService.setReportOptions(reportOptions);
 
-                            reportOptions = reportOptions;
+                            //reportOptions = reportOptions; // ????????
 
                             scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 

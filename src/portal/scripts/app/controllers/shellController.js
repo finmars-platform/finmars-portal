@@ -5,10 +5,7 @@
 
     'use strict';
 
-    var logService = require('../../../../core/services/logService');
     var cookiesService = require('../../../../core/services/cookieService');
-
-    var entityViwerDataService = require('../services/entityViewerDataService');
 
     var usersService = require('../services/usersService');
     var metaContentTypesService = require('../services/metaContentTypesService');
@@ -111,7 +108,6 @@
                     $state.go('app.home');
                     vm.getMasterUsersList();
                 }
-                ;
 
                 if (ev.data.event === crossTabEvents.LOGOUT) {
 
@@ -126,7 +122,6 @@
                     });
 
                 }
-                ;
 
 
             }
@@ -189,7 +184,6 @@
                 });
 
             }
-            ;
 
         };
 

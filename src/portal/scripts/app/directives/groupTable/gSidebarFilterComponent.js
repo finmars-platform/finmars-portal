@@ -45,6 +45,9 @@
 
                 scope.fields = {};
 
+                var listLayout = scope.evDataService.getListLayout();
+                scope.layoutName = listLayout.name;
+
                 var entityAttrs = [];
                 var dynamicAttrs = [];
 
@@ -657,6 +660,227 @@
                     return false;
                 };
 
+                // Methods for report viewer inside dashboard
+                scope.renameLayout = function ($event) {
+
+                    var currentLayoutName = JSON.parse(JSON.stringify(scope.layoutName));
+
+                    $mdDialog.show({
+                        controller: 'RenameDialogController as vm',
+                        templateUrl: 'views/dialogs/rename-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: {
+                                name: currentLayoutName
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            scope.layoutName = res.name;
+
+                            var listLayout = scope.evDataService.getListLayout();
+                            listLayout.name = res.name;
+
+                            scope.evDataService.setListLayout(listLayout);
+
+                        }
+
+                    })
+                };
+
+                scope.saveLayoutList = function ($event) {
+
+                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+                    if (listLayout.hasOwnProperty('id')) {
+                        uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+                            scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
+                        });
+                    }
+
+                    $mdDialog.show({
+                        controller: 'SaveLayoutDialogController as vm',
+                        templateUrl: 'views/save-layout-dialog-view.html',
+                        targetEvent: $event,
+                        clickOutsideToClose: false
+                    })
+
+                };
+
+                scope.openLayoutList = function ($event) {
+
+                    $mdDialog.show({
+                        controller: 'UiLayoutListDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        preserveScope: false,
+                        locals: {
+                            options: {
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService,
+                                entityType: scope.entityType
+                            }
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.layoutName = res.data.layoutName;
+                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+                        }
+
+                    })
+                };
+
+                scope.exportLayout = function ($event) {
+
+                    var layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+                    $mdDialog.show({
+                        controller: 'LayoutExportDialogController as vm',
+                        templateUrl: 'views/dialogs/layout-export-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: {layout: layout, isReport: scope.isReport}
+                        }
+                    })
+
+                };
+
+                scope.openViewConstructor = function (ev) {
+
+                    if (scope.isReport) {
+
+                        var controllerName = '';
+                        var templateUrl = '';
+
+                        switch (scope.entityType) {
+                            case 'balance-report':
+                                controllerName = 'gModalReportController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-view.html';
+                                break;
+                            case 'pl-report':
+                                controllerName = 'gModalReportPnlController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-view.html';
+                                break;
+                            case 'performance-report':
+                                controllerName = 'gModalReportPerformanceController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-performance-view.html';
+                                break;
+                            case 'cash-flow-projection-report':
+                                controllerName = 'gModalReportCashFlowProjectionController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-cash-flow-projection-view.html';
+                                break;
+                            case 'transaction-report':
+                                controllerName = 'gModalReportTransactionController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-transaction-view.html';
+                                break;
+                        }
+
+                        $mdDialog.show({
+                            controller: controllerName,
+                            templateUrl: templateUrl,
+                            targetEvent: ev,
+                            locals: {
+                                attributeDataService: scope.attributeDataService,
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService,
+                                contentWrapElement: scope.contentWrapElement
+                            }
+                        });
+
+
+                    } else {
+                        $mdDialog.show({
+                            controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
+                            templateUrl: 'views/directives/groupTable/modal-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: ev,
+                            locals: {
+                                attributeDataService: scope.attributeDataService,
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService,
+                                contentWrapElement: scope.contentWrapElement
+                            }
+                        });
+                    }
+                };
+
+                scope.openReportSettings = function ($event) {
+
+                    var reportOptions = scope.evDataService.getReportOptions();
+
+                    $mdDialog.show({
+                        controller: 'GReportSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            reportOptions: reportOptions,
+                            options: {
+                                entityType: scope.entityType
+                            }
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            reportOptions = res.data;
+
+                            scope.evDataService.setReportOptions(reportOptions);
+
+                            scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+                        }
+
+                    })
+
+                };
+                // < Methods for report viewer inside dashboard >
+
+                var initEventListeners = function () {
+
+                    scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+                        syncFilters();
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+
+                        scope.reportOptions = scope.evDataService.getReportOptions();
+                        scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.UPDATE_FILTER_AREA_SIZE, function () {
+
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        if (scope.sideNavCollapsed) {
+                            interfaceLayout.filterArea.width = 239;
+                        } else {
+                            interfaceLayout.filterArea.width = 55;
+                        }
+
+                        scope.sideNavCollapsed = !scope.sideNavCollapsed;
+
+                        scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
+                    });
+
+                };
+
                 var init = function () {
 
                     uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
@@ -740,38 +964,7 @@
 
                     });
 
-                    scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
-                        syncFilters();
-                    });
-
-                    scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
-
-                        scope.reportOptions = scope.evDataService.getReportOptions();
-                        scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
-
-                    });
-
-                    scope.evEventService.addEventListener(evEvents.UPDATE_FILTER_AREA_SIZE, function () {
-
-                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-                        if (scope.sideNavCollapsed) {
-                            interfaceLayout.filterArea.width = 239;
-                        } else {
-                            interfaceLayout.filterArea.width = 55;
-                        }
-
-                        scope.sideNavCollapsed = !scope.sideNavCollapsed;
-
-                        scope.evDataService.setInterfaceLayout(interfaceLayout);
-
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-
-                    });
-
-                    scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
-                    });
+                    initEventListeners();
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 
