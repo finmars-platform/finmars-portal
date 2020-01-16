@@ -18,7 +18,8 @@
                 columnNumber: '=',
                 item: '=',
                 dashboardDataService: '=',
-                dashboardEventService: '='
+                dashboardEventService: '=',
+                updateDashboardLayoutCallback: '&?'
             },
             link: function (scope, elem, attr) {
 
@@ -26,8 +27,8 @@
                     data: false
                 };
 
-                if (scope.item && scope.item.data && scope.item.data.chart_custom_name) {
-                    scope.customName = scope.item.data.chart_custom_name;
+                if (scope.item && scope.item.data && scope.item.data.custom_component_name) {
+                    scope.customName = scope.item.data.custom_component_name;
                 }
 
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
@@ -69,6 +70,18 @@
                             scope.vm.componentType = scope.item;
                             scope.vm.entityType = scope.item.data.settings.entity_type;
                             scope.vm.startupSettings = scope.item.data.settings;
+
+                            if (scope.item.data.custom_component_name) {
+                                scope.customName = scope.item.data.custom_component_name;
+                            } else {
+                                scope.customName = null;
+                            }
+
+                            if (scope.updateDashboardLayoutCallback) {
+                                setTimeout(function () {
+                                    scope.updateDashboardLayoutCallback({tabNumber: scope.tabNumber, rowNumber: scope.rowNumber, socketData: scope.item});
+                                }, 400);
+                            }
 
                             scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
                             scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);

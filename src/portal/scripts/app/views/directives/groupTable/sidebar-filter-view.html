@@ -12,9 +12,56 @@
 
                 <md-card-content>
 
-                    <p class="g-r-card-title">
+                    <!--<p class="g-r-card-title">
                         Report settings
-                    </p>
+                    </p>-->
+
+                    <div class="layout-settings-layout-name-holder">
+                        <span data-ng-bind="layoutName" class="layout-settings-layout-name"></span>
+                        <md-button data-ng-click="renameLayout($event)" aria-label="open rename layout dialog">
+                            <ng-md-icon icon="edit" size="22">
+                                <md-tooltip md-direction="bottom">Rename Layout</md-tooltip>
+                            </ng-md-icon>
+                        </md-button>
+                    </div>
+
+                    <div layout="row" layout-align="space-between center" class="layout-settings-actions-btns-container">
+
+                        <dvi flex="60" layout="row" layout-align="start center">
+                            <md-button aria-label="save viewer layout" data-ng-click="saveLayoutList($event)">
+                                <ng-md-icon icon="save" size="22">
+                                    <md-tooltip md-direction="top">Save Layout</md-tooltip>
+                                </ng-md-icon>
+                            </md-button>
+
+                            <md-button aria-label="open viewer layout" data-ng-click="openLayoutList($event)">
+                                <ng-md-icon icon="folder_open" size="22">
+                                    <md-tooltip md-direction="top">Open Layout</md-tooltip>
+                                </ng-md-icon>
+                            </md-button>
+
+                            <md-button aria-label="export viewer layout configuration" data-ng-click="exportLayout($event)">
+                                <ng-md-icon icon="forward" size="22">
+                                    <md-tooltip md-direction="top">Export Layout</md-tooltip>
+                                </ng-md-icon>
+                            </md-button>
+                        </dvi>
+
+                        <div flex="40" layout="row" layout-align="end center">
+                            <md-button aria-label="open view constructor" data-ng-click="openViewConstructor($event)">
+                                <ng-md-icon icon="view_list" size="22">
+                                    <md-tooltip md-direction="top">View Constructor</md-tooltip>
+                                </ng-md-icon>
+                            </md-button>
+
+                            <md-button aria-label="open report settings" data-ng-click="openReportSettings($event)">
+                                <ng-md-icon icon="settings" size="22">
+                                    <md-tooltip md-direction="top">Settings</md-tooltip>
+                                </ng-md-icon>
+                            </md-button>
+                        </div>
+
+                    </div>
 
                     <div layout="column" style="padding-top: 16px">
 

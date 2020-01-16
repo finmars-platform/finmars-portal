@@ -16,13 +16,51 @@
             vm.item.data.user_settings = {};
         }
 
-        var availableAbscissaAttrs = vm.item.data.user_settings.available_abscissa_keys;
-        var availableOrdinateAttrs = vm.item.data.user_settings.available_ordinate_keys;
-        var availableValueAttrs = vm.item.data.user_settings.available_value_keys;
+        vm.abscissaSearchTerm = '';
+        vm.ordinateSearchTerm = '';
+        vm.abscissaSearchTerm = '';
 
-        vm.chartType = vm.item.data.type;
+        vm.availableAbscissaAttrs = vm.item.data.user_settings.available_abscissa_keys;
+        vm.availableOrdinateAttrs = vm.item.data.user_settings.available_ordinate_keys;
+        vm.availableValueAttrs = vm.item.data.user_settings.available_value_keys;
 
-        var getAttributes = function () {
+        vm.getSelectName = function (attr) {
+            if (attr.layout_name) {
+                return attr.layout_name;
+            }
+
+            return attr.attribute_data.name;
+        };
+
+        var selectFilterComparator = function (item, searchTerms) {
+            if (item && searchTerms) {
+                var optionName;
+
+                if (item.layout_name) {
+                    optionName = item.layout_name.toLowerCase();
+                } else if (item.attribute_data) {
+                    optionName = item.attribute_data.name.toLowerCase();
+                }
+
+                return optionName.indexOf(searchTerms.toLowerCase()) !== -1;
+            }
+
+            return true;
+        };
+
+        vm.abscissaFilterExpr = function (item) {
+            return selectFilterComparator(item, vm.abscissaSearchTerm);
+        };
+
+        vm.ordinateFilterExpr = function (item) {
+            return selectFilterComparator(item, vm.ordinateSearchTerm);
+        };
+
+        vm.valuesFilterExpr = function (item) {
+            return selectFilterComparator(item, vm.valuesSearchTerm);
+        };
+
+        /*var getAttributes = function () {
 
             var attributes = attributeDataService.getAllAttributesByEntityType(vm.entityType);
 
@@ -48,7 +86,7 @@
                 });
             }
 
-        };
+        };*/
 
         vm.openNumberFormatSettings = function($event) {
 
@@ -83,7 +121,7 @@
             $mdDialog.hide({status: 'agree', data: {item: vm.item}});
         };
 
-        getAttributes();
+        // getAttributes();
     }
 
 }());

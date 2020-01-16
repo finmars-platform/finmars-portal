@@ -16,24 +16,47 @@
             vm.item.data.user_settings = {};
         }
 
-        var availableAttrs = vm.item.data.user_settings.available_attrs_keys;
-        var availableNumericAttrs = vm.item.data.user_settings.available_numeric_attrs_keys;
+        vm.availableAttrs = vm.item.data.user_settings.available_attrs_keys;
+        vm.availableNumericAttrs = vm.item.data.user_settings.available_numeric_attrs_keys;
 
         vm.chartType = vm.item.data.type;
 
-        if (vm.chartType === "report_viewer_bars_chart") {
+        vm.valuesSearchTerm = '';
+        vm.categoriesSearchTerm = '';
 
-            if (vm.item.data.settings.bars_direction === 'bottom-top') {
-                vm.barsNamesAttrSelectorTitle = 'Bars Names (Abscissa)';
-                vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Ordinate)'
-            } else {
-                vm.barsNamesAttrSelectorTitle = 'Bars Names (Ordinate)';
-                vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Abscissa)';
+        vm.getSelectName = function (attr) {
+            if (attr.layout_name) {
+                return attr.layout_name;
             }
 
-        }
+            return attr.attribute_data.name;
+        };
 
-        var getAttributes = function () {
+        var selectFilterComparator = function (item, searchTerms) {
+            if (item && searchTerms) {
+                var optionName;
+
+                if (item.layout_name) {
+                    optionName = item.layout_name.toLowerCase();
+                } else if (item.attribute_data) {
+                    optionName = item.attribute_data.name.toLowerCase();
+                }
+
+                return optionName.indexOf(searchTerms.toLowerCase()) !== -1;
+            }
+
+            return true;
+        };
+
+        vm.valuesFilterExpr = function (item) {
+            return selectFilterComparator(item, vm.valuesSearchTerm);
+        };
+
+        vm.categoriesFilterExpr = function (item) {
+            return selectFilterComparator(item, vm.categoriesSearchTerm);
+        };
+
+        /*var getAttributes = function () {
 
             var attributes = attributeDataService.getAllAttributesByEntityType(vm.entityType);
 
@@ -53,7 +76,7 @@
                 });
             }
 
-        };
+        };*/
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -63,7 +86,7 @@
             $mdDialog.hide({status: 'agree', data: {item: vm.item}});
         };
 
-        getAttributes();
+        //getAttributes();
     }
 
 }());
