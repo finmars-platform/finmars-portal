@@ -12,6 +12,9 @@
     var complexImportService = require('../../services/complex-import/complexImportService');
     var complexImportValidateService = require('../../services/complex-import/complexImportValidateService');
 
+    var usersService = require('../../services/usersService');
+
+
     module.exports = function ($scope, $mdDialog) {
 
         logService.controller('ComplexImport', 'initialized');
@@ -34,6 +37,9 @@
 
         vm.processing = false;
         vm.loaderData = {};
+
+
+        vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
             if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
@@ -652,8 +658,45 @@
             }
         };
 
+        vm.getMember = function () {
+
+            usersService.getMyCurrentMember().then(function (data) {
+
+                vm.currentMember = data;
+
+                if(vm.currentMember.is_admin) {
+                    vm.hasSchemeEditPermission = true
+                }
+
+                vm.currentMember.groups_object.forEach(function (group) {
+
+                    if(group.permission_table) {
+
+                        group.permission_table.configuration.forEach(function (item) {
+
+                            if(item.content_type === 'complex_import.compleximportscheme') {
+                                if (item.data.creator_change) {
+                                    vm.hasSchemeEditPermission = true
+                                }
+                            }
+
+                        })
+
+                    }
+
+                });
+
+                console.log('hasSchemeEditPermission', vm.hasSchemeEditPermission);
+
+                $scope.$apply();
+
+            });
+
+        };
+
         vm.init = function () {
             vm.getSchemeList();
+            vm.getMember();
         };
 
         vm.init();

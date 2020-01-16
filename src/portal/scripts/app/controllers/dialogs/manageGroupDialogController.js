@@ -424,6 +424,51 @@
 
             }
 
+            if (prop === 'manage_attributes' && item.data[prop] === false) {
+
+                vm.permissionTable.configuration.forEach(function (tableItem) {
+
+                    if (tableItem.content_type === 'obj_attrs.attributetype') {
+                        tableItem.data.creator_view = false
+                        tableItem.data.creator_change = false
+                    }
+
+                })
+
+            }
+
+            if (item.content_type === 'obj_attrs.attributetype') {
+
+                if (prop === 'creator_view') {
+                    item.data['creator_change'] = item.data[prop]
+                }
+
+                if (prop === 'creator_change') {
+                    item.data['creator_view'] = item.data[prop]
+                }
+
+                console.log('prop', prop);
+
+                vm.permissionTable.data.forEach(function (tableItem) {
+
+                    tableItem.data.manage_attributes = item.data['creator_view']
+
+
+                });
+
+
+            }
+
+            if (item.content_type === 'ui.userfield') {
+                if (prop === 'creator_view') {
+                    item.data['creator_change'] = item.data[prop]
+                }
+
+                if (prop === 'creator_change') {
+                    item.data['creator_view'] = item.data[prop]
+                }
+            }
+
         };
 
         vm.canInheritRight = function (contentType) {
@@ -462,6 +507,8 @@
                         });
 
                         vm.processing = false;
+
+                        vm.isSaved = false;
                     }
 
                     resolve()
@@ -546,6 +593,8 @@
 
                             }
 
+                            vm.isSaved = false;
+
                             resolve()
 
                         })
@@ -594,6 +643,7 @@
                 });
 
                 vm.processing = false;
+                vm.isSaved = false;
 
                 $scope.$apply();
 

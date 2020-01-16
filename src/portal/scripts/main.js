@@ -35,6 +35,52 @@ app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 }]);
 
 var metaService = require('./app/services/metaService');
+var usersService = require('./app/services/usersService');
+
+function enableAccessHandler($transitions) {
+
+    usersService.getMyCurrentMember().then(function (data) {
+
+        var member = data;
+
+        $transitions.onStart({}, function (transition) {
+
+            if (member.is_admin) {
+                return true
+            }
+
+            console.log('transition.to().name', transition.to().name);
+
+            if (transition.to().name === 'app.settings.general.init-configuration') {
+                return false;
+            }
+
+            if (transition.to().name === 'app.settings.init-configuration') {
+                return false;
+            }
+
+            if (transition.to().name === 'app.settings.ecosystem-default-settings') {
+                return false;
+            }
+
+            if (transition.to().name === 'app.settings.data-providers') {
+                return false
+            }
+
+            if (transition.to().name === 'app.settings.users-groups') {
+                return false
+            }
+
+            if (transition.to().name === 'app.processes') {
+                return false
+            }
+
+            return true;
+        })
+
+    })
+
+}
 
 app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transitions, $state) {
 
@@ -50,6 +96,8 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
         });
 
     }
+
+    enableAccessHandler($transitions);
 
     $transitions.onSuccess({}, function (trans) {
 
@@ -176,7 +224,6 @@ app.controller('ContextMenuLayoutManagerController', ['$scope', '$mdDialog', req
 app.controller('ContextMenuConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/contextMenuConstructorController')]);
 app.controller('ContextMenuOptionSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/contextMenuOptionSettingsDialogController')]);
 app.directive('contextMenuConstructorOption', [require('./app/directives/contextMenuConstructorOptionDirective')]);
-
 
 
 app.controller('EcosystemDefaultSettingsController', ['$scope', '$mdDialog', require('./app/controllers/pages/ecosystemDefaultSettingsController')]);
@@ -346,7 +393,7 @@ app.controller('PerformanceReportController', ['$scope', '$stateParams', require
 app.controller('CustomFieldDialogController', ['$scope', '$mdDialog', 'attributeDataService', 'entityViewerEventService', 'data', require('./app/controllers/dialogs/customFieldDialogController')]);
 app.controller('CustomFieldController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/customFieldController')]);
 app.controller('CustomFieldAddDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldAddDialogController')]);
-app.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService',  require('./app/controllers/dialogs/customFieldEditDialogController')]);
+app.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldEditDialogController')]);
 
 
 // Settings

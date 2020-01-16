@@ -132,17 +132,17 @@
                                                          layout-align="space-between center">
                                                         <div flex="33" layout="center center">
                                                             <md-checkbox class="md-secondary"
-                                                                         data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin && !vm.currentMember.is_owner}"
+                                                                         data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin}"
                                                                          ng-model="group.objectPermissions.manage"></md-checkbox>
                                                         </div>
                                                         <div flex="33" layout="center center">
                                                             <md-checkbox class="md-secondary"
-                                                                         data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin && !vm.currentMember.is_owner}"
+                                                                         data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin}"
                                                                          ng-model="group.objectPermissions.change"></md-checkbox>
                                                         </div>
                                                         <div flex="33" layout="center center" data-ng-if="vm.entityType !== 'currency'">
                                                             <md-checkbox class="md-secondary"
-                                                                         data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin && !vm.currentMember.is_owner}"
+                                                                         data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin}"
                                                                          ng-model="group.objectPermissions.view"></md-checkbox>
                                                         </div>
                                                     </div>
