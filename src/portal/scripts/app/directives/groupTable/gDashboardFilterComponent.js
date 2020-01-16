@@ -40,6 +40,9 @@
 
                 scope.fields = {};
 
+                var listLayout = scope.evDataService.getListLayout();
+                scope.layoutName = listLayout.name;
+
                 var prepareReportLayoutOptions = function () {
 
                     scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
@@ -106,7 +109,7 @@
                                 } else {
                                     scope.$apply();
                                     resolve(true);
-                                };
+                                }
 
                             }).catch(function (error) {
                                 reject(error);
@@ -477,22 +480,59 @@
                     return false;
                 };
 
-                var init = function () {
+                // Methods for report viewer inside dashboard
+                scope.saveLayoutList = function ($event) {
 
-                    uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
-                        var transactionFields = data.results;
-                        scope.transactionsUserDates = transactionFields.filter(function (field) {
-                            return field.key.indexOf('user_date') !== -1;
+                    if (listLayout.hasOwnProperty('id')) {
+                        uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+                            scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
                         });
+                    }
 
-                    });
+                    $mdDialog.show({
+                        controller: 'SaveLayoutDialogController as vm',
+                        templateUrl: 'views/save-layout-dialog-view.html',
+                        targetEvent: $event,
+                        clickOutsideToClose: false
+                    })
 
-                    syncFilters();
+                };
 
-                    /*scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                scope.openReportSettings = function ($event) {
 
-                    });*/
+                    var reportOptions = scope.evDataService.getReportOptions();
+
+                    $mdDialog.show({
+                        controller: 'GReportSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            reportOptions: reportOptions,
+                            options: {
+                                entityType: scope.entityType
+                            }
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            reportOptions = res.data;
+
+                            scope.evDataService.setReportOptions(reportOptions);
+
+                            scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+                        }
+
+                    })
+
+                };
+                // < Methods for report viewer inside dashboard >
+
+                var initEventListeners = function () {
 
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
@@ -529,8 +569,23 @@
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
                     });
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
+                };
 
+                var init = function () {
+
+                    uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+
+                        var transactionFields = data.results;
+                        scope.transactionsUserDates = transactionFields.filter(function (field) {
+                            return field.key.indexOf('user_date') !== -1;
+                        });
+
+                    });
+
+                    syncFilters();
+                    initEventListeners();
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
                 };
 
                 init();

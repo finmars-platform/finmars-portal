@@ -18,7 +18,8 @@
                 columnNumber: '=',
                 item: '=',
                 dashboardDataService: '=',
-                dashboardEventService: '='
+                dashboardEventService: '=',
+                updateDashboardLayoutCallback: '&?'
             },
             link: function (scope, elem, attr) {
 
@@ -32,7 +33,7 @@
 
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
-                console.log("dashboard scope.item", scope.item);
+
                 scope.vm = {
                     componentType: scope.item,
                     entityType: scope.item.data.settings.entity_type,
@@ -66,6 +67,18 @@
                             scope.vm.componentType = scope.item;
                             scope.vm.entityType = scope.item.data.settings.entity_type;
                             scope.vm.startupSettings = scope.item.data.settings;
+
+                            if (scope.item.data.chart_custom_name) {
+                                scope.customName = scope.item.data.chart_custom_name;
+                            } else {
+                                scope.customName = null;
+                            }
+
+                            if (scope.updateDashboardLayoutCallback) {
+                                setTimeout(function () {
+                                    scope.updateDashboardLayoutCallback({tabNumber: scope.tabNumber, rowNumber: scope.rowNumber, socketData: scope.item});
+                                }, 400);
+                            }
 
                             scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
                             scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);

@@ -93,7 +93,7 @@
 
 
                                 <div class="dashboard-constructor-row-controls"
-                                     data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows"
+                                     data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows track by row.row_number"
                                      data-tab="fixed_area" data-row="{{row.row_number}}">
 
                                     <md-button class="md-button dashboard-manage-row-btn"

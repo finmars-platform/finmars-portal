@@ -7,9 +7,36 @@
 
                 <md-card-content>
 
-                    <p class="g-r-card-title">
+                    <!--<p class="g-r-card-title">
                         Report settings
-                    </p>
+                    </p>-->
+                    <div data-ng-bind="layoutName" class="text-center"></div>
+                    <!--<div class="dashboard-rs-layout-name-holder">
+                        <span data-ng-bind="layoutName" class="dashboard-rs-layout-name"></span>
+                        <md-button data-ng-click="renameLayout($event)" aria-label="open rename layout dialog">
+                            <ng-md-icon icon="edit">
+                                <md-tooltip md-direction="bottom">Rename Layout</md-tooltip>
+                            </ng-md-icon>
+                        </md-button>
+                    </div>-->
+
+                    <div class="layout-settings-actions-btns-container">
+                        <div layout="row" layout-align="space-between center">
+
+                            <md-button aria-label="save viewer layout" data-ng-click="saveLayoutList($event)">
+                                <ng-md-icon icon="save" size="22">
+                                    <md-tooltip md-direction="top">Save Layout</md-tooltip>
+                                </ng-md-icon>
+                            </md-button>
+
+                            <md-button aria-label="open report settings" data-ng-click="openReportSettings($event)">
+                                <ng-md-icon icon="settings">
+                                    <md-tooltip md-direction="top">Settings</md-tooltip>
+                                </ng-md-icon>
+                            </md-button>
+
+                        </div>
+                    </div>
 
                     <div layout="column" style="padding-top: 16px">
 

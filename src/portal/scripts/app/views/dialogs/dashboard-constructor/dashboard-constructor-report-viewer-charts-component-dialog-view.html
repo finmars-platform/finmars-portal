@@ -138,39 +138,33 @@
                     </md-content>
                 </md-tab>
 
-                <md-tab label="USER SETTINGS">
+                <md-tab label="MENU SETTINGS">
                     <md-content class="p-16">
-
-                        <h3 class="m-t-0">Select available columns for chart inside dashboard</h3>
 
                         <div data-ng-if="vm.item.type === 'report_viewer_bars_chart'" layout="row">
 
-                            <two-fields-multiselect ng-model="vm.item.user_settings.available_attrs_keys"
-                                                    title="{{vm.barsNamesAttrSelectorTitle}}"
-                                                    items="vm.attributesForMultiselect"
-                                                    model="vm.item.user_settings.available_attrs_keys"
-                                                    name-property="name"></two-fields-multiselect>
+                            <table-attributes-menu-constructor title="Category"
+                                                               dialog-title="Choose Columns for Category"
+                                                               model="vm.item.user_settings.available_attrs_keys"
+                                                               available-attrs="vm.attributes"></table-attributes-menu-constructor>
 
-                            <two-fields-multiselect ng-model="vm.item.user_settings.available_numeric_attrs_keys"
-                                                    title="{{vm.barsNumbersAttrSelectorTitle}}"
-                                                    items="vm.numericAttributesForMultiselect"
-                                                    model="vm.item.user_settings.available_numeric_attrs_keys"
-                                                    name-property="name"></two-fields-multiselect>
+                            <table-attributes-menu-constructor title="Value"
+                                                               dialog-title="Choose Columns for Value"
+                                                               model="vm.item.user_settings.available_numeric_attrs_keys"
+                                                               available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>
                         </div>
 
                         <div data-ng-if="vm.item.type === 'report_viewer_pie_chart'" layout="row">
 
-                            <two-fields-multiselect ng-model="vm.item.user_settings.available_attrs_keys"
-                                                    title="Separate Chart By"
-                                                    items="vm.attributesForMultiselect"
-                                                    model="vm.item.user_settings.available_attrs_keys"
-                                                    name-property="name"></two-fields-multiselect>
+                            <table-attributes-menu-constructor title="Category"
+                                                               dialog-title="Choose Columns for Category"
+                                                               model="vm.item.user_settings.available_attrs_keys"
+                                                               available-attrs="vm.attributes"></table-attributes-menu-constructor>
 
-                            <two-fields-multiselect ng-model="vm.item.user_settings.available_numeric_attrs_keys"
-                                                    title="Chart Numeric Value"
-                                                    items="vm.numericAttributesForMultiselect"
-                                                    model="vm.item.user_settings.available_numeric_attrs_keys"
-                                                    name-property="name"></two-fields-multiselect>
+                            <table-attributes-menu-constructor title="Value"
+                                                               dialog-title="Choose Columns for Value"
+                                                               model="vm.item.user_settings.available_numeric_attrs_keys"
+                                                               available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>
 
                         </div>
 

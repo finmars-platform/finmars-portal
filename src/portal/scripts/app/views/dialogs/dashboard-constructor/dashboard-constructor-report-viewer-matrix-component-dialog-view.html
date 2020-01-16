@@ -19,6 +19,13 @@
                             <input type="text" data-ng-model="vm.item.name">
                         </md-input-container>
 
+                        <div>
+                            <md-input-container style="width: 200px;">
+                                <label for="">Matrix label</label>
+                                <input type="text" data-ng-model="vm.item.custom_component_name">
+                            </md-input-container>
+                        </div>
+
                         <div class="m-t-16 m-b-16">
 
                             <md-input-container style="width: 200px;">
@@ -261,12 +268,10 @@
                 </md-content>
             </md-tab>
 
-            <md-tab label="USER SETTINGS">
+            <md-tab label="MENU SETTINGS">
                 <md-content class="p-16">
 
-                    <h3 class="m-t-0">Select available columns for matrix inside dashboard</h3>
-
-                    <two-fields-multiselect ng-model="vm.item.user_settings.available_abscissa_keys"
+                    <!--<two-fields-multiselect ng-model="vm.item.user_settings.available_abscissa_keys"
                                             title="Abscissa"
                                             items="vm.attributesForMultiselect"
                                             model="vm.item.user_settings.available_abscissa_attributes"
@@ -282,7 +287,45 @@
                                             title="Value"
                                             items="vm.numericAttributesForMultiselect"
                                             model="vm.item.user_settings.available_value_attributes"
-                                            name-property="name"></two-fields-multiselect>
+                                            name-property="name"></two-fields-multiselect>-->
+
+                    <div layout="column">
+                        <div class="dashboard-constructor-field1">
+                            <table-attributes-menu-constructor title="Axis X Columns"
+                                                               dialog-title="Axis X Columns"
+                                                               model="vm.item.user_settings.available_abscissa_keys"
+                                                               available-attrs="vm.attributes"></table-attributes-menu-constructor>
+                        </div>
+
+                        <div class="dashboard-constructor-field1">
+                            <table-attributes-menu-constructor title="Axis Y Columns"
+                                                               dialog-title="Axis Y Columns"
+                                                               model="vm.item.user_settings.available_ordinate_keys"
+                                                               available-attrs="vm.attributes"></table-attributes-menu-constructor>
+                        </div>
+
+                        <div class="dashboard-constructor-field1">
+                            <table-attributes-menu-constructor title="Values"
+                                                               dialog-title="Values"
+                                                               model="vm.item.user_settings.available_value_keys"
+                                                               available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>
+                        </div>
+                    </div>
+
+                    <!--<table-attributes-menu-constructor title="Category"
+                                                       dialog-title="Choose Columns for Category"
+                                                       model="vm.item.user_settings.available_attrs_keys"
+                                                       available-attrs="vm.attributes"></table-attributes-menu-constructor>
+
+                    <table-attributes-menu-constructor title="Value"
+                                                       dialog-title="Choose Columns for Value"
+                                                       model="vm.item.user_settings.available_numeric_attrs_keys"
+                                                       available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>
+
+                    <table-attributes-menu-constructor title="Value"
+                                                       dialog-title="Choose Columns for Value"
+                                                       model="vm.item.user_settings.available_numeric_attrs_keys"
+                                                       available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>-->
 
                 </md-content>
             </md-tab>

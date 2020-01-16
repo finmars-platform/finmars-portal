@@ -87,9 +87,9 @@
 
                 };*/
 
-                scope.saveReportLayout = function () {
+                /*scope.saveReportLayout = function () {
                     scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.SAVE_VIEWER_TABLE_CONFIGURATION);
-                };
+                };*/
 
                 scope.initEventListeners = function () {
 
