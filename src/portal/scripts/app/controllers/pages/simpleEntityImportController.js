@@ -14,6 +14,7 @@
 
 
     var baseUrlService = require('../../services/baseUrlService');
+    var usersService = require('../../services/usersService');
 
     var baseUrl = baseUrlService.resolve();
 
@@ -49,6 +50,8 @@
         vm.validateConfig = {
             mode: 1
         };
+
+        vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
             if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
@@ -104,8 +107,6 @@
             }
 
         };
-
-        vm.getSchemeList();
 
         vm.updateEntitySchemes = function () {
             vm.getSchemeList();
@@ -360,7 +361,6 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
-
         vm.getFileUrl = function(id) {
 
             return baseUrl + 'file-reports/file-report/' + id + '/view/';
@@ -543,6 +543,49 @@
             })
 
         }
+
+        vm.getMember = function () {
+
+            usersService.getMyCurrentMember().then(function (data) {
+
+                vm.currentMember = data;
+
+                if(vm.currentMember.is_admin) {
+                    vm.hasSchemeEditPermission = true
+                }
+
+                vm.currentMember.groups_object.forEach(function (group) {
+
+                    if(group.permission_table) {
+
+                        group.permission_table.configuration.forEach(function (item) {
+
+                            if(item.content_type === 'csv_import.csvimportscheme') {
+                                if (item.data.creator_change) {
+                                    vm.hasSchemeEditPermission = true
+                                }
+                            }
+
+                        })
+
+                    }
+
+                });
+
+                $scope.$apply();
+
+            });
+
+        };
+
+        vm.init = function () {
+
+            vm.getSchemeList();
+            vm.getMember();
+
+        };
+
+        vm.init();
 
     };
 
