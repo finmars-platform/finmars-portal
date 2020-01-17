@@ -231,6 +231,7 @@
                     <div style="width: 95px; margin-right: 25px;">
                         <md-checkbox class="checkbox-center"
                                      data-ng-checked="item.data.creator_change"
+                                     data-ng-disabled="(item.content_type == 'obj_attrs.attributetype' || item.content_type == 'ui.userfield') && item.data.creator_view"
                                      data-ng-click="vm.updateCheckbox(item, 'creator_change')">
                         </md-checkbox>
                     </div>

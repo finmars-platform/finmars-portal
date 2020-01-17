@@ -914,7 +914,21 @@
 
                                     }
 
-                                });
+                                }).catch(function(){
+
+                                    console.log("Access denied?");
+
+                                    errors.push({
+                                        content_type: 'ui.contextmenulayout',
+                                        item: item,
+                                        error: {
+                                            message: 'Context Menu Layout Access Denied: name ' + item.name
+                                        },
+                                        mode: 'overwrite'
+                                    });
+
+                                    resolve();
+                                })
 
                             }));
                             break;
@@ -1813,17 +1827,39 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createContextMenuLayout(item));
+                                            uiRepository.createContextMenuLayout(item).then(function(data){
+                                                resolveLocal(data);
+                                            }).catch(function () {
+                                                resolveLocal()
+                                            })
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createContextMenuLayout(item));
+                                        uiRepository.createContextMenuLayout(item).then(function(data){
+                                            resolveLocal(data);
+                                        }).catch(function () {
+                                            resolveLocal()
+                                        })
 
                                     }
 
-                                });
+                                }).catch(function(){
+
+                                    console.log("Access denied?");
+
+                                    errors.push({
+                                        content_type: 'ui.contextmenulayout',
+                                        item: item,
+                                        error: {
+                                            message: 'Context Menu Layout Access Denied: name ' + item.name
+                                        },
+                                        mode: 'skip'
+                                    });
+
+                                    resolveLocal();
+                                })
 
                             }));
                             break;
