@@ -150,7 +150,7 @@
 
                 }
 
-                if (vm.scheme.calculated_inputs.length) {
+                if (vm.scheme.calculated_inputs && vm.scheme.calculated_inputs.length) {
 
                     vm.calculatedFields = [];
 

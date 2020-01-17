@@ -15,7 +15,7 @@
                 type: '@'
             },
             link: function (scope, elem, attr) {
-
+                console.log("reconciliation card field", scope.field);
                 scope.statusClass = '';
 
                 scope.resolveStatus = function () {

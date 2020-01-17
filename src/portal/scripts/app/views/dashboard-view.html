@@ -221,7 +221,7 @@
             </div>
 
             <md-tabs md-border-bottom md-dynamic-height class="dashboard-tabs height-100">
-                <md-tab data-ng-repeat="tab in vm.layout.data.tabs" md-on-select="vm.setActiveTab(tab)">
+                <md-tab data-ng-repeat="tab in vm.layout.data.tabs | orderBy: 'tab_number' track by tab.tab_number" md-on-select="vm.setActiveTab(tab)">
                     <md-tab-label>
                         <span>
                             {{tab.name}}

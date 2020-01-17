@@ -91,6 +91,7 @@ app.service('$customDialog', ['$rootScope', '$templateCache', '$compile', '$cont
 app.controller('DashboardLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/dashboardLayoutManagerController')]);
 
 app.controller('DashboardConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dashboardConstructorController')]);
+app.controller('DashboardConstructorSocketSettingsDialogController', ['$scope', '$mdDialog', 'dashboardConstructorDataService', 'dashboardConstructorEventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorSocketSettingsDialogController')]);
 
 app.controller('DashboardConstructorControlComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorControlComponentDialogController')]);
 app.controller('DashboardConstructorButtonSetComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorButtonSetComponentDialogController')]);
@@ -165,6 +166,7 @@ app.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', re
 app.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/helpDialogController')]);
 app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
 app.controller('CalculatorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/calculatorDialogController')]);
+app.controller('TabsEditorDialogController', ['$scope', '$mdDialog', 'tabs', require('./app/controllers/dialogs/tabsEditorDialogController')]);
 
 app.controller('InputTemplateLayoutViewerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/inputTemplateLayoutViewerDialogController')]);
 app.controller('TemplateLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateLayoutManagerController')]);
@@ -552,6 +554,7 @@ app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTabl
 app.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
 app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
 app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
+app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
 

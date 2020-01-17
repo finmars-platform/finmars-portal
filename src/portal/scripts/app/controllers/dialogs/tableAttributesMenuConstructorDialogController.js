@@ -47,7 +47,6 @@
                 vm.selectedAttrs[attrIndex].order -= 1;
                 vm.selectedAttrs[nextItemIndex] = itemToMove;
             }
-
         };
 
         vm.openAttributeSelector = function ($event) {
