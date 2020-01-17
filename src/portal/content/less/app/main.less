@@ -654,7 +654,6 @@ md-tooltip.md-tooltip.md-panel.tooltip_1 {
   }
 }
 
-
 md-tooltip.md-panel.md-tooltip.md-default-theme, md-tooltip.md-panel.md-tooltip {
   &.red-text {
     color: #fa393e;
@@ -2606,5 +2605,46 @@ md-checkbox.checkbox-center {
     margin: 0 4px;
     height: 26px;
     width: 33px;
+  }
+}
+
+expression-editor-button.grey-expression-btn {
+  button.md-button.expr-btn {
+    color: rgb(33,33,33);
+    background-color: rgb(250,250,250);
+
+    &:not([disabled]):hover {
+      background-color: rgb(250,250,250);
+      opacity: 0.5;
+    }
+  }
+}
+
+.draggable-dialog-sign {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+  fill: #929292;
+  cursor: grab;
+
+  .dd-sign-left-icon, .dd-sign-right-icon {
+    position: absolute;
+    top: 0;
+  }
+
+  .dd-sign-left-icon {
+    right: 6px;
+  }
+
+  .dd-sign-right-icon {
+    right: 0;
+  }
+}
+
+md-dialog {
+  .draggable-dialog-sign {
+    top: 5px;
+    left: 10px;
   }
 }

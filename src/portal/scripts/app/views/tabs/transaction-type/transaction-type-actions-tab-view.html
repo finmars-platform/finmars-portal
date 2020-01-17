@@ -11,7 +11,7 @@
                              class="ttype-action-info-container"
                              layout-align="start center">
                             <span class="m-t-16" ng-click="$event.stopPropagation()">
-                                <expression-editor-button
+                                <expression-editor-button data-ng-class="{'grey-expression-btn': !item.condition_expr}"
                                         data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                                         data-item="item.condition_expr"></expression-editor-button>
                                 <md-tooltip class="tooltip_2"

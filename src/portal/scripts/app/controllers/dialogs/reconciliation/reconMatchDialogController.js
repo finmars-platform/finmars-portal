@@ -579,10 +579,17 @@
                         $(container).addClass('active');
                     });
 
+                    drake.on('drag', function () {
+                        document.addEventListener('wheel', DnDWheel);
+                    });
+
                     drake.on('out', function (elem, container, source) {
                         $(container).removeClass('active');
                     });
 
+                    drake.on('dragend', function (elem) {
+                        document.removeEventListener('wheel', DnDWheel);
+                    });
 
                 },
 
@@ -621,8 +628,16 @@
                         $(container).addClass('active');
                     });
 
+                    drake.on('drag', function () {
+                        document.addEventListener('wheel', DnDWheel);
+                    });
+
                     drake.on('out', function (elem, container, source) {
                         $(container).removeClass('active');
+                    });
+
+                    drake.on('dragend', function (elem) {
+                        document.removeEventListener('wheel', DnDWheel);
                     });
 
                 },
@@ -666,9 +681,7 @@
                     });
 
                     drake.on('dragend', function (elem) {
-
                         document.removeEventListener('wheel', DnDWheel);
-
                     });
 
                     drake.on('over', function (elem, container, source) {

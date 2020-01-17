@@ -1,7 +1,8 @@
 <md-dialog aria-label="" class="draggable-dialog manage-member-group width-70" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <is-draggable-sign></is-draggable-sign>
+
             <h2 layout="row">Edit group&nbsp;<b data-ng-bind="::vm.group.name"></b>
 
                 <div style="margin-left: 10px" layout="row" layout-sm="column" data-ng-if="vm.processing"

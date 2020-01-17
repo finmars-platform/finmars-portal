@@ -37,7 +37,7 @@
             }
         }
 
-
+        console.log("dashboard settings vm.item", vm.item);
         vm.componentsTypes = [];
 
         vm.layouts = [];

@@ -64,9 +64,38 @@
 
                 };
 
-                scope.toggleFieldEditMode = function () {
+                scope.toggleFieldEditMode = function ($event) {
 
-                    var layout = scope.dashboardConstructorDataService.getData();
+                    $mdDialog.show({
+                        controller: "DashboardConstructorSocketSettingsDialogController as vm",
+                        templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-socket-settings-dialog-view.html',
+                        targetEvent: $event,
+                        autoWrap: true,
+                        locals: {
+                            dashboardConstructorDataService: scope.dashboardConstructorDataService,
+                            dashboardConstructorEventService: scope.dashboardConstructorEventService,
+                            attributeDataService: scope.attributeDataService,
+                            data: {
+                                item: scope.item,
+                                tabNumber: scope.tabNumber,
+                                rowNumber: scope.rowNumber,
+                                columnNumber: scope.columnNumber,
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            scope.syncWithComponentType();
+
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+                            console.log("dashboard settings res", res);
+                            scope.saveField();
+                        }
+
+                    });
+
+                    /*var layout = scope.dashboardConstructorDataService.getData();
 
                     layout.data.tabs = layout.data.tabs.map(function (tab) {
 
@@ -91,12 +120,8 @@
 
                     scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
 
-                    scope.item.editMode = true;
+                    scope.item.editMode = true;*/
 
-                    /*
-                    scope.calculateColspanList();
-                    scope.calculateRowspanList();
-                    */
 
                 };
 
@@ -573,11 +598,14 @@
                             autoWrap: true,
                             skipHide: true,
                             locals: locals
-                        }).then(function (value) {
 
-                            scope.syncWithComponentType();
+                        }).then(function (res) {
 
-                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+                            if (res && res.status === 'agree') {
+                                scope.syncWithComponentType();
+
+                                scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+                            }
 
                         });
                     }

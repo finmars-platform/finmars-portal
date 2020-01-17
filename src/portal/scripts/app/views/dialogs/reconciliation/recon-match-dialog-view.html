@@ -1,7 +1,8 @@
 <md-dialog aria-label="" ng-cloak class="draggable-dialog width-90  recon-match-holder" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <is-draggable-sign></is-draggable-sign>
+
             <h2>Reconciliation Matching</h2>
             <span flex></span>
         </div>
@@ -67,8 +68,16 @@
 
                     <div data-ng-repeat="item in vm.bankLinesList track by $index" class="recon-match-fields-container">
 
-                        <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"
-                                    data-ng-mousedown="vm.turnOnDragging()"></ng-md-icon>
+                        <is-draggable-sign data-ng-mousedown="vm.turnOnDragging()"></is-draggable-sign>
+
+                        <div style="padding-left: 50px">
+
+                            <div class="recon-match-line-title"
+                                 title="{{(item.___index + 1) + ' : ' + item.source_id}}">
+                                {{item.___index + 1}} : {{item.source_id}}
+                            </div>
+
+                        </div>
 
                         <md-menu class="match-recon-body-line-settings-button">
                             <md-button data-ng-click="$mdOpenMenu($event)"
@@ -86,15 +95,6 @@
                                 </md-menu-item>
                             </md-menu-content>
                         </md-menu>
-
-                        <div style="padding-left: 50px">
-
-                            <div class="recon-match-line-title"
-                                 title="{{(item.___index + 1) + ' : ' + item.source_id}}">
-                                {{item.___index + 1}} : {{item.source_id}}
-                            </div>
-
-                        </div>
 
                         <div layout="row">
 
@@ -224,8 +224,13 @@
                     <div data-ng-repeat="item in vm.complexTransactionList track by $index"
                          class="recon-match-fields-container">
 
-                        <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"
-                                    data-ng-mousedown="vm.turnOnDragging()"></ng-md-icon>
+                        <is-draggable-sign data-ng-mousedown="vm.turnOnDragging()"></is-draggable-sign>
+
+                        <div style="padding-left: 50px">
+                            <div class="recon-match-line-title" title="{{item.code + ' : ' + item.text}}">
+                                {{item.code}} : {{item.text}}
+                            </div>
+                        </div>
 
                         <md-menu class="match-recon-body-line-settings-button">
                             <md-button data-ng-click="$mdOpenMenu($event)"
@@ -252,12 +257,6 @@
                                 </md-menu-item>
                             </md-menu-content>
                         </md-menu>
-
-                        <div style="padding-left: 50px">
-                            <div class="recon-match-line-title" title="{{item.code + ' : ' + item.text}}">
-                                {{item.code}} : {{item.text}}
-                            </div>
-                        </div>
 
                         <div layout="row">
 
