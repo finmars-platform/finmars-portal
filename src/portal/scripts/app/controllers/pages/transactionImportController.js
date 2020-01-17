@@ -12,6 +12,7 @@
 
 
     var baseUrlService = require('../../services/baseUrlService');
+    var usersService = require('../../services/usersService');
 
     var baseUrl = baseUrlService.resolve();
 
@@ -43,15 +44,13 @@
             mode: 1
         };
 
+        vm.hasSchemeEditPermission = false;
+
         vm.loadIsAvailable = function () {
             return !vm.readyStatus.processing && vm.config.scheme && vm.config.error_handling;
         };
 
-        transactionSchemeService.getList().then(function (data) {
-            vm.transactionSchemes = data.results;
-            vm.readyStatus.schemes = true;
-            $scope.$apply();
-        });
+
 
         vm.checkExtension = function (file, extension, $event) {
             console.log('file', file);
@@ -526,6 +525,56 @@
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
+
+        vm.getMember = function () {
+
+            usersService.getMyCurrentMember().then(function (data) {
+
+                vm.currentMember = data;
+
+                if(vm.currentMember.is_admin) {
+                    vm.hasSchemeEditPermission = true
+                }
+
+                vm.currentMember.groups_object.forEach(function (group) {
+
+                    if(group.permission_table) {
+
+                        group.permission_table.configuration.forEach(function (item) {
+
+                            if(item.content_type === 'integrations.complextransactionimportscheme') {
+                                if (item.data.creator_change) {
+                                    vm.hasSchemeEditPermission = true
+                                }
+                            }
+
+                        })
+
+                    }
+
+                });
+
+                console.log('hasSchemeEditPermission', vm.hasSchemeEditPermission);
+
+                $scope.$apply();
+
+            });
+
+        };
+
+        vm.init = function () {
+
+            transactionSchemeService.getList().then(function (data) {
+                vm.transactionSchemes = data.results;
+                vm.readyStatus.schemes = true;
+                $scope.$apply();
+            });
+
+            vm.getMember();
+
+        };
+
+        vm.init();
 
 
     };

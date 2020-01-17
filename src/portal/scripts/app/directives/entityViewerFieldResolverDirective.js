@@ -224,9 +224,16 @@
 
                     var result = '';
 
+                    console.log("scope.fields[0]", scope.fields[0]);
+
                     if (scope.fields[0]) {
-                        result = scope.fields[0].name;
+                        if (scope.fields[0].name) {
+                            result = scope.fields[0].name;
+                        } else {
+                            result = scope.fields[0].public_name;
+                        }
                     }
+
 
                     return result
                 };
