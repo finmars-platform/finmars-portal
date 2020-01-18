@@ -1,0 +1,53 @@
+<md-dialog aria-label="input forms preview"
+           class="entity-editor-dialog height-100 draggable-dialog"
+           drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Input Form Editor Preview</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="height-100">
+        <div data-ng-if="vm.checkReadyStatus()">
+
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab data-ng-repeat="tab in vm.tabs">
+                <md-tab-label>
+                    <span>{{tab.name}}</span>
+                </md-tab-label>
+
+                <md-tab-body>
+                    <md-content class="md-padding p-t-26"
+                                ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
+                        <div layout="row"
+                             data-ng-repeat="row in vm.range(tab.layout.rows)"
+                             class="entity-editor-row">
+                            <div data-ng-repeat="field in tab.layout.fields track by $index"
+                                 class="ev-data-field
+								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
+                                 flex="{{vm.bindFlex(tab, row, field)}}"
+                                 data-ng-if="vm.checkFieldRender(tab, row, field)">
+                                <bind-field-control entity-type="vm.entityType"
+                                                    entity="vm.entity"
+                                                    item="vm.attributesLayout[tab.index][$index]"></bind-field-control>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+            </md-tabs>
+
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
+        <div>
+            <md-button class="md-raised" data-ng-click="vm.cancel()">
+                Close
+            </md-button>
+        </div>
+    </md-dialog-actions>
+</md-dialog>

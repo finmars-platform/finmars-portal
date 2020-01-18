@@ -15,78 +15,38 @@
 
            <div layout="row">
 
-               <div class="m-t-16 m-b-16">
+               <div style="margin: 10px 16px;">
 
-                   <md-input-container style="width: 200px;">
-                       <label for="">Abscissa</label>
-                       <md-select data-ng-model="vm.settings.abscissa"
-                                  md-on-close="abscissaSearchTerm = ''">
-                           <md-select-header>
-                               <input data-ng-model="abscissaSearchTerm"
-                                      type="search"
-                                      placeholder="Search for a ..."
-                                      class="md-text md-select-search-pattern select-input-filter"
-                                      ng-keydown="$event.stopPropagation()">
-                           </md-select-header>
-                           <md-option
-                                   data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: abscissaSearchTerm} track by attribute.key "
-                                   ng-value="attribute.key">
-                               {{attribute.name}}
-                           </md-option>
-                       </md-select>
-                   </md-input-container>
+                   <table-attribute-selector title="Abscissa"
+                                             dialog-title="Abscissa"
+                                             available-attrs="vm.attributes"
+                                             item="vm.settings.abscissa"></table-attribute-selector>
 
                </div>
 
-               <div class="m-t-16 m-b-16">
+               <div style="margin: 10px 16px;">
 
-                   <md-input-container style="width: 200px;">
-                       <label for="">Ordinate</label>
-                       <md-select data-ng-model="vm.settings.ordinate"
-                                  md-on-close="ordinateSearchTerm = ''">
-                           <md-select-header>
-                               <input data-ng-model="ordinateSearchTerm"
-                                      type="search"
-                                      placeholder="Search for a ..."
-                                      class="md-text md-select-search-pattern select-input-filter"
-                                      ng-keydown="$event.stopPropagation()">
-                           </md-select-header>
-                           <md-option
-                                   data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: ordinateSearchTerm} track by attribute.key "
-                                   ng-value="attribute.key">
-                               {{attribute.name}}
-                           </md-option>
-                       </md-select>
-                   </md-input-container>
+                   <table-attribute-selector title="Ordinate"
+                                             dialog-title="Ordinate"
+                                             available-attrs="vm.attributes"
+                                             item="vm.settings.ordinate"></table-attribute-selector>
 
                </div>
 
-               <div class="m-t-16 m-b-16">
+               <div style="margin: 10px 16px;">
 
-                   <md-input-container style="width: 200px;">
-                       <label for="">Value</label>
-                       <md-select data-ng-model="vm.settings.value_key"
-                                  md-on-close="valueSearchTerm = ''">
-                           <md-select-header>
-                               <input data-ng-model="valueSearchTerm"
-                                      type="search"
-                                      placeholder="Search for a ..."
-                                      class="md-text md-select-search-pattern select-input-filter"
-                                      ng-keydown="$event.stopPropagation()">
-                           </md-select-header>
-                           <md-option
-                                   data-ng-repeat="attribute in vm.numericAttributes | orderBy:'-name' | filter:{name: valueSearchTerm} track by attribute.key "
-                                   ng-value="attribute.key">
-                               {{attribute.name}}
-                           </md-option>
-                       </md-select>
-                   </md-input-container>
-
-                   <md-button class="md-raised md-primary" ng-click="vm.openNumberFormatSettings($event)" style="margin-right:20px;">
-                       Format Settings
-                   </md-button>
+                   <table-attribute-selector title="Value"
+                                             dialog-title="Value"
+                                             available-attrs="vm.numericAttributes"
+                                             item="vm.settings.value_key"></table-attribute-selector>
 
                </div>
+
+               <md-button class="md-raised md-primary"
+                          data-ng-click="vm.openNumberFormatSettings($event)"
+                          style="height: 36px">
+                   Format Settings
+               </md-button>
 
            </div>
 

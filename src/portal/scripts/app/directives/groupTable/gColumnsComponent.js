@@ -127,7 +127,7 @@
 
                     return allAttrsList;
 
-                }
+                };
 
                 scope.checkReportRemoveButton = function (column, index) {
                     var groups = scope.evDataService.getGroups();
@@ -145,6 +145,40 @@
                     return true;
 
                 };
+
+                /*var getColumnSettingsMenu = function (column) {
+                    var menuComp;
+
+                    if (scope.isReport) {
+
+                        if (column.value_type === 20) {
+                            menuComp = [
+                                {
+
+                                }
+                            ]
+                        }
+
+                    }
+                };*/
+
+                /*scope.openColumnSettingsMenu = function (e, column) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (scope.isReport) {
+                        var menuDiv = document.createElement('div');
+
+                        menuDiv.style.top = e.pageY + 'px';
+                        menuDiv.style.left = e.pageX + 'px';
+
+
+                    } else {
+
+                    }
+
+                };*/
 
                 scope.checkReportSortButton = function (column, index) {
 
