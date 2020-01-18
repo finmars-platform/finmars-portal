@@ -151,7 +151,7 @@
                 vm.attributesLayout.push(tabResult);
 
             });
-            console.log("inputs flex vm.tabs", vm.tabs);
+
             console.log('vm.attributesLayout', vm.attributesLayout);
 
         };
@@ -246,16 +246,6 @@
                         })
 
                     });
-
-                    /*vm.editLayout = function () {
-                        $state.go('app.data-constructor', {
-                            entityType: vm.entityType,
-                            instanceId: vm.editLayoutEntityInstanceId
-                        });
-                        $mdDialog.hide();
-                    };*/
-
-                    // $scope.$apply();
 
                     resolve();
 

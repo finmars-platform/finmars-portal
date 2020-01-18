@@ -1100,6 +1100,34 @@
 
         };
 
+        vm.openFormPreview = function ($event) {
+
+            var tabs = JSON.parse(angular.toJson(vm.tabs));
+
+            var previewController = 'EntityViewerFormsPreviewDialogController as vm';
+            var previewData = {entityType: vm.entityType};
+
+            if (vm.entityType === 'complex-transaction') {
+                previewController = 'ComplexTransactionFormsPreviewDialogController as vm';
+                previewData.transactionTypeId = vm.instanceId;
+            }
+
+            $mdDialog.show({
+                controller: previewController,
+                templateUrl: 'views/dialogs/data-constructor-forms-preview-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                multiple: true,
+                locals: {
+                    inputFormTabs: tabs,
+                    data: previewData
+                }
+
+            })
+
+        };
+
         vm.init = function () {
 
             vm.getLayout().then(function () {
