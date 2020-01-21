@@ -125,8 +125,6 @@ app.factory('pickmeup', ['$window', function ($window) {
     }
 }]);
 
-// Dashboard
-
 app.factory('d3Service', ['$window', function ($window) {
     if ($window.d3) {
         return $window.d3;
@@ -135,6 +133,10 @@ app.factory('d3Service', ['$window', function ($window) {
 
 app.service('$customDialog', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/customDialogService')]);
 
+
+// Dashboard
+
+app.component('dashboardEntityViewer', require('./app/components/dashboardEntityViewerComponent'));
 
 app.controller('DashboardLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/dashboardLayoutManagerController')]);
 
@@ -181,8 +183,8 @@ app.directive('reportViewerBarsChart', ['d3Service', require('./app/directives/r
 app.directive('reportViewerPieChart', ['d3Service', require('./app/directives/reportViewer/reportViewerPieChart')]);
 
 
-app.controller('DashboardLayoutListDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboardLayoutListDialogController')]);
-
+app.controller('DashboardLayoutListDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboard/dashboardLayoutListDialogController')]);
+app.controller('DashboardLayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboard/dashboardLayoutExportDialogController')]);
 
 // Common
 
@@ -242,7 +244,6 @@ app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state'
 app.controller('ClassifierImportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierImportDialogController')]);
 app.controller('ClassifierExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierExportDialogController')]);
 app.controller('LayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/layoutExportDialogController')]);
-app.controller('DashboardLayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboardLayoutExportDialogController')]);
 app.controller('FileReportsController', ['$scope', '$mdDialog', require('./app/controllers/pages/fileReportsController')]);
 
 
@@ -444,6 +445,7 @@ app.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('.
 // Layouts
 
 app.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
+app.controller('UiShareLayoutDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiShareLayoutDialogController')]);
 app.controller('UiLayoutSaveAsDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutSaveAsDialogController')]);
 app.controller('SelectLayoutDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/selectLayoutDialogController')]);
 
@@ -455,7 +457,6 @@ app.controller('BookmarksLayoutSelectDialogController', ['$scope', '$mdDialog', 
 
 app.component('floatRangeCustomFieldControl', require('./app/components/floatRangeCustomFieldControlComponent'));
 app.component('dateRangeCustomFieldControl', require('./app/components/dateRangeCustomFieldControlComponent'));
-app.component('dashboardEntityViewer', require('./app/components/dashboardEntityViewerComponent'));
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);

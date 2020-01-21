@@ -123,7 +123,7 @@
 
             $mdDialog.show({
                 controller: 'DashboardLayoutListDialogController as vm',
-                templateUrl: 'views/dialogs/dashboard-layout-list-view.html',
+                templateUrl: 'views/dialogs/dashboard/dashboard-layout-list-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: false,
@@ -175,7 +175,7 @@
 
             $mdDialog.show({
                 controller: 'DashboardLayoutExportDialogController as vm',
-                templateUrl: 'views/dialogs/dashboard-layout-export-dialog-view.html',
+                templateUrl: 'views/dialogs/dashboard/dashboard-layout-export-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
