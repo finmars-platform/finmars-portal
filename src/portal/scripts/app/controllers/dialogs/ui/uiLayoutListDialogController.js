@@ -1,20 +1,21 @@
 /**
- * Created by sergey on 04.11.16.
+ * Created by szhitenev on 04.11.16.
  */
 (function () {
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
     var evEvents = require('../../../services/entityViewerEvents');
 
     var uiService = require('../../../services/uiService');
 
     var middlewareService = require('../../../services/middlewareService');
 
-    module.exports = function ($scope, $mdDialog, options) {
+    var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
+    var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
+    var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
 
-        logService.controller('UiLayoutListDialogController', 'initalized');
+    module.exports = function ($scope, $mdDialog, options) {
 
         var vm = this;
 
@@ -31,6 +32,9 @@
         if (!isRootEntityViewer) {
             splitPanelLayoutId = entityViewerDataService.getSplitPanelDefaultLayout();
         }
+
+
+        vm.invites = [];
 
         //var contentType = metaContentTypesService.getContentTypeUIByEntity(options.entityType);
 
@@ -52,10 +56,13 @@
                             if (filter.options.hasOwnProperty('use_from_above')) {
                                 item.hasUseFromAboveFilter = true;
                                 break;
-                            };
+                            }
 
-                        };
-                    };
+
+                        }
+
+                    }
+
 
                 });
 
@@ -64,8 +71,6 @@
             });
 
         };
-
-        vm.getList();
 
         vm.renameLayout = function ($event, layout, index) {
 
@@ -149,7 +154,8 @@
                 layoutsItemsList.forEach(function (layoutItem) {
                     if (layoutItem.classList.contains('active')) {
                         layoutItem.classList.remove('active');
-                    };
+                    }
+
 
                 });
 
@@ -179,7 +185,8 @@
                             uiService.updateListLayout(layoutsList[i].id, layoutsList[i]);
                             break;
                         }
-                    };
+                    }
+
 
                     layoutData.is_default = true;
                     item.is_default = true;
@@ -227,6 +234,38 @@
             }
         };
 
+        vm.shareLayout = function ($event, item) {
+
+            var type = 'entity_viewer';
+
+            if (entityViewerDataService.getEntityType().indexOf('report') !== -1) {
+                type = 'report_viewer';
+            }
+
+            $mdDialog.show({
+                controller: 'UiShareLayoutDialogController as vm',
+                templateUrl: 'views/dialogs/ui/ui-share-layout-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                multiple: true,
+                clickOutsideToClose: false,
+                locals: {
+                    options: {
+                        layout: item,
+                        type: type
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.getList();
+                }
+
+            })
+
+        };
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
@@ -246,6 +285,163 @@
             }
 
         };
+
+        vm.acceptInvite = function ($event, invite) {
+
+            console.log("Accept invite: ", $event, invite);
+
+            invite.status = 1;
+
+            // TODO import configuration and create new layout with sourced_from_global_layout
+
+            inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (data) {
+
+                vm.importConfig = {data: data.shared_configuration_file.data, mode: 'overwrite'};
+
+                console.log("New configuration file", data);
+
+                new Promise(function (resolve, reject) {
+
+                    vm.importConfiguration(resolve)
+
+                }).then(function (data) {
+
+                    console.log("Import Finished");
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: "Layout is installed"
+                            }
+                        }
+                    });
+
+                    vm.getInvites();
+
+                });
+
+            })
+
+        };
+
+        vm.declineInvite = function ($event, invite) {
+
+            console.log("Decline invite: ", $event, invite);
+
+            invite.status = 2;
+
+            inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (value) {
+
+                vm.getInvites();
+
+            })
+
+        };
+
+        vm.importConfiguration = function (resolve) {
+
+            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+
+                vm.importConfig = data;
+
+                $scope.$apply();
+
+                if (vm.importConfig.task_status === 'SUCCESS') {
+
+                    resolve()
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.importConfiguration(resolve);
+                    }, 1000)
+
+                }
+
+            })
+
+        };
+
+        vm.pullUpdate = function ($event, item, $index) {
+
+            console.log("Pull Update for Layout:", item);
+
+            shareConfigurationFileService.getByKey(item.sourced_from_global_layout).then(function (data) {
+
+                var sharedFile = data;
+
+                vm.importConfig = {data: sharedFile.data, mode: 'overwrite'};
+
+                console.log("New configuration file", data);
+
+                new Promise(function (resolve, reject) {
+
+                    vm.importConfiguration(resolve)
+
+                }).then(function (data) {
+
+                    console.log("Import Finished");
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: "Layout is updated"
+                            }
+                        }
+                    });
+
+                })
+
+            })
+
+        };
+
+        vm.getInvites = function () {
+
+            inviteToSharedConfigurationFileService.getListOfMyInvites({
+                filters: {
+                    status: '0'
+                }
+            }).then(function (data) {
+
+                vm.invites = data.results;
+
+                console.log('vm.invites', vm.invites);
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.init = function () {
+
+            vm.getInvites();
+            vm.getList();
+
+        };
+
+        vm.init();
 
     }
 

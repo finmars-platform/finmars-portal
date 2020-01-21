@@ -28,6 +28,15 @@
                 </div>
 
                 <div>
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.pullUpdate($event, item, $index)"
+                               data-ng-if="item.sourced_from_global_layout">
+                        <md-tooltip md-direction="top">Update Layout</md-tooltip>
+                        <ng-md-icon icon="file_download" size="24"></ng-md-icon>
+                    </md-button>
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.shareLayout($event, item, $index)">
+                        <md-tooltip md-direction="top">Share</md-tooltip>
+                        <ng-md-icon icon="share" size="24"></ng-md-icon>
+                    </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.renameLayout($event, item, $index)">
                         <md-tooltip md-direction="top">Rename</md-tooltip>
                         <ng-md-icon icon="mode_edit" size="24"></ng-md-icon>
