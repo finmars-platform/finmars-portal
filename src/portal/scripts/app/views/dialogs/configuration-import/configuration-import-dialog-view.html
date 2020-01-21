@@ -254,6 +254,13 @@
                 Import
             </md-button>
 
+            <md-button class="md-raised" data-ng-class="{'disabled-btn': vm.processing || !vm.readyStatus.member || !vm.readyStatus.groups}"
+
+                       ng-click="vm.agreeAsBackendProcess($event)"
+                       style="margin-right:20px;" aria-label="import button">
+                Import (Backend Processing)
+            </md-button>
+
         </div>
     </md-dialog-actions>
 </md-dialog>
