@@ -89,34 +89,34 @@
                         </div>
 
                         <div data-ng-if="vm.item.type === 'report_viewer_bars_chart'" layout="row">
-                            <table-attribute-selector title="{{vm.barsNamesAttrSelectorTitle}}"
-                                                      dialog-title="{{vm.barsNamesAttrSelectorTitle}}"
-                                                      available-attrs="vm.attributes"
-                                                      item="vm.item.settings.bar_name_key"
+                            <table-attribute-selector data-title="Category"
+                                                      data-dialog-title="Choose Columns for Category"
+                                                      data-available-attrs="vm.attributes"
+                                                      data-item="vm.item.settings.bar_name_key"
                                                       class="dashboard-constructor-field1"
                                                       style="margin: 0 10px;"></table-attribute-selector>
 
-                            <table-attribute-selector title="{{vm.barsNumbersAttrSelectorTitle}}"
-                                                      dialog-title="{{vm.barsNumbersAttrSelectorTitle}}"
-                                                      available-attrs="vm.numericAttributes"
-                                                      item="vm.item.settings.bar_number_key"
+                            <table-attribute-selector data-title="Value"
+                                                      data-dialog-title="Choose Columns for Value"
+                                                      data-available-attrs="vm.numericAttributes"
+                                                      data-item="vm.item.settings.bar_number_key"
                                                       class="dashboard-constructor-field1"
                                                       style="margin: 0 10px;"></table-attribute-selector>
                         </div>
 
                         <div data-ng-if="vm.item.type === 'report_viewer_pie_chart'" layout="row">
 
-                            <table-attribute-selector title="Separate Chart By"
-                                                      dialog-title="Separate Chart By"
-                                                      item="vm.item.settings.group_attr"
-                                                      available-attrs="vm.attributes"
+                            <table-attribute-selector data-title="Separate Chart By"
+                                                      data-dialog-title="Separate Chart By"
+                                                      data-item="vm.item.settings.group_attr"
+                                                      data-available-attrs="vm.attributes"
                                                       class="dashboard-constructor-field1"
                                                       style="margin: 0 10px;"></table-attribute-selector>
 
-                            <table-attribute-selector title="Chart Numeric Value"
-                                                      dialog-title="Chart Numeric Value"
-                                                      available-attrs="vm.numericAttributes"
-                                                      item="vm.item.settings.number_attr"
+                            <table-attribute-selector data-title="Chart Numeric Value"
+                                                      data-dialog-title="Chart Numeric Value"
+                                                      data-available-attrs="vm.numericAttributes"
+                                                      data-item="vm.item.settings.number_attr"
                                                       class="dashboard-constructor-field1"
                                                       style="margin: 0 10px;"></table-attribute-selector>
 
@@ -144,28 +144,32 @@
 
                         <div data-ng-if="vm.item.type === 'report_viewer_bars_chart'" layout="row">
 
-                            <table-attributes-menu-constructor title="Category"
-                                                               dialog-title="Choose Columns for Category"
-                                                               model="vm.item.user_settings.available_attrs_keys"
-                                                               available-attrs="vm.attributes"></table-attributes-menu-constructor>
+                            <table-attributes-menu-constructor data-title="Category"
+                                                               data-dialog-title="Choose Columns for Category"
+                                                               data-model="vm.item.user_settings.available_attrs_keys"
+                                                               data-available-attrs="vm.attributes"
+                                                               data-default-attrs-keys="vm.item.settings.bar_name_key"></table-attributes-menu-constructor>
 
-                            <table-attributes-menu-constructor title="Value"
-                                                               dialog-title="Choose Columns for Value"
-                                                               model="vm.item.user_settings.available_numeric_attrs_keys"
-                                                               available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>
+                            <table-attributes-menu-constructor data-title="Value"
+                                                               data-dialog-title="Choose Columns for Value"
+                                                               data-model="vm.item.user_settings.available_numeric_attrs_keys"
+                                                               data-available-attrs="vm.numericAttributes"
+                                                               data-default-attrs-keys="vm.item.settings.bar_number_key"></table-attributes-menu-constructor>
                         </div>
 
                         <div data-ng-if="vm.item.type === 'report_viewer_pie_chart'" layout="row">
 
-                            <table-attributes-menu-constructor title="Category"
-                                                               dialog-title="Choose Columns for Category"
-                                                               model="vm.item.user_settings.available_attrs_keys"
-                                                               available-attrs="vm.attributes"></table-attributes-menu-constructor>
+                            <table-attributes-menu-constructor data-title="Category"
+                                                               data-dialog-title="Choose Columns for Category"
+                                                               data-model="vm.item.user_settings.available_attrs_keys"
+                                                               data-available-attrs="vm.attributes"
+                                                               data-default-attrs-keys="vm.item.settings.group_attr"></table-attributes-menu-constructor>
 
-                            <table-attributes-menu-constructor title="Value"
-                                                               dialog-title="Choose Columns for Value"
-                                                               model="vm.item.user_settings.available_numeric_attrs_keys"
-                                                               available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>
+                            <table-attributes-menu-constructor data-title="Value"
+                                                               data-dialog-title="Choose Columns for Value"
+                                                               data-model="vm.item.user_settings.available_numeric_attrs_keys"
+                                                               data-available-attrs="vm.numericAttributes"
+                                                               data-default-attrs-keys="vm.item.settings.number_attr"></table-attributes-menu-constructor>
 
                         </div>
 

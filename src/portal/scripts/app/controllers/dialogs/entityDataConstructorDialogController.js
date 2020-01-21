@@ -118,6 +118,40 @@
 
         };
 
+        vm.openTabsEditor = function ($event) {
+
+            var tabs = JSON.parse(angular.toJson(vm.tabs));
+
+            $mdDialog.show({
+                controller: 'TabsEditorDialogController as vm',
+                templateUrl: 'views/dialogs/tabs-editor-dialog-view.html',
+                multiple: true,
+                locals: {
+                    tabs: tabs,
+                    data: {
+                        trackByProp: 'name'
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.tabs = [];
+                    vm.tabs = res.data.tabs;
+
+                    vm.tabs.forEach(function (tab, index) {
+                        tab.tabOrder = index;
+                    });
+
+                    vm.createFieldsTree();
+                    vm.updateDrakeContainers();
+
+                }
+
+            });
+        };
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
@@ -843,7 +877,7 @@
 
                 this.dragula = dragula(items,
                     {
-                        moves: function (el, target, source, sibling) {
+                        moves: function (el) {
                             if (el.classList.contains('ec-attr-empty-btn')) {
                                 return false;
                             }

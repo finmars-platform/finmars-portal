@@ -505,17 +505,44 @@
 
                     dragulaInit: function () {
 
+                        var colsHolder = scope.contentWrapElement.querySelector('.g-columns-holder');
+
                         var items = [
-                            scope.contentWrapElement.querySelector('.g-columns-holder'),
+                            colsHolder,
                             scope.contentWrapElement.querySelector('#columnsbag'),
                             scope.contentWrapElement.querySelector('.g-groups-holder'),
                             scope.contentWrapElement.querySelector('#groupsbag'),
                             scope.contentWrapElement.querySelector('#gc-delete-area')
                         ];
 
-                        this.dragula = dragula(items, {
-                            revertOnSpill: true
-                        });
+                        if (isReport) {
+
+                            this.dragula = dragula(items, {
+                                moves: function (elem, source, handle, sibling) { // prevents from moving columns that have groupings
+
+                                    if (source === colsHolder) {
+
+                                        var groups = scope.evDataService.getGroups();
+                                        var colKey = elem.dataset.columnKey;
+
+                                        for (var i = 0; i < groups.length; i++) {
+                                            if (groups[i].key === colKey) {
+                                                return false;
+                                            }
+                                        }
+
+                                    }
+
+                                    return true;
+                                },
+                                revertOnSpill: true
+                            });
+
+                        } else {
+                            this.dragula = dragula(items, {
+                                revertOnSpill: true
+                            });
+                        }
 
                     }
                 };

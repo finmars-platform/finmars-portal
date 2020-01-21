@@ -12,7 +12,8 @@
                 title: '@',
                 dialogTitle: '@',
                 availableAttrs: '<',
-                item: '='
+                item: '=',
+                onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/table-attribute-selector-view.html',
             link: function (scope, elem, attr) {
@@ -66,6 +67,14 @@
 
                             scope.inputText = res.data.name;
                             scope.item = res.data.key;
+
+                            if (scope.onChangeCallback) {
+
+                                setTimeout(function () {
+                                    scope.onChangeCallback();
+                                });
+
+                            }
 
                         }
 

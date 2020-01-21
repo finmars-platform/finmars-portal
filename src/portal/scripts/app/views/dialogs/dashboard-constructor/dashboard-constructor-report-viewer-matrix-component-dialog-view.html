@@ -89,31 +89,11 @@
 
                             <div class="m-t-16 m-b-16">
 
-                                <table-attribute-selector title="Abscissa"
-                                                          dialog-title="Abscissa"
+                                <table-attribute-selector title="Axis X Columns"
+                                                          dialog-title="Axis X Columns"
                                                           available-attrs="vm.attributes"
                                                           item="vm.item.settings.abscissa"
                                                           class="dashboard-constructor-field1"></table-attribute-selector>
-
-                                <!--<md-input-container style="width: 200px;">
-                                    <label for="">Abscissa</label>
-                                    <md-select data-ng-model="vm.item.settings.abscissa"
-                                               md-on-close="abscissaSearchTerm = ''"
-                                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                                        <md-select-header>
-                                            <input data-ng-model="abscissaSearchTerm"
-                                                   type="search"
-                                                   placeholder="Search for a ..."
-                                                   class="md-text md-select-search-pattern select-input-filter"
-                                                   ng-keydown="$event.stopPropagation()">
-                                        </md-select-header>
-                                        <md-option
-                                                data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: abscissaSearchTerm} track by attribute.key "
-                                                ng-value="attribute.key">
-                                            {{attribute.name}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>-->
 
                             </div>
 
@@ -121,31 +101,11 @@
 
                         <div class="m-t-16 m-b-16">
 
-                            <table-attribute-selector title="Ordinate"
-                                                      dialog-title="Ordinate"
+                            <table-attribute-selector title="Axis Y Columns"
+                                                      dialog-title="Axis Y Columns"
                                                       available-attrs="vm.attributes"
                                                       item="vm.item.settings.ordinate"
                                                       class="dashboard-constructor-field1 md-block"></table-attribute-selector>
-
-                            <!--<md-input-container style="width: 200px;">
-                                <label for="">Ordinate</label>
-                                <md-select data-ng-model="vm.item.settings.ordinate"
-                                           md-on-close="ordinateSearchTerm = ''"
-                                           ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                                    <md-select-header>
-                                        <input data-ng-model="ordinateSearchTerm"
-                                               type="search"
-                                               placeholder="Search for a ..."
-                                               class="md-text md-select-search-pattern select-input-filter"
-                                               ng-keydown="$event.stopPropagation()">
-                                    </md-select-header>
-                                    <md-option
-                                            data-ng-repeat="attribute in vm.attributes | orderBy:'-name' | filter:{name: ordinateSearchTerm} track by attribute.key "
-                                            ng-value="attribute.key">
-                                        {{attribute.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>-->
 
                         </div>
 
@@ -159,27 +119,6 @@
                                                           item="vm.item.settings.value_key"
                                                           class="dashboard-constructor-field1"
                                                           style="margin: 0 10px;"></table-attribute-selector>
-
-                                <!--<md-input-container style="width: 200px;">
-                                    <label for="">Value</label>
-                                    <md-select data-ng-model="vm.item.settings.value_key"
-                                               md-on-close="valueSearchTerm = ''"
-                                               ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                                        <md-select-header>
-                                            <input data-ng-model="valueSearchTerm"
-                                                   type="search"
-                                                   placeholder="Search for a ..."
-                                                   class="md-text md-select-search-pattern select-input-filter"
-                                                   ng-keydown="$event.stopPropagation()">
-                                        </md-select-header>
-                                        <md-option
-                                                data-ng-click="vm.item.settings.top_left_title = attribute.name"
-                                                data-ng-repeat="attribute in vm.numericAttributes | orderBy:'-name' | filter:{name: valueSearchTerm} track by attribute.key "
-                                                ng-value="attribute.key">
-                                            {{attribute.name}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>-->
 
                             </div>
 
@@ -271,61 +210,31 @@
             <md-tab label="MENU SETTINGS">
                 <md-content class="p-16">
 
-                    <!--<two-fields-multiselect ng-model="vm.item.user_settings.available_abscissa_keys"
-                                            title="Abscissa"
-                                            items="vm.attributesForMultiselect"
-                                            model="vm.item.user_settings.available_abscissa_attributes"
-                                            name-property="name"></two-fields-multiselect>
-
-                    <two-fields-multiselect ng-model="vm.item.user_settings.available_ordinate_keys"
-                                            title="Ordinate"
-                                            items="vm.attributesForMultiselect"
-                                            model="vm.item.user_settings.available_ordinate_attributes"
-                                            name-property="name"></two-fields-multiselect>
-
-                    <two-fields-multiselect ng-model="vm.item.user_settings.available_value_keys"
-                                            title="Value"
-                                            items="vm.numericAttributesForMultiselect"
-                                            model="vm.item.user_settings.available_value_attributes"
-                                            name-property="name"></two-fields-multiselect>-->
-
                     <div layout="column">
                         <div class="dashboard-constructor-field1">
-                            <table-attributes-menu-constructor title="Axis X Columns"
-                                                               dialog-title="Axis X Columns"
-                                                               model="vm.item.user_settings.available_abscissa_keys"
-                                                               available-attrs="vm.attributes"></table-attributes-menu-constructor>
+                            <table-attributes-menu-constructor data-title="Axis X Columns"
+                                                               data-dialog-title="Axis X Columns"
+                                                               data-model="vm.item.user_settings.available_abscissa_keys"
+                                                               data-available-attrs="vm.attributes"
+                                                               data-default-attrs-keys="vm.item.settings.abscissa"></table-attributes-menu-constructor>
                         </div>
 
                         <div class="dashboard-constructor-field1">
-                            <table-attributes-menu-constructor title="Axis Y Columns"
-                                                               dialog-title="Axis Y Columns"
-                                                               model="vm.item.user_settings.available_ordinate_keys"
-                                                               available-attrs="vm.attributes"></table-attributes-menu-constructor>
+                            <table-attributes-menu-constructor data-title="Axis Y Columns"
+                                                               data-dialog-title="Axis Y Columns"
+                                                               data-model="vm.item.user_settings.available_ordinate_keys"
+                                                               data-available-attrs="vm.attributes"
+                                                               data-default-attrs-keys="vm.item.settings.ordinate"></table-attributes-menu-constructor>
                         </div>
 
                         <div class="dashboard-constructor-field1">
-                            <table-attributes-menu-constructor title="Values"
-                                                               dialog-title="Values"
-                                                               model="vm.item.user_settings.available_value_keys"
-                                                               available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>
+                            <table-attributes-menu-constructor data-title="Values"
+                                                               data-dialog-title="Values"
+                                                               data-model="vm.item.user_settings.available_value_keys"
+                                                               data-available-attrs="vm.numericAttributes"
+                                                               data-default-attrs-keys="vm.item.settings.value_key"></table-attributes-menu-constructor>
                         </div>
                     </div>
-
-                    <!--<table-attributes-menu-constructor title="Category"
-                                                       dialog-title="Choose Columns for Category"
-                                                       model="vm.item.user_settings.available_attrs_keys"
-                                                       available-attrs="vm.attributes"></table-attributes-menu-constructor>
-
-                    <table-attributes-menu-constructor title="Value"
-                                                       dialog-title="Choose Columns for Value"
-                                                       model="vm.item.user_settings.available_numeric_attrs_keys"
-                                                       available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>
-
-                    <table-attributes-menu-constructor title="Value"
-                                                       dialog-title="Choose Columns for Value"
-                                                       model="vm.item.user_settings.available_numeric_attrs_keys"
-                                                       available-attrs="vm.numericAttributes"></table-attributes-menu-constructor>-->
 
                 </md-content>
             </md-tab>

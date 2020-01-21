@@ -27,7 +27,7 @@
             </div>
 
             <div class="attr-selector-btns-container">
-                <div ng-repeat="item in vm.activeGroup.items | orderBy: ['order', 'attrName'] | filter: {name: vm.searchTerms}">
+                <div ng-repeat="item in vm.activeGroup.items | orderBy: ['order', 'name'] | filter: {name: vm.searchTerms}">
                     <md-button class="md-raised"
                                ng-class="{'md-primary': item.isGroup}"
                                ng-click="vm.openGroupOrSelectAttr(item)"

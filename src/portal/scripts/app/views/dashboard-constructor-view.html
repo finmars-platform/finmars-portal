@@ -133,7 +133,9 @@
                 <div class="dashboard-constructor-tabs-holder"
                      data-add-tab-ec
                      data-tabs="vm.layout.data.tabs">
-                    <md-button class="md-raised" data-ng-click="vm.openTabsEditor($event)">Change order of tabs</md-button>
+                    <md-button class="md-raised"
+                               data-ng-click="vm.openTabsEditor($event)"
+                               data-ng-disabled="!vm.layout.data.tabs || vm.layout.data.tabs.length < 2">Change order of tabs</md-button>
 
                     <md-tabs md-border-bottom md-dynamic-height>
                         <md-tab data-ng-repeat="tab in vm.layout.data.tabs | orderBy: 'tab_number' track by tab.id">

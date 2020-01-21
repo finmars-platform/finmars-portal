@@ -27,7 +27,7 @@
 
         vm.tabs = inputFormTabs;
 
-        vm.readyStatus = {attrs: false, userFields: false};
+        vm.readyStatus = {content: false, entity: true, transactionTypes: false, layout: false};
 
 
         vm.attrs = [];
@@ -100,10 +100,9 @@
 
                             if (!attrFound) {
                                 for (u = 0; u < vm.userInputs.length; u = u + 1) {
-                                    //console.log('vm.userInputs[u]', vm.userInputs[u]);
+
                                     if (field.name === vm.userInputs[u].name) {
                                         vm.userInputs[u].options = field.options;
-                                        // return vm.userInputs[u];
                                         fieldResult = vm.userInputs[u];
 
                                         attrFound = true;
@@ -142,8 +141,6 @@
                 vm.attributesLayout.push(tabResult);
 
             });
-
-            console.log('vm.attributesLayout', vm.attributesLayout);
 
         };
 
@@ -215,8 +212,24 @@
             return haveAccess;
         };*/
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+        vm.getContextParameters = function () {
+
+            var result = {};
+
+            if (vm.contextData) {
+
+                Object.keys(vm.contextData).forEach(function (key) {
+
+                    if (key.indexOf('_object') === -1) {
+                        result[key] = vm.contextData[key]
+                    }
+
+                })
+
+            }
+
+            return result
+
         };
 
         vm.getFormLayoutFields = function () {
@@ -226,8 +239,6 @@
                 vm.readyStatus.layout = false;
 
                 var contextParameters = vm.getContextParameters();
-
-                console.log('contextParameters', contextParameters);
 
                 transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(function (data) {
 
@@ -242,8 +253,6 @@
                     keys.forEach(function (item) {
                         vm.entity[item] = data.values[item];
                     });
-
-                    vm.readyStatus.layout = true;
 
                     vm.userInputs = [];
                     vm.tabs.forEach(function (tab) {
@@ -263,7 +272,6 @@
                     });
 
                     vm.generateAttributesFromLayoutFields();
-
 
                     inputsWithCalculations.forEach(function (inputWithCalc) {
 
@@ -285,6 +293,8 @@
 
                     });
 
+                    vm.readyStatus.layout = true;
+
                     resolve();
 
                 });
@@ -292,6 +302,47 @@
             })
 
         };
+
+        function getGroupsFromItems(items) {
+
+            var groups = {};
+
+            items.forEach(function (item) {
+
+                if (item.group_object) {
+
+                    if (!groups[item.group_object.id]) {
+                        groups[item.group_object.id] = item.group_object;
+                        groups[item.group_object.id].items = [];
+                    }
+
+                    groups[item.group_object.id].items.push(item);
+
+                } else {
+
+                    if (!groups['ungrouped']) {
+                        groups['ungrouped'] = {name: 'Ungrouped'};
+                        groups['ungrouped'].items = [];
+                    }
+
+                    groups['ungrouped'].items.push(item);
+
+                }
+
+
+            });
+
+            var groupsList = Object.keys(groups).map(function (key) {
+                return groups[key]
+            });
+
+            groupsList = groupsList.filter(function (item) {
+                return !!item
+            });
+
+            return groupsList;
+
+        }
 
         vm.getPortfolios = function () {
 
@@ -311,14 +362,35 @@
 
         };
 
+        vm.loadTransactionTypes = function () {
+
+            var options = {
+                filters: {
+                    portfolio: null,
+                    instrument_type: null
+                },
+                pageSize: 1000
+            };
+
+            return transactionTypeService.getListLight(options).then(function (data) {
+
+                vm.transactionGroups = getGroupsFromItems(data.results);
+
+                vm.readyStatus.transactionTypes = true;
+
+            })
+
+        };
+
         vm.getAttributeTypes = function () {
             return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
+                vm.readyStatus.content = true;
             });
         };
 
         vm.checkReadyStatus = function () {
-            return vm.readyStatus.attrs && vm.readyStatus.userFields;
+            return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.transactionTypes && vm.readyStatus.layout;
         };
 
         vm.bindFlex = function (tab, row, field) {
@@ -370,12 +442,35 @@
 
         };
 
+        vm.cancel = function () {
+            $mdDialog.hide({status: 'disagree'});
+        };
+
         var init = function () {
+            var promises = [];
+
+            promises.push(vm.getFormLayoutFields());
+            //vm.getFormLayoutFields();
+
             vm.getPortfolios();
             vm.getInstrumentTypes();
-            vm.loadTransactionTypes();
+            promises.push(vm.loadTransactionTypes());
+            //vm.loadTransactionTypes();
 
-            vm.getAttributeTypes();
+            promises.push(vm.getAttributeTypes());
+            //vm.getAttributeTypes();
+
+            Promise.all(promises).then(function () {
+
+                $scope.$apply(function () {
+                    setTimeout(function () {
+                        $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                            ev.stopPropagation();
+                        });
+                    }, 100);
+                });
+
+            })
         };
 
         init();
