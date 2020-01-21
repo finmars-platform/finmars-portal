@@ -10,6 +10,7 @@
                 title: '@',
                 dialogTitle: '@',
                 model: '=',
+                defaultAttrsKeys: '<',
                 availableAttrs: '<',
                 nothingSelectedText: '@',
                 onChangeCallback: '&?'
@@ -50,6 +51,95 @@
                     }
                 };
 
+                scope.$watch('defaultAttrsKeys', function () {
+
+                    if (scope.model || scope.defaultAttrsKeys) {
+                        updateSelectedAttrs();
+                    }
+
+                    setInputAndTooltipText();
+
+                }, true);
+
+                var getDefaultAttrFromAvailable = function () {
+
+                    for (var i = 0; i < scope.availableAttrs.length; i++) {
+
+                        if (scope.availableAttrs[i].key === scope.defaultAttrsKeys) {
+
+                            return {
+                                attribute_data: JSON.parse(angular.toJson(scope.availableAttrs[i])),
+                                layout_name: '',
+                                is_default: true
+                            };
+                        }
+
+                    }
+
+                    return false;
+
+                };
+
+                var updateSelectedAttrs = function () { // update selected attributes if default attribute changed
+
+                    if ((!scope.model || scope.model.length === 0) && scope.defaultAttrsKeys) {
+
+                        scope.model = [];
+
+                        var defaultAttr = getDefaultAttrFromAvailable();
+
+                        if (defaultAttr) {
+                            scope.model.push(defaultAttr);
+                        }
+
+                    // If scope.model is not empty
+                    } else if (scope.defaultAttrsKeys) {
+
+                        if (scope.model[0].attribute_data.key === scope.defaultAttrsKeys) {
+
+                            scope.model[0].is_default = true;
+
+                        } else {
+
+                            scope.model[0].is_default = false;
+
+                            var defaultAttr = null;
+
+                            // if default attribute is selected
+                            for (var i = 1; i < scope.model.length; i++) {
+
+                                if (scope.model[i].attribute_data.key === scope.defaultAttrsKeys) {
+
+                                    defaultAttr = scope.model[i];
+                                    defaultAttr.is_default = true;
+                                    scope.model.splice(i, 1);
+                                    scope.model.unshift(defaultAttr);
+                                    break;
+
+                                }
+
+                            }
+
+                            // default attribute is not selected
+                            if (!defaultAttr) {
+
+                                defaultAttr = getDefaultAttrFromAvailable();
+                                scope.model.unshift(defaultAttr);
+
+                            }
+
+                            for (var i = 0; i < scope.model.length; i++) {
+                                scope.model[i].order = i;
+                            }
+
+                        }
+
+                    } else { // if default attribute changed to empty
+                        scope.model[0].is_default = false;
+                    }
+
+                };
+
                 $(elem).click(function (event) {
 
                     event.preventDefault();
@@ -64,7 +154,8 @@
                             data: {
                                 title: scope.dialogTitle,
                                 availableAttrs: scope.availableAttrs,
-                                selectedAttrs: scope.model
+                                selectedAttrs: scope.model,
+                                defaultAttrsKeys: scope.defaultAttrsKeys
                             }
                         }
                     }).then(function (res) {
@@ -75,20 +166,15 @@
                             setInputAndTooltipText();
 
                             if (scope.onChangeCallback) {
-
                                 setTimeout(function () {
                                     scope.onChangeCallback();
                                 }, 500);
-
                             }
-
 
                         }
 
                     });
                 });
-
-                setInputAndTooltipText();
 
             }
         }

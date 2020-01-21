@@ -178,7 +178,7 @@
                 ];
 
                 this.dragula = dragula(items, {
-                    moves: function (elem, target, source, sibling) {
+                    moves: function () {
                         return vm.dragIconGrabbed;
                     },
                     revertOnSpill: true

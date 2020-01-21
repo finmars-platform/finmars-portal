@@ -614,10 +614,17 @@
                         $(container).addClass('active');
                     });
 
+                    drake.on('drag', function () {
+                        document.addEventListener('wheel', DnDWheel);
+                    });
+
                     drake.on('out', function (elem, container, source) {
                         $(container).removeClass('active');
                     });
 
+                    drake.on('dragend', function (elem) {
+                        document.removeEventListener('wheel', DnDWheel);
+                    });
 
                 },
 
@@ -633,7 +640,7 @@
 
                     this.dragula = dragula(items, {
                         revertOnSpill: true,
-                        moves: function (elem, target, source, sibling) {
+                        moves: function () {
                             return vm.dragIconGrabbed
                         }
                     });
@@ -662,8 +669,16 @@
                         $(container).addClass('active');
                     });
 
+                    drake.on('drag', function () {
+                        document.addEventListener('wheel', DnDWheel);
+                    });
+
                     drake.on('out', function (elem, container, source) {
                         $(container).removeClass('active');
+                    });
+
+                    drake.on('dragend', function (elem) {
+                        document.removeEventListener('wheel', DnDWheel);
                     });
 
                 },
@@ -679,7 +694,7 @@
 
                     this.dragula = dragula(items, {
                         revertOnSpill: true,
-                        moves: function (elem, target, source, sibling) {
+                        moves: function () {
                             return vm.dragIconGrabbed
                         }
                     });
@@ -710,12 +725,6 @@
 
                     drake.on('drag', function () {
                         document.addEventListener('wheel', DnDWheel);
-                    });
-
-                    drake.on('dragend', function (elem) {
-
-                        document.removeEventListener('wheel', DnDWheel);
-
                     });
 
                     drake.on('over', function (elem, container, source) {
@@ -1100,6 +1109,10 @@
 
                         }
 
+                    });
+
+                    drake.on('dragend', function (elem) {
+                        document.removeEventListener('wheel', DnDWheel);
                     });
 
                 },

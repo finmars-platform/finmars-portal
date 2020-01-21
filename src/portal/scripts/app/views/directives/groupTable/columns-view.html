@@ -62,19 +62,6 @@
                                     </md-button>
                                 </div>
 
-                                <div data-ng-if="viewContext === 'dashboard'"
-                                     class="dashboard-fold-btns-container">
-                                    <div class="overflow-hidden" data-ng-if="hasFoldingBtn($index)">
-                                        <div data-ng-hide="!groupLevelIsFolded($index)"
-                                             class="ev-fold-button"
-                                             data-ng-click="unfoldLevel(column.key, $index)">+
-                                        </div>
-                                        <div data-ng-hide="groupLevelIsFolded($index)"
-                                             class="ev-fold-button"
-                                             data-ng-click="foldLevel(column.key, $index)">-
-                                        </div>
-                                    </div>
-                                </div>
                                 <!-- if inside .caption will be two <span> with ng-if, firefox will add white space to column name -->
                                 <!-- IMPORTANT .column-name-span class needed for converting table into file -->
                                 <div ng-if="!column.layout_name" class="caption">
@@ -83,6 +70,20 @@
 
                                 <div ng-if="column.layout_name" class="caption">
                                     <span ng-bind="column.layout_name" class="column-name-span"></span>
+                                </div>
+                            </div>
+
+                            <div data-ng-if="viewContext === 'dashboard' && hasFoldingBtn($index)"
+                                 class="dashboard-fold-btns-container">
+                                <div class="overflow-hidden">
+                                    <div data-ng-hide="!groupLevelIsFolded($index)"
+                                         class="ev-fold-button"
+                                         data-ng-click="unfoldLevel(column.key, $index)">+
+                                    </div>
+                                    <div data-ng-hide="groupLevelIsFolded($index)"
+                                         class="ev-fold-button"
+                                         data-ng-click="foldLevel(column.key, $index)">-
+                                    </div>
                                 </div>
                             </div>
 
@@ -105,7 +106,7 @@
                                             </md-button>
                                         </md-menu-item>
 
-                                        <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key) && viewContext !== 'dashboard'">
+                                        <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key)">
                                             <md-button data-ng-click="addColumnEntityToGrouping(column)"
                                                        class="g-settings-option-btn">
                                                 <ng-md-icon icon="visibility_off"
@@ -397,7 +398,7 @@
                                             <md-menu-content style="display: none"></md-menu-content>
                                         </md-menu-item>
 
-                                        <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key) && viewContext !== 'dashboard'">
+                                        <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key)">
                                             <md-button data-ng-click="addColumnEntityToGrouping(column)"
                                                        class="g-settings-option-btn">
                                                 <ng-md-icon icon="visibility_off"
@@ -481,7 +482,7 @@
                                             </md-button>
                                         </md-menu-item>
 
-                                        <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key) && viewContext !== 'dashboard'">
+                                        <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key)">
                                             <md-button data-ng-click="addColumnEntityToGrouping(column)"
                                                        class="g-settings-option-btn">
                                                 <ng-md-icon icon="visibility_off"

@@ -93,7 +93,7 @@
 
 
                                 <div class="dashboard-constructor-row-controls"
-                                     data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows track by row.row_number"
+                                     data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows"
                                      data-tab="fixed_area" data-row="{{row.row_number}}">
 
                                     <md-button class="md-button dashboard-manage-row-btn"
@@ -130,10 +130,15 @@
 
                 </div>
 
-                <div class="dashboard-constructor-tabs-holder" data-add-tab-ec data-tabs="vm.layout.data.tabs">
+                <div class="dashboard-constructor-tabs-holder"
+                     data-add-tab-ec
+                     data-tabs="vm.layout.data.tabs">
+                    <md-button class="md-raised"
+                               data-ng-click="vm.openTabsEditor($event)"
+                               data-ng-disabled="!vm.layout.data.tabs || vm.layout.data.tabs.length < 2">Change order of tabs</md-button>
 
                     <md-tabs md-border-bottom md-dynamic-height>
-                        <md-tab data-ng-repeat="tab in vm.layout.data.tabs">
+                        <md-tab data-ng-repeat="tab in vm.layout.data.tabs | orderBy: 'tab_number' track by tab.id">
                             <md-tab-label>
                                 <div data-ng-if="!tab.editState">
                                     <span class="ec-tab-item-name">{{tab.name}}</span>

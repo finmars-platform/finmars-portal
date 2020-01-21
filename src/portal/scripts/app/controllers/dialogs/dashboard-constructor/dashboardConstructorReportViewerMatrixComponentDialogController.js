@@ -37,7 +37,7 @@
             }
         }
 
-
+        console.log("dashboard settings vm.item", vm.item);
         vm.componentsTypes = [];
 
         vm.layouts = [];
@@ -122,14 +122,6 @@
             vm.numericAttributes = vm.attributes.filter(function (item) {
                 return item.value_type === 20;
             });
-
-            /*vm.attributesForMultiselect = vm.attributes.map(function (item) {
-                return {name: item.name, id: item.key}
-            });
-
-            vm.numericAttributesForMultiselect = vm.numericAttributes.map(function (item) {
-                return {name: item.name, id: item.key}
-            });*/
 
         };
 
