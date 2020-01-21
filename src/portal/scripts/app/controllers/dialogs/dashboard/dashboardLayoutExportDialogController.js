@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
+    var uiService = require('../../../services/uiService');
 
     module.exports = function ($scope, $mdDialog, data) {
 

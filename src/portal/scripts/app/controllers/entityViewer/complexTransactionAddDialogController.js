@@ -988,9 +988,42 @@
 
         vm.init = function () {
 
+            console.log('entity', entity);
+
             if (Object.keys(entity).length) { // if copy
 
-                if (!entity.hasOwnProperty('contextData')) {
+                if (entity.hasOwnProperty('contextData')) {
+
+                    vm.contextData = Object.assign({}, entity.contextData);
+                    delete entity.contextData;
+
+                    vm.transactionTypeId = entity.transaction_type;
+
+                    vm.dataConstructorData = {
+                        entityType: vm.entityType,
+                        instanceId: vm.transactionTypeId
+                    };
+
+                    vm.getFormLayout().then(function (value) {
+                        $scope.$apply();
+                    })
+
+
+
+                } else if (entity.hasOwnProperty('transaction_type')) {
+
+                    vm.transactionTypeId = entity.transaction_type;
+
+                    vm.dataConstructorData = {
+                        entityType: vm.entityType,
+                        instanceId: vm.transactionTypeId
+                    };
+
+                    vm.getFormLayout().then(function (value) {
+                        $scope.$apply();
+                    })
+
+                } else {
 
                     console.log("Apply from make copy", entity);
 
@@ -1018,22 +1051,7 @@
                         $scope.$apply();
                     });
 
-                } else if (entity.hasOwnProperty('transaction_type')) {
 
-                    vm.transactionTypeId = entity.transaction_type;
-
-                    vm.dataConstructorData = {
-                        entityType: vm.entityType,
-                        instanceId: vm.transactionTypeId
-                    };
-
-                    vm.getFormLayout().then(function (value) {
-                        $scope.$apply();
-                    })
-
-                } else {
-                    vm.contextData = Object.assign({}, entity.contextData);
-                    delete entity.contextData;
                 }
 
 
