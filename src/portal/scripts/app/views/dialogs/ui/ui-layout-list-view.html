@@ -9,6 +9,49 @@
     </md-toolbar>
     <md-dialog-content>
 
+        <div data-ng-if="vm.invites.length" class="p-24">
+
+            <h4>Invitation to Layouts</h4>
+
+            <div data-ng-repeat="item in vm.invites">
+
+                <div layout="row">
+                    <div>
+                        <b>Name</b>: {{item.shared_configuration_file_object.name}}}
+                    </div>
+
+                    <div style="margin-left: 10px">
+                        <b>From</b>: {{item.member_from_object.username}}
+                    </div>
+                </div>
+
+                <div data-ng-if="item.shared_configuration_file.notes" class="m-t-16">
+                    <div>
+                        <b>Description:</b>
+                    </div>
+                    <div>
+                        {{item.shared_configuration_file.notes}}
+                    </div>
+                </div>
+
+                <div data-ng-if="item.notes" class="m-t-16">
+                    <div><b>Message</b>:</div>
+                    <div>
+                        {{item.notes}}
+                    </div>
+                </div>
+
+                <div class="m-t-16">
+
+                    <md-button class="md-raised md-primary" data-ng-click="vm.acceptInvite($event, item)">Accept
+                    </md-button>
+                    <md-button class="md-raised" data-ng-click="vm.declineInvite($event, item)">Decline</md-button>
+
+                </div>
+            </div>
+
+        </div>
+
         <div data-ng-if="vm.readyStatus.items">
             <div data-ng-repeat="item in vm.items"
                  class="ll-layout-item"
@@ -16,7 +59,7 @@
                  layout-align="space-between center"
                  style="padding: 10px"
                  ng-click="vm.selectLayout(item, $event)">
-<!--                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">-->
+                <!--                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">-->
                 <div layout="row" class="ll-name">
                     <ng-md-icon ng-if="item.hasUseFromAboveFilter"
                                 icon="flag"
@@ -28,6 +71,15 @@
                 </div>
 
                 <div>
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.pullUpdate($event, item, $index)"
+                               data-ng-if="item.sourced_from_global_layout">
+                        <md-tooltip md-direction="top">Update Layout</md-tooltip>
+                        <ng-md-icon icon="file_download" size="24"></ng-md-icon>
+                    </md-button>
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.shareLayout($event, item, $index)">
+                        <md-tooltip md-direction="top">Share</md-tooltip>
+                        <ng-md-icon icon="share" size="24"></ng-md-icon>
+                    </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.renameLayout($event, item, $index)">
                         <md-tooltip md-direction="top">Rename</md-tooltip>
                         <ng-md-icon icon="mode_edit" size="24"></ng-md-icon>

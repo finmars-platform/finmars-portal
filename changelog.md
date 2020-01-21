@@ -1,5 +1,8 @@
 # Changelog
 
+## 21.01.2020
+- Layout Sharing
+
 ## 12.12.2019
 - Reconciliation
 
