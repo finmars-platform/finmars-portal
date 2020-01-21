@@ -605,7 +605,7 @@
 
                     this.dragula = dragula(items, {
                         revertOnSpill: true,
-                        moves: function (elem, target, source, sibling) {
+                        moves: function () {
                             return vm.dragIconGrabbed
                         }
                     });
@@ -653,7 +653,7 @@
 
                     this.dragula = dragula(items, {
                         revertOnSpill: true,
-                        moves: function (elem, target, source, sibling) {
+                        moves: function () {
                             return vm.dragIconGrabbed
                         }
                     });

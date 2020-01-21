@@ -12,10 +12,10 @@
         <h2 style="margin-left: 15px;">Drag cards to change order of tabs</h2>
         <div class="tabs-dnd-container" layout="row">
 
-            <md-card data-ng-repeat="tab in vm.tabs track by tab.id"
+            <md-card data-ng-repeat="tab in vm.tabs track by tab[vm.tabUniqueProp]"
                      data-ng-init="$last && vm.tabsDragAndDrop.init()"
                      class="tab-editor-tab-card"
-                     data-tab-id="{{tab.id}}">
+                     data-tab-id="{{tab[vm.tabUniqueProp]}}">
                 <p data-ng-bind="tab.name"></p>
             </md-card>
 

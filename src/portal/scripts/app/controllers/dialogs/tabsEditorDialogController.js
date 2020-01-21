@@ -5,11 +5,12 @@
 
     'use strict';
 
-    module.exports = function ($scope, $mdDialog, tabs) {
+    module.exports = function ($scope, $mdDialog, tabs, data) {
 
         var vm = this;
 
         vm.tabs = tabs;
+        vm.tabUniqueProp = data.trackByProp;
 
         vm.tabsDragAndDrop = {
 
@@ -27,10 +28,10 @@
                     var tabsAfterDrag = [];
 
                     tabsCardsElems.forEach(function (tab, index) {
-                        var tabId = tab.dataset.tabId;
+                        var tabIdentifier = tab.dataset.tabId;
 
                         for (var i = 0; i < vm.tabs.length; i++) {
-                            if (tabId === vm.tabs[i].id) {
+                            if (tabIdentifier === vm.tabs[i][vm.tabUniqueProp]) {
                                 vm.tabs[i].tab_number = index;
                                 tabsAfterDrag.push(vm.tabs[i]);
                                 break;

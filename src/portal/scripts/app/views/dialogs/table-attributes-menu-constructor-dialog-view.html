@@ -22,11 +22,19 @@
 
         <div layout="row" data-ng-repeat="attr in vm.selectedAttrs | orderBy: 'order'">
 
-            <md-input-container style="width: 250px;">
+            <md-input-container data-ng-if="attr.is_default" style="width: 250px;">
                 <input type="text"
                        data-ng-model="attr.attribute_data.name"
                        aria-label="attribute name"
                        readonly>
+            </md-input-container>
+
+            <md-input-container data-ng-if="!attr.is_default" style="width: 250px;">
+                <input type="text"
+                       data-ng-model="attr.attribute_data.name"
+                       class="attr-menu-attribute-key-input"
+                       data-ng-click="vm.changeAttributeOfMenuPosition(attr, $event)"
+                       aria-label="default attribute name">
             </md-input-container>
 
             <md-input-container style="width: 250px;">
@@ -35,7 +43,7 @@
                        aria-label="attribute custom table name">
             </md-input-container>
 
-            <div layout="row" class="button-group1">
+            <div data-ng-if="!attr.is_default" layout="row" class="button-group1">
                 <md-button class="md-raised" data-ng-click="vm.moveUp(attr.order)">
                     <ng-md-icon icon="expand_less">
                         <md-tooltip md-direction="bottom">Move up</md-tooltip>
@@ -48,14 +56,8 @@
                     </ng-md-icon>
                 </md-button>
 
-                <md-button class="md-raised">
-                    <ng-md-icon icon="edit">
-                        <md-tooltip md-direction="bottom">Edit Column</md-tooltip>
-                    </ng-md-icon>
-                </md-button>
-
                 <md-button class="md-raised"
-                           data-ng-click="vm.deleteAttr($index)">
+                           data-ng-click="vm.deleteAttr($index, attr.attribute_data)">
                     <ng-md-icon icon="close">
                         <md-tooltip md-direction="bottom">Delete Column</md-tooltip>
                     </ng-md-icon>

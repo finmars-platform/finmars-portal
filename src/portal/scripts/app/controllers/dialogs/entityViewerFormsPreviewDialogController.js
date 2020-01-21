@@ -122,8 +122,6 @@
 
             });
 
-            console.log('vm.attributesLayout', vm.attributesLayout);
-
         };
 
         /*vm.loadPermissions = function () {
@@ -291,9 +289,6 @@
 
             uiService.getInstrumentFieldList().then(function (data) {
 
-                console.log('data', data);
-                console.log('vm.tabs', vm.tabs);
-
                 data.results.forEach(function (userField) {
 
                     vm.tabs.forEach(function (tab) {
@@ -303,8 +298,6 @@
                             if (field.attribute && field.attribute.key) {
 
                                 if (field.attribute.key === userField.key) {
-
-                                    console.log('here?', field);
 
                                     if (!field.options) {
                                         field.options = {};

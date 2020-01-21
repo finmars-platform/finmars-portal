@@ -32,8 +32,12 @@
 
                     <div class="form-constructor-workarea">
 
+                        <md-button class="md-raised"
+                                   data-ng-click="vm.openTabsEditor($event)"
+                                   data-ng-disabled="!vm.tabs || vm.tabs.length < 2">Change order of tabs</md-button>
+
                         <md-tabs md-border-bottom md-dynamic-height>
-                            <md-tab data-ng-repeat="tab in vm.tabs">
+                            <md-tab data-ng-repeat="tab in vm.tabs track by tab.name">
                                 <md-tab-label>
                                     <div data-ng-if="!tab.editState" data-ng-click="">
                                         <span class="ec-tab-item-name">{{tab.name}}</span>

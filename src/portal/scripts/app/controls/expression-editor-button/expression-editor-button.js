@@ -8,9 +8,14 @@
             templateUrl: 'controls/expression-editor-button/expression-editor-button.html',
             scope: {
                 item: '=',
-                data: '='
+                data: '=',
+                buttonText: '@'
             },
             link: function (scope, elem, attr) {
+
+                if (scope.buttonText === undefined) {
+                    scope.buttonText = '...';
+                }
 
                 scope.openExpressionDialog = function ($event) {
 

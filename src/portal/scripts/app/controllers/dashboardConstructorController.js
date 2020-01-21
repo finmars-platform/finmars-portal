@@ -279,7 +279,10 @@
                 templateUrl: 'views/dialogs/tabs-editor-dialog-view.html',
                 multiple: true,
                 locals: {
-                    tabs: tabs
+                    tabs: tabs,
+                    data: {
+                        trackByProp: 'id'
+                    }
                 }
 
             }).then(function (res) {
@@ -412,42 +415,6 @@
             }
 
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
-        };
-
-        var tabMovementTimeout;
-
-        vm.moveTabToTheLeft = function (tabNumber) {
-            var prevTabNumber = tabNumber - 1;
-
-            if (prevTabNumber >= 0) {
-                var tabToMove = JSON.parse(angular.toJson(vm.layout.data.tabs[tabNumber]));
-                tabToMove.tab_number -= 1;
-
-                vm.layout.data.tabs[tabNumber] = vm.layout.data.tabs[prevTabNumber];
-                vm.layout.data.tabs[tabNumber].tab_number += 1;
-                vm.layout.data.tabs[prevTabNumber] = tabToMove;
-            }
-
-            clearTimeout(tabMovementTimeout);
-            tabMovementTimeout = setTimeout(function () {
-                vm.dashboardConstructorDataService.setData(vm.layout);
-                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
-
-                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
-            }, 500)
-        };
-
-        vm.moveTabToTheRight = function (tabNumber) {
-            var nextTabNumber = tabNumber + 1;
-
-            if (vm.layout.data.tabs[nextTabNumber]) {
-                var tabToMove = JSON.parse(angular.toJson(vm.layout.data.tabs[tabNumber]));
-                tabToMove.tab_number += 1;
-
-                vm.layout.data.tabs[tabNumber] = vm.layout.data.tabs[nextTabNumber];
-                vm.layout.data.tabs[tabNumber].tab_number -= 1;
-                vm.layout.data.tabs[nextTabNumber] = tabToMove;
-            }
         };
 
         vm.getVerboseType = function (item) {
