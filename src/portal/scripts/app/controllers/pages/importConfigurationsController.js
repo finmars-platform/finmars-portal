@@ -100,8 +100,8 @@
                     var file = JSON.parse(evt.target.result);
 
                     $mdDialog.show({
-                        controller: 'SettingGeneralConfigurationPreviewFileDialogController as vm',
-                        templateUrl: 'views/dialogs/settings-general-configuration-preview-file-dialog-view.html',
+                        controller: 'ConfigurationImportDialogController as vm',
+                        templateUrl: 'views/dialogs/configuration-import/configuration-import-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         preserveScope: true,

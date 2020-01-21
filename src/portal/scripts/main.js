@@ -415,10 +415,13 @@ app.controller('SettingsGeneralComplexImportController', ['$scope', '$mdDialog',
 app.controller('SettingsGeneralTransactionImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralTransactionImportController')]);
 app.controller('SettingsGeneralSimpleEntityImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralSimpleEntityImportController')]);
 
-// Settings - Configuration Export/Import
+// Configuration Import
 
-app.controller('SettingGeneralConfigurationPreviewFileDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralConfigurationPreviewFileDialogController')]);
-app.controller('SettingGeneralConfigurationPreviewFileErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralConfigurationPreviewFileErrorsDialogController')]);
+app.controller('ConfigurationImportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
+app.controller('ConfigurationImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportErrorsDialogController')]);
+
+// Configuration Export
+
 //app.controller('SettingGeneralConfigurationExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralConfigurationExportFileDialogController')]);
 app.controller('SettingsGeneralConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralConfigurationController')]);
 app.controller('SettingsGeneralInitConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInitConfigurationController')]);

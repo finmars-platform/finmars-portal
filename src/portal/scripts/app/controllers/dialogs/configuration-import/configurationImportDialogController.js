@@ -5,12 +5,12 @@
 
     'use strict';
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-    var metaService = require('../../services/metaService');
-    var usersService = require('../../services/usersService');
-    var usersGroupService = require('../../services/usersGroupService');
-    var configurationImportService = require('../../services/configuration-import/configurationImportService');
-    var mappingsImportService = require('../../services/mappings-import/mappingsImportService');
+    var metaContentTypesService = require('../../../services/metaContentTypesService');
+    var metaService = require('../../../services/metaService');
+    var usersService = require('../../../services/usersService');
+    var usersGroupService = require('../../../services/usersGroupService');
+    var configurationImportService = require('../../../services/configuration-import/configurationImportService');
+    var mappingsImportService = require('../../../services/mappings-import/mappingsImportService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -805,8 +805,8 @@
                             $mdDialog.hide({status: 'errors_occured', data: {}});
 
                             $mdDialog.show({
-                                controller: 'SettingGeneralConfigurationPreviewFileErrorsDialogController as vm',
-                                templateUrl: 'views/dialogs/settings-general-configuration-preview-file-errors-dialog-view.html',
+                                controller: 'ConfigurationImportErrorsDialogController as vm',
+                                templateUrl: 'views/dialogs/configuration-import/configuration-import-errors-dialog-view.html',
                                 targetEvent: $event,
                                 preserveScope: true,
                                 multiple: true,
@@ -866,6 +866,46 @@
 
                 console.error(error);
             }
+
+        };
+
+        vm.agreeAsBackendProcess = function($event){
+
+            console.log("vm.agreeAsBackendProcess");
+
+            vm.processing = true;
+
+            vm.activeItemTotal = 0;
+            window.importConfigurationCounter = 0;
+
+            vm.items.forEach(function (entity) {
+
+                delete entity.order__;
+                delete entity.first_item__;
+                delete entity.attributeIsUsed__;
+                delete entity.first_level_header__;
+
+                entity.content.forEach(function (item) {
+
+                    delete item.order__;
+                    delete item.first_item__;
+                    delete item.countOfUsages__;
+
+                    if (item.active) {
+                        vm.activeItemTotal = vm.activeItemTotal + 1;
+                    }
+
+                })
+
+            });
+
+
+
+            var mappingItems = assembleMappingsIntoArray();
+            mappingItems = JSON.parse(angular.toJson(mappingItems));
+
+            console.log('vm.items', vm.items);
+            console.log('mappingItems', mappingItems);
 
         };
 
