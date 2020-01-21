@@ -3,7 +3,8 @@
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <is-draggable-sign></is-draggable-sign>
+
             <h1 class="entity-data-constructor-title">
                 <span class="ec-entity-type">
                     {{vm.entityType}}
@@ -31,8 +32,12 @@
 
                     <div class="form-constructor-workarea">
 
+                        <md-button class="md-raised"
+                                   data-ng-click="vm.openTabsEditor($event)"
+                                   data-ng-disabled="!vm.tabs || vm.tabs.length < 2">Change order of tabs</md-button>
+
                         <md-tabs md-border-bottom md-dynamic-height>
-                            <md-tab data-ng-repeat="tab in vm.tabs">
+                            <md-tab data-ng-repeat="tab in vm.tabs track by tab.name">
                                 <md-tab-label>
                                     <div data-ng-if="!tab.editState" data-ng-click="">
                                         <span class="ec-tab-item-name">{{tab.name}}</span>
@@ -151,6 +156,10 @@
                            class="md-raised md-primary manage-attrs-btn"
                            data-ng-click="vm.manageAttrs()">
                     Manage attributes
+                </md-button>
+                <md-button class="md-raised manage-attrs-btn"
+                           data-ng-click="vm.openFormPreview($event)">
+                    Preview Form
                 </md-button>
             </div>
 

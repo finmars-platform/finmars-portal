@@ -214,7 +214,14 @@
       "accounts.accounttype",
       "currencies.currency",
       "instruments.pricingpolicy",
-      "ui.instrumentuserfieldmodel",
+      "ui.instrumentuserfieldmodel"
+    ],
+    "firstLevelGroup": "Database Configuration",
+    "firstElementExist": false
+  },
+  {
+    "name": "Reference Table",
+    "entities": [
       "reference_tables.referencetable"
     ],
     "firstLevelGroup": "Database Configuration",

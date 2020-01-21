@@ -66,7 +66,6 @@
                 scope.resizeGridCells = function () {
 
                     var layout = scope.dashboardConstructorDataService.getData();
-
                     var tab;
 
                     if (scope.tabNumber === 'fixed_area') {
@@ -92,7 +91,6 @@
 
                         rowNumber = parseInt(domElem.dataset.row, 10);
                         columnNumber = parseInt(domElem.dataset.column, 10);
-
                         layoutElem = tab.layout.rows[rowNumber].columns[columnNumber];
 
                         if (layoutElem.cell_type === 'empty') {

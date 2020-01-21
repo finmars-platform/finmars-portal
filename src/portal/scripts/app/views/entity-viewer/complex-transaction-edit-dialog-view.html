@@ -1,4 +1,6 @@
-<md-dialog aria-label="edit complex transaction dialog" ng-cloak class="entity-editor-dialog draggable-dialog" drag-dialog
+<md-dialog aria-label="edit complex transaction dialog"
+           class="entity-editor-dialog draggable-dialog"
+           drag-dialog
            style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools" data-ng-if="vm.checkReadyStatus()"
@@ -51,8 +53,8 @@
                                 <div layout="row"
                                      ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
-                                    <div class="ev-data-field {{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
-                                         ng-repeat="field in tab.layout.fields track by $index"
+                                    <div data-ng-repeat="field in tab.layout.fields track by $index"
+                                         class="ev-data-field {{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
                                          flex="{{vm.bindFlex(tab, row, field)}}"
                                          data-ng-if="vm.checkFieldRender(tab, row, field)">
                                         <bind-field-control

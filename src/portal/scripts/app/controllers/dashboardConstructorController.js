@@ -21,7 +21,8 @@
 
         vm.readyStatus = {
             data: false,
-            attributes: false
+            attributes: false,
+            tabs: false
         };
 
         vm.dashboardConstructorDataService = null;
@@ -267,6 +268,37 @@
             }, 100);
 
 
+        };
+
+        vm.openTabsEditor = function ($event) {
+
+            var tabs = JSON.parse(angular.toJson(vm.layout.data.tabs));
+
+            $mdDialog.show({
+                controller: 'TabsEditorDialogController as vm',
+                templateUrl: 'views/dialogs/tabs-editor-dialog-view.html',
+                multiple: true,
+                locals: {
+                    tabs: tabs,
+                    data: {
+                        trackByProp: 'id'
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.layout.data.tabs = [];
+                    vm.layout.data.tabs = res.data.tabs;
+
+                    vm.dashboardConstructorDataService.setData(vm.layout);
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+                }
+
+            });
         };
 
         var tabNameInput = null;
@@ -659,52 +691,12 @@
                                     targetRow.columns[column_number].cell_type = 'component';
                                     targetRow.columns[column_number].data = component;
 
-                                    /*vm.layout.data.fixed_area.layout.rows.forEach(function (row) {
-
-                                        row.columns.forEach(function (column) {
-
-                                            if (column.column_number === column_number && row.row_number === row_number) {
-
-                                                column.cell_type = 'component';
-
-                                                column.data = component
-
-                                            }
-
-                                        })
-
-                                    });*/
-
                                 } else { // when dragged from area with available cards
 
                                     var targetRow = vm.layout.data.tabs[tab_number].layout.rows[row_number];
 
                                     targetRow.columns[column_number].cell_type = 'component';
                                     targetRow.columns[column_number].data = component;
-
-                                    /*vm.layout.data.tabs.forEach(function (tab) {
-
-                                        if (tab.tab_number === tab_number) {
-
-                                            tab.layout.rows.forEach(function (row) {
-
-                                                row.columns.forEach(function (column) {
-
-                                                    if (column.column_number === column_number && row.row_number === row_number) {
-
-                                                        column.cell_type = 'component';
-                                                        column.data = component;
-
-                                                    }
-
-                                                })
-
-
-                                            });
-
-                                        }
-
-                                    });*/
 
                                 }
 
@@ -923,11 +915,11 @@
                 return row
             });
 
-            layout.data.fixed_area.layout.rows_count = layout.data.fixed_area.layout.rows.length
+            layout.data.fixed_area.layout.rows_count = layout.data.fixed_area.layout.rows.length;
 
             vm.dashboardConstructorDataService.setData(layout);
 
-            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
 
@@ -965,7 +957,7 @@
 
             vm.dashboardConstructorDataService.setData(layout);
 
-            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
         };

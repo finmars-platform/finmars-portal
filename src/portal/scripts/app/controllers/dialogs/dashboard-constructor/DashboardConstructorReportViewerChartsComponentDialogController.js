@@ -94,14 +94,6 @@
                 return item.value_type === 20;
             });
 
-            /*vm.attributesForMultiselect = vm.attributes.map(function (item) {
-                return {name: item.name, id: item.key}
-            });
-
-            vm.numericAttributesForMultiselect = vm.numericAttributes.map(function (item) {
-                return {name: item.name, id: item.key}
-            });*/
-
         };
 
         vm.chartTypeChanged = function () {
@@ -144,91 +136,12 @@
         vm.chartBarsDirectionChanged = function () {
 
             if (vm.item.settings.bars_direction === 'bottom-top') {
-                vm.barsNamesAttrSelectorTitle = 'Bars Names (Abscissa)';
-                vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Ordinate)';
-
                 vm.item.settings.abscissa_position = 'bottom';
             } else {
-                vm.barsNamesAttrSelectorTitle = 'Bars Names (Ordinate)';
-                vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Abscissa)';
-
                 vm.item.settings.ordinate_position = 'left';
             }
 
         };
-
-        /*vm.setNumberFormatPreset = function (preset) {
-
-            if (!vm.item.settings.number_format) {
-                vm.item.settings.number_format = {};
-            }
-
-            switch (preset) {
-
-                case 'price':
-                    vm.item.settings.number_format.zero_format_id = 1;
-                    vm.item.settings.number_format.negative_color_format_id = 0;
-                    vm.item.settings.number_format.negative_format_id = 0;
-                    vm.item.settings.number_format.round_format_id = 1;
-                    vm.item.settings.number_format.percentage_format_id = 0;
-                    break;
-                case 'market_value':
-                    vm.item.settings.number_format.zero_format_id = 1;
-                    vm.item.settings.number_format.negative_color_format_id = 1;
-                    vm.item.settings.number_format.negative_format_id = 1;
-                    vm.item.settings.number_format.thousands_separator_format_id = 2;
-                    vm.item.settings.number_format.round_format_id = 1;
-                    vm.item.settings.number_format.percentage_format_id = 0;
-                    break;
-                case 'amount':
-                    vm.item.settings.number_format.zero_format_id = 1;
-                    vm.item.settings.number_format.negative_color_format_id = 1;
-                    vm.item.settings.number_format.negative_format_id = 0;
-                    vm.item.settings.number_format.thousands_separator_format_id = 2;
-                    vm.item.settings.number_format.round_format_id = 3;
-                    vm.item.settings.number_format.percentage_format_id = 0;
-                    break;
-                case 'exposure':
-                    vm.item.settings.number_format.zero_format_id = 1;
-                    vm.item.settings.number_format.negative_color_format_id = 1;
-                    vm.item.settings.number_format.negative_format_id = 1;
-                    vm.item.settings.number_format.round_format_id = 0;
-                    vm.item.settings.number_format.percentage_format_id = 2;
-                    break;
-                case 'return':
-                    vm.item.settings.number_format.zero_format_id = 1;
-                    vm.item.settings.number_format.negative_color_format_id = 1;
-                    vm.item.settings.number_format.negative_format_id = 0;
-                    vm.item.settings.number_format.percentage_format_id = 3;
-                    break;
-            }
-
-        };
-
-        vm.openNumberFormatSettings = function($event){
-
-            $mdDialog.show({
-                controller: 'NumberFormatSettingsDialogController as vm',
-                templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
-                targetEvent: $event,
-                multiple: true,
-                locals: {
-                    data: {
-                        settings: vm.item.settings.number_format
-                    }
-                }
-
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    vm.item.settings.number_format = res.data.settings;
-
-                }
-
-            });
-
-        };*/
 
         vm.getContentTypeByEntityType = function () {
 
