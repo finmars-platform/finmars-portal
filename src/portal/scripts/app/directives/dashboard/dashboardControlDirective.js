@@ -3,6 +3,7 @@
     'use strict';
 
     var entityResolverService = require('../../services/entityResolverService');
+    var metaContentTypeService = require('../../services/metaContentTypesService');
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
@@ -27,7 +28,7 @@
 
                 scope.getEntityTypeByContentType = function (contentType) {
 
-                    if (contentType === 'instruments.instrument') {
+                    /*if (contentType === 'instruments.instrument') {
                         return 'instrument'
                     }
 
@@ -45,7 +46,9 @@
 
                     if (contentType === 'instruments.pricingpolicy') {
                         return 'pricing-policy'
-                    }
+                    }*/
+
+                    return metaContentTypeService.findEntityByContentType(contentType);
 
                 };
 
@@ -119,7 +122,7 @@
 
                         var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
 
-                        if(status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
+                        if (status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
                             scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                             scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                         }
@@ -131,7 +134,7 @@
                 scope.init = function () {
 
                     scope.entityType = scope.getEntityTypeByContentType(scope.item.data.settings.content_type);
-
+                    console.log('dashboard control scope.entityType', scope.entityType);
                     if (!scope.item.data.store) {
                         scope.item.data.store = {} // "store" - property for all dashboard data related properties
                     }

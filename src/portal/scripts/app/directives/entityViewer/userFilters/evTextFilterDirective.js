@@ -170,6 +170,11 @@
                     scope.filterSettingsChanged();
                 };
 
+                scope.clearFilter = function () {
+                    scope.filter.options.filter_values = [];
+                    scope.filterSettingsChanged();
+                };
+
                 scope.renameFilter = function (filter, $mdMenu, $event) {
 
                     $mdMenu.close($event);

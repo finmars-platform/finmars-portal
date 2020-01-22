@@ -197,6 +197,14 @@
                     </md-menu-item>
 
                     <md-menu-item>
+                        <md-button ng-click="clearFilter()" class="g-settings-option-btn">
+                            <ng-md-icon icon="visibility_off"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <span>Clear</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
                         <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
                                    class="g-settings-option-btn">
                             <ng-md-icon icon="visibility_off"

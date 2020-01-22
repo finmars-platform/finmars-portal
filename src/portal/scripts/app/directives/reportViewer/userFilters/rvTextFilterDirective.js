@@ -185,6 +185,12 @@
                     scope.filterSettingsChange();
                 };
 
+                scope.clearFilter = function () {
+                    filter.options.filter_values = [];
+
+                    scope.filterSettingsChange();
+                };
+
                 scope.renameFilter = function (filter, $mdMenu, $event) {
 
                     $mdMenu.close($event);

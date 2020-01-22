@@ -40,28 +40,6 @@
                 <md-input-container class="md-block no-error-spacer">
                     <label data-ng-bind="item.data.name"></label>
 
-                    <!--<md-select md-on-close="searchTerm = ''"
-                               data-ng-change="valueChanged()"
-                               multiple="item.data.settings.multiple"
-                               data-ng-model="item.data.store.value"
-                               md-on-open="getData()"
-                               md-container-class="common-select-container">
-                        <md-select-header>
-                            <input data-ng-model="searchTerm"
-                                   type="search"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern select-input-filter"
-                                   ng-keydown="$event.stopPropagation()">
-                        </md-select-header>
-                        <div class="select-options-holder">
-                            <md-option
-                                    data-ng-repeat="field in fields | orderBy:'-name' | filter:{name: searchTerm} as results track by field.id "
-                                    ng-value="field.id">
-                                {{field.name}}
-                            </md-option>
-                        </div>
-                    </md-select>-->
-
                     <md-select data-ng-model="item.data.store.value"
                                data-ng-change="valueChanged()"
                                md-on-open="getData()"
@@ -109,36 +87,6 @@
                                   data-input-text="item.data.store.name"
                                   data-entity-type="entityType"
                                   data-callback="valueChanged()"></entity-search-select>
-
-            <!--<md-input-container data-ng-if="item.data.settings.multiple"
-                                class="md-block no-error-spacer">
-                <label data-ng-bind="item.data.name"></label>
-
-                <md-select data-ng-model="item.data.store.value"
-                           data-ng-change="valueChanged()"
-                           md-on-open="getData()"
-                           md-container-class="common-select-container"
-                           md-on-close="searchTerm = ''"
-                           style="margin-bottom: 10px">
-
-                    <md-select-header>
-                        <input data-ng-model="searchTerm"
-                               type="search"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern select-input-filter"
-                               ng-keydown="$event.stopPropagation()">
-                    </md-select-header>
-
-                    <div class="select-options-holder">
-                        <md-option
-                                data-ng-repeat="field in fields | orderBy:'-name' | filter:{name: searchTerm} as results track by field.id "
-                                ng-value="field.id">
-                            {{field.name}}
-                        </md-option>
-                    </div>
-
-                </md-select>
-            </md-input-container>-->
 
             <div data-ng-if="item.data.settings.multiple">
                 <two-fields-multiselect data-title="{{item.data.name}}"
