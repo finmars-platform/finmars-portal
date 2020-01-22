@@ -153,6 +153,20 @@
                     scope.filterSettingsChanged();
                 };
 
+                scope.clearFilter = function () {
+                    if (scope.filter.options.filter_type === 'from_to') {
+
+                        scope.filter.options.filter_values = {};
+
+                    } else {
+
+                        scope.filter.options.filter_values = [];
+
+                    }
+
+                    scope.filterSettingsChanged();
+                };
+
                 scope.renameFilter = function (filter, $mdMenu, $event) {
 
                     $mdMenu.close($event);

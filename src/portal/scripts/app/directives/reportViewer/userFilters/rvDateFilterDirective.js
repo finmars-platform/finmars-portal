@@ -100,7 +100,7 @@
                 var isUseFromAboveActive = function () {
                     if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length > 0) {
                         return true;
-                    };
+                    }
 
                     return false;
                 };
@@ -170,9 +170,7 @@
                     scope.filter.options.filter_type = filterType;
 
                     if (filterType === 'date_tree') {
-
                         scope.filter.options.dates_tree = [];
-
                     }
 
                     if (filterType === 'from_to') {
@@ -204,9 +202,25 @@
 
                         return true;
 
-                    };
+                    }
 
                     return false;
+                };
+
+                scope.clearFilter = function () {
+
+                    if (scope.filter.options.filter_type === 'date_tree') {
+                        scope.filter.options.dates_tree = [];
+                    }
+
+                    if (scope.filter.options.filter_type === 'from_to') {
+                        scope.filter.options.filter_values = {}
+                    } else {
+                        scope.filter.options.filter_values = [];
+                    }
+
+                    scope.filterSettingsChange();
+
                 };
 
                 var convertDatesTreeToFlatList = function () {
@@ -253,7 +267,7 @@
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                    };
+                    }
 
                 };
 
@@ -264,7 +278,6 @@
                     }
 
                     scope.applyFilter();
-
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
@@ -372,7 +385,7 @@
 
                                 scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                            };
+                            }
 
                         });
 

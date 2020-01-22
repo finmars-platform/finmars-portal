@@ -1,4 +1,6 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+<md-dialog aria-label="dashboard constructor control component"
+           class="draggable-dialog width-50"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>New Control Component</h2>
@@ -25,12 +27,42 @@
 
             <div data-ng-if="vm.item.settings.value_type == 100" layout="row">
 
-                <md-input-container class="md-block" style="height: 58px" >
+                <!--<md-input-container class="md-block" style="height: 58px" >
                     <label>Content Type</label>
                     <md-select data-ng-model="vm.item.settings.content_type">
                         <md-option value="{{contentType.key}}" data-ng-repeat="contentType in vm.contentTypes">
                             {{contentType.name}}
                         </md-option>
+                    </md-select>
+                </md-input-container>-->
+
+                <md-input-container class="md-block no-error-spacer"
+                                    aria-label="select with filter"
+                                    style="height: 58px">
+                    <label>Content Type</label>
+                    <md-select ng-model="vm.item.settings.content_type"
+                               md-container-class="common-select-container"
+                               md-on-close="searchTerm = ''"
+                               style="margin-bottom: 10px">
+
+                        <md-select-header>
+                            <input data-ng-model="searchTerm"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+
+                        <div class="select-options-holder">
+
+                            <md-option
+                                    data-ng-repeat="contentType in vm.contentTypes | filter: {name: searchTerm}"
+                                    ng-value="contentType.key"
+                                    ng-bind="contentType.name">
+                            </md-option>
+
+                        </div>
+
                     </md-select>
                 </md-input-container>
 

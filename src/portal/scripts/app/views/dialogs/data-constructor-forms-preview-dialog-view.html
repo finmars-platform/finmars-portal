@@ -42,7 +42,7 @@
 
         </div>
 
-        <div data-ng-if="!vm.readyStatus.content">
+        <div data-ng-if="!vm.checkReadyStatus()">
             <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
                 <progress-circular diameter="100"></progress-circular>
             </div>

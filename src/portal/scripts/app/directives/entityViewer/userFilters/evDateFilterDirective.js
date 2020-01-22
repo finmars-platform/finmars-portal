@@ -173,7 +173,7 @@
 
                         return true;
 
-                    };
+                    }
 
                     return false;
                 };
@@ -249,6 +249,22 @@
                     }
 
                     scope.applyFilter();
+
+                };
+
+                scope.clearFilter = function () {
+
+                    if (scope.filter.options.filter_type === 'date_tree') {
+                        scope.filter.options.dates_tree = [];
+                    }
+
+                    if (scope.filter.options.filter_type === 'from_to') {
+                        scope.filter.options.filter_values = {};
+                    } else {
+                        scope.filter.options.filter_values = [];
+                    }
+
+                    scope.filterSettingsChanged();
 
                 };
 

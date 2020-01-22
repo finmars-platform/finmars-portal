@@ -38,8 +38,28 @@
                 key: 'accounts.account'
             },
             {
+                name: 'Counterparty',
+                key: 'counterparties.counterparty'
+            },
+            {
+                name: 'Responsible',
+                key: 'counterparties.responsible'
+            },
+            {
                 name: 'Currency',
                 key: 'currencies.currency'
+            },
+            {
+                name: 'Strategy 1',
+                key: 'strategies.strategy1'
+            },
+            {
+                name: 'Strategy 2',
+                key: 'strategies.strategy2'
+            },
+            {
+                name: 'Strategy 3',
+                key: 'strategies.strategy3'
             },
             {
                 name: 'Pricing Policy',

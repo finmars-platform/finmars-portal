@@ -400,14 +400,57 @@
                 };
 
                 scope.clearAll = function () {
-                    scope.filters.forEach(function (item) {
-                        item.options.query = '';
-                    });
 
-                    scope.evDataService.setFilters(scope.filters);
-                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                    if (scope.filters && scope.filters.length > 0) {
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+                        var hasEnabledFilters = false;
+                        var hasFrontendFilters = false;
+
+                        scope.filters.forEach(function (filter) {
+                            if (filter.options.filter_type === 'date_tree') {
+                                filter.options.dates_tree = [];
+                            }
+
+                            if (filter.options.filter_type === 'from_to') {
+                                filter.options.filter_values = {};
+                            } else {
+                                filter.options.filter_values = [];
+                            }
+
+                            if (filter.options.enabled) {
+                                hasEnabledFilters = true;
+                            }
+
+                            if (filter.options.is_frontend_filter) {
+                                hasFrontendFilters = true;
+                            }
+                        });
+
+
+                        scope.evDataService.setFilters(scope.filters);
+                        scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+
+                        if (hasEnabledFilters) {
+
+                            if (scope.isReport) {
+
+                                scope.evDataService.resetData();
+                                scope.evDataService.resetRequestParameters();
+
+                                var rootGroup = scope.evDataService.getRootGroupData();
+
+                                scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                            } else if (hasFrontendFilters) {
+                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            }
+
+                        }
+
+                    }
 
                 };
 

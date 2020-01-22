@@ -35,8 +35,8 @@
         vm.editLayoutByEntityInsance = false;
 
         vm.recalculating = false;
-
         vm.formIsValid = true;
+        vm.updateTableOnClose = {lockedStatusChanged: false, cancelStatusChanged: false};
 
         vm.attrs = [];
         vm.userInputs = [];
@@ -280,7 +280,16 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+            var updateRowIcon = false;
+
+            if (vm.updateTableOnClose.lockedStatusChanged || vm.updateTableOnClose.cancelStatusChanged) {
+                updateRowIcon = {
+                    is_locked: vm.entity.is_locked,
+                    is_canceled: vm.entity.is_canceled
+                };
+            }
+
+            $mdDialog.hide({status: 'disagree', data: {updateRowIcon: updateRowIcon}});
         };
 
         vm.manageAttrs = function (ev) {
@@ -817,6 +826,7 @@
             complexTransactionService.updateProperties(vm.entity.id, {is_locked: vm.entity.is_locked}).then(function () {
 
                 // console.log('here');
+                vm.updateTableOnClose.lockedStatusChanged = !vm.updateTableOnClose.lockedStatusChanged;
 
                 $scope.$apply();
 
@@ -831,6 +841,7 @@
             complexTransactionService.updateProperties(vm.entity.id, {is_canceled: vm.entity.is_canceled}).then(function () {
 
                 // console.log('here');
+                vm.updateTableOnClose.cancelStatusChanged = !vm.updateTableOnClose.cancelStatusChanged;
 
                 $scope.$apply();
 

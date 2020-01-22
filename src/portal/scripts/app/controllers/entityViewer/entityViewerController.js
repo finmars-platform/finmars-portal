@@ -265,7 +265,21 @@
                                             vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                         }
+
+                                    } else if (res.status === 'disagree' && res.data.updateRowIcon) {
+
+                                        var tIsLocked = res.data.updateRowIcon.is_locked;
+                                        var tIsCanceled = res.data.updateRowIcon.is_canceled;
+                                        var activeObject = vm.entityViewerDataService.getActiveObject();
+                                        var transactionObj = vm.entityViewerDataService.getObject(activeObject.___id, activeObject.___parentId);
+
+                                        transactionObj.is_locked = tIsLocked;
+                                        transactionObj.is_canceled = tIsCanceled;
+                                        vm.entityViewerDataService.setObject(transactionObj);
+
+                                        vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
                                     }
+
                                 });
 
                             } else {

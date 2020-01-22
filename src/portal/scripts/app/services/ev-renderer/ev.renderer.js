@@ -42,13 +42,13 @@
                 case 'control':
                     renderedRow = controlRender.render(item, evDataService, previousRow);
                     break;
-            };
+            }
 
             if (renderedRow) {
                 previousRow = renderedRow;
 
                 return renderedRow;
-            };
+            }
 
             /*if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
                 return placeholderRender.render(item, columns)
