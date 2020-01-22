@@ -8,6 +8,7 @@
     var metaContentTypesService = require('../../../services/metaContentTypesService');
     var metaService = require('../../../services/metaService');
     var usersService = require('../../../services/usersService');
+    var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
     var usersGroupService = require('../../../services/usersGroupService');
     var configurationImportService = require('../../../services/configuration-import/configurationImportService');
     var mappingsImportService = require('../../../services/mappings-import/mappingsImportService');
@@ -684,12 +685,15 @@
                     if (mappingGroups[i].entities.indexOf(parent.entity) !== -1) {
                         vm[mappingGroups[i].groupKey].push(parent);
                         break;
-                    };
+                    }
+                    ;
 
                     if (i === mappingGroups.length - 1) {
                         vm.systemElements.push(parent);
-                    };
-                };
+                    }
+                    ;
+                }
+                ;
 
             });
 
@@ -757,7 +761,6 @@
                 })
 
             });
-
 
 
             var mappingItems = assembleMappingsIntoArray();
@@ -869,7 +872,31 @@
 
         };
 
-        vm.agreeAsBackendProcess = function($event){
+        vm.importConfiguration = function (resolve) {
+
+            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+
+                vm.importConfig = data;
+
+                $scope.$apply();
+
+                if (vm.importConfig.task_status === 'SUCCESS') {
+
+                    resolve()
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.importConfiguration(resolve);
+                    }, 1000)
+
+                }
+
+            })
+
+        };
+
+        vm.agreeAsBackendProcess = function ($event) {
 
             console.log("vm.agreeAsBackendProcess");
 
@@ -899,13 +926,83 @@
 
             });
 
+            vm.items = vm.items.filter(function (entity) {
+                entity.content = entity.content.filter(function (item) {
+                    return item.active
+                });
+                return entity.active;
+            });
 
 
             var mappingItems = assembleMappingsIntoArray();
             mappingItems = JSON.parse(angular.toJson(mappingItems));
 
+            mappingItems = mappingItems.filter(function (entity) {
+                entity.content = entity.content.filter(function (item) {
+                    return item.active;
+                });
+                return entity.active;
+            });
+
             console.log('vm.items', vm.items);
             console.log('mappingItems', mappingItems);
+
+            var date = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
+
+            var configuration = {
+                "head": {
+                    "date": date
+                },
+                "body": [
+                    {
+                        "section_name": "configuration",
+                        "items": vm.items
+                    },
+                    {
+                        "section_name": "mappings",
+                        "items": mappingItems
+                    }
+                ]
+            };
+
+            vm.importConfig = {
+                data: configuration,
+                mode: vm.settings.mode
+            };
+
+            new Promise(function (resolve, reject) {
+
+                vm.importConfiguration(resolve)
+
+            }).then(function (data) {
+
+                console.log('agreeAsBackendProcess data', data);
+                console.log('agreeAsBackendProcess vm.importConfig', vm.importConfig);
+
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        success: {
+                            title: "",
+                            description: "You have successfully imported configuration file"
+                        }
+                    }
+
+                }).then(function () {
+
+                    $mdDialog.hide({status: 'agree', data: {}});
+
+                });
+
+
+            })
+
 
         };
 
