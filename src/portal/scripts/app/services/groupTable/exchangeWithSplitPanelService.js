@@ -9,7 +9,8 @@
 
         var data = {
             checkForSplitPanelLayoutChangesFn: null,
-            openAdditionFn: null
+            openAdditionFn: null,
+            setSplitPanelLayoutToOpenFn: null
         };
 
         function setSplitPanelLayoutChangesCheckFn(callbackFn) {

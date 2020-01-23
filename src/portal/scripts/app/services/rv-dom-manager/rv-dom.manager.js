@@ -566,15 +566,13 @@
         rvScrollManager.setRootWrapElem(elements.rootWrapElem);
 
         var isRootEntityViewer = evDataService.isRootEntityViewer();
+        var viewContext = evDataService.getViewContext();
 
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();
 
         var contentWrapElemHeight = rvScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = rvScrollManager.getContentWrapElemWidth();
-
-        //var rootEntityContentWrapElemHeight = rvScrollManager.getRootWrapElemHeight();
-        //var rootEntityContentWrapElemWidth = rvScrollManager.getRootEntityContentWrapElemWidth();
 
 
         var viewportTop;
@@ -643,11 +641,15 @@
         //rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
         rvScrollManager.setContentElemPaddingTop(paddingTop);
 
-
+        // there is another method that calculates contentElemWidth resizeScrollableArea() form gColumnResizerComponent.js
         var areaWidth = 0;
         var i;
         var columnMargins = 16;
         var dropNewFieldWidth = 400;
+        if (viewContext === 'dashboard') {
+            dropNewFieldWidth = 105;
+        }
+
         var columns = evDataService.getColumns();
 
         for (i = 0; i < columns.length; i = i + 1) {
@@ -659,13 +661,11 @@
 
         var resultWidth = areaWidth + dropNewFieldWidth;
 
-        if (resultWidth < contentWrapElemWidth) {
-            resultWidth = contentWrapElemWidth;
+        if (resultWidth > contentWrapElemWidth) {
+            rvScrollManager.setContentElemWidth(resultWidth);
         }
 
         // console.log('resultWidth', resultWidth);
-
-        rvScrollManager.setContentElemWidth(resultWidth);
 
     };
 
@@ -942,7 +942,7 @@
                 }
 
                 result = result + '</div>';
-                console.log("context menu link", result);
+
             } else {
 
                 result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +

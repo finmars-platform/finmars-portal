@@ -30,7 +30,8 @@
         var splitPanelLayoutId = null;
 
         if (!isRootEntityViewer) {
-            splitPanelLayoutId = entityViewerDataService.getSplitPanelDefaultLayout();
+            var spDefaultLayoutData = entityViewerDataService.getSplitPanelDefaultLayout();
+            splitPanelLayoutId = spDefaultLayoutData.layoutId;
         }
 
 
@@ -200,7 +201,13 @@
 
             } else if (layoutData.id !== splitPanelLayoutId) {
 
-                entityViewerDataService.setSplitPanelDefaultLayout(layoutData.id);
+                var defaultLayoutData = {
+                    layoutId: layoutData.id,
+                    name: layoutData.name,
+                    content_type: layoutData.content_type
+                };
+
+                entityViewerDataService.setSplitPanelDefaultLayout(defaultLayoutData);
                 entityViewerEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
                 splitPanelLayoutId = layoutData.id;
 
@@ -278,13 +285,8 @@
         vm.agree = function () {
 
             if (selectedLayout) {
-                /*selectedLayout.is_active = true;
-                delete selectedLayout.hasUseFromAboveFilter;
 
-                uiService.updateListLayout(selectedLayout.id, selectedLayout).then(function () {
-                    $mdDialog.hide({status: 'agree', data: {layoutName: selectedLayout.name}});
-                });*/
-                $mdDialog.hide({status: 'agree', data: {layoutName: selectedLayout.name}});
+                $mdDialog.hide({status: 'agree', data: {layoutName: selectedLayout.name, layoutId: selectedLayout.id}});
 
             } else {
                 $mdDialog.hide({status: 'disagree'});

@@ -36,7 +36,7 @@
         var pageStateName = $state.current.name;
         var pageStateParams = {
             strategyNumber: $stateParams.strategyNumber,
-            layout: $stateParams.layout,
+            layoutName: $stateParams.layoutName,
         };
 
         /*vm.logout = function () {
@@ -231,7 +231,7 @@
 
                 pageStateName = transition.to().name;
                 pageStateParams.strategyNumber = transition.params().strategyNumber;
-                pageStateParams.layout = transition.params().layout;
+                pageStateParams.layoutName = transition.params().layoutName;
 
                 if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport(pageStateName)) {
                     showLayoutName = true;
@@ -297,8 +297,8 @@
             } else {
 
                 var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams.strategyNumber);
-                var layoutNameFromParams = pageStateParams.layout;
-                console.log("open layout layoutNameFromParams", layoutNameFromParams);
+                var layoutNameFromParams = pageStateParams.layoutName;
+
                 var setLayoutName = function (layoutData) {
                     if (layoutData && layoutData.length) {
                         newLayoutName = layoutData[0].name;
@@ -323,7 +323,7 @@
                     var layoutName;
 
                     params.forEach(function (param) {
-                        console.log("open layout params shell", params);
+
                         var pieces = param.split('=');
                         var key = pieces[0];
                         var value = pieces[1];
@@ -348,9 +348,8 @@
                             name: layoutName
                         }
                     }).then(function (activeLayoutData) {
-                        console.log("open layout shell activeLayoutData", activeLayoutData);
-                        var activeLayoutRes = activeLayoutData.results;
 
+                        var activeLayoutRes = activeLayoutData.results;
                         setLayoutName(activeLayoutRes);
 
                     })

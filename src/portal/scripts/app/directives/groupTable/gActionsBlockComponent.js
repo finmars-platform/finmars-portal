@@ -930,11 +930,13 @@
 
                             if (scope.isRootEntityViewer) {
                                 middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                $state.transitionTo($state.current, {layoutName: res.data.layoutName});
                             } else {
                                 middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
-                            }
 
-                            $state.transitionTo($state.current, {layout: res.data.layoutName});
+                                scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
+                                scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                            }
 
                         }
 
@@ -1405,8 +1407,7 @@
                 };*/
 
                 scope.exportAsCSV = function () {
-                    /*var rows = document.querySelectorAll('.ev-content .g-row');
-                    var columns = document.querySelectorAll('.g-columns-holder .g-cell');*/
+
                     var flatList = scope.evDataService.getFlatList();
                     var columns = scope.evDataService.getColumns();
                     var groups = scope.evDataService.getGroups();

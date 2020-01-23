@@ -99,12 +99,16 @@
                 }
 
                 function resizeScrollableArea() {
+                    var viewContext = scope.evDataService.getViewContext();
 
                     var columns = scope.evDataService.getColumns();
                     var i;
                     var areaWidth = 0;
                     var columnMargins = 16;
                     var dropNewFieldWidth = 400;
+                    if (viewContext === 'dashboard') {
+                        dropNewFieldWidth = 105;
+                    }
 
                     var buttonSelectAllWidth = 24;
 
@@ -127,12 +131,15 @@
                     var wrapperWidth = $('.ev-viewport').width();
 
                     if (resultWidth < wrapperWidth) {
+
                         resultWidth = wrapperWidth;
+                        evContent.style.width = 'auto';
+
+                    } else {
+                        $(evContent).width(resultWidth + buttonSelectAllWidth);
                     }
 
                     $(scrollableArea).width(resultWidth);
-
-                    $(evContent).width(resultWidth + buttonSelectAllWidth);
 
                 }
 
