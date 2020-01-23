@@ -24,12 +24,18 @@
 
         vm.getList = function () {
 
-            uiService.getDashboardLayoutList().then(function (data) {
-                vm.items = data.results;
-                layoutsList = data.results;
+            return new Promise(function (resolve, reject) {
 
-                vm.readyStatus.items = true;
-                $scope.$apply();
+                uiService.getDashboardLayoutList().then(function (data) {
+                    vm.items = data.results;
+                    layoutsList = data.results;
+
+                    vm.readyStatus.items = true;
+                    $scope.$apply();
+                    resolve(data);
+
+                });
+
             });
 
         };
@@ -226,22 +232,26 @@
 
                     console.log("Import Finished");
 
-                    $mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true,
-                        locals: {
-                            info: {
-                                title: 'Success',
-                                description: "Layout is updated"
+                    vm.getList().then(function (value) {
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Layout is updated"
+                                }
                             }
-                        }
+                        });
+
                     });
 
                 })
@@ -260,7 +270,9 @@
 
             inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (data) {
 
-                vm.importConfig = {data: data.shared_configuration_file.data, mode: 'overwrite'};
+                var sharedFile = data;
+
+                vm.importConfig = {data: sharedFile.shared_configuration_file_object.data, mode: 'overwrite'};
 
                 console.log("New configuration file", data);
 
@@ -272,28 +284,48 @@
 
                     console.log("Import Finished");
 
-                    $mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true,
-                        locals: {
-                            info: {
-                                title: 'Success',
-                                description: "Layout is installed"
-                            }
-                        }
-                    });
-
                     vm.getInvites();
+                    vm.getList().then(function (data) {
+
+                        vm.items.forEach(function (item) {
+
+                            if (item.name === sharedFile.shared_configuration_file_object.name) {
+                                item.sourced_from_global_layout = sharedFile.shared_configuration_file;
+
+                                uiService.updateDashboardLayout(item.id, item).then(function (value) {
+
+
+                                    vm.getList().then(function (value1) {
+
+                                        $mdDialog.show({
+                                            controller: 'InfoDialogController as vm',
+                                            templateUrl: 'views/info-dialog-view.html',
+                                            parent: angular.element(document.body),
+                                            targetEvent: $event,
+                                            clickOutsideToClose: false,
+                                            preserveScope: true,
+                                            autoWrap: true,
+                                            skipHide: true,
+                                            multiple: true,
+                                            locals: {
+                                                info: {
+                                                    title: 'Success',
+                                                    description: "Layout is installed"
+                                                }
+                                            }
+                                        })
+
+                                    })
+
+                                })
+
+                            }
+
+                        })
+
+                    })
 
                 });
-
 
 
             })
