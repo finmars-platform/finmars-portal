@@ -78,7 +78,7 @@
                 })
 
             });
-
+            console.log("transaction import vm.inputs", vm.inputs);
 
             vm.readyStatus.transactionType = true;
             $scope.$apply();

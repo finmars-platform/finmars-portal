@@ -20,13 +20,13 @@
                         <div layout="row">
 
                             <div flex="40">
-                                <span data-ng-bind="item.name"></span> (<span data-ng-bind="vm.bindType(item)"></span>)
+                                <span data-ng-bind="item.verbose_name"></span> (<span data-ng-bind="item.name"></span>)
                             </div>
 
                             <div layout="row" flex="50">
                                 <div flex="80">
                                     <md-input-container>
-                                        <label for="">Expression</label>
+                                        <label for="" data-ng-bind="vm.bindType(item)"></label>
                                         <input type="text" data-ng-model="item.mapping.expression">
                                     </md-input-container>
                                 </div>

@@ -24,7 +24,7 @@
         var currencyHistoryService = require('../../services/currencyHistoryService');
 
 
-        module.exports = function ($scope, $mdDialog, $state, $transitions, $customDialog) {
+        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog) {
 
             var vm = this;
 
@@ -34,6 +34,33 @@
                 attributes: false,
                 layout: false
             };
+
+            var listOfStatesWithLayout = [
+                'app.data.portfolio',
+                'app.data.account',
+                'app.data.account-type',
+                'app.data.counterparty',
+                'app.data.responsible',
+                'app.data.instrument',
+                'app.data.instrument-type',
+                'app.data.pricing-policy',
+                'app.data.complex-transaction',
+                'app.data.transaction',
+                'app.data.transaction-type',
+                'app.data.currency-history',
+                'app.data.price-history',
+                'app.data.currency',
+                'app.data.strategy-group',
+                'app.data.strategy'
+            ];
+
+            vm.stateWithLayout = false;
+
+            if (listOfStatesWithLayout.indexOf($state.current.name) !== -1) {
+                vm.stateWithLayout = true;
+            }
+
+            var deregisterOnBeforeTransitionHook;
 
             // $customDialog.show({
             //     controller: 'LoaderDialogController as vm',
@@ -47,6 +74,11 @@
             //
             // });
 
+            var initTransitionHooks = function () {
+
+                deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
+
+            };
 
             var setEventListeners = function () {
 
@@ -457,9 +489,7 @@
             };
 
             vm.isLayoutFromUrl = function () {
-
                 return window.location.href.indexOf('?layout=') !== -1
-
             };
 
             vm.getLayoutByName = function (name) {
@@ -480,13 +510,14 @@
 
                     if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
 
-                        activeLayoutData.results.forEach(function (item) {
+                        for (var i = 0; i < activeLayoutData.results.length; i++) {
+                            var item = activeLayoutData.results[i];
 
                             if (item.name === name) {
-                                activeLayout = item
+                                activeLayout = item;
+                                break;
                             }
-
-                        });
+                        }
 
                     }
 
@@ -526,33 +557,6 @@
 
             vm.getDefaultLayout = function () {
 
-                /*uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
-
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
-
-                        var activeLayout = activeLayoutData.results[0];
-                        activeLayout.is_active = false;
-
-                        uiService.updateListLayout(activeLayout.id, activeLayout);
-
-                        vm.setLayout(activeLayout);
-
-                    } else {
-
-                        uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-
-                        var defaultLayout = null;
-                        if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-                            defaultLayout = defaultLayoutData.results[0];
-                        }
-
-                        vm.setLayout(defaultLayout);
-
-                    });
-                    }
-
-                });*/
-
                 uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
 
                     var defaultLayout = null;
@@ -590,7 +594,6 @@
 
                 setEventListeners();
 
-
                 if (vm.isLayoutFromUrl()) {
 
                     var queryParams = window.location.href.split('?')[1];
@@ -599,7 +602,7 @@
                     var layoutName;
 
                     params.forEach(function (param) {
-                        console.log("open layout params", params);
+
                         var pieces = param.split('=');
                         var key = pieces[0];
                         var value = pieces[1];
@@ -616,10 +619,14 @@
 
                     vm.getLayoutByName(layoutName);
 
+                } else if ($stateParams.layoutName) {
+
+                    var layoutName = $stateParams.layoutName;
+
+                    vm.getLayoutByName(layoutName);
+
                 } else {
-
                     vm.getDefaultLayout();
-
                 }
 
 
@@ -662,58 +669,6 @@
 
                 });
             };
-
-            vm.init = function () {
-
-                middlewareService.onMasterUserChanged(function () {
-
-                    doNotCheckLayoutChanges = true;
-                    removeTransitionWatcher();
-
-                });
-
-                middlewareService.onLogOut(function () {
-
-                    doNotCheckLayoutChanges = true;
-                    removeTransitionWatcher();
-
-                });
-
-                vm.getCurrentMember().then(function (value) {
-
-                    vm.getView();
-
-                })
-
-
-            };
-
-            vm.init();
-
-            var listOfStatesWithLayout = [
-                'app.data.portfolio',
-                'app.data.account',
-                'app.data.account-type',
-                'app.data.counterparty',
-                'app.data.responsible',
-                'app.data.instrument',
-                'app.data.instrument-type',
-                'app.data.pricing-policy',
-                'app.data.complex-transaction',
-                'app.data.transaction',
-                'app.data.transaction-type',
-                'app.data.currency-history',
-                'app.data.price-history',
-                'app.data.currency',
-                'app.data.strategy-group',
-                'app.data.strategy'
-            ];
-
-            vm.stateWithLayout = false;
-
-            if (listOfStatesWithLayout.indexOf($state.current.name) !== -1) {
-                vm.stateWithLayout = true;
-            }
 
             var checkLayoutForChanges = function () {
 
@@ -857,13 +812,6 @@
 
             };
 
-            var deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
-
-            /*var doOnMasterUserSelect = function () {
-                deregisterOnBeforeTransitionHook();
-                return checkLayoutForChanges();
-            };*/
-
             var warnAboutLayoutChangesLoss = function (event) {
 
                 var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
@@ -888,18 +836,45 @@
             };
 
             var removeTransitionWatcher = function () {
-
                 if (vm.stateWithLayout) {
                     deregisterOnBeforeTransitionHook();
-                }
 
-                window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
+                    window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
+                }
             };
 
-            if (vm.stateWithLayout) {
+            vm.init = function () {
 
-                window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
-            }
+                if (vm.stateWithLayout) {
+                    initTransitionHooks();
+
+                    window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
+                }
+
+                middlewareService.onMasterUserChanged(function () {
+
+                    doNotCheckLayoutChanges = true;
+                    removeTransitionWatcher();
+
+                });
+
+                middlewareService.onLogOut(function () {
+
+                    doNotCheckLayoutChanges = true;
+                    removeTransitionWatcher();
+
+                });
+
+                vm.getCurrentMember().then(function (value) {
+
+                    vm.getView();
+
+                })
+
+
+            };
+
+            vm.init();
 
             this.$onDestroy = function () {
                 removeTransitionWatcher();

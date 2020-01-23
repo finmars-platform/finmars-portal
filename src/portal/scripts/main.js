@@ -319,8 +319,8 @@ app.controller('EntityTypeClassifierMappingDialogController', ['$scope', '$mdDia
 
 // Entity Viewer & Report Viewer
 
-app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$transitions', '$customDialog', require('./app/controllers/entityViewer/entityViewerController')]);
-app.controller('ReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
+app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$stateParams', '$transitions', '$customDialog', require('./app/controllers/entityViewer/entityViewerController')]);
+app.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
 app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
 app.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);

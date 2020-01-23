@@ -102,8 +102,8 @@
             allRowsSelected: false,
             rootEntityViewer: false,
             splitPanelIsActive: false,
-            splitPanelDefaultLayoutId: false,
-            splitPanelActiveLayoutId: false,
+            splitPanelDefaultLayout: {}, // serves to manage default layout inside split panel
+            splitPanelLayoutToOpen: null,
             additions: {},
             report: {},
             export: {},
@@ -1027,22 +1027,22 @@
 
         }
 
-        function setSplitPanelDefaultLayout(layoutId) { // used to change split panel default layout from Split Panel
-            data.splitPanelDefaultLayoutId = layoutId;
+        function setSplitPanelDefaultLayout(layoutData) {
+            data.splitPanelDefaultLayout = layoutData;
         }
 
         function getSplitPanelDefaultLayout() {
-            return data.splitPanelDefaultLayoutId;
+            return data.splitPanelDefaultLayout;
         }
 
-        function setSplitPanelActiveLayout(layoutId) {
-            data.splitPanelActiveLayoutId = layoutId;
+        function setSplitPanelLayoutToOpen(layoutName) {
+            data.splitPanelLayoutToOpen = layoutName;
         }
 
-        function getSplitPanelActiveLayout() {
-            var splitPanelActiveLayoutId = data.splitPanelActiveLayoutId;
-            data.splitPanelActiveLayoutId = false;
-            return splitPanelActiveLayoutId;
+        function getSplitPanelLayoutToOpen() {
+            var splitPanelActiveLayoutName = data.splitPanelLayoutToOpen;
+            data.splitPanelLayoutToOpen = false;
+            return splitPanelActiveLayoutName;
         }
 
         function setViewType(viewType) {
@@ -1284,8 +1284,8 @@
             isSplitPanelActive: isSplitPanelActive,
             setSplitPanelDefaultLayout: setSplitPanelDefaultLayout,
             getSplitPanelDefaultLayout: getSplitPanelDefaultLayout,
-            setSplitPanelActiveLayout: setSplitPanelActiveLayout,
-            getSplitPanelActiveLayout: getSplitPanelActiveLayout,
+            setSplitPanelLayoutToOpen: setSplitPanelLayoutToOpen,
+            getSplitPanelLayoutToOpen: getSplitPanelLayoutToOpen,
 
             setActiveObjectsCount: setActiveObjectsCount,
             getActiveObjectsCount: getActiveObjectsCount,

@@ -24,7 +24,7 @@
         var expressionService = require('../../services/expression.service');
         var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $transitions) {
+        module.exports = function ($scope, $mdDialog, $stateParams, $transitions) {
 
             var vm = this;
 
@@ -1195,9 +1195,7 @@
             };
 
             vm.isLayoutFromUrl = function () {
-
                 return window.location.href.indexOf('?layout=') !== -1
-
             };
 
             vm.getLayoutByName = function (name) {
@@ -1220,13 +1218,14 @@
 
                     if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
 
-                        activeLayoutData.results.forEach(function (item) {
+                        for (var i = 0; i < activeLayoutData.results.length; i++) {
+                            var item = activeLayoutData.results[i];
 
                             if (item.name === name) {
-                                activeLayout = item
+                                activeLayout = item;
+                                break;
                             }
-
-                        });
+                        }
 
                     }
 
@@ -1253,7 +1252,7 @@
                             }
                         }).then(function (value) {
 
-                            vm.getLayoutActiveOrDefault()
+                            vm.getDefaultLayout()
 
                         })
 
@@ -1263,37 +1262,19 @@
 
             };
 
-            vm.getLayoutActiveOrDefault = function () {
+            vm.getDefaultLayout = function () {
 
-                console.log('vm.getLayoutActiveOrDefault');
-
-                uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
-
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
-
-                        var activeLayout = activeLayoutData.results[0];
-                        activeLayout.is_active = false;
-                        uiService.updateListLayout(activeLayout.id, activeLayout);
-
-                        vm.setLayout(activeLayout);
-
-                    } else {
-
-                        uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-                            var defaultLayout = null;
-                            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-                                defaultLayout = defaultLayoutData.results[0];
-                            }
-
-                            vm.setLayout(defaultLayout);
-
-                        });
-
+                uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
+                    var defaultLayout = null;
+                    if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+                        defaultLayout = defaultLayoutData.results[0];
                     }
+
+                    vm.setLayout(defaultLayout);
 
                 });
 
-            }
+            };
 
             vm.getActiveObjectFromQueryParameters = function () {
 
@@ -1465,15 +1446,25 @@
 
                         if (key === 'layout') {
                             layoutName = value
+
+                            if (layoutName.indexOf('%20') !== -1) {
+                                layoutName = layoutName.replace(/%20/g, " ")
+                            }
                         }
 
                     });
 
                     vm.getLayoutByName(layoutName);
 
+                } else if ($stateParams.layoutName) {
+
+                    var layoutName = $stateParams.layoutName;
+
+                    vm.getLayoutByName(layoutName);
+
                 } else {
 
-                    vm.getLayoutActiveOrDefault();
+                    vm.getDefaultLayout();
 
                 }
 

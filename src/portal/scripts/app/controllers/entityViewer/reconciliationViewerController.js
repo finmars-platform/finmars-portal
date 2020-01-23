@@ -396,8 +396,8 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
 
-                    var spActiveLayout = vm.entityViewerDataService.getSplitPanelActiveLayout();
-                    parentEntityViewerDataService.setSplitPanelActiveLayout(spActiveLayout);
+                    var spActiveLayout = vm.entityViewerDataService.getSplitPanelLayoutToOpen();
+                    parentEntityViewerDataService.setSplitPanelLayoutToOpen(spActiveLayout);
 
                     vm.getView();
 

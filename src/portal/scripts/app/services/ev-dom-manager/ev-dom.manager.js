@@ -573,19 +573,19 @@
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="recon_view_bank_file_line"' +
                 ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>'
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>';
 
             popup.innerHTML = popup.innerHTML + '<div>' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="recon_book_selected"' +
                 ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>'
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>';
 
             popup.innerHTML = popup.innerHTML + '<div>' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="recon_hide"' +
                 ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>'
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>';
 
             popup.innerHTML = popup.innerHTML + '</div>';
 
@@ -607,7 +607,7 @@
                 popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
                     ' data-ev-dropdown-action="edit_instrument"' +
                     ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>';
 
             }
 
@@ -757,7 +757,7 @@
     };
 
     var calculateScroll = function (elements, evDataService, evScrollManager) {
-        console.log("collapse button elements", elements.contentWrapElem, elements.contentWrapElem.clientWidth);
+
         evScrollManager.setViewportElem(elements.viewportElem);
         evScrollManager.setContentElem(elements.contentElem);
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
@@ -768,11 +768,11 @@
 
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = evScrollManager.getContentWrapElemWidth();
-        console.log("collapse button viewportWidth", contentWrapElemWidth, interfaceLayout);
+
         var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
         //var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
         var viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
-        console.log("collapse button viewportWidth", viewportWidth);
+
         var viewportHeight;
 
         if (!isRootEntityViewer) {
@@ -788,7 +788,6 @@
 
         evScrollManager.setViewportHeight(viewportHeight);
         if (viewportWidth) {
-            console.log("collapse button viewportWidth", viewportWidth);
             evScrollManager.setViewportWidth(viewportWidth);
         }
 

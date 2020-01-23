@@ -8,6 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -87,8 +88,8 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
 
-                    var spActiveLayout = vm.entityViewerDataService.getSplitPanelActiveLayout();
-                    parentEntityViewerDataService.setSplitPanelActiveLayout(spActiveLayout);
+                    var spActiveLayout = vm.entityViewerDataService.getSplitPanelLayoutToOpen();
+                    parentEntityViewerDataService.setSplitPanelLayoutToOpen(spActiveLayout);
 
                     vm.getView();
 
@@ -98,7 +99,11 @@
 
                     var spDefaultLayout = vm.entityViewerDataService.getSplitPanelDefaultLayout();
                     var additions = parentEntityViewerDataService.getAdditions();
-                    additions.layoutData.layoutId = spDefaultLayout;
+
+                    additions.layoutData.layoutId = spDefaultLayout.layoutId;
+                    additions.layoutData.name = spDefaultLayout.name;
+                    additions.layoutData.content_type = spDefaultLayout.content_type;
+
                     parentEntityViewerDataService.setAdditions(additions);
 
                 });
@@ -120,7 +125,7 @@
 
                     if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
                         return currentLayoutConfig;
-                    };
+                    }
                 }
 
                 return false
@@ -187,21 +192,28 @@
 
                 vm.downloadAttributes();
 
-                console.log('here? 1231232', vm.entityViewerDataService.isRootEntityViewer());
-
                 var columns = parentEntityViewerDataService.getColumns();
 
-                console.log('parent columns', columns);
-
-                var splitPanelActiveLayoutId = parentEntityViewerDataService.getSplitPanelActiveLayout();
+                var splitPanelLayoutToOpen = parentEntityViewerDataService.getSplitPanelLayoutToOpen();
                 var additions = parentEntityViewerDataService.getAdditions();
+
+                var spDefaultLayoutData = {
+                    layoutId: additions.layoutData.layoutId,
+                    name: additions.layoutData.name,
+                    content_type: additions.layoutData.content_type
+                };
 
                 var defaultLayoutId = null;
 
-                if (splitPanelActiveLayoutId) {
-                    defaultLayoutId = splitPanelActiveLayoutId;
+                if (splitPanelLayoutToOpen) {
+                    defaultLayoutId = splitPanelLayoutToOpen;
                 } else {
-                    defaultLayoutId = additions.layoutData.layoutId;
+                    defaultLayoutId = additions.layoutId; // needed in order for old system layouts work
+
+                    if (additions.layoutData && additions.layoutData.layoutId) {
+                        defaultLayoutId = additions.layoutData.layoutId;
+                    }
+
                 }
 
                 vm.entityViewerDataService.setAttributesFromAbove(columns);
@@ -285,54 +297,38 @@
 
                     }
 
+                    vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
+
                 };
 
-                uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
+                if (defaultLayoutId) {
 
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+                    uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
 
-                        var activeLayout = activeLayoutData.results[0];
-                        activeLayout.is_active = false;
-                        uiService.updateListLayout(activeLayout.id, activeLayout);
-
-                        middlewareService.setNewSplitPanelLayoutName(activeLayout.name);
-                        setLayout(activeLayout);
-
-                    } else {
-
-                        if (defaultLayoutId) {
-
-                            uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
-
-                                if (spLayoutData) {
-                                    vm.entityViewerDataService.setSplitPanelDefaultLayout(defaultLayoutId);
-                                    middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
-                                }
-
-                                setLayout(spLayoutData);
-
-                            });
-
-                        } else {
-
-                            uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-
-                                var defaultLayout = null;
-                                if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-
-                                    defaultLayout = defaultLayoutData.results[0];
-                                    middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
-
-                                }
-
-                                setLayout(defaultLayout);
-
-                            });
+                        if (spLayoutData) {
+                            middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
                         }
 
-                    }
+                        setLayout(spLayoutData);
 
-                });
+                    });
+
+                } else {
+
+                    uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
+
+                        var defaultLayout = null;
+                        if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+
+                            defaultLayout = defaultLayoutData.results[0];
+                            middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
+
+                        }
+
+                        setLayout(defaultLayout);
+
+                    });
+                }
 
             };
 
