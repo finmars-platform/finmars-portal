@@ -38,7 +38,7 @@
 
                 vm.readyStatus.members = true;
 
-                vm.getSentInvites();
+                // vm.getSentInvites();
 
                 $scope.$apply();
 

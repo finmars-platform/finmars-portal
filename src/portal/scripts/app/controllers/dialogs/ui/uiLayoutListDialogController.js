@@ -42,34 +42,39 @@
 
         vm.getList = function () {
 
-            uiService.getListLayout(options.entityType).then(function (data) {
-                vm.items = data.results;
-                layoutsList = data.results;
+            return new Promise(function (resolve, reject) {
 
-                vm.items.forEach(function (item) {
+                uiService.getListLayout(options.entityType).then(function (data) {
+                    vm.items = data.results;
+                    layoutsList = data.results;
 
-                    if (Array.isArray(item.data.filters)) {
-                        var f;
-                        for (f = 0; f < item.data.filters.length; f++) {
-                            var filter = item.data.filters[f];
+                    vm.items.forEach(function (item) {
 
-                            if (filter.options.hasOwnProperty('use_from_above')) {
-                                item.hasUseFromAboveFilter = true;
-                                break;
+                        if (Array.isArray(item.data.filters)) {
+                            var f;
+                            for (f = 0; f < item.data.filters.length; f++) {
+                                var filter = item.data.filters[f];
+
+                                if (filter.options.hasOwnProperty('use_from_above')) {
+                                    item.hasUseFromAboveFilter = true;
+                                    break;
+                                }
+
+
                             }
-
 
                         }
 
-                    }
 
+                    });
 
+                    resolve();
+
+                    vm.readyStatus.items = true;
+                    $scope.$apply();
                 });
 
-                vm.readyStatus.items = true;
-                $scope.$apply();
-            });
-
+            })
         };
 
         vm.renameLayout = function ($event, layout, index) {
@@ -293,13 +298,11 @@
 
             invite.status = 1;
 
-            // TODO import configuration and create new layout with sourced_from_global_layout
-
             inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (data) {
 
-                vm.importConfig = {data: data.shared_configuration_file.data, mode: 'overwrite'};
+                var sharedFile = data;
 
-                console.log("New configuration file", data);
+                vm.importConfig = {data: sharedFile.shared_configuration_file_object.data, mode: 'overwrite'};
 
                 new Promise(function (resolve, reject) {
 
@@ -309,25 +312,47 @@
 
                     console.log("Import Finished");
 
-                    $mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true,
-                        locals: {
-                            info: {
-                                title: 'Success',
-                                description: "Layout is installed"
-                            }
-                        }
-                    });
-
                     vm.getInvites();
+
+                    vm.getList().then(function (data) {
+
+                        vm.items.forEach(function (item) {
+
+                            if (item.name === sharedFile.shared_configuration_file_object.name) {
+                                item.sourced_from_global_layout = sharedFile.shared_configuration_file;
+
+                                uiService.updateListLayout(item.id, item).then(function (value) {
+
+
+                                    vm.getList().then(function (value1) {
+
+                                        $mdDialog.show({
+                                            controller: 'InfoDialogController as vm',
+                                            templateUrl: 'views/info-dialog-view.html',
+                                            parent: angular.element(document.body),
+                                            targetEvent: $event,
+                                            clickOutsideToClose: false,
+                                            preserveScope: true,
+                                            autoWrap: true,
+                                            skipHide: true,
+                                            multiple: true,
+                                            locals: {
+                                                info: {
+                                                    title: 'Success',
+                                                    description: "Layout is installed"
+                                                }
+                                            }
+                                        })
+
+                                    })
+
+                                })
+
+                            }
+
+                        })
+
+                    })
 
                 });
 
@@ -393,23 +418,27 @@
 
                     console.log("Import Finished");
 
-                    $mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true,
-                        locals: {
-                            info: {
-                                title: 'Success',
-                                description: "Layout is updated"
+                    vm.getList().then(function (value) {
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Layout is updated"
+                                }
                             }
-                        }
-                    });
+                        })
+
+                    })
 
                 })
 
