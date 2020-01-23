@@ -184,7 +184,7 @@
                             </md-button>
                         </md-menu-item>
 
-                        <md-menu-item
+<!--                        <md-menu-item
                                 data-ng-if="verticalAdditions.isOpen && verticalAdditions.type === 'reconciliation'">
                             <md-button ng-click="toggleSplitPanel($event, 'reconciliation_match_editor')"
                                        class="g-settings-option-btn">
@@ -197,7 +197,7 @@
                                             class="z-menu-icon"></ng-md-icon>
                                 <span>Open Match Editor</span>
                             </md-button>
-                        </md-menu-item>
+                        </md-menu-item>-->
                     </md-menu-content>
                 </md-menu>
             </div>
@@ -228,6 +228,10 @@
 
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
                 <md-button class="md-raised md-primary full-width" data-ng-click="matchReconciliationLines($event)">Match</md-button>
+            </div>
+
+            <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                <md-button class="md-raised full-width" data-ng-click="openMatchEditor()">Open Match Editor</md-button>
             </div>
 
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">

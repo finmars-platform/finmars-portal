@@ -273,12 +273,13 @@
         vm.agree = function () {
 
             if (selectedLayout) {
-                selectedLayout.is_active = true;
+                /*selectedLayout.is_active = true;
                 delete selectedLayout.hasUseFromAboveFilter;
 
                 uiService.updateListLayout(selectedLayout.id, selectedLayout).then(function () {
                     $mdDialog.hide({status: 'agree', data: {layoutName: selectedLayout.name}});
-                });
+                });*/
+                $mdDialog.hide({status: 'agree', data: {layoutName: selectedLayout.name}});
 
             } else {
                 $mdDialog.hide({status: 'disagree'});

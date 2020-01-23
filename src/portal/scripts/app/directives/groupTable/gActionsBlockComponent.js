@@ -933,7 +933,8 @@
                             } else {
                                 middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                             }
-                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+                            $state.transitionTo($state.current, {layout: res.data.layoutName});
 
                         }
 
@@ -1529,6 +1530,10 @@
 
                 };
 
+                scope.openMatchEditor = function () {
+                    scope.evEventService.dispatchEvent(evEvents.RECON_TOGGLE_MATCH_EDITOR);
+                };
+
                 scope.reconBookSelected = function ($event) {
 
                     console.log('reconBookSelected');
@@ -1540,6 +1545,39 @@
                 scope.init = function () {
 
                     scope.getCurrentMember();
+
+                    if (scope.isRootEntityViewer) {
+
+                        scope.evEventService.addEventListener(evEvents.RECON_TOGGLE_MATCH_EDITOR, function () {
+
+                            var additions = scope.evDataService.getAdditions();
+
+                            if (additions.type === "reconciliation_match_editor") {
+
+                                clearAdditions();
+                                var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                                interfaceLayout.splitPanel.height = 0;
+
+                                scope.evDataService.setInterfaceLayout(interfaceLayout);
+                                middlewareService.setNewSplitPanelLayoutName(false);
+
+                            } else {
+
+                                additions.isOpen = true;
+                                additions.type = "reconciliation_match_editor";
+
+                                delete additions.layoutData;
+
+                                scope.evDataService.setSplitPanelStatus(true);
+                                scope.evDataService.setAdditions(additions);
+                                scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
+                                scope.currentAdditions = scope.evDataService.getAdditions();
+
+                            }
+
+                        });
+
+                    }
 
                     if (scope.viewContext !== 'reconciliation_viewer') {
 

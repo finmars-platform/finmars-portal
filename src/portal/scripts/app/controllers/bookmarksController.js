@@ -35,58 +35,10 @@
 
             var layoutId = layoutInfo.list_layout;
             var stateToGo = layoutInfo.data.state;
-            var entityType = metaContentTypesService.getContentTypeUIByState(stateToGo);
             var layoutExist = false;
 
             if (!vm.entityUpdating) {
                 vm.entityUpdating = true;
-
-                /*uiService.getListLayout(entityType).then(function (data) {
-                    var layouts = data.results;
-
-                    if (layouts && layouts.length) {
-
-                        layouts.forEach(function (layout) {
-                            if (layout.id === layoutId) {
-                                layout.is_default = true;
-                                layoutExist = true;
-                            } else {
-                                layout.is_default = false;
-                            };
-
-                        });
-                    }
-
-                    var updateDefaultLayout = function (layoutsToUpdate) {
-                        var promises = [];
-
-                        layoutsToUpdate.forEach(function (item) {
-                            promises.push(uiService.updateListLayout(item.id, item));
-                        });
-
-                        Promise.all(promises).then(function () {
-
-                            if ($state.current.name === stateToGo) { // If Bookmark change layout for current state, update it
-                                $state.reload(stateToGo);
-                                middlewareService.setNewEntityViewerLayoutName('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
-                                $scope.$apply();
-                            }
-                            else {
-                                $state.go(stateToGo);
-                                $scope.$apply();
-                            }
-                            vm.entityUpdating = false;
-                        });
-                    };
-
-                    if (layoutExist) {
-                        updateDefaultLayout(layouts);
-                    } else {
-                        $state.go('app.not-found');
-                        vm.entityUpdating = false;
-                    }
-
-                });*/
 
                 uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
                     var layout = layoutData;
@@ -97,25 +49,9 @@
 
                     var openActiveLayout = function () {
 
-                        layout.is_active = true;
+                        $state.transitionTo(stateToGo, {layout: layout.name});
 
-                        uiService.updateListLayout(layout.id, layout).then(function () {
-
-                            if ($state.current.name === stateToGo) { // If Bookmark change layout for current state, update it
-
-                                $state.reload(stateToGo);
-                                // middlewareService.setNewEntityViewerLayoutName(layout.name); // Give signal to update active layout name in the toolbar
-                                $scope.$apply();
-
-                            } else {
-                                $state.go(stateToGo);
-                                // middlewareService.setNewEntityViewerLayoutName(layout.name); // Give signal to update active layout name in the toolbar
-                                $scope.$apply();
-                            }
-
-                            vm.entityUpdating = false;
-
-                        });
+                        vm.entityUpdating = false;
 
                     };
 

@@ -94,87 +94,87 @@
                 template: '<div data-ui-view></div>'
             })
             .state('app.data.portfolio', {
-                url: '/portfolios',
+                url: '/portfolios?layout',
                 templateUrl: 'views/data/data-portfolio-view.html',
                 controller: 'DataPortfolioController as vm'
             })
             .state('app.data.tag', {
-                url: '/tags',
+                url: '/tags?layoutName',
                 templateUrl: 'views/data/data-tag-view.html',
                 controller: 'DataTagController as vm'
             })
             .state('app.data.account', {
-                url: '/accounts',
+                url: '/accounts?layout',
                 templateUrl: 'views/data/data-account-view.html',
                 controller: 'DataAccountController as vm'
             })
             .state('app.data.account-type', {
-                url: '/account-types',
+                url: '/account-types?layout',
                 templateUrl: 'views/data/data-account-type-view.html',
                 controller: 'DataAccountTypeController as vm'
             })
             .state('app.data.counterparty-group', {
-                url: '/counterparty-group',
+                url: '/counterparty-group?layout',
                 templateUrl: 'views/data/data-counterparty-group-view.html',
                 controller: 'DataCounterpartyGroupController as vm'
             })
             .state('app.data.counterparty', {
-                url: '/counterparties',
+                url: '/counterparties?layout',
                 templateUrl: 'views/data/data-counterparty-view.html',
                 controller: 'DataCounterpartyController as vm'
             })
             .state('app.data.responsible-group', {
-                url: '/responsible-group',
+                url: '/responsible-group?layout',
                 templateUrl: 'views/data/data-responsible-group-view.html',
                 controller: 'DataResponsibleGroupController as vm'
             })
             .state('app.data.responsible', {
-                url: '/responsibles',
+                url: '/responsibles?layout',
                 templateUrl: 'views/data/data-responsible-view.html',
                 controller: 'DataResponsibleController as vm'
             })
             .state('app.data.instrument', {
-                url: '/instruments',
+                url: '/instruments?layout',
                 templateUrl: 'views/data/data-instrument-view.html',
                 controller: 'DataInstrumentController as vm'
             })
             .state('app.data.instrument-type', {
-                url: '/instrument-types',
+                url: '/instrument-types?layout',
                 templateUrl: 'views/data/data-instrument-type-view.html',
                 controller: 'DataInstrumentTypeController as vm'
             })
             .state('app.data.pricing-policy', {
-                url: '/pricing-policy',
+                url: '/pricing-policy?layout',
                 templateUrl: 'views/data/data-pricing-policy-view.html',
                 controller: 'DataPricingPolicyController as vm'
             })
             .state('app.data.complex-transaction', {
-                url: '/complex-transactions',
+                url: '/complex-transactions?layout',
                 templateUrl: 'views/data/data-complex-transaction-view.html',
                 controller: 'DataComplexTransactionController as vm'
             })
             .state('app.data.transaction', {
-                url: '/transactions',
+                url: '/transactions?layout',
                 templateUrl: 'views/data/data-transaction-view.html',
                 controller: 'DataTransactionController as vm'
             })
             .state('app.data.transaction-type', {
-                url: '/transaction-types',
+                url: '/transaction-types?layout',
                 templateUrl: 'views/data/data-transaction-type-view.html',
                 controller: 'DataTransactionTypeController as vm'
             })
             .state('app.data.transaction-type-group', {
-                url: '/transaction-type-group',
+                url: '/transaction-type-group?layout',
                 templateUrl: 'views/data/data-transaction-type-group-view.html',
                 controller: 'DataTransactionTypeGroupController as vm'
             })
             .state('app.data.currency-history', {
-                url: '/currencies',
+                url: '/currencies?layout',
                 templateUrl: 'views/data/data-currency-history-view.html',
                 controller: 'DataCurrencyHistoryController as vm'
             })
             .state('app.data.price-history', {
-                url: '/pricing',
+                url: '/pricing?layout',
                 templateUrl: 'views/data/data-price-history-view.html',
                 controller: 'DataPriceHistoryController as vm'
             })
@@ -184,7 +184,7 @@
             //    controller: 'DataPortfolioController as vm'
             //})
             .state('app.data.currency', {
-                url: '/currency',
+                url: '/currency?layout',
                 templateUrl: 'views/data/data-currency-view.html',
                 controller: 'DataCurrencyController as vm'
             })
@@ -199,7 +199,7 @@
                 controller: 'DataStrategySubgroupController as vm'
             })
             .state('app.data.strategy', {
-                url: '/strategy/:strategyNumber',
+                url: '/strategy/:strategyNumber?layout',
                 templateUrl: 'views/data/data-strategy-view.html',
                 controller: 'DataStrategyController as vm'
             })
@@ -210,7 +210,7 @@
                 template: '<div data-ui-view></div>'
             })
             .state('app.reports.balance-report', {
-                url: '/balance',
+                url: '/balance?layout',
                 templateUrl: 'views/reports/reports-balance-view.html',
                 controller: 'BalanceReportController as vm'
             })
@@ -223,22 +223,22 @@
                 }
             })
             .state('app.reports.pl-report', {
-                url: '/profit-and-lost',
+                url: '/profit-and-lost?layout',
                 templateUrl: 'views/reports/reports-profit-and-lost-view.html',
                 controller: 'ProfitAndLostReportController as vm'
             })
             .state('app.reports.transaction-report', {
-                url: '/transaction',
+                url: '/transaction?layout',
                 templateUrl: 'views/reports/reports-transaction-view.html',
                 controller: 'TransactionReportController as vm'
             })
             .state('app.reports.cash-flow-projection-report', {
-                url: '/cash-flow-projection',
+                url: '/cash-flow-projection?layout',
                 templateUrl: 'views/reports/reports-cash-flow-projection-view.html',
                 controller: 'CashFlowProjectionReportController as vm'
             })
             .state('app.reports.performance-report', {
-                url: '/performance',
+                url: '/performance?layout',
                 templateUrl: 'views/reports/reports-performance-view.html',
                 controller: 'PerformanceReportController as vm'
             })

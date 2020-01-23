@@ -34,7 +34,10 @@
         vm.broadcastManager = null;
 
         var pageStateName = $state.current.name;
-        var pageStateParams = $stateParams.strategyNumber;
+        var pageStateParams = {
+            strategyNumber: $stateParams.strategyNumber,
+            layout: $stateParams.layout,
+        };
 
         /*vm.logout = function () {
             console.log('Logged out');
@@ -105,6 +108,7 @@
 
                 if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
                     middlewareService.masterUserChanged();
+                    console.log("context menu master user changed");
                     $state.go('app.home');
                     vm.getMasterUsersList();
                 }
@@ -136,7 +140,7 @@
                 middlewareService.masterUserChanged();
 
                 usersService.setMasterUser(master.id).then(function (value) {
-
+                    console.log("context menu master user changed");
                     $state.go('app.home');
 
                     if (vm.broadcastManager) {
@@ -226,7 +230,8 @@
             $transitions.onFinish({}, function (transition) {
 
                 pageStateName = transition.to().name;
-                pageStateParams = transition.params().strategyNumber;
+                pageStateParams.strategyNumber = transition.params().strategyNumber;
+                pageStateParams.layout = transition.params().layout;
 
                 if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport(pageStateName)) {
                     showLayoutName = true;
@@ -267,19 +272,6 @@
 
             var newLayoutName = middlewareService.getNewEntityViewerLayoutName();
             var newSplitPanelLayoutName = middlewareService.getNewSplitPanelLayoutName();
-            // Change layout information on state change
-            /*if (currentState !== previousState) {
-                previousState = currentState;
-
-                if (currentState.indexOf('app.data.') !== -1 || vm.isReport()) {
-                    showLayoutName = true;
-                    vm.getActiveLayoutName();
-                } else {
-                    showLayoutName = false;
-                }
-            }*/
-
-            // Check if layout has been switched without changing state
 
             if (newLayoutName) {
                 vm.getActiveLayoutName(newLayoutName);
@@ -293,9 +285,7 @@
         };
 
         vm.isLayoutFromUrl = function () {
-
             return window.location.href.indexOf('?layout=') !== -1
-
         };
 
         vm.getActiveLayoutName = function (newLayoutName) {
@@ -306,9 +296,9 @@
 
             } else {
 
-
-                var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams);
-
+                var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams.strategyNumber);
+                var layoutNameFromParams = pageStateParams.layout;
+                console.log("open layout layoutNameFromParams", layoutNameFromParams);
                 var setLayoutName = function (layoutData) {
                     if (layoutData && layoutData.length) {
                         newLayoutName = layoutData[0].name;
@@ -321,7 +311,11 @@
                     $scope.$apply();
                 };
 
-                if (vm.isLayoutFromUrl()) {
+                if (layoutNameFromParams) { // state params value updates earlier than window.location.href
+
+                    vm.activeLayoutName = layoutNameFromParams;
+
+                } else if (vm.isLayoutFromUrl()) {
 
                     var queryParams = window.location.href.split('?')[1];
                     var params = queryParams.split('&');
@@ -329,13 +323,18 @@
                     var layoutName;
 
                     params.forEach(function (param) {
-
+                        console.log("open layout params shell", params);
                         var pieces = param.split('=');
                         var key = pieces[0];
                         var value = pieces[1];
 
                         if (key === 'layout') {
-                            layoutName = value
+                            layoutName = value;
+
+                            if (layoutName.indexOf('%20') !== -1) {
+                                layoutName = layoutName.replace(/%20/g, " ")
+                            }
+
                         }
 
                     });
@@ -349,7 +348,7 @@
                             name: layoutName
                         }
                     }).then(function (activeLayoutData) {
-
+                        console.log("open layout shell activeLayoutData", activeLayoutData);
                         var activeLayoutRes = activeLayoutData.results;
 
                         setLayoutName(activeLayoutRes);
@@ -358,25 +357,11 @@
 
                 } else {
 
-                    uiService.getActiveListLayout(entityType).then(function (activeLayoutData) {
+                    uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
 
-                        if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+                        var defaultLayoutRes = defaultLayoutData.results;
 
-                            var activeLayoutRes = activeLayoutData.results;
-
-                            setLayoutName(activeLayoutRes);
-
-                        } else {
-
-                            uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
-
-                                var defaultLayoutRes = defaultLayoutData.results;
-
-                                setLayoutName(defaultLayoutRes);
-
-                            });
-
-                        }
+                        setLayoutName(defaultLayoutRes);
 
                     });
 
