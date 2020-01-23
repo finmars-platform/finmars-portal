@@ -6,7 +6,6 @@
 
         'use strict';
 
-        var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
         var evHelperService = require('../../services/entityViewerHelperService');
 
@@ -420,6 +419,10 @@
 
                 });
 
+                vm.entityViewerEventService.addEventListener(evEvents.RECON_TOGGLE_MATCH_EDITOR, function () {
+                    parentEntityViewerEventService.dispatchEvent(evEvents.RECON_TOGGLE_MATCH_EDITOR);
+                });
+
             };
 
             var getLayoutChanges = function () {
@@ -517,7 +520,6 @@
 
 
             };
-
 
             vm.checkMatchAvailability = function () {
 

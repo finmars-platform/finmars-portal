@@ -8,7 +8,8 @@
     module.exports = function () {
 
         var data = {
-            checkForSplitPanelLayoutChangesFn: null
+            checkForSplitPanelLayoutChangesFn: null,
+            openAdditionFn: null
         };
 
         function setSplitPanelLayoutChangesCheckFn(callbackFn) {

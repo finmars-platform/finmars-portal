@@ -867,8 +867,8 @@
             'accounts.accounttype': 'data/account-types',
             'counterparties.counterparty': 'data/counterparty',
             'counterparties.responsible': 'data/responsibles',
-            'instrumets.instrument': 'data/instruments',
-            'instrumets.instrumenttype': 'data/instrument-types',
+            'instruments.instrument': 'data/instruments',
+            'instruments.instrumenttype': 'data/instrument-types',
             'instruments.pricingpolicy': 'data/pricing-policy',
             'currencies.currency': 'data/currency',
             'strategies.strategy1': 'data/strategy/1',
@@ -902,45 +902,80 @@
 
     };
 
-    var generateContextMenuItems = function (parentOption, ttypes, obj, objectId, parentGroupHashId) {
+    var composeContextMenuItem = function (result, item, evDataService, ttypes, obj, objectId, parentGroupHashId) {
 
-        var result = '<div class="ev-dropdown-submenu">';
+        if (checkContextMenuOptionVisibility(obj, item)) {
 
-        parentOption.items.forEach(function (item) {
+            var ttype_specific_attr = '';
+            var additional_text = '';
+            var is_disabled = '';
 
-            if (checkContextMenuOptionVisibility(obj, item)) {
+            if (item.action === 'book_transaction_specific') {
 
-                var ttype_specific_attr = '';
-                var additional_text = '';
-                var is_disabled = '';
+                item.id = getContextMenuTtypeId(ttypes, item);
 
-                if (item.action === 'book_transaction_specific') {
-                    item.id = getContextMenuTtypeId(ttypes, item);
-
-                    if (item.id) {
-                        ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
-                    } else {
-                        additional_text = ' (Not Found)';
-                        is_disabled = 'disabled-btn';
-                    }
+                if (item.id) {
+                    ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
+                } else {
+                    additional_text = ' (Not Found)';
+                    is_disabled = 'disabled-btn';
                 }
 
-                result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : ' ') + '" ' +
-                    ' data-ev-dropdown-action="' + item.action + '"' +
-                    ttype_specific_attr +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
+            }
 
+            if (item.action === 'open_layout') {
+
+                result = result +
+                    '<div class="ev-dropdown-option' + (item.items ? ' ev-dropdown-menu-holder' : '') + '">'+
+                    '<a href="' + getContextMenuActionLink(evDataService, item, obj) + '"' +
+                    ' target="_blank"' +
+                    ' data-ev-dropdown-action="' + item.action + '"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' +
+                    '<span>' + item.name + '</span>' +
+                    '</a>';
 
                 if (item.items && item.items.length) {
 
-                    result = result + generateContextMenuItems(item, ttypes, obj, objectId, parentGroupHashId)
+                    result = result + generateContextMenuItems(item, evDataService, ttypes, obj, objectId, parentGroupHashId)
+
+                }
+
+                result = result + '</div>';
+                console.log("context menu link", result);
+            } else {
+
+                result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +
+                    ' data-ev-dropdown-action="' + item.action + '"' +
+
+                    ttype_specific_attr +
+
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
+
+                if (item.items && item.items.length) {
+
+                    result = result + generateContextMenuItems(item, evDataService, ttypes, obj, objectId, parentGroupHashId)
 
                 }
 
                 result = result + '</div>';
 
             }
+
+
+        }
+
+        return result;
+    };
+
+    var generateContextMenuItems = function (parentOption, evDataService, ttypes, obj, objectId, parentGroupHashId) {
+
+        var result = '<div class="ev-dropdown-submenu">';
+
+        parentOption.items.forEach(function (item) {
+
+            result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
 
         });
 
@@ -955,67 +990,7 @@
         var result = '<div>';
 
         menu.root.items.forEach(function (item) {
-
-            if (checkContextMenuOptionVisibility(obj, item)) {
-
-                var ttype_specific_attr = '';
-                var additional_text = '';
-                var is_disabled = '';
-
-                if (item.action === 'book_transaction_specific') {
-                    item.id = getContextMenuTtypeId(ttypes, item);
-
-                    if (item.id) {
-                        ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
-                    } else {
-                        additional_text = ' (Not Found)'
-                    }
-
-                }
-
-                if (item.action === 'open_layout') {
-
-                    result = result + '<a class="ev-dropdown-option ' + (item.items ? ' ev-dropdown-menu-holder' : ' ') + '"' +
-                        ' href="' + getContextMenuActionLink(evDataService, item, obj) + '" target="_blank"' +
-                        ' data-ev-dropdown-action="' + item.action + '"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">' +
-
-                        item.name;
-
-                    if (item.items && item.items.length) {
-
-                        result = result + generateContextMenuItems(item, ttypes, obj, objectId, parentGroupHashId)
-
-                    }
-
-                    result = result + '</a>'
-
-
-                } else {
-
-                    result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : ' ') + '"' +
-                        ' data-ev-dropdown-action="' + item.action + '"' +
-
-                        ttype_specific_attr +
-
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
-
-                    if (item.items && item.items.length) {
-
-                        result = result + generateContextMenuItems(item, ttypes, obj, objectId, parentGroupHashId)
-
-                    }
-
-                    result = result + '</div>'
-
-                }
-
-
-            }
-
-
+            result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
         });
 
         result = result + '</div>';

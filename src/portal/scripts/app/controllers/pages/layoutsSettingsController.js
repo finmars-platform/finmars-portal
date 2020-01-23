@@ -434,12 +434,8 @@
 
         vm.openLayout = function (layout) {
 
-            layout.is_active = true;
-
-            uiService.updateListLayout(layout.id, layout).then(function () {
-                var stateToGo = getLayoutDataByContentType(layout.content_type, 'state');
-                $state.go(stateToGo);
-            });
+            var stateToGo = getLayoutDataByContentType(layout.content_type, 'state');
+            $state.transitionTo(stateToGo, {layout: layout.name});
 
         };
 
