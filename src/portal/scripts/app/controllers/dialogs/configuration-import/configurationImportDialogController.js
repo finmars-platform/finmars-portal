@@ -878,6 +878,9 @@
 
                 vm.importConfig = data;
 
+                vm.counter = data.processed_rows;
+                vm.activeItemTotal = data.total_rows;
+
                 $scope.$apply();
 
                 if (vm.importConfig.task_status === 'SUCCESS') {
