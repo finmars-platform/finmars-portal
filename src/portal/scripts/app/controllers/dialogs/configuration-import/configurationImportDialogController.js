@@ -933,7 +933,7 @@
                 entity.content = entity.content.filter(function (item) {
                     return item.active
                 });
-                return entity.active;
+                return true
             });
 
 
@@ -944,7 +944,7 @@
                 entity.content = entity.content.filter(function (item) {
                     return item.active;
                 });
-                return entity.active;
+                return true
             });
 
             console.log('vm.items', vm.items);
