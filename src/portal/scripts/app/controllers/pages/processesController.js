@@ -164,6 +164,10 @@
                 result = 'Automated Prices Download'
             }
 
+            if (item.task_type === 'configuration_import') {
+                result = 'Configuration Import';
+            }
+
             if (!result) {
                 result = 'Unknown Task'
             }
@@ -199,7 +203,7 @@
 
         };
 
-        vm.getFileUrl = function(id) {
+        vm.getFileUrl = function (id) {
 
             return baseUrl + 'file-reports/file-report/' + id + '/view/';
 
