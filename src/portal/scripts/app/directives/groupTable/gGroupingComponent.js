@@ -146,7 +146,7 @@
                         }
 
                         if (!group.report_settings.subtotal_type) {
-                            group.report_settings.subtotal_type = 'area';
+                            group.report_settings.subtotal_type = 'line';
                         }
 
                         if (!scope.isReport && !group.hasOwnProperty('ev_folded')) {

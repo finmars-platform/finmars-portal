@@ -30,6 +30,7 @@
         vm.entityType = entityType;
 
         vm.entity = {$_isValid: true};
+        var dataConstructorLayout = [];
         vm.transactionType = null;
 
         vm.recalculating = false;
@@ -52,19 +53,23 @@
         vm.generateAttributesFromLayoutFields = function () {
 
             vm.attributesLayout = [];
+            var fieldsToEmptyList = [];
+
             var tabResult;
             var fieldResult;
             var i, l, e, u;
 
-            vm.tabs.forEach(function (tab) {
+            vm.tabs.forEach(function (tab, tabIndex) {
 
                 tabResult = [];
 
-                tab.layout.fields.forEach(function (field) {
+                tab.layout.fields.forEach(function (field, fieldIndex) {
 
                     fieldResult = {};
 
                     if (field && field.type === 'field') {
+
+                        var attrFound = false;
 
                         if (field.attribute_class === 'attr') {
 
@@ -73,8 +78,12 @@
                                 if (field.key) {
 
                                     if (field.key === vm.attrs[i].user_code) {
+
                                         vm.attrs[i].options = field.options;
                                         fieldResult = vm.attrs[i];
+                                        attrFound = true;
+                                        break;
+
                                     }
 
                                 } else {
@@ -82,20 +91,53 @@
                                     if (field.attribute.user_code) {
 
                                         if (field.attribute.user_code === vm.attrs[i].user_code) {
+
                                             vm.attrs[i].options = field.options;
                                             fieldResult = vm.attrs[i];
+                                            attrFound = true;
+                                            break;
+
                                         }
 
                                     }
 
                                 }
 
+                            }
 
+                            if (!attrFound) {
+                                var fieldPath = {
+                                    tabIndex: tabIndex,
+                                    fieldIndex: fieldIndex
+                                };
+
+                                fieldsToEmptyList.push(fieldPath);
+                            }
+
+                        } else if (field.attribute_class === 'userInput') {
+
+                            for (u = 0; u < vm.userInputs.length; u = u + 1) {
+                                //console.log('vm.userInputs[u]', vm.userInputs[u]);
+                                if (field.name === vm.userInputs[u].name) {
+                                    vm.userInputs[u].options = field.options;
+                                    // return vm.userInputs[u];
+                                    fieldResult = vm.userInputs[u];
+
+                                    attrFound = true;
+                                    break;
+                                }
+                            }
+
+                            if (!attrFound) {
+                                var fieldPath = {
+                                    tabIndex: tabIndex,
+                                    fieldIndex: fieldIndex
+                                };
+
+                                fieldsToEmptyList.push(fieldPath);
                             }
 
                         } else {
-
-                            var attrFound = false;
 
                             for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                                 if (field.name === vm.entityAttrs[e].name) {
@@ -104,20 +146,6 @@
 
                                     attrFound = true;
                                     break;
-                                }
-                            }
-
-                            if (!attrFound) {
-                                for (u = 0; u < vm.userInputs.length; u = u + 1) {
-                                    //console.log('vm.userInputs[u]', vm.userInputs[u]);
-                                    if (field.name === vm.userInputs[u].name) {
-                                        vm.userInputs[u].options = field.options;
-                                        // return vm.userInputs[u];
-                                        fieldResult = vm.userInputs[u];
-
-                                        attrFound = true;
-                                        break;
-                                    }
                                 }
                             }
 
@@ -145,14 +173,34 @@
 
                     tabResult.push(fieldResult)
 
-
                 });
 
                 vm.attributesLayout.push(tabResult);
 
             });
 
-            console.log('vm.attributesLayout', vm.attributesLayout);
+            // Empty sockets that have no attribute that matches them
+            fieldsToEmptyList.forEach(function (fieldPath) {
+
+                var dcLayoutFields = dataConstructorLayout[fieldPath.tabIndex].layout.fields;
+
+                var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
+                var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
+
+                dcLayoutFields[fieldPath.fieldIndex] = {
+                    colspan: 1,
+                    column: fieldToEmptyColumn,
+                    editMode: false,
+                    row: fieldToEmptyRow,
+                    type: 'empty'
+                };
+
+            });
+
+            // Method to update edit layout
+            // uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
+
+            // < Empty sockets that have no attribute that matches them >
 
         };
 
@@ -207,6 +255,8 @@
                     vm.readyStatus.layout = true;
 
                     vm.tabs = data.book_transaction_layout.data;
+                    dataConstructorLayout = data.book_transaction_layout.data;
+
                     vm.userInputs = [];
                     vm.tabs.forEach(function (tab) {
                         tab.layout.fields.forEach(function (field) {
@@ -426,6 +476,8 @@
                 });
 
                 vm.tabs = data.book_transaction_layout.data;
+                dataConstructorLayout = data.book_transaction_layout.data;
+
                 vm.userInputs = [];
                 vm.tabs.forEach(function (tab) {
                     tab.layout.fields.forEach(function (field) {
