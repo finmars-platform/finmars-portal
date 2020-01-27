@@ -1,6 +1,11 @@
-<md-dialog aria-label="" ng-cloak class="save-as-layouts-dialog" style="width: 50%">
+<md-dialog class="save-as-layouts-dialog draggable-dialog"
+           aria-label="save as layout dialog"
+           drag-dialog
+           style="width: 50%" >
     <md-toolbar>
         <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
             <h2>Layouts</h2>
             <span flex></span>
         </div>

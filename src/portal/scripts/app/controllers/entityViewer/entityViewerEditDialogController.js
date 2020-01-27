@@ -33,6 +33,7 @@
         vm.entityId = entityId;
 
         vm.entity = {$_isValid: true};
+        var dataConstructorLayout = [];
 
         vm.hasEnabledStatus = true;
 
@@ -66,16 +67,17 @@
         vm.generateAttributesFromLayoutFields = function () {
 
             vm.attributesLayout = [];
+            var fieldsToEmptyList = [];
 
             var tabResult;
             var fieldResult;
             var i, l, e;
 
-            vm.tabs.forEach(function (tab) {
+            vm.tabs.forEach(function (tab, tabIndex) {
 
                 tabResult = [];
 
-                tab.layout.fields.forEach(function (field) {
+                tab.layout.fields.forEach(function (field, fieldIndex) {
 
                     fieldResult = {};
 
@@ -83,13 +85,19 @@
 
                         if (field.attribute_class === 'attr') {
 
+                            var dAttrFound = false;
+
                             for (i = 0; i < vm.attrs.length; i = i + 1) {
 
                                 if (field.key) {
 
                                     if (field.key === vm.attrs[i].user_code) {
+
                                         vm.attrs[i].options = field.options;
                                         fieldResult = vm.attrs[i];
+                                        dAttrFound = true;
+                                        break;
+
                                     }
 
                                 } else {
@@ -97,15 +105,27 @@
                                     if (field.attribute.user_code) {
 
                                         if (field.attribute.user_code === vm.attrs[i].user_code) {
+
                                             vm.attrs[i].options = field.options;
                                             fieldResult = vm.attrs[i];
+                                            dAttrFound = true;
+                                            break;
+
                                         }
 
                                     }
 
                                 }
 
+                            }
 
+                            if (!dAttrFound) {
+                                var fieldPath = {
+                                    tabIndex: tabIndex,
+                                    fieldIndex: fieldIndex
+                                };
+
+                                fieldsToEmptyList.push(fieldPath);
                             }
 
                         } else {
@@ -141,8 +161,28 @@
 
             });
 
-            console.log('vm.attributesLayout', vm.attributesLayout);
+            // Empty sockets that have no attribute that matches them
+            fieldsToEmptyList.forEach(function (fieldPath) {
 
+                var dcLayoutFields = dataConstructorLayout[fieldPath.tabIndex].layout.fields;
+
+                var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
+                var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
+
+                dcLayoutFields[fieldPath.fieldIndex] = {
+                    colspan: 1,
+                    column: fieldToEmptyColumn,
+                    editMode: false,
+                    row: fieldToEmptyRow,
+                    type: 'empty'
+                };
+
+            });
+
+            // Method to update edit layout
+            // uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+
+            // < Empty sockets that have no attribute that matches them >
         };
 
         vm.loadPermissions = function () {
@@ -310,7 +350,10 @@
             uiService.getEditLayout(vm.entityType).then(function (data) {
 
                 if (data.results.length && data.results.length > 0 && data.results[0].data) {
+
                     vm.tabs = data.results[0].data;
+                    dataConstructorLayout = data.results[0]; // unchanged layout to edit fields without attributes
+
                 } else {
                     vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
                 }

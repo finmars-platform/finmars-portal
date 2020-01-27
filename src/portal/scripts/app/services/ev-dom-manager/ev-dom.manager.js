@@ -567,31 +567,33 @@
         popup.id = 'dropdown-' + objectId;
         popup.classList.add('ev-dropdown');
 
+        var innerHTMLString = '';
+
         if (viewContext === 'reconciliation_viewer') {
 
-            popup.innerHTML = '<div>' +
+            innerHTMLString = '<div>' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="recon_view_bank_file_line"' +
                 ' data-object-id="' + objectId + '"' +
                 ' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>';
 
-            popup.innerHTML = popup.innerHTML + '<div>' +
+            innerHTMLString = innerHTMLString + '<div>' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="recon_book_selected"' +
                 ' data-object-id="' + objectId + '"' +
                 ' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>';
 
-            popup.innerHTML = popup.innerHTML + '<div>' +
+            innerHTMLString = innerHTMLString + '<div>' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="recon_hide"' +
                 ' data-object-id="' + objectId + '"' +
                 ' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>';
 
-            popup.innerHTML = popup.innerHTML + '</div>';
+            innerHTMLString = innerHTMLString + '</div>';
 
         } else {
 
-            popup.innerHTML = '<div>' +
+            innerHTMLString = '<div>' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="edit"' +
                 ' data-object-id="' + objectId + '"' +
@@ -604,16 +606,39 @@
 
             if (entityType === 'price-history') {
 
-                popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
+                innerHTMLString = innerHTMLString + '<div class="ev-dropdown-option"' +
                     ' data-ev-dropdown-action="edit_instrument"' +
                     ' data-object-id="' + objectId + '"' +
                     ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>';
 
             }
 
-            popup.innerHTML = popup.innerHTML + '</div>';
+            if (entityType === 'complex-transaction') {
+
+                innerHTMLString = innerHTMLString +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="lock_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Lock Transaction</div>' +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="unlock_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Unlock Transaction</div>' +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="ignore_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Ignore Transaction</div>' +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="activate_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
+            }
+
+            innerHTMLString = innerHTMLString + '</div>';
 
         }
+
+        popup.innerHTML = innerHTMLString;
 
         popup.style.cssText = menuPosition;
         popup.style.position = 'absolute';

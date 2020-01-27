@@ -72,6 +72,7 @@
                         }
 
                         vm.tabs = vm.ui.data || [];
+
                         vm.tabs.forEach(function (tab, index) {
                             tab.tabOrder = index;
 
@@ -664,148 +665,228 @@
 
         };
 
+        var emptySocketsWithoutAttrFromLayout = function () {
+
+            var i, u;
+
+            vm.tabs.forEach(function (tab) {
+
+                tab.layout.fields.forEach(function (field, fieldIndex) {
+
+                    if (field && field.type === 'field') {
+
+                        var attrFound = false;
+
+                        if (field.attribute_class === 'attr') {
+
+                            for (i = 0; i < vm.attrs.length; i = i + 1) {
+
+                                if (field.key) {
+
+                                    if (field.key === vm.attrs[i].user_code) {
+                                        attrFound = true;
+                                        break;
+                                    }
+
+                                } else {
+
+                                    if (field.attribute.user_code) {
+
+                                        if (field.attribute.user_code === vm.attrs[i].user_code) {
+                                            attrFound = true;
+                                            break;
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                            if (!attrFound) {
+
+                                var fieldCol = field.column;
+                                var fieldRow = field.row;
+
+                                tab.layout.fields[fieldIndex] = {
+                                    colspan: 1,
+                                    column: fieldCol,
+                                    editMode: false,
+                                    row: fieldRow,
+                                    type: 'empty'
+                                }
+                            }
+
+                        } else if (field.attribute_class === 'userInput') {
+
+                            for (u = 0; u < vm.userInputs.length; u = u + 1) {
+
+                                if (field.name === vm.userInputs[u].name) {
+                                    attrFound = true;
+                                    break;
+                                }
+
+                            }
+
+                            if (!attrFound) {
+
+                                var fieldCol = field.column;
+                                var fieldRow = field.row;
+
+                                tab.layout.fields[fieldIndex] = {
+                                    colspan: 1,
+                                    column: fieldCol,
+                                    editMode: false,
+                                    row: fieldRow,
+                                    type: 'empty'
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                });
+
+            });
+
+            console.log('delete absent vm.tabs', vm.tabs)
+
+        };
+
         vm.getItems = function () {
 
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.attrs = data.results;
-                var entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                attributeTypeService.getList(vm.entityType).then(function (data) {
 
-                /*if (vm.entityType === 'transaction-type') {
+                    vm.attrs = data.results;
+                    var entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
-                    var doNotShowAttrs = ['code', 'date', 'status', 'text'];
-                    vm.entityAttrs = entityAttrs.filter(function (entity) {
-                        return doNotShowAttrs.indexOf(entity.key) === -1;
-                    });
+                    switch (vm.entityType) {
 
-                } else {
-                    vm.entityAttrs = entityAttrs;
-                }*/
+                        case 'complex-transaction':
+                        case 'transaction-type':
 
-                switch (vm.entityType) {
+                            var doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
+                                'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
+                                'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
+                                'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
+                                'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
+                                'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6','user_number_7',
+                                'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
+                                'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
+                                'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
 
-                    case 'complex-transaction':
-                    case 'transaction-type':
-
-                        var doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
-                            'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
-                            'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
-                            'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
-                            'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
-                            'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6','user_number_7',
-                            'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
-                            'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
-                            'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
-
-                        vm.entityAttrs = entityAttrs.filter(function (entity) {
-                            return doNotShowAttrs.indexOf(entity.key) === -1;
-                        });
-
-                        break;
-
-                    case 'instrument':
-
-                        var doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
-                            'accrued_multiplier', 'default_accrued',
-                            'pricing_currency', 'price_multiplier',
-                            'default_price', 'daily_pricing_model',
-                            'price_download_scheme', 'reference_for_pricing'];
-
-                        vm.entityAttrs = entityAttrs.filter(function (entity) {
-                            return doNotShowAttrs.indexOf(entity.key) === -1;
-                        });
-
-                        break;
-
-                    default:
-                        vm.entityAttrs = entityAttrs;
-
-                }
-
-                vm.layoutAttrs = layoutService.getLayoutAttrs();
-
-                if (vm.instanceId && vm.entityType === 'complex-transaction') {
-
-                    entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
-
-                        var inputs = data.inputs;
-
-                        inputs.forEach(function (input) {
-
-                            var input_value_type = input.value_type;
-                            if (input.value_type === 100) {
-                                input_value_type = 'field'
-                            }
-
-                            var contentType;
-
-                            if (input.content_type && input.content_type !== undefined) {
-
-                                contentType = input.content_type.split('.')[1];
-
-                                if (contentType === 'eventclass') {
-                                    contentType = 'event_class';
-                                }
-
-                                if (contentType === 'notificationclass') {
-                                    contentType = 'notification_class';
-                                }
-
-                                if (contentType === 'accrualcalculationmodel') {
-                                    contentType = 'accrual_calculation_model';
-                                }
-
-                                if (contentType === 'pricingpolicy') {
-                                    contentType = 'pricing_policy';
-                                }
-
-                            } else {
-
-                                contentType = input.name.split(' ').join('_').toLowerCase();
-
-                            }
-
-                            vm.userInputs.push({
-                                key: contentType,
-                                name: input.name,
-                                reference_table: input.reference_table,
-                                verbose_name: input.verbose_name,
-                                content_type: input.content_type,
-                                value_type: input_value_type
+                            vm.entityAttrs = entityAttrs.filter(function (entity) {
+                                return doNotShowAttrs.indexOf(entity.key) === -1;
                             });
 
+                            break;
+
+                        case 'instrument':
+
+                            var doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
+                                'accrued_multiplier', 'default_accrued',
+                                'pricing_currency', 'price_multiplier',
+                                'default_price', 'daily_pricing_model',
+                                'price_download_scheme', 'reference_for_pricing'];
+
+                            vm.entityAttrs = entityAttrs.filter(function (entity) {
+                                return doNotShowAttrs.indexOf(entity.key) === -1;
+                            });
+
+                            break;
+
+                        default:
+                            vm.entityAttrs = entityAttrs;
+
+                    }
+
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+
+                    if (vm.instanceId && vm.entityType === 'complex-transaction') {
+
+                        entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
+
+                            var inputs = data.inputs;
+
+                            inputs.forEach(function (input) {
+
+                                var input_value_type = input.value_type;
+                                if (input.value_type === 100) {
+                                    input_value_type = 'field'
+                                }
+
+                                var contentType;
+
+                                if (input.content_type && input.content_type !== undefined) {
+
+                                    contentType = input.content_type.split('.')[1];
+
+                                    if (contentType === 'eventclass') {
+                                        contentType = 'event_class';
+                                    }
+
+                                    if (contentType === 'notificationclass') {
+                                        contentType = 'notification_class';
+                                    }
+
+                                    if (contentType === 'accrualcalculationmodel') {
+                                        contentType = 'accrual_calculation_model';
+                                    }
+
+                                    if (contentType === 'pricingpolicy') {
+                                        contentType = 'pricing_policy';
+                                    }
+
+                                } else {
+
+                                    contentType = input.name.split(' ').join('_').toLowerCase();
+
+                                }
+
+                                vm.userInputs.push({
+                                    key: contentType,
+                                    name: input.name,
+                                    reference_table: input.reference_table,
+                                    verbose_name: input.verbose_name,
+                                    content_type: input.content_type,
+                                    value_type: input_value_type
+                                });
+
+                            });
+
+                            //emptySocketsWithoutAttrFromLayout();
+
+                            vm.syncItems();
+
+                            vm.readyStatus.constructor = true;
+
+                            resolve();
+
+                        }).catch(function () {
+
+                            reject('error on getting complex transaction');
+
                         });
+
+                    } else {
+
+                        //emptySocketsWithoutAttrFromLayout();
 
                         vm.syncItems();
 
                         vm.readyStatus.constructor = true;
 
-                        $scope.$apply(function () {
+                        resolve();
 
-                            setTimeout(function () {
-                                vm.dragAndDrop.init();
-                            }, 500)
+                    }
 
-                        });
-
-
-                    });
-
-                } else {
-
-                    vm.syncItems();
-
-                    vm.readyStatus.constructor = true;
-
-                    $scope.$apply(function () {
-
-                        setTimeout(function () {
-                            vm.dragAndDrop.init();
-                        }, 500)
-
-                    });
-
-                }
+                }).catch(function () {
+                    reject('error on getting dynamic attributes');
+                });
 
             });
 
@@ -1166,8 +1247,19 @@
 
             vm.getLayout().then(function () {
 
-                vm.getItems();
-                vm.createFieldsTree();
+                vm.getItems().then(function () {
+
+                    vm.createFieldsTree();
+
+                    $scope.$apply(function () {
+
+                        setTimeout(function () {
+                            vm.dragAndDrop.init();
+                        }, 500)
+
+                    });
+
+                });
 
             });
 
