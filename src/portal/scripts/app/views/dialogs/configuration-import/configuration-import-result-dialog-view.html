@@ -12,7 +12,7 @@
         <md-content>
             <md-card>
                 <md-card-content>
-                    <h3>Please see below the list of records we failed to import</h3>
+                    <h3>Please see below the list of records</h3>
 
                     <div class="m-t-8">
                         <a href="javascript:void(0)" class="download-error-link">Download error file</a>
@@ -23,17 +23,18 @@
                         <thead>
                         <tr>
                             <th>Object</th>
-                            <th>Issue</th>
+                            <th>Text</th>
                             <th>Reaction</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr data-ng-repeat="errorItem in vm.data.errors">
-                            <td>{{ vm.getName(errorItem) }}</td>
+                        <tr data-ng-repeat="item in vm.records">
+                            <td>{{ vm.getName(item) }}</td>
                             <td>
-                                <div data-ng-if="errorItem.error">{{errorItem.error.message}}</div>
+                                <div data-ng-if="item.error && item.error.message">{{item.error.message}}</div>
+                                <div data-ng-if="!item.error.message">Success</div>
                             </td>
-                            <td>{{errorItem.mode}}</td>
+                            <td>{{item.mode}}</td>
                         </tr>
                         </tbody>
 

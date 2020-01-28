@@ -807,21 +807,21 @@
 
                             $mdDialog.hide({status: 'errors_occured', data: {}});
 
-                            $mdDialog.show({
-                                controller: 'ConfigurationImportErrorsDialogController as vm',
-                                templateUrl: 'views/dialogs/configuration-import/configuration-import-errors-dialog-view.html',
-                                targetEvent: $event,
-                                preserveScope: true,
-                                multiple: true,
-                                autoWrap: true,
-                                skipHide: true,
-                                locals: {
-                                    data: {
-                                        errors: configurationData.errors
-                                    }
-                                }
-
-                            });
+                            // $mdDialog.show({
+                            //     controller: 'ConfigurationImportErrorsDialogController as vm',
+                            //     templateUrl: 'views/dialogs/configuration-import/configuration-import-errors-dialog-view.html',
+                            //     targetEvent: $event,
+                            //     preserveScope: true,
+                            //     multiple: true,
+                            //     autoWrap: true,
+                            //     skipHide: true,
+                            //     locals: {
+                            //         data: {
+                            //             errors: configurationData.errors
+                            //         }
+                            //     }
+                            //
+                            // });
 
 
                         } else {
@@ -982,19 +982,17 @@
                 console.log('agreeAsBackendProcess data', data);
                 console.log('agreeAsBackendProcess vm.importConfig', vm.importConfig);
 
+
                 $mdDialog.show({
-                    controller: 'SuccessDialogController as vm',
-                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    controller: 'ConfigurationImportResultDialogController as vm',
+                    templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
                     targetEvent: $event,
                     preserveScope: true,
                     multiple: true,
                     autoWrap: true,
                     skipHide: true,
                     locals: {
-                        success: {
-                            title: "",
-                            description: "You have successfully imported configuration file"
-                        }
+                        data: vm.importConfig
                     }
 
                 }).then(function () {
@@ -1002,7 +1000,6 @@
                     $mdDialog.hide({status: 'agree', data: {}});
 
                 });
-
 
             })
 
