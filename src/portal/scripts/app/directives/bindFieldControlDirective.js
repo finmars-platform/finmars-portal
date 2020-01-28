@@ -23,6 +23,8 @@
             },
             link: function (scope, elem, attr) {
 
+                console.log('scope.entityChange', scope.entityChange);
+
                 scope.readyStatus = {classifier: false};
 
                 var attrs = scope.$parent.vm.attrs || [];
@@ -395,6 +397,8 @@
                         numberInputContainerElem.classList.remove('md-input-invalid');
                         numberInputElem.classList.remove('ng-invalid', 'ng-invalid-number');
                     }
+
+                    scope.itemChange();
 
                 };
 
