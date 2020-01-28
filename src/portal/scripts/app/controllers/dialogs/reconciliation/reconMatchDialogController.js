@@ -66,7 +66,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                console.trace();
+                // console.trace();
 
                 var newField = Object.assign({}, field);
 

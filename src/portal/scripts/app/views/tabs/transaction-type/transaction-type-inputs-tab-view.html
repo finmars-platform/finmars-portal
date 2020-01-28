@@ -22,6 +22,7 @@
                 <th>Use Default Value from Context</th>
                 <th>Default value</th>
                 <th>Input expr</th>
+                <th>Linked Inputs</th>
                 <th style="text-align: center">
                     <md-button class="md-icon-button" aria-label="ttype inputs search button">
                         <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
@@ -47,16 +48,13 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             <tr data-ng-repeat="item in vm.entity.inputs | filter:vm.query | orderBy:vm.sort:vm.direction">
 
                 <td class="edit-state-td">
-                    <!--<md-input-container class="no-error-spacer">
-                        <input type="text"
-                               data-ng-model="item.name">
-                    </md-input-container>-->
                     <span ng-bind="item.name"></span>
                 </td>
                 <td class="edit-state-td">
@@ -66,71 +64,11 @@
                 </td>
                 <td class="edit-state-td">
 
-                    <!--<md-input-container class="md-block"
-                                        aria-label="select with filter"
-                                        md-no-float="">
-                        <md-select ng-model="item.value_type"
-                                   ng-change="vm.valueTypeChanged(item)"
-                                   md-container-class="common-select-container"
-                                   md-on-close="vm.searchTerms[vm.getInputsFilterST('valueTypeSearchTerm', $index)] = ''"
-                                   readonly>
-
-                            <md-select-header>
-                                <input data-ng-model="vm.searchTerms[vm.getInputsFilterST('valueTypeSearchTerm', $index)]"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-
-                            <div class="select-options-holder">
-
-                                <md-option
-                                        data-ng-repeat="item in vm.valueTypes | filter: {display_name: vm.searchTerms[vm.getInputsFilterST('valueTypeSearchTerm', $index)]}"
-                                        ng-value="item.value">
-                                    {{item.display_name}}
-                                </md-option>
-
-                            </div>
-
-                        </md-select>
-                    </md-input-container>-->
                     <span ng-bind="vm.getNameByValueType(item.value_type)"></span>
                 </td>
 
                 <td class="edit-state-td">
-                    <!--<md-input-container class="md-block"
-                                        md-no-float=""
-                                        aria-label="select with filter">
-                        <md-select ng-model="item.content_type"
-                                   md-container-class="common-select-container"
-                                   ng-change="item.context_property = null"
-                                   md-on-close="vm.searchTerms[vm.getInputsFilterST('contentTypeSearchTerm', $index)] = ''"
-                                   id="ttype-inputs-content-type"
-                                   ng-disabled="item.value_type !== 100"
-                                   readonly>
 
-                            <md-select-header>
-                                <input data-ng-model="vm.searchTerms[vm.getInputsFilterST('contentTypeSearchTerm', $index)]"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-
-                            <div class="select-options-holder">
-
-                                <md-option
-                                        data-ng-repeat="item in vm.contentTypes | filter: {name: vm.searchTerms[vm.getInputsFilterST('contentTypeSearchTerm', $index)]}"
-                                        ng-value="item.key">
-                                    {{item.name}}
-                                </md-option>
-
-                            </div>
-
-                        </md-select>
-
-                    </md-input-container>-->
                     <span data-ng-if="item.value_type == 110" ng-bind="item.reference_table"></span>
                     <span data-ng-if="item.value_type == 100"
                           ng-bind="vm.getNameByContentType(item.content_type)"></span>
@@ -221,6 +159,11 @@
 
                     <expression-editor-button data-item="item.value_expr"></expression-editor-button>
 
+                </td>
+                <td>
+                    <md-input-container class="no-error-spacer">
+                        <input type="text" data-ng-model="item.settings.linked_inputs_names">
+                    </md-input-container>
                 </td>
                 <td class="ttype-inputs-actions-td">
                     <!--<md-button ng-if="vm.entity.id"
@@ -431,6 +374,12 @@
                     </md-input-container>
 
                     <expression-editor-button data-item="vm.newItem.value_expr"></expression-editor-button>
+                </td>
+
+                <td>
+                    <md-input-container class="no-error-spacer">
+                        <input type="text" data-ng-model="item.settings.linked_inputs_names">
+                    </md-input-container>
                 </td>
 
                 <td class="ttype-inputs-actions-td">
