@@ -422,7 +422,7 @@ app.controller('SettingsGeneralSimpleEntityImportController', ['$scope', '$mdDia
 // Configuration Import
 
 app.controller('ConfigurationImportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
-app.controller('ConfigurationImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportErrorsDialogController')]);
+app.controller('ConfigurationImportResultDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportResultDialogController')]);
 
 // Configuration Export
 
