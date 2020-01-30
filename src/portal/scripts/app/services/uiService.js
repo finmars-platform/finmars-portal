@@ -30,7 +30,7 @@
 
     var getListLayout = function (entity, options) {
 
-        console.trace();
+        // console.trace();
 
         return uiRepository.getListLayout(entity, options);
     };
@@ -64,7 +64,7 @@
 
     var getDefaultListLayout = function (entityType) {
 
-        console.trace();
+        // console.trace();
 
         return uiRepository.getDefaultListLayout(entityType);
     };

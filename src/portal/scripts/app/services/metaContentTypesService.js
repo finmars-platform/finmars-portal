@@ -294,6 +294,24 @@
             case 'integrations.pricedownloadschememapping':
                 result = 'Price Download Scheme Mapping';
                 break;
+            case 'obj_attrs.instrumentattributetype':
+                result = 'Instrument Attribute Types';
+                break;
+            case 'obj_attrs.currencyattributetype':
+                result = 'Currency Attribute Types';
+                break;
+            case 'obj_attrs.accountattributetype':
+                result = 'Account Attribute Types';
+                break;
+            case 'integrations.pricingautomatedschedule:':
+                result = 'Pricing Download Schedule';
+                break;
+            case 'ui.transactionuserfieldmodel':
+                result = 'Transaction User field'
+                break;
+            case 'ui.dashboardlayout':
+                result = 'Dashboard Layout';
+                break;
 
         }
 

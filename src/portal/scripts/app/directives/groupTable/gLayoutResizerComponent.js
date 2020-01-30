@@ -54,7 +54,7 @@
                             width = contentWrapWidth;
                         }
 
-                        console.log('width', width);
+                        // console.log('width', width);
 
                         $(scope.workareaWrapElement).width(width);
                         var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();

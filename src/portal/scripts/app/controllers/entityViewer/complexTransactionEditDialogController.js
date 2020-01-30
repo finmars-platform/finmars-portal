@@ -483,6 +483,110 @@
 
         };
 
+        vm.recalculateInputs = function (inputs) {
+
+            vm.recalculating = true;
+
+            var values = {};
+
+            console.log('vm.userInputs', vm.userInputs);
+
+            vm.userInputs.forEach(function (item) {
+                values[item.name] = vm.entity[item.name]
+            });
+
+            var book = {
+                id: vm.entityId,
+                transaction_type: vm.entity.transaction_type,
+                recalculate_inputs: inputs,
+                process_mode: 'recalculate',
+                complex_transaction: vm.entity,
+                values: values
+            };
+
+            complexTransactionService.rebookComplexTransaction(book.id, book).then(function (data) {
+
+                // vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
+                vm.transactionTypeId = data.transaction_type;
+                vm.editLayoutEntityInstanceId = data.transaction_type;
+                vm.entity = data.complex_transaction;
+
+                var inputsWithCalculations = data.transaction_type_object.inputs;
+
+                vm.readyStatus.entity = true;
+
+                var keys = Object.keys(data.values);
+
+                keys.forEach(function (item) {
+                    vm.entity[item] = data.values[item];
+                });
+
+                data.complex_transaction.attributes.forEach(function (item) {
+                    if (item.attribute_type_object.value_type === 10) {
+                        vm.entity[item.attribute_type_object.name] = item.value_string;
+                    }
+                    if (item.attribute_type_object.value_type === 20) {
+                        vm.entity[item.attribute_type_object.name] = item.value_float;
+                    }
+                    if (item.attribute_type_object.value_type === 30) {
+                        vm.entity[item.attribute_type_object.name] = item.classifier;
+                    }
+                    if (item.attribute_type_object.value_type === 40) {
+                        vm.entity[item.attribute_type_object.name] = item.value_date;
+                    }
+                });
+
+                vm.tabs = data.book_transaction_layout.data;
+                vm.userInputs = [];
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        if (field.attribute_class === 'userInput') {
+                            vm.userInputs.push(field.attribute);
+                        }
+                    });
+                });
+
+                vm.tabs = vm.tabs.map(function (item, index) {
+
+                    item.index = index;
+
+                    return item;
+
+                });
+
+                vm.generateAttributesFromLayoutFields();
+
+                if (inputsWithCalculations) {
+                    inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                        vm.userInputs.forEach(function (userInput) {
+                            if (userInput.name === inputWithCalc.name) {
+                                if (inputWithCalc.can_recalculate === true) {
+                                    userInput.buttons = [
+                                        {
+                                            icon: 'iso',
+                                            tooltip: 'Recalculate',
+                                            caption: '',
+                                            classes: 'md-raised',
+                                            action: vm.recalculate
+                                        }
+                                    ]
+                                }
+                            }
+                        })
+
+                    });
+
+                }
+
+                vm.recalculating = false;
+
+                $scope.$apply();
+
+            });
+
+        };
+
         vm.fillUserFields = function () {
 
             vm.textFields = [];
@@ -724,6 +828,13 @@
                     vm.readyStatus.entity = true;
                     vm.readyStatus.layout = true;
                     vm.readyStatus.userFields = true;
+
+                    vm.oldValues = {};
+
+                    vm.userInputs.forEach(function (item) {
+                        vm.oldValues[item.name] = vm.entity[item.name]
+                    });
+
 
                     vm.loadPermissions();
 
@@ -1273,6 +1384,7 @@
         vm.init = function () {
             vm.getItem();
             vm.getAttributeTypes();
+
         };
 
         vm.init();
@@ -1283,6 +1395,49 @@
             vm.entityType = entityType;
             vm.entityId = entityId;
         }
+
+        vm.entityChange = function () {
+
+            console.log("entityChange", vm);
+
+            console.log("vm.oldValues", vm.oldValues);
+
+            var changedInput = null;
+
+            vm.userInputs.forEach(function (item) {
+                if (vm.oldValues[item.name] !== vm.entity[item.name]) {
+                    changedInput = item
+                }
+            });
+
+            vm.userInputs.forEach(function (item) {
+                vm.oldValues[item.name] = vm.entity[item.name]
+            });
+
+            var resultInput;
+
+            vm.transactionType.inputs.forEach(function (item) {
+
+                if(item.name === changedInput.name) {
+                    resultInput = item;
+                }
+            });
+
+            if (resultInput && resultInput.settings) {
+
+                if (resultInput.settings.linked_inputs_names) {
+
+                    vm.recalculateInputs(resultInput.settings.linked_inputs_names.split(','))
+
+                }
+
+            }
+
+
+            console.log('changedInput', changedInput);
+            console.log('resultInput', resultInput);
+
+        };
 
     }
 
