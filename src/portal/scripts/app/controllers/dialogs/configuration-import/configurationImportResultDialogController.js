@@ -16,6 +16,8 @@
 
         vm.data = data;
 
+        vm.records = [];
+
         vm.createFile = function () {
 
             var result = [];
@@ -30,7 +32,7 @@
 
             result.push(columnRow);
 
-            vm.data.errors.forEach(function (errorItem) {
+            vm.records.forEach(function (errorItem) {
 
                 var content = [];
 
@@ -70,36 +72,36 @@
 
         };
 
-        vm.getName = function (errorItem) {
+        vm.getName = function (item) {
 
             var result = '';
 
-            if (errorItem.content_type) {
-                result = result + metaContentTypesService.getEntityNameByContentType(errorItem.content_type)
+            if (item.content_type) {
+                result = result + metaContentTypesService.getEntityNameByContentType(item.content_type)
             }
 
-            if (errorItem.item) {
+            if (item.item) {
 
                 result = result + ': ';
 
-                if (errorItem.item.scheme_name) {
-                    result = result + errorItem.item.scheme_name
+                if (item.item.scheme_name) {
+                    result = result + item.item.scheme_name
                 } else {
 
-                    if (errorItem.item.short_name) {
+                    if (item.item.short_name) {
 
-                        result = result + errorItem.item.short_name + ' (' + errorItem.item.user_code + ')';
+                        result = result + item.item.short_name + ' (' + item.item.user_code + ')';
 
                     } else {
 
-                        if (errorItem.item.user_code) {
+                        if (item.item.user_code) {
 
-                            result = result + errorItem.item.user_code;
+                            result = result + item.item.user_code;
 
                         } else {
 
-                            if (errorItem.item.name) {
-                                result = result + errorItem.item.name;
+                            if (item.item.name) {
+                                result = result + item.item.name;
                             }
 
                         }
@@ -123,6 +125,26 @@
         };
 
         vm.init = function () {
+
+            console.log('vm.data', vm.data);
+
+            Object.keys(vm.data.stats).forEach(function (sectionKey) {
+
+                Object.keys(vm.data.stats[sectionKey]).forEach(function (entityKey) {
+
+                    vm.data.stats[sectionKey][entityKey].forEach(function (item) {
+
+                        vm.records.push(item)
+
+
+                    });
+
+                })
+
+            });
+
+            console.log('vm.records', vm.records);
+
 
             setTimeout(function () {
                 vm.setDownloadLink();

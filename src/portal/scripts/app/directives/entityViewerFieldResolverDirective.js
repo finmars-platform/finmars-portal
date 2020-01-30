@@ -224,7 +224,7 @@
 
                     var result = '';
 
-                    console.log("scope.fields[0]", scope.fields[0]);
+                    // console.log("scope.fields[0]", scope.fields[0]);
 
                     if (scope.fields[0]) {
                         if (scope.fields[0].name) {
