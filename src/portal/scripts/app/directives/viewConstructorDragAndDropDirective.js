@@ -8,6 +8,9 @@
     var evEvents = require('../services/entityViewerEvents');
 
     var evDataHelper = require('../helpers/ev-data.helper');
+    var ScrollHelper = require('../helpers/scrollHelper');
+
+    var scrollHelper = new ScrollHelper();
 
     module.exports = function ($mdDialog) {
         return {
@@ -247,38 +250,6 @@
                     }
                 };
 
-                // scroll while dragging
-                var DnDScrollElem;
-                var DnDScrollTimeOutId;
-                var scrollSize = null;
-
-                var DnDWheel = function (event) {
-                    event.preventDefault();
-
-                    var scrolled = DnDScrollElem.scrollTop;
-
-                    if (scrollSize === null) {
-                        scrollSize = scrolled
-                    }
-
-                    if (event.deltaY > 0) {
-                        scrollSize = scrollSize + 100;
-                    } else {
-                        scrollSize = scrollSize - 100;
-                    }
-
-                    clearTimeout(DnDScrollTimeOutId);
-
-                    DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
-                        DnDScrollElem.scroll({
-                            top: Math.max(0, scrollSize)
-                        });
-                        scrollSize = null;
-                    }, 30);
-
-                };
-                // < scroll while dragging >
-
                 var selectedDnD = {
 
                     init: function () {
@@ -342,7 +313,7 @@
                         });
 
                         drake.on('drag', function () {
-                            document.addEventListener('wheel', DnDWheel);
+                            document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
                         });
 
                         drake.on('drop', function (elem, target, source, nextSibling) {
@@ -647,7 +618,7 @@
 
                         drake.on('dragend', function (elem) {
 
-                            document.removeEventListener('wheel', DnDWheel);
+                            document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
                             if (sourceContainer) {
                                 sourceContainer.classList.remove('dragged-out-card-space');
                             }
@@ -681,7 +652,9 @@
 
                 var init = function () {
                     setTimeout(function () {
-                        DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
+                        var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
+                        scrollHelper.setDnDScrollElem(DnDScrollElem);
+
                         viewConstructorDnD.init();
                         selectedDnD.init();
                     });

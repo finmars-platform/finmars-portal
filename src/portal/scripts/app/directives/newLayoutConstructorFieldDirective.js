@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 30.05.2016.
+ * Created by mevstratov on 28.01.2020.
  */
 (function () {
 
@@ -10,12 +10,13 @@
 
     module.exports = function ($mdDialog) {
         return {
-            restrict: 'AE',
+            restrict: 'E',
             scope: {
-                tab: '=',
-                row: '<',
-                column: '<',
-                tabFieldsTree: '='
+                fixedArea: '=',
+                fieldsTree: '=', // if it is fieldsTree with tabs transfer vm.fieldsTree[tab.tabOrder]
+                tabs: '=',
+                tabOrder: '@',
+                field: '='
             },
             templateUrl: 'views/directives/layout-constructor-field-view.html',
             link: function (scope, elem, attr) {
@@ -28,9 +29,6 @@
                     colspan: 1,
                     editMode: false
                 };
-
-                scope.tabOrder = scope.tab.tabOrder;
-                scope.colsInTotal = scope.tab.layout.columns;
 
                 scope.fieldUsesBackgroundColor = false;
                 scope.fieldBackgroundColor = '#000000';
@@ -56,12 +54,21 @@
                     layoutAttrsKeys.push(layoutAttr.key);
                 });
 
-                var tabs = scope.$parent.vm.tabs;
+                scope.$watch('fieldsTree', function () {
 
-                scope.$watch('tabFieldsTree', function () {
+                    if (scope.fieldsTree) {
+                        setFieldDefaultSettings();
 
-                    if (scope.tabFieldsTree) {
-                        findItem();
+                        scope.row = scope.field.row;
+                        scope.column = scope.field.column;
+
+                        if (scope.tabOrder === 'fixedArea') {
+                            scope.rowsInTotal = scope.fixedArea.layout.rows;
+                            scope.colsInTotal = scope.fixedArea.layout.columns;
+                        } else {
+                            scope.rowsInTotal = scope.tabs[scope.tabOrder].layout.rows;
+                            scope.colsInTotal = scope.tabs[scope.tabOrder].layout.columns;
+                        }
 
                         setTimeout(function () { // set min height to prevent row disappearance on card drag
                             setCardContainerMinHeight();
@@ -70,9 +77,9 @@
 
                 });
 
-                function findItem() {
+                function setFieldDefaultSettings() {
 
-                    scope.item = JSON.parse(JSON.stringify(scope.tabFieldsTree[scope.row][scope.column]));
+                    scope.item = scope.field;
 
                     if (scope.item.backgroundColor) {
                         scope.fieldUsesBackgroundColor = true;
@@ -102,7 +109,8 @@
 
                     var attrFound = false;
 
-                    var i, b, l, e, u;
+                    var i, l, e, u;
+
                     for (i = 0; i < scope.attrs.length; i = i + 1) {
                         if (scope.attrs[i].id && scope.item.id) {
                             if (scope.attrs[i].id === scope.item.id) {
@@ -160,16 +168,19 @@
                     }
 
                     saveColspanTimeOutId = setTimeout(function () {
-                        for (var i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
-                            if (scope.tab.layout.fields[i].row === scope.item.row &&
-                                scope.tab.layout.fields[i].column === scope.item.column) {
+                        /*for (var i = 0; i < scope.fixedArea.layout.fields.length; i = i + 1) {
+                            if (scope.fixedArea.layout.fields[i].row === scope.item.row &&
+                                scope.fixedArea.layout.fields[i].column === scope.item.column) {
 
-                                scope.tab.layout.fields[i].colspan = JSON.parse(JSON.stringify(colspan));
+                                scope.fixedArea.layout.fields[i].colspan = JSON.parse(JSON.stringify(colspan));
                                 saveColspanTimeOutId = null;
                                 break;
 
                             }
-                        }
+                        }*/
+
+                        // for fixed area
+                        scope.fieldsTree[scope.row][scope.column].colspan = JSON.parse(JSON.stringify(colspan));
                     }, 400);
 
                 };
@@ -199,19 +210,30 @@
                 };
 
                 scope.changeFieldColspan = function (colspan) {
-                    scope.tabFieldsTree[scope.row][scope.column].colspan = colspan;
+                    scope.fieldsTree[scope.row][scope.column].colspan = colspan;
                 };
 
                 function addRow() {
+
+                    scope.fixedArea.layout.rows = scope.fixedArea.layout.rows + 1;
+                    var newRowNumber = scope.fixedArea.layout.rows;
+                    scope.fieldsTree[newRowNumber] = {};
+
                     var c;
-                    scope.tab.layout.rows = scope.tab.layout.rows + 1;
-                    for (c = 0; c < scope.tab.layout.columns; c = c + 1) {
-                        scope.tab.layout.fields.push({
-                            row: scope.tab.layout.rows,
+                    for (c = 0; c < scope.fixedArea.layout.columns; c = c + 1) {
+                        scope.fixedArea.layout.fields.push({
+                            row: newRowNumber,
                             column: c + 1,
                             colspan: 1,
                             type: 'empty'
                         });
+
+                        scope.fieldsTree[newRowNumber][c] = {
+                            row: newRowNumber,
+                            column: c + 1,
+                            colspan: 1,
+                            type: 'empty'
+                        };
                     }
 
                 }
@@ -221,16 +243,16 @@
                     var i;
                     var originalFieldSettings;
 
-                    for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
-                        if (scope.tab.layout.fields[i].row === scope.row && scope.tab.layout.fields[i].column === scope.column) {
-                            scope.tab.layout.fields[i].editMode = false;
-                            originalFieldSettings = JSON.parse(JSON.stringify(scope.tab.layout.fields[i]));
+                    for (i = 0; i < scope.fixedArea.layout.fields.length; i = i + 1) {
+                        if (scope.fixedArea.layout.fields[i].row === scope.row && scope.fixedArea.layout.fields[i].column === scope.column) {
+                            scope.fixedArea.layout.fields[i].editMode = false;
+                            originalFieldSettings = JSON.parse(JSON.stringify(scope.fixedArea.layout.fields[i]));
                             break;
                         }
                     }
 
                     scope.item = originalFieldSettings;
-                    scope.tabFieldsTree[scope.row][scope.column] = originalFieldSettings; // needed to reset colspan
+                    scope.fieldsTree[scope.row][scope.column] = originalFieldSettings; // needed to reset colspan
                     scope.item.editMode = false;
 
                     if (scope.item.backgroundColor) {
@@ -246,67 +268,75 @@
                 };
 
                 scope.toggleEditMode = function () {
-                    var i;
+                    /*var i;
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                         scope.tab.layout.fields[i].editMode = false;
+                    }*/
+                    var i, c;
+                    for (i = 1; i <= scope.rowsInTotal; i++) {
+                        for (c = 1; c <= scope.colsInTotal; c++) {
+                            scope.fieldsTree[i][c].editMode = false;
+                        }
                     }
 
+                    scope.field.editMode = true;
                     scope.item.editMode = true;
                 };
 
                 scope.saveField = function () {
 
                     var i;
-                    for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
+                    for (i = 0; i < scope.fixedArea.layout.fields.length; i = i + 1) {
 
-                        if (scope.tab.layout.fields[i].row === scope.item.row &&
-                            scope.tab.layout.fields[i].column === scope.item.column) {
+                        if (scope.fixedArea.layout.fields[i].row === scope.item.row &&
+                            scope.fixedArea.layout.fields[i].column === scope.item.column) {
 
                             if (layoutAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
-                                scope.tab.layout.fields[i].attribute_class = 'decorationAttr';
+                                scope.fixedArea.layout.fields[i].attribute_class = 'decorationAttr';
 
                             } else if (entityAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
-                                scope.tab.layout.fields[i].attribute_class = 'entityAttr';
+                                scope.fixedArea.layout.fields[i].attribute_class = 'entityAttr';
 
                             } else if (scope.item.attribute.id) {
-                                scope.tab.layout.fields[i].attribute_class = 'attr';
-                                scope.tab.layout.fields[i].id = scope.item.attribute.id;
+                                scope.fixedArea.layout.fields[i].attribute_class = 'attr';
+                                scope.fixedArea.layout.fields[i].id = scope.item.attribute.id;
 
                             } else {
-                                scope.tab.layout.fields[i].attribute_class = 'userInput';
+                                scope.fixedArea.layout.fields[i].attribute_class = 'userInput';
                             }
 
                             if (scope.item.options) {
-                                scope.tab.layout.fields[i].options = scope.item.options;
+                                scope.fixedArea.layout.fields[i].options = scope.item.options;
                             }
 
 
-                            scope.tab.layout.fields[i].name = scope.item.attribute.name;
-                            scope.tab.layout.fields[i].type = 'field';
-                            scope.tab.layout.fields[i].colspan = scope.item.colspan;
-                            scope.tab.layout.fields[i].attribute = scope.item.attribute;
+                            scope.fixedArea.layout.fields[i].name = scope.item.attribute.name;
+                            scope.fixedArea.layout.fields[i].type = 'field';
+                            scope.fixedArea.layout.fields[i].colspan = scope.item.colspan;
+                            scope.fixedArea.layout.fields[i].attribute = scope.item.attribute;
 
                             if (scope.item.editable !== false) { // its important
-                                scope.tab.layout.fields[i].editable = true
+                                scope.fixedArea.layout.fields[i].editable = true
                             } else {
-                                scope.tab.layout.fields[i].editable = false
+                                scope.fixedArea.layout.fields[i].editable = false
                             }
 
                             if (scope.fieldUsesBackgroundColor) {
-                                scope.tab.layout.fields[i].backgroundColor = scope.fieldBackgroundColor;
+                                scope.fixedArea.layout.fields[i].backgroundColor = scope.fieldBackgroundColor;
                             } else {
-                                scope.tab.layout.fields[i].backgroundColor = null;
+                                scope.fixedArea.layout.fields[i].backgroundColor = null;
                             }
 
-                            if (scope.tab.layout.fields[i].row === scope.tab.layout.rows) {
+                            if (scope.fixedArea.layout.fields[i].row === scope.fixedArea.layout.rows) {
                                 addRow();
                             }
+
                         }
                     }
 
                     scope.item.editMode = false;
 
-                    scope.$parent.vm.createFieldsTree();
+                    scope.$parent.vm.createFixedAreaFieldsTree();
                     scope.$parent.vm.syncItems();
 
                 };
@@ -315,17 +345,18 @@
                     var i, r, columnsIsEmpty;
                     var emptyRows = [];
                     // checking all rows except first 4
-                    rowsLoop: for (r = scope.tab.layout.rows; r >= 5; r = r - 1) {
+                    rowsLoop: for (r = scope.fixedArea.layout.rows; r >= 5; r = r - 1) {
                         columnsIsEmpty = true;
 
-                        for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
-                            if (scope.tab.layout.fields[i].row == r) {
-                                if (scope.tab.layout.fields[i].type === 'field') {
+                        for (i = 0; i < scope.fixedArea.layout.fields.length; i = i + 1) {
+                            if (scope.fixedArea.layout.fields[i].row == r) {
+                                if (scope.fixedArea.layout.fields[i].type === 'field') {
                                     columnsIsEmpty = false;
                                     break rowsLoop;
                                 }
                             }
                         }
+
                         if (columnsIsEmpty) {
                             emptyRows.push(r);
                         }
@@ -340,22 +371,22 @@
 
                     var i, e;
 
-                    for (i = scope.tab.layout.rows; i > 5; i = i - 1) { // Delete all empty rows except first 5
+                    for (i = scope.fixedArea.layout.rows; i > 5; i = i - 1) { // Delete all empty rows except first 5
 
                         for (e = 0; e < emptyRows.length - 1; e = e + 1) { // {emptyRows.length - 1} is needed to prevent deleting of last empty row
 
                             var emptyRowOrderNumber = emptyRows[e];
                             if (i === emptyRowOrderNumber) {
                                 var f;
-                                for (f = 0; f < scope.tab.layout.fields.length; f = f + 1) {
+                                for (f = 0; f < scope.fixedArea.layout.fields.length; f = f + 1) {
 
-                                    if (scope.tab.layout.fields[f].row == scope.tab.layout.rows) {
-                                        scope.tab.layout.fields.splice(f, 1);
+                                    if (scope.fixedArea.layout.fields[f].row == scope.fixedArea.layout.rows) {
+                                        scope.fixedArea.layout.fields.splice(f, 1);
                                         f = f - 1;
                                     }
                                 }
 
-                                scope.tab.layout.rows = scope.tab.layout.rows - 1;
+                                scope.fixedArea.layout.rows = scope.fixedArea.layout.rows - 1;
                             }
                         }
 
@@ -366,12 +397,11 @@
                 scope.getCols = function () {
 
                     var colsLeft = [1];
-                    var row = scope.tabFieldsTree[scope.row];
-                    var columnsInTotal = scope.tab.layout.columns;
+                    var row = scope.fieldsTree[scope.row];
 
                     var i;
                     var c = 1;
-                    for (i = scope.column + 1; i <= columnsInTotal; i++) {
+                    for (i = scope.column + 1; i <= scope.colsInTotal; i++) {
 
                         if (row[i].type !== 'empty') {
                             break;
@@ -401,18 +431,18 @@
                     scope.item.editable = null;
                     scope.item.colspan = 1;
 
-                    for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
-                        if (scope.tab.layout.fields[i].row === scope.item.row) {
-                            if (scope.tab.layout.fields[i].column === scope.item.column) {
-                                scope.tab.layout.fields[i].id = null;
-                                scope.tab.layout.fields[i].key = null;
-                                scope.tab.layout.fields[i].attribute = null;
-                                scope.tab.layout.fields[i].attribute_class = null;
-                                scope.tab.layout.fields[i].disabled = false;
-                                scope.tab.layout.fields[i].colspan = 1;
-                                scope.tab.layout.fields[i].name = '';
-                                scope.tab.layout.fields[i].backgroundColor = null;
-                                scope.tab.layout.fields[i].type = 'empty';
+                    for (i = 0; i < scope.fixedArea.layout.fields.length; i = i + 1) {
+                        if (scope.fixedArea.layout.fields[i].row === scope.item.row) {
+                            if (scope.fixedArea.layout.fields[i].column === scope.item.column) {
+                                scope.fixedArea.layout.fields[i].id = null;
+                                scope.fixedArea.layout.fields[i].key = null;
+                                scope.fixedArea.layout.fields[i].attribute = null;
+                                scope.fixedArea.layout.fields[i].attribute_class = null;
+                                scope.fixedArea.layout.fields[i].disabled = false;
+                                scope.fixedArea.layout.fields[i].colspan = 1;
+                                scope.fixedArea.layout.fields[i].name = '';
+                                scope.fixedArea.layout.fields[i].backgroundColor = null;
+                                scope.fixedArea.layout.fields[i].type = 'empty';
                                 findEmptyRows();
                                 break;
                             }
@@ -422,28 +452,95 @@
                     scope.fieldUsesBackgroundColor = false;
                     scope.fieldBackgroundColor = '#000000';
 
-                    scope.$parent.vm.createFieldsTree();
+                    if (scope.tabOrder === 'fixedArea') {
+                        scope.$parent.vm.createFixedAreaFieldsTree();
+                    } else {
+                        scope.$parent.vm.createFieldsTree();
+                    }
+
                     scope.$parent.vm.syncItems();
+                };
+
+                var isAttrDisabled = function (attr, attrType) {
+
+                    var i, f;
+                    for (i = 0; i < scope.tabs.length; i++) {
+                        var tab = scope.tabs[i];
+
+                        for (f = 0; f < tab.layout.fields.length; f++) {
+                            var field = tab.layout.fields[f];
+
+                            if (field.type === 'field') {
+
+                                if (attrType === 'dynamicAttribute') {
+
+                                    if (attr.user_code === field.attribute.user_code) {
+                                        return true;
+                                    }
+
+                                } else { // for entity attrs and user inputs
+
+                                    if (attr.key === field.attribute.key) {
+                                        return true;
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+
+                    if (scope.fixedArea.isActive) {
+
+                        var a;
+                        for (a = 0; a < scope.fixedArea.layout.fields.length; a++) {
+                            var field = scope.fixedArea.layout.fields[a];
+
+                            if (field.type === 'field') {
+
+                                if (attrType === 'dynamicAttribute') {
+
+                                    if (attr.user_code === field.attribute.user_code) {
+                                        return true;
+                                    }
+
+                                } else { // for entity attrs and user inputs
+
+                                    if (attr.key === field.attribute.key) {
+                                        return true;
+                                    }
+
+                                }
+
+                            }
+                        }
+
+                    }
+
+                    return false;
+
                 };
 
                 scope.findAttrsLeft = function () {
 
                     scope.attrs.forEach(function (attr) {
-                        attr.disabled = false;
-                        tabs.forEach(function (tab) {
+                        attr.disabled = isAttrDisabled(attr, 'dynamicAttribute');
+
+                        /*scope.tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (item) {
                                 if (item.type === 'field') {
-                                    if (attr.user_code === item.attribute.user_code) {
+                                    if (attr.id === item.id) {
                                         attr.disabled = true;
                                     }
                                 }
                             })
-                        })
+                        })*/
                     });
 
                     scope.entityAttrs.forEach(function (entityAttr) {
-                        entityAttr.disabled = false;
-                        tabs.forEach(function (tab) {
+                        entityAttr.disabled = isAttrDisabled(entityAttr, 'entityAttribute');
+
+                        /*scope.tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (item) {
                                 if (item.type === 'field') {
                                     if (entityAttr.key === item.attribute.key) {
@@ -451,20 +548,22 @@
                                     }
                                 }
                             })
-                        })
+                        })*/
                     });
 
                     scope.userInputs.forEach(function (userInput) {
-                        userInput.disabled = false;
-                        tabs.forEach(function (tab) {
+                        userInput.disabled = isAttrDisabled(userInput, 'userInput');
+
+                        /*scope.tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (item) {
                                 if (item.type === 'field') {
                                     if (userInput.key === item.attribute.key) {
                                         userInput.disabled = true;
+                                        return false;
                                     }
                                 }
                             })
-                        })
+                        })*/
                     });
 
                 };
@@ -509,6 +608,7 @@
                 };
 
                 scope.findSelected = function (fields, val) {
+                    //console.log(fields, val);
 
                     if (fields && val) {
                         if (fields.join(' ') === val.join(' ')) {
@@ -518,13 +618,6 @@
 
                     return false;
                 };
-
-                /*scope.copyFromValue = function (attr) {
-                    if (attr.id) {
-                        return JSON.stringify({id: attr.id});
-                    }
-                    return JSON.stringify({key: attr.key});
-                };*/
 
                 scope.findStringAttributes = function () {
                     var b, a, e;
@@ -633,7 +726,9 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
+
                             scope.item.options.number_format = res.data.settings;
+                            console.log("number format scope.item", scope.item);
                         }
 
                     });
