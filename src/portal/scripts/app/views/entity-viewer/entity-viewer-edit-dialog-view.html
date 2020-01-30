@@ -3,7 +3,11 @@
            aria-label="entity viewer edit dialog"
            style="height: 100%">
     <md-toolbar>
-        <div class="md-toolbar-tools"  data-ng-if="vm.checkReadyStatus()" data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
+        <div data-ng-if="vm.checkReadyStatus()"
+             class="md-toolbar-tools"
+             data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
+            <is-draggable-sign></is-draggable-sign>
+
             <h2 data-ng-if="vm.hasEditPermission">Edit {{vm.entityTypeSlug()}}</h2>
             <h2 data-ng-if="!vm.hasEditPermission">View {{vm.entityTypeSlug()}}</h2>
             <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">

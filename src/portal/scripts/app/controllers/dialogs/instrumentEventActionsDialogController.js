@@ -7,8 +7,6 @@
 
     var logService = require('../../../../../core/services/logService');
 
-
-    var metaService = require('../../services/metaService');
     var transactionTypeService = require('../../services/transactionTypeService');
 
     module.exports = function ($scope, $mdDialog, eventActions) {
@@ -85,29 +83,70 @@
             vm.eventActions.splice(index, 1);
         };
 
-        vm.addRow = function () {
-            vm.eventActions.push({
-                "transaction_type": vm.newItem.transaction_type,
-                "text": vm.newItem.text,
-                "is_sent_to_pending": vm.newItem.is_sent_to_pending,
-                "is_book_automatic": vm.newItem.is_book_automatic,
-                "button_position": vm.newItem.button_position
-            });
+        vm.addRow = function ($event) {
 
-            vm.newItem = {
-                "transaction_type": '',
-                "text": '',
-                "is_sent_to_pending": false,
-                "is_book_automatic": false,
-                "button_position": ''
-            };
+            var buttonPositionWithSamaValue = false;
+            for (var i = 0; i < vm.eventActions.length; i++) {
+                if (vm.eventActions[i].button_position == vm.newItem.button_position) {
+                    buttonPositionWithSamaValue = true;
+                    break;
+                }
+            }
+
+            if (!buttonPositionWithSamaValue || !vm.newItem.button_position) {
+
+                vm.eventActions.push({
+                    "transaction_type": vm.newItem.transaction_type,
+                    "text": vm.newItem.text,
+                    "is_sent_to_pending": vm.newItem.is_sent_to_pending,
+                    "is_book_automatic": vm.newItem.is_book_automatic,
+                    "button_position": vm.newItem.button_position
+                });
+
+                vm.newItem = {
+                    "transaction_type": '',
+                    "text": '',
+                    "is_sent_to_pending": false,
+                    "is_book_automatic": false,
+                    "button_position": ''
+                };
+
+            } else {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    multiple: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: 'Button position should contain unique value.'
+                        }
+                    }
+                })
+
+            }
 
             console.log('eventActions', vm.eventActions);
+        };
+
+        vm.getRangeOfNumbers = function (number) {
+            var buttonPositions = [1];
+
+            for (var i = 2; i <= number; i++) {
+                buttonPositions.push(i);
+            }
+
+            return buttonPositions;
         };
 
         vm.agree = function () {
             //console.log('vm.attr', vm.attribute);
             eventActions = vm.eventActions;
+
             $mdDialog.hide({status: 'agree', eventActions: eventActions});
         };
 

@@ -4,7 +4,7 @@
             <md-card class="ec-attr-card ec-attr-occupied"
                      data-col="{{column}}"
                      data-row="{{row}}"
-                     data-tab-order="{{tab.tabOrder}}">
+                     data-tab-order="{{tabOrder}}">
                 <div layout="row">
                     <div class="ec-extend-btns-holder" layout="row">
                         <button class="md-button md-raised" ng-click="decreaseColspan(item)">
@@ -37,7 +37,7 @@
             <div class="ec-attr-card ec-attr-empty"
                  data-col="{{column}}"
                  data-row="{{row}}"
-                 data-tab-name="{{tab.name}}"
+                 data-tab-order="{{tabOrder}}"
                  data-colspan="{{item.colspan}}">
                 <md-button aria-label="add field" data-ng-click="toggleEditMode()" class="width-100 ec-attr-empty-btn">
                     <ng-md-icon icon="add_circle"></ng-md-icon>
@@ -51,10 +51,11 @@
             <md-input-container class="md-block ec-attr-row" flex-gt-sm>
                 <label>Please select Element</label>
                 <!--{{item.attribute}}-->
-                <md-select ng-model="item.attribute"
-                           md-container-class="common-select-container"
-                           md-on-close="searchTerm = ''"
-                           ng-focus="findAttrsLeft()">
+                <md-select data-ng-model="item.attribute"
+                           data-md-container-class="common-select-container"
+                           data-md-on-close="searchTerm = ''"
+                           data-ng-focus="findAttrsLeft()"
+                           data-ng-change="item.type = 'field'">
                     <md-select-header>
                         <input data-ng-model="searchTerm"
                                type="search"
@@ -118,7 +119,7 @@
             </md-input-container>
 
             <md-input-container class="md-block no-error-spacer ec-attr-row"
-                                data-ng-if="item.attribute.value_type != 'decoration'">
+                                data-ng-if="item.attribute && item.attribute.value_type !== 'decoration'">
                 <label>Custom label</label>
                 <input data-ng-model="item.options.fieldName">
             </md-input-container>
@@ -137,7 +138,7 @@
 
             </div>
 
-            <div ng-if="hasBackgroundColorInput()" class="ec-input-color-container">
+            <div data-ng-if="hasBackgroundColorInput()" class="ec-input-color-container">
                 <div layout="row" layout-align="start center" class="m-b-8">
 
                     <md-input-container class="ec-input-color-checkbox-container">
@@ -160,13 +161,13 @@
             <div layout="row" layout-align="space-between center" class="constructor-card-actions">
                 <md-button aria-label="cancel"
                            data-ng-click="cancel()"
-                           data-ng-class="{'CCA-small-btn': tab.layout.columns > 5}">
+                           data-ng-class="{'CCA-small-btn': colsInTotal > 5}">
                     Cancel
                 </md-button>
                 <md-button class="ec-field-btn"
                            aria-label="save layout"
                            data-ng-click="saveField()"
-                           data-ng-class="{'disabled': !item.attribute, 'CCA-small-btn': tab.layout.columns > 5}">
+                           data-ng-class="{'disabled': !item.attribute, 'CCA-small-btn': colsInTotal > 5}">
                     <span>Ok</span>
                 </md-button>
             </div>
