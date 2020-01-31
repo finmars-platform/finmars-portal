@@ -34,7 +34,7 @@
 
         vm.tabs = [];
         vm.fieldsTree = {};
-        vm.fixedArea = {};
+        vm.fixedArea = null;
 
         vm.entityType = data.entityType;
 
@@ -62,7 +62,18 @@
 
         var setDataConstructorLayout = function () {
 
-            vm.tabs = vm.ui.data || [];
+            if (Array.isArray(vm.ui.data)) {
+
+                vm.tabs = vm.ui.data || [];
+
+            } else {
+
+                vm.tabs = vm.ui.data.tabs || [];
+                vm.fixedArea = vm.ui.data.fixedArea;
+
+            }
+
+
             vm.tabs.forEach(function (tab, index) {
                 tab.tabOrder = index;
 
@@ -71,7 +82,6 @@
                 })
             });
 
-            vm.fixedArea = vm.ui.fixedArea;
             if (!vm.fixedArea) {
 
                 vm.fixedArea = {
@@ -493,13 +503,16 @@
                     removeLastRow(vm.fixedArea);
                 }
 
+                vm.ui.data = {
+                    tabs: [],
+                    fixedArea: {}
+                };
+
                 if (vm.tabs) {
-                    vm.ui.data = JSON.parse(angular.toJson(vm.tabs));
-                } else {
-                    vm.ui.data = [];
+                    vm.ui.data.tabs = JSON.parse(angular.toJson(vm.tabs));
                 }
 
-                vm.ui.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
+                vm.ui.data.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
 
                 if (vm.uiIsDefault) {
                     if (vm.instanceId) {
@@ -773,93 +786,100 @@
 
         };
 
-        var emptySocketsWithoutAttrFromLayout = function () {
+        var emptyTabSocketsWithoutAttrs = function (tab) {
 
             var i, u;
+            tab.layout.fields.forEach(function (field, fieldIndex) {
 
-            vm.tabs.forEach(function (tab) {
+                if (field && field.type === 'field') {
 
-                tab.layout.fields.forEach(function (field, fieldIndex) {
+                    var attrFound = false;
 
-                    if (field && field.type === 'field') {
+                    if (field.attribute_class === 'attr') {
 
-                        var attrFound = false;
+                        for (i = 0; i < vm.attrs.length; i = i + 1) {
 
-                        if (field.attribute_class === 'attr') {
+                            if (field.key) {
 
-                            for (i = 0; i < vm.attrs.length; i = i + 1) {
-
-                                if (field.key) {
-
-                                    if (field.key === vm.attrs[i].user_code) {
-                                        attrFound = true;
-                                        break;
-                                    }
-
-                                } else {
-
-                                    if (field.attribute.user_code) {
-
-                                        if (field.attribute.user_code === vm.attrs[i].user_code) {
-                                            attrFound = true;
-                                            break;
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                            if (!attrFound) {
-
-                                var fieldCol = field.column;
-                                var fieldRow = field.row;
-
-                                tab.layout.fields[fieldIndex] = {
-                                    colspan: 1,
-                                    column: fieldCol,
-                                    editMode: false,
-                                    row: fieldRow,
-                                    type: 'empty'
-                                }
-                            }
-
-                        } else if (field.attribute_class === 'userInput') {
-
-                            for (u = 0; u < vm.userInputs.length; u = u + 1) {
-
-                                if (field.name === vm.userInputs[u].name) {
+                                if (field.key === vm.attrs[i].user_code) {
                                     attrFound = true;
                                     break;
                                 }
 
-                            }
+                            } else {
 
-                            if (!attrFound) {
+                                if (field.attribute.user_code) {
 
-                                var fieldCol = field.column;
-                                var fieldRow = field.row;
+                                    if (field.attribute.user_code === vm.attrs[i].user_code) {
+                                        attrFound = true;
+                                        break;
+                                    }
 
-                                tab.layout.fields[fieldIndex] = {
-                                    colspan: 1,
-                                    column: fieldCol,
-                                    editMode: false,
-                                    row: fieldRow,
-                                    type: 'empty'
                                 }
 
                             }
 
                         }
 
+                        if (!attrFound) {
+
+                            var fieldCol = field.column;
+                            var fieldRow = field.row;
+
+                            tab.layout.fields[fieldIndex] = {
+                                colspan: 1,
+                                column: fieldCol,
+                                editMode: false,
+                                row: fieldRow,
+                                type: 'empty'
+                            }
+                        }
+
+                    } else if (field.attribute_class === 'userInput') {
+
+                        for (u = 0; u < vm.userInputs.length; u = u + 1) {
+
+                            if (field.name === vm.userInputs[u].name) {
+                                attrFound = true;
+                                break;
+                            }
+
+                        }
+
+                        if (!attrFound) {
+
+                            var fieldCol = field.column;
+                            var fieldRow = field.row;
+
+                            tab.layout.fields[fieldIndex] = {
+                                colspan: 1,
+                                column: fieldCol,
+                                editMode: false,
+                                row: fieldRow,
+                                type: 'empty'
+                            }
+
+                        }
+
                     }
 
-                });
+                }
 
             });
 
-            console.log('delete absent vm.tabs', vm.tabs)
+        };
+
+        var emptySocketsWithoutAttrFromLayout = function () {
+
+            vm.tabs.forEach(function (tab) {
+
+                emptyTabSocketsWithoutAttrs(tab);
+
+            });
+
+            if (vm.fixedArea.isActive) {
+                emptyTabSocketsWithoutAttrs(vm.fixedArea);
+            }
 
         };
 
@@ -966,7 +986,7 @@
 
                             });
 
-                            //emptySocketsWithoutAttrFromLayout();
+                            emptySocketsWithoutAttrFromLayout();
 
                             vm.syncItems();
 
@@ -982,7 +1002,7 @@
 
                     } else {
 
-                        //emptySocketsWithoutAttrFromLayout();
+                        emptySocketsWithoutAttrFromLayout();
 
                         vm.syncItems();
 

@@ -2,6 +2,7 @@
            drag-dialog
            aria-label="entity viewer edit dialog"
            style="height: 100%">
+
     <md-toolbar>
         <div data-ng-if="vm.checkReadyStatus()"
              class="md-toolbar-tools"
@@ -23,9 +24,27 @@
 
         <div style="min-width: 1450px">
             <div data-ng-if="vm.checkReadyStatus()">
+                <div data-ng-if="vm.fixedArea.isActive"
+                     class="entity-editor-fixed-area-container"
+                     data-ng-class="{'opacity-05': !vm.entity.is_enabled && vm.hasEnabledStatus, 'no-pointer-events': !vm.entity.is_enabled && vm.hasEnabledStatus}">
+                    <div layout="row"
+                         data-ng-repeat="row in vm.range(vm.fixedArea.layout.rows)"
+                         class="entity-editor-row">
+                        <div data-ng-repeat="field in vm.fixedArea.layout.fields track by $index"
+                             data-ng-if="vm.checkFieldRender(vm.fixedArea, row, field)"
+                             class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                             flex="{{vm.bindFlex(vm.fixedArea, field)}}">
+                            <bind-field-control entity-type="vm.entityType"
+                                                entity="vm.entity"
+                                                item="vm.fixedAreaAttributesLayout[$index]"></bind-field-control>
+                        </div>
+                    </div>
+                </div>
+
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
-                    <md-tab data-ng-repeat="tab in vm.tabs track by tab.id">
+                    <md-tab data-ng-repeat="tab in vm.tabs track by tab.name">
                         <md-tab-label>
                             <span>{{tab.name}}</span>
                         </md-tab-label>
@@ -35,11 +54,11 @@
                                 <div layout="row"
                                      data-ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
-                                    <div class="ev-data-field
-								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
-                                         data-ng-repeat="field in tab.layout.fields track by $index"
-                                         flex="{{vm.bindFlex(tab, row, field)}}"
-                                         data-ng-if="vm.checkFieldRender(tab, row, field)">
+                                    <div data-ng-repeat="field in tab.layout.fields track by $index"
+                                         data-ng-if="vm.checkFieldRender(tab, row, field)"
+                                         class="ev-data-field"
+                                         data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                                         flex="{{vm.bindFlex(tab, field)}}">
                                         <bind-field-control entity-type="vm.entityType"
                                                             entity="vm.entity"
                                                             item="vm.attributesLayout[tab.index][$index]"></bind-field-control>

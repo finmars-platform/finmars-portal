@@ -79,7 +79,7 @@
 
                 function setFieldDefaultSettings() {
 
-                    scope.item = scope.field;
+                    scope.item = JSON.parse(angular.toJson(scope.field));
 
                     if (scope.item.backgroundColor) {
                         scope.fieldUsesBackgroundColor = true;

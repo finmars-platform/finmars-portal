@@ -253,7 +253,13 @@
 
         return [
             {
-                data: [
+                data: {
+                    tabs: [],
+                    fixedArea: {
+                        isActive: false,
+                        layout: []
+                    }
+                }
                     /*{
                         "name": "General",
                         "id": 1,
@@ -263,7 +269,6 @@
                             "columns": 1
                         }
                     }*/
-                ]
             }
         ]
     };
