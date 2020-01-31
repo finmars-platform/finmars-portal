@@ -326,6 +326,24 @@
                 controller: 'ProcessesController as vm'
             })
 
+            .state('app.pricing-policy', {
+                url: '/pricing-policies',
+                templateUrl: 'views/pages/pricing-policy-page-view.html',
+                controller: 'PricingPolicyPageController as vm'
+            })
+
+            .state('app.pricing-schemes', {
+                url: '/pricing-schemes',
+                templateUrl: 'views/pages/pricing-scheme-page-view.html',
+                controller: 'PricingSchemePageController as vm'
+            })
+
+            .state('app.pricing-schedules', {
+                url: '/pricing-schedules',
+                templateUrl: 'views/pages/pricing-schedule-page-view.html',
+                controller: 'PricingSchedulePageController as vm'
+            })
+
             .state('app.import', {
                 url: '/import',
                 abstract: true,

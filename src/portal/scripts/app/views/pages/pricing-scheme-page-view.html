@@ -1,0 +1,132 @@
+<div class="p-24">
+
+    <div data-ng-if="vm.readyStatus.instrumentPricingSchemes && vm.readyStatus.currencyPricingSchemes">
+
+        <div>
+
+            <h4>Instruments Pricing Schemes</h4>
+
+            <div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Type
+                            </th>
+                            <th>
+                                Notes
+                            </th>
+                            <th>
+                                Clarification for Users:
+                            </th>
+                            <th>
+                                Error Handler
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="item in vm.instrumentPricingSchemes">
+                            <td>
+                                {{item.name}}
+                            </td>
+                            <td>
+                                {{item.type_object.name}}
+                            </td>
+                            <td>
+                                {{item.notes}}
+                            </td>
+                            <td>
+                                {{item.notes_for_user}}
+                            </td>
+                            <td>
+                                {{vm.getErrorHandler(item)}}
+                            </td>
+                            <td>
+                                <md-button class="md-raised" data-ng-click="vm.editInstrumentPricingScheme($event, item)">Edit</md-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="m-t-16">
+                <md-button class="md-raised" data-ng-click="vm.addInstrumentPricingScheme($event)">Add New
+                </md-button>
+            </div>
+
+        </div>
+
+        <div class="m-t-16">
+
+            <h4>Currencies Pricing Schemes</h4>
+
+            <div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Notes
+                        </th>
+                        <th>
+                            Clarification for Users:
+                        </th>
+                        <th>
+                            Error Handler
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-ng-repeat="item in vm.currencyPricingSchemes">
+                        <td>
+                            {{item.name}}
+                        </td>
+                        <td>
+                            {{item.type_object.name}}
+                        </td>
+                        <td>
+                            {{item.notes}}
+                        </td>
+                        <td>
+                            {{item.notes_for_user}}
+                        </td>
+                        <td>
+                            {{vm.getErrorHandler(item)}}
+                        </td>
+                        <td>
+                            <md-button class="md-raised" data-ng-click="vm.editCurrencyPricingScheme($event, item)">Edit</md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="m-t-16">
+                <md-button class="md-raised" data-ng-click="vm.addCurrencyPricingScheme($event)">Add New</md-button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.instrumentPricingSchemes || !vm.readyStatus.currencyPricingSchemes">
+        <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+</div>
