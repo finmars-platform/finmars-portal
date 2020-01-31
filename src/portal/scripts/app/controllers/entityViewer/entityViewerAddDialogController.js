@@ -33,6 +33,7 @@
         vm.entityType = entityType;
 
         vm.entity = {$_isValid: true};
+        var dataConstructorLayout = {};
 
         if (Object.keys(entity).length) { // make copy option
             vm.entity = entity;
@@ -48,6 +49,7 @@
         vm.range = gridHelperService.range;
 
         vm.attributesLayout = [];
+        vm.fixedAreaAttributesLayout = [];
 
         vm.isInheritRights = false;
 
@@ -56,86 +58,146 @@
 
         vm.canManagePermissions = false;
 
-        vm.generateAttributesFromLayoutFields = function () {
+        var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
-            vm.attributesLayout = [];
-
-            var tabResult;
-            var fieldResult;
             var i, l, e;
 
-            vm.tabs.forEach(function (tab) {
+            tab.layout.fields.forEach(function (field, fieldIndex) {
 
-                tabResult = [];
+                var fieldResult = {};
 
-                tab.layout.fields.forEach(function (field) {
+                if (field && field.type === 'field') {
 
-                    fieldResult = {};
+                    if (field.attribute_class === 'attr') {
 
-                    if (field && field.type === 'field') {
+                        var dAttrFound = false;
 
-                        if (field.attribute_class === 'attr') {
+                        for (i = 0; i < vm.attrs.length; i = i + 1) {
 
-                            for (i = 0; i < vm.attrs.length; i = i + 1) {
+                            if (field.key) {
 
-                                if (field.key) {
+                                if (field.key === vm.attrs[i].user_code) {
 
-                                    if (field.key === vm.attrs[i].user_code) {
+                                    vm.attrs[i].options = field.options;
+                                    fieldResult = vm.attrs[i];
+                                    dAttrFound = true;
+                                    break;
+
+                                }
+
+                            } else {
+
+                                if (field.attribute.user_code) {
+
+                                    if (field.attribute.user_code === vm.attrs[i].user_code) {
+
                                         vm.attrs[i].options = field.options;
                                         fieldResult = vm.attrs[i];
-                                    }
-
-                                } else {
-
-                                    if (field.attribute.user_code) {
-
-                                        if (field.attribute.user_code === vm.attrs[i].user_code) {
-                                            vm.attrs[i].options = field.options;
-                                            fieldResult = vm.attrs[i];
-                                        }
+                                        dAttrFound = true;
+                                        break;
 
                                     }
 
                                 }
 
-
-                            }
-
-                        } else {
-
-                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                                if (field.name === vm.entityAttrs[e].name) {
-                                    vm.entityAttrs[e].options = field.options;
-                                    fieldResult = vm.entityAttrs[e];
-                                }
-                            }
-
-                            for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                                if (field.name === vm.layoutAttrs[l].name) {
-                                    vm.layoutAttrs[l].options = field.options;
-                                    fieldResult = vm.layoutAttrs[l];
-                                }
                             }
 
                         }
 
-                        if (field.backgroundColor) {
-                            fieldResult.backgroundColor = field.backgroundColor;
+                        if (!dAttrFound) {
+                            var fieldPath = {
+                                tabIndex: tabIndex,
+                                fieldIndex: fieldIndex
+                            };
+
+                            fieldsToEmptyList.push(fieldPath);
+                        }
+
+                    } else {
+
+                        for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                            if (field.name === vm.entityAttrs[e].name) {
+                                vm.entityAttrs[e].options = field.options;
+                                fieldResult = vm.entityAttrs[e];
+                            }
+                        }
+
+                        for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                            if (field.name === vm.layoutAttrs[l].name) {
+                                vm.layoutAttrs[l].options = field.options;
+                                fieldResult = vm.layoutAttrs[l];
+                            }
                         }
 
                     }
 
-                    tabResult.push(fieldResult)
+                    if (field.backgroundColor) {
+                        fieldResult.backgroundColor = field.backgroundColor;
+                    }
+
+                }
+
+                tabResult.push(fieldResult)
 
 
-                });
+            });
+
+        };
+
+        vm.generateAttributesFromLayoutFields = function () {
+
+            vm.attributesLayout = [];
+            var fieldsToEmptyList = [];
+
+            var tabResult;
+
+            vm.tabs.forEach(function (tab, tabIndex) {
+
+                tabResult = [];
+
+                getMatchForLayoutFields(tab, tabIndex, fieldsToEmptyList, tabResult);
 
                 vm.attributesLayout.push(tabResult);
 
             });
 
-            console.log('vm.attributesLayout', vm.attributesLayout);
+            if (vm.fixedArea && vm.fixedArea.isActive) {
 
+                vm.fixedAreaAttributesLayout = [];
+
+                getMatchForLayoutFields(vm.fixedArea, 'fixedArea', fieldsToEmptyList, vm.fixedAreaAttributesLayout);
+
+            }
+
+
+            // Empty sockets that have no attribute that matches them
+            fieldsToEmptyList.forEach(function (fieldPath) {
+
+                if (fieldPath.tabIndex === 'fixedArea') {
+
+                    var dcLayoutFields = vm.fixedArea.layout.fields;
+
+                } else {
+                    var dcLayoutFields = vm.tabs[fieldPath.tabIndex].layout.fields;
+                }
+
+                var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
+                var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
+
+                dcLayoutFields[fieldPath.fieldIndex] = {
+                    colspan: 1,
+                    column: fieldToEmptyColumn,
+                    editMode: false,
+                    row: fieldToEmptyRow,
+                    type: 'empty'
+                };
+
+            });
+
+            // Method to update edit layout
+            /*uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);*/
+
+            // < Empty sockets that have no attribute that matches them >
         };
 
         vm.loadPermissions = function () {
@@ -295,13 +357,13 @@
 
                 if (vm.entityType === 'instrument') {
 
-                    console.log('vm.entity', vm.entity)
+                    console.log('vm.entity', vm.entity);
 
                     entityResolverService.getByKey('instrument-type', vm.entity.instrument_type).then(function (data) {
 
                         vm.entity.object_permissions = data.object_permissions.map(function (item) {
 
-                            var result = Object.assign({}, item)
+                            var result = Object.assign({}, item);
 
                             result.permission = item.permission.split('_')[0] + '_instrument';
 
@@ -449,9 +511,19 @@
             uiService.getEditLayout(vm.entityType).then(function (data) {
 
                 if (data.results.length && data.results.length > 0 && data.results[0].data) {
-                    vm.tabs = data.results[0].data;
+
+                    dataConstructorLayout = data.results[0];
+
+                    if (Array.isArray(data.results[0].data)) {
+                        vm.tabs = data.results[0].data;
+                    } else {
+                        vm.tabs = data.results[0].data.tabs;
+                        vm.fixedArea = data.results[0].data.fixedArea;
+                    }
+
                 } else {
-                    vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
+                    vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
+                    vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
                 }
 
                 vm.tabs = vm.tabs.map(function (item, index) {
@@ -489,14 +561,14 @@
             return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions
         };
 
-        vm.bindFlex = function (tab, row, field) {
-            var totalColspans = 0;
+        vm.bindFlex = function (tab, field) {
+            /*var totalColspans = 0;
             var i;
             for (i = 0; i < tab.layout.fields.length; i = i + 1) {
                 if (tab.layout.fields[i].row === row) {
                     totalColspans = totalColspans + tab.layout.fields[i].colspan;
                 }
-            }
+            }*/
             var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
 

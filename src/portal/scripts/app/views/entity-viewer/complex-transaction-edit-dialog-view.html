@@ -5,14 +5,15 @@
     <md-toolbar>
         <div class="md-toolbar-tools" data-ng-if="vm.checkReadyStatus()"
              data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
+            <is-draggable-sign></is-draggable-sign>
+
             <div layout="row">
 
                 <h2 data-ng-if="vm.hasEditPermission">Rebook Transaction</h2>
                 <h2 data-ng-if="!vm.hasEditPermission">View Transaction</h2>
                 <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">
                     <ng-md-icon icon="lock" size="24">
-                            <md-tooltip
-                                    md-direction="bottom">You don't have permission to rebook this Transaction</md-tooltip>
+                            <md-tooltip md-direction="bottom">You don't have permission to rebook this Transaction</md-tooltip>
                     </ng-md-icon>
                 </span>
                 <span flex></span>
@@ -42,6 +43,26 @@
                         data-ng-if="vm.entity.status == 2">Pending</b>
                 </div>
 
+                <div data-ng-if="vm.fixedArea.isActive"
+                     class="entity-editor-fixed-area-container"
+                     ng-class="{'opacity-05': vm.entity.is_locked, 'no-pointer-events': vm.entity.is_locked}">
+                    <div layout="row"
+                         ng-repeat="row in vm.range(vm.fixedArea.layout.rows)"
+                         class="entity-editor-row">
+                        <div data-ng-repeat="field in vm.fixedArea.layout.fields track by $index"
+                             data-ng-if="vm.checkFieldRender(vm.fixedArea, row, field)"
+                             class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                             flex="{{vm.bindFlex(vm.fixedArea, field)}}">
+                            <bind-field-control
+                                    entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    entity-change="vm.entityChange()"
+                                    item="vm.fixedAreaAttributesLayout[$index]"></bind-field-control>
+                        </div>
+                    </div>
+                </div>
+
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
                     <md-tab data-ng-repeat="tab in vm.tabs">
                         <md-tab-label>
@@ -55,7 +76,7 @@
                                      class="entity-editor-row">
                                     <div data-ng-repeat="field in tab.layout.fields track by $index"
                                          class="ev-data-field {{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
-                                         flex="{{vm.bindFlex(tab, row, field)}}"
+                                         flex="{{vm.bindFlex(tab, field)}}"
                                          data-ng-if="vm.checkFieldRender(tab, row, field)">
                                         <bind-field-control
                                                 entity-type="vm.entityType"

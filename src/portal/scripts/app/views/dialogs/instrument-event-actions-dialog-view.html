@@ -103,7 +103,7 @@
                             </td>
                             <td data-ng-if="!item.editStatus">
                                 <div data-ng-bind="item.button_position"
-                                      class="e-actions-button-position-cw e-actions-text-cell"></div>
+                                     class="e-actions-button-position-cw e-actions-text-cell text-center"></div>
                             </td>
                             <td data-ng-if="!item.editStatus" class="table-misc-cell">
                                 <md-menu>
@@ -193,13 +193,18 @@
                                     </md-checkbox>
                                 </md-input-container>
                             </td>
+
                             <td data-ng-if="item.editStatus">
                                 <md-input-container class="no-error-spacer e-actions-button-position-cw e-actions-row-bottom-margin">
-                                    <!--<label for="">Periodicity</label>-->
-                                    <input type="text"
-                                           data-ng-model="item.button_position">
+                                    <md-select class="text-center"
+                                               data-ng-model="item.button_position"
+                                               aria-label="select instrument event action button position">
+                                        <md-option data-ng-repeat="buttonPosition in vm.getRangeOfNumbers(vm.eventActions.length)"
+                                                   data-ng-value="buttonPosition">{{buttonPosition}}</md-option>
+                                    </md-select>
                                 </md-input-container>
                             </td>
+
                             <td data-ng-if="item.editStatus" class="ES-row-btn">
                                 <md-button data-ng-click="vm.saveItem(item)">
                                     Ok
@@ -266,12 +271,16 @@
                             </td>
                             <td>
                                 <md-input-container class="no-error-spacer e-actions-button-position-cw e-actions-row-bottom-margin">
-                                    <!--<label for="">Periodicity</label>-->
-                                    <input type="text" data-ng-model="vm.newItem.button_position">
+                                    <md-select class="text-center"
+                                               data-ng-model="vm.newItem.button_position"
+                                               aria-label="select instrument event action button position">
+                                        <md-option data-ng-repeat="buttonPosition in vm.getRangeOfNumbers(vm.eventActions.length + 1)"
+                                                   data-ng-value="buttonPosition">{{buttonPosition}}</md-option>
+                                    </md-select>
                                 </md-input-container>
                             </td>
                             <td>
-                                <md-button data-ng-click="vm.addRow()" class="ES-row-btn">
+                                <md-button data-ng-click="vm.addRow($event)" class="ES-row-btn">
                                     Add
                                 </md-button>
                             </td>

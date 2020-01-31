@@ -14,7 +14,10 @@
     var metaService = require('../../services/metaService');
 
     var gridHelperService = require('../../services/gridHelperService');
+    var ScrollHelper = require('../../helpers/scrollHelper');
     var layoutService = require('../../services/layoutService');
+
+    var scrollHelper = new ScrollHelper();
 
     module.exports = function ($scope, data, $stateParams, $state, $mdDialog) {
 
@@ -31,6 +34,7 @@
 
         vm.tabs = [];
         vm.fieldsTree = {};
+        vm.fixedArea = null;
 
         vm.entityType = data.entityType;
 
@@ -56,6 +60,44 @@
         // but it can be taken from different entity
         // e.g. transaction -> transaction-type.book_transaction_layout
 
+        var setDataConstructorLayout = function () {
+
+            if (Array.isArray(vm.ui.data)) {
+
+                vm.tabs = vm.ui.data || [];
+
+            } else {
+
+                vm.tabs = vm.ui.data.tabs || [];
+                vm.fixedArea = vm.ui.data.fixedArea;
+
+            }
+
+
+            vm.tabs.forEach(function (tab, index) {
+                tab.tabOrder = index;
+
+                tab.layout.fields.forEach(function (field) {
+                    field.editMode = false;
+                })
+            });
+
+            if (!vm.fixedArea) {
+
+                vm.fixedArea = {
+                    isActive: false,
+                    layout: {
+                        rows: 0,
+                        columns: 1,
+                        fields: []
+                    }
+                };
+            }
+
+            addRowsForTabs();
+
+        };
+
         vm.getLayout = function () {
 
             return new Promise(function (resolve) {
@@ -71,18 +113,9 @@
                             vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
                         }
 
-                        vm.tabs = vm.ui.data || [];
-                        vm.tabs.forEach(function (tab, index) {
-                            tab.tabOrder = index;
+                        setDataConstructorLayout();
 
-                            tab.layout.fields.forEach(function (field) {
-                                field.editMode = false;
-                            })
-                        });
-
-                        addRowForTab();
-
-                        resolve(vm.tabs);
+                        resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
 
                     });
 
@@ -97,18 +130,9 @@
                             vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
                         }
 
-                        vm.tabs = vm.ui.data || [];
-                        vm.tabs.forEach(function (tab, index) {
-                            tab.tabOrder = index;
+                        setDataConstructorLayout();
 
-                            tab.layout.fields.forEach(function (field) {
-                                field.editMode = false;
-                            })
-                        });
-
-                        addRowForTab();
-
-                        resolve(vm.tabs);
+                        resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
 
                     });
 
@@ -116,6 +140,29 @@
 
             });
 
+        };
+
+        vm.toggleFixedArea = function () {
+            vm.fixedArea.isActive = !vm.fixedArea.isActive;
+
+            if (vm.fixedArea.isActive) {
+                addRows(vm.fixedArea);
+
+                vm.createFixedAreaFieldsTree();
+                vm.updateDrakeContainers();
+
+            } else {
+
+                vm.fixedArea.layout = {
+                    rows: 0,
+                    columns: 1,
+                    fields: []
+                };
+
+                vm.updateDrakeContainers();
+                vm.syncItems();
+
+            }
         };
 
         vm.openTabsEditor = function ($event) {
@@ -126,6 +173,7 @@
                 controller: 'TabsEditorDialogController as vm',
                 templateUrl: 'views/dialogs/tabs-editor-dialog-view.html',
                 multiple: true,
+                targetEvent: $event,
                 locals: {
                     tabs: tabs,
                     data: {
@@ -158,13 +206,20 @@
 
         vm.checkColspan = function (tab, row, column) {
 
-            var fieldsTree = vm.fieldsTree[tab.tabOrder];
-            var fieldRow = fieldsTree[row];
+            if (tab === 'fixedArea') {
+
+                var fieldRow = vm.fixedAreaFieldsTree[row];
+
+            } else {
+                var fieldTab = vm.fieldsTree[tab.tabOrder];
+                var fieldRow = fieldTab[row];
+            }
+
             var colspanSizeToHide = 2;
 
             for (var i = column - 1; i > 0; i--) { // check if previous columns have enough colspan to cover current one
 
-                if (fieldRow[i] && parseInt(fieldRow[i].colspan) >= parseInt(colspanSizeToHide)) {
+                if (fieldRow[i] && parseInt(fieldRow[i].colspan) >= colspanSizeToHide) {
                     return false;
                 }
 
@@ -177,10 +232,14 @@
 
         vm.range = gridHelperService.range;
 
-        function addRowForTab() {
+        function addRowsForTabs() {
             var i;
             for (i = 0; i < vm.tabs.length; i = i + 1) {
                 addRows(vm.tabs[i]);
+            }
+
+            if (vm.fixedArea.isActive) {
+                addRows(vm.fixedArea);
             }
         }
 
@@ -259,7 +318,9 @@
                     skipHide: true,
                     multiple: true
                 }).then(function (res) {
+
                     if (res.status === 'agree') {
+
                         var i, r, c;
                         for (i = 0; i < tab.layout.fields.length; i = i + 1) {
                             for (r = 0; r < tab.layout.rows; r = r + 1) {
@@ -272,7 +333,17 @@
                         }
 
                         tab.layout.columns = columns;
+
+                        if (tab.isActive) { // is fixed area
+                            vm.createFixedAreaFieldsTree();
+                        } else {
+                            vm.createFieldsTree();
+                        }
+
+                        vm.syncItems();
+                        vm.updateDrakeContainers();
                     }
+
                 });
 
             } else {
@@ -291,11 +362,16 @@
                 }
 
                 tab.layout.columns = columns;
+
+                if (tab.isActive) { // is fixed area
+                    vm.createFixedAreaFieldsTree();
+                } else {
+                    vm.createFieldsTree();
+                }
+
+                vm.updateDrakeContainers();
+
             }
-
-            vm.createFieldsTree();
-
-            vm.updateDrakeContainers();
 
         };
 
@@ -327,24 +403,49 @@
                 tab.layout.fields.push(field);
             }
 
-            vm.createFieldsTree();
+            if (tab.isActive) {
+                vm.createFixedAreaFieldsTree();
+            } else {
+                vm.createFieldsTree();
+            }
+
             vm.updateDrakeContainers();
 
         };
 
-        vm.isRowEmpty = function (tabOrder, rowNumber, columnsNumber) {
-
+        vm.isFARowEmtpty = function (rowNumber) {
             var isEmpty = true;
-            for (var i = 1; i <= columnsNumber; i++) {
-                var socket = vm.fieldsTree[tabOrder][rowNumber][i];
+
+            for (var i = 1; i <= vm.fixedArea.layout.columns; i++) {
+                var socket = vm.fixedAreaFieldsTree[rowNumber][i];
 
                 if (socket && socket.type !== 'empty') {
                     isEmpty = false;
                     break;
-                } /*else if (!socket) {
+                }
+
+            }
+
+            return isEmpty;
+        };
+
+        vm.isRowEmpty = function (tabOrder, rowNumber, colsTotalNumber) {
+
+            var isEmpty = true;
+
+            if (tabOrder === 'fixedArea') {
+                var tabLayout = vm.fixedAreaFieldsTree[rowNumber];
+            } else {
+                var tabLayout = vm.fieldsTree[tabOrder][rowNumber];
+            }
+
+            for (var i = 1; i <= colsTotalNumber; i++) {
+                var socket = tabLayout[i];
+
+                if (socket && socket.type !== 'empty') {
                     isEmpty = false;
                     break;
-                }*/
+                }
 
             }
 
@@ -372,7 +473,12 @@
 
             tab.layout.rows = tab.layout.rows - 1;
 
-            vm.createFieldsTree();
+            if (tab.isActive) {
+                vm.createFixedAreaFieldsTree();
+            } else {
+                vm.createFieldsTree();
+            }
+
             vm.updateDrakeContainers();
 
         };
@@ -393,11 +499,20 @@
                     removeLastRow(vm.tabs[i]);
                 }
 
-                if (vm.tabs) {
-                    vm.ui.data = JSON.parse(angular.toJson(vm.tabs));
-                } else {
-                    vm.ui.data = [];
+                if (vm.fixedArea.isActive) {
+                    removeLastRow(vm.fixedArea);
                 }
+
+                vm.ui.data = {
+                    tabs: [],
+                    fixedArea: {}
+                };
+
+                if (vm.tabs) {
+                    vm.ui.data.tabs = JSON.parse(angular.toJson(vm.tabs));
+                }
+
+                vm.ui.data.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
 
                 if (vm.uiIsDefault) {
                     if (vm.instanceId) {
@@ -462,23 +577,30 @@
             var i;
             var field;
 
-            /*for (i = 0; i < tab.layout.fields.length; i = i + 1) {
-                if (tab.layout.fields[i].row === row) {
-                    if (tab.layout.fields[i].column === column) {
-                        field = tab.layout.fields[i];
-                    }
+            if (tab === 'fixedArea') {
 
-                    totalColspans = totalColspans + parseInt(tab.layout.fields[i].colspan, 10);
+                for (i = 0; i < vm.fixedAreaFieldsTree[row].length; i++) {
+                    var colFromRow = vm.fixedAreaFieldsTree[row][i];
+                    totalColspans = totalColspans + parseInt(colFromRow.colspan, 10);
                 }
-            }*/
-            for (i = 0; i < vm.fieldsTree[tab.tabOrder][row].length; i++) {
-                var colFromRow = vm.fieldsTree[tab.tabOrder][row][i];
-                totalColspans = totalColspans + parseInt(colFromRow.colspan, 10);
+
+                field = vm.fixedAreaFieldsTree[row][column];
+
+                var flexUnit = 100 / vm.fixedArea.layout.columns;
+
+            } else {
+
+                for (i = 0; i < vm.fieldsTree[tab.tabOrder][row].length; i++) {
+                    var colFromRow = vm.fieldsTree[tab.tabOrder][row][i];
+                    totalColspans = totalColspans + parseInt(colFromRow.colspan, 10);
+                }
+
+                field = vm.fieldsTree[tab.tabOrder][row][column];
+
+                var flexUnit = 100 / tab.layout.columns;
+
             }
 
-            field = vm.fieldsTree[tab.tabOrder][row][column];
-
-            var flexUnit = 100 / tab.layout.columns;
 
             if (field) {
                 return Math.floor(field.colspan * flexUnit);
@@ -497,7 +619,7 @@
             }
 
             vm.createFieldsTree();
-            vm.syncItems()
+            vm.syncItems();
         };
 
         vm.addTab = function () {
@@ -664,148 +786,235 @@
 
         };
 
-        vm.getItems = function () {
+        var emptyTabSocketsWithoutAttrs = function (tab) {
 
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            var i, u;
+            tab.layout.fields.forEach(function (field, fieldIndex) {
 
-                vm.attrs = data.results;
-                var entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                if (field && field.type === 'field') {
 
-                /*if (vm.entityType === 'transaction-type') {
+                    var attrFound = false;
 
-                    var doNotShowAttrs = ['code', 'date', 'status', 'text'];
-                    vm.entityAttrs = entityAttrs.filter(function (entity) {
-                        return doNotShowAttrs.indexOf(entity.key) === -1;
-                    });
+                    if (field.attribute_class === 'attr') {
 
-                } else {
-                    vm.entityAttrs = entityAttrs;
-                }*/
+                        for (i = 0; i < vm.attrs.length; i = i + 1) {
 
-                switch (vm.entityType) {
+                            if (field.key) {
 
-                    case 'complex-transaction':
-                    case 'transaction-type':
-
-                        var doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
-                            'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
-                            'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
-                            'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
-                            'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
-                            'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6','user_number_7',
-                            'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
-                            'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
-                            'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
-
-                        vm.entityAttrs = entityAttrs.filter(function (entity) {
-                            return doNotShowAttrs.indexOf(entity.key) === -1;
-                        });
-
-                        break;
-
-                    case 'instrument':
-
-                        var doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
-                            'accrued_multiplier', 'default_accrued',
-                            'pricing_currency', 'price_multiplier',
-                            'default_price', 'daily_pricing_model',
-                            'price_download_scheme', 'reference_for_pricing'];
-
-                        vm.entityAttrs = entityAttrs.filter(function (entity) {
-                            return doNotShowAttrs.indexOf(entity.key) === -1;
-                        });
-
-                        break;
-
-                    default:
-                        vm.entityAttrs = entityAttrs;
-
-                }
-
-                vm.layoutAttrs = layoutService.getLayoutAttrs();
-
-                if (vm.instanceId && vm.entityType === 'complex-transaction') {
-
-                    entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
-
-                        var inputs = data.inputs;
-
-                        inputs.forEach(function (input) {
-
-                            var input_value_type = input.value_type;
-                            if (input.value_type === 100) {
-                                input_value_type = 'field'
-                            }
-
-                            var contentType;
-
-                            if (input.content_type && input.content_type !== undefined) {
-
-                                contentType = input.content_type.split('.')[1];
-
-                                if (contentType === 'eventclass') {
-                                    contentType = 'event_class';
-                                }
-
-                                if (contentType === 'notificationclass') {
-                                    contentType = 'notification_class';
-                                }
-
-                                if (contentType === 'accrualcalculationmodel') {
-                                    contentType = 'accrual_calculation_model';
-                                }
-
-                                if (contentType === 'pricingpolicy') {
-                                    contentType = 'pricing_policy';
+                                if (field.key === vm.attrs[i].user_code) {
+                                    attrFound = true;
+                                    break;
                                 }
 
                             } else {
 
-                                contentType = input.name.split(' ').join('_').toLowerCase();
+                                if (field.attribute.user_code) {
+
+                                    if (field.attribute.user_code === vm.attrs[i].user_code) {
+                                        attrFound = true;
+                                        break;
+                                    }
+
+                                }
 
                             }
 
-                            vm.userInputs.push({
-                                key: contentType,
-                                name: input.name,
-                                reference_table: input.reference_table,
-                                verbose_name: input.verbose_name,
-                                content_type: input.content_type,
-                                value_type: input_value_type
+                        }
+
+                        if (!attrFound) {
+
+                            var fieldCol = field.column;
+                            var fieldRow = field.row;
+
+                            tab.layout.fields[fieldIndex] = {
+                                colspan: 1,
+                                column: fieldCol,
+                                editMode: false,
+                                row: fieldRow,
+                                type: 'empty'
+                            }
+                        }
+
+                    } else if (field.attribute_class === 'userInput') {
+
+                        for (u = 0; u < vm.userInputs.length; u = u + 1) {
+
+                            if (field.name === vm.userInputs[u].name) {
+                                attrFound = true;
+                                break;
+                            }
+
+                        }
+
+                        if (!attrFound) {
+
+                            var fieldCol = field.column;
+                            var fieldRow = field.row;
+
+                            tab.layout.fields[fieldIndex] = {
+                                colspan: 1,
+                                column: fieldCol,
+                                editMode: false,
+                                row: fieldRow,
+                                type: 'empty'
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+        };
+
+        var emptySocketsWithoutAttrFromLayout = function () {
+
+            vm.tabs.forEach(function (tab) {
+
+                emptyTabSocketsWithoutAttrs(tab);
+
+            });
+
+            if (vm.fixedArea.isActive) {
+                emptyTabSocketsWithoutAttrs(vm.fixedArea);
+            }
+
+        };
+
+        vm.getItems = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                attributeTypeService.getList(vm.entityType).then(function (data) {
+
+                    vm.attrs = data.results;
+                    var entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+                    switch (vm.entityType) {
+
+                        case 'complex-transaction':
+                        case 'transaction-type':
+
+                            var doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
+                                'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
+                                'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
+                                'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
+                                'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
+                                'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6','user_number_7',
+                                'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
+                                'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
+                                'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
+
+                            vm.entityAttrs = entityAttrs.filter(function (entity) {
+                                return doNotShowAttrs.indexOf(entity.key) === -1;
                             });
 
+                            break;
+
+                        case 'instrument':
+
+                            var doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
+                                'accrued_multiplier', 'default_accrued',
+                                'pricing_currency', 'price_multiplier',
+                                'default_price', 'daily_pricing_model',
+                                'price_download_scheme', 'reference_for_pricing'];
+
+                            vm.entityAttrs = entityAttrs.filter(function (entity) {
+                                return doNotShowAttrs.indexOf(entity.key) === -1;
+                            });
+
+                            break;
+
+                        default:
+                            vm.entityAttrs = entityAttrs;
+
+                    }
+
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+
+                    if (vm.instanceId && vm.entityType === 'complex-transaction') {
+
+                        entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
+
+                            var inputs = data.inputs;
+
+                            inputs.forEach(function (input) {
+
+                                var input_value_type = input.value_type;
+                                if (input.value_type === 100) {
+                                    input_value_type = 'field'
+                                }
+
+                                var contentType;
+
+                                if (input.content_type && input.content_type !== undefined) {
+
+                                    contentType = input.content_type.split('.')[1];
+
+                                    if (contentType === 'eventclass') {
+                                        contentType = 'event_class';
+                                    }
+
+                                    if (contentType === 'notificationclass') {
+                                        contentType = 'notification_class';
+                                    }
+
+                                    if (contentType === 'accrualcalculationmodel') {
+                                        contentType = 'accrual_calculation_model';
+                                    }
+
+                                    if (contentType === 'pricingpolicy') {
+                                        contentType = 'pricing_policy';
+                                    }
+
+                                } else {
+
+                                    contentType = input.name.split(' ').join('_').toLowerCase();
+
+                                }
+
+                                vm.userInputs.push({
+                                    key: contentType,
+                                    name: input.name,
+                                    reference_table: input.reference_table,
+                                    verbose_name: input.verbose_name,
+                                    content_type: input.content_type,
+                                    value_type: input_value_type
+                                });
+
+                            });
+
+                            emptySocketsWithoutAttrFromLayout();
+
+                            vm.syncItems();
+
+                            vm.readyStatus.constructor = true;
+
+                            resolve();
+
+                        }).catch(function () {
+
+                            reject('error on getting complex transaction');
+
                         });
+
+                    } else {
+
+                        emptySocketsWithoutAttrFromLayout();
 
                         vm.syncItems();
 
                         vm.readyStatus.constructor = true;
 
-                        $scope.$apply(function () {
+                        resolve();
 
-                            setTimeout(function () {
-                                vm.dragAndDrop.init();
-                            }, 500)
+                    }
 
-                        });
-
-
-                    });
-
-                } else {
-
-                    vm.syncItems();
-
-                    vm.readyStatus.constructor = true;
-
-                    $scope.$apply(function () {
-
-                        setTimeout(function () {
-                            vm.dragAndDrop.init();
-                        }, 500)
-
-                    });
-
-                }
+                }).catch(function () {
+                    reject('error on getting dynamic attributes');
+                });
 
             });
 
@@ -814,7 +1023,6 @@
         vm.createFieldsTree = function () {
 
             var tabs = JSON.parse(JSON.stringify(vm.tabs));
-
             vm.fieldsTree = {};
 
             tabs.forEach(function (tab) {
@@ -833,15 +1041,33 @@
                         treeTab[fRow] = {};
                     }
 
-                    if (!treeTab[fRow][fCol]) {
-                        treeTab[fRow][fCol] = {};
-                    }
-
                     treeTab[fRow][fCol] = field;
 
                 }
 
             });
+
+        };
+
+        vm.createFixedAreaFieldsTree = function () {
+
+            var fixedAreaFields = JSON.parse(JSON.stringify(vm.fixedArea.layout.fields));
+            vm.fixedAreaFieldsTree = {};
+
+            var i;
+            for (i = 0; i < fixedAreaFields.length; i++) {
+
+                var field = fixedAreaFields[i];
+                var fRow = field.row;
+                var fCol = field.column;
+
+                if (!vm.fixedAreaFieldsTree[fRow]) {
+                    vm.fixedAreaFieldsTree[fRow] = {};
+                }
+
+                vm.fixedAreaFieldsTree[fRow][fCol] = field;
+
+            }
 
         };
 
@@ -862,6 +1088,112 @@
             console.log('emptyFieldsElem', emptyFieldsElem);
 
             return items;
+
+        };
+
+        var onDropFromSocket = function (elem, targetTab, targetRow, targetColumn, targetColspan) {
+
+            var draggedFromTabOrder = elem.dataset.tabOrder;
+            var draggedFromRow = parseInt(elem.dataset.row, 10);
+            var draggedFromColumn = parseInt(elem.dataset.col, 10);
+
+            if (draggedFromTabOrder === 'fixedArea') {
+                var draggedFromTab = vm.fixedArea;
+            } else {
+                var draggedFromTab = vm.tabs[draggedFromTabOrder];
+            }
+
+            var a;
+            for (a = 0; a < targetTab.layout.fields.length; a++) {
+                var field = targetTab.layout.fields[a];
+
+                if (field.column === targetColumn && field.row === targetRow) {
+
+                    if (draggedFromTabOrder === 'fixedArea') {
+                        var draggedFromTab = vm.fixedArea;
+                        var draggedFromFieldData = JSON.parse(JSON.stringify(vm.fixedAreaFieldsTree[draggedFromRow][draggedFromColumn]));
+                    } else {
+                        var draggedFromTab = vm.tabs[draggedFromTabOrder];
+                        var draggedFromFieldData = JSON.parse(JSON.stringify(vm.fieldsTree[draggedFromTabOrder][draggedFromRow][draggedFromColumn]));
+                    }
+
+                    targetTab.layout.fields[a] = draggedFromFieldData;
+                    targetTab.layout.fields[a].colspan = targetColspan;
+                    targetTab.layout.fields[a].column = targetColumn;
+                    targetTab.layout.fields[a].row = targetRow;
+
+                    break;
+                }
+            }
+
+            // make socket we dragged from empty
+            var i;
+            for (i = 0; i < draggedFromTab.layout.fields.length; i++) {
+                var field = draggedFromTab.layout.fields[i];
+
+                if (field.column === draggedFromColumn && field.row === draggedFromRow) {
+
+                    var emptyFieldData = {
+                        colspan: 1,
+                        column: draggedFromColumn,
+                        editMode: false,
+                        row: draggedFromRow,
+                        type: "empty"
+                    };
+
+                    draggedFromTab.layout.fields[i] = emptyFieldData;
+
+                    break;
+                }
+            }
+            // < make socket we dragged from empty >
+
+        };
+
+        var onDropFromAttributesList = function (elem, targetTab, targetRow, targetColumn) {
+
+            var a;
+            for (a = 0; a < targetTab.layout.fields.length; a++) {
+                var field = targetTab.layout.fields[a];
+
+                if (field.column === targetColumn && field.row === targetRow) { // dragging from attributes list
+
+                    var entityAttrsKeys = [];
+                    vm.entityAttrs.forEach(function (entityAttr) {
+                        entityAttrsKeys.push(entityAttr.key);
+                    });
+
+                    var layoutAttrsKeys = [];
+                    vm.layoutAttrs.forEach(function (layoutAttr) {
+                        layoutAttrsKeys.push(layoutAttr.key);
+                    });
+
+                    var itemIndex = parseInt(elem.dataset.index, 10);
+
+                    field.attribute = vm.items[itemIndex];
+                    field.editable = vm.items[itemIndex].editable;
+                    field.name = field.attribute.name;
+                    field.attribute_class = 'userInput';
+                    field.type = 'field';
+                    field.colspan = 1;
+
+                    if (field.attribute.hasOwnProperty('id')) {
+
+                        field.attribute_class = 'attr';
+                        field.id = field.attribute.id;
+
+                    } else if (entityAttrsKeys.indexOf(field.attribute.key) !== -1) {
+
+                        field.attribute_class = 'entityAttr';
+
+                    } else if (layoutAttrsKeys.indexOf(field.attribute.key) !== -1) {
+                        field.attribute_class = 'decorationAttr';
+                    }
+
+                    break;
+
+                }
+            }
 
         };
 
@@ -911,6 +1243,10 @@
 
                 });
 
+                drake.on('drag', function () {
+                    document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+                });
+
                 drake.on('out', function (elem, container, source) {
                     $(container).removeClass('active');
                 });
@@ -921,115 +1257,48 @@
 
                     if (target) {
 
-                        if (target.classList.contains('ec-attr-empty')) {
+                        var targetTabOrder = target.dataset.tabOrder;
+                        var targetRow = parseInt(target.dataset.row, 10);
+                        var targetColumn = parseInt(target.dataset.col, 10);
+                        var targetColspan = parseInt(target.dataset.colspan, 10);
 
-                            var targetTabName = target.dataset.tabName;
-                            var targetColspan = parseInt(target.dataset.colspan, 10);
-                            var targetColumn = parseInt(target.dataset.col, 10);
-                            var targetRow = parseInt(target.dataset.row, 10);
+                        if (targetTabOrder === 'fixedArea') {
+                            var targetTab = vm.fixedArea;
+                        } else {
+                            var targetTab = vm.tabs[targetTabOrder];
+                        }
 
-                            var i, a;
-                            for (i = 0; i < vm.tabs.length; i++) {
-                                var tab = vm.tabs[i];
+                        if (elem.classList.contains('ec-attr-occupied')) {
 
-                                // if (!tab.hasOwnProperty('editState') || (tab.hasOwnProperty('editState') && tab.editState)) {
-                                if (tab.name === targetTabName) {
+                            onDropFromSocket(elem, targetTab, targetRow, targetColumn, targetColspan);
 
-                                    for (a = 0; a < tab.layout.fields.length; a++) {
-                                        var field = tab.layout.fields[a];
+                        } else {
 
-                                        if (elem.classList.contains('ec-attr-occupied')) { // dragging from socket
-
-                                            var dElemTabOrder = elem.dataset.tabOrder;
-                                            var dElemColumn = parseInt(elem.dataset.col, 10);
-                                            var dElemRow = parseInt(elem.dataset.row, 10);
-
-                                            var occupiedFieldData = JSON.parse(JSON.stringify(vm.fieldsTree[dElemTabOrder][dElemRow][dElemColumn]));
-
-                                            if (field.column === targetColumn && field.row === targetRow) {
-                                                vm.tabs[i].layout.fields[a] = occupiedFieldData;
-                                                vm.tabs[i].layout.fields[a].colspan = targetColspan;
-                                                vm.tabs[i].layout.fields[a].column = targetColumn;
-                                                vm.tabs[i].layout.fields[a].row = targetRow;
-                                            }
-
-                                            if (field.column === dElemColumn && field.row === dElemRow) { // make dragged from socket empty
-
-                                                var emptyFieldData = {
-                                                    colspan: 1,
-                                                    column: dElemColumn,
-                                                    editMode: false,
-                                                    row: dElemRow,
-                                                    type: "empty"
-                                                };
-
-                                                vm.tabs[i].layout.fields[a] = emptyFieldData;
-                                            }
-
-                                        } else { // dragging from attributes list
-
-                                            if (field.column === targetColumn && field.row === targetRow) {
-
-                                                var entityAttrsKeys = [];
-                                                vm.entityAttrs.forEach(function (entityAttr) {
-                                                    entityAttrsKeys.push(entityAttr.key);
-                                                });
-
-                                                var layoutAttrsKeys = [];
-                                                vm.layoutAttrs.forEach(function (layoutAttr) {
-                                                    layoutAttrsKeys.push(layoutAttr.key);
-                                                });
-
-                                                var itemIndex = parseInt(elem.dataset.index, 10);
-
-                                                field.attribute = vm.items[itemIndex];
-                                                field.editable = vm.items[itemIndex].editable;
-                                                field.name = field.attribute.name;
-                                                field.attribute_class = 'userInput';
-                                                field.type = 'field';
-                                                field.colspan = 1;
-
-                                                if (field.attribute.hasOwnProperty('id')) {
-                                                    field.attribute_class = 'attr';
-                                                    field.id = field.attribute.id;
-                                                }
-                                                if (entityAttrsKeys.indexOf(field.attribute.key) !== -1) {
-                                                    field.attribute_class = 'entityAttr';
-                                                }
-                                                if (layoutAttrsKeys.indexOf(field.attribute.key) !== -1) {
-                                                    field.attribute_class = 'decorationAttr';
-                                                }
-
-                                                break;
-
-                                            }
-
-                                        }
-
-                                    }
-
-                                    if (targetRow === tab.layout.rows) {
-                                        addRows(tab);
-                                    }
-
-                                    break;
-                                }
-                            }
-
-                            vm.createFieldsTree();
-                            vm.syncItems();
-
-                            $scope.$apply();
+                            onDropFromAttributesList(elem, targetTab, targetRow, targetColumn);
 
                         }
+
+                        if (targetRow === targetTab.layout.rows) {
+                            addRows(targetTab);
+                        }
+
+                        vm.createFieldsTree();
+                        vm.createFixedAreaFieldsTree();
+
+                        vm.syncItems();
+
+                        $scope.$apply();
 
                     }
 
                 });
 
                 drake.on('dragend', function (el) {
+
+                    document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
                     $scope.$apply();
                     drake.remove();
+
                 });
             },
 
@@ -1082,11 +1351,22 @@
                     })
                 });
 
-                if (item.key === 'object_permissions_user') {
-                    result = false;
+                if (vm.fixedArea.isActive) {
+
+                    var i;
+                    for (i = 0; i < vm.fixedArea.layout.fields.length; i++) {
+                        var field = vm.fixedArea.layout.fields[i];
+
+                        if (field.type === 'field' && field.name === item.name) {
+                            result = false;
+                            break;
+                        }
+
+                    }
+
                 }
 
-                if (item.key === 'object_permissions_group') {
+                if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
                     result = false;
                 }
 
@@ -1105,12 +1385,7 @@
                 return item
             });
 
-            console.log('vm.items', vm.items);
-            console.log('vm.entityType', vm.entityType);
-
             vm.updateDrakeContainers();
-
-            console.log('syncItems.items', vm.items);
 
         };
 
@@ -1166,8 +1441,26 @@
 
             vm.getLayout().then(function () {
 
-                vm.getItems();
-                vm.createFieldsTree();
+                vm.getItems().then(function () {
+
+                    vm.createFieldsTree();
+
+                    if (vm.fixedArea.isActive) {
+                        vm.createFixedAreaFieldsTree();
+                    }
+
+                    $scope.$apply(function () {
+
+                        setTimeout(function () {
+                            vm.dragAndDrop.init();
+                        }, 500)
+
+                    });
+
+                    var scrollElem = document.querySelector('.entity-data-constructor-dialog .scrollElemOnDrag');
+                    scrollHelper.setDnDScrollElem(scrollElem);
+
+                });
 
             });
 
@@ -1178,6 +1471,10 @@
         $scope.$on("$destroy", function () {
             vm.dragAndDrop.destroy();
         });
+
+        vm.onInit = function () {
+
+        };
     }
 
 }());
