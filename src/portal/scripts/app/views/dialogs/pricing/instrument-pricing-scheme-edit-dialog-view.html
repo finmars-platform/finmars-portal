@@ -1,0 +1,70 @@
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Edit Instrument Pricing Scheme</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="p-24">
+
+        <div data-if="vm.readyStatus.types && vm.readyStatus.scheme">
+
+            <md-input-container>
+                <label>Name</label>
+                <input type="text" data-ng-model="vm.item.name">
+            </md-input-container>
+
+            <md-input-container>
+                <label>Type</label>
+                <md-select data-ng-model="vm.item.type">
+                    <md-option ng-value="item.id" data-ng-repeat="item in vm.types">{{item.name}}</md-option>
+                </md-select>
+            </md-input-container>
+
+            <div class="m-t-16">
+
+                <div><label for="">Notes</label></div>
+                <textarea name="" data-ng-model="vm.item.notes" cols="60" rows="5"></textarea>
+
+            </div>
+
+            <div class="m-t-16">
+
+                <div><label for="">Clarification for Users</label></div>
+                <textarea name="" data-ng-model="vm.item.notes_for_user" cols="60" rows="5"></textarea>
+
+            </div>
+
+            <md-input-container class="m-t-16">
+                <label>Error handling</label>
+                <md-select data-ng-model="vm.item.error_handler">
+                    <md-option value="1">Skip</md-option>
+                    <md-option value="2">Default Price</md-option>
+                    <md-option value="3">Ask For Manual Entry</md-option>
+                    <md-option value="4">Add to Pricing Log</md-option>
+                </md-select>
+            </md-input-container>
+
+
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.types || !vm.readyStatus.scheme">
+
+            <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Close
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
