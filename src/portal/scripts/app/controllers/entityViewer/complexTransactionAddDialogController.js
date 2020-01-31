@@ -49,35 +49,40 @@
         vm.transactionTypeId = null;
 
         vm.attributesLayout = [];
+        vm.fixedAreaAttributesLayout = [];
 
-        vm.generateAttributesFromLayoutFields = function () {
+        var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
-            vm.attributesLayout = [];
-            var fieldsToEmptyList = [];
-
-            var tabResult;
-            var fieldResult;
             var i, l, e, u;
 
-            vm.tabs.forEach(function (tab, tabIndex) {
+            tab.layout.fields.forEach(function (field, fieldIndex) {
 
-                tabResult = [];
+                var fieldResult = {};
 
-                tab.layout.fields.forEach(function (field, fieldIndex) {
+                if (field && field.type === 'field') {
 
-                    fieldResult = {};
+                    var attrFound = false;
 
-                    if (field && field.type === 'field') {
+                    if (field.attribute_class === 'attr') {
 
-                        var attrFound = false;
+                        for (i = 0; i < vm.attrs.length; i = i + 1) {
 
-                        if (field.attribute_class === 'attr') {
+                            if (field.key) {
 
-                            for (i = 0; i < vm.attrs.length; i = i + 1) {
+                                if (field.key === vm.attrs[i].user_code) {
 
-                                if (field.key) {
+                                    vm.attrs[i].options = field.options;
+                                    fieldResult = vm.attrs[i];
+                                    attrFound = true;
+                                    break;
 
-                                    if (field.key === vm.attrs[i].user_code) {
+                                }
+
+                            } else {
+
+                                if (field.attribute.user_code) {
+
+                                    if (field.attribute.user_code === vm.attrs[i].user_code) {
 
                                         vm.attrs[i].options = field.options;
                                         fieldResult = vm.attrs[i];
@@ -86,103 +91,116 @@
 
                                     }
 
-                                } else {
-
-                                    if (field.attribute.user_code) {
-
-                                        if (field.attribute.user_code === vm.attrs[i].user_code) {
-
-                                            vm.attrs[i].options = field.options;
-                                            fieldResult = vm.attrs[i];
-                                            attrFound = true;
-                                            break;
-
-                                        }
-
-                                    }
-
                                 }
 
                             }
 
-                            if (!attrFound) {
-                                var fieldPath = {
-                                    tabIndex: tabIndex,
-                                    fieldIndex: fieldIndex
-                                };
+                        }
 
-                                fieldsToEmptyList.push(fieldPath);
+                        if (!attrFound) {
+                            var fieldPath = {
+                                tabIndex: tabIndex,
+                                fieldIndex: fieldIndex
+                            };
+
+                            fieldsToEmptyList.push(fieldPath);
+                        }
+
+                    } else if (field.attribute_class === 'userInput') {
+
+                        for (u = 0; u < vm.userInputs.length; u = u + 1) {
+                            //console.log('vm.userInputs[u]', vm.userInputs[u]);
+                            if (field.name === vm.userInputs[u].name) {
+                                vm.userInputs[u].options = field.options;
+                                // return vm.userInputs[u];
+                                fieldResult = vm.userInputs[u];
+
+                                attrFound = true;
+                                break;
                             }
+                        }
 
-                        } else if (field.attribute_class === 'userInput') {
+                        if (!attrFound) {
+                            var fieldPath = {
+                                tabIndex: tabIndex,
+                                fieldIndex: fieldIndex
+                            };
 
-                            for (u = 0; u < vm.userInputs.length; u = u + 1) {
-                                //console.log('vm.userInputs[u]', vm.userInputs[u]);
-                                if (field.name === vm.userInputs[u].name) {
-                                    vm.userInputs[u].options = field.options;
-                                    // return vm.userInputs[u];
-                                    fieldResult = vm.userInputs[u];
+                            fieldsToEmptyList.push(fieldPath);
+                        }
+
+                    } else {
+
+                        for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                            if (field.name === vm.entityAttrs[e].name) {
+                                vm.entityAttrs[e].options = field.options;
+                                fieldResult = vm.entityAttrs[e];
+
+                                attrFound = true;
+                                break;
+                            }
+                        }
+
+                        if (!attrFound) {
+                            for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                                if (field.name === vm.layoutAttrs[l].name) {
+                                    vm.layoutAttrs[l].options = field.options;
+                                    fieldResult = vm.layoutAttrs[l];
 
                                     attrFound = true;
                                     break;
                                 }
                             }
-
-                            if (!attrFound) {
-                                var fieldPath = {
-                                    tabIndex: tabIndex,
-                                    fieldIndex: fieldIndex
-                                };
-
-                                fieldsToEmptyList.push(fieldPath);
-                            }
-
-                        } else {
-
-                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                                if (field.name === vm.entityAttrs[e].name) {
-                                    vm.entityAttrs[e].options = field.options;
-                                    fieldResult = vm.entityAttrs[e];
-
-                                    attrFound = true;
-                                    break;
-                                }
-                            }
-
-                            if (!attrFound) {
-                                for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                                    if (field.name === vm.layoutAttrs[l].name) {
-                                        vm.layoutAttrs[l].options = field.options;
-                                        fieldResult = vm.layoutAttrs[l];
-
-                                        attrFound = true;
-                                        break;
-                                    }
-                                }
-                            }
-
                         }
-
-                        if (field.backgroundColor) {
-                            fieldResult.backgroundColor = field.backgroundColor;
-                        }
-
-                        fieldResult.editable = field.editable;
 
                     }
 
-                    tabResult.push(fieldResult)
+                    if (field.backgroundColor) {
+                        fieldResult.backgroundColor = field.backgroundColor;
+                    }
 
-                });
+                    fieldResult.editable = field.editable;
+
+                }
+
+                tabResult.push(fieldResult)
+
+            });
+
+        };
+
+        vm.generateAttributesFromLayoutFields = function () {
+
+            vm.attributesLayout = [];
+            var fieldsToEmptyList = [];
+
+            var tabResult;
+
+            vm.tabs.forEach(function (tab, tabIndex) {
+
+                tabResult = [];
+
+                getMatchForLayoutFields(tab, tabIndex, fieldsToEmptyList, tabResult);
 
                 vm.attributesLayout.push(tabResult);
 
             });
 
+            if (vm.fixedArea && vm.fixedArea.isActive) {
+
+                vm.fixedAreaAttributesLayout = [];
+                getMatchForLayoutFields(vm.fixedArea, 'fixedArea', fieldsToEmptyList, vm.fixedAreaAttributesLayout);
+
+            }
+
             // Empty sockets that have no attribute that matches them
             fieldsToEmptyList.forEach(function (fieldPath) {
 
-                var dcLayoutFields = dataConstructorLayout[fieldPath.tabIndex].layout.fields;
+                if (fieldPath.tabIndex === 'fixedArea') {
+                    var dcLayoutFields = vm.fixedArea.layout.fields;
+                } else {
+                    var dcLayoutFields = vm.tabs[fieldPath.tabIndex].layout.fields;
+                }
 
                 var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
                 var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
@@ -255,8 +273,14 @@
 
                     vm.readyStatus.layout = true;
 
-                    vm.tabs = data.book_transaction_layout.data;
-                    dataConstructorLayout = data.book_transaction_layout.data;
+                    if (Array.isArray(data.book_transaction_layout.data)) {
+                        vm.tabs = data.book_transaction_layout.data;
+                    } else {
+                        vm.tabs = data.book_transaction_layout.data.tabs;
+                        vm.fixedArea = data.book_transaction_layout.data.fixedArea;
+                    }
+
+                    dataConstructorLayout = data.book_transaction_layout; // unchanged layout that is used to remove fields without attributes
 
                     vm.userInputs = [];
                     vm.tabs.forEach(function (tab) {
@@ -266,6 +290,14 @@
                             }
                         });
                     });
+
+                    if (vm.fixedArea && vm.fixedArea.isActive) {
+                        vm.fixedArea.layout.fields.forEach(function (field) {
+                            if (field.attribute_class === 'userInput') {
+                                vm.userInputs.push(field.attribute);
+                            }
+                        });
+                    }
 
                     vm.tabs = vm.tabs.map(function (item, index) {
 
@@ -482,8 +514,14 @@
                     }
                 });
 
-                vm.tabs = data.book_transaction_layout.data;
-                dataConstructorLayout = data.book_transaction_layout.data;
+                if (Array.isArray(data.book_transaction_layout.data)) {
+                    vm.tabs = data.book_transaction_layout.data;
+                } else {
+                    vm.tabs = data.book_transaction_layout.data.tabs;
+                    vm.fixedArea = data.book_transaction_layout.data.fixedArea;
+                }
+
+                dataConstructorLayout = data.book_transaction_layout; // unchanged layout that is used to remove fields without attributes
 
                 vm.userInputs = [];
                 vm.tabs.forEach(function (tab) {
@@ -493,6 +531,14 @@
                         }
                     });
                 });
+
+                if (vm.fixedArea && vm.fixedArea.isActive) {
+                    vm.fixedArea.layout.fields.forEach(function (field) {
+                        if (field.attribute_class === 'userInput') {
+                            vm.userInputs.push(field.attribute);
+                        }
+                    });
+                }
 
                 vm.tabs = vm.tabs.map(function (item, index) {
 
@@ -589,7 +635,15 @@
                     }
                 });
 
-                vm.tabs = data.book_transaction_layout.data;
+                if (Array.isArray(data.book_transaction_layout.data)) {
+                    vm.tabs = data.book_transaction_layout.data;
+                } else {
+                    vm.tabs = data.book_transaction_layout.data.tabs;
+                    vm.fixedArea = data.book_transaction_layout.data.fixedArea;
+                }
+
+                dataConstructorLayout = data.book_transaction_layout; // unchanged layout that is used to remove fields without attributes
+
                 vm.userInputs = [];
                 vm.tabs.forEach(function (tab) {
                     tab.layout.fields.forEach(function (field) {
@@ -598,6 +652,14 @@
                         }
                     });
                 });
+
+                if (vm.fixedArea && vm.fixedArea.isActive) {
+                    vm.fixedArea.layout.fields.forEach(function (field) {
+                        if (field.attribute_class === 'userInput') {
+                            vm.userInputs.push(field.attribute);
+                        }
+                    });
+                }
 
                 vm.tabs = vm.tabs.map(function (item, index) {
 
@@ -654,14 +716,14 @@
 
         vm.range = gridHelperService.range;
 
-        vm.bindFlex = function (tab, row, field) {
-            var totalColspans = 0;
+        vm.bindFlex = function (tab, field) {
+            /*var totalColspans = 0;
             var i;
             for (i = 0; i < tab.layout.fields.length; i = i + 1) {
                 if (tab.layout.fields[i].row === row) {
                     totalColspans = totalColspans + tab.layout.fields[i].colspan;
                 }
-            }
+            }*/
             var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
 
