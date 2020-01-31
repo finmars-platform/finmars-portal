@@ -30,11 +30,74 @@
 
                 <div class="form-constructor-main">
 
-                    <div class="form-constructor-workarea">
+                    <div class="form-constructor-workarea scrollElemOnDrag">
 
-                        <md-button class="md-raised"
-                                   data-ng-click="vm.openTabsEditor($event)"
-                                   data-ng-disabled="!vm.tabs || vm.tabs.length < 2">Change order of tabs</md-button>
+                        <div class="form-constructor-fixed-area">
+                            <div>
+                                <md-button class="md-raised m-b-16"
+                                           data-ng-click="vm.toggleFixedArea()">TOGGLE TOP PANEL</md-button>
+                            </div>
+
+                            <div data-ng-if="vm.fixedArea.isActive"
+                                 class="ec-md-content">
+
+                                <div class="ec-layout-box">
+                                    <md-button data-ng-repeat="item in vm.boxColumns"
+                                               data-ng-click="vm.setLayoutColumns(vm.fixedArea, item, $event)"
+                                               class="ec-layout-btn"
+                                               data-ng-class="{'active': vm.fixedArea.layout.columns === item}"
+                                               aria-label="input form editor columns quantity">
+                                        <ng-md-icon icon="stop" data-ng-repeat="icon in vm.range(item)"></ng-md-icon>
+                                    </md-button>
+                                </div>
+
+                                <div class="ec-layout">
+                                    <div layout="row"
+                                         data-ng-repeat="row in vm.fixedAreaFieldsTree"
+                                         class="ec-layout-row">
+                                        <div data-ng-repeat="field in row"
+                                             class="form-constructor-field-wrap"
+                                             flex="{{vm.bindFlex('fixedArea', field.row, field.column)}}"
+                                             ng-if="vm.checkColspan('fixedArea', field.row, field.column)">
+                                            <new-layout-constructor-field data-fixed-area="vm.fixedArea"
+                                                                          data-fields-tree="vm.fixedAreaFieldsTree"
+                                                                          data-tabs="vm.tabs"
+                                                                          data-tab-order="fixedArea"
+                                                                          data-field="field"></new-layout-constructor-field>
+                                        </div>
+
+                                        <md-button class="md-button ec-manage-row-btn"
+                                                   ng-click="vm.insertRow(vm.fixedArea, $index + 1)" style="right: 55px">
+                                            +
+                                            <md-tooltip class="tooltip_1" md-direction="top">Insert row below</md-tooltip>
+                                        </md-button>
+
+                                        <md-button data-ng-if="vm.fixedArea.layout.rows > $index + 1"
+                                                   class="md-button ec-manage-row-btn"
+                                                   ng-click="vm.deleteRow(vm.fixedArea, $index + 1)"
+                                                   style="right: 10px;"
+                                                   data-ng-disabled="!vm.isRowEmpty('fixedArea', $index + 1, vm.fixedArea.layout.columns)">
+                                            -
+                                            <md-tooltip class="tooltip_1"
+                                                        md-direction="top"
+                                                        data-ng-hide="!vm.isFARowEmtpty($index + 1)">Remove row</md-tooltip>
+                                            <md-tooltip class="tooltip_1"
+                                                        md-direction="top"
+                                                        data-ng-hide="vm.isFARowEmtpty($index + 1)">Empty row before removing it</md-tooltip>
+                                        </md-button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <md-button class="md-raised"
+                                       data-ng-click="vm.openTabsEditor($event)"
+                                       data-ng-disabled="!vm.tabs || vm.tabs.length < 2">Change order of tabs</md-button>
+                        </div>
 
                         <md-tabs md-border-bottom md-dynamic-height>
                             <md-tab data-ng-repeat="tab in vm.tabs track by tab.name">
@@ -68,10 +131,10 @@
                                         </md-button>
                                     </div>
                                 </md-tab-label>
+
                                 <md-tab-body>
                                     <div class="ec-md-content ec-layout-tab">
                                         <div class="ec-layout-box">
-                                            <span class="select-layout-caption">Select layout</span>
                                             <md-button class="{{tab.layout.columns === item ? 'active' : '' }} ec-layout-btn"
                                                        data-ng-click="vm.setLayoutColumns(tab, item, $event)"
                                                        data-ng-repeat="item in vm.boxColumns"

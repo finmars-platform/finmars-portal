@@ -792,7 +792,6 @@
         };
 
         var openEditLayoutDialog = function (ev) {
-
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
