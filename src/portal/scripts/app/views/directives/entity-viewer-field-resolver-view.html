@@ -11,37 +11,42 @@
 
         <div data-ng-if="!isSpecialSearchRelation()">
             <div data-ng-if="checkComplexEntityType()">
-                <md-input-container class="md-block no-error-spacer">
+                <md-input-container class="md-block no-error-spacer"
+                                    aria-label="select with search">
                     <label data-ng-bind="getName()"></label>
-                    <div>
-                        <md-select md-on-close="searchTerm = ''"
-                                   data-ng-model="entity[getModelKey()]"
-                                   data-ng-change="changeHandler()"
-                                   md-on-open="getData()"
-                                   md-selected-text="bindFormFields()"
-                                   md-container-class="common-select-container">
-                            <md-select-header>
-                                <input data-ng-model="searchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
 
-                            <div class="select-options-holder">
+                    <md-select md-on-close="searchTerm = ''"
+                               data-ng-model="entity[getModelKey()]"
+                               data-ng-change="changeHandler()"
+                               md-on-open="getData()"
+                               md-selected-text="bindFormFields()"
+                               md-container-class="common-select-container">
+                        <md-select-header>
+                            <input data-ng-model="searchTerm"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
 
-                                <md-optgroup data-ng-if="group.fields.length" label="{{group.name}}"
-                                             data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id">
-                                    <md-option
-                                            data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by $index"
-                                            ng-value="field.id">
-                                        {{bindListFields(field)}}
-                                    </md-option>
-                                </md-optgroup>
+                        <div data-ng-if="groups" class="select-options-holder">
 
-                            </div>
-                        </md-select>
-                    </div>
+                            <md-optgroup data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id"
+                                         data-ng-if="group.fields.length"
+                                         label="{{group.name}}">
+                                <md-option
+                                        data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by $index"
+                                        ng-value="field.id">
+                                    {{bindListFields(field)}}
+                                </md-option>
+                            </md-optgroup>
+
+                        </div>
+
+                        <div data-ng-if="!groups" class="select-options-holder">
+                            <md-option data-ng-value="fields[0].id">{{bindListFields(fields[0])}}</md-option>
+                        </div>
+                    </md-select>
                 </md-input-container>
             </div>
 
@@ -129,14 +134,22 @@
                                class="md-text md-select-search-pattern"
                                ng-keydown="$event.stopPropagation()">
                     </md-select-header>
-                    <md-optgroup label="{{group.name}}"
-                                 data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id">
-                        <md-option
-                                data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm}"
-                                ng-value="field.id">
-                            {{bindListFields(field)}}
-                        </md-option>
-                    </md-optgroup>
+
+                    <div data-ng-if="groups" class="select-options-holder">
+                        <md-optgroup data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id"
+                                     data-ng-if="group.fields.length"
+                                     label="{{group.name}}">
+                            <md-option
+                                    data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm}"
+                                    ng-value="field.id">
+                                {{bindListFields(field)}}
+                            </md-option>
+                        </md-optgroup>
+                    </div>
+
+                    <div data-ng-if="!groups" class="select-options-holder">
+                        <md-option data-ng-value="fields[0].id">{{bindListFields(fields[0])}}</md-option>
+                    </div>
                 </md-select>
             </md-input-container>
         </div>
@@ -155,7 +168,8 @@
                                 <input data-ng-model="searchTerm"
                                        type="search"
                                        placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern">
+                                       class="md-text md-select-search-pattern"
+                                       ng-keydown="$event.stopPropagation()">
                             </md-select-header>
                             <md-option
                                     data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by field.id"
@@ -206,7 +220,8 @@
                             <input data-ng-model="searchTerm"
                                    type="search"
                                    placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern">
+                                   class="md-text md-select-search-pattern"
+                                   ng-keydown="$event.stopPropagation()">
                         </md-select-header>
                         <md-option
                                 data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:{name: searchTerm}"

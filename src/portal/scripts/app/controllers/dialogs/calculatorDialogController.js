@@ -124,7 +124,13 @@
 
                     operatorType = operator;
                     var indexOfOperator = vm.calculationsHistory.length - 3;
-                    vm.calculationsHistory = vm.calculationsHistory.slice(0, indexOfOperator) + operator + " ";
+                    vm.calculationsHistory = vm.calculationsHistory.slice(0, indexOfOperator) + " " + operator + " ";
+
+                } else {
+
+                    operatorType = operator;
+                    prevNumber = "0";
+                    vm.calculationsHistory = "0" + " " + operator + " ";
 
                 }
 
@@ -182,18 +188,21 @@
                         calculationResultNum = calculationResultNum.toFixed(allowedDigitsNumber);
                     }
                     break;
+
                 case "-":
                     calculationResultNum = num1 - num2;
                     if (allowedDigitsNumber > 0) {
                         calculationResultNum = calculationResultNum.toFixed(allowedDigitsNumber);
                     }
                     break;
+
                 case "*":
                     calculationResultNum = num1 * num2;
                     if (allowedDigitsNumber > 0) {
                         calculationResultNum = calculationResultNum.toFixed(allowedDigitsNumber);
                     }
                     break;
+
                 case "/":
                     calculationResultNum = num1 / num2;
                     if (allowedDigitsNumber > 0) {
@@ -243,6 +252,22 @@
                 prevNumber = "";
                 vm.calculationsHistory = "";
                 currentNumber = Number(calcResultNumber).toString(); // Number() needed to remove tailing zeros from float number
+
+            }
+
+        };
+
+        vm.toggleNumberPosNeg = function () {
+
+            if (currentNumber && currentNumber !== "0") {
+
+                if (currentNumber.indexOf('-') === 0) {
+                    currentNumber = currentNumber.slice(1);
+                } else {
+                    currentNumber = '-' + currentNumber;
+                }
+
+                vm.numberToShow = currentNumber;
 
             }
 

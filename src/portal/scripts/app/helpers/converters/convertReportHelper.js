@@ -2,9 +2,6 @@
 
     'use strict';
 
-    var utilsHelper = require('../utils.helper');
-    var globalConstantsService = require('../../services/globalConstantsService');
-
     var convertToExcel = function () {
 
         /*var rows = document.querySelectorAll('.ev-content .g-row');
@@ -60,7 +57,20 @@
 
     };
 
-    var useShortNameAttrs = globalConstantsService.getAttributesWithShortNameToUse();
+    var useShortNameAttrs = ['instrument', 'instrument_type'];
+
+    var getTransactionStatusName = function (statusNumber) {
+
+        switch (statusNumber) {
+            case 1:
+                return 'Booked';
+                break;
+            case 2:
+                return 'Pending';
+                break;
+        }
+
+    };
 
     var getEntityViewerDynamicAttrCellVal = function (flatListItem, column) {
 
@@ -203,6 +213,10 @@
                     cellText = attrObj.short_name;
                 }
 
+
+            } else if (column.key === 'status' && typeof flatListItem[column.key] === 'number') {
+
+                cellText = getTransactionStatusName(flatListItem[column.key]);
 
             } else {
                 cellText = String(flatListItem[column.key]);
@@ -447,42 +461,6 @@
             var c;
             for (c = 0; c < columns.length; c++) {
 
-                /*var columnKey = columns[c].key;
-                var cellText = '';
-
-                if (flatList[r].___type === 'subtotal') {
-
-                    var columnWithGroupName = flatList[r].___level - 2; // group level count starts from 1 and we omit root group
-
-                    if (columnWithGroupName < 0 && c === 0) { // to show grand total
-
-                        cellText = 'Grand Total'
-
-                    } else if (c === columnWithGroupName) {
-
-                        cellText = String(flatList[r].___group_name);
-
-                    } else if ((flatList[r][columnKey] || flatList[r][columnKey] === 0) && c >= numberOfGroups) {
-
-                        cellText = String(flatList[r][columnKey]);
-
-                    }
-
-                } else {
-
-                    if (proxylineGroupData.level && c === proxylineGroupData.level - 2) {
-
-                        cellText = proxylineGroupData.group_name;
-                        proxylineGroupData = {}; // resetting after group name got rendered in row that goes after proxyline
-
-                    } else if ((flatList[r][columnKey]) && c >= numberOfGroups) {
-
-                        cellText = String(flatList[r][columnKey]);
-
-                    }
-
-                }*/
-
                 var resultObj = getReportViewerCellVal(flatList[r], columns[c], c, numberOfGroups, proxylineGroupData);
 
                 var cellText = resultObj.cellText;
@@ -507,53 +485,6 @@
 
             var c;
             for (c = 0; c < columns.length; c++) {
-
-                /*var columnKey = columns[c].key;
-                var cellText = '';
-
-                if (flatList[r].___type === 'group') {
-
-                    var columnWithGroupName = flatList[r].___level - 1; // group level count starts from 1 and we omit root group
-
-                    if (c === 0) {
-
-                        if (columnWithGroupName > 0) {
-                            cellText = '  '.repeat(columnWithGroupName) + String(flatList[r].___group_name); // distinguish group level by spaces
-                        } else {
-                            cellText = String(flatList[r].___group_name);
-                        }
-
-                    }
-
-                } else if (flatList[r].hasOwnProperty('attributes') &&
-                    columnKey.indexOf("attributes.") === 0) {  // for dynamic attributes
-
-                    cellText = getEntityViewerDynamicAttrCellVal(flatList[r], columns[c]);
-
-                } else if (flatList[r][columnKey]) {
-
-                    var colValueType = columns[c].value_type;
-
-                    if (colValueType === 'field') {
-
-                        var attrObjName = columnKey + '_object';
-                        var attrObj = flatList[r][attrObjName];
-
-                        if (useShortNameAttrs.indexOf(columnKey) === -1) {
-
-                            cellText = attrObj.name;
-
-                        } else { // use short name for relation attributes
-
-                            cellText = attrObj.short_name;
-                        }
-
-
-                    } else {
-                        cellText = String(flatList[r][columnKey]);
-                    }
-
-                }*/
 
                 var cellText = getEntityViewerCellVal(flatList[r], columns[c], c);
 
