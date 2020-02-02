@@ -10,7 +10,7 @@
                         <div layout="row"
                              class="ttype-action-info-container"
                              layout-align="start center">
-                            <span class="m-t-16" ng-click="$event.stopPropagation()">
+                            <span ng-click="$event.stopPropagation()">
                                 <expression-editor-button data-ng-class="{'grey-expression-btn': !item.condition_expr}"
                                         data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                                         data-item="item.condition_expr" data-button-text="If(...)"></expression-editor-button>
@@ -59,7 +59,7 @@
                     </div>
                 </v-pane-header>
 
-                <v-pane-content style="padding: 20px;">
+                <v-pane-content class="transaction-type-actions-fields" style="padding: 20px;">
 
                     <div data-ng-if="item.transaction != null"
                          data-ng-include="'views/tabs/transaction-type/actions/transaction-action-view.html'">

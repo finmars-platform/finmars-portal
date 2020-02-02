@@ -1,5 +1,20 @@
 <div data-ng-controller="EventSchedulesTabController as vm">
     <div data-ng-if="vm.checkReadyStatus()">
+
+        <div layout="row" class="m-b-16">
+            <div class="ev-data-field">
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    item="vm.maturityDateAttr"></bind-field-control>
+            </div>
+
+            <div class="ev-data-field">
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    item="vm.maturityPriceAttr"></bind-field-control>
+            </div>
+        </div>
+
         <table class="bordered margin-bottom-20">
             <thead>
                 <tr>
@@ -196,7 +211,7 @@
                     </td>
                     <td data-ng-if="item.editStatus" class="edit-state-td event-schedule-checkbox-td">
                         <md-checkbox data-ng-model="vm.item.is_auto_generated"
-                                     aria-lable="edited-is_auto_generated-checkbox" data-ng-disabled="true"></md-checkbox>
+                                     aria-label="edited-is_auto_generated-checkbox" data-ng-disabled="true"></md-checkbox>
                     </td>
                     <td data-ng-if="item.editStatus" class="edit-state-td">
                         <md-input-container class="no-error-spacer ES-input-notification-class-container" aria-label="select with filter">
@@ -356,7 +371,7 @@
                         <md-checkbox data-ng-model="vm.newItem.is_auto_generated"
                                      class="ES-add-new-checkbox"
                                      data-ng-disabled="true"
-                                     aria-lable="is_auto_generated-checkbox"></md-checkbox>
+                                     aria-label="is_auto_generated-checkbox"></md-checkbox>
                     </td>
 
                     <td>

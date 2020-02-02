@@ -10,19 +10,61 @@
 }
 
 .transaction-type-actions-tab-view {
-  .expr-btn {
-    margin-top: 0;
-    position: relative;
-    top: -8px;
-  }
-  .expression-input-container {
-    width: 60%;
-  }
+
   .custom-small-icon-btn, .expr-btn {
     min-width: 24px;
     height: 24px;
     min-height: 24px;
     line-height: 24px;
+  }
+
+  md-switch {
+    padding-left: 11px;
+    margin-top: 0px;
+  }
+
+  md-input-container {
+    //width: 100%;
+    min-height: 58px;
+  }
+
+  ttype-actions-input-select {
+    md-input-container {
+      width: 100%;
+      padding-right: 10px;
+      margin: 0;
+      box-sizing: border-box;
+    }
+  }
+
+  /*div.flex-33 {
+    padding-left: 5px;
+    padding-right: 5px;
+  }*/
+}
+
+.transaction-type-actions-fields {
+  .expr-btn {
+    margin: 7px 10px 0 0;
+  }
+
+  .expression-input-container {
+    flex: 0 1 100%;
+  }
+
+}
+
+.transaction-type-actions-tab-view, .template-ttype-actions {
+  .ref {
+    background-color: rgb(255, 64, 129) !important;
+    color: #fff !important;
+  }
+  .md-icon-button.md-raised {
+    background: rgb(63, 81, 181);
+    color: #fff;
+    &:hover {
+      background: rgba(63, 81, 181, .8);
+    }
   }
 }
 

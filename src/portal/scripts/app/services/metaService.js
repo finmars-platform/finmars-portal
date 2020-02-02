@@ -476,6 +476,45 @@
 
     };
 
+    var getEntityViewerFixedFieldsAttributes = function (entityType) {
+
+        switch (entityType) {
+            case 'instrument':
+                return ['name', 'short_name', 'user_code', 'instrument_type', 'public_name'];
+                break;
+
+            case 'account':
+                return ['name', 'short_name', 'user_code', 'type', 'public_name'];
+                break;
+
+            case 'portfolio':
+                return ['name', 'short_name', 'user_code', null, 'public_name'];
+                break;
+
+            case 'counterparty':
+            case 'responsible':
+            case 'currency':
+            case 'strategy-1':
+            case 'strategy-2':
+            case 'strategy-3':
+            case 'complex-transaction':
+                return ['name', 'short_name', 'user_code'];
+                break;
+
+            case 'account-type':
+                return ['name', 'short_name', 'user_code', 'transaction_details_expr', 'public_name'];
+                break;
+
+            case 'instrument-type':
+                return ['name', 'short_name', 'user_code', 'instrument_class', 'public_name'];
+                break;
+
+            default:
+                return [];
+        }
+
+    };
+
     module.exports = {
         isReport: isReport,
         getMenu: getMenu,
@@ -495,7 +534,8 @@
         getFieldsWithTagGrouping: getFieldsWithTagGrouping,
         getCurrentLocation: getCurrentLocation,
         getHeaderTitleForCurrentLocation: getHeaderTitleForCurrentLocation,
-        getContentGroups: getContentGroups
+        getContentGroups: getContentGroups,
+        getEntityViewerFixedFieldsAttributes: getEntityViewerFixedFieldsAttributes
     }
 
 }());

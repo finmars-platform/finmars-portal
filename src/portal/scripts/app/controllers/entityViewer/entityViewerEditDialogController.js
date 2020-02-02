@@ -36,6 +36,7 @@
         var dataConstructorLayout = {};
 
         vm.hasEnabledStatus = true;
+        vm.entityStatus = '';
 
         if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
             vm.hasEnabledStatus = false;
@@ -51,12 +52,13 @@
 
         vm.attrs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
-        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+        vm.entityAttrs = [];
 
         vm.range = gridHelperService.range;
 
         vm.dataConstructorData = {entityType: vm.entityType};
 
+        vm.fixedFieldsAttributes = [];
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
@@ -64,6 +66,35 @@
 
         vm.hasEditPermission = false;
         vm.canManagePermissions = false;
+
+        var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+
+        var getEntityAttrs = function () {
+            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+            vm.fixedFieldsAttributes = [];
+
+            var i, a;
+            for (i = 0; i < keysOfFixedFieldsAttrs.length; i++) {
+                var attrKey = keysOfFixedFieldsAttrs[i];
+
+                if (!attrKey) {
+
+                    vm.fixedFieldsAttributes.push(null);
+
+                } else {
+
+                    for (a = 0; a < vm.entityAttrs.length; a++) {
+                        if (vm.entityAttrs[a].key === attrKey) {
+                            vm.fixedFieldsAttributes.push(vm.entityAttrs[a]);
+                            break;
+                        }
+                    }
+
+                }
+            }
+
+        };
+
 
         var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
@@ -425,7 +456,6 @@
 
                     vm.entity.$_isValid = true;
                     vm.readyStatus.entity = true;
-
                     // vm.readyStatus.permissions = true;
 
                     if (vm.entityType !== 'price-history' && vm.entityType !== 'currency-history') {
@@ -653,7 +683,7 @@
 
         };
 
-        vm.toggleEnableStatus = function ($event) {
+        vm.toggleEnableStatus = function () {
 
             vm.entity.is_enabled = !vm.entity.is_enabled;
 
@@ -665,12 +695,68 @@
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
                     console.log('enable/disable toggle success');
+                    getEntityStatus();
 
                     $scope.$apply();
 
                 });
             })
 
+
+        };
+
+        vm.entityStatusChanged = function () {
+
+            entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
+
+                switch (vm.entityStatus) {
+                    case 'enabled':
+                        result.is_enabled = true;
+                        result.is_deleted = false;
+                        vm.entity.is_enabled = true;
+                        vm.entity.is_deleted = false;
+                        break;
+
+                    case 'disabled':
+                        result.is_enabled = false;
+                        result.is_deleted = false;
+                        vm.entity.is_enabled = false;
+                        vm.entity.is_deleted = false;
+                        break;
+
+                    case 'deleted':
+                        result.is_deleted = true;
+                        vm.entity.is_deleted = true;
+                        break;
+
+                    case 'active':
+                        break;
+
+                    case 'inactive':
+                        break;
+                }
+
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                    $scope.$apply();
+
+                });
+
+            });
+
+        };
+
+        var getEntityStatus = function () {
+
+            vm.entityStatus = 'disabled';
+
+            if (vm.entity.is_enabled) {
+                vm.entityStatus = 'enabled';
+            }
+
+            if (vm.entity.is_deleted) {
+                vm.entityStatus = 'deleted';
+            }
 
         };
 
@@ -757,7 +843,7 @@
 
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
-                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                    getEntityAttrs();
 
                 }
 
@@ -1007,7 +1093,13 @@
         };
 
         vm.init = function () {
-            vm.getItem();
+            getEntityAttrs();
+
+            vm.getItem().then(function () {
+
+                getEntityStatus();
+
+            });
         };
 
         vm.init();
