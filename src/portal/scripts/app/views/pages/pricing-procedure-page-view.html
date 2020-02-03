@@ -1,10 +1,10 @@
 <div class="p-24">
 
-    <div data-ng-if="vm.readyStatus.schedules">
+    <div data-ng-if="vm.readyStatus.procedures">
 
         <div>
 
-            <h4>Pricing Schedules</h4>
+            <h4>Pricing Procedures</h4>
 
             <div>
 
@@ -19,15 +19,15 @@
                                 Notes
                             </th>
                             <th>
-                                Active
+                                Notes for Users
                             </th>
                             <th>
-                                Edit Schedule
+                                Edit Procedure
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-ng-repeat="item in vm.schedules">
+                        <tr data-ng-repeat="item in vm.procedures">
                             <td>
                                 {{item.name}}
                             </td>
@@ -35,10 +35,10 @@
                                 {{item.notes}}
                             </td>
                             <td>
-                                {{item.is_enabled}}
+                                {{item.notes_for_user}}
                             </td>
                             <td>
-                                <md-button class="md-raised" data-ng-click="vm.editPricingSchedule($event, item)">Edit</md-button>
+                                <md-button class="md-raised" data-ng-click="vm.editProcedure($event, item)">Edit</md-button>
                             </td>
                         </tr>
                     </tbody>
@@ -47,7 +47,7 @@
             </div>
 
             <div class="m-t-16">
-                <md-button class="md-raised" data-ng-click="vm.addPricingSchedule($event)">Add New
+                <md-button class="md-raised" data-ng-click="vm.addProcedure($event)">Add New
                 </md-button>
             </div>
 
@@ -56,7 +56,7 @@
 
     </div>
 
-    <div data-ng-if="!vm.readyStatus.schedules">
+    <div data-ng-if="!vm.readyStatus.procedures">
         <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
             <progress-circular diameter="100"></progress-circular>
         </div>

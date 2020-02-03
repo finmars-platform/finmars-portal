@@ -15,7 +15,7 @@
     var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
-    var pricingAutomatedScheduleService = require('../../services/import/pricingAutomatedScheduleService');
+    var pricingScheduleService = require('../pricing/pricingScheduleService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
     var uiRepository = require('../../repositories/uiRepository');
@@ -462,7 +462,7 @@
                             resolve(getAndUpdate(contentType, item, settings, cacheContainer));
                             break;
                         case 'integrations.pricingautomatedschedule':
-                            resolve(pricingAutomatedScheduleService.updateSchedule(item));
+                            resolve(pricingScheduleService.updateSchedule(item));
                             break;
                         case 'complex_import.compleximportscheme':
                             resolve(new Promise(function (resolveLocal, reject) {
@@ -1612,7 +1612,7 @@
                         case 'integrations.pricingautomatedschedule':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                pricingAutomatedScheduleService.updateSchedule(item).then(function (data) {
+                                pricingScheduleService.updateSchedule(item).then(function (data) {
 
                                     console.log('pricingautomatedschedule here?', data);
 
