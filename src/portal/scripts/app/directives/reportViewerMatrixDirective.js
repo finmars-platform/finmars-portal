@@ -265,15 +265,8 @@
                         return item.___type === 'object'
                     });
 
-                    // console.log('scope.matrixSettings', scope.matrixSettings);
-                    //
-                    // console.log('Report Viewer Status: flatList', flatList);
-
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa);
                     scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate);
-                    console.log('fixed matrix test');
-                    // console.log('scope.columns ', scope.columns);
-                    // console.log('scope.rows ', scope.rows);
 
                     scope.matrix = reportViewerMatrixHelper.getMatrix(itemList,
                         scope.rows,
@@ -283,11 +276,7 @@
                         scope.matrixSettings.value_key,
                         scope.matrixSettings.subtotal_formula_id);
 
-                    //console.log('scope.matrix', scope.matrix);
-
                     scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix);
-
-                    // console.log('scope.totals', scope.totals);
 
                 };
 

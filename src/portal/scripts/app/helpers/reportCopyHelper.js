@@ -28,9 +28,6 @@
 
     var copy = function (evDataService, isReport, copyType) {
 
-        /*var rows = document.querySelectorAll('.ev-content .g-row.selected');
-        var columns = document.querySelectorAll('.g-columns-holder .g-cell');*/
-
         var flatList = evDataService.getFlatList();
 
         if (copyType === 'selected') {

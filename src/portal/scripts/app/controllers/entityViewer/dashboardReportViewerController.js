@@ -69,6 +69,12 @@
 
                 });
 
+                vm.entityViewerEventService.addEventListener(evEvents.GROUP_TYPE_SORT_CHANGE, function () {
+
+                    rvDataProviderService.sortGroupType(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                });
+
                 vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
 
                     rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);

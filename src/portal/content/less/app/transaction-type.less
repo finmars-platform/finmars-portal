@@ -10,37 +10,93 @@
 }
 
 .transaction-type-actions-tab-view {
-  .expr-btn {
-    margin-top: 0;
-    position: relative;
-    top: -8px;
-  }
-  .expression-input-container {
-    width: 60%;
-  }
+
   .custom-small-icon-btn, .expr-btn {
     min-width: 24px;
     height: 24px;
     min-height: 24px;
     line-height: 24px;
   }
+
+  md-switch {
+    padding-left: 11px;
+    margin-top: 0px;
+  }
+
+  md-input-container {
+    //width: 100%;
+    min-height: 58px;
+  }
+
+  entity-search-select {
+    md-input-container {
+      display: block;
+      margin-left: 0;
+    }
+  }
+
+  ttype-actions-input-select {
+    md-input-container {
+      width: 100%;
+      padding-right: 10px;
+      margin: 0;
+      box-sizing: border-box;
+    }
+  }
+
+  .ttype-actions-selector-with-phantoms {
+    margin-left: 0;
+    display: block;
+  }
+
+  /*div.flex-33 {
+    padding-left: 5px;
+    padding-right: 5px;
+  }*/
+}
+
+.transaction-type-actions-fields {
+  .expr-btn {
+    margin: 7px 10px 0 0;
+  }
+
+  .expression-input-container {
+    flex: 0 1 100%;
+  }
+
+}
+
+.transaction-type-actions-tab-view, .template-ttype-actions {
+  .ref {
+    background-color: rgb(255, 64, 129) !important;
+    color: #fff !important;
+  }
+  .md-icon-button.md-raised {
+    background: rgb(63, 81, 181);
+    color: #fff;
+    &:hover {
+      background: rgba(63, 81, 181, .8);
+    }
+  }
 }
 
 md-input-container.orange-actions-selector {
-    md-select {
-      .md-select-value.md-select-placeholder {
-        color: #e49400;
-      }
-      .md-select-value {
-        border-bottom-color: #e49400;
-      }
-    }
+  width: 100%;
 
-    md-select:not([disabled]):focus {
-      .md-select-value {
-        border-bottom-color: #e49400;
-      }
+  md-select {
+    .md-select-value.md-select-placeholder {
+      color: #e49400;
     }
+    .md-select-value {
+      border-bottom-color: #e49400;
+    }
+  }
+
+  md-select:not([disabled]):focus {
+    .md-select-value {
+      border-bottom-color: #e49400;
+    }
+  }
 }
 md-input-container.md-default-theme:not(.md-input-invalid).md-input-has-value.orange-actions-selector label, md-input-container:not(.md-input-invalid).md-input-has-value.orange-actions-selector label {
   color: #e49400;

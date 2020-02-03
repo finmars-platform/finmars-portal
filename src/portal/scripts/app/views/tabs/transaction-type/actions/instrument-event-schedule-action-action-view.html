@@ -17,7 +17,7 @@
 
             <div flex="50">
 
-                <md-input-container>
+                <md-input-container class="md-block">
                     <label for="" content-title>Event (Phantom)</label>
                     <md-select data-ng-model="item.instrument_event_schedule_action.event_schedule_phantom">
                         <md-option
@@ -32,7 +32,7 @@
 
             <div flex="50">
 
-                    <md-input-container>
+                    <md-input-container class="md-block">
                         <label for="" content-title>Transaction Type</label>
                         <md-select
                                 data-ng-model="item.instrument_event_schedule_action.transaction_type_from_instrument_type">
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div layout="row">
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Action is sent to pending: Boolean</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule_action.is_sent_to_pending">
@@ -54,7 +54,7 @@
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                         data-item="item.instrument_event_schedule_action.is_sent_to_pending"></expression-editor-button>
             </div>
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Action is book automatic: Boolean</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule_action.is_book_automatic">
@@ -66,7 +66,7 @@
     </div>
     <div flex="50">
         <div layout="row">
-            <div flex="33" layout="row">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Button position: Number</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule_action.button_position">
@@ -74,7 +74,7 @@
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                         data-item="item.instrument_event_schedule_action.button_position"></expression-editor-button>
             </div>
-            <div flex="33" layout="row">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Text: Text</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule_action.text">

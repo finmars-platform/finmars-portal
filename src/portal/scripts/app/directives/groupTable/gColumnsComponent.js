@@ -182,7 +182,7 @@
 
                 scope.checkReportSortButton = function (column, index) {
 
-                    if (scope.isReport && index < scope.groups.length && scope.viewContext !== "dashboard") {
+                    if (scope.isReport && index < scope.groups.length) {
 
                         if (column.key === scope.groups[index].key) {
                             return false;
@@ -268,6 +268,36 @@
 
                     scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
+                };
+
+                scope.groupsSortHandler = function (groupIndex, sort) {
+
+                    // reset sorting for other groups
+                    var i;
+                    for (i = 0; i < scope.groups.length; i = i + 1) {
+                        if (!scope.groups[i].options) {
+                            scope.groups[i].options = {};
+                        }
+                    }
+
+                    var group = scope.groups[groupIndex];
+                    console.log("groups sorting group", group);
+                    group.options.sort = sort;
+
+                    var groups = scope.evDataService.getGroups();
+
+                    groups.forEach(function (item) {
+
+                        if (group.key === item.key || group.id === item.id) {
+                            item = group
+                        }
+
+                    });
+
+                    scope.evDataService.setGroups(groups);
+                    scope.evDataService.setActiveGroupTypeSort(group);
+
+                    scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
                 };
 
                 scope.selectSubtotalType = function (column, type) {

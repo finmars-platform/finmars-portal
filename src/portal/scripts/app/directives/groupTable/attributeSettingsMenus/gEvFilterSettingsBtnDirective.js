@@ -35,7 +35,7 @@
                 scope.showFRCheckMark = function (filterRegime) {
                     if (scope.filter.options.filter_type === filterRegime) {
                         return true;
-                    };
+                    }
 
                     return false;
                 };

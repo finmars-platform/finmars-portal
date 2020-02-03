@@ -23,12 +23,21 @@
 
             <div layout="row" layout-align="space-between center">
                 <button class="calculator-btn md-ink-ripple"
-                        ng-click="vm.deleteLastChar()"
-                        ng-disabled="vm.calculatorIsBroken">
+                        data-ng-click="vm.deleteLastChar()"
+                        data-ng-disabled="vm.calculatorIsBroken">
                     <ng-md-icon icon="keyboard_backspace" style="fill: rgba(255, 255, 255, 0.87);"></ng-md-icon>
                 </button>
-                <button class="calculator-btn md-ink-ripple"
-                        ng-click="vm.clearAll()">C</button>
+
+                <div layout="row">
+                    <button class="calculator-btn md-ink-ripple pos-neg-toggle-btn"
+                            data-ng-click="vm.toggleNumberPosNeg()"
+                            data-ng-disabled="vm.calculatorIsBroken">
+                        <span>+</span>
+                        <span>-</span>
+                    </button>
+                    <button class="calculator-btn md-ink-ripple"
+                            ng-click="vm.clearAll()">C</button>
+                </div>
             </div>
 
             <div layout="row">
