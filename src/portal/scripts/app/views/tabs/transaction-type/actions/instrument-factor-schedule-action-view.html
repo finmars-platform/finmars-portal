@@ -32,7 +32,7 @@
                                                   is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.instrument_factor_schedule.instrument_toggle">
-                            <md-input-container>
+                            <md-input-container class="ttype-actions-selector-with-phantoms">
                                 <label for="" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.instrument_factor_schedule[vm.resolveInstrumentProp(item, 'instrument_factor_schedule', 'instrument')]"
@@ -63,7 +63,7 @@
         <div layout="row">
             <div flex="50">
                 <div layout="row">
-                    <div flex="50">
+                    <div flex="50" layout="row" layout-align="start top">
                         <md-input-container class="expression-input-container">
                             <label for="" class="uncut-text-on-focus-label" content-title>Factor: Number</label>
                             <input type="text" value-title
@@ -77,7 +77,7 @@
         </div>
     </div>
     <div flex="50">
-        <div flex="50" layout="row">
+        <div flex="50" layout="row" layout="row" layout-align="start top">
             <md-input-container class="expression-input-container">
                 <label for="" class="uncut-text-on-focus-label" content-title>Effective date: Date</label>
                 <input type="text" value-title style="color: grey;"
