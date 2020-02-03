@@ -20,6 +20,8 @@
         var vm = this;
 
         vm.entity = $scope.$parent.vm.entity;
+        vm.entityType = 'instrument';
+        vm.entityAttrs = $scope.$parent.vm.entityAttrs;
 
         var activeItemOriginal = null;
 
@@ -45,7 +47,22 @@
 
         if (vm.entity.event_schedules) {
             vm.readyStatus.eventSchedulesReady = true;
+        }
+
+        var getAttributeByKey = function (key) {
+
+            for (var i = 0; i < vm.entityAttrs.length; i++) {
+
+                if (vm.entityAttrs[i].key === key) {
+                    return vm.entityAttrs[i];
+                }
+
+            }
+
         };
+
+        vm.maturityDateAttr = getAttributeByKey('maturity_date');
+        vm.maturityPriceAttr = getAttributeByKey('maturity_price');
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.notificationClasses && vm.readyStatus.eventClasses && vm.readyStatus.eventSchedulesReady;

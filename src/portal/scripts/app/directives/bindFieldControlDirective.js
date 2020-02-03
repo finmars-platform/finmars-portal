@@ -23,8 +23,6 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('scope.entityChange', scope.entityChange);
-
                 scope.readyStatus = {classifier: false};
 
                 var attrs = scope.$parent.vm.attrs || [];
@@ -367,11 +365,11 @@
 
                         if (parseFloat(changedValue) < 0) {
 
-                            if (scope.numberFormat.negative_color_format_id === 1) {
+                            if (scope.numberFormat && scope.numberFormat.negative_color_format_id === 1) {
                                 numberInputElem.classList.add('negative-red');
                             }
 
-                            if (scope.item.options.onlyPositive) {
+                            if (scope.item.options && scope.item.options.onlyPositive) {
                                 numberIsInvalid = true;
                             } else {
                                 scope.entity[scope.getModelKey()] = JSON.parse(JSON.stringify(changedValue));

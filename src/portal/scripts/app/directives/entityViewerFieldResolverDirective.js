@@ -29,6 +29,7 @@
                 scope.type = 'id';
                 scope.fields = [];
 
+                var fieldsDataIsLoaded = false;
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
@@ -107,14 +108,7 @@
 
                             scope.readyStatus.tags = true;
 
-                            scope.$apply(function () {
-
-                                setTimeout(function () {
-                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                        ev.stopPropagation();
-                                    });
-                                }, 100);
-                            })
+                            scope.$apply();
                         })
                     }
                 };
@@ -206,10 +200,10 @@
                             }
                         });
 
-                        return resultCaption
+                        return resultCaption;
                     }
 
-                    return field.name
+                    return field.name;
                 };
 
                 scope.bindMCField = function (model) {
@@ -260,52 +254,46 @@
                     console.log('getData.key', scope.item.key);
                     console.log('getData.scope', scope);
 
-                    if (scope.entityType === 'complex-transaction') {
+                    if (!fieldsDataIsLoaded) {
 
-                        fieldResolverService.getFieldsByContentType(scope.item.content_type, scope.options).then(function (res) {
+                        if (scope.entityType === 'complex-transaction') {
 
-                            scope.type = res.type;
-                            scope.fields = res.data;
-                            scope.readyStatus.content = true;
+                            fieldResolverService.getFieldsByContentType(scope.item.content_type, scope.options).then(function (res) {
 
-                            console.log('getData', res);
+                                scope.type = res.type;
+                                scope.fields = res.data;
+                                scope.readyStatus.content = true;
+                                fieldsDataIsLoaded = true;
 
-                            scope.getFieldsGrouped();
+                                scope.getFieldsGrouped();
 
-                            scope.$apply(function () {
-
-                                setTimeout(function () {
-                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                        ev.stopPropagation();
-                                    });
-                                }, 100);
+                                scope.$apply();
                             });
-                        });
 
-                    } else {
+                        } else {
 
-                        fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
+                            fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
 
-                            scope.type = res.type;
-                            scope.fields = res.data;
-                            scope.readyStatus.content = true;
+                                scope.type = res.type;
+                                scope.fields = res.data;
+                                scope.readyStatus.content = true;
+                                fieldsDataIsLoaded = true;
 
-                            scope.getFieldsGrouped();
+                                scope.getFieldsGrouped();
 
-                            scope.$apply(function () {
-
-                                setTimeout(function () {
-                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                        ev.stopPropagation();
-                                    });
-                                }, 100);
+                                scope.$apply();
                             });
-                        });
+
+                        }
 
                     }
+
+
                 };
 
                 scope.$watch('item', function () {
+
+                    fieldsDataIsLoaded = false;
 
                     if (scope.fields.length === 1) { // only for smart search
 
@@ -326,6 +314,7 @@
                             } else {
                                 scope.fields.push(item_object);
                             }
+
                         }
 
                     }

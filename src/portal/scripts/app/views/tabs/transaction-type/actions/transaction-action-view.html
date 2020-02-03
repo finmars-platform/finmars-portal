@@ -131,7 +131,7 @@
                         </div>
 
                         <div data-ng-if="!item.transaction.instrument_toggle">
-                            <md-input-container>
+                            <md-input-container class="ttype-actions-selector-with-phantoms">
                                 <label for="" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'instrument')]"
@@ -164,7 +164,7 @@
 
         <div layout="row">
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Principal with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.principal_with_sign">
@@ -173,7 +173,7 @@
                         data-item="item.transaction.principal_with_sign" ></expression-editor-button>
             </div>
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Reference fx-rate: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.reference_fx_rate">
@@ -182,7 +182,7 @@
                         data-item="item.transaction.reference_fx_rate"></expression-editor-button>
             </div>
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Position size with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.position_size_with_sign">
@@ -197,7 +197,7 @@
 
         <div layout="row" layout-align="space-between">
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Carry with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.carry_with_sign">
@@ -206,7 +206,7 @@
                         data-item="item.transaction.carry_with_sign"></expression-editor-button>
             </div>
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Trade price: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.trade_price">
@@ -236,7 +236,7 @@
 
         <div layout="row" layout-align="space-between">
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Overheads with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.overheads_with_sign">
@@ -245,7 +245,7 @@
                         data-item="item.transaction.overheads_with_sign"></expression-editor-button>
             </div>
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Factor: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.factor">
@@ -263,7 +263,7 @@
 
         <div layout="row" layout-align="space-between">
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Cash consideration: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.cash_consideration">
@@ -275,7 +275,7 @@
         </div>
 
         <div layout="row">
-            <div flex="100">
+            <div flex="100" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Notes: Text</label>
                     <input type="text" value-title data-ng-model="item.transaction.notes">
@@ -317,7 +317,7 @@
                 </div>
             </div>
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Accounting date: Date</label>
                     <input type="text" value-title style="color: grey"
@@ -369,7 +369,7 @@
                 </div>
             </div>
 
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Cash date: Date</label>
                     <input type="text" value-title style="color: grey;"
@@ -397,18 +397,6 @@
                                               data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_interim_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Account interim</label>
-                            <md-select
-                                    data-ng-model="item.transaction.account_interim_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('account')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
-
                         <ttype-actions-input-select label-title="Account interim"
                                                     model="item.transaction.account_interim_input"
                                                     find-inputs="vm.findInputs('account')"
@@ -441,7 +429,7 @@
                         </div>
 
                         <div data-ng-if="!item.transaction.linked_instrument_toggle">
-                            <md-input-container>
+                            <md-input-container class="ttype-actions-selector-with-phantoms">
                                 <label for="" content-title>Linked instrument</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'linked_instrument')]"
@@ -489,7 +477,7 @@
                         </div>
 
                         <div data-ng-if="!item.transaction.allocation_pl_toggle">
-                            <md-input-container>
+                            <md-input-container class="ttype-actions-selector-with-phantoms">
                                 <label for="" content-title>Allocation-P&L</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_pl')]"
@@ -537,7 +525,7 @@
                         </div>
 
                         <div data-ng-if="!item.transaction.allocation_balance_toggle">
-                            <md-input-container>
+                            <md-input-container class="ttype-actions-selector-with-phantoms">
                                 <label for="" content-title>Allocation-Balance</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_balance')]"
@@ -645,18 +633,6 @@
                                               data-entity-type="'strategy-3'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_position_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy3 position</label>
-                            <md-select
-                                    data-ng-model="item.transaction.strategy3_position_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('strategy-3')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
-
                         <ttype-actions-input-select label-title="Strategy3 position"
                                                     model="item.transaction.strategy3_position_input"
                                                     find-inputs="vm.findInputs('strategy-3')"
@@ -681,46 +657,12 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy1_cash_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy1 cash</label>
-                            <md-select data-ng-model="item.transaction.strategy1_cash"
-                                       md-on-open="vm.loadRelation('strategy1_cash')">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['strategy1_cash'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['strategy1_cash'].length">
-                                    {{relationItem.name}}
-                                </md-option>
-
-                                <md-option data-ng-if="!vm.relationItems['strategy1_cash'].length"
-                                           ng-value="item.transaction.strategy1_cash_object.id">
-                                    {{item.transaction.strategy1_cash_object.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
                         <entity-search-select data-item="item.transaction.strategy1_cash"
                                               data-label="'Strategy1 cash'"
                                               data-input-text="item.transaction.strategy1_cash_object.name"
                                               data-entity-type="'strategy-1'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_cash_toggle">
-                        <!--<md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy1 cash</label>
-                            <md-select
-                                    data-ng-model="item.transaction.strategy1_cash_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('strategy-1')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>-->
-
                         <ttype-actions-input-select label-title="Strategy1 cash"
                                                     model="item.transaction.strategy1_cash_input"
                                                     find-inputs="vm.findInputs('strategy-1')"

@@ -193,16 +193,7 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
-        /*vm.editLayout = function () {
-            var entityAddress = {entityType: vm.entityType};
-            if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
-                entityAddress = {entityType: 'complex-transaction', from: vm.entityType};
-            }
-            $state.go('app.data-constructor', entityAddress);
-            $mdDialog.hide();
-        };*/
-
-        vm.editLayout = function (ev) {
+        /*vm.editLayout = function (ev) {
 
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
@@ -232,7 +223,7 @@
 
             });
 
-        };
+        };*/
 
         vm.manageAttrs = function (ev) {
             var entityAddress = {entityType: vm.entityType};

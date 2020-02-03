@@ -62,6 +62,29 @@
                                     </md-button>
                                 </div>
 
+                                <div class="sort"
+                                     data-ng-if="!checkReportSortButton(column, $index) && viewContext === 'dashboard'">
+                                    <md-button class="column-sort column-btns"
+                                               data-ng-show="groups[$index].options.sort === 'ASC'"
+                                               aria-label="open settings"
+                                               data-ng-click="groupsSortHandler($index, 'DESC')">
+                                        <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+                                    </md-button>
+                                    <md-button class="column-sort-up column-btns"
+                                               data-ng-show="groups[$index].options.sort === 'DESC'"
+                                               aria-label="open settings"
+                                               data-ng-click="groupsSortHandler($index, 'ASC')">
+                                        <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
+                                    </md-button>
+                                    <md-button class="column-sort column-both-sorted column-btns"
+                                               data-ng-show="!groups[$index].options.sort"
+                                               aria-label="open settings"
+                                               data-ng-click="groupsSortHandler($index, 'DESC')">
+                                        <ng-md-icon class="c-up" icon="keyboard_arrow_up"></ng-md-icon>
+                                        <ng-md-icon class="c-down" icon="keyboard_arrow_down"></ng-md-icon>
+                                    </md-button>
+                                </div>
+
                                 <!-- if inside .caption will be two <span> with ng-if, firefox will add white space to column name -->
                                 <!-- IMPORTANT .column-name-span class needed for converting table into file -->
                                 <div ng-if="!column.layout_name" class="caption">

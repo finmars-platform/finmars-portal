@@ -1499,8 +1499,6 @@
             }
             // < if created input with name of deleted one, remove it from warning >
 
-            originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
-            //vm.save(originalEntity, true);
 
             vm.newItem.name = null;
             vm.newItem.verbose_name = null;

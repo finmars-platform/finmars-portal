@@ -4,6 +4,8 @@
            style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools"  data-ng-if="vm.checkReadyStatus()" data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
+            <is-draggable-sign></is-draggable-sign>
+
             <h2 data-ng-if="vm.hasEditPermission">Edit Transaction type</h2>
             <h2 data-ng-if="!vm.hasEditPermission">View Transaction type</h2>
             <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">

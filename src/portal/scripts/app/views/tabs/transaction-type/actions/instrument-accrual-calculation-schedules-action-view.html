@@ -32,7 +32,7 @@
                                                   is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.instrument_accrual_calculation_schedules.instrument_toggle">
-                            <md-input-container>
+                            <md-input-container class="ttype-actions-selector-with-phantoms">
                                 <label for="" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.instrument_accrual_calculation_schedules[vm.resolveInstrumentProp(item, 'instrument_accrual_calculation_schedules', 'instrument')]"
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div layout="row">
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Accrual start date: Date</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.accrual_start_date">
@@ -69,7 +69,7 @@
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                         data-item="item.instrument_accrual_calculation_schedules.accrual_start_date"></expression-editor-button>
             </div>
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>First payment date: Date</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.first_payment_date">
@@ -77,7 +77,7 @@
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                         data-item="item.instrument_accrual_calculation_schedules.first_payment_date"></expression-editor-button>
             </div>
-            <div flex="33">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Accrual size: Number</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.accrual_size">
@@ -88,7 +88,7 @@
         </div>
     </div>
     <div flex="50">
-        <div flex="50" layout="row">
+        <div flex="50" layout="row" layout-align="start top">
             <md-input-container class="expression-input-container">
                 <label for="" class="uncut-text-on-focus-label" content-title>Notes: Text</label>
                 <input type="text" value-title style="color: grey;"
@@ -98,7 +98,7 @@
                     data-item="item.instrument_accrual_calculation_schedules.notes"></expression-editor-button>
         </div>
         <div layout="row">
-            <div flex="33" layout="row">
+            <div flex="33" layout="row" layout-align="start top">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Periodicity n: Number</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.periodicity_n">
