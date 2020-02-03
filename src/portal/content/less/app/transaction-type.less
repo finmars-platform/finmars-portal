@@ -28,6 +28,13 @@
     min-height: 58px;
   }
 
+  entity-search-select {
+    md-input-container {
+      display: block;
+      margin-left: 0;
+    }
+  }
+
   ttype-actions-input-select {
     md-input-container {
       width: 100%;
@@ -35,6 +42,11 @@
       margin: 0;
       box-sizing: border-box;
     }
+  }
+
+  .ttype-actions-selector-with-phantoms {
+    margin-left: 0;
+    display: block;
   }
 
   /*div.flex-33 {
@@ -69,20 +81,22 @@
 }
 
 md-input-container.orange-actions-selector {
-    md-select {
-      .md-select-value.md-select-placeholder {
-        color: #e49400;
-      }
-      .md-select-value {
-        border-bottom-color: #e49400;
-      }
-    }
+  width: 100%;
 
-    md-select:not([disabled]):focus {
-      .md-select-value {
-        border-bottom-color: #e49400;
-      }
+  md-select {
+    .md-select-value.md-select-placeholder {
+      color: #e49400;
     }
+    .md-select-value {
+      border-bottom-color: #e49400;
+    }
+  }
+
+  md-select:not([disabled]):focus {
+    .md-select-value {
+      border-bottom-color: #e49400;
+    }
+  }
 }
 md-input-container.md-default-theme:not(.md-input-invalid).md-input-has-value.orange-actions-selector label, md-input-container:not(.md-input-invalid).md-input-has-value.orange-actions-selector label {
   color: #e49400;
