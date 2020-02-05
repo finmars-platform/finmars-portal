@@ -1,0 +1,3 @@
+<div>
+    Pricing
+</div>

@@ -1,0 +1,91 @@
+<div data-ng-controller="PricingTabController as vm">
+    <div>
+        <div data-ng-if="vm.readyStatus.content">
+
+            <div layout="row">
+
+                <md-input-container class="md-block disabled-btn" style="width: 200px;">
+                    <label>System Currency</label>
+                    <md-select md-on-close="vm.searchTermCurrency = ''"
+                               data-ng-model="vm.system_currency"
+                               md-on-open="vm.getCurrencyFields()"
+                               md-container-class="common-select-container">
+                        <md-select-header>
+                            <input data-ng-model="vm.searchTermCurrency"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+                        <div class="select-options-holder">
+                            <md-option
+                                    data-ng-repeat="field in vm.systemCurrencyFields | orderBy:'-'+field.name | filter:{name: vm.searchTermCurrency} as results track by field.id "
+                                    ng-value="field.id">
+                                {{field.name}}
+                            </md-option>
+                        </div>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" style="width: 550px;">
+                    <label>Pricing Algorithm</label>
+                    <md-select md-on-close="vm.searchTermDailyPricingModel = ''"
+                               data-ng-model="vm.entity.daily_pricing_model"
+                               md-on-open="vm.getDailyPricingModelFields()"
+                               md-container-class="common-select-container">
+                        <md-select-header>
+                            <input data-ng-model="vm.searchTermDailyPricingModel"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+                        <div class="select-options-holder">
+                            <md-option
+                                    data-ng-repeat="field in vm.dailyPricingModelFields | orderBy:'-'+field.name | filter:{name: vm.searchTermDailyPricingModel} as results track by field.id "
+                                    ng-value="field.id">
+                                {{field.name}}
+                            </md-option>
+                        </div>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" style="width: 200px;">
+                    <label>FX Download Scheme</label>
+                    <md-select md-on-close="vm.searchTermScheme = ''"
+                               data-ng-model="vm.entity.price_download_scheme"
+                               md-on-open="vm.getPriceDownloadSchemeFields()"
+                               md-container-class="common-select-container">
+                        <md-select-header>
+                            <input data-ng-model="vm.searchTermScheme"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+                        <div class="select-options-holder">
+                            <md-option
+                                    data-ng-repeat="field in vm.priceDownloadSchemeFields | orderBy:'-'+field.scheme_name | filter:{scheme_name: vm.searchTermScheme} as results track by field.id "
+                                    ng-value="field.id">
+                                {{field.scheme_name}}
+                            </md-option>
+                        </div>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container style="width: 200px;">
+                    <label for="">ID for FX Download</label>
+                    <input type="text" data-ng-model="vm.entity.reference_for_pricing">
+                </md-input-container>
+
+            </div>
+
+
+        </div>
+        <div data-ng-if="!vm.readyStatus.content">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+    </div>
+</div>
