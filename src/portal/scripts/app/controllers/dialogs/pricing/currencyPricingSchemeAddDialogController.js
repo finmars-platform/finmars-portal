@@ -12,7 +12,10 @@
 
         var vm = this;
 
-        vm.item = {};
+        vm.item = {
+            type_settings: {}
+        };
+
         vm.types = [];
 
         vm.readyStatus = {types: false, attributeTypes: false};

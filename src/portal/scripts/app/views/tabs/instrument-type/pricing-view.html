@@ -1,5 +1,122 @@
 <div>
 
-    Pricing
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>
+                Pricing Policy
+            </th>
+
+            <th>
+                Pricing Scheme
+            </th>
+
+            <th>
+                Pricing Scheme Clarification
+            </th>
+
+            <th>
+                Parameter Clarification
+            </th>
+
+            <th>
+                Edit Default Parameters
+            </th>
+
+            <th>
+                Edit Scheme
+            </th>
+
+            <th>
+                Notes
+            </th>
+
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        <tr data-ng-repeat="item in vm.entity.pricing_policies">
+
+            <td>
+                {{item.pricing_policy_object.name}}
+            </td>
+
+            <td>
+                {{item.pricing_scheme_object.name}}
+            </td>
+
+            <td>
+                {{item.pricing_scheme_object.notes_for_user}}
+            </td>
+
+            <td>
+                {{item.pricing_scheme_object.notes_for_parameter}}
+            </td>
+
+            <td>
+
+                <div data-ng-if="item.pricing_scheme_object.type_object.input_type == 1">
+                    -
+                </div>
+
+                <div class="m-t-16" data-ng-if="item.pricing_scheme_object.type_object.input_type == 2" data-ng-init="item.default_value ? item.switchState = 'default_value' : item.switchState = 'attribute_key'">
+
+                    <div layout="row" data-ng-if="item.switchState == 'default_value'">
+
+                        <md-input-container>
+                            <label>Default Value</label>
+                            <input type="text" data-ng-model="item.default_value">
+                        </md-input-container>
+
+                        <md-button class="md-raised md-primary" data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch</md-button>
+
+                    </div>
+
+                    <div layout="row" data-ng-if="item.switchState == 'attribute_key'">
+
+                        <md-input-container class="m-t-16">
+                            <label>Options</label>
+                            <md-select data-ng-model="item.attribute_key">
+                                <md-option value="reference_for_pricing">Default Reference For Pricing</md-option>
+                                <md-option ng-value="item.user_code" data-ng-repeat="item in vm.attributeTypes">{{item.name}} ({{item.user_code}})</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-button class="md-raised md-primary" data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch</md-button>
+
+                    </div>
+
+                </div>
+
+                <div class="m-t-16" data-ng-if="item.pricing_scheme_object.type_object.input_type == 3">
+                    Multiple Parameter Input
+                </div>
+
+            </td>
+
+            <td>
+                <md-button class="md-raised" data-ng-click="vm.editPricingScheme($event, item.pricing_scheme_object)">Edit</md-button>
+            </td>
+
+            <td>
+                <md-input-container>
+                    <label>Notes</label>
+                    <input type="text" data-ng-model="item.notes">
+                </md-input-container>
+            </td>
+
+        </tr>
+
+        </tbody>
+
+
+    </table>
+
 
 </div>

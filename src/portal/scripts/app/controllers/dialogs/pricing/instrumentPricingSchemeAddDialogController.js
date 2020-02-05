@@ -13,7 +13,10 @@
 
         var vm = this;
 
-        vm.item = {};
+        vm.item = {
+            type_settings: {}
+        };
+
         vm.types = [];
         vm.switchState = 'default_value';
 
