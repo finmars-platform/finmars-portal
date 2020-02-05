@@ -53,6 +53,7 @@
         vm.attrs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = [];
+        vm.attributeTypes = [];
 
         vm.range = gridHelperService.range;
 
@@ -1089,6 +1090,77 @@
 
             });
 
+
+        };
+
+        vm.editPricingScheme = function($event, item) {
+
+            if(vm.entityType === 'currency') {
+
+                $mdDialog.show({
+                    controller: 'CurrencyPricingSchemeEditDialogController as vm',
+                    templateUrl: 'views/dialogs/pricing/currency-pricing-scheme-edit-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            item: item
+                        }
+
+                    }
+                }).then(function (res) {
+
+                    if (res.status === 'agree') {
+                        // Do what?
+                    }
+
+                })
+
+            } else {
+
+                $mdDialog.show({
+                    controller: 'InstrumentPricingSchemeEditDialogController as vm',
+                    templateUrl: 'views/dialogs/pricing/instrument-pricing-scheme-edit-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            item: item
+                        }
+
+                    }
+                }).then(function (res) {
+
+                    if (res.status === 'agree') {
+                        // Do what?
+                    }
+
+                })
+
+            }
+
+        };
+
+        vm.switchPricingPolicyParameter = function($event, item) {
+
+            if (item.switchState === 'default_value') {
+                item.switchState = 'attribute_key'
+            } else {
+                item.switchState = 'default_value'
+            }
+
+            item.default_value = null;
+            item.attribute_key = null;
 
         };
 
