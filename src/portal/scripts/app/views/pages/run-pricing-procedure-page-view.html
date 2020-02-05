@@ -1,0 +1,73 @@
+<div class="p-24">
+
+    <div layout="column" data-ng-if="vm.readyStatus.data">
+
+        <h1>Run Pricing</h1>
+
+        <table>
+
+            <thead>
+
+            <tr>
+                <th>
+                    Procedure Name
+                </th>
+
+                <th>
+                    Notes
+                </th>
+                <th>
+                    Date Range
+                </th>
+                <th>
+                    Execute
+                </th>
+                <th>
+                    Edit Procedure
+                </th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr data-ng-repeat="item in vm.procedures">
+
+                <td>
+                    {{item.name}}
+                </td>
+
+                <td>
+                    {{item.notes}}
+                </td>
+
+                <td>
+                    <div data-ng-if="item.price_date_from">{{item.price_date_from}} - {{item.price_date_to}}</div>
+                    <div data-ng-if="!item.price_date_from">&nbsp;</div>
+                </td>
+
+                <td>
+                    <md-button class="md-raised" data-ng-click="vm.executeProcedure($event, item)">Execute</md-button>
+                </td>
+
+                <td>
+                    <md-button class="md-raised" data-ng-click="vm.editProcedure($event, item)">Edit</md-button>
+                </td>
+
+            </tr>
+
+            </tbody>
+
+
+        </table>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+    </div>
+
+
+</div>
