@@ -23,6 +23,7 @@
         var previousGroup = [];
         var openedGroupNames = [];
         var tableAttributes = data.availableAttrs;
+
         var tableAttrsTree = {
             name: '-',
             items: []
@@ -35,6 +36,11 @@
 
                 var tAttr = JSON.parse(JSON.stringify(tableAttributes[a]));
                 var attrPathKeys = tAttr.name.split(". ");
+
+                if (tAttr.hasOwnProperty('attribute_type')) { // place all dynamic attributes into separate group
+                    attrPathKeys.unshift('User Attributes');
+                }
+
                 var attrName = attrPathKeys.pop();
                 var attrObjPath = tableAttrsTree.items;
 
@@ -84,11 +90,10 @@
 
             }
 
-            console.log("selector tableAttrsTree", tableAttrsTree);
-
         };
 
         var getCurrentLocation = function () {
+
             var currentLocationPath = '-';
 
             if (openedGroupNames.length > 0) {
@@ -106,6 +111,7 @@
             }
 
             vm.currentLocation = currentLocationPath;
+
         };
 
         vm.returnToPrevGroup = function () {

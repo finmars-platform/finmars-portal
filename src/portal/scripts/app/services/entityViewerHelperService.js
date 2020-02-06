@@ -67,6 +67,8 @@
 
         if (isReport) {
 
+            activeLayoutConfig.data
+
             if (activeLayoutConfig.data.reportOptions) {
                 delete activeLayoutConfig.data.reportOptions.task_id;
                 delete activeLayoutConfig.data.reportOptions.recieved_at;
@@ -87,9 +89,11 @@
 
             }
 
-            delete layoutCurrentConfig.data.reportOptions.task_id;
-            delete layoutCurrentConfig.data.reportOptions.recieved_at;
-            delete layoutCurrentConfig.data.reportOptions.task_status;
+            if (layoutCurrentConfig.data.reportOptions) {
+                delete layoutCurrentConfig.data.reportOptions.task_id;
+                delete layoutCurrentConfig.data.reportOptions.recieved_at;
+                delete layoutCurrentConfig.data.reportOptions.task_status;
+            }
 
             if (layoutCurrentConfig.data.hasOwnProperty('reportLayoutOptions') && layoutCurrentConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
 

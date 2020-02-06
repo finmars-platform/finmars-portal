@@ -842,9 +842,10 @@
 
                 listLayout.data.interfaceLayout = interfaceLayoutToSave;
 
-                if (isRootEntityViewer()) {
+                /*if (isRootEntityViewer()) {
                     listLayout.data.additions = JSON.parse(JSON.stringify(getAdditions()));
-                }
+                }*/
+                listLayout.data.additions = JSON.parse(JSON.stringify(getAdditions()));
 
                 if (options) {
 
@@ -993,9 +994,10 @@
             setGroups(listLayout.data.grouping);
             setFilters(listLayout.data.filters);
 
-            if (isRootEntityViewer()) {
+            /*if (isRootEntityViewer()) {
                 setAdditions(listLayout.data.additions);
-            }
+            }*/
+            setAdditions(listLayout.data.additions);
 
             setListLayout(listLayout);
 

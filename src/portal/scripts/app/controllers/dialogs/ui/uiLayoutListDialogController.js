@@ -34,7 +34,6 @@
             splitPanelLayoutId = spDefaultLayoutData.layoutId;
         }
 
-
         vm.invites = [];
 
         //var contentType = metaContentTypesService.getContentTypeUIByEntity(options.entityType);
@@ -178,6 +177,7 @@
             var layoutData = layoutsList[index];
 
             if (isRootEntityViewer) {
+
                 if (!layoutData.is_default) {
 
                     for (var i = 0; i < vm.items.length; i++) {
@@ -193,10 +193,25 @@
                         }
                     }
 
-
                     layoutData.is_default = true;
                     item.is_default = true;
                     uiService.updateListLayout(layoutData.id, layoutData);
+
+                    // needed to update is_default on front-end
+                    var listLayout = entityViewerDataService.getListLayout();
+                    var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
+
+                    if (listLayout.id === layoutData.id) {
+                        listLayout.is_default = true;
+                        activeLayoutConfig.is_default = true;
+                    } else {
+                        listLayout.is_default = false;
+                        activeLayoutConfig.is_default = false;
+                    }
+
+                    entityViewerDataService.setListLayout(listLayout);
+                    entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});
+
                 }
 
             } else if (layoutData.id !== splitPanelLayoutId) {

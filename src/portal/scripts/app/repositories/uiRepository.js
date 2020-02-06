@@ -277,17 +277,6 @@
         return [{
             "name": "default",
             "data": {
-                "foreignEntityId": null,
-                "table": {
-                    "sorting": {
-                        "column": {
-                            "sort": null,
-                            "key": null
-                        }
-                    },
-                    "columns": [],
-                    "filters": []
-                },
                 "entityType": null,
                 "folding": false,
                 "sorting": {
@@ -303,16 +292,9 @@
                     }
                 },
                 "grouping": [],
-                "columns": [
-                    /*{
-                        "value_type": 10,
-                        "name": "Name",
-                        "key": "name"
-                    }*/
-                ],
+                "columns": [],
                 "filters": [],
-                "additions": {},
-                "additionsType": ""
+                "additions": {}
             }
         }]
     };

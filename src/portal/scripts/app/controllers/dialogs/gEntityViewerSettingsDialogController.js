@@ -21,7 +21,7 @@
         vm.saveSettings = function () {
 
             if (pagePagination.page_size !== vm.itemsToLoad) {
-                console.log("pagination pagePagination changed");
+
                 pagePagination = entityViewerDataService.getPagination();
                 pagePagination.page_size = vm.itemsToLoad;
 

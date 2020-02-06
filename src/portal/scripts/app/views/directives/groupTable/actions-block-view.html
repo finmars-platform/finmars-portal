@@ -2,7 +2,7 @@
 
     <div class="actions-block-scrollable-area">
 
-        <div ng-if="!isReport && entityType != 'reconciliation' ">
+        <div ng-if="!isReport && entityType != 'reconciliation'">
 
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row"
                  data-ng-if="!isReport && hasCreatePermission">
@@ -58,6 +58,13 @@
                                        ng-class="{'disabled-btn': !layout.id  }">
                                 <span>Export Layout</span>
                             </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-checkbox data-ng-model="isDefaultLayout"
+                                         data-ng-disabled="true"
+                                         aria-label="is default layout">
+                                Default
+                            </md-checkbox>
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
@@ -321,6 +328,16 @@
                                                ng-class="{'disabled-btn': !layout.id  }">
                                         <span>Export Layout</span>
                                     </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <div class="actions-block-dropdown-checkbox-holder">
+                                        <md-checkbox data-ng-model="isLayoutDefault"
+                                                     data-ng-disabled="true"
+                                                     class="m-b-0"
+                                                     aria-label="is default layout">
+                                            Default
+                                        </md-checkbox>
+                                    </div>
                                 </md-menu-item>
                             </md-menu-content>
                         </md-menu>
