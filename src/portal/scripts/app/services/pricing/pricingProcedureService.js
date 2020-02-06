@@ -1,7 +1,7 @@
 /**
  * Created by szhitenev on 25.08.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
@@ -15,16 +15,20 @@
         return pricingProcedureRepository.getByKey(id);
     };
 
-    var create = function(account) {
+    var create = function (account) {
         return pricingProcedureRepository.create(account);
     };
 
-    var update = function(id, account) {
+    var update = function (id, account) {
         return pricingProcedureRepository.update(id, account);
     };
 
     var deleteByKey = function (id) {
         return pricingProcedureRepository.deleteByKey(id);
+    };
+
+    var runProcedure = function (id, data) {
+        return pricingProcedureRepository.runProcedure(id, data);
     };
 
     module.exports = {
@@ -33,7 +37,9 @@
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        runProcedure: runProcedure
     }
 
 }());

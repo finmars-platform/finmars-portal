@@ -1,7 +1,7 @@
 /**
  * Created by szhitenev on 25.08.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
@@ -85,13 +85,32 @@
             })
     };
 
+
+    function runProcedure(id, data) {
+
+        return xhrService.fetch(baseUrl + 'pricing/procedure/' + id + '/run-procedure/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    }
+
     module.exports = {
 
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+
+        runProcedure: runProcedure
     }
 
 }());

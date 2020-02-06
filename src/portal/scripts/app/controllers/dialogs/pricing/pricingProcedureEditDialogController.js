@@ -35,6 +35,10 @@
 
                 vm.item = data;
 
+                if (vm.item.price_date_to) {
+                    vm.item.isRange = true
+                }
+
                 vm.readyStatus.content = true;
 
                 $scope.$apply();
