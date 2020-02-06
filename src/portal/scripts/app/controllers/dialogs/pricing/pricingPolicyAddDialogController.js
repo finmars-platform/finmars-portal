@@ -57,7 +57,13 @@
 
         vm.agree = function () {
 
-            $mdDialog.hide({status: 'agree'});
+            pricingPolicyService.create(vm.item).then(function (data) {
+
+                vm.item = data;
+
+                $mdDialog.hide({status: 'agree', data: {item: vm.item}});
+
+            });
 
         };
 

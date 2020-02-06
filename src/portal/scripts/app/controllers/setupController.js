@@ -9,7 +9,7 @@
     var usersService = require('../services/usersService');
     var usersGroupService = require('../services/usersGroupService');
 
-    var configurationImportService = require('../services/configuration-import/configurationImportService');
+    var backendConfigurationImportService = require('../services/backendConfigurationImportService');
 
     module.exports = function ($scope, $state) {
 
@@ -126,47 +126,48 @@
 
         };
 
-        vm.applyItem = function ($event, item) {
+        vm.importConfiguration = function (resolve) {
 
-            var sections = item.data.body;
+            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
 
-            console.log('vm.applyItem', items);
-            var settings = {mode: 'skip'};
+                vm.importConfig = data;
 
-            var items = [];
-            // var mappingItems = [];
+                vm.counter = data.processed_rows;
+                vm.activeItemTotal = data.total_rows;
 
-            sections.forEach(function (item) {
+                $scope.$apply();
 
-                if (item.section_name === 'configuration') {
-                    items = item.items;
+                if (vm.importConfig.task_status === 'SUCCESS') {
+
+                    resolve()
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.importConfiguration(resolve);
+                    }, 1000)
+
                 }
 
-                // if (item.section_name === 'mappings') {
-                //     mappingItems = item.items;
-                // }
+            })
 
-            });
+        };
 
-            // console.log("mappingItems", mappingItems);
-            console.log("items", items);
+        vm.applyItem = function ($event, item) {
 
-            // vm.items.forEach(function (item) {
-            //
-            //     item.active = false;
-            //
-            //     item.content.forEach(function (child) {
-            //         child.active = false;
-            //     });
-            //
-            // });
+            vm.importConfig = {
+                data: item.data,
+                mode: 'overwrite'
+            };
 
-            settings.member = vm.currentMember;
-            settings.groups = vm.groups;
+            new Promise(function (resolve, reject) {
 
-            configurationImportService.importConfiguration(items, settings).then(function () {
+                vm.importConfiguration(resolve)
+
+            }).then(function (value) {
 
                 $state.go('app.home');
+
             })
 
 

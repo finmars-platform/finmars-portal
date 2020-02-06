@@ -245,7 +245,7 @@
                             <span class="side-nav-icon">
                                 <ng-md-icon icon="history" size="24"></ng-md-icon>
                             </span>
-                                <span class="side-nav-title">History</span>
+                                <span class="side-nav-title">Transactions</span>
                                 <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                             </md-button>
 
@@ -259,6 +259,29 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li>
+                                    <md-button class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.data.transaction">
+                                        <span class="side-nav-title">Base Transactions</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li data-ng-if="vm.accessSectionTable">
+                        <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="history">
+                            <md-button class="sidemenu-btn history-sidenav-menu-btn">
+                            <span class="side-nav-icon">
+                                <ng-md-icon icon="history" size="24"></ng-md-icon>
+                            </span>
+                                <span class="side-nav-title">Valuations</span>
+                                <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                            </md-button>
+
+                            <ul class="sidenav-dropdown-menu history-dropdown-menu-element ng-hide">
                                 <li data-ng-if="vm.accessTable.data_price_history">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
@@ -273,6 +296,15 @@
                                                class="sidenav-dropdown-menu-btn"
                                                ui-sref="app.data.currency-history">
                                         <span class="side-nav-title">FX Rates</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                                <li>
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.run-pricing-procedure">
+                                        <span class="side-nav-title">Run Pricing</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -428,14 +460,6 @@
                                     <md-button class="sidenav-dropdown-menu-btn"
                                                ui-sref="app.system.transactions">
                                         <span class="side-nav-title">Transactions Audit</span>
-                                        <span class="md-visually-hidden"
-                                              data-ng-if="isSelected()">current page</span>
-                                    </md-button>
-                                </li>
-                                <li data-ng-if="vm.accessTable.report_base_transaction">
-                                    <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.transaction">
-                                        <span class="side-nav-title">Base Transactions</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -601,6 +625,52 @@
                                             </md-button>
                                         </li>
 
+                                    </ul>
+
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="dataTypes">
+                                    <md-button class="sidemenu-btn dataTypes-sidenav-menu-btn">
+                                        <span class="side-nav-title">Pricing</span>
+                                        <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                                    </md-button>
+
+                                    <ul class="sidenav-dropdown-menu dataTypes-dropdown-menu-element ng-hide">
+
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.pricing-schemes">
+                                                <span class="side-nav-title">Schemes</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.pricing-policy">
+                                                <span class="side-nav-title">Policies</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.pricing-procedure">
+                                                <span class="side-nav-title">Procedures</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.pricing-schedules">
+                                                <span class="side-nav-title">Schedules</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
                                     </ul>
 
                                 </div>

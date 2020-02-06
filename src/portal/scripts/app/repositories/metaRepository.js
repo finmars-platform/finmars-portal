@@ -158,6 +158,10 @@
                     {
                         label: 'Pricing',
                         templateUrl: 'views/tabs/currency/pricing-view.html'
+                    },
+                    {
+                        label: 'Pricing (Old)',
+                        templateUrl: 'views/tabs/currency/pricing-view-old.html'
                     }
                 ];
             case 'instrument':
@@ -171,12 +175,16 @@
                         templateUrl: 'views/tabs/instrument/events-view.html'
                     },
                     {
-                        label: 'Pricing',
+                        label: 'Pricing (old)',
                         templateUrl: 'views/tabs/instrument/manual-pricing-formulas-view.html'
                     },
                     {
                         label: 'Factors',
                         templateUrl: 'views/tabs/instrument/factor-schedule-view.html'
+                    },
+                    {
+                        label: 'Pricing',
+                        templateUrl: 'views/tabs/instrument/pricing-view.html'
                     }
                 ];
             case 'complex-transaction':

@@ -7,7 +7,7 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var pricingAutomatedScheduleService = require('../../services/import/pricingAutomatedScheduleService');
+    var pricingScheduleService = require('../../services/pricing/pricingScheduleService');
 
 
     module.exports = function ($scope, $mdDialog) {
@@ -47,7 +47,7 @@
             return res;
         };
 
-        pricingAutomatedScheduleService.getSchedule().then(function (data) {
+        pricingScheduleService.getSchedule().then(function (data) {
             vm.schedule = data;
             vm.readyStatus.schedule = true;
 
@@ -111,7 +111,7 @@
                 vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day + ' ' + vm.cron.month + ' *'
             }
 
-            pricingAutomatedScheduleService.updateSchedule(vm.schedule).then(function (data) {
+            pricingScheduleService.updateSchedule(vm.schedule).then(function (data) {
 
                 $mdDialog.show({
                     controller: 'SuccessDialogController as vm',

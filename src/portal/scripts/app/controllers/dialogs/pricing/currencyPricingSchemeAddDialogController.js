@@ -6,15 +6,38 @@
     'use strict';
 
     var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
+    var attributeTypeService = require('../../../services/attributeTypeService');
 
     module.exports = function($scope, $mdDialog, data){
 
         var vm = this;
 
-        vm.item = {};
+        vm.item = {
+            type_settings: {}
+        };
+
         vm.types = [];
 
-        vm.readyStatus = {types: false};
+        vm.readyStatus = {types: false, attributeTypes: false};
+
+        vm.switchState = 'default_value';
+
+
+        vm.getAttributeTypes = function () {
+
+            var entityType = 'currency';
+
+            attributeTypeService.getList(entityType).then(function (data) {
+
+                vm.attributeTypes = data.results;
+
+                vm.readyStatus.attributeTypes = true;
+
+                $scope.$apply();
+
+            })
+
+        };
 
         vm.getTypes = function(){
 
@@ -32,6 +55,32 @@
 
         };
 
+        vm.addParameter = function ($event) {
+
+            if (!vm.item.type_settings.data) {
+                vm.item.type_settings.data = {
+                    parameters: []
+                }
+            }
+
+            var index = vm.item.type_settings.data.parameters.length;
+
+            vm.item.type_settings.data.parameters.push({index: index, ___switch_state: 'default_value'})
+
+        };
+
+        vm.switchParameter = function($event, item) {
+
+            if (item.___switch_state === 'default_value') {
+                item.___switch_state = 'attribute_key'
+            } else {
+                item.___switch_state = 'default_value'
+            }
+
+            item.default_value = null;
+            item.attribute_key = null;
+
+        };
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -45,14 +94,17 @@
 
                 console.log('data', data);
 
-                $mdDialog.hide({status: 'agree'});
+                $mdDialog.hide({status: 'agree', data: {item: data}});
 
             })
 
         };
 
         vm.init = function () {
+
             vm.getTypes();
+            vm.getAttributeTypes();
+
         };
 
         vm.init();
