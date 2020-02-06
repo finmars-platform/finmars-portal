@@ -1,26 +1,13 @@
 /**
- * Created by szhitenev on 17.08.2016.
+ * Created by szhitenev on 30.01.2020.
  */
-(function () {
+(function(){
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var pricingScheduleService= require('../../../services/pricing/pricingScheduleService');
 
-    var metaService = require('../../services/metaService');
-    var dataProvidersService = require('../../services/import/dataProvidersService');
-    var scheduleService = require('../../services/import/scheduleService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
-    var instrumentService = require('../../services/instrumentService');
-
-    var importInstrumentService = require('../../services/import/importInstrumentService');
-    var pricingScheduleService = require('../../services/pricing/pricingScheduleService');
-
-
-    module.exports = function ($scope, $mdDialog, $mdpTimePicker) {
-
-        logService.controller('AutomatedUploadsHistoryDialogController', 'initialized');
+    module.exports = function($scope, $mdDialog, data){
 
         var vm = this;
 
@@ -55,54 +42,6 @@
             return res;
         };
 
-        pricingScheduleService.getSchedule().then(function (data) {
-
-            console.log('data', data);
-
-            vm.schedule = data;
-            vm.readyStatus.schedule = true;
-
-            var values = vm.schedule.cron_expr.split(' ');
-
-
-            console.log('value', values);
-
-
-            if (values.length === 5) {
-
-                vm.cron.time = new Date();
-                vm.cron.time.setMinutes(values[0]);
-                vm.cron.time.setHours(values[1]);
-
-
-                if (values[3] === '*' && values[2] === '*') {
-                    vm.cron.periodicity = 2;
-                    vm.cron.day = values[4].split(',');
-                    vm.cron.day.forEach(function (day) {
-                        vm.days[day - 1] = {status: true};
-                    })
-
-                }
-                if (values[4] === '*') {
-                    vm.cron.periodicity = 3;
-                    vm.cron.day = values[2].split(',');
-                    if (values[3].length > 1) {
-                        vm.cron.month = values[3].split(',');
-                    } else {
-                        vm.cron.month = [values[3]];
-                    }
-                }
-
-                if (values[4] === '*' && values[3] === '*' && values[2] === '*') {
-                    vm.cron.periodicity = 1
-                }
-            }
-
-            console.log('vm.periodicity', vm.periodicity);
-
-            $scope.$apply();
-        });
-
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
@@ -131,7 +70,7 @@
                 vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day + ' ' + vm.cron.month + ' *'
             }
 
-            pricingScheduleService.updateSchedule(vm.schedule).then(function (data) {
+            pricingScheduleService.create(vm.schedule).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: 'success'});
                 $scope.$apply();
@@ -153,6 +92,12 @@
             })
         };
 
-    };
+        vm.init = function(){
+
+        };
+
+        vm.init();
+
+    }
 
 }());

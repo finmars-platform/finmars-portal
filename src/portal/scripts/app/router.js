@@ -344,6 +344,19 @@
                 controller: 'PricingSchedulePageController as vm'
             })
 
+            .state('app.pricing-procedure', {
+                url: '/pricing-procedures',
+                templateUrl: 'views/pages/pricing-procedure-page-view.html',
+                controller: 'PricingProcedurePageController as vm'
+            })
+
+            .state('app.run-pricing-procedure', {
+                url: '/run-pricing-procedures',
+                templateUrl: 'views/pages/run-pricing-procedure-page-view.html',
+                controller: 'RunPricingProcedurePageController as vm'
+            })
+
+
             .state('app.import', {
                 url: '/import',
                 abstract: true,

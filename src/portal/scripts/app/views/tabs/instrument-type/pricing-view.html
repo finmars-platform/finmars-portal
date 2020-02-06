@@ -1,5 +1,7 @@
 <div>
 
+
+
     <table>
 
         <thead>
@@ -23,6 +25,10 @@
             </th>
 
             <th>
+                Override Pricing Scheme Default Parameters
+            </th>
+
+            <th>
                 Edit Default Parameters
             </th>
 
@@ -32,6 +38,10 @@
 
             <th>
                 Notes
+            </th>
+
+            <th>
+                Apply for All Instruments of This Type
             </th>
 
 
@@ -57,6 +67,11 @@
 
             <td>
                 {{item.pricing_scheme_object.notes_for_parameter}}
+            </td>
+
+            <td>
+                <md-checkbox data-ng-model="item.overwrite_default_parameters">
+                </md-checkbox>
             </td>
 
             <td>
@@ -109,6 +124,12 @@
                     <label>Notes</label>
                     <input type="text" data-ng-model="item.notes">
                 </md-input-container>
+            </td>
+
+            <td>
+                <md-button class="md-raised md-primary" data-ng-click="vm.applyPricingToAllInstruments($event, item)">
+                    Apply
+                </md-button>
             </td>
 
         </tr>

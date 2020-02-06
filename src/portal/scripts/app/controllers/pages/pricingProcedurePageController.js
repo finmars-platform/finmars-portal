@@ -5,34 +5,34 @@
 
     'use strict';
 
-    var pricingScheduleService = require('../../services/pricing/pricingScheduleService');
+    var pricingProcedureService = require('../../services/pricing/pricingProcedureService');
 
     module.exports = function ($scope, $mdDialog) {
 
         var vm = this;
 
-        vm.schedules = [];
+        vm.procedures = [];
 
-        vm.readyStatus = {schedules: false};
+        vm.readyStatus = {procedures: false};
 
         vm.getList = function () {
 
-            pricingScheduleService.getList().then(function (data) {
+            pricingProcedureService.getList().then(function (data) {
 
-                vm.schedules = data.results;
+                vm.procedures = data.results;
 
-                vm.readyStatus.schedules = true;
+                vm.readyStatus.procedures = true;
 
                 $scope.$apply();
 
             })
         };
 
-        vm.editPricingSchedule = function ($event, item) {
+        vm.editProcedure = function ($event, item) {
 
             $mdDialog.show({
-                controller: 'PricingScheduleEditDialogController as vm',
-                templateUrl: 'views/dialogs/pricing/pricing-schedule-edit-dialog-view.html',
+                controller: 'PricingProcedureEditDialogController as vm',
+                templateUrl: 'views/dialogs/pricing/pricing-procedure-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -56,11 +56,11 @@
 
         };
 
-        vm.addPricingSchedule = function ($event) {
+        vm.addProcedure = function ($event) {
 
             $mdDialog.show({
-                controller: 'PricingScheduleAddDialogController as vm',
-                templateUrl: 'views/dialogs/pricing/pricing-schedule-add-dialog-view.html',
+                controller: 'PricingProcedureAddDialogController as vm',
+                templateUrl: 'views/dialogs/pricing/pricing-procedure-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
