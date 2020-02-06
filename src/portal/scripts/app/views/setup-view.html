@@ -25,7 +25,8 @@
                 </md-input-container>
 
 
-                <md-button class="md-raised md-primary m-0 float-right" data-ng-class="{'disabled-btn': !vm.interface_level}" data-ng-click="vm.finishStep1()">
+                <md-button class="md-raised md-primary m-0 float-right"
+                           data-ng-class="{'disabled-btn': !vm.interface_level}" data-ng-click="vm.finishStep1()">
                     Next
                 </md-button>
 
@@ -38,7 +39,8 @@
 
                 <div class="margin-auto setup-wrapper">
 
-                    <div data-ng-repeat="item in vm.items" class="setup-item" ng-class="{active: vm.activeConfig === item.id}">
+                    <div data-ng-repeat="item in vm.items" class="setup-item"
+                         ng-class="{active: vm.activeConfig === item.id}">
 
                         <div>
 
@@ -113,7 +115,8 @@
                             Back
                         </md-button>
 
-                        <md-button class="md-raised md-primary m-0 float-right" ng-class="{'disabled-btn': !vm.activeConfig}" data-ng-click="vm.finishSetup($event)">
+                        <md-button class="md-raised md-primary m-0 float-right"
+                                   ng-class="{'disabled-btn': !vm.activeConfig}" data-ng-click="vm.finishSetup($event)">
                             Finish
                         </md-button>
 
@@ -128,9 +131,15 @@
 
             <h1 class="text-center">Applying new settings</h1>
 
-            <h2 class="m-0 text-center m-b-50">Please, wait</h2>
+            <!--<h2 class="m-0 text-center m-b-50">Please, wait</h2>-->
 
-            <div class="m-l-16" layout="row" layout-sm="column" layout-align="space-around">
+            <div data-ng-if="vm.activeItemTotal" class="text-center m-t-16 m-b-16" style="font-size: 18px;">
+
+                <span>Initialization Progress:</span> <span>{{vm.counter}} / {{vm.activeItemTotal}}</span>
+
+            </div>
+
+            <div style="margin-top: 60px;" layout="row" layout-sm="column" layout-align="space-around">
                 <md-progress-circular md-diameter="50" md-mode="indeterminate"></md-progress-circular>
             </div>
 

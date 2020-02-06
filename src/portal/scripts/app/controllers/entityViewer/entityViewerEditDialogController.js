@@ -1164,6 +1164,12 @@
 
         };
 
+        vm.applyPricingToAllInstruments = function($event, item) {
+
+            console.log('vm.applyPricingToAllInstruments', item);
+
+        };
+
         vm.init = function () {
             getEntityAttrs();
 

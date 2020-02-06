@@ -31,6 +31,28 @@
 
             console.log("Execute Procedure", item)
 
+            pricingProcedureService.runProcedure(item.id, item).then(function (data) {
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "Procedure is being processed"
+                        }
+                    }
+                });
+
+            })
+
         };
 
         vm.editProcedure = function ($event, item) {
