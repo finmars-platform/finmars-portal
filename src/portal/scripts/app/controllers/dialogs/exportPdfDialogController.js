@@ -26,8 +26,6 @@
 
         var exportOptions = evDataService.getExportOptions();
 
-        console.log("export options", exportOptions);
-
         if (exportOptions && exportOptions.hasOwnProperty('pdf')) {
 
             if (exportOptions.pdf.zoom) {

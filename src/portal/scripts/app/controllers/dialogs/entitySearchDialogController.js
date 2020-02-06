@@ -325,7 +325,7 @@
                 // Call function when scroll reaches specified position
                 if (elemScrollHeight - scrollElem.scrollTop < scrollPositionToLoadItems && !scrollAtTheEnd) {
                     scrollAtTheEnd = true;
-                    console.log("smart search1 works", vm.itemsCount);
+
                     if (vm.itemsCount && vm.itemsCount > vm.items.length) {
                         page = page + 1;
 

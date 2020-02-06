@@ -2,9 +2,11 @@
 
     'use strict';
 
-    var dashboardEvents = require('../../services/dashboard/dashboardEvents')
-    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses')
+    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
+    var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
+    var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
 
     module.exports = function () {
         return {
@@ -24,6 +26,9 @@
                     data: false
                 };
 
+                scope.dashboardComponentDataService = new DashboardComponentDataService;
+                scope.dashboardComponentEventService = new DashboardComponentEventService;
+
                 scope.vm = {
                     tabNumber: scope.tabNumber,
                     rowNumber: scope.rowNumber,
@@ -32,7 +37,9 @@
                     entityType: scope.item.data.settings.entity_type,
                     startupSettings: scope.item.data.settings,
                     dashboardDataService: scope.dashboardDataService,
-                    dashboardEventService: scope.dashboardEventService
+                    dashboardEventService: scope.dashboardEventService,
+                    dashboardComponentDataService: scope.dashboardComponentDataService,
+                    dashboardComponentEventService: scope.dashboardComponentEventService
                 };
 
                 scope.initEventListeners = function () {
@@ -60,7 +67,7 @@
                     scope.initEventListeners();
 
                     scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                 };
 

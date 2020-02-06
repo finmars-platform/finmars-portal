@@ -83,15 +83,15 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
-                    vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.PROCESSING)
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
+                    vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.PROCESSING);
+                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                 });
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.ACTIVE)
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
+                    vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.ACTIVE);
+                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                 });
 
@@ -806,9 +806,13 @@
 
                             $scope.$apply();
 
-                        })
+                        });
 
-                    })
+                    }).catch(function (error) {
+
+                        reject(error);
+
+                    });
 
                 });
 
@@ -821,6 +825,11 @@
                     vm.dashboardComponentDataService.setViewerTableColumns(columns);
                     vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
 
+                }).catch(function (error) {
+
+                    vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.ERROR);
+                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    console.log("dashboard report viewer component promise error", error);
                 });
 
             };

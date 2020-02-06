@@ -32,7 +32,11 @@
                                ng-class="{'md-primary': item.isGroup}"
                                ng-click="vm.openGroupOrSelectAttr(item)"
                                aria-label="open group of attributes">
-                        <span ng-bind="item.name"></span>
+                        <span data-ng-bind="item.name"></span>
+                        <md-tooltip data-ng-if="item.attributeObject"
+                                    class="tooltip_2"
+                                    data-md-direction="top"
+                                    data-ng-bind="item.attributeObject.key"></md-tooltip>
                     </md-button>
                 </div>
             </div>

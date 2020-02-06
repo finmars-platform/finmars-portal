@@ -261,13 +261,31 @@
 
         };
 
+        var componentBuildingTimeTimeout;
+        var onComponentBuildingForTooLong = function (compId) {
+
+            componentBuildingTimeTimeout = setTimeout(function () {
+
+                var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
+
+                if (statusesObject[compId] === dashboardComponentStatuses.PROCESSING || statusesObject[compId] === dashboardComponentStatuses.START) {
+                    vm.dashboardDataService.setComponentStatus(compId, dashboardComponentStatuses.ERROR);
+                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    throw "id of defective dashboard component " + compId;
+                }
+
+            }, 8000);
+
+        };
+
         vm.initDashboardComponents = function () {
 
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
+                clearTimeout(componentBuildingTimeTimeout);
 
+                var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
                 var nextComponentToStart = null;
 
                 var keys = Object.keys(statusesObject);
@@ -278,11 +296,14 @@
                     key = keys[i];
 
                     if (statusesObject[key] === dashboardComponentStatuses.INIT && nextComponentToStart === null) {
-                        nextComponentToStart = key
+                        nextComponentToStart = key;
                     }
 
                     if (statusesObject[key] === dashboardComponentStatuses.PROCESSING || statusesObject[key] === dashboardComponentStatuses.START) {
                         nextComponentToStart = null;
+
+                        onComponentBuildingForTooLong(key);
+
                         break;
                     }
 
@@ -297,7 +318,6 @@
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
 
                 }
-
 
             });
 
