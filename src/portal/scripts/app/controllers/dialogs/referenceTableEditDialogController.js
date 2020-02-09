@@ -7,6 +7,10 @@
 
     var referenceTablesService = require('../../services/referenceTablesService');
 
+    var ScrollHelper = require('../../helpers/scrollHelper');
+
+    var scrollHelper = new ScrollHelper();
+
     module.exports = function ($scope, $mdDialog, data) {
 
         console.log('data', data);
@@ -16,6 +20,11 @@
         vm.referenceTable = data.referenceTable;
         vm.validationEnabled = false;
         vm.dragAndDropInited = false;
+
+        vm.filterTerms = {
+            key: "",
+            value: ""
+        };
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -66,38 +75,6 @@
 
         };
 
-        // scroll while dragging
-        var DnDScrollElem;
-        var DnDScrollTimeOutId;
-        var scrollSize = null;
-
-        var DnDWheel = function (event) {
-            event.preventDefault();
-
-            var scrolled = DnDScrollElem.scrollTop;
-
-            if (scrollSize === null) {
-                scrollSize = scrolled
-            }
-
-            if (event.deltaY > 0) {
-                scrollSize = scrollSize + 100;
-            } else {
-                scrollSize = scrollSize - 100;
-            }
-
-            clearTimeout(DnDScrollTimeOutId);
-
-            DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
-                DnDScrollElem.scroll({
-                    top: Math.max(0, scrollSize)
-                });
-                scrollSize = null;
-            }, 30);
-
-        };
-        // < scroll while dragging >
-
         vm.dragIconGrabbed = false;
 
         var turnOffDragging = function () {
@@ -120,31 +97,19 @@
                 var drake = this.dragula;
 
                 drake.on('drag', function () {
-                    document.addEventListener('wheel', DnDWheel);
+                    document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
                 });
 
                 drake.on('drop', function (elem, target, source, nextSiblings) {
-                    //var refTableRows = document.querySelectorAll('.e-reference-table-row-card');
+
                     var draggedRowOrder = parseInt(elem.dataset.rowOrder);
                     var siblingRowOrder = null;
                     if (nextSiblings) {
                         siblingRowOrder = parseInt(nextSiblings.dataset.rowOrder);
                     }
 
-                    //var rowToInsert = null;
-
                     var rowToInsert = vm.referenceTable.rows[draggedRowOrder];
                     vm.referenceTable.rows.splice(draggedRowOrder, 1);
-
-                    /*for (var i = 0; i < vm.referenceTable.rows.length; i++) {
-                        if (vm.referenceTable.rows[i].order === draggedRowOrder) {
-
-                            rowToInsert = vm.referenceTable.rows[i];
-                            vm.referenceTable.rows.splice(i, 1);
-                            break;
-
-                        }
-                    }*/
 
                     if (siblingRowOrder) {
 
@@ -168,7 +133,7 @@
                 });
 
                 drake.on('dragend', function (elem) {
-                    document.removeEventListener('wheel', DnDWheel);
+                    document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
                 });
             },
 
@@ -179,7 +144,11 @@
 
                 this.dragula = dragula(items, {
                     moves: function () {
-                        return vm.dragIconGrabbed;
+                        if (vm.dragIconGrabbed && !vm.filterTerms.key && !vm.filterTerms.value) {
+                            return true;
+                        }
+
+                        return false;
                     },
                     revertOnSpill: true
                 })
@@ -250,7 +219,8 @@
 
         var init = function () {
             setTimeout(function () {
-                DnDScrollElem = document.querySelector('.dndScrollableElem');
+                var DnDScrollElem = document.querySelector('.dndScrollableElem');
+                scrollHelper.setDnDScrollElem(DnDScrollElem);
             }, 500);
 
             vm.referenceTable.rows.forEach(function (row, index) { // TODO remove later

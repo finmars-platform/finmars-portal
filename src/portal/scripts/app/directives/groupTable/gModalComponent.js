@@ -625,7 +625,6 @@
                 for (i = 0; i < itemsElem.length; i = i + 1) {
                     items.push(itemsElem[i]);
                 }
-                ;
 
                 this.dragula = dragula(items,
                     {

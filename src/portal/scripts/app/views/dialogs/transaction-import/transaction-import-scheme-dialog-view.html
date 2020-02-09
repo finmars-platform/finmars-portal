@@ -1,5 +1,5 @@
-<md-dialog aria-label="import transaction scheme manager dialog" ng-cloak
-           class="transaction-scheme-manager-dialog-view draggable-dialog" drag-dialog>
+<md-dialog aria-label="import transaction scheme manager dialog"
+           class="transaction-scheme-manager-dialog-view draggable-dialog transactionSchemeManagerDialogElemToResize" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -181,13 +181,20 @@
                                                         </div>
                                                         <div flex="20">
                                                             <div layout="row">
-                                                                <two-fields-multiselect title="Selector values"
-                                                                                        items="vm.selector_values_projection"
-                                                                                        model="item.selector_values"
-                                                                                        ng-model="item.selector_values"
-                                                                                        nothing-selected-text=" "
-                                                                                        name-property="value"
-                                                                                        class="table-filter-input-container"></two-fields-multiselect>
+                                                                <two-fields-multiselect ng-model="item.selector_values"
+                                                                                        data-title="Selector values"
+                                                                                        data-items="vm.selector_values_projection"
+                                                                                        data-model="item.selector_values"
+                                                                                        data-nothing-selected-text="[ ]"
+                                                                                        data-selected-items-indication="array"
+                                                                                        data-name-property="value"
+                                                                                        class="table-filter-input-container">
+                                                                </two-fields-multiselect>
+
+                                                                <md-tooltip data-ng-if="item.selector_values && item.selector_values.length > 0"
+                                                                            class="tooltip_1"
+                                                                            md-direction="top"
+                                                                            ng-bind="vm.selectedValuesTooltipName(item.selector_values)"></md-tooltip>
                                                             </div>
                                                         </div>
                                                         <div flex="20">
@@ -197,7 +204,7 @@
                                                                 <label for="">Transaction type</label>
                                                                 <md-select ng-model="item.transaction_type"
                                                                            md-container-class="common-select-container"
-                                                                           md-on-close="searchTerm = ''">
+                                                                           md-on-close="searchTerm = ''" style="margin: 0;">
 
                                                                     <md-select-header>
                                                                         <input data-ng-model="searchTerm"
@@ -299,7 +306,7 @@
                                                                                         data-title="Selector values"
                                                                                         data-items="vm.selector_values_projection"
                                                                                         data-model="item.selector_values"
-                                                                                        data-nothing-selected-text=" "
+                                                                                        data-nothing-selected-text="[ ]"
                                                                                         data-selected-items-indication="array"
                                                                                         data-name-property="value"
                                                                                         class="table-filter-input-container">
@@ -411,7 +418,7 @@
             </div>
         </md-content>
     </md-dialog-content>
-    <md-dialog-actions layout="row">
+    <md-dialog-actions layout="row" class="position-relative">
         <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-if="vm.scheme.id">
             Make Copy
         </md-button>
@@ -422,5 +429,10 @@
             <span data-ng-if="vm.scheme.id">Save</span>
             <span data-ng-if="!vm.scheme.id">Create</span>
         </md-button>
+
+        <ng-md-icon icon="signal_cellular_4_bar"
+                    size="24"
+                    class="resize-dialog-window-grabber"
+                    data-ng-mousedown="vm.startDialogWindowResize($event)"></ng-md-icon>
     </md-dialog-actions>
 </md-dialog>

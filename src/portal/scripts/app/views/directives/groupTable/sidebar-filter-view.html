@@ -22,7 +22,26 @@
                                         md-direction="top"
                                         data-ng-bind="layoutName"></md-tooltip>
                         </span>
-                        <md-button data-ng-click="renameLayout($event)" aria-label="open rename layout dialog">
+
+                        <md-button data-ng-if="isLayoutDefault"
+                                   class="layout-settings-is-layout-default-btn">
+                            <ng-md-icon icon="star"
+                                        size="22">
+                                <md-tooltip md-direction="top">Default Layout</md-tooltip>
+                            </ng-md-icon>
+                        </md-button>
+                        <md-button data-ng-if="!isLayoutDefault"
+                                   class="layout-settings-is-layout-default-btn"
+                                   data-ng-click="setLayoutAsDefault($event)">
+                            <ng-md-icon icon="star_border"
+                                        size="22">
+                                <md-tooltip md-direction="top">Not default layout</md-tooltip>
+                            </ng-md-icon>
+                        </md-button>
+
+                        <md-button data-ng-click="renameLayout($event)"
+                                   class="layout-settings-rename-btn"
+                                   aria-label="open rename layout dialog">
                             <ng-md-icon icon="edit" size="22">
                                 <md-tooltip md-direction="top">Rename Layout</md-tooltip>
                             </ng-md-icon>

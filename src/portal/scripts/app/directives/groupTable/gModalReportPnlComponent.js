@@ -612,6 +612,29 @@
 
         };
 
+        vm.openCustomFieldsManager = function ($event) {
+
+            $mdDialog.show({
+                controller: 'CustomFieldDialogController as vm',
+                templateUrl: 'views/dialogs/custom-field-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    attributeDataService: attributeDataService,
+                    entityViewerEventService: entityViewerEventService,
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+
+            })
+
+        };
+
         vm.selectAttribute = function (selectedGroup, event) {
 
             var availableAttrs;

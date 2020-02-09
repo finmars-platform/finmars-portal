@@ -38,7 +38,7 @@
                 var attrPathKeys = tAttr.name.split(". ");
 
                 if (tAttr.hasOwnProperty('attribute_type')) { // place all dynamic attributes into separate group
-                    attrPathKeys.unshift('User Attributes');
+                    attrPathKeys.splice(1, 0, 'User Attributes');
                 }
 
                 var attrName = attrPathKeys.pop();

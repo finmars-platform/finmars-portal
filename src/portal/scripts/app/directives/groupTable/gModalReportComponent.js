@@ -5,13 +5,9 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
-
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var customFieldService = require('../../services/reports/customFieldService');
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
@@ -253,6 +249,20 @@
         };
 
         vm.getCustomAttrs = function () {
+
+            vm.custom = attributeDataService.getCustomFieldsByEntityType(vm.entityType);
+            vm.custom = vm.custom.map(function (customItem) {
+
+                customItem.custom_field = Object.assign({}, customItem);
+
+                customItem.key = 'custom_fields.' + customItem.user_code;
+                customItem.name = 'Custom Field. ' + customItem.name;
+
+                return customItem
+
+            });
+
+            vm.attrsList = [];
 
             vm.attrsList = vm.attrsList.concat(vm.balanceAttrs);
             vm.attrsList = vm.attrsList.concat(vm.allocationAttrs);
@@ -591,6 +601,28 @@
 
         };
 
+        vm.openCustomFieldsManager = function ($event) {
+
+            $mdDialog.show({
+                controller: 'CustomFieldDialogController as vm',
+                templateUrl: 'views/dialogs/custom-field-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    attributeDataService: attributeDataService,
+                    entityViewerEventService: entityViewerEventService,
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+
+            })
+
+        };
 
         vm.selectAttribute = function (selectedGroup, event) {
 
@@ -617,6 +649,7 @@
                     });
                     break;
             }
+
 
             $mdDialog.show({
                 controller: "TableAttributeSelectorDialogController as vm",

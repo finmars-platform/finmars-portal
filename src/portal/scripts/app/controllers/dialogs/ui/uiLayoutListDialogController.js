@@ -212,6 +212,8 @@
                     entityViewerDataService.setListLayout(listLayout);
                     entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});
 
+                    entityViewerEventService.dispatchEvent(evEvents.DEFAULT_LAYOUT_CHANGE);
+
                 }
 
             } else if (layoutData.id !== splitPanelLayoutId) {

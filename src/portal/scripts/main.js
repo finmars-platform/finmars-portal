@@ -520,7 +520,7 @@ app.controller('PricingProcedureEditDialogController', ['$scope', '$mdDialog', '
 // Reference Table
 
 app.controller('ReferenceTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/referenceTablesController')]);
-app.controller('ReferenceTableEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/refereneTableEditDialogController')]);
+app.controller('ReferenceTableEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/referenceTableEditDialogController')]);
 app.controller('ReferenceTableRenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/refereneTableRenameDialogController')]);
 app.controller('ReferenceTableImportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/referenceTableImportDialogController')]);
 app.controller('ReferenceTableExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/referenceTableExportDialogController')]);

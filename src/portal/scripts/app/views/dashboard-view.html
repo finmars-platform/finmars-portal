@@ -2,6 +2,131 @@
 
     <div data-ng-if="vm.readyStatus.data" class="height-100">
 
+        <div data-ng-if="vm.componentFillInModeData" class="dashboard-component-fillin-mode">
+
+            <!--<div data-ng-if="item.data.type == 'control'">
+                <dashboard-control
+                        tab-number="tab.tab_number"
+                        row-number="row.row_number"
+                        column-number="item.column_number"
+                        item="item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                ></dashboard-control>
+            </div>
+
+            <div data-ng-if="item.data.type == 'button_set'">
+                <dashboard-button-set
+                        tab-number="tab.tab_number"
+                        row-number="row.row_number"
+                        column-number="item.column_number"
+                        item="item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                ></dashboard-button-set>
+            </div>
+
+            <div data-ng-if="item.data.type == 'input_form'">
+                <dashboard-input-form
+                        tab-number="tab.tab_number"
+                        row-number="row.row_number"
+                        column-number="item.column_number"
+                        item="item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                ></dashboard-input-form>
+            </div>-->
+
+            <div data-ng-if="item.data.type == 'report_viewer'" class="height-100">
+                <dashboard-report-viewer
+                        tab-number="vm.componentFillInModeData.tab_number"
+                        row-number="vm.componentFillInModeData.row_number"
+                        column-number="vm.componentFillInModeData.column_number"
+                        item="vm.componentFillInModeData.item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                ></dashboard-report-viewer>
+            </div>
+
+            <div data-ng-if="item.data.type == 'report_viewer_split_panel'"
+                 class="height-100">
+                <dashboard-report-viewer-split-panel
+                        class="height-100 display-block"
+                        tab-number="vm.componentFillInModeData.tab_number"
+                        row-number="vm.componentFillInModeData.row_number"
+                        column-number="vm.componentFillInModeData.column_number"
+                        item="vm.componentFillInModeData.item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                ></dashboard-report-viewer-split-panel>
+            </div>
+
+            <div data-ng-if="item.data.type == 'report_viewer_grand_total'"
+                 class="height-100">
+                <dashboard-report-viewer-grand-total
+                        class="height-100 display-block"
+                        tab-number="vm.componentFillInModeData.tab_number"
+                        row-number="vm.componentFillInModeData.row_number"
+                        column-number="vm.componentFillInModeData.column_number"
+                        item="vm.componentFillInModeData.item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                ></dashboard-report-viewer-grand-total>
+            </div>
+
+            <div data-ng-if="item.data.type === 'report_viewer_bars_chart' || item.data.type === 'report_viewer_pie_chart'"
+                 class="height-100">
+                <dashboard-report-viewer-charts
+                        class="height-100 display-block"
+                        tab-number="vm.componentFillInModeData.tab_number"
+                        row-number="vm.componentFillInModeData.row_number"
+                        column-number="vm.componentFillInModeData.column_number"
+                        item="vm.componentFillInModeData.item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                        update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
+                ></dashboard-report-viewer-charts>
+            </div>
+
+            <div data-ng-if="item.data.type == 'report_viewer_matrix'"
+                 class="height-100">
+                <dashboard-report-viewer-matrix
+                        class="height-100 display-block"
+                        tab-number="vm.componentFillInModeData.tab_number"
+                        row-number="vm.componentFillInModeData.row_number"
+                        column-number="vm.componentFillInModeData.column_number"
+                        item="vm.componentFillInModeData.item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                        update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
+                ></dashboard-report-viewer-matrix>
+            </div>
+
+            <div data-ng-if="item.data.type == 'entity_viewer'" class="height-100">
+                <dashboard-entity-viewer
+                        tab-number="vm.componentFillInModeData.tab_number"
+                        row-number="vm.componentFillInModeData.row_number"
+                        column-number="vm.componentFillInModeData.column_number"
+                        item="vm.componentFillInModeData.item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                ></dashboard-entity-viewer>
+            </div>
+
+            <div data-ng-if="item.data.type == 'entity_viewer_split_panel'"
+                 class="height-100">
+                <dashboard-entity-viewer-split-panel
+                        tab-number="vm.componentFillInModeData.tab_number"
+                        row-number="vm.componentFillInModeData.row_number"
+                        column-number="vm.componentFillInModeData.column_number"
+                        item="vm.componentFillInModeData.item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                ></dashboard-entity-viewer-split-panel>
+            </div>
+
+        </div>
+
         <div data-ng-if="vm.layout" class="dashboard-tabs-holder height-100">
 
             <div class="dashboard-title">

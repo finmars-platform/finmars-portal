@@ -18,7 +18,8 @@
                 columnNumber: '=',
                 item: '=',
                 dashboardDataService: '=',
-                dashboardEventService: '='
+                dashboardEventService: '=',
+                fillInModeCallback: '&?'
             },
             link: function (scope, elem, attr) {
 
@@ -74,6 +75,10 @@
                 /*scope.saveReportLayout = function () {
                     scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.SAVE_VIEWER_TABLE_CONFIGURATION);
                 };*/
+
+                scope.turnOnFillInMode = function () {
+
+                };
 
                 scope.initEventListeners = function () {
 

@@ -42,6 +42,8 @@
                 }
 
                 scope.isReport = metaService.isReport(scope.entityType);
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                scope.isLayoutDefault = false;
 
                 scope.fields = {};
 
@@ -54,6 +56,26 @@
                 var viewContext = scope.evDataService.getViewContext();
                 var contextMenu = {};
                 var ttypes = null;
+
+                var checkIsLayoutDefault = function () {
+
+                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+                    if (scope.isRootEntityViewer) {
+                        scope.isLayoutDefault = listLayout.is_default;
+                    } else {
+
+                        var spDefaultLayoutData = scope.evDataService.getSplitPanelDefaultLayout();
+
+                        if (spDefaultLayoutData.layoutId === listLayout.id) {
+                            scope.isLayoutDefault = true;
+                        } else {
+                            scope.isLayoutDefault = false;
+                        }
+
+                    }
+
+                };
 
                 var getAttributes = function () {
 
@@ -703,6 +725,60 @@
                     return false;
                 };
 
+                scope.setLayoutAsDefault = function ($event) {
+
+                    var listLayout = JSON.parse(JSON.stringify(scope.evDataService.getLayoutCurrentConfiguration(scope.isReport)));
+
+                    if (listLayout.hasOwnProperty('id')) {
+
+                        if (scope.isRootEntityViewer) {
+
+                            listLayout.is_default = true;
+
+                            uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+
+                                scope.evDataService.setListLayout(listLayout);
+                                scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
+
+                                checkIsLayoutDefault();
+                                scope.$apply();
+
+                            });
+
+                        } else {
+
+                            var defaultLayoutData = {
+                                layoutId: listLayout.id,
+                                name: listLayout.name,
+                                content_type: listLayout.content_type
+                            };
+
+                            scope.evDataService.setSplitPanelDefaultLayout(defaultLayoutData);
+                            scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+
+                        }
+
+                    } else {
+
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                warning: {
+                                    title: 'Warning',
+                                    description: 'Save layout before making it default'
+                                }
+                            }
+                        })
+
+                    }
+
+                };
+
                 // Methods for report viewer inside dashboard
                 scope.renameLayout = function ($event) {
 
@@ -922,6 +998,20 @@
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
                     });
 
+                    if (scope.isRootEntityViewer) {
+
+                        scope.evEventService.addEventListener(evEvents.DEFAULT_LAYOUT_CHANGE, function () {
+                            checkIsLayoutDefault();
+                        });
+
+                    } else {
+
+                        scope.evEventService.addEventListener(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED, function () {
+                            checkIsLayoutDefault();
+                        });
+
+                    }
+
                 };
 
                 var init = function () {
@@ -1008,6 +1098,8 @@
                     });
 
                     initEventListeners();
+
+                    checkIsLayoutDefault();
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 

@@ -7,13 +7,9 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var uiService = require('../../services/uiService');
-
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var customFieldService = require('../../services/reports/customFieldService');
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
@@ -832,6 +828,28 @@
 
         };
 
+        vm.openCustomFieldsManager = function ($event) {
+
+            $mdDialog.show({
+                controller: 'CustomFieldDialogController as vm',
+                templateUrl: 'views/dialogs/custom-field-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    attributeDataService: attributeDataService,
+                    entityViewerEventService: entityViewerEventService,
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+
+            })
+
+        };
 
         vm.selectAttribute = function (selectedGroup, event) {
 
