@@ -696,29 +696,35 @@
                                 <span class="g-meta-circle blue">F</span>
                             </div>
 
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.custom | filter: {name: customSearchTerms}" layout="row">
-                                <div class="view-constructor-checkboxes-container"
-                                     layout="row"
-                                     layout-align="start center">
-                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                                 data-ng-change="vm.updateAttrs(vm.custom)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                                 class="md-g-green"
-                                                 data-ng-change="vm.updateAttrs(vm.custom)">
-                                    </md-checkbox>
-                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                                 class="md-primary" data-ng-change="vm.updateAttrs(vm.custom)">
-                                    </md-checkbox>
+                            <div>
+
+                                <div class="g-checkbox-row" data-ng-repeat="item in vm.custom | filter: {name: customSearchTerms}" layout="row">
+                                    <div class="view-constructor-checkboxes-container"
+                                         layout="row"
+                                         layout-align="start center">
+                                        <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                                     data-ng-change="vm.updateAttrs(vm.custom)">
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                                     class="md-g-green"
+                                                     data-ng-change="vm.updateAttrs(vm.custom)">
+                                        </md-checkbox>
+                                        <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                                     class="md-primary" data-ng-change="vm.updateAttrs(vm.custom)">
+                                        </md-checkbox>
+                                    </div>
+                                    <div class="g-modal-draggable-card vcDraggableCard">
+                                        <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                            {{item.name}}
+                                            <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                            </md-tooltip>
+                                        </md-card>
+                                    </div>
                                 </div>
-                                <div class="g-modal-draggable-card vcDraggableCard">
-                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
-                                        {{item.name}}
-                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                        </md-tooltip>
-                                    </md-card>
-                                </div>
+
                             </div>
+
+                            <md-button class="md-raised m-l-0" data-ng-click="vm.openCustomFieldsManager($event)">Edit</md-button>
                         </md-content>
                     </md-tab>
 

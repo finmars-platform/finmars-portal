@@ -20,6 +20,8 @@
         vm.readyStatus = {data: false};
         vm.layout = null;
 
+        vm.componentFillInModeData = null;
+
         vm.dashboardDataService = null;
         vm.dashboardEventService = null;
 
@@ -208,6 +210,10 @@
             if (!Object.keys(statusesObject).length) {
                 vm.processing = false;
             }
+
+        };
+
+        vm.turnOnComponentFillInMode = function () {
 
         };
 

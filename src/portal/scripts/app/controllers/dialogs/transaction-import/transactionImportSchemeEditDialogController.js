@@ -37,19 +37,41 @@
 
         };
 
-        vm.mapFields = [
-        ];
+        vm.mapFields = [];
+        vm.providerFields = [];
+        vm.calculatedFields = [];
+        vm.reconFields = [];
 
-        vm.providerFields = [
+        var dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
+        var dialogElemWidth = 0;
+        var dialogElemHeight = 0;
+        var initXPos = 0;
+        var initYPos = 0;
+        var xPos = 0;
+        var yPos = 0;
 
-        ];
+        var resizeDialogWindow = function (event) {
+            xPos = event.pageX;
+            yPos = event.pageY;
 
-        vm.calculatedFields = [
+            dialogElemToResize.style.width = (dialogElemWidth + xPos - initXPos) + 'px';
+            dialogElemToResize.style.height = (dialogElemHeight + yPos - initYPos) + 'px';
+        };
 
-        ];
+        var endDialogWindowResize = function () {
+            window.removeEventListener('mousemove', resizeDialogWindow);
+        };
 
-        vm.reconFields = [
-        ];
+        vm.startDialogWindowResize = function ($event) {
+            dialogElemWidth = JSON.parse(JSON.stringify(dialogElemToResize.clientWidth));
+            dialogElemHeight = JSON.parse(JSON.stringify(dialogElemToResize.clientHeight));
+
+            initXPos = $event.clientX;
+            initYPos = $event.clientY;
+
+            window.addEventListener('mousemove', resizeDialogWindow);
+            window.addEventListener('mouseup', endDialogWindowResize, {once: true});
+        };
 
         vm.openSelectorManager = function ($event) {
 
@@ -69,6 +91,7 @@
                         scheme: vm.scheme
                     }
                 }
+
             }).then(function (res) {
 
                 if(res && res.status === 'agree') {
@@ -538,10 +561,6 @@
                 locals: {
                     mapItem: item
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                }
             });
         };
 
@@ -573,6 +592,13 @@
         };
 
         vm.init = function () {
+            setTimeout(function () {
+                dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
+
+                // Prevents element from moving while resizing modal window
+                dialogElemToResize.style.left = dialogElemToResize.offsetLeft + 'px';
+                dialogElemToResize.style.top = dialogElemToResize.offsetTop + 'px';
+            }, 500);
 
             vm.getScheme();
             vm.getTransactionTypes();

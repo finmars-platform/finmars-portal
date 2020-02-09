@@ -203,7 +203,7 @@
                     content_type: additions.layoutData.content_type
                 };
 
-                var defaultLayoutId = null;
+                var defaultLayoutId;
 
                 if (splitPanelLayoutToOpen) {
                     defaultLayoutId = splitPanelLayoutToOpen;
@@ -222,6 +222,7 @@
 
                 var setLayout = function (layout) {
 
+                    vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
                     var reportOptions = vm.entityViewerDataService.getReportOptions();
@@ -293,11 +294,7 @@
                         $scope.$apply();
 
                         //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
-
                     }
-
-                    vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
 
                 };
 

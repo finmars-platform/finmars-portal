@@ -42,7 +42,7 @@
                 scope.viewContext = scope.evDataService.getViewContext();
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-                scope.isLayoutDefault = false;
+                //scope.isLayoutDefault = false;
 
                 scope.hasCreatePermission = false;
 
@@ -54,7 +54,7 @@
                 var dleEventIndex;
 
 
-                var checkIsLayoutDefault = function () {
+                /*var checkIsLayoutDefault = function () {
 
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
@@ -71,7 +71,7 @@
 
                     }
 
-                };
+                };*/
 
                 var checkLayoutExistence = function () {
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
@@ -959,7 +959,7 @@
 
                         }
 
-                        checkIsLayoutDefault();
+                        //checkIsLayoutDefault();
 
                     })
                 };
@@ -1614,7 +1614,7 @@
 
                     }
 
-                    checkIsLayoutDefault();
+                    //checkIsLayoutDefault();
 
                 };
 

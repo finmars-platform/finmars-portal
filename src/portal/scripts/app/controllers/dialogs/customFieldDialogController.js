@@ -123,8 +123,10 @@
             }).then(function (res) {
                 console.log('res', res);
                 if (res.status === 'agree') {
+
                     customFieldService.deleteByKey(vm.entityType, item.id).then(function (data) {
                         if (data.status === 'conflict') {
+
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
@@ -138,11 +140,14 @@
                                     }
                                 }
                             })
+
                         } else {
 
                             vm.attributeDataService.downloadCustomFieldsByEntityType(vm.entityType).then(function () {
+
                                 vm.entityViewerEventService.dispatchEvent(evEvents.DYNAMIC_ATTRIBUTES_CHANGE);
                                 vm.getList();
+
                             });
 
                         }
@@ -200,9 +205,7 @@
         vm.init = function () {
 
             //vm.attributeDataService = new AttributeDataService();
-
             vm.downloadAttributes();
-
             vm.getList();
 
         };
