@@ -202,7 +202,7 @@
 
         vm.refreshAll = function () {
 
-            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
+            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL);
             vm.processing = true;
 
             var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
@@ -212,11 +212,6 @@
             }
 
         };
-
-        vm.turnOnComponentFillInMode = function () {
-
-        };
-
 
         vm.setActiveTab = function (tab) {
             vm.dashboardDataService.setActiveTab(tab)

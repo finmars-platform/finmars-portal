@@ -9,6 +9,7 @@
     top: 0;
     left: 0;
     z-index: 2;
+    background-color: #fff;
   }
 
   .dashboard-title {
@@ -31,6 +32,7 @@
     width: 100%;
     height: 100%;
   }
+
   .dashboard-component-loader {
 
     position: absolute;
@@ -112,15 +114,22 @@
       text-overflow: ellipsis;
       overflow: hidden;
     }
+
+    .dashboard-component-header-left {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      button.md-button {
+        min-width: 0;
+        min-height: 0;
+        height: 23px;
+        margin: 0;
+      }
+    }
   }
 
-  .dashboard-component-settings-menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .dashboard-component-settings-btn {
+  /*.dashboard-component-settings-btn {
     position: absolute;
     min-width: 0;
     min-height: 0;
@@ -128,7 +137,7 @@
     margin: 0;
     top: 0;
     right: 0;
-  }
+  }*/
 
   .dashboard-component-body {
     min-height: 0;

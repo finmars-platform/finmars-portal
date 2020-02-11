@@ -18,7 +18,8 @@
                 columnNumber: '=',
                 item: '=',
                 dashboardDataService: '=',
-                dashboardEventService: '='
+                dashboardEventService: '=',
+                fillInModeData: '=?'
             },
             link: function (scope, elem, attr) {
 
@@ -59,33 +60,36 @@
                     dashboardComponentEventService: scope.dashboardComponentEventService
                 };
 
-                /*scope.addColumnToReport = function ($event) {
+                if (scope.fillInModeData) {
+                    scope.vm.entityViewerDataService = scope.fillInModeData.entityViewerDataService;
+                    scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
+                }
 
-                    $mdDialog.show({
-                        controller: "TableAttributeSelectorDialogController as vm",
-                        templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
-                        targetEvent: $event,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                availableAttrs: scope.availableAttrsForCols,
-                                title: 'Choose column to add'
-                            }
-                        }
-                    }).then(function (res) {
+                scope.updateViewerTable = function () {
+                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
+                };
 
-                        if (res && res.status === "agree") {
+                scope.enableFillInMode = function () {
 
-                            res.data.columns = true;
-                            viewerTableCols.push(res.data);
-                            scope.vm.dashboardComponentDataService.setViewerTableColumns(viewerTableCols);
-                            scope.vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
+                    var entityViewerDataService = scope.vm.dashboardComponentDataService.getEntityViewerDataService();
+                    var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
 
-                        }
+                    scope.fillInModeData = {
+                        tab_number: scope.vm.tabNumber,
+                        row_number: scope.vm.rowNumber,
+                        column_number: scope.vm.columnNumber,
+                        item: JSON.parse(JSON.stringify(scope.item)),
+                        entityViewerDataService: entityViewerDataService,
+                        attributeDataService: attributeDataService,
+                        redrawTableCallback: scope.updateViewerTable // needed to update table of original component
+                    }
 
-                    })
+                };
 
-                };*/
+                scope.disableFillInMode = function () {
+                    scope.fillInModeData.redrawTableCallback();
+                    scope.fillInModeData = null;
+                };
 
                 /*scope.saveReportLayout = function () {
                     scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.SAVE_VIEWER_TABLE_CONFIGURATION);
@@ -109,45 +113,20 @@
 
                     });
 
-                    /*scope.vm.dashboardComponentEventService.addEventListener(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED, function () {
-                        attributesDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
-                    });
-
-                    scope.vm.dashboardComponentEventService.addEventListener(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED, function () {
-
-                        viewerTableCols = scope.vm.dashboardComponentDataService.getViewerTableColumns();
-                        var attributes = attributesDataService.getAllAttributesByEntityType(scope.vm.entityType);
-
-                        if (columnsToManage && columnsToManage.length > 0) {
-                            scope.availableAttrsForCols = attributes.filter(function (attr) {
-
-                                if (columnsToManage.indexOf(attr.key) !== -1) {
-
-                                    for (var i = 0; i < viewerTableCols.length; i++) {
-                                        if (viewerTableCols[i].key === attr.key) {
-                                            return false;
-                                        }
-                                    }
-
-                                    return true;
-                                }
-
-                                return false;
-
-                            });
-
-                        }
-
-                    });*/
-
                 };
 
                 scope.init = function () {
 
                     scope.initEventListeners();
 
-                    scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    if (!scope.fillInModeData) {
+
+                        scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    } else {
+                        scope.readyStatus.data = true;
+                    }
 
                 };
 

@@ -736,6 +736,24 @@
                         formatAxisText(ticksTextToToWrap, barWidth);
 
                     });
+
+                    if (scope.evDataService.didDataLoadEnd()) {
+
+                        getDataForChart();
+                        sortChartData();
+                        if (scope.rvChartsSettings.bars_direction === 'bottom-top') {
+                            drawChartWithVerticalCols();
+                        } else {
+                            drawChartWithHorizontalCols();
+                        }
+
+                        scope.readyStatus = true;
+                        //scope.$apply();
+
+                        var ticksTextToToWrap = chartHolderElem.querySelectorAll('.svg-text-to-wrap');
+                        formatAxisText(ticksTextToToWrap, barWidth);
+
+                    }
                 };
 
                 init();
