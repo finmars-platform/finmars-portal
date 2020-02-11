@@ -55,6 +55,12 @@
                 'report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'
             ];
 
+            var fillInModeEnabled = false;
+
+            if ($scope.$parent.vm.entityViewerDataService) {
+                fillInModeEnabled = true;
+            }
+
             vm.setEventListeners = function () {
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
@@ -83,15 +89,23 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
-                    vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.PROCESSING);
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    vm.entityViewerDataService.setDataLoadStatus(false);
+
+                    if (!fillInModeEnabled) {
+                        vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.PROCESSING);
+                        vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    }
 
                 });
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.ACTIVE);
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    vm.entityViewerDataService.setDataLoadStatus(true);
+
+                    if (!fillInModeEnabled) {
+                        vm.dashboardDataService.setComponentStatus(vm.componentType.data.id, dashboardComponentStatuses.ACTIVE);
+                        vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    }
 
                 });
 
@@ -241,7 +255,7 @@
                     var reportOptions = vm.entityViewerDataService.getReportOptions();
                     var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
-                    // Check if there is need to solve report datepicker expression
+                    // Check are there report datepicker expressions to solve
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
                         var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
@@ -281,14 +295,12 @@
 
 
                         } else {
-
                             resolve();
                         }
 
                     } else {
-
+                    // < Check are there report datepicker expressions to solve >
                         resolve();
-
                     }
 
 
@@ -507,89 +519,89 @@
             };
 
             // TODO DEPRECATED, delete soon as dashboard will be discussed
-            vm.oldEventExchanges = function () {
+            /*vm.oldEventExchanges = function () {
 
-                // if (vm.startupSettings.linked_components) {
-                //
-                //     console.log('vm.startupSettings.linked_components', vm.startupSettings.linked_components);
-                //
-                //     if (vm.startupSettings.linked_components.hasOwnProperty('active_object')) {
-                //
-                //         var componentId = vm.startupSettings.linked_components.active_object;
-                //
-                //         vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + componentId, function () {
-                //
-                //             vm.handleDashboardActiveObject(componentId)
-                //
-                //         })
-                //
-                //     }
-                //
-                //     if (vm.startupSettings.linked_components.hasOwnProperty('report_settings')) {
-                //
-                //         Object.keys(vm.startupSettings.linked_components.report_settings).forEach(function (property) {
-                //
-                //             var componentId = vm.startupSettings.linked_components.report_settings[property];
-                //
-                //             vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + componentId, function () {
-                //
-                //                 var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
-                //
-                //                 var reportOptions = vm.entityViewerDataService.getReportOptions();
-                //
-                //                 console.log('componentOutput', componentOutput);
-                //
-                //                 reportOptions[property] = componentOutput.value;
-                //
-                //                 vm.entityViewerDataService.setReportOptions(reportOptions);
-                //
-                //                 vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
-                //
-                //             })
-                //
-                //         })
-                //
-                //     }
-                //
-                //     if (vm.startupSettings.linked_components.hasOwnProperty('filter_links')) {
-                //
-                //         vm.startupSettings.linked_components.filter_links.forEach(function (filter_link) {
-                //
-                //             vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + filter_link.component_id, function () {
-                //
-                //                 vm.handleDashboardFilterLink(filter_link)
-                //
-                //             })
-                //         })
-                //
-                //     }
-                //
-                //
-                // }
-                //
-                // if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_matrix') {
-                //
-                //     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-                //
-                //         var activeObject = vm.entityViewerDataService.getActiveObject();
-                //
-                //         console.log('click report viewer active object', activeObject);
-                //
-                //         vm.dashboardDataService.setComponentOutput(vm.componentType.data.id, activeObject);
-                //
-                //         vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentType.data.id)
-                //
-                //         if(vm.componentType.data.settings.auto_refresh) {
-                //
-                //             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
-                //
-                //         }
-                //
-                //     });
-                //
-                // }
+                if (vm.startupSettings.linked_components) {
 
-            };
+                    console.log('vm.startupSettings.linked_components', vm.startupSettings.linked_components);
+
+                    if (vm.startupSettings.linked_components.hasOwnProperty('active_object')) {
+
+                        var componentId = vm.startupSettings.linked_components.active_object;
+
+                        vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + componentId, function () {
+
+                            vm.handleDashboardActiveObject(componentId)
+
+                        })
+
+                    }
+
+                    if (vm.startupSettings.linked_components.hasOwnProperty('report_settings')) {
+
+                        Object.keys(vm.startupSettings.linked_components.report_settings).forEach(function (property) {
+
+                            var componentId = vm.startupSettings.linked_components.report_settings[property];
+
+                            vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + componentId, function () {
+
+                                var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+
+                                var reportOptions = vm.entityViewerDataService.getReportOptions();
+
+                                console.log('componentOutput', componentOutput);
+
+                                reportOptions[property] = componentOutput.value;
+
+                                vm.entityViewerDataService.setReportOptions(reportOptions);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
+
+                            })
+
+                        })
+
+                    }
+
+                    if (vm.startupSettings.linked_components.hasOwnProperty('filter_links')) {
+
+                        vm.startupSettings.linked_components.filter_links.forEach(function (filter_link) {
+
+                            vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + filter_link.component_id, function () {
+
+                                vm.handleDashboardFilterLink(filter_link)
+
+                            })
+                        })
+
+                    }
+
+
+                }
+
+                if (vm.componentType.data.type === 'report_viewer' || vm.componentType.data.type === 'report_viewer_matrix') {
+
+                    vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                        var activeObject = vm.entityViewerDataService.getActiveObject();
+
+                        console.log('click report viewer active object', activeObject);
+
+                        vm.dashboardDataService.setComponentOutput(vm.componentType.data.id, activeObject);
+
+                        vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentType.data.id)
+
+                        if(vm.componentType.data.settings.auto_refresh) {
+
+                            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
+
+                        }
+
+                    });
+
+                }
+
+            }; */
 
             vm.initDashboardExchange = function () {
 
@@ -667,20 +679,7 @@
 
             };
 
-            vm.getView = function () {
-
-                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
-
-                vm.readyStatus.layout = false;
-
-                vm.entityViewerDataService = new EntityViewerDataService();
-                vm.entityViewerEventService = new EntityViewerEventService();
-                vm.splitPanelExchangeService = new SplitPanelExchangeService();
-                vm.attributeDataService = new AttributeDataService();
-
-
-                console.log('$scope.$parent.vm.startupSettings', $scope.$parent.vm.startupSettings);
-                console.log('$scope.$parent.vm.componentType', $scope.$parent.vm.componentType);
+            var setDataFromDashboard = function () {
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.startupSettings = $scope.$parent.vm.startupSettings;
@@ -691,27 +690,15 @@
                 vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
                 vm.componentType = $scope.$parent.vm.componentType;
 
-                if (vm.userSettings) {
-
+                if ((vm.componentType.data.type === 'report_viewer' ||
+                    vm.componentType.data.type === 'report_viewer_split_panel') &&
+                    vm.userSettings) {
+                    // Set attributes available for columns addition
                     if (vm.userSettings.manage_columns && vm.userSettings.manage_columns.length > 0) {
                         vm.attributeDataService.setAttributesAvailableForColumns(vm.userSettings.manage_columns);
                     }
 
                 }
-
-                vm.entityViewerDataService.setViewContext('dashboard');
-
-                var downloadAttrsPromise = vm.downloadAttributes();
-                vm.setEventListeners();
-
-                vm.entityViewerDataService.setEntityType(vm.entityType);
-                vm.entityViewerDataService.setRootEntityViewer(true);
-
-                if (vm.componentType.data.type === 'report_viewer_split_panel') {
-                    vm.entityViewerDataService.setUseFromAbove(true);
-                }
-
-                var layoutId = vm.startupSettings.layout;
 
                 if (vm.componentType.data.type === 'report_viewer_matrix') {
                     vm.matrixSettings = {
@@ -753,7 +740,6 @@
 
                 if (vm.componentType.data.type === 'report_viewer_pie_chart') {
                     vm.rvChartsSettings = {
-                        //fieldsKeys: vm.componentType.data.settings.fieldsKeys
                         group_attr: vm.componentType.data.settings.group_attr,
                         number_attr: vm.componentType.data.settings.number_attr,
                         group_number_calc_formula: vm.componentType.data.settings.group_number_calc_formula,
@@ -766,11 +752,44 @@
                     };
                 }
 
+            };
+
+            vm.getView = function () {
+
+                //middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+
+                vm.readyStatus.layout = false;
+
+                vm.entityViewerDataService = new EntityViewerDataService();
+                vm.entityViewerEventService = new EntityViewerEventService();
+                //vm.splitPanelExchangeService = new SplitPanelExchangeService();
+                vm.attributeDataService = new AttributeDataService();
+
+
+                console.log('$scope.$parent.vm.startupSettings', $scope.$parent.vm.startupSettings);
+                console.log('$scope.$parent.vm.componentType', $scope.$parent.vm.componentType);
+
+                setDataFromDashboard();
+
+                vm.entityViewerDataService.setViewContext('dashboard');
+
+                var downloadAttrsPromise = vm.downloadAttributes();
+                vm.setEventListeners();
+
+                vm.entityViewerDataService.setEntityType(vm.entityType);
+                vm.entityViewerDataService.setRootEntityViewer(true);
+
+                if (vm.componentType.data.type === 'report_viewer_split_panel') {
+                    vm.entityViewerDataService.setUseFromAbove(true);
+                }
+
+                var layoutId = vm.startupSettings.layout;
+
                 var setLayoutPromise = new Promise(function (resolve, reject) {
 
                     uiService.getListLayoutByKey(layoutId).then(function (data) {
 
-                        vm.layout = data;
+                        //vm.layout = data;
 
                         vm.setLayout(data).then(function () {
 
@@ -818,6 +837,8 @@
 
                 Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
 
+                    vm.dashboardComponentDataService.setEntityViewerDataService(vm.entityViewerDataService);
+
                     vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
                     vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED);
 
@@ -834,9 +855,35 @@
 
             };
 
+            var getViewInsideFilledInComponent = function () {
+
+                vm.entityViewerDataService = $scope.$parent.vm.entityViewerDataService;
+                vm.entityViewerEventService = new EntityViewerEventService();
+                vm.attributeDataService = $scope.$parent.vm.attributeDataService;
+
+                setDataFromDashboard();
+                vm.setEventListeners();
+
+                vm.readyStatus.layout = true;
+                vm.readyStatus.attributes = true;
+
+                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                vm.entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+                vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
+                vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED);
+
+            };
+
             vm.init = function () {
 
-                vm.getView();
+                if (fillInModeEnabled) {
+
+                    getViewInsideFilledInComponent();
+
+                } else {
+                    vm.getView();
+                }
 
             };
 

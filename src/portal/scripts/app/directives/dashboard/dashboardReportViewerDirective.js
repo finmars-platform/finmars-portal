@@ -19,7 +19,7 @@
                 item: '=',
                 dashboardDataService: '=',
                 dashboardEventService: '=',
-                fillInModeCallback: '&?'
+                fillInModeData: '=?'
             },
             link: function (scope, elem, attr) {
 
@@ -33,18 +33,6 @@
 
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
-
-                //var attributesDataService = null;
-                //var columnsToManage = null;
-                // var viewerTableCols = null;
-
-                /*if (scope.item.data.user_settings) {
-
-                    if (scope.item.data.user_settings.manage_columns) {
-                        columnsToManage = scope.item.data.user_settings.manage_columns;
-                    }
-
-                }*/
 
                 scope.vm = {
                     tabNumber: scope.tabNumber,
@@ -60,43 +48,58 @@
                     dashboardComponentEventService: scope.dashboardComponentEventService
                 };
 
-                /*scope.addColumnToReport = function (attribute) {
+                if (scope.fillInModeData) {
+                    scope.vm.entityViewerDataService = scope.fillInModeData.entityViewerDataService;
+                    scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
+                }
 
-                    var colData = JSON.parse(JSON.stringify(attribute));
+                scope.updateViewerTable = function () {
+                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
+                };
 
-                    colData.columns = true;
-                    viewerTableCols.push(colData);
+                scope.enableFillInMode = function () {
 
-                    scope.vm.dashboardComponentDataService.setViewerTableColumns(viewerTableCols);
-                    scope.vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
+                    var entityViewerDataService = scope.vm.dashboardComponentDataService.getEntityViewerDataService();
+                    var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
 
-                };*/
+                    scope.fillInModeData = {
+                        tab_number: scope.tabNumber,
+                        row_number: scope.rowNumber,
+                        column_number: scope.columnNumber,
+                        item: scope.item,
+                        entityViewerDataService: entityViewerDataService,
+                        attributeDataService: attributeDataService,
+                        redrawTableCallback: scope.updateViewerTable // needed to update table of original component
+                    }
 
-                /*scope.saveReportLayout = function () {
-                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.SAVE_VIEWER_TABLE_CONFIGURATION);
-                };*/
+                };
 
-                scope.turnOnFillInMode = function () {
-
+                scope.disableFillInMode = function () {
+                    scope.fillInModeData.redrawTableCallback();
+                    scope.fillInModeData = null;
                 };
 
                 scope.initEventListeners = function () {
 
-                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+                    if (!scope.fillInModeData) {
 
-                        var status = scope.dashboardDataService.getComponentStatus(scope.vm.componentType.data.id);
+                        scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                        if (status === dashboardComponentStatuses.START) { // Init calculation of a component
+                            var status = scope.dashboardDataService.getComponentStatus(scope.vm.componentType.data.id);
 
-                            scope.readyStatus.data = true;
+                            if (status === dashboardComponentStatuses.START) { // Init calculation of a component
 
-                            setTimeout(function () {
-                                scope.$apply();
-                            },0)
+                                scope.readyStatus.data = true;
 
-                        }
+                                setTimeout(function () {
+                                    scope.$apply();
+                                },0)
 
-                    });
+                            }
+
+                        });
+
+                    }
 
                     /*scope.vm.dashboardComponentEventService.addEventListener(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED, function () {
                         attributesDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
@@ -135,8 +138,14 @@
 
                     scope.initEventListeners();
 
-                    scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
+                    if (!scope.fillInModeData) {
+
+                        scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    } else {
+                        scope.readyStatus.data = true;
+                    }
 
                 };
 

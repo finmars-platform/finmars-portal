@@ -6,19 +6,28 @@
             <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
         </div>
 
-        <!--<md-menu class="dashboard-component-settings-menu">
-            <md-button class="md-button dashboard-component-settings-btn"
-                   aria-label="dashboard component settings btn"
-                   data-ng-click="$mdOpenMenu($event)">
-                <ng-md-icon size="24" icon="menu"></ng-md-icon>
-                <md-tooltip class="tooltip_2"
-                        md-direction="top">Component settings</md-tooltip>
+        <div class="dashboard-component-header-left">
+            <md-button data-ng-if="fillInModeData"
+                       data-ng-click="disableFillInMode()">
+                <ng-md-icon size="24" icon="close"></ng-md-icon>
+                <md-tooltip data-md-direction="top">Close Filled in Component</md-tooltip>
             </md-button>
 
-            <md-menu-content>
+            <md-menu data-ng-if="!fillInModeData" class="dashboard-component-settings-menu">
+                <md-button class="md-button dashboard-component-settings-btn"
+                           aria-label="dashboard component settings btn"
+                           data-ng-click="$mdOpenMenu($event)">
+                    <ng-md-icon size="24" icon="settings"></ng-md-icon>
+                    <md-tooltip md-direction="top">Component settings</md-tooltip>
+                </md-button>
 
-            </md-menu-content>
-        </md-menu>-->
+                <md-menu-content>
+                    <md-menu-item>
+                        <md-button data-ng-click="enableFillInMode()">Fill in dashboard space</md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>
     </div>
 
     <div class="dashboard-component-body" flex="grow">

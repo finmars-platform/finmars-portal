@@ -37,7 +37,7 @@
                 ></dashboard-input-form>
             </div>-->
 
-            <div data-ng-if="item.data.type == 'report_viewer'" class="height-100">
+            <div data-ng-if="vm.componentFillInModeData.item.data.type == 'report_viewer'" class="height-100">
                 <dashboard-report-viewer
                         tab-number="vm.componentFillInModeData.tab_number"
                         row-number="vm.componentFillInModeData.row_number"
@@ -45,10 +45,11 @@
                         item="vm.componentFillInModeData.item"
                         dashboard-data-service="vm.dashboardDataService"
                         dashboard-event-service="vm.dashboardEventService"
+                        fill-in-mode-data="vm.componentFillInModeData"
                 ></dashboard-report-viewer>
             </div>
 
-            <div data-ng-if="item.data.type == 'report_viewer_split_panel'"
+            <div data-ng-if="vm.componentFillInModeData.item.data.type == 'report_viewer_split_panel'"
                  class="height-100">
                 <dashboard-report-viewer-split-panel
                         class="height-100 display-block"
@@ -58,23 +59,12 @@
                         item="vm.componentFillInModeData.item"
                         dashboard-data-service="vm.dashboardDataService"
                         dashboard-event-service="vm.dashboardEventService"
+                        fill-in-mode-data="vm.componentFillInModeData"
                 ></dashboard-report-viewer-split-panel>
             </div>
 
-            <div data-ng-if="item.data.type == 'report_viewer_grand_total'"
-                 class="height-100">
-                <dashboard-report-viewer-grand-total
-                        class="height-100 display-block"
-                        tab-number="vm.componentFillInModeData.tab_number"
-                        row-number="vm.componentFillInModeData.row_number"
-                        column-number="vm.componentFillInModeData.column_number"
-                        item="vm.componentFillInModeData.item"
-                        dashboard-data-service="vm.dashboardDataService"
-                        dashboard-event-service="vm.dashboardEventService"
-                ></dashboard-report-viewer-grand-total>
-            </div>
-
-            <div data-ng-if="item.data.type === 'report_viewer_bars_chart' || item.data.type === 'report_viewer_pie_chart'"
+            <div data-ng-if="vm.componentFillInModeData.item.data.type === 'report_viewer_bars_chart' ||
+                             vm.componentFillInModeData.item.data.type === 'report_viewer_pie_chart'"
                  class="height-100">
                 <dashboard-report-viewer-charts
                         class="height-100 display-block"
@@ -84,11 +74,12 @@
                         item="vm.componentFillInModeData.item"
                         dashboard-data-service="vm.dashboardDataService"
                         dashboard-event-service="vm.dashboardEventService"
+                        fill-in-mode-data="vm.componentFillInModeData"
                         update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
                 ></dashboard-report-viewer-charts>
             </div>
 
-            <div data-ng-if="item.data.type == 'report_viewer_matrix'"
+            <div data-ng-if="vm.componentFillInModeData.item.data.type == 'report_viewer_matrix'"
                  class="height-100">
                 <dashboard-report-viewer-matrix
                         class="height-100 display-block"
@@ -98,31 +89,9 @@
                         item="vm.componentFillInModeData.item"
                         dashboard-data-service="vm.dashboardDataService"
                         dashboard-event-service="vm.dashboardEventService"
+                        fill-in-mode-data="vm.componentFillInModeData"
                         update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
                 ></dashboard-report-viewer-matrix>
-            </div>
-
-            <div data-ng-if="item.data.type == 'entity_viewer'" class="height-100">
-                <dashboard-entity-viewer
-                        tab-number="vm.componentFillInModeData.tab_number"
-                        row-number="vm.componentFillInModeData.row_number"
-                        column-number="vm.componentFillInModeData.column_number"
-                        item="vm.componentFillInModeData.item"
-                        dashboard-data-service="vm.dashboardDataService"
-                        dashboard-event-service="vm.dashboardEventService"
-                ></dashboard-entity-viewer>
-            </div>
-
-            <div data-ng-if="item.data.type == 'entity_viewer_split_panel'"
-                 class="height-100">
-                <dashboard-entity-viewer-split-panel
-                        tab-number="vm.componentFillInModeData.tab_number"
-                        row-number="vm.componentFillInModeData.row_number"
-                        column-number="vm.componentFillInModeData.column_number"
-                        item="vm.componentFillInModeData.item"
-                        dashboard-data-service="vm.dashboardDataService"
-                        dashboard-event-service="vm.dashboardEventService"
-                ></dashboard-entity-viewer-split-panel>
             </div>
 
         </div>
@@ -255,6 +224,7 @@
                                             item="item"
                                             dashboard-data-service="vm.dashboardDataService"
                                             dashboard-event-service="vm.dashboardEventService"
+                                            fill-in-mode-data="vm.componentFillInModeData"
                                     ></dashboard-report-viewer>
                                 </div>
 
@@ -268,6 +238,7 @@
                                             item="item"
                                             dashboard-data-service="vm.dashboardDataService"
                                             dashboard-event-service="vm.dashboardEventService"
+                                            fill-in-mode-data="vm.componentFillInModeData"
                                     ></dashboard-report-viewer-split-panel>
                                 </div>
 
@@ -294,6 +265,7 @@
                                             item="item"
                                             dashboard-data-service="vm.dashboardDataService"
                                             dashboard-event-service="vm.dashboardEventService"
+                                            fill-in-mode-data="vm.componentFillInModeData"
                                             update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
                                     ></dashboard-report-viewer-charts>
                                 </div>
@@ -308,6 +280,7 @@
                                             item="item"
                                             dashboard-data-service="vm.dashboardDataService"
                                             dashboard-event-service="vm.dashboardEventService"
+                                            fill-in-mode-data="vm.componentFillInModeData"
                                             update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
                                     ></dashboard-report-viewer-matrix>
                                 </div>
@@ -417,6 +390,7 @@
                                                     item="item"
                                                     dashboard-data-service="vm.dashboardDataService"
                                                     dashboard-event-service="vm.dashboardEventService"
+                                                    fill-in-mode-data="vm.componentFillInModeData"
                                             ></dashboard-report-viewer>
                                         </div>
 
@@ -456,6 +430,7 @@
                                                     item="item"
                                                     dashboard-data-service="vm.dashboardDataService"
                                                     dashboard-event-service="vm.dashboardEventService"
+                                                    fill-in-mode-data="vm.componentFillInModeData"
                                                     update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
                                             ></dashboard-report-viewer-charts>
                                         </div>
@@ -470,6 +445,7 @@
                                                     item="item"
                                                     dashboard-data-service="vm.dashboardDataService"
                                                     dashboard-event-service="vm.dashboardEventService"
+                                                    fill-in-mode-data="vm.componentFillInModeData"
                                                     update-dashboard-layout-callback="vm.updateLayoutOnComponentChange(tabNumber, rowNumber, socketData)"
                                             ></dashboard-report-viewer-matrix>
                                         </div>

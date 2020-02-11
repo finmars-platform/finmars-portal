@@ -136,7 +136,8 @@
             flatList: [],
             projection: [],
             activeObject: null,
-            activeObjectsCount: 0
+            activeObjectsCount: 0,
+            dataLoadEnded: false
         };
 
         data.interfaceLayout = getDefaultInterfaceLayout();
@@ -1134,6 +1135,14 @@
             return data.parentEventService
         }
 
+        function setDataLoadStatus(isEnded) {
+            data.dataLoadEnded = isEnded;
+        }
+
+        function didDataLoadEnd() {
+            return data.dataLoadEnded;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1328,7 +1337,10 @@
             getParentDataService: getParentDataService,
 
             setParentEventService: setParentEventService,
-            getParentEventService: getParentEventService
+            getParentEventService: getParentEventService,
+
+            setDataLoadStatus: setDataLoadStatus,
+            didDataLoadEnd: didDataLoadEnd
 
         }
     }

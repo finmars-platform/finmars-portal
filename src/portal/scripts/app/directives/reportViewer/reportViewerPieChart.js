@@ -445,6 +445,24 @@
                         scope.$apply();
 
                     });
+
+                    if (scope.evDataService.didDataLoadEnd()) {
+
+                        getDataForCharts();
+
+                        drawChart();
+
+                        if (scope.showLegends) {
+                            getDataForLegends();
+                            scope.readyStatuses.legendsAreReady = true;
+                        }
+
+                        scope.readyStatuses.chartIsReady = true;
+
+                        //scope.$apply();
+
+                    }
+
                 };
 
                 init();
