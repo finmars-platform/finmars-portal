@@ -13,7 +13,77 @@
         <div style="min-width: 1450px">
 
             <div data-ng-if="vm.checkReadyStatus()">
-                <div data-ng-if="vm.fixedArea.isActive" class="entity-editor-fixed-area-container">
+
+                <div data-ng-if="vm.fixedFieldsAttributes.length > 0" class="m-b-16 p-t-24">
+                    <div layout="row"
+                         class="entity-editor-row">
+                        <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                             flex="50">
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
+                                                entity-type="vm.entityType"
+                                                entity="vm.entity"
+                                                item="vm.fixedFieldsAttributes[0]"></bind-field-control>
+                        </div>
+
+                        <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                             flex="35">
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]"
+                                                entity-type="vm.entityType"
+                                                entity="vm.entity"
+                                                item="vm.fixedFieldsAttributes[1]"></bind-field-control>
+                        </div>
+
+                        <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                             flex="15">
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]"
+                                                entity-type="vm.entityType"
+                                                entity="vm.entity"
+                                                item="vm.fixedFieldsAttributes[2]"></bind-field-control>
+                        </div>
+                    </div>
+
+                    <div layout="row"
+                         class="entity-editor-row">
+                        <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                             flex="50">
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]"
+                                                entity-type="vm.entityType"
+                                                entity="vm.entity"
+                                                item="vm.fixedFieldsAttributes[3]"></bind-field-control>
+                        </div>
+
+                        <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                             flex="35">
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]"
+                                                entity-type="vm.entityType"
+                                                entity="vm.entity"
+                                                item="vm.fixedFieldsAttributes[4]"></bind-field-control>
+                        </div>
+
+                        <!--<div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                             flex="15">
+                            <md-input-container class="md-block">
+                                <label>Status</label>
+                                <md-select data-ng-model="vm.entityStatus"
+                                           data-ng-change="vm.entityStatusChanged()">
+                                    <md-option value="enabled">Enabled</md-option>
+                                    <md-option value="disabled">Disabled</md-option>
+                                    <md-option value="deleted">Deleted</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>-->
+                    </div>
+
+                    <span class="ec-decoration line"></span>
+                </div>
+
+                <!--<div data-ng-if="vm.fixedArea.isActive" class="entity-editor-fixed-area-container">
                     <div layout="row"
                          data-ng-repeat="row in vm.range(vm.fixedArea.layout.rows)"
                          class="entity-editor-row">
@@ -27,7 +97,7 @@
                                                 item="vm.fixedAreaAttributesLayout[$index]"></bind-field-control>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
                     <md-tab data-ng-repeat="tab in vm.tabs">

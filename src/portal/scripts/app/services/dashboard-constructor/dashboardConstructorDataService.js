@@ -1,12 +1,14 @@
 (function () {
 
-    var md5helper = require('../../helpers/md5.helper')
+    var md5helper = require('../../helpers/md5.helper');
 
     module.exports = function () {
 
         var layoutData = { // basically its layout that we store on backend
             name: '',
-            data: {}
+            data: {
+                components: []
+            }
         };
 
         function setData(data) {
@@ -17,12 +19,41 @@
             return layoutData
         }
 
-        function setComponentsTypes(data) {
-            layoutData.data.components_types = data;
+        function setComponents(data) {
+
+            if (!data || !Array.isArray(data)) {
+                layoutData.data.components = [];
+            } else {
+                layoutData.data.components = data;
+            }
+
         }
 
-        function getComponentsTypes() {
-            return layoutData.data.components_types
+        function getComponents() {
+            return layoutData.data.components;
+        }
+
+        function getComponentById (componentId) {
+
+            for (var i = 0; i < layoutData.data.components.length; i++) {
+                if (layoutData.data.components[i].id === componentId) {
+                    return layoutData.data.components[i];
+                }
+            }
+
+            return null;
+        }
+
+        function updateComponentById (componentData) {
+
+            for (var i = 0; i < layoutData.data.components.length; i++) {
+
+                if (layoutData.data.components[i].id === componentData.id) {
+                    layoutData.data.components[i] = componentData;
+                }
+
+            }
+
         }
 
         // non data store related methods, mostly helpers
@@ -36,8 +67,10 @@
             setData: setData,
             getData: getData,
 
-            setComponentsTypes: setComponentsTypes,
-            getComponentsTypes: getComponentsTypes,
+            setComponents: setComponents,
+            getComponents: getComponents,
+            getComponentById: getComponentById,
+            updateComponentById: updateComponentById,
 
             // non data related method, mostly helpers
             ___generateId: ___generateId

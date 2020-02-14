@@ -136,6 +136,16 @@
                     return false
                 };
 
+                scope.inputBackgroundColor = function () {
+                    var backgroundColor = '';
+
+                    if (scope.item.backgroundColor) {
+                        backgroundColor = 'background-color: ' + scope.item.backgroundColor + ';';
+                    }
+
+                    return backgroundColor;
+                };
+
                 scope.getName = function () {
 
                     if (scope.item.hasOwnProperty('verbose_name')) {

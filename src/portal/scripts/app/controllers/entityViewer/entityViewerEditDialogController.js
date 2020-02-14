@@ -86,8 +86,15 @@
 
                     for (a = 0; a < vm.entityAttrs.length; a++) {
                         if (vm.entityAttrs[a].key === attrKey) {
-                            vm.fixedFieldsAttributes.push(vm.entityAttrs[a]);
+
+                            if (vm.entityAttrs[a]) {
+                                var entityAttr = JSON.parse(JSON.stringify(vm.entityAttrs[a]));
+                                entityAttr.backgroundColor = "#ffff00";
+                            }
+                            vm.fixedFieldsAttributes.push(entityAttr);
+
                             break;
+
                         }
                     }
 

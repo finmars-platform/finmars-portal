@@ -186,7 +186,7 @@
                 };
 
                 scope.clearFilter = function () {
-                    filter.options.filter_values = [];
+                    scope.filter.options.filter_values = [];
 
                     scope.filterSettingsChange();
                 };

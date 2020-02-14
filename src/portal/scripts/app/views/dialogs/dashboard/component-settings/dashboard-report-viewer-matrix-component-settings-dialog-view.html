@@ -13,7 +13,7 @@
         <div class="dashboard-constructor-field2" style="margin: 0 10px;">
             <md-input-container class="m-0 width-100">
                 <label>Chart Label</label>
-                <input type="text" data-ng-model="vm.item.data.custom_component_name">
+                <input type="text" data-ng-model="vm.item.custom_component_name">
             </md-input-container>
         </div>
 
@@ -24,7 +24,7 @@
                                 class="m-0 width-100"
                                 aria-label="select with filter">
                 <label>Column (Axis X)</label>
-                <md-select ng-model="vm.item.data.settings.abscissa"
+                <md-select ng-model="vm.item.settings.abscissa"
                            md-container-class="common-select-container"
                            md-on-close="vm.abscissaSearchTerm = ''">
 
@@ -58,7 +58,7 @@
                                 class="m-0 width-100"
                                 aria-label="select with filter">
                 <label>Category</label>
-                <md-select ng-model="vm.item.data.settings.ordinate"
+                <md-select ng-model="vm.item.settings.ordinate"
                            md-container-class="common-select-container"
                            md-on-close="vm.ordinateSearchTerm = ''">
 
@@ -95,7 +95,7 @@
                                     class="m-0 width-100"
                                     aria-label="select with filter">
                     <label>Values</label>
-                    <md-select ng-model="vm.item.data.settings.value_key"
+                    <md-select ng-model="vm.item.settings.value_key"
                                md-container-class="common-select-container"
                                md-on-close="vm.valuesSearchTerm = ''">
 
@@ -123,7 +123,7 @@
             </div>
 
             <div>
-                <number-format-menu data-format-settings="vm.item.data.settings.number_format"
+                <number-format-menu data-format-settings="vm.item.settings.number_format"
                                     data-button-content="<span>Number Format</span>"
                                     data-button-classes="md-raised md-primary"
                                     class="dashboard-constructor-btn-among-fields"></number-format-menu>
@@ -132,7 +132,7 @@
             <md-input-container class="dashboard-constructor-field1"
                                 style="margin: 0 10px;">
                 <label for="">Calculation</label>
-                <md-select data-ng-model="vm.item.data.settings.subtotal_formula_id">
+                <md-select data-ng-model="vm.item.settings.subtotal_formula_id">
                     <md-option value="1">Sum</md-option>
                     <md-option value="2">Weighted Market Value</md-option>
                     <md-option value="3">Weighted Market Value Percent</md-option>

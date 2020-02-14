@@ -106,12 +106,6 @@
                             case "empty":
                                 filterRegime = "Show empty cells";
                                 break;
-                            /*case "top_n":
-                                filterRegime = "Top N items";
-                                break;
-                            case "bottom_n":
-                                filterRegime = "Bottom N items";
-                                break;*/
                         }
 
                     }

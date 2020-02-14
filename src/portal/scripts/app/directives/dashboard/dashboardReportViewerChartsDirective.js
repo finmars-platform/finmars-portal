@@ -19,8 +19,7 @@
                 item: '=',
                 dashboardDataService: '=',
                 dashboardEventService: '=',
-                fillInModeData: '=?',
-                updateDashboardLayoutCallback: '&?'
+                fillInModeData: '=?' // data about component inside tabs for filled in component
             },
             link: function (scope, elem, attr) {
 
@@ -28,17 +27,26 @@
                     data: false
                 };
 
-                if (scope.item && scope.item.data && scope.item.data.chart_custom_name) {
-                    scope.customName = scope.item.data.chart_custom_name;
-                }
-
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
+                var componentData;
+
+                if (scope.item && scope.item.data) {
+                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                    if (componentData.chart_custom_name) {
+                        scope.customName = componentData.chart_custom_name;
+                    }
+
+                }
+
                 scope.vm = {
-                    componentType: scope.item,
-                    entityType: scope.item.data.settings.entity_type,
-                    startupSettings: scope.item.data.settings,
+                    tabNumber: scope.tabNumber,
+                    rowNumber: scope.rowNumber,
+                    columnNumber: scope.columnNumber,
+                    componentData: componentData,
+                    entityType: componentData.settings.entity_type,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,
@@ -62,54 +70,39 @@
                         autoWrap: true,
                         multiple: true,
                         locals: {
-                            item: scope.vm.componentType,
+                            item: scope.vm.componentData,
                             attributeDataService: attributeDataService
                         }
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
 
-                            scope.item = res.data.item;
-                            scope.vm.componentType = scope.item;
-                            scope.vm.entityType = scope.item.data.settings.entity_type;
-                            scope.vm.startupSettings = scope.item.data.settings;
+                            componentData = res.data.item;
 
-                            if (scope.item.data.chart_custom_name) {
-                                scope.customName = scope.item.data.chart_custom_name;
+                            scope.vm.componentData = componentData;
+                            scope.vm.entityType = componentData.settings.entity_type;
+
+                            if (componentData.chart_custom_name) {
+                                scope.customName = componentData.chart_custom_name;
                             } else {
                                 scope.customName = null;
                             }
 
-                            if (scope.updateDashboardLayoutCallback) {
-                                setTimeout(function () {
-                                    scope.updateDashboardLayoutCallback({tabNumber: scope.tabNumber, rowNumber: scope.rowNumber, socketData: scope.item});
-                                }, 400);
-                            }
-
-                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            scope.dashboardDataService.updateComponent(componentData);
 
                             if (scope.fillInModeData) {
-
-                                scope.fillInModeData.item = res.data.item;
-                                scope.fillInModeData.redrawTableCallback();
-
+                                // Reloading corresponding component inside tabs from it's filled in copy
+                                scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
                             }
+
+                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_CONTENT_OF_COMPONENT);
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                         }
 
                     })
 
-                };
-
-                scope.updateViewerTable = function () {
-                    scope.item = scope.fillInModeData.item;
-                    scope.vm.componentType = scope.item;
-                    scope.vm.entityType = scope.item.data.settings.entity_type;
-                    scope.vm.startupSettings = scope.item.data.settings;
-
-                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
                 };
 
                 scope.enableFillInMode = function () {
@@ -124,7 +117,7 @@
                         item: scope.item,
                         entityViewerDataService: entityViewerDataService,
                         attributeDataService: attributeDataService,
-                        redrawTableCallback: scope.updateViewerTable // needed to update table of original component
+                        dashboardComponentEventService: scope.dashboardComponentEventService // needed to update component inside tabs
                     }
 
                 };
@@ -139,7 +132,7 @@
 
                         scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                            var status = scope.dashboardDataService.getComponentStatus(scope.vm.componentType.data.id);
+                            var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
 
                             if (status === dashboardComponentStatuses.START) { // Init calculation of a component
 
@@ -153,6 +146,23 @@
 
                         });
 
+                        scope.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
+
+                            if (scope.item && scope.item.data) {
+                                componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                                if (componentData.chart_custom_name) {
+                                    scope.customName = componentData.chart_custom_name;
+                                }
+                            }
+
+                            scope.vm.componentData = componentData;
+                            scope.vm.entityType = componentData.settings.entity_type;
+
+                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_CONTENT_OF_COMPONENT);
+
+                        });
+
                     }
 
                 };
@@ -163,7 +173,7 @@
 
                     if (!scope.fillInModeData) {
 
-                        scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     } else {

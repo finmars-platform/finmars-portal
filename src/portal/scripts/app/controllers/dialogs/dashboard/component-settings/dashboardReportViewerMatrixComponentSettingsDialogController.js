@@ -10,19 +10,19 @@
         var vm = this;
 
         vm.item = JSON.parse(JSON.stringify(item));
-        vm.entityType = vm.item.data.settings.entity_type;
+        vm.entityType = vm.item.settings.entity_type;
 
-        if (!vm.item.data.user_settings) {
-            vm.item.data.user_settings = {};
+        if (!vm.item.user_settings) {
+            vm.item.user_settings = {};
         }
 
         vm.abscissaSearchTerm = '';
         vm.ordinateSearchTerm = '';
         vm.abscissaSearchTerm = '';
 
-        vm.availableAbscissaAttrs = vm.item.data.user_settings.available_abscissa_keys;
-        vm.availableOrdinateAttrs = vm.item.data.user_settings.available_ordinate_keys;
-        vm.availableValueAttrs = vm.item.data.user_settings.available_value_keys;
+        vm.availableAbscissaAttrs = vm.item.user_settings.available_abscissa_keys;
+        vm.availableOrdinateAttrs = vm.item.user_settings.available_ordinate_keys;
+        vm.availableValueAttrs = vm.item.user_settings.available_value_keys;
 
         vm.getSelectName = function (attr) {
             if (attr.layout_name) {
@@ -97,7 +97,7 @@
                 multiple: true,
                 locals: {
                     data: {
-                        settings: vm.item.data.settings.number_format
+                        settings: vm.item.settings.number_format
                     }
                 }
 
@@ -105,7 +105,7 @@
 
                 if (res.status === 'agree') {
 
-                    vm.item.data.settings.number_format = res.data.settings;
+                    vm.item.settings.number_format = res.data.settings;
 
                 }
 

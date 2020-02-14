@@ -35,6 +35,13 @@
         vm.entity = {$_isValid: true};
         var dataConstructorLayout = {};
 
+        vm.hasEnabledStatus = true;
+        vm.entityStatus = '';
+
+        if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
+            vm.hasEnabledStatus = false;
+        }
+
         if (Object.keys(entity).length) { // make copy option
             vm.entity = entity;
         }
@@ -43,11 +50,12 @@
 
         vm.attrs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
-        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+        vm.entityAttrs = [];
 
         vm.formIsValid = true;
         vm.range = gridHelperService.range;
 
+        vm.fixedFieldsAttributes = [];
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
@@ -57,6 +65,40 @@
         vm.lastInstrumentType = null;
 
         vm.canManagePermissions = false;
+
+        var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+
+        var getEntityAttrs = function () {
+            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+            vm.fixedFieldsAttributes = [];
+
+            var i, a;
+            for (i = 0; i < keysOfFixedFieldsAttrs.length; i++) {
+                var attrKey = keysOfFixedFieldsAttrs[i];
+
+                if (!attrKey) {
+
+                    vm.fixedFieldsAttributes.push(null);
+
+                } else {
+
+                    for (a = 0; a < vm.entityAttrs.length; a++) {
+                        if (vm.entityAttrs[a].key === attrKey) {
+
+                            if (vm.entityAttrs[a]) {
+                                var entityAttr = JSON.parse(JSON.stringify(vm.entityAttrs[a]));
+                                entityAttr.backgroundColor = "#ffff00";
+                            }
+                            vm.fixedFieldsAttributes.push(entityAttr);
+
+                            break;
+                        }
+                    }
+
+                }
+            }
+
+        };
 
         var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
@@ -489,7 +531,7 @@
                     vm.init();
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
-                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+                    getEntityAttrs();
 
                 }
 
@@ -673,6 +715,61 @@
 
         };
 
+        /*vm.entityStatusChanged = function () {
+
+            entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
+
+                switch (vm.entityStatus) {
+                    case 'enabled':
+                        result.is_enabled = true;
+                        result.is_deleted = false;
+                        vm.entity.is_enabled = true;
+                        vm.entity.is_deleted = false;
+                        break;
+
+                    case 'disabled':
+                        result.is_enabled = false;
+                        result.is_deleted = false;
+                        vm.entity.is_enabled = false;
+                        vm.entity.is_deleted = false;
+                        break;
+
+                    case 'deleted':
+                        result.is_deleted = true;
+                        vm.entity.is_deleted = true;
+                        break;
+
+                    case 'active':
+                        break;
+
+                    case 'inactive':
+                        break;
+                }
+
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                    $scope.$apply();
+
+                });
+
+            });
+
+        };
+
+        var getEntityStatus = function () {
+
+            vm.entityStatus = 'disabled';
+
+            if (vm.entity.is_enabled) {
+                vm.entityStatus = 'enabled';
+            }
+
+            if (vm.entity.is_deleted) {
+                vm.entityStatus = 'deleted';
+            }
+
+        };*/
+
         vm.save = function ($event) {
 
             vm.updateEntityBeforeSave();
@@ -772,7 +869,7 @@
         };
 
         vm.init = function () {
-
+            getEntityAttrs();
             vm.getFormLayout();
 
 

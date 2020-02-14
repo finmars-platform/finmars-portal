@@ -19,7 +19,7 @@
                 item: '=',
                 dashboardDataService: '=',
                 dashboardEventService: '=',
-                fillInModeData: '=?'
+                fillInModeData: '=?' // data about component inside tabs for filled in component
             },
             link: function (scope, elem, attr) {
 
@@ -27,21 +27,26 @@
                     data: false
                 };
 
-                if (scope.item && scope.item.data && scope.item.data.custom_component_name) {
-                    scope.customName = scope.item.data.custom_component_name;
-                }
-
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
+
+                var componentData;
+
+                if (scope.item && scope.item.data) {
+                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                    if (componentData.custom_component_name) {
+                        scope.customName = componentData.custom_component_name;
+                    }
+
+                }
 
                 scope.vm = {
                     tabNumber: scope.tabNumber,
                     rowNumber: scope.rowNumber,
                     columnNumber: scope.columnNumber,
-                    componentType: scope.item,
-                    entityType: scope.item.data.settings.entity_type,
-                    startupSettings: scope.item.data.settings,
-                    userSettings: scope.item.data.user_settings,
+                    componentData: componentData,
+                    entityType: componentData.settings.entity_type,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,
@@ -52,10 +57,6 @@
                     scope.vm.entityViewerDataService = scope.fillInModeData.entityViewerDataService;
                     scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
                 }
-
-                scope.updateViewerTable = function () {
-                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
-                };
 
                 scope.enableFillInMode = function () {
 
@@ -69,13 +70,13 @@
                         item: scope.item,
                         entityViewerDataService: entityViewerDataService,
                         attributeDataService: attributeDataService,
-                        redrawTableCallback: scope.updateViewerTable // needed to update table of original component
+                        dashboardComponentEventService: scope.dashboardComponentEventService // needed to update component inside tabs
                     }
 
                 };
 
                 scope.disableFillInMode = function () {
-                    scope.fillInModeData.redrawTableCallback();
+                    scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
                     scope.fillInModeData = null;
                 };
 
@@ -85,7 +86,7 @@
 
                         scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                            var status = scope.dashboardDataService.getComponentStatus(scope.vm.componentType.data.id);
+                            var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
 
                             if (status === dashboardComponentStatuses.START) { // Init calculation of a component
 
@@ -140,7 +141,7 @@
 
                     if (!scope.fillInModeData) {
 
-                        scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     } else {

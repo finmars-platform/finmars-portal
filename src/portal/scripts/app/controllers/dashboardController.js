@@ -189,13 +189,14 @@
 
         vm.refreshActiveTab = function () {
 
-            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ACTIVE_TAB)
-            vm.processing = true;
+            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ACTIVE_TAB);
 
             var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
             if (!Object.keys(statusesObject).length) {
                 vm.processing = false;
+            } else {
+                vm.processing = true;
             }
 
         };
@@ -203,12 +204,13 @@
         vm.refreshAll = function () {
 
             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL);
-            vm.processing = true;
 
             var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
             if (!Object.keys(statusesObject).length) {
                 vm.processing = false;
+            } else {
+                vm.processing = true;
             }
 
         };
@@ -239,22 +241,29 @@
 
                 var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
-                vm.processing = false;
-
                 // console.log('statusesObject', statusesObject);
 
                 var processed = false;
 
                 Object.keys(statusesObject).forEach(function (componentId) {
 
-                    if (statusesObject[componentId] === dashboardComponentStatuses.PROCESSING) {
+                    /*if (statusesObject[componentId] === dashboardComponentStatuses.PROCESSING) {
                         processed = true;
-                        vm.processing = true;
+                    }*/
+                    if (statusesObject[componentId] !== dashboardComponentStatuses.ACTIVE &&
+                        statusesObject[componentId] !== dashboardComponentStatuses.ERROR) {
+
+                        processed = true;
                     }
 
                 });
 
                 if (processed) {
+
+                    vm.processing = true;
+
+                } else if (vm.processing) {
+                    vm.processing = false;
                     $scope.$apply();
                 }
 
@@ -281,7 +290,6 @@
 
         vm.initDashboardComponents = function () {
 
-
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
                 clearTimeout(componentBuildingTimeTimeout);
@@ -304,7 +312,6 @@
                         nextComponentToStart = null;
 
                         onComponentBuildingForTooLong(key);
-
                         break;
                     }
 
@@ -316,7 +323,7 @@
                 if (nextComponentToStart) {
 
                     vm.dashboardDataService.setComponentStatus(nextComponentToStart, dashboardComponentStatuses.START);
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE)
+                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                 }
 

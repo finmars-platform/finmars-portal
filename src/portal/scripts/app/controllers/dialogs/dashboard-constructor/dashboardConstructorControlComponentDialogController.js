@@ -78,14 +78,15 @@
 
             if (vm.item.id) {
 
-                vm.componentsTypes = vm.componentsTypes.map(function (item) {
+                /*vm.componentsTypes = vm.componentsTypes.map(function (item) {
 
                     if (item.id === vm.item.id) {
                         return vm.item
                     }
 
                     return item;
-                })
+                })*/
+                dataService.updateComponentById(vm.item);
 
             } else {
 
@@ -97,7 +98,7 @@
 
             }
 
-            dataService.setComponentsTypes(vm.componentsTypes);
+            dataService.setComponents(vm.componentsTypes);
 
             $mdDialog.hide({status: 'agree'});
         };
@@ -106,7 +107,7 @@
 
             console.log('dataService', dataService);
 
-            vm.componentsTypes = dataService.getComponentsTypes()
+            vm.componentsTypes = dataService.getComponents()
 
         };
 
