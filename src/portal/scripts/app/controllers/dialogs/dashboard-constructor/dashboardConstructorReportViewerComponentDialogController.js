@@ -173,14 +173,14 @@
 
             }
 
-            dataService.setComponentsTypes(vm.componentsTypes);
+            dataService.setComponents(vm.componentsTypes);
 
             $mdDialog.hide({status: 'agree'});
         };
 
         vm.init = function () {
 
-            vm.componentsTypes = dataService.getComponentsTypes();
+            vm.componentsTypes = dataService.getComponents();
 
             vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
                 return componentType.type === 'control';

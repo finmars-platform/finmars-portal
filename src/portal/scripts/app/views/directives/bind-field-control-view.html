@@ -144,7 +144,7 @@
     </div>-->
 
     <div data-ng-if="fieldType['display_name'] === 'Field'">
-        <div style="{{inputBackgroundColor()}}">
+        <div>
             <ev-field-resolver data-item="item"
                                data-entity="entity"
                                data-options="options"
@@ -164,7 +164,7 @@
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
-        <div style="{{inputBackgroundColor()}}">
+        <div>
             <ev-field-resolver data-item="item"
                                data-entity="entity"
                                data-options="options"></ev-field-resolver>
@@ -176,7 +176,8 @@
         <md-input-container class="field-date-pick-holder no-error-spacer md-block">
             <label data-ng-bind="getName()"></label>
             <zh-date-picker data-date-value="entity[getModelKey()]"
-                            ng-class="{'disabled-btn': isDisabled}"></zh-date-picker>
+                            ng-class="{'disabled-btn': isDisabled}"
+                            style="{{inputBackgroundColor()}}"></zh-date-picker>
             <div class="bind-field-buttons-block">
                 <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayMinus"
                            data-ng-click="setDateMinus()">
@@ -228,7 +229,8 @@
                            data-classifier-value="entity[getModelKey()]"
                            data-ng-change="changeClassifier()"
                            md-container-class="h-classifier-select"
-                           data-entity-type="entityType">
+                           data-entity-type="entityType"
+                           style="{{inputBackgroundColor()}}">
 
                     <md-option ng-value="node.id" selected="selected">
                         {{node.name}}

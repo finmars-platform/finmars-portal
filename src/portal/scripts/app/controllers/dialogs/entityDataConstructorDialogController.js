@@ -916,7 +916,8 @@
                                 'accrued_multiplier', 'default_accrued',
                                 'pricing_currency', 'price_multiplier',
                                 'default_price', 'daily_pricing_model',
-                                'price_download_scheme', 'reference_for_pricing'];
+                                'price_download_scheme', 'reference_for_pricing',
+                                'maturity_date', 'maturity_price'];
 
                             break;
 

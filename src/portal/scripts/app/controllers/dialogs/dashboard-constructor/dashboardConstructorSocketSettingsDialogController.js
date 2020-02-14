@@ -10,7 +10,7 @@
     module.exports = function ($scope, $mdDialog, dashboardConstructorDataService, dashboardConstructorEventService, attributeDataService, data) {
 
         var vm = this;
-        console.log("dashboard settings data", data);
+
         vm.item = data.item;
         vm.tabNumber = data.tabNumber;
         vm.rowNumber = data.rowNumber;
@@ -23,13 +23,14 @@
         vm.colspanList = [1];
         vm.rowspanList = [1];
 
+        vm.component = vm.dashboardConstructorDataService.getComponentById(vm.item.data.id);
         var componentChanged = false;
 
         vm.getVerboseType = function () {
 
             var verboseType = 'Unknown';
 
-            switch (vm.item.data.type) {
+            switch (vm.component.type) {
                 case 'report_viewer':
                     verboseType = 'Report Viewer';
                     break;
@@ -253,19 +254,19 @@
 
         };
 
-        vm.editComponentType = function ($event, item) {
+        vm.editComponentType = function ($event) {
 
             var contrName = '';
             var templateUrl = '';
 
             var locals = {
-                item: JSON.parse(JSON.stringify(item)),
+                item: JSON.parse(JSON.stringify(vm.component)),
                 dataService: vm.dashboardConstructorDataService,
                 eventService: vm.dashboardConstructorEventService,
                 attributeDataService: vm.attributeDataService
             };
 
-            switch (item.type) {
+            switch (vm.component.type) {
                 case 'control':
                     contrName = 'DashboardConstructorControlComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html';
@@ -323,6 +324,7 @@
                 }).then(function (res) {
 
                     if (res && res.status === 'agree') {
+                        vm.component = vm.dashboardConstructorDataService.getComponentById(vm.item.data.id);
                         componentChanged = true;
                     }
 

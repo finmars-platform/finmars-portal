@@ -1,7 +1,7 @@
 <div>
 
     <div data-ng-if="type === 'id'">
-        <div data-ng-if="isSpecialSearchRelation()">
+        <div data-ng-if="isSpecialSearchRelation()" style="{{inputBackgroundColor()}}">
             <entity-search-select item="entity[getModelKey()]"
                                   label="getName()"
                                   input-text="inputText"
@@ -20,7 +20,8 @@
                                data-ng-change="changeHandler()"
                                md-on-open="getData()"
                                md-selected-text="bindFormFields()"
-                               md-container-class="common-select-container">
+                               md-container-class="common-select-container"
+                               style="{{inputBackgroundColor()}}">
                         <md-select-header>
                             <input data-ng-model="searchTerm"
                                    type="search"
@@ -60,7 +61,8 @@
                                        data-ng-change="changeHandler()"
                                        md-on-open="getData()"
                                        md-selected-text="bindFormFields()"
-                                       md-container-class="common-select-container">
+                                       md-container-class="common-select-container"
+                                       style="{{inputBackgroundColor()}}">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -95,7 +97,8 @@
                                    data-ng-model="entity[getModelKey()]"
                                    data-ng-change="changeHandler()"
                                    md-on-open="getData()"
-                                   md-container-class="common-select-container">
+                                   md-container-class="common-select-container"
+                                   style="{{inputBackgroundColor()}}">
                             <md-select-header>
                                 <input data-ng-model="searchTerm"
                                        type="search"
@@ -126,7 +129,8 @@
                            data-ng-model="entity[getModelKey()]"
                            data-ng-change="changeHandler()"
                            multiple="true"
-                           md-selected-text="bindMCField()">
+                           md-selected-text="bindMCField()"
+                           style="{{inputBackgroundColor()}}">
                     <md-select-header>
                         <input data-ng-model="searchTerm"
                                type="search"
@@ -153,6 +157,7 @@
                 </md-select>
             </md-input-container>
         </div>
+
         <div data-ng-if="!checkComplexEntityType()">
             <div data-ng-if="getModelKey() !== 'content_types'">
                 <div data-ng-if="resolveMultiple()">
@@ -163,7 +168,8 @@
                                    data-ng-model="entity[getModelKey()]"
                                    data-ng-change="changeHandler()"
                                    md-selected-text="bindMCField()"
-                                   multiple="true">
+                                   multiple="true"
+                                   style="{{inputBackgroundColor()}}">
                             <md-select-header>
                                 <input data-ng-model="searchTerm"
                                        type="search"
@@ -179,6 +185,7 @@
                         </md-select>
                     </md-input-container>
                 </div>
+
                 <div data-ng-if="!resolveMultiple()">
                     <md-input-container class="md-block no-error-spacer">
                         <label data-ng-bind="getName()"></label>
@@ -187,7 +194,8 @@
                                    data-ng-model="entity[getModelKey()]"
                                    data-ng-change="changeHandler()"
                                    md-selected-text="bindFormFields()"
-                                   md-container-class="common-select-container">
+                                   md-container-class="common-select-container"
+                                   style="{{inputBackgroundColor()}}">
                             <md-select-header>
                                 <input data-ng-model="searchTerm"
                                        type="search"
@@ -207,6 +215,7 @@
                 </div>
 
             </div>
+
             <div data-ng-if="getModelKey() === 'content_types'">
                 <md-input-container class="md-block no-error-spacer">
                     <label data-ng-bind="getName()"></label>
@@ -215,7 +224,8 @@
                                data-ng-model="entity[getModelKey()]"
                                data-ng-change="changeHandler()"
                                md-selected-text="bindMCField()"
-                               multiple="true">
+                               multiple="true"
+                               style="{{inputBackgroundColor()}}">
                         <md-select-header>
                             <input data-ng-model="searchTerm"
                                    type="search"

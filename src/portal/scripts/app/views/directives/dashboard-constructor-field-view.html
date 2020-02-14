@@ -31,7 +31,7 @@
                 </div>
 
                 <p class="name-holder">
-                    <b><span data-ng-bind="item.data.name"></span></b> (<span
+                    <b><span data-ng-bind="componentData.name"></span></b> (<span
                         data-ng-bind="getVerboseType()"></span>)
                 </p>
                 <div class="dashboard-field-card-options">
@@ -51,8 +51,8 @@
 
     <md-card data-ng-if="item.editMode" class="dashboard-field-card {{item.editMode ? 'active' : ''}}">
 
-        <md-button class="md-raised edit-component-type-button" data-ng-click="editComponentType($event, item.data)">
-            b><span data-ng-bind="item.data.name"></span></b> (<span
+        <md-button class="md-raised edit-component-type-button" data-ng-click="editComponentType($event)">
+            b><span data-ng-bind="componentData.name"></span></b> (<span
                 data-ng-bind="getVerboseType()"></span>)
         </md-button>
 

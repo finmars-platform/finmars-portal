@@ -22,11 +22,20 @@
             templateUrl: 'views/directives/dashboard-constructor-field-view.html',
             link: function (scope, elem, attr) {
 
+                scope.$watch('item', function () {
+                    scope.componentData = scope.dashboardConstructorDataService.getComponentById(scope.item.data.id);
+                });
+
                 scope.getVerboseType = function () {
+
+                    var componentType = null;
+                    if (scope.componentData) {
+                        componentType = scope.componentData.type;
+                    }
 
                     var verboseType = 'Unknown';
 
-                    switch (scope.item.data.type) {
+                    switch (componentType) {
                         case 'report_viewer':
                             verboseType = 'Report Viewer';
                             break;
@@ -86,9 +95,11 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            scope.syncWithComponentType();
+                            //scope.syncWithComponentType();
+                            scope.componentData = scope.dashboardConstructorDataService.getComponentById(scope.item.data.id);
 
-                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+
                             console.log("dashboard settings res", res);
                             scope.saveField();
                         }
@@ -520,7 +531,7 @@
 
                 };
 
-                scope.syncWithComponentType = function () {
+                /*scope.syncWithComponentType = function () {
 
                     var layout = scope.dashboardConstructorDataService.getData();
 
@@ -530,21 +541,21 @@
 
                     });
 
-                };
+                };*/
 
-                scope.editComponentType = function ($event, item) {
+                scope.editComponentType = function ($event) {
 
                     var contrName = '';
                     var templateUrl = '';
 
                     var locals = {
-                        item: JSON.parse(JSON.stringify(item)),
+                        item: JSON.parse(JSON.stringify(scope.componentData)),
                         dataService: scope.dashboardConstructorDataService,
                         eventService: scope.dashboardConstructorEventService,
                         attributeDataService: scope.attributeDataService
                     };
 
-                    switch (item.type) {
+                    switch (scope.componentData.type) {
                         case 'control':
                             contrName = 'DashboardConstructorControlComponentDialogController as vm';
                             templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html';
@@ -602,7 +613,8 @@
                         }).then(function (res) {
 
                             if (res && res.status === 'agree') {
-                                scope.syncWithComponentType();
+                                //scope.syncWithComponentType();
+                                scope.componentData = scope.dashboardConstructorDataService.getComponentById(scope.item.data.id);
 
                                 scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
                             }

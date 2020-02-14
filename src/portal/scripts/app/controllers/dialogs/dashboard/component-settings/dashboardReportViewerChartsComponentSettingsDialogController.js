@@ -10,16 +10,16 @@
         var vm = this;
 
         vm.item = JSON.parse(JSON.stringify(item));
-        vm.entityType = vm.item.data.settings.entity_type;
+        vm.entityType = vm.item.settings.entity_type;
 
-        if (!vm.item.data.user_settings) {
-            vm.item.data.user_settings = {};
+        if (!vm.item.user_settings) {
+            vm.item.user_settings = {};
         }
 
-        vm.availableAttrs = vm.item.data.user_settings.available_attrs_keys;
-        vm.availableNumericAttrs = vm.item.data.user_settings.available_numeric_attrs_keys;
+        vm.availableAttrs = vm.item.user_settings.available_attrs_keys;
+        vm.availableNumericAttrs = vm.item.user_settings.available_numeric_attrs_keys;
 
-        vm.chartType = vm.item.data.type;
+        vm.chartType = vm.item.type;
 
         vm.valuesSearchTerm = '';
         vm.categoriesSearchTerm = '';

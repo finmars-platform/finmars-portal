@@ -22,7 +22,7 @@
                 entityChange: '&'
             },
             link: function (scope, elem, attr) {
-
+                console.log("input form item", scope.item);
                 scope.readyStatus = {classifier: false};
 
                 var attrs = scope.$parent.vm.attrs || [];

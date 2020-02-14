@@ -82,13 +82,18 @@
                             <md-input-container class="md-block">
                                 <label>Status</label>
                                 <md-select data-ng-model="vm.entityStatus"
-                                           data-ng-change="vm.entityStatusChanged()">
+                                           data-ng-change="vm.entityStatusChanged()"
+                                           style="background-color: #ffff00;">
                                     <md-option value="enabled">Enabled</md-option>
                                     <md-option value="disabled">Disabled</md-option>
                                     <md-option value="deleted">Deleted</md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
+                    </div>
+
+                    <div class="entity-editor-divider-holder">
+                        <div></div>
                     </div>
                 </div>
 

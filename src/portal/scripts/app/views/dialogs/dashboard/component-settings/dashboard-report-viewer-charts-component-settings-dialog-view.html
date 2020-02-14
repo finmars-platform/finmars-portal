@@ -13,7 +13,7 @@
         <div class="dashboard-constructor-field2" style="margin: 0 10px;">
             <md-input-container class="m-0 width-100">
                 <label>Chart Label</label>
-                <input type="text" data-ng-model="vm.item.data.chart_custom_name">
+                <input type="text" data-ng-model="vm.item.chart_custom_name">
             </md-input-container>
         </div>
 
@@ -25,7 +25,7 @@
                                 class="m-0 width-100"
                                 aria-label="select with filter">
                 <label>Category</label>
-                <md-select ng-model="vm.item.data.settings.bar_name_key"
+                <md-select ng-model="vm.item.settings.bar_name_key"
                            md-container-class="common-select-container"
                            md-on-close="vm.categoriesSearchTerm = ''">
 
@@ -60,7 +60,7 @@
                                 class="m-0 width-100"
                                 aria-label="select with filter">
                 <label>Category</label>
-                <md-select ng-model="vm.item.data.settings.group_attr"
+                <md-select ng-model="vm.item.settings.group_attr"
                            md-container-class="common-select-container"
                            md-on-close="vm.categoriesSearchTerm = ''">
 
@@ -98,7 +98,7 @@
                                     class="m-0 width-100"
                                     aria-label="select with filter">
                     <label>Value</label>
-                    <md-select ng-model="vm.item.data.settings.bar_number_key"
+                    <md-select ng-model="vm.item.settings.bar_number_key"
                                md-container-class="common-select-container"
                                md-on-close="vm.valuesSearchTerm = ''">
 
@@ -133,7 +133,7 @@
                                     class="m-0 width-100"
                                     aria-label="select with filter">
                     <label>Value</label>
-                    <md-select ng-model="vm.item.data.settings.number_attr"
+                    <md-select ng-model="vm.item.settings.number_attr"
                                md-container-class="common-select-container"
                                md-on-close="vm.valuesSearchTerm = ''">
 
@@ -161,7 +161,7 @@
             </div>
 
             <div>
-                <number-format-menu data-format-settings="vm.item.data.settings.number_format"
+                <number-format-menu data-format-settings="vm.item.settings.number_format"
                                     data-button-content="<span>Number Format</span>"
                                     data-button-classes="md-raised md-primary"
                                     class="dashboard-constructor-btn-among-fields"></number-format-menu>
@@ -170,7 +170,7 @@
             <md-input-container class="dashboard-constructor-field1"
                                 style="margin: 0 10px;">
                 <label for="">Calculation</label>
-                <md-select data-ng-model="vm.item.data.settings.group_number_calc_formula">
+                <md-select data-ng-model="vm.item.settings.group_number_calc_formula">
                     <md-option value="1">Sum</md-option>
                     <md-option value="2">Weighted Market Value</md-option>
                     <md-option value="3">Weighted Market Value Percent</md-option>
