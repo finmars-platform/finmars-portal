@@ -87,8 +87,8 @@
 
                             if (vm.entityAttrs[a]) {
                                 var entityAttr = JSON.parse(JSON.stringify(vm.entityAttrs[a]));
-                                entityAttr.backgroundColor = "#ffff00";
                             }
+
                             vm.fixedFieldsAttributes.push(entityAttr);
 
                             break;

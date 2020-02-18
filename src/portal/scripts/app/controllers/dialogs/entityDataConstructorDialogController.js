@@ -1440,7 +1440,16 @@
 
         };
 
+        vm.setTabsHolderHeight = function () {
+            var elemThatSetsMaxHeight = document.querySelector('.mdDialogContent');
+            var tabsHolderElem = document.querySelector('.tabsHolderElem');
+
+            tabsHolderElem.style.height = elemThatSetsMaxHeight.clientHeight + 'px';
+        };
+
         vm.init = function () {
+
+            window.addEventListener('resize', vm.setTabsHolderHeight);
 
             vm.getLayout().then(function () {
 
@@ -1472,12 +1481,10 @@
         vm.init();
 
         $scope.$on("$destroy", function () {
+            window.removeEventListener('resize', vm.setTabsHolderHeight);
             vm.dragAndDrop.destroy();
         });
 
-        vm.onInit = function () {
-
-        };
     }
 
 }());

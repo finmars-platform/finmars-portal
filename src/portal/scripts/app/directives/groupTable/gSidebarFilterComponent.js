@@ -13,6 +13,8 @@
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
 
+    var middlewareService = require('../../services/middlewareService');
+
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaService = require('../../services/metaService');
 
@@ -513,8 +515,8 @@
                         locals: {
                             data: filter
                         }
-                    })
 
+                    })
 
                 };
 
@@ -802,12 +804,26 @@
 
                             var listLayout = scope.evDataService.getListLayout();
                             listLayout.name = res.name;
-
                             scope.evDataService.setListLayout(listLayout);
+
+                            uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+
+                                // Give signal to update layout name in the toolbar
+                                if (scope.isRootEntityViewer) {
+                                    middlewareService.setNewEntityViewerLayoutName(listLayout.name);
+                                } else {
+                                    middlewareService.setNewSplitPanelLayoutName(listLayout.name);
+                                }
+
+                                scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
+                                scope.$apply();
+
+                            });
 
                         }
 
                     })
+
                 };
 
                 scope.saveLayoutList = function ($event) {
@@ -1004,10 +1020,20 @@
                             checkIsLayoutDefault();
                         });
 
+                        scope.evEventService.addEventListener(evEvents.LAYOUT_NAME_CHANGE, function () {
+                            var listLayout = scope.evDataService.getListLayout();
+                            scope.layoutName = listLayout.name;
+                        });
+
                     } else {
 
                         scope.evEventService.addEventListener(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED, function () {
                             checkIsLayoutDefault();
+                        });
+
+                        scope.evEventService.addEventListener(evEvents.LAYOUT_NAME_CHANGE, function () {
+                            var spDefaultLayoutData = scope.evDataService.getSplitPanelDefaultLayout();
+                            scope.layoutName = spDefaultLayoutData.name;
                         });
 
                     }
