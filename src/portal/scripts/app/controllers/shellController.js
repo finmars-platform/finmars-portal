@@ -269,7 +269,6 @@
         vm.activeSPLayoutName = false; // false needed to check whether split panel disabled and have no layout in middlewareService
 
         vm.isStateOfEntity = function () {
-
             var newLayoutName = middlewareService.getNewEntityViewerLayoutName();
             var newSplitPanelLayoutName = middlewareService.getNewSplitPanelLayoutName();
 

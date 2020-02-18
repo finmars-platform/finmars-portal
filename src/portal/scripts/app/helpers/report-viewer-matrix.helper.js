@@ -25,113 +25,87 @@
 
         var result = [];
 
-        var data = {};
-        var dataItems = {};
+        rows.forEach(function (rowName) { // creating data structure for matrix
 
-        // itemList.forEach(function (item) {
-        //
-        //     rows.forEach(function (row) {
-        //
-        //         columns.forEach(function (column) {
-        //
-        //             if (!data.hasOwnProperty(row + ':' + column)) {
-        //                 data[row + ':' + column] = 0
-        //             }
-        //
-        //             if (item[columnsKey] === column && item[rowsKey] === row) {
-        //
-        //                 data[row + ':' + column] = data[row + ':' + column] + item[valueKey]
-        //
-        //             }
-        //         })
-        //
-        //     })
-        //
-        // });
-
-        itemList.forEach(function (item) {
-
-            rows.forEach(function (row) {
-
-                columns.forEach(function (column) {
-
-                    if (!dataItems.hasOwnProperty(row + ':' + column)) {
-                        dataItems[row + ':' + column] = []
-                    }
-
-                    if (item[columnsKey] === column && item[rowsKey] === row) {
-
-                        dataItems[row + ':' + column].push(item)
-
-                    }
-                })
-
-            })
-
-        });
-
-        var pieces;
-        var row;
-        var column;
-
-        console.log('dataItems', dataItems);
-        console.log('subtotal_formula_id', subtotal_formula_id);
-
-        var columnData;
-        var resultObj;
-
-        Object.keys(dataItems).forEach(function (key) {
-
-            columnData = {
-                key: valueKey,
-                report_settings: {
-                    subtotal_formula_id: subtotal_formula_id
-                }
+            var matrixRowData = {
+                index: result.length,
+                row_name: rowName,
+                items: []
             };
 
-            resultObj = rvSubtotalService.calculateColumn(dataItems[key], columnData);
+            columns.forEach(function (colName) {
 
-            data[key] = resultObj[valueKey]
+                var matrixColumnData = {
+                    index: matrixRowData.items.length,
+                    column_name: colName,
+                    data: {
+                        flatListItems: [],
+                        value: 0
+                    }
+                };
 
-        });
+                matrixRowData.items.push(matrixColumnData);
 
-        console.log('data', data);
-
-        var rowsAsKeys = {};
-
-        Object.keys(data).forEach(function (dataKey) {
-
-            pieces = dataKey.split(':');
-
-            row = pieces[0];
-            column = pieces[1];
-
-            if (!rowsAsKeys.hasOwnProperty(row)) {
-                rowsAsKeys[row] = {
-                    row_name: row,
-                    items: []
-                }
-            }
-
-            rowsAsKeys[row].items.push({
-                column_name: column,
-                data: {
-                    value: data[dataKey]
-                }
-            })
-
-        });
-
-        Object.keys(rowsAsKeys).forEach(function (rowKey, index) {
-
-            rowsAsKeys[rowKey].index = index;
-
-            rowsAsKeys[rowKey].items = rowsAsKeys[rowKey].items.map(function (item, index) {
-                item.index = index;
-                return item;
             });
 
-            result.push(rowsAsKeys[rowKey])
+            result.push(matrixRowData);
+
+        });
+
+        itemList.forEach(function (item) { // find items for matrix cells
+
+            var rowName = item[rowsKey];
+            var colName = item[columnsKey];
+
+            if (rowName && colName) {
+
+                var r, c;
+                rowsLoop: for (r = 0; r < result.length; r++) {
+                    var row = result[r];
+
+                    if (row.row_name === rowName) {
+
+                        for (c = 0; c < row.items.length; c++) {
+                            var column = row.items[c];
+
+                            if (column.column_name === colName) {
+
+                                column.data.flatListItems.push(item);
+                                break rowsLoop;
+
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+
+        });
+
+        result.forEach(function (row) { // calculating values of matrix's cells
+
+            row.items.forEach(function (column) {
+
+                if (column.data.flatListItems.length) {
+
+                    var columnData = {
+                        key: valueKey,
+                        report_settings: {
+                            subtotal_formula_id: subtotal_formula_id
+                        }
+                    };
+
+                    var colValueObj = rvSubtotalService.calculateColumn(column.data.flatListItems, columnData);
+                    column.data.value = colValueObj[valueKey];
+
+                }
+
+                delete column.data.flatListItems;
+
+            });
+
         });
 
         return result

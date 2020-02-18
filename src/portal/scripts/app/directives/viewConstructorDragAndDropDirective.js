@@ -28,6 +28,7 @@
                 var columns = scope.evDataService.getColumns();
                 var filters = scope.evDataService.getFilters();
                 var groups = scope.evDataService.getGroups();
+                var isReport = true;
 
                 var viewConstructorDnD = {
 
@@ -233,10 +234,21 @@
 
                         this.dragula = dragula(items,
                             {
-                                accepts: function (el, target, source, sibling) {
+                                accepts: function (el, target, source, nextSibling) {
 
                                     if (target.classList.contains('g-modal-draggable-card')) {
                                         return false;
+                                    }
+
+                                    if (target.classList.contains('g-columns-holder') &&
+                                        nextSibling && nextSibling.dataset.columnKey &&
+                                        isReport) {
+
+                                        for (var i = 0; i < groups.length; i++) {
+                                            if (groups[i].key === nextSibling.dataset.columnKey) {
+                                                return false;
+                                            }
+                                        }
                                     }
 
                                     return true;

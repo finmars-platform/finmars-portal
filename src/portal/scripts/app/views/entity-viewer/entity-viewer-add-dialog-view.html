@@ -14,7 +14,7 @@
 
             <div data-ng-if="vm.checkReadyStatus()">
 
-                <div data-ng-if="vm.fixedFieldsAttributes.length > 0" class="m-b-16 p-t-24">
+                <div data-ng-if="vm.fixedFieldsAttributes.length > 0" class="entity-editor-fixed-fields-container">
                     <div layout="row"
                          class="entity-editor-row">
                         <div class="ev-data-field"
@@ -80,7 +80,9 @@
                         </div>-->
                     </div>
 
-                    <span class="ec-decoration line"></span>
+                    <div class="entity-editor-divider-holder">
+                        <div></div>
+                    </div>
                 </div>
 
                 <!--<div data-ng-if="vm.fixedArea.isActive" class="entity-editor-fixed-area-container">

@@ -9,12 +9,12 @@
 
         var vm = this;
 
-        vm.attrsEntityType = data.attrsEntityType;
+        vm.attrsEntityType = data.entityType;
         vm.item = data.item;
         vm.data = data.data;
         vm.filterType = data.filterType;
         vm.attributes = [];
-        console.log("link to selection useFromAboveDialog data", data, vm.attrsEntityType);
+
         vm.filterTypes = [];
 
         switch (vm.data.value_type) {
@@ -24,6 +24,10 @@
                 vm.filterTypes = [{
                     key: 'contains',
                     name: 'CONTAINS'
+                },
+                {
+                    key: 'equal',
+                    name: 'EQUAL'
                 }];
                 break;
 
@@ -65,7 +69,7 @@
                     vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.attrsEntityType).filter(function (attr) {
                         if (attr.value_type === 10 || attr.value_type === 30) {
                             return true;
-                        };
+                        }
                         return false;
                     });
                     break;

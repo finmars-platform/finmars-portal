@@ -295,8 +295,12 @@
                         autoWrap: true,
                         skipHide: true,
                         locals: {
-                            item: columnKey,
-                            data: {attributes: attributesFromAbove}
+                            data: {
+                                item: columnKey,
+                                data: {value_type: 40},
+                                entityType: entityType
+                            },
+                            attributeDataService: scope.attributeDataService
                         }
                     }).then(function (res) {
 
