@@ -331,6 +331,12 @@
                     return 'Instrument User Text Field Names';
                 case 'ui.transactionuserfieldmodel':
                     return 'Transaction User Field Names';
+                case 'pricing.currencypricingscheme':
+                    return 'Currency Pricing Scheme';
+                case 'pricing.instrumentpricingscheme':
+                    return 'Instrument Pricing Scheme';
+                case 'pricing.pricingprocedure':
+                    return 'Pricing Procedure';
                 default:
                     return "Unknown"
             }
