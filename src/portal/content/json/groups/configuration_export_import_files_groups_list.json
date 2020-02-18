@@ -289,5 +289,13 @@
     ],
     "firstLevelGroup": "Mapping Tables",
     "firstElementExist": false
+  },
+  {
+    "name": "Pricing",
+    "entities": [
+      "pricing.instrumetpricingscheme",
+      "pricing.currencypricingscheme",
+      "pricing.pricingprocedure"
+    ]
   }
 ]
