@@ -19,6 +19,11 @@
                     <input type="text" data-ng-model="vm.item.name">
                 </md-input-container>
 
+                <md-input-container>
+                    <label>User Code</label>
+                    <input type="text" data-ng-model="vm.item.user_code">
+                </md-input-container>
+
                 <div class="m-t-16">
 
                     <div><label for="">Notes</label></div>
@@ -296,6 +301,38 @@
                         </div>
 
                     </div>
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <h4>Filters</h4>
+
+                <div>
+
+                    <two-fields-multiselect ng-model="vm.pricing_policy_filters"
+                                            data-title="Pricing Policies"
+                                            data-items="vm.pricingPolicies"
+                                            data-model="vm.item.pricing_policy_filters"
+
+                                            data-name-property="name"
+                                            class="table-filter-input-container">
+                    </two-fields-multiselect>
+
+                </div>
+
+                <div>
+
+                    <two-fields-multiselect ng-model="vm.instrument_filters"
+                                            data-title="Instruments"
+                                            data-items="vm.instruments"
+                                            data-model="vm.item.instrument_filters"
+
+                                            data-name-property="name"
+                                            class="table-filter-input-container">
+                    </two-fields-multiselect>
 
                 </div>
 
