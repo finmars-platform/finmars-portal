@@ -26,6 +26,7 @@
         var currencyHistoryService = require('../../services/currencyHistoryService');
 
 
+
         module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog) {
 
             var vm = this;
@@ -133,7 +134,10 @@
                                         transactionObj.is_canceled = false;
 
                                         complexTransactionService.updateProperties(transactionObj.id,
-                                            {is_locked: transactionObj.is_locked, is_canceled: transactionObj.is_canceled}
+                                            {
+                                                is_locked: transactionObj.is_locked,
+                                                is_canceled: transactionObj.is_canceled
+                                            }
                                         );
 
                                     }
@@ -160,7 +164,10 @@
                                         transactionObj.is_canceled = true;
 
                                         complexTransactionService.updateProperties(transactionObj.id,
-                                            {is_locked: transactionObj.is_locked, is_canceled: transactionObj.is_canceled}
+                                            {
+                                                is_locked: transactionObj.is_locked,
+                                                is_canceled: transactionObj.is_canceled
+                                            }
                                         );
 
                                     }
@@ -962,8 +969,7 @@
 
                     vm.getView();
 
-                })
-
+                });
 
             };
 

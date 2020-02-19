@@ -25,6 +25,10 @@
 
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
+    var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
+    var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
+
+
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
 
         var vm = this;
@@ -1153,9 +1157,9 @@
 
         };
 
-        vm.editPricingScheme = function($event, item) {
+        vm.editPricingScheme = function ($event, item) {
 
-            if(vm.entityType === 'currency') {
+            if (vm.entityType === 'currency') {
 
                 $mdDialog.show({
                     controller: 'CurrencyPricingSchemeEditDialogController as vm',
@@ -1211,7 +1215,7 @@
 
         };
 
-        vm.switchPricingPolicyParameter = function($event, item) {
+        vm.switchPricingPolicyParameter = function ($event, item) {
 
             if (item.switchState === 'default_value') {
                 item.switchState = 'attribute_key'
@@ -1224,9 +1228,98 @@
 
         };
 
-        vm.applyPricingToAllInstruments = function($event, item) {
+        vm.applyPricingToAllInstruments = function ($event, item) {
 
             console.log('vm.applyPricingToAllInstruments', item);
+
+        };
+
+        vm.getCurrencyPricingSchemes = function () {
+
+            currencyPricingSchemeService.getList().then(function (data) {
+
+                vm.currencyPricingSchemes = data.results;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getInstrumentPricingSchemes = function () {
+
+            instrumentPricingSchemeService.getList().then(function (data) {
+
+                vm.instrumentPricingSchemes = data.results;
+
+                console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getEntityPricingSchemes = function () {
+
+            if (vm.entityType === 'currency') {
+                vm.getCurrencyPricingSchemes();
+            }
+
+            if (vm.entityType === 'instrument') {
+                vm.getInstrumentPricingSchemes();
+            }
+
+            if (vm.entityType === 'instrument-type') {
+                vm.getInstrumentPricingSchemes();
+            }
+
+        };
+
+        vm.pricingSchemeChange = function ($event, item) {
+
+            console.log('pricingSchemeChange.item', item);
+
+            item.pricing_scheme_object = null;
+            item.default_value = null;
+            item.attribute_key = null;
+            item.data = null;
+
+            if (vm.entityType === 'instrument' || vm.entityType === 'instrument-type') {
+
+                vm.instrumentPricingSchemes.forEach(function (scheme) {
+
+                    if(scheme.id === item.pricing_scheme) {
+
+                        item.pricing_scheme_object = scheme;
+                    }
+
+                })
+
+            }
+
+            if (vm.entityType === 'currency') {
+
+                vm.currencyPricingSchemes.forEach(function (scheme) {
+
+                    if(scheme.id === item.pricing_scheme) {
+
+                        item.pricing_scheme_object = scheme;
+                    }
+
+                })
+
+            }
+
+            vm.entity.pricing_policies = vm.entity.pricing_policies.map(function (policy) {
+
+                if (policy.id === item.id) {
+                    return Object.assign({}, item);
+                }
+
+                return policy
+
+            })
 
         };
 
@@ -1236,6 +1329,8 @@
             vm.getItem().then(function () {
 
                 getEntityStatus();
+
+                vm.getEntityPricingSchemes();
 
             });
         };
