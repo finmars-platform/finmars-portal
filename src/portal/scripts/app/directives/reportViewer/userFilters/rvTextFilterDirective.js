@@ -40,10 +40,6 @@
                         return {id: cRowsContent, name: cRowsContent}
                     });
 
-                    /*if (!scope.isRootEntityViewer) {
-                        scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
-                    }*/
-
                     scope.$apply();
                 };
 

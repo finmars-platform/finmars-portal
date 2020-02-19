@@ -1321,16 +1321,20 @@
 
                                     listLayout.id = data.id;
 
-                                    if (!scope.isRootEntityViewer) {
+                                    if (scope.isRootEntityViewer) {
+
+                                        middlewareService.setNewEntityViewerLayoutName(listLayout.name);
+
+                                    } else  {
                                         scope.evDataService.setSplitPanelDefaultLayout(listLayout.id);
                                         scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-                                        middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active split panel layout name in the toolbar
+                                        middlewareService.setNewSplitPanelLayoutName(listLayout.name); // Give signal to update active split panel layout name in the toolbar
                                     }
-
-                                    //scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
                                     scope.evDataService.setListLayout(listLayout);
                                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
+
+                                    scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 
                                     scope.isNewLayout = false;
                                     scope.$apply();

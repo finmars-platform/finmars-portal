@@ -18,10 +18,11 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content>
+    <md-dialog-content class="mdDialogContent height-100">
         <div class="entity-constructor">
 
-            <div ng-if="vm.readyStatus.constructor" class="ec-tabs-holder" data-add-tab-ec data-tabs="vm.tabs">
+            <div data-ng-if="vm.readyStatus.constructor"
+                 data-add-tab-ec data-tabs="vm.tabs">
                 <!--<h1 class="ec-breadcrumbs">
                     <span class="ec-entity-type">{{vm.entityType}} <ng-md-icon icon="chevron_right" size="24"
                                                                                style="fill:#8B8B8B;"></ng-md-icon></span> INPUT
@@ -30,8 +31,8 @@
 
                 <div class="form-constructor-main">
 
-                    <div class="form-constructor-workarea scrollElemOnDrag">
-
+                    <div class="form-constructor-workarea scrollElemOnDrag tabsHolderElem">
+                        <div data-ng-init="vm.setTabsHolderHeight()"></div>
                         <!-- CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR -->
                         <!--<div class="form-constructor-fixed-area">
                             <div>
@@ -214,7 +215,7 @@
         </div>
     </md-dialog-content>
 
-    <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
+    <md-dialog-actions layout="row" layout-align="space-between center" class="dialog-bottom-footer">
 
             <div>
                 <md-button data-ng-if="vm.attributesAvailable(vm.entityType)"

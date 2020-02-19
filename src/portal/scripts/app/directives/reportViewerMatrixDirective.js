@@ -105,12 +105,10 @@
                     var headerScrollableElem = elem[0].querySelector('.rvmScrollableHeaderRow');
                     var bodyScrollableElem = elem[0].querySelector('.scrollableMatrixBodyColumn');
                     var bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
-                    console.log("fixed matrix data", headerScrollableElem, bodyScrollableElem, bodyScrollElem);
-                    bodyScrollElem.addEventListener('scroll', function () {
 
+                    bodyScrollElem.addEventListener('scroll', function () {
                         headerScrollableElem.style.left = (cellWidth - bodyScrollElem.scrollLeft) + 'px';
                         bodyScrollableElem.style.top = -bodyScrollElem.scrollTop + 'px';
-
                     });
 
                 };

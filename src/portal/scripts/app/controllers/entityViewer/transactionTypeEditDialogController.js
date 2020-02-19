@@ -1321,10 +1321,15 @@
 
                     uiService.getEditLayoutByInstanceId('complex-transaction', vm.entityId).then(function (editLayoutData) {
 
-                        if (editLayoutData) {
-                            var editLayout = editLayoutData;
+                        if (editLayoutData && editLayoutData.data) {
 
-                            editLayout.data.forEach(function (tab) {
+                            if (Array.isArray(editLayoutData.data)) {
+                                var editLayoutTabs = editLayoutData.data;
+                            } else {
+                                var editLayoutTabs = editLayoutData.data.tabs;
+                            }
+
+                            editLayoutTabs.forEach(function (tab) {
 
                                 for (var i = 0; i < tab.layout.fields.length; i++) {
                                     var field = tab.layout.fields[i];
@@ -1343,7 +1348,7 @@
 
                             });
 
-                            uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, editLayout).then(function () {
+                            uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, editLayoutData).then(function () {
                                 resolve();
                             }).catch(function (error) {
                                 reject(error);

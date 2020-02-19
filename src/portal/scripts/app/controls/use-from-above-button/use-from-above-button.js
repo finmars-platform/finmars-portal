@@ -33,7 +33,7 @@
                             data: {
                                 item: scope.item,
                                 data: scope.data,
-                                attrsEntityType: scope.attributesEntityType,
+                                entityType: scope.attributesEntityType,
                                 filterType: scope.filterType
                             },
                             attributeDataService: scope.attributeDataService

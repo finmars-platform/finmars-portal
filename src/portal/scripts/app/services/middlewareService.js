@@ -15,7 +15,7 @@
 
     function setNewEntityViewerLayoutName(layoutName) {
         data.newEntityViewerLayoutName = layoutName;
-    };
+    }
 
     function getNewEntityViewerLayoutName() {
 
@@ -24,33 +24,33 @@
 
         return newLayout;
 
-    };
+    }
 
     function setNewSplitPanelLayoutName(layoutName) {
         data.newSplitPanelLayoutName = layoutName;
-    };
+    }
 
     function getNewSplitPanelLayoutName() {
         return data.newSplitPanelLayoutName;
-    };
+    }
 
     function setWarningOfLayoutChangesLossFn(callbackFn) {
         data.warnOnLayoutChangeFn = callbackFn;
-    };
+    }
 
     function getWarningOfLayoutChangesLossFn() {
         var callbackFn = data.warnOnLayoutChangeFn;
         data.warnOnLayoutChangeFn = false;
         return callbackFn;
-    };
+    }
 
     function onMasterUserChanged (callback) {
 
         if (callback) {
             data.masterUserChangeEvents.push(callback);
-        };
+        }
 
-    };
+    }
 
     function masterUserChanged () {
 
@@ -58,15 +58,15 @@
             callback();
         });
 
-    };
+    }
 
     function onLogOut (callback) {
 
         if (callback) {
             data.logOutEvents.push(callback);
-        };
+        }
 
-    };
+    }
 
     function initLogOut () {
 
@@ -74,7 +74,7 @@
             callback();
         });
 
-    };
+    }
 
     function clearEvents () {
         data.masterUserChangeEvents = [];
@@ -88,7 +88,7 @@
             warnOnLayoutChangeFn: false,
             masterUserChanged: false
         };
-    };
+    }
 
     module.exports = {
         setNewEntityViewerLayoutName: setNewEntityViewerLayoutName,
