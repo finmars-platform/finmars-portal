@@ -58,7 +58,11 @@
             </td>
 
             <td>
-                {{item.pricing_scheme_object.name}}
+                <md-input-container class="m-t-16">
+                    <md-select data-ng-model="item.pricing_scheme" data-ng-change="vm.pricingSchemeChange($event, item)">
+                        <md-option ng-value="scheme.id" data-ng-repeat="scheme in vm.instrumentPricingSchemes">{{scheme.name}}</md-option>
+                    </md-select>
+                </md-input-container>
             </td>
 
             <td>
