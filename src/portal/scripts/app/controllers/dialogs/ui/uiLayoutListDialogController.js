@@ -104,11 +104,18 @@
                     layout.name = res.data.name;
 
                     uiService.updateListLayout(layoutData.id, layoutData).then(function () {
+
+                        var listLayout = entityViewerDataService.getListLayout();
+                        listLayout.name = layoutData.name;
+                        entityViewerDataService.setListLayout(listLayout);
+
                         if (isRootEntityViewer) {
                             middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
                         } else {
                             middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
                         }
+
+                        entityViewerEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 
                     });
 

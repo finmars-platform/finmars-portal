@@ -48,6 +48,7 @@ module.exports = {
     'LIST_LAYOUT_CHANGE': 'LIST_LAYOUT_CHANGE',
     'DEFAULT_LAYOUT_CHANGE': 'DEFAULT_LAYOUT_CHANGE',
     'ACTIVE_LAYOUT_CONFIGURATION_CHANGED': 'ACTIVE_LAYOUT_CONFIGURATION_CHANGED', // needed for layout changes indicator inside actions block
+    'LAYOUT_NAME_CHANGE': 'LAYOUT_NAME_CHANGE',
 
     // Events used only to track layout changes
     'REPORT_EXPORT_OPTIONS_CHANGED': 'REPORT_EXPORT_OPTIONS_CHANGED',

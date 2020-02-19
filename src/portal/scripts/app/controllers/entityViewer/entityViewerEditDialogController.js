@@ -89,8 +89,8 @@
 
                             if (vm.entityAttrs[a]) {
                                 var entityAttr = JSON.parse(JSON.stringify(vm.entityAttrs[a]));
-                                entityAttr.backgroundColor = "#ffff00";
                             }
+
                             vm.fixedFieldsAttributes.push(entityAttr);
 
                             break;
@@ -461,7 +461,7 @@
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
 
                     vm.entity = data;
-
+                    console.log("fixed fields vm.entity", vm.entity);
                     vm.entity.$_isValid = true;
                     vm.readyStatus.entity = true;
                     // vm.readyStatus.permissions = true;
@@ -717,32 +717,65 @@
 
             entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
 
-                switch (vm.entityStatus) {
-                    case 'enabled':
-                        result.is_enabled = true;
-                        result.is_deleted = false;
-                        vm.entity.is_enabled = true;
-                        vm.entity.is_deleted = false;
-                        break;
+                if (vm.entityStatus === 'instrument') {
 
-                    case 'disabled':
-                        result.is_enabled = false;
-                        result.is_deleted = false;
-                        vm.entity.is_enabled = false;
-                        vm.entity.is_deleted = false;
-                        break;
+                    switch (vm.entityStatus) {
+                        case 'active':
+                            result.is_active = true;
+                            result.is_enabled = true;
+                            result.is_deleted = false;
+                            vm.entity.is_active = true;
+                            vm.entity.is_enabled = true;
+                            vm.entity.is_deleted = false;
+                            break;
 
-                    case 'deleted':
-                        result.is_deleted = true;
-                        vm.entity.is_deleted = true;
-                        break;
+                        case 'inactive':
+                            result.is_active = false;
+                            result.is_enabled = true;
+                            result.is_deleted = false;
+                            vm.entity.is_active = false;
+                            vm.entity.is_enabled = true;
+                            vm.entity.is_deleted = false;
+                            break;
 
-                    case 'active':
-                        break;
+                        case 'disabled':
+                            result.is_enabled = false;
+                            result.is_deleted = false;
+                            vm.entity.is_enabled = false;
+                            vm.entity.is_deleted = false;
+                            break;
 
-                    case 'inactive':
-                        break;
+                        case 'deleted':
+                            result.is_deleted = true;
+                            vm.entity.is_deleted = true;
+                            break;
+                    }
+
+                } else {
+
+                    switch (vm.entityStatus) {
+                        case 'enabled':
+                            result.is_enabled = true;
+                            result.is_deleted = false;
+                            vm.entity.is_enabled = true;
+                            vm.entity.is_deleted = false;
+                            break;
+
+                        case 'disabled':
+                            result.is_enabled = false;
+                            result.is_deleted = false;
+                            vm.entity.is_enabled = false;
+                            vm.entity.is_deleted = false;
+                            break;
+
+                        case 'deleted':
+                            result.is_deleted = true;
+                            vm.entity.is_deleted = true;
+                            break;
+                    }
+
                 }
+
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
@@ -756,14 +789,34 @@
 
         var getEntityStatus = function () {
 
-            vm.entityStatus = 'disabled';
+            if (vm.entityType === 'instrument') {
 
-            if (vm.entity.is_enabled) {
+                vm.entityStatus = 'inactive';
+
+                if (vm.entity.is_active) {
+                    vm.entityStatus = 'active';
+                }
+
+                if (!vm.entity.is_enabled) {
+                    vm.entityStatus = 'disabled';
+                }
+
+                if (vm.entity.is_deleted) {
+                    vm.entityStatus = 'deleted';
+                }
+
+            } else {
+
                 vm.entityStatus = 'enabled';
-            }
 
-            if (vm.entity.is_deleted) {
-                vm.entityStatus = 'deleted';
+                if (!vm.entity.is_enabled) {
+                    vm.entityStatus = 'disabled';
+                }
+
+                if (vm.entity.is_deleted) {
+                    vm.entityStatus = 'deleted';
+                }
+
             }
 
         };
