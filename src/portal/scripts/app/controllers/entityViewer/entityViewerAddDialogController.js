@@ -24,6 +24,10 @@
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
+    var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
+    var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
+
+
     module.exports = function ($scope, $mdDialog, $state, entityType, entity) {
 
         console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
@@ -933,7 +937,50 @@
 
         };
 
+        vm.getCurrencyPricingSchemes = function () {
+
+            currencyPricingSchemeService.getList().then(function (data) {
+
+                vm.currencyPricingSchemes = data.results;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getInstrumentPricingSchemes = function () {
+
+            instrumentPricingSchemeService.getList().then(function (data) {
+
+                vm.instrumentPricingSchemes = data.results;
+
+                console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getEntityPricingSchemes = function () {
+
+            if (vm.entityType === 'currency') {
+                vm.getCurrencyPricingSchemes();
+            }
+
+            if (vm.entityType === 'instrument') {
+                vm.getInstrumentPricingSchemes();
+            }
+
+            if (vm.entityType === 'instrument-type') {
+                vm.getInstrumentPricingSchemes();
+            }
+
+        };
+
         vm.init = function () {
+
             getEntityAttrs();
             vm.getFormLayout();
 
@@ -943,6 +990,8 @@
             } else {
                 vm.loadPermissions();
             }
+
+            vm.getEntityPricingSchemes();
 
 
         };

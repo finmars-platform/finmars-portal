@@ -7,11 +7,21 @@
 
     var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
 
+    var instrumentService = require('../../../services/instrumentService');
+    var pricingPolicyService = require('../../../services/pricingPolicyService');
+
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
         vm.item = {};
+
+        vm.instruments = [];
+        vm.pricingPolicies = [];
+
+        vm.pricing_policy_filters = [];
+        vm.instrument_filters = [];
 
         vm.toggleStatus = {
             'date_both': 'datepicker',
@@ -58,7 +68,7 @@
 
                 } else {
 
-                    m.item.price_date_from_expr = null;
+                    vm.item.price_date_from_expr = null;
                     vm.item.price_date_to_expr = null;
 
                     vm.item.price_date_from = vm.item.date_both;
@@ -87,6 +97,14 @@
                 vm.item.accrual_date_to = null
             }
 
+            if (vm.item.pricing_policy_filters) {
+                vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.join(',');
+            }
+
+            if (vm.item.instrument_filters) {
+                vm.item.instrument_filters = vm.item.instrument_filters.join(',');
+            }
+
             pricingProcedureService.create(vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
@@ -95,7 +113,55 @@
 
         };
 
+        vm.getInstruments = function () {
+
+            instrumentService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+
+                vm.instruments = data.results.map(function (item) {
+
+                    return {
+                        id: item.user_code,
+                        name: item.user_code
+                    }
+
+                });
+
+                console.log('vm.instruments', vm.instruments);
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getPricingPolicies = function () {
+
+            pricingPolicyService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+
+                vm.pricingPolicies = data.results.map(function (item) {
+
+                    return {
+                        id: item.user_code,
+                        name: item.user_code
+                    }
+
+                });
+
+                $scope.$apply();
+
+            })
+
+        };
+
         vm.init = function () {
+
+            vm.getPricingPolicies();
+
+            vm.getInstruments();
 
         };
 
