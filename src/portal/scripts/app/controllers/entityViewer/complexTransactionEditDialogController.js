@@ -18,6 +18,8 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
 
+    var uiService = require('../../services/uiService');
+
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
@@ -29,6 +31,7 @@
 
         vm.entity = {$_isValid: true};
         var dataConstructorLayout = [];
+        var dcLayoutHasBeenFixed = false;
 
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false, userFields: false};
 
@@ -63,7 +66,7 @@
         vm.baseTransactions = [];
         vm.reconFields = [];
 
-        var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
+        /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
             var i, l, e, u;
 
@@ -185,6 +188,7 @@
 
             vm.attributesLayout = [];
             var fieldsToEmptyList = [];
+            dcLayoutHasBeenFixed = false;
 
             var tabResult;
 
@@ -210,14 +214,30 @@
 
                 if (fieldPath.tabIndex === 'fixedArea') {
                     var dcLayoutFields = vm.fixedArea.layout.fields;
+                    var layoutFieldsToSave = dataConstructorLayout.data.fixedArea.layout.fields;
                 } else {
                     var dcLayoutFields = vm.tabs[fieldPath.tabIndex].layout.fields;
+
+                    if (Array.isArray(dataConstructorLayout.data)) {
+                        var layoutFieldsToSave = dataConstructorLayout.data[fieldPath.tabIndex].layout.fields;
+                    } else {
+                        var layoutFieldsToSave = dataConstructorLayout.data.tabs[fieldPath.tabIndex].layout.fields;
+                    }
+
                 }
 
                 var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
                 var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
 
-                dcLayoutFields[fieldPath.fieldIndex] = {
+                dcLayoutFields[fieldPath.fieldIndex] = { // removing from view
+                    colspan: 1,
+                    column: fieldToEmptyColumn,
+                    editMode: false,
+                    row: fieldToEmptyRow,
+                    type: 'empty'
+                };
+
+                layoutFieldsToSave[fieldPath.fieldIndex] = { // removing from layout copy for saving
                     colspan: 1,
                     column: fieldToEmptyColumn,
                     editMode: false,
@@ -227,11 +247,57 @@
 
             });
 
-            // Method to update edit layout
-            // uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
-
+            if (fieldsToEmptyList.length) {
+                dcLayoutHasBeenFixed = true;
+            }
             // < Empty sockets that have no attribute that matches them >
 
+        };*/
+
+        var fixFieldsLayoutWithMissingSockets = function () {
+
+            var socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(vm.tabs, dataConstructorLayout);
+
+            if (vm.fixedArea && vm.fixedArea.isActive) {
+                var socketsHasBeenAddedToFixedArea = entityEditorHelper.fixCustomTabs(vm.fixedArea, dataConstructorLayout);
+            }
+
+            if (socketsHasBeenAddedToTabs || socketsHasBeenAddedToFixedArea) {
+                dcLayoutHasBeenFixed = true;
+            }
+
+        };
+
+        var mapAttributesToLayoutFields = function () {
+
+            var attributes = {
+                entityAttrs: vm.entityAttrs,
+                dynamicAttrs: vm.attrs,
+                layoutAttrs: vm.layoutAttrs,
+                userInputs: vm.userInputs
+            };
+
+            var attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.tabs, attributes, dataConstructorLayout, true);
+
+            vm.attributesLayout = attributesLayoutData.attributesLayout;
+
+            if (vm.fixedArea && vm.fixedArea.isActive) {
+                var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.fixedArea, attributes, dataConstructorLayout, true);
+
+                vm.fixedAreaAttributesLayout = fixedAreaAttributesLayoutData.attributesLayout;
+            }
+
+            if (attributesLayoutData.dcLayoutHasBeenFixed || (fixedAreaAttributesLayoutData && fixedAreaAttributesLayoutData.dcLayoutHasBeenFixed)) {
+                dcLayoutHasBeenFixed = true;
+            }
+
+        };
+
+        var mapAttributesAndFixFieldsLayout = function () {
+            dcLayoutHasBeenFixed = false;
+
+            fixFieldsLayoutWithMissingSockets();
+            mapAttributesToLayoutFields();
         };
 
         vm.loadPermissions = function () {
@@ -391,6 +457,7 @@
         vm.recalculate = function (item) {
 
             vm.recalculating = true;
+            vm.readyStatus.layout = false;
 
             var values = {};
 
@@ -448,7 +515,7 @@
                     vm.fixedArea = data.book_transaction_layout.data.fixedArea;
                 }
 
-                dataConstructorLayout = data.book_transaction_layout; // unchanged layout that is used to remove fields without attributes
+                dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
                 availableTransactionInputsNames = [];
                 data.transaction_type_object.inputs.forEach(function (tInput) {
@@ -472,15 +539,15 @@
                     });
                 }
 
-                vm.tabs = vm.tabs.map(function (item, index) {
+                if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
+                    vm.tabs.forEach(function (tab, index) {
+                        tab.tabOrder = index;
+                    });
+                }
 
-                    item.index = index;
+                mapAttributesAndFixFieldsLayout();
 
-                    return item;
-
-                });
-
-                vm.generateAttributesFromLayoutFields();
+                vm.readyStatus.layout = true;
 
                 if (inputsWithCalculations) {
                     inputsWithCalculations.forEach(function (inputWithCalc) {
@@ -516,6 +583,7 @@
         vm.recalculateInputs = function (inputs) {
 
             vm.recalculating = true;
+            vm.readyStatus.layout = false;
 
             var values = {};
 
@@ -574,7 +642,7 @@
                     vm.fixedArea = data.book_transaction_layout.data.fixedArea;
                 }
 
-                dataConstructorLayout = data.book_transaction_layout; // unchanged layout that is used to remove fields without attributes
+                dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
                 vm.userInputs = [];
                 vm.tabs.forEach(function (tab) {
@@ -593,15 +661,15 @@
                     });
                 }
 
-                vm.tabs = vm.tabs.map(function (item, index) {
+                if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
+                    vm.tabs.forEach(function (tab, index) {
+                        tab.tabOrder = index;
+                    });
+                }
 
-                    item.index = index;
+                mapAttributesAndFixFieldsLayout();
 
-                    return item;
-
-                });
-
-                vm.generateAttributesFromLayoutFields();
+                vm.readyStatus.layout = true;
 
                 if (inputsWithCalculations) {
                     inputsWithCalculations.forEach(function (inputWithCalc) {
@@ -761,6 +829,9 @@
         };
 
         vm.getItem = function () {
+
+            vm.readyStatus.layout = false;
+
             return new Promise(function (res, rej) {
 
                 complexTransactionService.initRebookComplexTransaction(vm.entityId).then(function (complexTransactionData) {
@@ -811,7 +882,7 @@
                         vm.fixedArea = complexTransactionData.book_transaction_layout.data.fixedArea;
                     }
 
-                    dataConstructorLayout = complexTransactionData.book_transaction_layout; // unchanged layout that is used to remove fields without attributes
+                    dataConstructorLayout = JSON.parse(JSON.stringify(complexTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
                     availableTransactionInputsNames = [];
 
@@ -836,15 +907,15 @@
                         });
                     }
 
-                    vm.tabs = vm.tabs.map(function (item, index) {
+                    if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
+                        vm.tabs.forEach(function (tab, index) {
+                            tab.tabOrder = index;
+                        });
+                    }
 
-                        item.index = index;
+                    mapAttributesAndFixFieldsLayout();
 
-                        return item
-
-                    });
-
-                    vm.generateAttributesFromLayoutFields();
+                    vm.readyStatus.layout = true;
 
                     if (inputsWithCalculations) {
                         inputsWithCalculations.forEach(function (inputWithCalc) {
@@ -1233,6 +1304,10 @@
 
                             result.process_mode = 'rebook';
 
+                            if (dcLayoutHasBeenFixed) {
+                                uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
+                            }
+
                             complexTransactionService.rebookComplexTransaction(result.id, result).then(function (data) {
                                 resolve(data);
                             }).catch(function (data) {
@@ -1247,13 +1322,14 @@
                                     locals: {
                                         validationData: data
                                     },
-                                    preserveScope: true,
                                     multiple: true,
                                     autoWrap: true,
                                     skipHide: true
-                                })
+                                });
 
-                            })
+                                reject(data);
+
+                            });
                         });
                     }).then(function (data) {
 
@@ -1415,7 +1491,6 @@
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
                 targetEvent: ev,
-                preserveScope: true,
                 multiple: true,
                 locals: {
                     data: vm.dataConstructorData

@@ -15,6 +15,8 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
 
+    var uiService = require('../../services/uiService');
+
     var transactionTypeService = require('../../services/transactionTypeService');
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
@@ -31,6 +33,7 @@
 
         vm.entity = {$_isValid: true};
         var dataConstructorLayout = [];
+        var dcLayoutHasBeenFixed = false;
         vm.transactionType = null;
 
         vm.recalculating = false;
@@ -51,7 +54,7 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
-        var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
+        /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
             var i, l, e, u;
 
@@ -198,14 +201,30 @@
 
                 if (fieldPath.tabIndex === 'fixedArea') {
                     var dcLayoutFields = vm.fixedArea.layout.fields;
+                    var layoutFieldsToSave = dataConstructorLayout.data.fixedArea.layout.fields;
                 } else {
                     var dcLayoutFields = vm.tabs[fieldPath.tabIndex].layout.fields;
+
+                    if (Array.isArray(dataConstructorLayout.data)) {
+                        var layoutFieldsToSave = dataConstructorLayout.data[fieldPath.tabIndex].layout.fields;
+                    } else {
+                        var layoutFieldsToSave = dataConstructorLayout.data.tabs[fieldPath.tabIndex].layout.fields;
+                    }
+
                 }
 
                 var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
                 var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
 
-                dcLayoutFields[fieldPath.fieldIndex] = {
+                dcLayoutFields[fieldPath.fieldIndex] = { // removing from view
+                    colspan: 1,
+                    column: fieldToEmptyColumn,
+                    editMode: false,
+                    row: fieldToEmptyRow,
+                    type: 'empty'
+                };
+
+                layoutFieldsToSave[fieldPath.fieldIndex] = { // removing from layout copy for saving
                     colspan: 1,
                     column: fieldToEmptyColumn,
                     editMode: false,
@@ -215,11 +234,57 @@
 
             });
 
-            // Method to update edit layout
-            // uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
-
+            if (fieldsToEmptyList.length) {
+                dcLayoutHasBeenFixed = true;
+            }
             // < Empty sockets that have no attribute that matches them >
 
+        };*/
+
+        var fixFieldsLayoutWithMissingSockets = function () {
+
+            var socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(vm.tabs, dataConstructorLayout);
+
+            if (vm.fixedArea && vm.fixedArea.isActive) {
+                var socketsHasBeenAddedToFixedArea = entityEditorHelper.fixCustomTabs(vm.fixedArea, dataConstructorLayout);
+            }
+
+            if (socketsHasBeenAddedToTabs || socketsHasBeenAddedToFixedArea) {
+                dcLayoutHasBeenFixed = true;
+            }
+
+        };
+
+        var mapAttributesToLayoutFields = function () {
+
+            var attributes = {
+                entityAttrs: vm.entityAttrs,
+                dynamicAttrs: vm.attrs,
+                layoutAttrs: vm.layoutAttrs,
+                userInputs: vm.userInputs
+            };
+
+            var attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.tabs, attributes, dataConstructorLayout, true);
+
+            vm.attributesLayout = attributesLayoutData.attributesLayout;
+
+            if (vm.fixedArea && vm.fixedArea.isActive) {
+                var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.fixedArea, attributes, dataConstructorLayout, true);
+
+                vm.fixedAreaAttributesLayout = fixedAreaAttributesLayoutData.attributesLayout;
+            }
+
+            if (attributesLayoutData.dcLayoutHasBeenFixed || (fixedAreaAttributesLayoutData && fixedAreaAttributesLayoutData.dcLayoutHasBeenFixed)) {
+                dcLayoutHasBeenFixed = true;
+            }
+
+        };
+
+        var mapAttributesAndFixFieldsLayout = function () {
+            dcLayoutHasBeenFixed = false;
+
+            fixFieldsLayoutWithMissingSockets();
+            mapAttributesToLayoutFields();
         };
 
         vm.getContextParameters = function () {
@@ -271,8 +336,6 @@
                         vm.entity[item] = data.values[item];
                     });
 
-                    vm.readyStatus.layout = true;
-
                     if (Array.isArray(data.book_transaction_layout.data)) {
                         vm.tabs = data.book_transaction_layout.data;
                     } else {
@@ -280,7 +343,7 @@
                         vm.fixedArea = data.book_transaction_layout.data.fixedArea;
                     }
 
-                    dataConstructorLayout = data.book_transaction_layout; // unchanged layout that is used to remove fields without attributes
+                    dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
                     vm.userInputs = [];
                     vm.tabs.forEach(function (tab) {
@@ -299,16 +362,15 @@
                         });
                     }
 
-                    vm.tabs = vm.tabs.map(function (item, index) {
+                    if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
+                        vm.tabs.forEach(function (tab, index) {
+                            tab.tabOrder = index;
+                        });
+                    }
 
-                        item.index = index;
+                    mapAttributesAndFixFieldsLayout();
 
-                        return item
-
-                    });
-
-                    vm.generateAttributesFromLayoutFields();
-
+                    vm.readyStatus.layout = true;
 
                     inputsWithCalculations.forEach(function (inputWithCalc) {
 
@@ -404,7 +466,6 @@
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
                 targetEvent: ev,
-                preserveScope: true,
                 multiple: true,
                 locals: {
                     data: vm.dataConstructorData
@@ -462,6 +523,7 @@
         vm.recalculate = function (item) {
 
             vm.recalculating = true;
+            vm.readyStatus.layout = false;
 
             var values = {};
 
@@ -521,7 +583,7 @@
                     vm.fixedArea = data.book_transaction_layout.data.fixedArea;
                 }
 
-                dataConstructorLayout = data.book_transaction_layout; // unchanged layout that is used to remove fields without attributes
+                dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
                 vm.userInputs = [];
                 vm.tabs.forEach(function (tab) {
@@ -540,15 +602,15 @@
                     });
                 }
 
-                vm.tabs = vm.tabs.map(function (item, index) {
+                if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
+                    vm.tabs.forEach(function (tab, index) {
+                        tab.tabOrder = index;
+                    });
+                }
 
-                    item.index = index;
+                mapAttributesAndFixFieldsLayout();
 
-                    return item
-
-                });
-
-                vm.generateAttributesFromLayoutFields();
+                vm.readyStatus.layout = true;
 
                 inputsWithCalculations.forEach(function (inputWithCalc) {
 
@@ -583,6 +645,7 @@
         vm.recalculateInputs = function (inputs) {
 
             vm.recalculating = true;
+            vm.readyStatus.layout = false;
 
             var values = {};
 
@@ -642,7 +705,7 @@
                     vm.fixedArea = data.book_transaction_layout.data.fixedArea;
                 }
 
-                dataConstructorLayout = data.book_transaction_layout; // unchanged layout that is used to remove fields without attributes
+                dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
                 vm.userInputs = [];
                 vm.tabs.forEach(function (tab) {
@@ -661,15 +724,15 @@
                     });
                 }
 
-                vm.tabs = vm.tabs.map(function (item, index) {
+                if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
+                    vm.tabs.forEach(function (tab, index) {
+                        tab.tabOrder = index;
+                    });
+                }
 
-                    item.index = index;
+                mapAttributesAndFixFieldsLayout();
 
-                    return item
-
-                });
-
-                vm.generateAttributesFromLayoutFields();
+                vm.readyStatus.layout = true;
 
                 inputsWithCalculations.forEach(function (inputWithCalc) {
 
@@ -706,12 +769,11 @@
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
-
             });
         };
 
         vm.checkReadyStatus = function () {
-            return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.transactionTypes
+            return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.transactionTypes;
         };
 
         vm.range = gridHelperService.range;
@@ -738,7 +800,7 @@
 
                     var spannedCols = [];
                     var itemsInRow = tab.layout.fields.filter(function (item) {
-                        return item.row === row
+                        return item.row === row;
                     });
 
 
@@ -756,12 +818,13 @@
                     });
 
                     if (spannedCols.indexOf(field.column) !== -1) {
-                        return false
+                        return false;
                     }
 
                     return true;
                 }
             }
+
             return false;
 
         };
@@ -879,7 +942,11 @@
                             res.complex_transaction.is_locked = resultEntity.is_locked;
                             res.complex_transaction.is_canceled = resultEntity.is_canceled;
 
-                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                            if (dcLayoutHasBeenFixed) {
+                                uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
+                            }
+
+                            /*transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
                                 resolve(data);
                             }).catch(function (data) {
 
@@ -897,9 +964,12 @@
                                     multiple: true,
                                     autoWrap: true,
                                     skipHide: true
-                                })
+                                });
 
-                            })
+                                reject(data);
+
+                            });*/
+
                         });
 
                     }).then(function (data) {
@@ -1198,7 +1268,9 @@
                 instanceId: vm.transactionTypeId
             };
 
-            vm.getFormLayout();
+            vm.getFormLayout().then(function () {
+                $scope.$apply();
+            });
 
         };
 

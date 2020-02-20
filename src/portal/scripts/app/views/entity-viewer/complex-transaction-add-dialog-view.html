@@ -145,7 +145,7 @@
                                             entity-type="vm.entityType"
                                             entity="vm.entity"
                                             entity-change="vm.entityChange()"
-                                            item="vm.fixedAreaAttributesLayout[$index]"></bind-field-control>
+                                            item="vm.fixedAreaAttributesLayout[row][field.column]"></bind-field-control>
                                 </div>
                             </div>
                         </div>
@@ -160,8 +160,8 @@
                                                 ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
                                         <div data-ng-repeat="row in vm.range(tab.layout.rows)"
                                              layout="row"
-                                             class="entity-editor-row">
-                                            <div data-ng-repeat="field in tab.layout.fields track by $index"
+                                             class="entity-editor-row" data-row-number="{{row}}">
+                                            <div data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
                                                  data-ng-if="vm.checkFieldRender(tab, row, field)"
                                                  class="ev-data-field"
                                                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
@@ -172,7 +172,7 @@
                                                         entity-type="vm.entityType"
                                                         entity="vm.entity"
                                                         entity-change="vm.entityChange()"
-                                                        item="vm.attributesLayout[tab.index][$index]"></bind-field-control>
+                                                        item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"></bind-field-control>
                                             </div>
                                         </div>
                                     </md-content>

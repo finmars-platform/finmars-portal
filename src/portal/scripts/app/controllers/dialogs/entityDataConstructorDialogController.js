@@ -55,6 +55,63 @@
 
         var choices = metaService.getTypeCaptions();
 
+        var fixTab = function (tab, numberOfRows, numberOfCols, fieldsList) {
+
+            var i, c;
+            for (i = 1; i <= numberOfRows; i++) {
+                var row = tab[i];
+
+                for (c = 1; c <= numberOfCols; c++) {
+
+                    if (!row[c]) {
+
+                        var missingSocket = {
+                            colspan: 1,
+                            column: c,
+                            editMode: false,
+                            row: i,
+                            type: 'empty'
+                        };
+
+                        fieldsList.push(missingSocket);
+
+                    }
+
+                }
+
+            }
+        };
+
+        var fixTabs = function () {
+
+            vm.createFieldsTree();
+
+            if (Object.keys(vm.fieldsTree).length) {
+                Object.keys(vm.fieldsTree).forEach(function (tabNumber, tabIndex) {
+
+                    var tab = vm.fieldsTree[tabIndex];
+                    var numberOfRows = vm.tabs[tabIndex].layout.rows;
+                    var numberOfCols = vm.tabs[tabIndex].layout.columns;
+
+                    fixTab(tab, numberOfRows, numberOfCols, vm.tabs[tabIndex].layout.fields);
+
+                });
+            }
+
+            if (vm.fixedArea.isActive) {
+                vm.createFixedAreaFieldsTree();
+
+                if (Object.keys(vm.fixedAreaFieldsTree).length) {
+                    var numberOfRows = vm.fixedArea.layout.rows;
+                    var numberOfCols = vm.fixedArea.layout.columns;
+
+                    fixTab(vm.fixedAreaFieldsTree, numberOfRows, numberOfCols, vm.fixedArea.layout.fields);
+                }
+
+            }
+
+        };
+
         // weirdo stuff
         // we took edit layout by instance id instead of entity content_type
         // but it can be taken from different entity
@@ -72,7 +129,6 @@
                 vm.fixedArea = vm.ui.data.fixedArea;
 
             }
-
 
             vm.tabs.forEach(function (tab, index) {
                 tab.tabOrder = index;
@@ -93,6 +149,8 @@
                     }
                 };
             }
+
+            fixTabs();
 
             addRowsForTabs();
 
@@ -1026,6 +1084,7 @@
         vm.createFieldsTree = function () {
 
             var tabs = JSON.parse(JSON.stringify(vm.tabs));
+
             vm.fieldsTree = {};
 
             tabs.forEach(function (tab) {
