@@ -187,6 +187,13 @@
                         templateUrl: 'views/tabs/instrument/pricing-view.html'
                     }
                 ];
+            case 'instrument-type':
+                return [
+                    {
+                        label: 'Pricing',
+                        templateUrl: 'views/tabs/instrument-type/pricing-view.html'
+                    }
+                ];
             case 'complex-transaction':
                 return [
                     // {
