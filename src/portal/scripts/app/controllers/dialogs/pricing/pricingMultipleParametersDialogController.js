@@ -86,13 +86,19 @@
 
             }
 
+            console.log('vm.items', vm.items);
+
             if (vm.schemeParameters) {
 
                 vm.schemeParameters.forEach(function (param) {
 
                     var exist = false;
 
+                    console.log('param', param);
+
                     vm.items.forEach(function (item) {
+
+                        console.log('item', item);
 
                         if (param.index === item.index) {
                             exist = true;
