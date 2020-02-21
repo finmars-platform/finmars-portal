@@ -38,6 +38,7 @@
 
         vm.entity = {$_isValid: true};
         var dataConstructorLayout = {};
+        var dcLayoutHasBeenFixed = false;
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
@@ -104,7 +105,7 @@
 
         };
 
-        var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
+        /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
             var i, l, e;
 
@@ -220,17 +221,32 @@
             fieldsToEmptyList.forEach(function (fieldPath) {
 
                 if (fieldPath.tabIndex === 'fixedArea') {
-
                     var dcLayoutFields = vm.fixedArea.layout.fields;
-
+                    var layoutFieldsToSave = dataConstructorLayout.data.fixedArea.layout.fields;
                 } else {
                     var dcLayoutFields = vm.tabs[fieldPath.tabIndex].layout.fields;
+
+                    // for old layouts compatibility
+                    if (Array.isArray(dataConstructorLayout.data)) {
+                        var layoutFieldsToSave = dataConstructorLayout.data[fieldPath.tabIndex].layout.fields;
+                    } else {
+                        var layoutFieldsToSave = dataConstructorLayout.data.tabs[fieldPath.tabIndex].layout.fields;
+                    }
+
                 }
 
                 var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
                 var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
 
-                dcLayoutFields[fieldPath.fieldIndex] = {
+                dcLayoutFields[fieldPath.fieldIndex] = { // removing from view
+                    colspan: 1,
+                    column: fieldToEmptyColumn,
+                    editMode: false,
+                    row: fieldToEmptyRow,
+                    type: 'empty'
+                };
+
+                layoutFieldsToSave[fieldPath.fieldIndex] = { // removing from layout copy for saving
                     colspan: 1,
                     column: fieldToEmptyColumn,
                     editMode: false,
@@ -240,11 +256,57 @@
 
             });
 
-            // Method to update edit layout
-            /*uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);*/
-
+            if (fieldsToEmptyList.length) {
+                dcLayoutHasBeenFixed = true;
+            }
             // < Empty sockets that have no attribute that matches them >
+        };*/
+
+        var fixFieldsLayoutWithMissingSockets = function () {
+
+            var socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(vm.tabs, dataConstructorLayout);
+
+            if (vm.fixedArea && vm.fixedArea.isActive) {
+                var socketsHasBeenAddedToFixedArea = entityEditorHelper.fixCustomTabs(vm.fixedArea, dataConstructorLayout);
+            }
+
+            if (socketsHasBeenAddedToTabs || socketsHasBeenAddedToFixedArea) {
+                dcLayoutHasBeenFixed = true;
+            }
+
         };
+
+        var mapAttributesToLayoutFields = function () {
+
+            var attributes = {
+                entityAttrs: vm.entityAttrs,
+                dynamicAttrs: vm.attrs,
+                layoutAttrs: vm.layoutAttrs
+            };
+
+            var attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.tabs, attributes, dataConstructorLayout, true);
+
+            vm.attributesLayout = attributesLayoutData.attributesLayout;
+
+            if (vm.fixedArea && vm.fixedArea.isActive) {
+                var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.fixedArea, attributes, dataConstructorLayout, true);
+
+                vm.fixedAreaAttributesLayout = fixedAreaAttributesLayoutData.attributesLayout;
+            }
+
+            if (attributesLayoutData.dcLayoutHasBeenFixed || (fixedAreaAttributesLayoutData && fixedAreaAttributesLayoutData.dcLayoutHasBeenFixed)) {
+                dcLayoutHasBeenFixed = true;
+            }
+
+        };
+
+        var mapAttributesAndFixFieldsLayout = function () {
+            dcLayoutHasBeenFixed = false;
+
+            fixFieldsLayoutWithMissingSockets();
+            mapAttributesToLayoutFields();
+        };
+
 
         vm.loadPermissions = function () {
 
@@ -518,7 +580,6 @@
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
                 targetEvent: ev,
-                preserveScope: true,
                 multiple: true,
                 locals: {
                     data: {
@@ -572,19 +633,19 @@
                     vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
                 }
 
-                vm.tabs = vm.tabs.map(function (item, index) {
-
-                    item.index = index;
-
-                    return item
-
-                });
+                if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
+                    vm.tabs.forEach(function (tab, index) {
+                        tab.tabOrder = index;
+                    });
+                }
 
                 vm.getAttributeTypes().then(function (value) {
 
                     entityViewerHelperService.transformItem(vm.entity, vm.attrs);
 
-                    vm.generateAttributesFromLayoutFields();
+                    //vm.generateAttributesFromLayoutFields();
+
+                    mapAttributesAndFixFieldsLayout();
 
                     vm.readyStatus.content = true;
                     vm.readyStatus.entity = true;
@@ -791,6 +852,10 @@
 
                     console.log('resultEntity', resultEntity);
 
+                    if (dcLayoutHasBeenFixed) {
+                        uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+                    }
+
                     entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
                         $mdDialog.hide({res: 'agree', data: data});
@@ -811,7 +876,7 @@
                             skipHide: true
                         })
 
-                    })
+                    });
 
                 } else {
 

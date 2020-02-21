@@ -78,7 +78,6 @@
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
                 targetEvent: $event,
-                preserveScope: true,
                 multiple: true,
                 locals: {
                     data: data
