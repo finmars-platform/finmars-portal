@@ -1407,7 +1407,7 @@
             }).then(function (res) {
 
                 if (res.status === 'agree') {
-                    item.data = res.data.item
+                    item.data = res.data.item.data
                 }
 
             })
