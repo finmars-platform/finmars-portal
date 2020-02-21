@@ -914,6 +914,34 @@
 
         };
 
+        vm.openPricingMultipleParametersDialog = function($event, item) {
+
+            $mdDialog.show({
+                controller: 'PricingMultipleParametersDialogController as vm',
+                templateUrl: 'views/dialogs/pricing/pricing-multiple-parameter-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: item
+                    }
+
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    item.data = res.data.item
+                }
+
+            })
+
+        };
+
         vm.init = function () {
 
             getEntityAttrs();

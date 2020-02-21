@@ -27,6 +27,10 @@
             </th>
 
             <th>
+                Multiple Parameters
+            </th>
+
+            <th>
                 Edit Scheme
             </th>
 
@@ -69,7 +73,7 @@
                     -
                 </div>
 
-                <div class="m-t-16" data-ng-if="item.pricing_scheme_object.type_object.input_type == 2" data-ng-init="item.default_value ? item.switchState = 'default_value' : item.switchState = 'attribute_key'">
+                <div data-ng-if="item.pricing_scheme_object.type_object.input_type != 1" class="m-t-16" data-ng-init="item.default_value ? item.switchState = 'default_value' : item.switchState = 'attribute_key'">
 
                     <div layout="row" data-ng-if="item.switchState == 'default_value'">
 
@@ -98,8 +102,18 @@
 
                 </div>
 
+            </td>
+
+            <td>
+
+                <div data-ng-if="item.pricing_scheme_object.type_object.input_type == 3">
+                    -
+                </div>
+
                 <div class="m-t-16" data-ng-if="item.pricing_scheme_object.type_object.input_type == 3">
-                    Multiple Parameter Input
+
+                    <md-button class="md-raised" data-ng-click="vm.openPricingMultipleParametersDialog($event, item)">...</md-button>
+
                 </div>
 
             </td>

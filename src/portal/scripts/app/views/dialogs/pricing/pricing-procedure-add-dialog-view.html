@@ -222,87 +222,88 @@
 
             </div>
 
-            <div>
+            <!--DEPRECATED -->
+            <!--<div>-->
 
-                <h4><md-checkbox ng-model="vm.item.accrual_is_active" aria-label="override">
-                    Accruals
-                    <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
-                                style="fill: #777777">
-                        <md-tooltip class="tooltip_1" md-direction="top">Activate Accruals Section</md-tooltip>
-                    </ng-md-icon>
-                </md-checkbox></h4>
+                <!--<h4><md-checkbox ng-model="vm.item.accrual_is_active" aria-label="override">-->
+                    <!--Accruals-->
+                    <!--<ng-md-icon class="tooltip-inline-block" icon="info" size="20"-->
+                                <!--style="fill: #777777">-->
+                        <!--<md-tooltip class="tooltip_1" md-direction="top">Activate Accruals Section</md-tooltip>-->
+                    <!--</ng-md-icon>-->
+                <!--</md-checkbox></h4>-->
 
-                <div data-ng-if="vm.item.accrual_is_active">
+                <!--<div data-ng-if="vm.item.accrual_is_active">-->
 
-                    <div layout="row">
+                    <!--<div layout="row">-->
 
-                        <md-button class="md-icon-button md-raised md-primary"
-                                   data-ng-click="vm.toggle('accrual_date_from')">
+                        <!--<md-button class="md-icon-button md-raised md-primary"-->
+                                   <!--data-ng-click="vm.toggle('accrual_date_from')">-->
 
-                            T
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>
+                            <!--T-->
+                            <!--<md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>-->
 
-                        </md-button>
+                        <!--</md-button>-->
 
-                        <div data-ng-if="vm.toggleStatus.accrual_date_from == 'datepicker'">
+                        <!--<div data-ng-if="vm.toggleStatus.accrual_date_from == 'datepicker'">-->
 
-                            <md-input-container>
-                                <label for="">Date from</label>
-                                <zh-date-picker data-date-value="vm.item.accrual_date_from"></zh-date-picker>
-                            </md-input-container>
+                            <!--<md-input-container>-->
+                                <!--<label for="">Date from</label>-->
+                                <!--<zh-date-picker data-date-value="vm.item.accrual_date_from"></zh-date-picker>-->
+                            <!--</md-input-container>-->
 
-                        </div>
+                        <!--</div>-->
 
-                        <div data-ng-if="vm.toggleStatus.accrual_date_from == 'expr'">
+                        <!--<div data-ng-if="vm.toggleStatus.accrual_date_from == 'expr'">-->
 
-                            <md-input-container style="width: 60%">
-                                <label for="">Date From (Expression)</label>
-                                <input type="text" data-ng-model="vm.item.accrual_date_from_expr">
-                            </md-input-container>
+                            <!--<md-input-container style="width: 60%">-->
+                                <!--<label for="">Date From (Expression)</label>-->
+                                <!--<input type="text" data-ng-model="vm.item.accrual_date_from_expr">-->
+                            <!--</md-input-container>-->
 
-                            <expression-editor-button data-item="vm.item.accrual_date_from_expr">
-                            </expression-editor-button>
+                            <!--<expression-editor-button data-item="vm.item.accrual_date_from_expr">-->
+                            <!--</expression-editor-button>-->
 
-                        </div>
+                        <!--</div>-->
 
-                    </div>
+                    <!--</div>-->
 
-                    <div layout="row">
+                    <!--<div layout="row">-->
 
-                        <md-button class="md-icon-button md-raised md-primary"
-                                   data-ng-click="vm.toggle('accrual_date_to')">
+                        <!--<md-button class="md-icon-button md-raised md-primary"-->
+                                   <!--data-ng-click="vm.toggle('accrual_date_to')">-->
 
-                            T
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>
+                            <!--T-->
+                            <!--<md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>-->
 
-                        </md-button>
+                        <!--</md-button>-->
 
-                        <div data-ng-if="vm.toggleStatus.accrual_date_to == 'datepicker'">
+                        <!--<div data-ng-if="vm.toggleStatus.accrual_date_to == 'datepicker'">-->
 
-                            <md-input-container>
-                                <label for="">Date to</label>
-                                <zh-date-picker data-date-value="vm.item.accrual_date_to"></zh-date-picker>
-                            </md-input-container>
+                            <!--<md-input-container>-->
+                                <!--<label for="">Date to</label>-->
+                                <!--<zh-date-picker data-date-value="vm.item.accrual_date_to"></zh-date-picker>-->
+                            <!--</md-input-container>-->
 
-                        </div>
+                        <!--</div>-->
 
-                        <div data-ng-if="vm.toggleStatus.accrual_date_to == 'expr'">
+                        <!--<div data-ng-if="vm.toggleStatus.accrual_date_to == 'expr'">-->
 
-                            <md-input-container style="width: 60%">
-                                <label for="">Date To (Expression)</label>
-                                <input type="text" data-ng-model="vm.item.accrual_date_to_expr">
-                            </md-input-container>
+                            <!--<md-input-container style="width: 60%">-->
+                                <!--<label for="">Date To (Expression)</label>-->
+                                <!--<input type="text" data-ng-model="vm.item.accrual_date_to_expr">-->
+                            <!--</md-input-container>-->
 
-                            <expression-editor-button data-item="vm.item.accrual_date_to_expr">
-                            </expression-editor-button>
+                            <!--<expression-editor-button data-item="vm.item.accrual_date_to_expr">-->
+                            <!--</expression-editor-button>-->
 
-                        </div>
+                        <!--</div>-->
 
-                    </div>
+                    <!--</div>-->
 
-                </div>
+                <!--</div>-->
 
-            </div>
+            <!--</div>-->
 
             <div>
 

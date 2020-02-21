@@ -516,6 +516,8 @@ app.controller('PricingScheduleEditDialogController', ['$scope', '$mdDialog', 'd
 app.controller('PricingProcedureAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingProcedureAddDialogController')]);
 app.controller('PricingProcedureEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingProcedureEditDialogController')]);
 
+app.controller('PricingMultipleParametersDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingMultipleParametersDialogController')]);
+
 
 // Reference Table
 
