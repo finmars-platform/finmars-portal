@@ -213,6 +213,345 @@
         return fieldsWithNegVal;
     };
 
+
+    var createFieldsTree = function (tabs) {
+
+        var tabsCopy = JSON.parse(JSON.stringify(tabs));
+
+        var fieldsTree = {};
+
+        tabsCopy.forEach(function (tab) {
+
+            fieldsTree[tab.tabOrder] = {};
+            var f;
+            for (f = 0; f < tab.layout.fields.length; f++) {
+
+                var treeTab = fieldsTree[tab.tabOrder];
+
+                var field = tab.layout.fields[f];
+                var fRow = field.row;
+                var fCol = field.column;
+
+                if (!treeTab[fRow]) {
+                    treeTab[fRow] = {};
+                }
+
+                treeTab[fRow][fCol] = field;
+
+            }
+
+        });
+
+        return fieldsTree;
+    };
+
+    var createFixedAreaFieldsTree = function (fixedAreaFields) {
+
+        var fixedAreaFieldsCopy = JSON.parse(JSON.stringify(fixedAreaFields));
+        var fixedAreaFieldsTree = {};
+
+        var i;
+        for (i = 0; i < fixedAreaFieldsCopy.length; i++) {
+
+            var field = fixedAreaFields.fields[i];
+            var fRow = field.row;
+            var fCol = field.column;
+
+            if (!fixedAreaFieldsTree[fRow]) {
+                fixedAreaFieldsTree[fRow] = {};
+            }
+
+            fixedAreaFieldsTree[fRow][fCol] = field;
+
+        }
+
+        return fixedAreaFieldsTree;
+
+    };
+
+
+    var getMatchForLayoutFields = function (tab, tabIndex, attributes, tabResult, fieldsToEmptyList, forComplexTransaction) {
+
+        var i, l, e, u;
+
+        tab.layout.fields.forEach(function (field, fieldIndex) {
+
+            var fieldResult = {};
+
+            var dynamicAttrs = attributes.dynamicAttrs;
+            var entityAttrs = attributes.entityAttrs;
+            var layoutAttrs = attributes.layoutAttrs;
+
+            if (field && field.type === 'field') {
+
+                var attrFound = false;
+
+                if (field.attribute_class === 'attr') {
+
+                    for (i = 0; i < dynamicAttrs.length; i = i + 1) {
+
+                        if (field.key) {
+
+                            if (field.key === dynamicAttrs[i].user_code) {
+
+                                dynamicAttrs[i].options = field.options;
+                                //fieldResult = dynamicAttrs[i];
+                                tabResult[field.row][field.column] = dynamicAttrs[i];
+                                attrFound = true;
+                                break;
+
+                            }
+
+                        } else {
+
+                            if (field.attribute.user_code) {
+
+                                if (field.attribute.user_code === dynamicAttrs[i].user_code) {
+
+                                    dynamicAttrs[i].options = field.options;
+                                    fieldResult = dynamicAttrs[i];
+                                    attrFound = true;
+                                    break;
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    if (!attrFound) {
+                        var fieldPath = {
+                            tabIndex: tabIndex,
+                            fieldIndex: fieldIndex
+                        };
+
+                        fieldsToEmptyList.push(fieldPath);
+                    }
+
+                } else {
+
+                    for (e = 0; e < entityAttrs.length; e = e + 1) {
+                        if (field.name === entityAttrs[e].name) {
+                            entityAttrs[e].options = field.options;
+                            fieldResult = entityAttrs[e];
+
+                            attrFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!attrFound) {
+                        for (l = 0; l < layoutAttrs.length; l = l + 1) {
+                            if (field.name === layoutAttrs[l].name) {
+                                layoutAttrs[l].options = field.options;
+                                fieldResult = layoutAttrs[l];
+
+                                attrFound = true;
+                                break;
+                            }
+                        }
+                    }
+
+                }
+
+                if (field.backgroundColor) {
+                    fieldResult.backgroundColor = field.backgroundColor;
+                }
+
+                if (forComplexTransaction) {
+
+                    var userInputs = attributes.userInputs;
+
+                    if (field.attribute_class === 'userInput') {
+
+                        for (u = 0; u < userInputs.length; u = u + 1) {
+                            //console.log('userInputs[u]', userInputs[u]);
+                            if (field.name === userInputs[u].name) {
+                                userInputs[u].options = field.options;
+                                // return userInputs[u];
+                                fieldResult = userInputs[u];
+
+                                attrFound = true;
+                                break;
+                            }
+                        }
+
+                        if (!attrFound) {
+                            var fieldPath = {
+                                tabIndex: tabIndex,
+                                fieldIndex: fieldIndex
+                            };
+
+                            fieldsToEmptyList.push(fieldPath);
+                        }
+
+                    }
+
+                    fieldResult.editable = field.editable;
+
+                }
+
+            }
+
+            //tabResult.push(fieldResult);
+            tabResult[field.row][field.column] = fieldResult;
+
+        });
+
+    };
+
+    var removeFieldsWithoutMatchingAttrs = function (tabs, fieldsToEmptyList, dataConstructorLayout) {
+
+        fieldsToEmptyList.forEach(function (fieldPath) {
+
+            if (fieldPath.tabIndex === 'fixedArea') {
+                var dcLayoutFields = tabs.layout.fields;
+                var layoutFieldsToSave = dataConstructorLayout.data.fixedArea.layout.fields;
+
+            } else {
+                var dcLayoutFields = tabs[fieldPath.tabIndex].layout.fields;
+
+                if (Array.isArray(dataConstructorLayout.data)) { // for old layouts
+                    var layoutFieldsToSave = dataConstructorLayout.data[fieldPath.tabIndex].layout.fields;
+                } else {
+                    var layoutFieldsToSave = dataConstructorLayout.data.tabs[fieldPath.tabIndex].layout.fields;
+                }
+            }
+
+            var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
+            var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
+
+            dcLayoutFields[fieldPath.fieldIndex] = { // removing from view
+                colspan: 1,
+                column: fieldToEmptyColumn,
+                editMode: false,
+                row: fieldToEmptyRow,
+                type: 'empty'
+            };
+
+            layoutFieldsToSave[fieldPath.fieldIndex] = { // removing from layout copy for saving
+                colspan: 1,
+                column: fieldToEmptyColumn,
+                editMode: false,
+                row: fieldToEmptyRow,
+                type: 'empty'
+            };
+
+        });
+
+    };
+
+    var generateAttributesFromLayoutFields = function (tabs, attributes, dataConstructorLayout, forComplexTransaction) {
+
+        var result = {
+            attributesLayout: {},
+            dcLayoutHasBeenFixed: false
+        };
+
+        var fieldsToEmptyList = [];
+        var tabResult;
+
+        if (Array.isArray(tabs)) { // for tabs
+
+            result.attributesLayout = createFieldsTree(tabs);
+
+            tabs.forEach(function (tab, tabIndex) {
+
+                tabResult = [];
+
+                getMatchForLayoutFields(tab, tabIndex, attributes, result.attributesLayout[tab.tabOrder], fieldsToEmptyList, forComplexTransaction);
+
+                //result.attributesLayout.push(tabResult);
+
+            });
+
+        } else { // for fixed area
+
+            result.attributesLayout = createFixedAreaFieldsTree(tabs);
+
+            getMatchForLayoutFields(tabs, 'fixedArea', fieldsToEmptyList, result.attributesLayout, attributes, forComplexTransaction);
+
+        }
+
+        if (fieldsToEmptyList.length) {
+            removeFieldsWithoutMatchingAttrs(tabs, fieldsToEmptyList, dataConstructorLayout);
+            result.dcLayoutHasBeenFixed = true;
+        }
+
+        return result;
+
+    };
+
+    var fixCustomTabs = function (tabs, dataConstructorLayout) {
+
+        var dcLayoutHasBeenFixed = false;
+
+        var fixTab = function (tab, numberOfRows, numberOfCols, viewFieldsList, fieldsListToSave) {
+
+            var i, c;
+            for (i = 1; i <= numberOfRows; i++) {
+                var row = tab[i];
+
+                for (c = 1; c <= numberOfCols; c++) {
+
+                    if (!row[c]) {
+
+                        var missingSocket = {
+                            colspan: 1,
+                            column: c,
+                            editMode: false,
+                            row: i,
+                            type: 'empty'
+                        };
+
+                        viewFieldsList.push(missingSocket);
+                        fieldsListToSave.push(missingSocket);
+                        dcLayoutHasBeenFixed = true;
+
+                    }
+
+                }
+
+            }
+        };
+
+        var tabsFieldsTree = createFieldsTree(tabs);
+
+        if (Object.keys(tabsFieldsTree).length) {
+            Object.keys(tabsFieldsTree).forEach(function (tabNumber, tabIndex) {
+
+                var tab = tabsFieldsTree[tabIndex];
+                var numberOfRows = tabs[tabIndex].layout.rows;
+                var numberOfCols = tabs[tabIndex].layout.columns;
+
+                var dataConstructorTabs = dataConstructorLayout.data;
+                if (!Array.isArray(dataConstructorTabs)) {
+                    dataConstructorTabs = dataConstructorLayout.data.tabs;
+                }
+
+                fixTab(tab, numberOfRows, numberOfCols, tabs[tabIndex].layout.fields, dataConstructorTabs[tabIndex].layout.fields);
+
+            });
+        }
+
+        if (tabs.isActive) { // for fixed area
+            var fixedAreaFieldsTree = createFixedAreaFieldsTree(tabs.layout.fields);
+
+            if (Object.keys(fixedAreaFieldsTree).length) {
+                var numberOfRows = tabs.layout.rows;
+                var numberOfCols = tabs.layout.columns;
+
+                fixTab(fixedAreaFieldsTree, numberOfRows, numberOfCols, tabs.layout.fields, dataConstructorLayout.layout.fields);
+            }
+
+        }
+
+        return dcLayoutHasBeenFixed;
+
+    };
+
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
         removeNullFields: removeNullFields,
@@ -220,7 +559,10 @@
         appendAttribute: appendAttribute,
         updateValue: updateValue,
         checkForNotNullRestriction: checkForNotNullRestriction,
-        checkForNegNumsRestriction: checkForNegNumsRestriction
+        checkForNegNumsRestriction: checkForNegNumsRestriction,
+
+        generateAttributesFromLayoutFields: generateAttributesFromLayoutFields,
+        fixCustomTabs: fixCustomTabs
     }
 
 }());
