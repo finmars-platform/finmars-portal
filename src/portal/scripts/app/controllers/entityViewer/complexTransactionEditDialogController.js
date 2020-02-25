@@ -253,6 +253,15 @@
             // < Empty sockets that have no attribute that matches them >
 
         };*/
+        vm.rearrangeMdDialogActions = function () {
+            var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
+
+            if (dialogWindowWidth < 905) {
+                vm.dialogElemToResize.classList.add("two-rows-dialog-actions");
+            } else {
+                vm.dialogElemToResize.classList.remove("two-rows-dialog-actions");
+            }
+        };
 
         var fixFieldsLayoutWithMissingSockets = function () {
 
@@ -1516,6 +1525,10 @@
         };
 
         vm.init = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
+            }, 100);
+
             vm.getItem();
             vm.getAttributeTypes();
 

@@ -5,19 +5,25 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     module.exports = function ($scope, $mdDialog, validationData) {
-
-        logService.controller('ValidationDialogController', 'initialized');
 
         var vm = this;
 
-        vm.validationData = validationData;
+        vm.errorData = validationData.errorData;
+        vm.errorMessage = null;
+        if (vm.errorData && vm.errorData.message) {
+            vm.errorMessage = vm.errorData.message;
+        }
 
-        vm.errorKeys = [];
+        vm.columnsNames = validationData.tableColumnsNames;
 
-        function removeUnderscores(key) {
+        vm.errorRows = [];
+
+        vm.showDevInfo = false;
+
+        //vm.errorKeys = [];
+
+        /*function removeUnderscores(key) {
 
             var result = '';
 
@@ -62,8 +68,26 @@
 
             return JSON.stringify(item.value);
 
-        };
+        };*/
 
+        if (vm.errorMessage) {
+
+            Object.keys(vm.errorMessage).forEach(function (messageKey) {
+
+                var errorMessages = vm.errorMessage[messageKey];
+
+                errorMessages.forEach(function (eMessage) {
+                    var errorObj = {
+                        name: messageKey,
+                        action_notes: eMessage
+                    };
+
+                    vm.errorRows.push(errorObj);
+                });
+
+            });
+
+        }
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -72,6 +96,10 @@
         vm.agree = function () {
             $mdDialog.hide({status: 'agree'});
         };
+
+        setTimeout(function () {
+            vm.dialogElemToResize = document.querySelector('.validationDialogElemToResize');
+        }, 100);
     }
 
 }());

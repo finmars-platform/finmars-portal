@@ -867,13 +867,14 @@
                             templateUrl: 'views/dialogs/validation-dialog-view.html',
                             targetEvent: $event,
                             parent: angular.element(document.body),
-                            locals: {
-                                validationData: data
-                            },
-                            preserveScope: true,
                             multiple: true,
-                            autoWrap: true,
-                            skipHide: true
+                            locals: {
+                                validationData: {
+                                    errorData: data,
+                                    tableColumnsNames: ['Name of fields', 'Error Cause']
+                                },
+
+                            }
                         })
 
                     });
@@ -1008,6 +1009,10 @@
         };
 
         vm.init = function () {
+
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
+            }, 100);
 
             getEntityAttrs();
             vm.getFormLayout();

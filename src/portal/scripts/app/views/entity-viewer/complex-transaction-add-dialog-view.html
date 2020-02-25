@@ -1,4 +1,6 @@
-<md-dialog aria-label="add complex transaction dialog" class="entity-editor-dialog draggable-dialog" drag-dialog
+<md-dialog aria-label="add complex transaction dialog"
+           class="entity-editor-dialog draggable-dialog dialog-actions-bottom cTransactionEditorDialogElemToResize"
+           drag-dialog
            style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -212,7 +214,7 @@
         </div>
 
     </md-dialog-content>
-    <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
+    <md-dialog-actions layout="row" layout-align="space-between center">
         <div layout="row">
             <md-button ng-click="vm.editLayout()"
                        class="md-raised md-primary"
@@ -258,7 +260,8 @@
             </div>
 
         </div>
-        <div>
+
+        <div style="margin-right: 10px;">
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
@@ -276,5 +279,10 @@
                 Book
             </md-button>
         </div>
+
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               data-on-resize-callback="vm.rearrangeMdDialogActions()"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>
