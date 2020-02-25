@@ -1,4 +1,4 @@
-<md-dialog class="entity-editor-dialog draggable-dialog"
+<md-dialog class="entity-editor-dialog draggable-dialog dialog-actions-bottom evEditorDialogElemToResize"
            drag-dialog
            aria-label="entity viewer edit dialog"
            style="height: 100%">
@@ -304,7 +304,7 @@
 
     </md-dialog-content>
 
-    <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
+    <md-dialog-actions layout="row" layout-align="space-between center">
         <div layout="row">
             <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary">
                 Edit Form
@@ -339,7 +339,7 @@
             </md-button>
         </div>
 
-        <div>
+        <div style="margin-right: 10px;">
             <md-button class="md-raised m-r-24" ng-click="vm.copy()" data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType != 'transaction'"
                        ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission">
                 Make a copy
@@ -365,5 +365,10 @@
                 Save
             </md-button>
         </div>
+
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               data-on-resize-callback="vm.rearrangeMdDialogActions()"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>

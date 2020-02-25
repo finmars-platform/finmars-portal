@@ -1,5 +1,6 @@
 <md-dialog aria-label="import transaction scheme manager dialog"
-           class="transaction-scheme-manager-dialog-view draggable-dialog transactionSchemeManagerDialogElemToResize" drag-dialog>
+           class="transaction-scheme-manager-dialog-view draggable-dialog dialog-actions-bottom transactionSchemeManagerDialogElemToResize"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -9,7 +10,7 @@
         </div>
     </md-toolbar>
     <md-dialog-content style="background: #E5E5E5;">
-        <md-content>
+        <md-content style="min-width: 600px">
             <div data-ng-if="vm.checkReadyStatus()">
                 <div layout="row" layout-align="center center">
                     <md-card flex="100" class="inm-card-special">
@@ -418,6 +419,7 @@
             </div>
         </md-content>
     </md-dialog-content>
+
     <md-dialog-actions layout="row" class="position-relative">
         <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-if="vm.scheme.id">
             Make Copy
@@ -430,9 +432,8 @@
             <span data-ng-if="!vm.scheme.id">Create</span>
         </md-button>
 
-        <ng-md-icon icon="signal_cellular_4_bar"
-                    size="24"
-                    class="resize-dialog-window-grabber"
-                    data-ng-mousedown="vm.startDialogWindowResize($event)"></ng-md-icon>
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>

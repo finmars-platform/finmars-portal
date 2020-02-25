@@ -44,7 +44,7 @@
 
                         </div>
 
-                        <div data-ng-if="!groups" class="select-options-holder">
+                        <div data-ng-if="!groups && field && field[0]" class="select-options-holder">
                             <md-option data-ng-value="fields[0].id">{{bindListFields(fields[0])}}</md-option>
                         </div>
                     </md-select>
@@ -151,7 +151,7 @@
                         </md-optgroup>
                     </div>
 
-                    <div data-ng-if="!groups" class="select-options-holder">
+                    <div data-ng-if="!groups && field && field[0]" class="select-options-holder">
                         <md-option data-ng-value="fields[0].id">{{bindListFields(fields[0])}}</md-option>
                     </div>
                 </md-select>

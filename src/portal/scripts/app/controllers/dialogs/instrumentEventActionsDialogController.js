@@ -52,6 +52,7 @@
         };
 
         vm.newItem = {
+            "id": vm.eventActions.length,
             "transaction_type": '',
             "text": '',
             "is_sent_to_pending": false,
@@ -75,8 +76,43 @@
             item.editStatus = true;
         };
 
-        vm.saveItem = function (item) {
-            item.editStatus = false;
+
+
+        vm.saveItem = function (item, $event) {
+            var buttonPositionWithSamaValue = false;
+            for (var i = 0; i < vm.eventActions.length; i++) {
+
+                if (vm.eventActions[i].id !== item.id &&
+                    vm.eventActions[i].button_position === item.button_position) {
+
+                    buttonPositionWithSamaValue = true;
+                    break;
+
+                }
+            }
+
+            if (!buttonPositionWithSamaValue) {
+                item.editStatus = false;
+
+            } else {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    multiple: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: 'Button position should contain unique value.'
+                        }
+                    }
+                })
+
+            }
+
         };
 
         vm.deleteItem = function (item, index) {
@@ -96,6 +132,7 @@
             if (!buttonPositionWithSamaValue || !vm.newItem.button_position) {
 
                 vm.eventActions.push({
+                    "id": vm.newItem.id,
                     "transaction_type": vm.newItem.transaction_type,
                     "text": vm.newItem.text,
                     "is_sent_to_pending": vm.newItem.is_sent_to_pending,
@@ -104,6 +141,7 @@
                 });
 
                 vm.newItem = {
+                    "id": vm.eventActions.length,
                     "transaction_type": '',
                     "text": '',
                     "is_sent_to_pending": false,
@@ -143,11 +181,46 @@
             return buttonPositions;
         };
 
-        vm.agree = function () {
-            //console.log('vm.attr', vm.attribute);
-            eventActions = vm.eventActions;
+        vm.agree = function ($event) {
 
-            $mdDialog.hide({status: 'agree', eventActions: eventActions});
+            var notSavedEventsExist = false;
+            for (var i = 0; i < vm.eventActions.length; i++) {
+                if (vm.eventActions[i].editStatus) {
+                    notSavedEventsExist = true;
+                    break;
+                }
+            }
+            //console.log('vm.attr', vm.attribute);
+            if (!notSavedEventsExist) {
+
+                eventActions = vm.eventActions;
+                $mdDialog.hide({status: 'agree', eventActions: eventActions});
+
+            } else {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    multiple: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: 'Please finish editing actions (press "OK" button) before saving',
+                            actionsButtons: [
+                                {
+                                    name: 'CLOSE',
+                                    response: false
+                                }
+                            ]
+                        }
+                    }
+                })
+
+            }
+
         };
 
         vm.cancel = function () {
@@ -155,6 +228,12 @@
         };
 
         vm.init = function () {
+            if (vm.eventActions.length && !vm.eventActions[0].hasOwnProperty('id')) {
+                vm.eventActions.forEach(function (event, index) {
+                    event.id = index;
+                });
+            }
+
             vm.getTransactionTypes();
         };
 

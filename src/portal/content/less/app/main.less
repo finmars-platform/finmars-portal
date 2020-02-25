@@ -2628,11 +2628,28 @@ expression-editor-button.grey-expression-btn {
     left: 10px;
 }
 
-.resize-dialog-window-grabber {
+dialog-window-resizer {
   position: absolute;
+  height: 24px;
+
+  .resize-dialog-icon {
+    displat: block;
+    height: 24px;
+    fill: #4C334D;
+    cursor: nwse-resize;
+  }
+}
+
+dialog-window-resizer.dialog-window-resizer_type1 {
   right: 0;
   bottom: 0;
-  height: 24px;
-  fill: #4C334D;
-  cursor: nwse-resize;
+}
+
+md-dialog.two-rows-dialog-actions {
+  padding-bottom: 104px;
+
+  md-dialog-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

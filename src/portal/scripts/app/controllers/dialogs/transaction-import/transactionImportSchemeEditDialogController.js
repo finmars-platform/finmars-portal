@@ -42,7 +42,7 @@
         vm.calculatedFields = [];
         vm.reconFields = [];
 
-        var dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
+        /*var dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
         var dialogElemWidth = 0;
         var dialogElemHeight = 0;
         var initXPos = 0;
@@ -71,7 +71,7 @@
 
             window.addEventListener('mousemove', resizeDialogWindow);
             window.addEventListener('mouseup', endDialogWindowResize, {once: true});
-        };
+        };*/
 
         vm.openSelectorManager = function ($event) {
 
@@ -593,12 +593,8 @@
 
         vm.init = function () {
             setTimeout(function () {
-                dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
-
-                // Prevents element from moving while resizing modal window
-                dialogElemToResize.style.left = dialogElemToResize.offsetLeft + 'px';
-                dialogElemToResize.style.top = dialogElemToResize.offsetTop + 'px';
-            }, 500);
+                vm.dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
+            }, 100);
 
             vm.getScheme();
             vm.getTransactionTypes();

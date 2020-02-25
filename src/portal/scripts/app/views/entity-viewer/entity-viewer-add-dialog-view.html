@@ -1,4 +1,6 @@
-<md-dialog aria-label="entity viewer add dialog" class="entity-editor-dialog draggable-dialog" drag-dialog
+<md-dialog aria-label="entity viewer add dialog"
+           class="entity-editor-dialog draggable-dialog dialog-actions-bottom evEditorDialogElemToResize"
+           drag-dialog
            style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -256,7 +258,8 @@
         </div>
 
     </md-dialog-content>
-    <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
+
+    <md-dialog-actions layout="row" layout-align="space-between center">
         <div>
             <md-button ng-click="vm.editLayout()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Edit Form
@@ -277,5 +280,8 @@
             </md-button>
         </div>
 
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>

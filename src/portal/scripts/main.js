@@ -64,15 +64,15 @@ function enableAccessHandler($transitions) {
             }
 
             if (transition.to().name === 'app.settings.data-providers') {
-                return false
+                return false;
             }
 
             if (transition.to().name === 'app.settings.users-groups') {
-                return false
+                return false;
             }
 
             if (transition.to().name === 'app.processes') {
-                return false
+                return false;
             }
 
             return true;
@@ -637,6 +637,7 @@ app.directive('inputFileDirective', [require('./app/directives/inputFileDirectiv
 app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
 app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
+app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
 

@@ -73,6 +73,16 @@
         vm.hasEditPermission = false;
         vm.canManagePermissions = false;
 
+        vm.rearrangeMdDialogActions = function () {
+            var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
+
+            if (dialogWindowWidth < 805) {
+                vm.dialogElemToResize.classList.add("two-rows-dialog-actions");
+            } else {
+                vm.dialogElemToResize.classList.remove("two-rows-dialog-actions");
+            }
+        };
+
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
         var getEntityAttrs = function () {
@@ -624,19 +634,18 @@
             return true;
         };
 
-        vm.handleErrors = function ($event, data) {
+        vm.handleErrors = function (data) {
 
             $mdDialog.show({
                 controller: 'ValidationDialogController as vm',
                 templateUrl: 'views/dialogs/validation-dialog-view.html',
-                targetEvent: $event,
+                multiple: true,
                 locals: {
-                    validationData: data
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
+                    validationData: {
+                        errorData: data,
+                        tableColumnsNames: ['Name of fields', 'Error Cause']
+                    }
+                }
             });
 
         };
@@ -906,11 +915,13 @@
                     entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
                         if (data.status === 400) {
-                            vm.handleErrors($event, data);
+                            vm.handleErrors(data);
                         } else {
                             $mdDialog.hide({res: 'agree', data: data});
                         }
 
+                    }).catch(function(data) {
+                        vm.handleErrors(data);
                     });
 
                 } else {
@@ -1415,6 +1426,10 @@
         };
 
         vm.init = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
+            }, 100);
+
             getEntityAttrs();
 
             vm.getItem().then(function () {

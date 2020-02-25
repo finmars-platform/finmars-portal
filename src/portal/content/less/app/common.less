@@ -571,10 +571,20 @@ input.no-input-arrows[type="number"] {
   }
 }
 
-.dialog-bottom-footer {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
+.dialog-actions-bottom {
+  padding-bottom: 52px;
+  box-sizing: border-box;
+
+  md-dialog-content {
+    height: 100%;
+  }
+
+  md-dialog-actions {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding-right: 16px;
+  }
 }
 
 .disabled-element {

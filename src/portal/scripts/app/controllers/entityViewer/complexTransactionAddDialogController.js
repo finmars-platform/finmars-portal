@@ -54,6 +54,16 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
+        vm.rearrangeMdDialogActions = function () {
+            var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
+
+            if (dialogWindowWidth < 695) {
+                vm.dialogElemToResize.classList.add("two-rows-dialog-actions");
+            } else {
+                vm.dialogElemToResize.classList.remove("two-rows-dialog-actions");
+            }
+        };
+
         /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
             var i, l, e, u;
@@ -1275,6 +1285,9 @@
         };
 
         vm.init = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
+            }, 100);
 
             console.log('entity', entity);
 
