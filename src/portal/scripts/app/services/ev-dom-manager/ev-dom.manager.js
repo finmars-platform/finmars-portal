@@ -547,6 +547,54 @@
 
     };
 
+    var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
+
+        function sendContextMenuActionToActiveObj (event) {
+            var objectId = event.target.dataset.objectId;
+            var parentGroupHashId = event.target.dataset.parentGroupHashId;
+            var dropdownAction = event.target.dataset.evDropdownAction;
+
+            var dropdownActionData = {};
+
+            console.log('event.target.dataset', event.target.dataset);
+
+            if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
+                dropdownActionData.id = event.target.dataset.evDropdownActionDataId
+            }
+
+            if (objectId && dropdownAction && parentGroupHashId) {
+
+                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                if (!obj) {
+                    obj = {}
+                }
+
+                obj.event = event;
+
+                console.log('dropdownActionData', dropdownActionData);
+
+                evDataService.setActiveObject(obj);
+                evDataService.setActiveObjectAction(dropdownAction);
+                evDataService.setActiveObjectActionData(dropdownActionData);
+
+                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                clearDropdowns();
+
+            } else {
+
+                if (!event.target.classList.contains('ev-dropdown-option')) {
+                    clearDropdowns();
+                }
+
+            }
+        }
+
+        window.addEventListener('click', sendContextMenuActionToActiveObj, {once: true});
+
+    };
+
     var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
         var entityType = evDataService.getEntityType();
@@ -647,6 +695,8 @@
 
         evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
+        addEventListenerForContextMenu(popup, evDataService, evEventService);
+
     };
 
     var initContextMenuEventDelegation = function (elem, evDataService, evEventService) {
@@ -654,6 +704,39 @@
         var entityType = evDataService.getEntityType();
 
         if (!metaService.isReport(entityType)) {
+
+            function sendContextMenuActionToActiveObj (event) {
+
+                var objectId = event.target.dataset.objectId;
+                var parentGroupHashId = event.target.dataset.parentGroupHashId;
+                var dropdownAction = event.target.dataset.evDropdownAction;
+
+                if (objectId && dropdownAction && parentGroupHashId) {
+
+                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                    if (!obj) {
+                        obj = {}
+                    }
+
+                    obj.event = event;
+
+                    evDataService.setActiveObject(obj);
+                    evDataService.setActiveObjectAction(dropdownAction);
+
+                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                    clearDropdowns();
+
+                } else {
+
+                    if (!event.target.classList.contains('ev-dropdown-option')) {
+                        clearDropdowns();
+                    }
+
+                }
+
+            }
 
             elem.addEventListener('contextmenu', function (ev) {
 
@@ -699,7 +782,7 @@
                 clearDropdowns();
             });
 
-            window.addEventListener('click', function (event) {
+            /*window.addEventListener('click', function (event) {
 
                 if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
 
@@ -734,7 +817,7 @@
 
                 }
 
-            });
+            });*/
 
         }
 

@@ -1061,7 +1061,7 @@
 
         vm.handleComplexTransactionErrors = function ($event, data) {
 
-            $mdDialog.show({
+            /*$mdDialog.show({
                 controller: 'ValidationDialogController as vm',
                 templateUrl: 'views/dialogs/validation-dialog-view.html',
                 targetEvent: $event,
@@ -1076,6 +1076,19 @@
                 autoWrap: true,
                 skipHide: true,
                 multiple: true
+            });*/
+            $mdDialog.show({
+                controller: 'ValidationDialogController as vm',
+                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                targetEvent: $event,
+                parent: angular.element(document.body),
+                multiple: true,
+                locals: {
+                    validationData: {
+                        errorData: data,
+                        tableColumnsNames: ['Name of fields', 'Error Cause']
+                    }
+                }
             });
 
         };
@@ -1328,12 +1341,13 @@
                                     templateUrl: 'views/dialogs/validation-dialog-view.html',
                                     targetEvent: $event,
                                     parent: angular.element(document.body),
-                                    locals: {
-                                        validationData: data
-                                    },
                                     multiple: true,
-                                    autoWrap: true,
-                                    skipHide: true
+                                    locals: {
+                                        validationData: {
+                                            errorData: data,
+                                            tableColumnsNames: ['Name of fields', 'Error Cause']
+                                        }
+                                    }
                                 });
 
                                 reject(data);
