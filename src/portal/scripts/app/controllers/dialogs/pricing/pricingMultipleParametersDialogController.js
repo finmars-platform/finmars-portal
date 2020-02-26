@@ -10,9 +10,65 @@
         var vm = this;
 
         vm.item = JSON.parse(JSON.stringify(data.item));
+        vm.entityType = data.entityType;
+        vm.attributeTypes = data.attributeTypes;
 
         vm.schemeParameters = [];
         vm.items = [];
+
+        vm.optionsForMultipleParameters = {};
+
+        vm.getOptionsForAttributeKey = function (valueType) {
+
+            var valueTypeInt = parseInt(valueType, 10);
+
+            var result = [];
+
+            if (valueTypeInt === 10) {
+                result.push({
+                    name: 'Reference for pricing',
+                    user_code: 'reference_for_pricing'
+                })
+            }
+
+            if (valueTypeInt === 20) {
+                result.push({
+                    name: 'Default Price',
+                    user_code: 'default_price'
+                })
+            }
+
+            if (valueTypeInt === 40) {
+                result.push({
+                    name: 'Maturity Date',
+                    user_code: 'maturity_date'
+                })
+            }
+
+            console.log('vm.attributeTypes', vm.attributeTypes);
+
+            var attrs = vm.attributeTypes.filter(function (item) {
+
+                if (item.value_type === valueTypeInt) {
+                    return true;
+                }
+
+                return false;
+
+            }).map(function (item) {
+
+                return {
+                    name: item.name,
+                    user_code: 'attributes.' + item.user_code
+                }
+
+            });
+
+            result = result.concat(attrs);
+
+            return result
+
+        };
 
         console.log('vm.item', vm.item);
 
@@ -115,6 +171,14 @@
 
             }
 
+
+            vm.items.forEach(function (item) {
+
+                var value_type = item.value_type;
+
+                vm.optionsForMultipleParameters[item.index] = vm.getOptionsForAttributeKey(value_type);
+
+            })
 
         };
 
