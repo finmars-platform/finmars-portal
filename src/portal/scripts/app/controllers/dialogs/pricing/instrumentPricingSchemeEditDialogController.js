@@ -20,9 +20,24 @@
         vm.types = [];
         vm.attributeTypes = [];
 
+        vm.optionsForPrimaryParameter = [];
+        vm.optionsForMultipleParameters = {};
+
         vm.switchState = 'default_value';
 
         vm.readyStatus = {types: false, item: false, attributeTypes: false};
+
+        vm.primaryParameterValueTypeUpdate = function () {
+            vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
+        };
+
+        vm.multipleParameterValueTypeUpdate = function (index) {
+
+            var value_type = vm.item.type_settings.data.parameters[index].value_type;
+
+            vm.optionsForMultipleParameters[index] = vm.getOptionsForAttributeKey(value_type);
+
+        };
 
         vm.getAttributeTypes = function () {
 
@@ -33,6 +48,8 @@
                 vm.attributeTypes = data.results;
 
                 vm.readyStatus.attributeTypes = true;
+
+                vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
 
                 $scope.$apply();
 
@@ -56,6 +73,58 @@
 
         };
 
+        vm.getOptionsForAttributeKey = function (valueType) {
+
+            var valueTypeInt = parseInt(valueType, 10);
+
+            var result = [];
+
+            if (valueTypeInt === 10) {
+                result.push({
+                    name: 'Reference for pricing',
+                    user_code: 'reference_for_pricing'
+                })
+            }
+
+            if (valueTypeInt === 20) {
+                result.push({
+                    name: 'Default Price',
+                    user_code: 'default_price'
+                })
+            }
+
+            if (valueTypeInt === 40) {
+                result.push({
+                    name: 'Maturity Date',
+                    user_code: 'maturity_date'
+                })
+            }
+
+            console.log('vm.attributeTypes', vm.attributeTypes);
+
+            var attrs = vm.attributeTypes.filter(function (item) {
+
+                if (item.value_type === valueTypeInt) {
+                    return true;
+                }
+
+                return false;
+
+            }).map(function (item) {
+
+                return {
+                    name: item.name,
+                    user_code: 'attributes.' + item.user_code
+                }
+
+            });
+
+            result = result.concat(attrs);
+
+            return result
+
+        };
+
         vm.getItem = function () {
 
             instrumentPricingSchemeService.getByKey(vm.itemId).then(function (data) {
@@ -71,6 +140,8 @@
                 }
 
                 vm.readyStatus.item = true;
+
+                vm.getAttributeTypes();
 
                 console.log('data', data);
 
@@ -129,7 +200,7 @@
 
         };
 
-        vm.switchParameter = function($event, item) {
+        vm.switchParameter = function ($event, item) {
 
             if (item.___switch_state === 'default_value') {
                 item.___switch_state = 'attribute_key'
@@ -146,8 +217,6 @@
 
             vm.getItem();
             vm.getTypes();
-
-            vm.getAttributeTypes();
 
         };
 

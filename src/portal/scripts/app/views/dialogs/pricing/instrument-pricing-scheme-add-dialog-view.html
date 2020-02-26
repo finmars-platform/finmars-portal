@@ -120,8 +120,7 @@
                     <md-input-container class="m-t-16">
                         <label>Options</label>
                         <md-select data-ng-model="vm.item.type_settings.attribute_key">
-                            <md-option value="reference_for_pricing">Default Reference For Pricing</md-option>
-                            <md-option ng-value="item.user_code" data-ng-repeat="item in vm.attributeTypes">
+                            <md-option ng-value="item.user_code" data-ng-repeat="item in vm.optionsForPrimaryParameter">
                                 {{item.name}} ({{item.user_code}})
                             </md-option>
                         </md-select>
@@ -133,7 +132,7 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type">
+                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>
@@ -176,8 +175,7 @@
                     <md-input-container class="m-t-16">
                         <label>Options</label>
                         <md-select data-ng-model="vm.item.type_settings.attribute_key">
-                            <md-option value="reference_for_pricing">Default Reference For Pricing</md-option>
-                            <md-option ng-value="item.user_code" data-ng-repeat="item in vm.attributeTypes">
+                            <md-option ng-value="item.user_code" data-ng-repeat="item in vm.optionsForPrimaryParameter">
                                 {{item.name}} ({{item.user_code}})
                             </md-option>
                         </md-select>
@@ -189,7 +187,7 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type">
+                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>
@@ -212,7 +210,7 @@
 
                         <md-input-container class="m-t-16">
                             <label>Value Type</label>
-                            <md-select data-ng-model="item.value_type">
+                            <md-select data-ng-model="item.value_type" data-ng-change="vm.multipleParameterValueTypeUpdate(item.index)">
                                 <md-option value="10">Text</md-option>
                                 <md-option value="20">Number</md-option>
                                 <md-option value="40">Date</md-option>
@@ -239,9 +237,7 @@
                                 <md-input-container class="m-t-16">
                                     <label>Options</label>
                                     <md-select data-ng-model="item.attribute_key">
-                                        <md-option value="reference_for_pricing">Default Reference For Pricing
-                                        </md-option>
-                                        <md-option ng-value="item.user_code" data-ng-repeat="item in vm.attributeTypes">
+                                        <md-option ng-value="item.user_code" data-ng-repeat="item in vm.optionsForMultipleParameters[item.index]">
                                             {{item.name}} ({{item.user_code}})
                                         </md-option>
                                     </md-select>
@@ -299,8 +295,7 @@
                     <md-input-container class="m-t-16">
                         <label>Options</label>
                         <md-select data-ng-model="vm.item.type_settings.attribute_key">
-                            <md-option value="reference_for_pricing">Default Reference For Pricing</md-option>
-                            <md-option ng-value="item.user_code" data-ng-repeat="item in vm.attributeTypes">
+                            <md-option ng-value="item.user_code" data-ng-repeat="item in vm.optionsForPrimaryParameter">
                                 {{item.name}} ({{item.user_code}})
                             </md-option>
                         </md-select>
@@ -312,7 +307,7 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type">
+                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>

@@ -55,10 +55,9 @@
                                 <md-input-container class="m-t-16">
                                     <label>Options</label>
                                     <md-select data-ng-model="item.attribute_key">
-                                        <md-option value="reference_for_pricing">Default Reference For Pricing</md-option>
-                                        <!--<md-option ng-value="item.user_code" data-ng-repeat="item in vm.attributeTypes">-->
-                                            <!--{{item.name}} ({{item.user_code}})-->
-                                        <!--</md-option>-->
+                                        <md-option ng-value="attribute.user_code" data-ng-repeat="attribute in vm.optionsForMultipleParameters[item.index]">
+                                            {{attribute.name}}
+                                        </md-option>
                                     </md-select>
                                 </md-input-container>
 
