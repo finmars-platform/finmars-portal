@@ -54,6 +54,7 @@ module.exports = {
     'REPORT_EXPORT_OPTIONS_CHANGED': 'REPORT_EXPORT_OPTIONS_CHANGED',
     'REPORT_TABLE_VIEW_CHANGED': 'REPORT_TABLE_VIEW_CHANGED',
     'ENTITY_VIEWER_PAGINATION_CHANGED': 'ENTITY_VIEWER_PAGINATION_CHANGED',
+    // < Events used only to track layout changes >
 
     // Trigger Split Panel events from root entity viewer
 
@@ -67,7 +68,9 @@ module.exports = {
 
 
     'RECON_BOOK_SELECTED': 'RECON_BOOK_SELECTED',
+    // < Trigger Split Panel events from root entity viewer >
 
     // Trigger Entity Viewer methods from Split Panel
     'RECON_TOGGLE_MATCH_EDITOR': 'RECON_TOGGLE_MATCH_EDITOR'
+    // < Trigger Entity Viewer methods from Split Panel >
 };

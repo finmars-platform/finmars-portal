@@ -1001,6 +1001,52 @@
 
     };
 
+    var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
+
+        function sendContextMenuActionToActiveObj (event) {
+
+            var objectId = event.target.dataset.objectId;
+            var parentGroupHashId = event.target.dataset.parentGroupHashId;
+            var dropdownAction = event.target.dataset.evDropdownAction;
+
+            var dropdownActionData = {};
+
+            if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
+                dropdownActionData.id = event.target.dataset.evDropdownActionDataId
+            }
+
+            if (objectId && dropdownAction && parentGroupHashId) {
+
+                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                if (!obj) {
+                    obj = {}
+                }
+
+                obj.event = event;
+
+                evDataService.setActiveObject(obj);
+                evDataService.setActiveObjectAction(dropdownAction);
+                evDataService.setActiveObjectActionData(dropdownActionData);
+
+                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                clearDropdowns();
+
+            } else {
+
+                if (!event.target.classList.contains('ev-dropdown-option')) {
+                    clearDropdowns();
+                }
+
+            }
+
+        }
+
+        window.addEventListener('click', sendContextMenuActionToActiveObj, {once: true});
+
+    };
+
     var createPopupMenu = function (objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
         clearDropdowns();
@@ -1015,9 +1061,6 @@
 
         evDataService.setObject(obj);
 
-        console.log('obj', obj);
-
-
         popup.id = 'dropdown-' + objectId;
         popup.classList.add('ev-dropdown');
 
@@ -1029,6 +1072,8 @@
         document.body.appendChild(popup);
 
         evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+        addEventListenerForContextMenu(popup, evDataService, evEventService);
 
     };
 
@@ -1143,7 +1188,7 @@
                     clearDropdowns();
                 });
 
-                window.addEventListener('click', function (event) {
+                /*window.addEventListener('click', function (event) {
 
                     if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
 
@@ -1190,7 +1235,7 @@
                     }
 
 
-                });
+                });*/
 
             });
 

@@ -914,7 +914,6 @@
 
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
-            console.log('vm.entity before save', vm.entity);
             var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
 
             if (vm.entity.$_isValid) {
@@ -956,29 +955,27 @@
                                 uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
                             }
 
-                            /*transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
                                 resolve(data);
                             }).catch(function (data) {
-
-                                console.log('data', data);
 
                                 $mdDialog.show({
                                     controller: 'ValidationDialogController as vm',
                                     templateUrl: 'views/dialogs/validation-dialog-view.html',
                                     targetEvent: $event,
                                     parent: angular.element(document.body),
-                                    locals: {
-                                        validationData: data
-                                    },
-                                    preserveScope: true,
                                     multiple: true,
-                                    autoWrap: true,
-                                    skipHide: true
+                                    locals: {
+                                        validationData: {
+                                            errorData: data,
+                                            tableColumnsNames: ['Name of fields', 'Error Cause']
+                                        }
+                                    }
                                 });
 
                                 reject(data);
 
-                            });*/
+                            });
 
                         });
 
@@ -986,7 +983,7 @@
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
-                            $mdDialog.show({
+                            /*$mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
                                 targetEvent: $event,
@@ -995,6 +992,21 @@
                                         complex_transaction_errors: data.complex_transaction_errors,
                                         instruments_errors: data.instruments_errors,
                                         transactions_errors: data.transactions_errors
+                                    }
+                                },
+                                multiple: true,
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true
+                            })*/
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: {
+                                        errorData: data,
+                                        tableColumnsNames: ['Name of fields', 'Error Cause']
                                     }
                                 },
                                 multiple: true,
@@ -1054,7 +1066,6 @@
 
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
-            console.log('vm.entity before save', vm.entity);
             var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
 
             if (vm.entity.$_isValid) {
@@ -1100,7 +1111,7 @@
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
-                            $mdDialog.show({
+                            /*$mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
                                 targetEvent: $event,
@@ -1109,6 +1120,21 @@
                                         complex_transaction_errors: data.complex_transaction_errors,
                                         instruments_errors: data.instruments_errors,
                                         transactions_errors: data.transactions_errors
+                                    }
+                                },
+                                multiple: true,
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true
+                            })*/
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: {
+                                        errorData: data,
+                                        tableColumnsNames: ['Name of fields', 'Error Cause']
                                     }
                                 },
                                 multiple: true,
@@ -1126,7 +1152,7 @@
 
                     }).catch(function (data) {
 
-                        $mdDialog.show({
+                        /*$mdDialog.show({
                             controller: 'ValidationDialogController as vm',
                             templateUrl: 'views/dialogs/validation-dialog-view.html',
                             targetEvent: $event,
@@ -1136,6 +1162,21 @@
                             },
                             preserveScope: true,
                             multiple: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })*/
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: {
+                                    errorData: data,
+                                    tableColumnsNames: ['Name of fields', 'Error Cause']
+                                }
+                            },
+                            multiple: true,
+                            preserveScope: true,
                             autoWrap: true,
                             skipHide: true
                         })

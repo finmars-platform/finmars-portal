@@ -348,6 +348,8 @@
 
                 scope.openContextMenu = function ($event) {
 
+                    $event.stopPropagation();
+
                     var lastClickedRow = scope.evDataService.getActiveObject();
 
                     if (lastClickedRow) {
