@@ -53,7 +53,7 @@
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
-        vm.attrs = [];
+        vm.attributeTypes = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = [];
 
@@ -70,6 +70,8 @@
         vm.lastInstrumentType = null;
 
         vm.canManagePermissions = false;
+
+        vm.attributeTypesByValueTypes = {} // need for pricing;
 
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
@@ -119,14 +121,14 @@
 
                         var dAttrFound = false;
 
-                        for (i = 0; i < vm.attrs.length; i = i + 1) {
+                        for (i = 0; i < vm.attributeTypes.length; i = i + 1) {
 
                             if (field.key) {
 
-                                if (field.key === vm.attrs[i].user_code) {
+                                if (field.key === vm.attributeTypes[i].user_code) {
 
-                                    vm.attrs[i].options = field.options;
-                                    fieldResult = vm.attrs[i];
+                                    vm.attributeTypes[i].options = field.options;
+                                    fieldResult = vm.attributeTypes[i];
                                     dAttrFound = true;
                                     break;
 
@@ -136,10 +138,10 @@
 
                                 if (field.attribute.user_code) {
 
-                                    if (field.attribute.user_code === vm.attrs[i].user_code) {
+                                    if (field.attribute.user_code === vm.attributeTypes[i].user_code) {
 
-                                        vm.attrs[i].options = field.options;
-                                        fieldResult = vm.attrs[i];
+                                        vm.attributeTypes[i].options = field.options;
+                                        fieldResult = vm.attributeTypes[i];
                                         dAttrFound = true;
                                         break;
 
@@ -280,7 +282,7 @@
 
             var attributes = {
                 entityAttrs: vm.entityAttrs,
-                dynamicAttrs: vm.attrs,
+                dynamicAttrs: vm.attributeTypes,
                 layoutAttrs: vm.layoutAttrs
             };
 
@@ -641,9 +643,11 @@
 
                 vm.getAttributeTypes().then(function (value) {
 
-                    entityViewerHelperService.transformItem(vm.entity, vm.attrs);
+                    entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
 
                     //vm.generateAttributesFromLayoutFields();
+
+                    vm.getEntityPricingSchemes();
 
                     mapAttributesAndFixFieldsLayout();
 
@@ -660,7 +664,7 @@
 
         vm.getAttributeTypes = function () {
             return attributeTypeService.getList(vm.entityType).then(function (data) {
-                vm.attrs = data.results;
+                vm.attributeTypes = data.results;
             });
         };
 
@@ -737,7 +741,7 @@
 
                 vm.entity.attributes = [];
 
-                vm.attrs.forEach(function (attributeType) {
+                vm.attributeTypes.forEach(function (attributeType) {
 
                     var value = vm.entity[attributeType.user_code];
 
@@ -839,7 +843,7 @@
 
             vm.updateEntityBeforeSave();
 
-            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
             console.log('vm.entity before save', vm.entity);
 
             var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, [], vm.layoutAttrs);
@@ -949,6 +953,46 @@
 
         };
 
+        vm.generateInstrumentAttributeTypesByValueTypes = function () {
+
+            vm.attributeTypesByValueTypes = {
+
+                10: [
+                    {
+                        name: 'Reference For Pricing',
+                        user_code: 'reference_for_pricing'
+                    }
+                ],
+                20: [
+                    {
+                        name: 'Default Price',
+                        user_code: 'default_price'
+                    }
+                ],
+                40: [
+                    {
+                        name: 'Maturity Date',
+                        user_code: 'maturity_date'
+                    }
+                ]
+
+            };
+
+            vm.attributeTypesByValueTypes[10] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+                return item.value_type === 10;
+            }));
+
+            vm.attributeTypesByValueTypes[20] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+                return item.value_type === 20;
+            }));
+
+            vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+                return item.value_type === 40;
+            }));
+
+
+        };
+
         vm.getInstrumentPricingSchemes = function () {
 
             instrumentPricingSchemeService.getList().then(function (data) {
@@ -957,11 +1001,15 @@
 
                 console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
 
+                vm.generateInstrumentAttributeTypesByValueTypes();
+
                 $scope.$apply();
 
             })
 
         };
+
+
 
         vm.getEntityPricingSchemes = function () {
 
@@ -993,7 +1041,9 @@
                 multiple: true,
                 locals: {
                     data: {
-                        item: item
+                        item: item,
+                        entityType: vm.entityType,
+                        attributeTypes: vm.attributeTypes
                     }
 
                 }
@@ -1019,7 +1069,7 @@
                 vm.loadPermissions();
             }
 
-            vm.getEntityPricingSchemes();
+
 
 
         };
