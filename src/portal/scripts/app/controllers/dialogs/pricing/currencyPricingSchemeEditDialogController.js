@@ -18,10 +18,57 @@
 
         vm.item = {};
         vm.types = [];
+        vm.attributeTypes = [];
+
+        vm.optionsForPrimaryParameter = [];
+        vm.optionsForMultipleParameters = {};
 
         vm.readyStatus = {types: false, item: false, attributeTypes: false};
 
         vm.switchState = 'default_value';
+
+        vm.primaryParameterValueTypeUpdate = function () {
+            vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
+        };
+
+        vm.multipleParameterValueTypeUpdate = function (index) {
+
+            var value_type = vm.item.type_settings.data.parameters[index].value_type;
+
+            vm.optionsForMultipleParameters[index] = vm.getOptionsForAttributeKey(value_type);
+
+        };
+
+        vm.getOptionsForAttributeKey = function (valueType) {
+
+            var valueTypeInt = parseInt(valueType, 10);
+
+            var result = [];
+
+            console.log('vm.attributeTypes', vm.attributeTypes);
+
+            var attrs = vm.attributeTypes.filter(function (item) {
+
+                if (item.value_type === valueTypeInt) {
+                    return true;
+                }
+
+                return false;
+
+            }).map(function (item) {
+
+                return {
+                    name: item.name,
+                    user_code: 'attributes.' + item.user_code
+                }
+
+            });
+
+            result = result.concat(attrs);
+
+            return result
+
+        };
 
         vm.getAttributeTypes = function () {
 
@@ -30,6 +77,8 @@
             attributeTypeService.getList(entityType).then(function (data) {
 
                 vm.attributeTypes = data.results;
+
+                vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
 
                 vm.readyStatus.attributeTypes = true;
 
