@@ -942,11 +942,67 @@
 
         };
 
+        vm.generateCurrencyAttributeTypesByValueTypes = function () {
+
+            vm.attributeTypesByValueTypes = {
+
+                10: [
+
+                ],
+                20: [
+
+                ],
+                40: [
+
+                ]
+
+            };
+
+            vm.attributeTypesByValueTypes[10] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+                return item.value_type === 10;
+            }).map(function (item) {
+
+                return {
+                    name: item.name,
+                    user_code: 'attributes.' + item.user_code
+                }
+
+            }));
+
+            vm.attributeTypesByValueTypes[20] = vm.attributeTypesByValueTypes[20].concat(vm.attributeTypes.filter(function (item) {
+                return item.value_type === 20;
+            }).map(function (item) {
+
+                return {
+                    name: item.name,
+                    user_code: 'attributes.' + item.user_code
+                }
+
+            }));
+
+            vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[40].concat(vm.attributeTypes.filter(function (item) {
+                return item.value_type === 40;
+            }).map(function (item) {
+
+                return {
+                    name: item.name,
+                    user_code: 'attributes.' + item.user_code
+                }
+
+            }));
+
+            console.log('vm.attributeTypesByValueTypes', vm.attributeTypesByValueTypes);
+
+
+        };
+
         vm.getCurrencyPricingSchemes = function () {
 
             currencyPricingSchemeService.getList().then(function (data) {
 
                 vm.currencyPricingSchemes = data.results;
+
+                vm.generateCurrencyAttributeTypesByValueTypes()
 
                 $scope.$apply();
 
@@ -981,15 +1037,38 @@
 
             vm.attributeTypesByValueTypes[10] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
                 return item.value_type === 10;
+            }).map(function (item) {
+
+                return {
+                    name: item.name,
+                    user_code: 'attributes.' + item.user_code
+                }
+
             }));
 
-            vm.attributeTypesByValueTypes[20] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+            vm.attributeTypesByValueTypes[20] = vm.attributeTypesByValueTypes[20].concat(vm.attributeTypes.filter(function (item) {
                 return item.value_type === 20;
+            }).map(function (item) {
+
+                return {
+                    name: item.name,
+                    user_code: 'attributes.' + item.user_code
+                }
+
             }));
 
-            vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+            vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[40].concat(vm.attributeTypes.filter(function (item) {
                 return item.value_type === 40;
+            }).map(function (item) {
+
+                return {
+                    name: item.name,
+                    user_code: 'attributes.' + item.user_code
+                }
+
             }));
+
+            console.log('vm.attributeTypesByValueTypes', vm.attributeTypesByValueTypes);
 
 
         };
