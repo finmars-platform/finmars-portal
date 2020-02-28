@@ -358,6 +358,60 @@
 
             </div>
 
+            <div data-ng-if="vm.item.type == 6">
+
+                <h4>World Trading Data</h4>
+
+
+                <div>
+
+                    <md-input-container>
+                        <label>Pricing Formula</label>
+                        <input type="text" data-ng-model="vm.item.type_settings.expr">
+                    </md-input-container>
+
+                    <expression-editor-button data-item="vm.item.type_settings.expr"
+                                              style="float: right"></expression-editor-button>
+
+                </div>
+
+                <div layout="row" data-ng-if="vm.switchState == 'default_value'">
+
+                    <md-input-container>
+                        <label>Default Value</label>
+                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                    </md-input-container>
+
+                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+
+                </div>
+
+                <div layout="row" data-ng-if="vm.switchState == 'attribute_key'">
+
+                    <md-input-container class="m-t-16">
+                        <label>Options</label>
+                        <md-select data-ng-model="vm.item.type_settings.attribute_key">
+                            <md-option ng-value="item.user_code" data-ng-repeat="item in vm.optionsForPrimaryParameter">
+                                {{item.name}} ({{item.user_code}})
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+
+                </div>
+
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
         </div>
 
         <div data-ng-if="!vm.readyStatus.types">
