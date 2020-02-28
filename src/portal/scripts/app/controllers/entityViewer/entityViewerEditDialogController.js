@@ -1338,7 +1338,7 @@
 
             }));
 
-            vm.attributeTypesByValueTypes[20] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+            vm.attributeTypesByValueTypes[20] = vm.attributeTypesByValueTypes[20].concat(vm.attributeTypes.filter(function (item) {
                 return item.value_type === 20;
             }).map(function (item) {
 
@@ -1349,7 +1349,7 @@
 
             }));
 
-            vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+            vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[40].concat(vm.attributeTypes.filter(function (item) {
                 return item.value_type === 40;
             }).map(function (item) {
 
@@ -1415,7 +1415,7 @@
 
             }));
 
-            vm.attributeTypesByValueTypes[20] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+            vm.attributeTypesByValueTypes[20] = vm.attributeTypesByValueTypes[20].concat(vm.attributeTypes.filter(function (item) {
                 return item.value_type === 20;
             }).map(function (item) {
 
@@ -1426,7 +1426,7 @@
 
             }));
 
-            vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[10].concat(vm.attributeTypes.filter(function (item) {
+            vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[40].concat(vm.attributeTypes.filter(function (item) {
                 return item.value_type === 40;
             }).map(function (item) {
 
