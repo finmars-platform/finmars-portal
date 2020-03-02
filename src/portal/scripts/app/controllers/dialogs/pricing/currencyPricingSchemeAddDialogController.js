@@ -17,10 +17,27 @@
         };
 
         vm.types = [];
+        vm.attributeTypes = [];
+
+        vm.optionsForPrimaryParameter = [];
+        vm.optionsForMultipleParameters = {};
 
         vm.readyStatus = {types: false, attributeTypes: false};
 
         vm.switchState = 'default_value';
+
+        vm.primaryParameterValueTypeUpdate = function () {
+            vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
+        };
+
+        vm.multipleParameterValueTypeUpdate = function () {
+
+            var value_type = vm.item.type_settings.data.parameters[index].value_type;
+
+            vm.optionsForMultipleParameters[index] = vm.getOptionsForAttributeKey(value_type);
+
+        };
+
 
 
         vm.getAttributeTypes = function () {
