@@ -6,6 +6,7 @@
     'use strict';
 
     var uiService = require('../../../services/uiService');
+    var dashboardHelper = require('../../../helpers/dashboard.helper');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
@@ -14,6 +15,9 @@
         vm.newFilter = {};
 
         vm.filterLinks = [];
+
+        vm.componentsForMultiselector = [];
+        var componentsForLinking = dashboardHelper.getComponentsForLinking();
 
         if (item) {
             vm.item = item;
@@ -31,8 +35,11 @@
                         cell: {
                             text_align: 'center'
                         }
-                    }
+                    },
+                    auto_refresh: false,
+                    linked_components: {}
                 },
+
                 user_settings: {}
             }
         }
@@ -111,9 +118,29 @@
 
                 vm.layouts = data.results;
 
+                vm.layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+                vm.showLinkingToFilters();
+
                 $scope.$apply();
 
             })
+
+        };
+
+        vm.showLinkingToFilters = function () {
+
+            for (var i = 0; i < vm.layouts.length; i++) {
+
+                if (vm.layouts[i].id === vm.item.settings.layout) {
+
+                    var layout = vm.layouts[i];
+                    vm.linkingToFilters = dashboardHelper.getLinkingToFilters(layout);
+
+                    break;
+
+                }
+
+            }
 
         };
 
@@ -176,13 +203,27 @@
 
         vm.init = function () {
 
-            console.log('dataService', dataService);
-
-            console.log('attributeDataService', attributeDataService);
-
-
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.dcMatrixElemToDrag');
+            }, 100);
 
             vm.componentsTypes = dataService.getComponents();
+
+            vm.componentsTypes.forEach(function (comp) {
+
+                if (componentsForLinking.indexOf(comp.type) !== -1 &&
+                    comp.id !== vm.item.id) {
+
+                    var compObj = {
+                        id: comp.id,
+                        name: comp.name
+                    };
+
+                    vm.componentsForMultiselector.push(compObj);
+
+                }
+
+            });
 
             console.log('vm', vm);
 

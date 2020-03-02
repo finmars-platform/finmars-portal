@@ -1503,11 +1503,7 @@
             getEntityAttrs();
 
             vm.getItem().then(function () {
-
                 getEntityStatus();
-
-
-
             });
         };
 

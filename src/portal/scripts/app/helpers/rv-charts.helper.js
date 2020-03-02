@@ -123,7 +123,7 @@
 
         } else {
             throw Error("exposure_percent is not set");
-        };
+        }
 
         return result
 
@@ -143,7 +143,7 @@
                 throw Error("market_value is not set");
             }
 
-        };
+        }
 
         if (!isNaN(parseFloat(flatListItem[numberKey]))) {
 
@@ -151,7 +151,7 @@
 
             result = result + parseFloat(flatListItem[numberKey]) * average;
 
-        };
+        }
 
         return result;
 
@@ -171,7 +171,7 @@
                 throw Error("market_value_percent is not set");
             }
 
-        };
+        }
 
         if (!isNaN(parseFloat(flatListItem[numberKey]))) {
 
@@ -179,7 +179,7 @@
 
             result = result + parseFloat(flatListItem[numberKey]) * average;
 
-        };
+        }
 
         return result;
 
@@ -199,7 +199,7 @@
                 throw Error("exposure is not set");
             }
 
-        };
+        }
 
         if (!isNaN(parseFloat(flatListItem[numberKey]))) {
 
@@ -207,7 +207,7 @@
 
             result = result + parseFloat(flatListItem[numberKey]) * average;
 
-        };
+        }
 
         return result;
 
@@ -228,7 +228,7 @@
                 throw Error("exposure_percent is not set");
             }
 
-        };
+        }
 
         if (!isNaN(parseFloat(flatListItem[numberKey]))) {
 
@@ -236,7 +236,7 @@
 
             result = result + parseFloat(flatListItem[numberKey]) * average;
 
-        };
+        }
 
         return result;
 
@@ -264,7 +264,7 @@
             case 9:
                 return weightedAverageExposurePercent(itemList, flatListItem, valueInTotal, numberKey);
 
-        };
+        }
 
     };
 
@@ -273,7 +273,7 @@
         var chartData = [];
 
         var savedFields = {};
-        console.log("d3 service getDataForChartsFromFlatList", calcFormulaId);
+
         /*var totalOfFieldValues = null;
 
         if (calcFormulaId >= 5) { // if it is formula that need total of some field'd values
@@ -285,6 +285,7 @@
             if (item[nameKey]) {
 
                 var nameValue = item[nameKey];
+
                 var numberValue = 0;
 
                 var savedNames = Object.keys(savedFields);
@@ -304,7 +305,7 @@
 
                     chartData[matchingDataIndex].numericValue = calculateFieldValues(itemList, item, numberValue, numberKey, calcFormulaId);
 
-                };
+                }
             }
 
         });

@@ -32,6 +32,9 @@
                 scope.chartDataWithPosNums = [];
                 scope.chartDataWithNegNums = [];
 
+                scope.viewContext = scope.evDataService.getViewContext();
+                scope.dashboardFilterCollapsed = true;
+
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
                 var chartHolderElem = elem[0].querySelector('.report-viewer-chart-holder');
 
@@ -92,6 +95,7 @@
                 var getDataForCharts = function () {
 
                     chartData = [];
+                    scope.chartDataWithNegNums = [];
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
                     var itemList = flatList.filter(function (item) {
@@ -298,7 +302,8 @@
                     var svg = d3.select(chartHolderElem)
                         .append('svg')
                             .attr('width', svgSize + 'px')
-                            .attr('height', svgSize + 'px');
+                            .attr('height', svgSize + 'px')
+                            .attr('class', 'pie-chart-elem');
 
                     // draw doughnut for positive numbers
                     var posChartWrapingG = svg.append('g')
@@ -430,6 +435,12 @@
                     scope.evDataService.setActiveObject({});
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        var chartElem = chartHolderElem.querySelector('.pie-chart-elem');
+
+                        if (chartElem) {
+                            chartHolderElem.removeChild(chartElem);
+                        }
 
                         getDataForCharts();
 

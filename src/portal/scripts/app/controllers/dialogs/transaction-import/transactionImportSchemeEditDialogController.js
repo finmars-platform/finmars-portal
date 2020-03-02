@@ -580,17 +580,6 @@
 
         };
 
-        vm.selectedValuesTooltipName = function (selectedVals) {
-            var tooltipName = null;
-
-            if (selectedVals && selectedVals.length > 0) {
-                tooltipName = "Values selected: " + selectedVals.join(', ');
-            }
-
-            return tooltipName;
-
-        };
-
         vm.init = function () {
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
