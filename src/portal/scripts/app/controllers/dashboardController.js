@@ -193,6 +193,8 @@
 
             var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
+            var restrictions = vm.dashboardDataService.getAllComponentsRefreshRestriction();
+
             if (!Object.keys(statusesObject).length) {
                 vm.processing = false;
             } else {
@@ -338,6 +340,8 @@
 
             vm.openDashboardLayout();
             vm.initEventListeners();
+
+
 
 
         };

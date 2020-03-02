@@ -55,7 +55,7 @@
 
                         } else {
 
-                            if (entityType === 'transaction-type') {
+                            if (entityType === 'transaction-type' || entityType === 'complex-transaction') {
 
                                 editorTemplateUrl = 'views/entity-viewer/complex-transaction-edit-split-panel-view.html';
                                 tpl = $templateCache.get(editorTemplateUrl);
@@ -77,7 +77,7 @@
 
                             } else {
 
-                                editorTemplateUrl = 'views/entity-viewer/entity-viewer-edit-split-panel-view.html'
+                                editorTemplateUrl = 'views/entity-viewer/entity-viewer-edit-split-panel-view.html';
                                 tpl = $templateCache.get(editorTemplateUrl);
 
                                 templateScope = scope.$new();

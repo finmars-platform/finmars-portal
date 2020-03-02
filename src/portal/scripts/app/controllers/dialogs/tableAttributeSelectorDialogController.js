@@ -151,6 +151,10 @@
         };
 
         var init = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.tableAttrsSelectorElemToResize');
+            }, 100);
+
             divideTableAttrsInGroups();
 
             vm.activeGroup = JSON.parse(JSON.stringify(tableAttrsTree));

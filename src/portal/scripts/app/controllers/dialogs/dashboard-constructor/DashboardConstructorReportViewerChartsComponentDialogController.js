@@ -3,6 +3,7 @@
     'use strict';
 
     var uiService = require('../../../services/uiService');
+    var dashboardHelper = require('../../../helpers/dashboard.helper');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
@@ -17,6 +18,9 @@
 
         vm.multiselectModalName = 'Fields multiselector';
 
+        vm.componentsForMultiselector = [];
+        var componentsForLinking = dashboardHelper.getComponentsForLinking();
+
         if (item) {
             vm.item = item;
         } else {
@@ -24,7 +28,9 @@
                 type: null,
                 id: null, // should be generated before create
                 name: '',
-                settings: {},
+                settings: {
+                    auto_refresh: false,
+                },
                 user_settings: {}
             }
         }
@@ -165,9 +171,29 @@
 
                 vm.layouts = data.results;
 
+                vm.layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+                vm.showLinkingToFilters();
+
                 $scope.$apply();
 
             })
+
+        };
+
+        vm.showLinkingToFilters = function () {
+
+            for (var i = 0; i < vm.layouts.length; i++) {
+
+                if (vm.layouts[i].id === vm.item.settings.layout) {
+
+                    var layout = vm.layouts[i];
+                    vm.linkingToFilters = dashboardHelper.getLinkingToFilters(layout);
+
+                    break;
+
+                }
+
+            }
 
         };
 
@@ -228,6 +254,10 @@
 
         vm.init = function () {
 
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.dcChartsElemToDrag');
+            }, 100);
+
             if (vm.item.settings.bars_direction === 'bottom-top') {
                 vm.barsNamesAttrSelectorTitle = 'Bars Names (Abscissa)';
                 vm.barsNumbersAttrSelectorTitle = 'Bars Numbers (Ordinate)';
@@ -237,6 +267,22 @@
             }
 
             vm.componentsTypes = dataService.getComponents();
+
+            vm.componentsTypes.forEach(function (comp) {
+
+                if (componentsForLinking.indexOf(comp.type) !== -1 &&
+                    comp.id !== vm.item.id) {
+
+                    var compObj = {
+                        id: comp.id,
+                        name: comp.name
+                    };
+
+                    vm.componentsForMultiselector.push(compObj);
+
+                }
+
+            });
 
             if (vm.item.id) {
                 vm.getLayouts();

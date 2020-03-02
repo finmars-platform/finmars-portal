@@ -98,7 +98,7 @@
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
 
                 var isUseFromAboveActive = function () {
-                    if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length > 0) {
+                    if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length) {
                         return true;
                     }
 
@@ -156,9 +156,9 @@
                                 filterRegime = "Date tree";
                                 break;
 
-                        };
+                        }
 
-                    };
+                    }
 
                     return filterRegime;
 

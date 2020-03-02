@@ -62,7 +62,7 @@
         }
 
         vm.getAttributes = function () {
-            console.log("link to selection value_type", vm.data, vm.data.value_type);
+
             switch (vm.data.value_type) {
                 case 10:
                 case 30:
