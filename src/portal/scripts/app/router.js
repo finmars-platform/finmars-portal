@@ -261,6 +261,23 @@
                 }
             })
 
+            .state('app.data.currency-history-error', {
+                url: '/currencies-errors',
+                templateUrl: 'views/data/data-currency-history-error-view.html',
+                controller: 'DataCurrencyHistoryErrorController as vm',
+                params: {
+                    layoutName: null
+                }
+            })
+            .state('app.data.price-history-error', {
+                url: '/pricing-errors',
+                templateUrl: 'views/data/data-price-history-error-view.html',
+                controller: 'DataPriceHistoryErrorController as vm',
+                params: {
+                    layoutName: null
+                }
+            })
+
             .state('app.reports', {
                 url: '/reports',
                 abstract: true,

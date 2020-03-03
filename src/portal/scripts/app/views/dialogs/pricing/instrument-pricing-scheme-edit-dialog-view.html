@@ -128,57 +128,102 @@
                     </md-select>
                 </md-input-container>
 
-                <md-tab>
-                    <md-tab-lable>
-                        <span class="grey-tab">Accruals</span>
-                    </md-tab-lable>
-                    <md-tab-body>
+                <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
-                        <div class="m-t-24">
+                    <md-tab>
+                        <md-tab-label>
+                            <span class="grey-tab">Prices</span>
+                        </md-tab-label>
+                        <md-tab-body>
 
-                            <div>
 
-                                <md-input-container class="m-t-16">
-                                    <label>Method</label>
-                                    <md-select data-ng-model="vm.item.type_settings.accrual_calculation_method"
-                                               data-ng-change="vm.item.type_settings.accrual_expr = null">
-                                        <md-option ng-value="2">As per Accrual Schedule</md-option>
-                                        <md-option ng-value="3">As per Formula</md-option>
-                                        <md-option ng-value="1">Not applicable</md-option>
-                                    </md-select>
-                                </md-input-container>
+                            <div class="m-t-24">
 
-                            </div>
+                                <div>
 
-                            <div data-ng-if="vm.item.type_settings.accrual_calculation_method == 3">
+                                    <md-input-container>
+                                        <label>Pricing Formula</label>
+                                        <input type="text" data-ng-model="vm.item.type_settings.expr">
+                                    </md-input-container>
 
-                                <md-input-container>
-                                    <label>Accrual Formula</label>
-                                    <input type="text" data-ng-model="vm.item.type_settings.accrual_expr">
-                                </md-input-container>
+                                    <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                              style="float: right"></expression-editor-button>
 
-                                <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
-                                                          style="float: right"></expression-editor-button>
+                                </div>
 
-                            </div>
+                                <div>
 
-                            <div>
+                                    <md-input-container>
+                                        <label>If Error. Pricing Error Text</label>
+                                        <input type="text"
+                                               data-ng-model="vm.item.type_settings.pricing_error_text_expr">
+                                    </md-input-container>
 
-                                <md-input-container>
-                                    <label>If Error. Accrual Error Text</label>
-                                    <input type="text"
-                                           data-ng-model="vm.item.type_settings.accrual_error_text_expr">
-                                </md-input-container>
+                                    <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              style="float: right"></expression-editor-button>
 
-                                <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
-                                                          style="float: right"></expression-editor-button>
+                                </div>
 
                             </div>
 
-                        </div>
 
-                    </md-tab-body>
-                </md-tab>
+                        </md-tab-body>
+                    </md-tab>
+
+                    <md-tab>
+                        <md-tab-label>
+                            <span class="grey-tab">Accruals</span>
+                        </md-tab-label>
+                        <md-tab-body>
+
+                            <div class="m-t-24">
+
+                                <div>
+
+                                    <md-input-container class="m-t-16">
+                                        <label>Method</label>
+                                        <md-select data-ng-model="vm.item.type_settings.accrual_calculation_method"
+                                                   data-ng-change="vm.item.type_settings.accrual_expr = null">
+                                            <md-option ng-value="2">As per Accrual Schedule</md-option>
+                                            <md-option ng-value="3">As per Formula</md-option>
+                                            <md-option ng-value="1">Not applicable</md-option>
+                                        </md-select>
+                                    </md-input-container>
+
+                                </div>
+
+                                <div data-ng-if="vm.item.type_settings.accrual_calculation_method == 3">
+
+                                    <md-input-container>
+                                        <label>Accrual Formula</label>
+                                        <input type="text" data-ng-model="vm.item.type_settings.accrual_expr">
+                                    </md-input-container>
+
+                                    <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              style="float: right"></expression-editor-button>
+
+                                </div>
+
+                                <div>
+
+                                    <md-input-container>
+                                        <label>If Error. Accrual Error Text</label>
+                                        <input type="text"
+                                               data-ng-model="vm.item.type_settings.accrual_error_text_expr">
+                                    </md-input-container>
+
+                                    <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              style="float: right"></expression-editor-button>
+
+                                </div>
+
+                            </div>
+
+                        </md-tab-body>
+                    </md-tab>
+
+
+                </md-tabs>
 
             </div>
 
@@ -292,57 +337,102 @@
                     <md-button class="md-raised" data-ng-click="vm.addParameter($event)">Add Parameter</md-button>
                 </div>
 
-                <md-tab>
-                    <md-tab-lable>
-                        <span class="grey-tab">Accruals</span>
-                    </md-tab-lable>
-                    <md-tab-body>
+                <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
-                        <div class="m-t-24">
+                    <md-tab>
+                        <md-tab-label>
+                            <span class="grey-tab">Prices</span>
+                        </md-tab-label>
+                        <md-tab-body>
 
-                            <div>
 
-                                <md-input-container class="m-t-16">
-                                    <label>Method</label>
-                                    <md-select data-ng-model="vm.item.type_settings.accrual_calculation_method"
-                                               data-ng-change="vm.item.type_settings.accrual_expr = null">
-                                        <md-option ng-value="2">As per Accrual Schedule</md-option>
-                                        <md-option ng-value="3">As per Formula</md-option>
-                                        <md-option ng-value="1">Not applicable</md-option>
-                                    </md-select>
-                                </md-input-container>
+                            <div class="m-t-24">
 
-                            </div>
+                                <div>
 
-                            <div data-ng-if="vm.item.type_settings.accrual_calculation_method == 3">
+                                    <md-input-container>
+                                        <label>Pricing Formula</label>
+                                        <input type="text" data-ng-model="vm.item.type_settings.expr">
+                                    </md-input-container>
 
-                                <md-input-container>
-                                    <label>Accrual Formula</label>
-                                    <input type="text" data-ng-model="vm.item.type_settings.accrual_expr">
-                                </md-input-container>
+                                    <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                              style="float: right"></expression-editor-button>
 
-                                <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
-                                                          style="float: right"></expression-editor-button>
+                                </div>
 
-                            </div>
+                                <div>
 
-                            <div>
+                                    <md-input-container>
+                                        <label>If Error. Pricing Error Text</label>
+                                        <input type="text"
+                                               data-ng-model="vm.item.type_settings.pricing_error_text_expr">
+                                    </md-input-container>
 
-                                <md-input-container>
-                                    <label>If Error. Accrual Error Text</label>
-                                    <input type="text"
-                                           data-ng-model="vm.item.type_settings.accrual_error_text_expr">
-                                </md-input-container>
+                                    <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              style="float: right"></expression-editor-button>
 
-                                <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
-                                                          style="float: right"></expression-editor-button>
+                                </div>
 
                             </div>
 
-                        </div>
 
-                    </md-tab-body>
-                </md-tab>
+                        </md-tab-body>
+                    </md-tab>
+
+                    <md-tab>
+                        <md-tab-label>
+                            <span class="grey-tab">Accruals</span>
+                        </md-tab-label>
+                        <md-tab-body>
+
+                            <div class="m-t-24">
+
+                                <div>
+
+                                    <md-input-container class="m-t-16">
+                                        <label>Method</label>
+                                        <md-select data-ng-model="vm.item.type_settings.accrual_calculation_method"
+                                                   data-ng-change="vm.item.type_settings.accrual_expr = null">
+                                            <md-option ng-value="2">As per Accrual Schedule</md-option>
+                                            <md-option ng-value="3">As per Formula</md-option>
+                                            <md-option ng-value="1">Not applicable</md-option>
+                                        </md-select>
+                                    </md-input-container>
+
+                                </div>
+
+                                <div data-ng-if="vm.item.type_settings.accrual_calculation_method == 3">
+
+                                    <md-input-container>
+                                        <label>Accrual Formula</label>
+                                        <input type="text" data-ng-model="vm.item.type_settings.accrual_expr">
+                                    </md-input-container>
+
+                                    <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              style="float: right"></expression-editor-button>
+
+                                </div>
+
+                                <div>
+
+                                    <md-input-container>
+                                        <label>If Error. Accrual Error Text</label>
+                                        <input type="text"
+                                               data-ng-model="vm.item.type_settings.accrual_error_text_expr">
+                                    </md-input-container>
+
+                                    <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              style="float: right"></expression-editor-button>
+
+                                </div>
+
+                            </div>
+
+                        </md-tab-body>
+                    </md-tab>
+
+
+                </md-tabs>
 
 
             </div>
@@ -443,9 +533,9 @@
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
                     <md-tab>
-                        <md-tab-lable>
+                        <md-tab-label>
                             <span class="grey-tab">Prices</span>
-                        </md-tab-lable>
+                        </md-tab-label>
                         <md-tab-body>
 
 
@@ -483,9 +573,9 @@
                     </md-tab>
 
                     <md-tab>
-                        <md-tab-lable>
+                        <md-tab-label>
                             <span class="grey-tab">Accruals</span>
-                        </md-tab-lable>
+                        </md-tab-label>
                         <md-tab-body>
 
                             <div class="m-t-24">
