@@ -422,11 +422,12 @@
 
             switch (item.type) {
                 case 'report_viewer':
+                case 'report_viewer_split_panel':
                     verboseName = 'Report Viewer';
                     break;
-                case 'report_viewer_split_panel':
+                /*case 'report_viewer_split_panel':
                     verboseName = 'Report Viewer Split Panel';
-                    break;
+                    break;*/
                 case 'report_viewer_grand_total':
                     verboseName = 'Report Viewer Grand Total';
                     break;
@@ -1144,9 +1145,13 @@
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html'
             },
             report_viewer_split_panel: {
+                editorController: 'DashboardConstructorReportViewerComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html'
+            },
+            /*report_viewer_split_panel: {
                 editorController: 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html'
-            },
+            },*/
             report_viewer_grand_total: {
                 editorController: 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html'
