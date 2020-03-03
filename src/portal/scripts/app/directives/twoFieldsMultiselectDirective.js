@@ -57,9 +57,44 @@
 
                 var arrayLikeInputText = function () {
 
-                    if (scope.model && scope.model.length > 0) {
+                    var propName = scope.nameProperty || 'name';
 
-                        scope.inputText = '[' + scope.model.join(', ') + ']';
+                    if (scope.model && scope.model.length) {
+
+                        if (scope.items && scope.items.length) {
+
+                            scope.inputText = '[';
+                            scope.tooltipText = 'Values selected:';
+
+                            scope.model.forEach(function (sItemId, index) {
+
+                                for (var i = 0; i < scope.items.length; i++) {
+
+                                    if (scope.items[i].id === sItemId) {
+
+                                        if (index > 0) { // add comma between selected items
+                                            scope.inputText = scope.inputText + ',';
+                                            scope.tooltipText = scope.tooltipText + ',';
+                                        }
+
+                                        scope.inputText = scope.inputText + ' ' + scope.items[i][propName];
+                                        scope.tooltipText = scope.tooltipText + ' ' + scope.items[i][propName];
+
+                                        break;
+
+                                    }
+
+                                }
+
+                            });
+
+                            scope.inputText = scope.inputText + ' ]';
+
+                        } else { // in case of error
+                            scope.inputText = scope.model.length + ' items selected';
+                        }
+
+                        //scope.inputText = '[' + scope.model.join(', ') + ']';
 
                     } else if (scope.nothingSelectedText) {
 

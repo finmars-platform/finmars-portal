@@ -267,17 +267,6 @@
                             }
                             // < leave only key = scope.filter.options.use_from_above.key >
 
-                            /*scope.noDataForLinkingTo = true;
-                            var columns = scope.evDataService.getColumns();
-                            var key = scope.filter.options.use_from_above;
-
-                            for (var c = 0; c < columns.length; c++) {
-                                if (columns[c].key === key) {
-                                    scope.noDataForLinkingTo = false;
-                                    break;
-                                };
-                            };*/
-
                             if (isUseFromAboveActive() && !scope.noDataForLinkingTo) {
 
                                 var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();

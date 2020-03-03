@@ -5,7 +5,6 @@
     module.exports = function ($mdDialog) {
         return {
             restriction: 'E',
-            templateUrl: 'views/directives/table-attributes-menu-constructor-view.html',
             scope: {
                 title: '@',
                 dialogTitle: '@',
@@ -15,6 +14,7 @@
                 nothingSelectedText: '@',
                 onChangeCallback: '&?'
             },
+            templateUrl: 'views/directives/dialog-selector-input-with-tooltip-view.html',
             link: function (scope, elem, attr) {
 
                 var setInputAndTooltipText = function () {

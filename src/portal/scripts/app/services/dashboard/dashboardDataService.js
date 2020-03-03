@@ -10,7 +10,8 @@
         };
 
         var tmpData = { // data that stored only in active session
-            componentsStatuses: {}
+            componentsStatuses: {},
+            componentsRefreshRestriction: {}
         };
 
         function setData(data) {
@@ -65,6 +66,24 @@
             return tmpData.componentsStatuses[componentId]
         }
 
+        function setComponentRefreshRestriction (componentId, restrictionStatus) {
+            tmpData.componentsRefreshRestriction[componentId] = restrictionStatus;
+        }
+
+        /*function getComponentRefreshRestriction (componentId) {
+            return tmpData.componentsRefreshRestriction[componentId];
+        }
+
+        function setAllComponentsRefreshRestriction (restrictionStatus) {
+            Object.keys(tmpData.componentsRefreshRestriction).forEach(function (componentId) {
+                tmpData.componentsRefreshRestriction[componentId] = restrictionStatus;
+            });
+        }*/
+
+        function getAllComponentsRefreshRestriction () {
+            return tmpData.componentsRefreshRestriction;
+        }
+
         function getComponentStatusesAll() {
             return tmpData.componentsStatuses
         }
@@ -114,6 +133,10 @@
             getComponentOutput: getComponentOutput,
             setComponentStatus: setComponentStatus,
             getComponentStatus: getComponentStatus,
+            setComponentRefreshRestriction: setComponentRefreshRestriction,
+            /*getComponentRefreshRestriction: getComponentRefreshRestriction,
+            setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction,*/
+            getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
             getComponents: getComponents,
             updateComponent: updateComponent,
             getComponentById: getComponentById,

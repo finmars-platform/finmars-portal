@@ -176,6 +176,8 @@
 
                     if (!scope.fillInModeData) {
 
+                        scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
+
                         scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 

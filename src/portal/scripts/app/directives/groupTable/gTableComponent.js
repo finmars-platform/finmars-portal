@@ -12,7 +12,7 @@
     module.exports = function () {
         return {
             restrict: 'AE',
-            templateUrl: 'views/directives/groupTable/group-table-shell-view.html',
+            templateUrl: 'views/directives/groupTable/g-table-component-view.html',
             scope: {
                 attributeDataService: '=',
                 evDataService: '=',

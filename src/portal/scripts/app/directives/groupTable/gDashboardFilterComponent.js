@@ -21,7 +21,8 @@
             restrict: 'AE',
             scope: {
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                attributeDataService: '='
             },
             templateUrl: 'views/directives/groupTable/dashboard-filter-view.html',
             link: function (scope, elem, attrs) {

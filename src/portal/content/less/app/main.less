@@ -1423,6 +1423,11 @@ md-toolbar.header {
   }
 }
 
+md-dialog { // needed to prevent resize of dialog into too small one
+  min-width: 200px;
+  min-height: 200px;
+}
+
 md-dialog.draggable-dialog {
   position: absolute;
   transition: initial;

@@ -6,14 +6,17 @@
     'use strict';
 
     var uiService = require('../../../services/uiService');
+    var dashboardHelper = require('../../../helpers/dashboard.helper');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
         var vm = this;
 
         vm.newFilter = {};
-
         vm.filterLinks = [];
+
+        vm.componentsForMultiselector = [];
+        var componentsForLinking = dashboardHelper.getComponentsForLinking();
 
         if (item) {
             vm.item = item;
@@ -35,12 +38,13 @@
                         sidebar: false,
                         splitPanel: false
                     },
+                    auto_refresh: false,
                     linked_components: {
                         report_settings: {},
                         filter_links: []
-                    },
-                    user_settings: {}
-                }
+                    }
+                },
+                user_settings: {}
             }
 
         }
@@ -111,9 +115,29 @@
 
                 vm.layouts = data.results;
 
+                vm.layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+                vm.showLinkingToFilters();
+
                 $scope.$apply();
 
             })
+
+        };
+
+        vm.showLinkingToFilters = function () {
+
+            for (var i = 0; i < vm.layouts.length; i++) {
+
+                if (vm.layouts[i].id === vm.item.settings.layout) {
+
+                    var layout = vm.layouts[i];
+                    vm.linkingToFilters = dashboardHelper.getLinkingToFilters(layout);
+
+                    break;
+
+                }
+
+            }
 
         };
 
@@ -179,6 +203,13 @@
         };
 
         vm.init = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.dcReportViewerElemToDrag');
+            }, 100);
+
+            if (vm.item.type === 'report_viewer_split_panel') {
+                vm.item.type = 'report_viewer';
+            }
 
             vm.componentsTypes = dataService.getComponents();
 
@@ -200,6 +231,17 @@
                 return componentType.type === 'control' &&
                        componentType.settings.value_type === 100 &&
                        componentType.settings.content_type === 'instruments.pricingpolicy'
+            });
+
+            vm.componentsTypes.forEach(function (comp) {
+                if (componentsForLinking.indexOf(comp.type) !== -1 &&
+                    comp.id !== vm.item.id) {
+                    vm.componentsForMultiselector.push(
+                        {
+                            id: comp.id,
+                            name: comp.name
+                        });
+                }
             });
 
             console.log('vm', vm);

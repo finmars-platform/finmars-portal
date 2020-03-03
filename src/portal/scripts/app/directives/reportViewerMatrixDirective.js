@@ -4,6 +4,7 @@
 
     var rvDataHelper = require('../helpers/rv-data.helper');
     var renderHelper = require('../helpers/render.helper');
+
     var reportViewerMatrixHelper = require('../helpers/report-viewer-matrix.helper');
 
     var evEvents = require('../services/entityViewerEvents');
@@ -24,6 +25,9 @@
                 // console.log('Report Viewer Matrix Component', scope);
 
                 scope.processing = true;
+
+                scope.viewContext = scope.evDataService.getViewContext();
+                scope.dashboardFilterCollapsed = true;
 
                 var cellWidth = 0;
 
@@ -403,7 +407,6 @@
                         scope.alignGrid();
 
                         scrollHeaderAndColumn();
-
 
                     });
 
