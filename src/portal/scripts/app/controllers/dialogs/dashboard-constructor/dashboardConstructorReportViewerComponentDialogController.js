@@ -207,6 +207,10 @@
                 vm.dialogElemToResize = document.querySelector('.dcReportViewerElemToDrag');
             }, 100);
 
+            if (vm.item.type === 'report_viewer_split_panel') {
+                vm.item.type = 'report_viewer';
+            }
+
             vm.componentsTypes = dataService.getComponents();
 
             vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
