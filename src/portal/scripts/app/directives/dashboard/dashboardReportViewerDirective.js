@@ -35,6 +35,10 @@
                 if (scope.item && scope.item.data) {
                     componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
+                    if (componentData.type === 'report_viewer_split_panel') {
+                        componentData.type = 'report_viewer';
+                    }
+
                     if (componentData.custom_component_name) {
                         scope.customName = componentData.custom_component_name;
                     }
@@ -64,14 +68,14 @@
                     var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
 
                     scope.fillInModeData = {
-                        tab_number: scope.tabNumber,
-                        row_number: scope.rowNumber,
-                        column_number: scope.columnNumber,
+                        tab_number: scope.vm.tabNumber,
+                        row_number: scope.vm.rowNumber,
+                        column_number: scope.vm.columnNumber,
                         item: scope.item,
                         entityViewerDataService: entityViewerDataService,
                         attributeDataService: attributeDataService,
                         dashboardComponentEventService: scope.dashboardComponentEventService // needed to update component inside tabs
-                    }
+                    };
 
                 };
 
@@ -102,37 +106,6 @@
 
                     }
 
-                    /*scope.vm.dashboardComponentEventService.addEventListener(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED, function () {
-                        attributesDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
-                    });*/
-
-                    /*scope.vm.dashboardComponentEventService.addEventListener(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED, function () {
-
-                        var attributes = attributesDataService.getAllAttributesByEntityType(scope.vm.entityType);
-                        viewerTableCols = scope.vm.dashboardComponentDataService.getViewerTableColumns();
-
-                        if (columnsToManage && columnsToManage.length > 0) {
-
-                            scope.availableForAdditionCols = attributes.filter(function (attr) {
-
-                                if (columnsToManage.indexOf(attr.key) !== -1) {
-
-                                    for (var i = 0; i < viewerTableCols.length; i++) {
-                                        if (viewerTableCols[i].key === attr.key) {
-                                            return false;
-                                        }
-                                    }
-
-                                    return true;
-                                }
-
-                                return false;
-
-                            });
-
-                        }
-
-                    });*/
                 };
 
                 scope.init = function () {
@@ -140,6 +113,8 @@
                     scope.initEventListeners();
 
                     if (!scope.fillInModeData) {
+
+                        scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
 
                         scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);

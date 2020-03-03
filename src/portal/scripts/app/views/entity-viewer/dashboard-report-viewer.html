@@ -2,7 +2,8 @@
     <div class="height-100">
         <div data-ng-if="vm.readyStatus.attributes && vm.readyStatus.layout" class="g-group-table-holder height-100">
 
-            <div data-ng-if="vm.componentData.type === 'report_viewer'" class="height-100">
+            <div data-ng-if="vm.componentData.type === 'report_viewer' || vm.componentData.type === 'report_viewer_split_panel'"
+                 class="height-100">
                 <group-table class="height-100 display-block"
                              attribute-data-service="vm.attributeDataService"
                              ev-data-service="vm.entityViewerDataService"
@@ -11,14 +12,14 @@
                 ></group-table>
             </div>
 
-            <div data-ng-if="vm.componentData.type === 'report_viewer_split_panel'" class="height-100">
+            <!--<div data-ng-if="vm.componentData.type === 'report_viewer_split_panel'" class="height-100">
                 <group-table class="height-100 display-block"
                              attribute-data-service="vm.attributeDataService"
                              ev-data-service="vm.entityViewerDataService"
                              ev-event-service="vm.entityViewerEventService"
                              sp-exchange-service="vm.splitPanelExchangeService"
                 ></group-table>
-            </div>
+            </div>-->
 
             <div data-ng-if="vm.componentData.type === 'report_viewer_grand_total'" class="height-100">
 

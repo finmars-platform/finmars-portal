@@ -6,6 +6,7 @@
     'use strict';
 
     var uiService = require('../../../services/uiService');
+    var dashboardHelper = require('../../../helpers/dashboard.helper');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
@@ -18,6 +19,7 @@
                 type: 'report_viewer_split_panel',
                 id: null, // should be generated before create
                 name: '',
+                custom_component_name: '',
                 settings: {
                     components: {
                         addEntityBtn: false,
@@ -29,9 +31,10 @@
                         sidebar: false,
                         splitPanel: false
                     },
+                    auto_refresh: false,
                     linked_components: {},
-                    user_settings: {}
-                }
+                },
+                user_settings: {}
             }
         }
 
@@ -55,11 +58,30 @@
 
         };
 
+        vm.showLinkingToFilters = function () {
+
+            for (var i = 0; i < vm.layouts.length; i++) {
+
+                if (vm.layouts[i].id === vm.item.settings.layout) {
+                    var layout = vm.layouts[i];
+                    vm.linkingToFilters = dashboardHelper.getLinkingToFilters(layout);
+
+                    break;
+                }
+
+            }
+
+        };
+
         vm.getLayouts = function () {
 
-            uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
+            return uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
 
                 vm.layouts = data.results;
+
+                vm.layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+
+                vm.showLinkingToFilters();
 
                 $scope.$apply();
 
@@ -71,13 +93,22 @@
 
             var layoutName;
 
-            vm.layouts.forEach(function (layout) {
+            /*vm.layouts.forEach(function (layout) {
 
                 if(layout.id === vm.item.settings.layout) {
                     layoutName = layout.name
                 }
 
-            });
+            });*/
+
+            for (var i = 0; i < vm.layouts.length; i++) {
+
+                if (vm.layouts[i].id === vm.item.settings.layout) {
+                    layoutName = vm.layouts[i].name;
+                    break;
+                }
+
+            }
 
             vm.item.settings.layout_name = layoutName;
             vm.item.settings.content_type = vm.getContentTypeByEntityType();
@@ -132,23 +163,39 @@
 
         };
 
-        var componentsForLinking = ['report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'];
+        var componentsForLinking = dashboardHelper.getComponentsForLinking();
 
         vm.init = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.dcRvSplitPanelElemToDrag');
+            }, 100);
 
             console.log('dataService', dataService);
 
             vm.componentsTypes = dataService.getComponents();
 
-            vm.reportViewerComponentTypes = vm.componentsTypes.filter(function (componentType) {
+            vm.componentsForMultiselector = [];
+            /*vm.reportViewerComponentTypes = vm.componentsTypes.filter(function (componentType) {
                 return componentsForLinking.indexOf(componentType.type) !== -1;
+            });*/
+            vm.componentsTypes.forEach(function (comp) {
+                if (componentsForLinking.indexOf(comp.type) !== -1 &&
+                    comp.id !== vm.item.id) {
+                    vm.componentsForMultiselector.push(
+                        {
+                            id: comp.id,
+                            name: comp.name
+                        });
+                }
             });
 
             console.log('vm', vm);
 
             if (vm.item.id) {
+
                 vm.getLayouts();
                 vm.getAttributes();
+
             }
 
         };

@@ -150,10 +150,10 @@
                                 if (filter.options.hasOwnProperty('use_from_above')) {
                                     item.hasUseFromAboveFilter = true;
                                     break;
-                                };
+                                }
 
-                            };
-                        };
+                            }
+                        }
 
                         for (c = 0; c < vm.groups.length; c++) {
                             if (item.content_type === vm.groups[c].key) {
@@ -162,17 +162,7 @@
                             }
                         }
                     }
-                    /*vm.items.forEach(function (item) {
 
-                        var i;
-                        for (i = 0; i < vm.groups.length; i++) {
-                            if (item.content_type === vm.groups[i].key) {
-                                vm.groups[i].content.push(item);
-                                break;
-                            }
-                        }
-
-                    });*/
                     vm.readyStatus.content = true;
                     $scope.$apply();
                     setAttributeManagerContainersHeight();

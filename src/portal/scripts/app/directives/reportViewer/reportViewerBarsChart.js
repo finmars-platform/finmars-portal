@@ -25,6 +25,9 @@
 
                 scope.showBarTooltip = false;
 
+                scope.viewContext = scope.evDataService.getViewContext();
+                scope.dashboardFilterCollapsed = true;
+
                 var mainElem = elem[0].querySelector('.report-viewer-charts');
                 var chartHolderElem = elem[0].querySelector('.report-viewer-chart-holder');
 
@@ -108,6 +111,7 @@
                     var itemList = flatList.filter(function (item) {
                         return item.___type === 'object';
                     });
+
 
                     chartData = rvChartsHelper.getDataForChartsFromFlatList(itemList, nameKey, numberKey, fieldValueCalcFormulaId);
 
@@ -466,7 +470,8 @@
                         .append("svg")
                             .attr("width", componentWidth + "px")
                             .attr("height", componentHeight + "px")
-                            .attr("viewBox", [0, 0, componentWidth, componentHeight]);
+                            .attr("viewBox", [0, 0, componentWidth, componentHeight])
+                            .attr("class", "bars-chart-elem");
 
                     svg.append("g")
                         .attr("fill", "steelblue")
@@ -655,7 +660,8 @@
                         .append("svg")
                         .attr("width", componentWidth + "px")
                         .attr("height", componentHeight + "px")
-                        .attr("viewBox", [0, 0, componentWidth, componentHeight]);
+                        .attr("viewBox", [0, 0, componentWidth, componentHeight])
+                        .attr("class", "bars-chart-elem");
 
                     svg.append("g")
                         .attr("fill", "steelblue")
@@ -721,8 +727,15 @@
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
+                        var chartElem = chartHolderElem.querySelector('.bars-chart-elem');
+
+                        if (chartElem) {
+                            chartHolderElem.removeChild(chartElem);
+                        }
+
                         getDataForChart();
                         sortChartData();
+
                         if (scope.rvChartsSettings.bars_direction === 'bottom-top') {
                             drawChartWithVerticalCols();
                         } else {

@@ -10,7 +10,8 @@
             restrict: 'E',
             scope: {
                 elemToResize: '=',
-                onResizeCallback: '&?'
+                onResizeCallback: '&?',
+                onResizeEndCallback: '&?'
             },
             templateUrl: 'views/directives/dialog-window-resizer-view.html',
             link: function (scope, elem, attrs) {
@@ -35,6 +36,10 @@
                 };
 
                 var endDialogWindowResize = function () {
+                    if (scope.onResizeEndCallback) {
+                        scope.onResizeEndCallback();
+                    }
+
                     window.removeEventListener('mousemove', resizeDialogWindow);
                 };
 

@@ -1,5 +1,5 @@
 <md-dialog aria-label="dashboard matrix constructor dialog"
-           class="draggable-dialog width-50"
+           class="draggable-dialog width-50 dialog-actions-bottom dcMatrixElemToDrag"
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -41,7 +41,7 @@
                         </div>
                         <div class="m-t-16 m-b-16">
 
-                            <md-input-container class="dashboard-constructor-field1">
+                            <!--<md-input-container class="dashboard-constructor-field1">
                                 <label for="">Layout</label>
                                 <md-select ng-model="vm.item.settings.layout"
                                            md-container-class="common-select-container"
@@ -68,20 +68,15 @@
                                         </div>
                                     </div>
                                 </md-select>
-                            </md-input-container>
-
-                            <!--<md-input-container style="width: 200px;">
-                                <label for="">Layout</label>
-                                <md-select data-ng-model="vm.item.settings.layout"
-                                           ng-class="{'disabled-btn': !vm.item.settings.entity_type}"
-                                           md-on-open="vm.getLayouts()">
-                                    <md-option
-                                            data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "
-                                            ng-value="layout.id">
-                                        {{layout.name}}
-                                    </md-option>
-                                </md-select>
                             </md-input-container>-->
+                            <expandable-items-selector data-model="vm.item.settings.layout"
+                                                       data-title="Layout"
+                                                       data-dialog-title="Choose layout"
+                                                       data-items="vm.layoutsWithLinkToFilters"
+                                                       data-is-disabled="!vm.item.settings.entity_type"
+                                                       data-on-change-callback="vm.showLinkingToFilters()"
+                                                       class="dashboard-constructor-selector-directive"></expandable-items-selector>
+
 
                         </div>
 
@@ -195,12 +190,12 @@
                         <!--<input type="text" data-ng-model="vm.item.settings.value_key">-->
                         <!--</md-input-container>-->
 
-                        <md-input-container style="height: 58px">
+                        <!--<md-input-container style="height: 58px">
 
                             <md-checkbox data-ng-model="vm.item.settings.auto_refresh"
                                          aria-label="member permission">Trigger Refresh on Value Change</md-checkbox>
 
-                        </md-input-container>
+                        </md-input-container>-->
 
                     </div>
 
@@ -238,6 +233,48 @@
 
                 </md-content>
             </md-tab>
+
+            <md-tab label="LINKING">
+                <md-content class="p-16">
+                    <div data-ng-if="vm.linkingToFilters && vm.linkingToFilters.length">
+                        <h4 class="m-t-0 m-b-16">Link to Selection filters of layout</h4>
+                        <div class="dashboard-constructor-linked-filters-container">
+                            <ui>
+                                <li data-ng-repeat="lFilter in vm.linkingToFilters">
+                                    <span data-ng-bind="lFilter.name"></span>
+                                </li>
+                            </ui>
+                        </div>
+                        <!--<div class="dashboard-constructor-linked-filters-ui">
+                            <div data-ng-repeat="lFilter in vm.linkingToFilters"
+                                data-ng-bind="lFilter.name"
+                                class="m-b-8 test-class"></div>
+                        </div>-->
+                    </div>
+
+                    <div layout="row">
+                        <div flex="50">
+                            <two-fields-multiselect ng-model="vm.item.settings.linked_components.active_object"
+                                                    title="Select Link to Component"
+                                                    items="vm.componentsForMultiselector"
+                                                    model="vm.item.settings.linked_components.active_object"
+                                                    name-property="name"
+                                                    data-selected-items-indication="array"
+                                                    class="dashboard-constructor-selector-directive"></two-fields-multiselect>
+                        </div>
+                    </div>
+
+                    <md-input-container style="height: 58px">
+
+                        <md-checkbox data-ng-model="vm.item.settings.auto_refresh" aria-label="member permission">Trigger
+                            Refresh on Value Change
+                        </md-checkbox>
+
+                    </md-input-container>
+
+                </md-content>
+            </md-tab>
+
         </md-tabs>
 
     </md-dialog-content>
@@ -248,5 +285,10 @@
         <md-button ng-click="vm.agree()" style="margin-right:20px;">
             OK
         </md-button>
+
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               data-on-resize-callback="vm.rearrangeMdDialogActions()"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>

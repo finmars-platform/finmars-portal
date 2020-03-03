@@ -1,4 +1,43 @@
 (function () {
+
+    var queryParamsHelper = require('../../helpers/queryParamsHelper');
+
+    var isActiveAndValid = function (filter) {
+
+        if (filter.options && filter.options.enabled) { // if filter is enabled
+
+            var filterType = filter.options.filter_type;
+
+            if (filterType === 'empty' ||
+                filter.options.exclude_empty_cells) { // if filter works for empty cells
+
+                return true;
+
+            } else if (filter.options.filter_values) { // if filter values can be used for filtering (not empty)
+
+                var filterValues = filter.options.filter_values;
+
+                if (filterType === 'from_to') {
+
+                    if ((filterValues.min_value || filterValues.min_value === 0) &&
+                        (filterValues.max_value || filterValues.max_value === 0)) {
+                        return true;
+                    }
+
+                } else if (Array.isArray(filterValues)) {
+
+                    if (filterValues[0] || filterValues[0] === 0) {
+                        return true;
+                    }
+
+                }
+            }
+
+        }
+
+        return false;
+    };
+
     // method needed to prevent removal of all rows in case of using filter with empty value but active excludeEmptyCells
     var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
@@ -238,38 +277,6 @@
 
     };
 
-    var filterByRegularFilters = function (items, regularFilters) {
-
-        var match;
-
-        return items.filter(function (item) {
-
-            match = true;
-
-            Object.keys(regularFilters).forEach(function (key) {
-
-                if (key !== 'ordering') {
-
-                    if (item.hasOwnProperty(key) && item[key]) {
-
-                        if (item[key].toString().indexOf(regularFilters[key]) === -1) {
-                            match = false;
-                        }
-
-                    } else {
-                        match = false;
-                    }
-
-                }
-
-            });
-
-            return match
-
-        });
-
-    };
-
     var getFilterMatch = function (item, key, value) {
 
         var item_value = item[key];
@@ -361,11 +368,37 @@
 
     };
 
+    var convertTableFiltersToRegularFilters = function (filters) {
+        var result = [];
+
+        filters.forEach(function (filter) {
+
+            if (isActiveAndValid(filter)) {
+
+                var key = queryParamsHelper.entityPluralToSingular(filter.key);
+
+                var filterSettings = {
+                    key: key,
+                    filter_type: filter.options.filter_type,
+                    exclude_empty_cells: filter.options.exclude_empty_cells,
+                    value_type: filter.value_type,
+                    value: filter.options.filter_values
+                };
+
+                result.push(filterSettings);
+
+            }
+
+        });
+
+        return result;
+    };
+
     module.exports = {
         filterTableRows: filterTableRows,
-        filterByRegularFilters: filterByRegularFilters,
         filterByGroupsFilters: filterByGroupsFilters,
-        getRegularFilters: getRegularFilters
+        getRegularFilters: getRegularFilters,
+        convertTableFiltersToRegularFilters: convertTableFiltersToRegularFilters
     }
 
 }());

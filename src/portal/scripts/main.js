@@ -207,6 +207,7 @@ app.controller('TableAttributeSelectorDialogController', ['$scope', '$mdDialog',
 app.controller('TableAttributesMenuConstructorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/tableAttributesMenuConstructorDialogController')]);
 app.controller('LayoutChangesLossWarningDialogController', ['$scope', 'data', '$mdDialog', require('./app/controllers/dialogs/layoutChangesLossWarningDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
+app.controller('ExpandableItemsSelectorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/expandableItemsSelectorDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 app.controller('RenameFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameFieldDialogController')]);
 app.controller('ResizeFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/resizeFieldDialogController')]);
@@ -626,6 +627,7 @@ app.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/tw
 app.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
 app.directive('tableAttributeSelector', ['$mdDialog', require('./app/directives/tableAttributeSelectorDirective')]);
 app.directive('tableAttributesMenuConstructor', ['$mdDialog', require('./app/directives/tableAttributesMenuConstructorDirective')]);
+app.directive('expandableItemsSelector', ['$mdDialog', require('./app/directives/expandableItemsSelectorDirective')]);
 app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['pickmeup', require('./app/directives/zhDatePickerDirective')]);

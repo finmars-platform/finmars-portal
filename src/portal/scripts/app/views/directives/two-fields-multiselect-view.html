@@ -1,4 +1,12 @@
 <md-input-container class="two-fields-multiselect-input">
-    <label data-ng-bind="title"></label>
-    <input type="text" data-ng-model="inputText" readonly>
+    <label data-ng-bind="title"
+           class="cursor-pointer"></label>
+    <input type="text"
+           data-ng-model="inputText"
+           class="cursor-pointer"
+           readonly>
 </md-input-container>
+<md-tooltip data-ng-if="model && model.length > 0 && tooltipText"
+            class="tooltip_1 f-s-15"
+            md-direction="top"
+            data-ng-bind="tooltipText"></md-tooltip>

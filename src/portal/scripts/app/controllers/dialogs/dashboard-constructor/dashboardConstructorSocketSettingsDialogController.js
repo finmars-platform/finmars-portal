@@ -32,11 +32,12 @@
 
             switch (vm.component.type) {
                 case 'report_viewer':
+                case 'report_viewer_split_panel':
                     verboseType = 'Report Viewer';
                     break;
-                case 'report_viewer_split_panel':
+                /*case 'report_viewer_split_panel':
                     verboseType = 'Report Viewer Split Panel';
-                    break;
+                    break;*/
                 case 'report_viewer_grand_total':
                     verboseType = 'Report Viewer Grand Total';
                     break;
@@ -272,13 +273,14 @@
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html';
                     break;
                 case 'report_viewer':
+                case 'report_viewer_split_panel':
                     contrName = 'DashboardConstructorReportViewerComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html';
                     break;
-                case 'report_viewer_split_panel':
+                /*case 'report_viewer_split_panel':
                     contrName = 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html';
-                    break;
+                    break;*/
                 case 'report_viewer_grand_total':
                     contrName = 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html';

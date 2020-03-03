@@ -23,6 +23,7 @@
         var rvDataHelper = require('../../helpers/rv-data.helper');
 
         var renderHelper = require('../../helpers/render.helper');
+        var dashboardHelper = require('../../helpers/dashboard.helper');
 
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
@@ -50,9 +51,8 @@
             var savedInterfaceLayout;
             var savedAddtions;
 
-            var componentsForLinking = [
-                'report_viewer', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'
-            ];
+            var componentsForLinking = dashboardHelper.getComponentsForLinking();
+            var gotActiveObjectFromLinkedComp = false;
 
             var fillInModeEnabled = false;
 
@@ -211,32 +211,39 @@
                 if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
 
                     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-
                         var activeObject = vm.entityViewerDataService.getActiveObject();
 
-                        var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
-                        var compsKeys = Object.keys(componentsOutputs);
+                        if (!gotActiveObjectFromLinkedComp) {
 
-                        if (compsKeys.length > 0) {
-                            compsKeys.forEach(function (compKey) {
-                                componentsOutputs[compKey].changedLast = false;
-                            });
-                            vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
-                        }
+                            var activeObject = vm.entityViewerDataService.getActiveObject();
 
-                        var compOutputData = {
-                            changedLast: true,
-                            data: activeObject
-                        };
+                            var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
+                            var compsKeys = Object.keys(componentsOutputs);
 
-                        vm.dashboardDataService.setComponentOutput(vm.componentData.id, compOutputData);
+                            if (compsKeys.length > 0) {
+                                compsKeys.forEach(function (compKey) {
+                                    componentsOutputs[compKey].changedLast = false;
+                                });
+                                vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
+                            }
 
-                        vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentData.id);
+                            var compOutputData = {
+                                changedLast: true,
+                                data: activeObject
+                            };
 
-                        if (vm.componentData.settings.auto_refresh) {
+                            vm.dashboardDataService.setComponentOutput(vm.componentData.id, compOutputData);
 
-                            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
+                            vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentData.id);
 
+                            if (vm.componentData.settings.auto_refresh) {
+
+                                vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
+
+                            }
+
+                        } else {
+                            gotActiveObjectFromLinkedComp = false;
                         }
 
                     });
@@ -398,11 +405,13 @@
 
             vm.handleDashboardActiveObject = function (componentId) {
 
+                gotActiveObjectFromLinkedComp = true;
                 var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
                 console.log('COMPONENT_VALUE_CHANGED_' + componentId, componentOutput);
 
-                if (vm.componentData.type === 'report_viewer_split_panel' && componentOutput) {
+                //if (vm.componentData.type === 'report_viewer_split_panel' && componentOutput) {
+                if (componentOutput) {
 
                     vm.entityViewerDataService.setActiveObject(componentOutput.data);
                     vm.entityViewerDataService.setActiveObjectFromAbove(componentOutput.data);
@@ -419,9 +428,7 @@
                 if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                     vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
-
                         vm.handleDashboardFilterLink(filter_link)
-
                     });
 
                 }
@@ -776,9 +783,10 @@
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 
-                if (vm.componentData.type === 'report_viewer_split_panel') {
+                /*if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
-                }
+                }*/
+                vm.entityViewerDataService.setUseFromAbove(true);
 
                 var layoutId = vm.componentData.settings.layout;
 
