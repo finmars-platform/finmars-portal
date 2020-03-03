@@ -2505,6 +2505,10 @@
 
         vm.init = function () {
 
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.ttypeEditorElemToDrag');
+            });
+
             ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
             });

@@ -172,7 +172,7 @@
                     },
                     {
                         label: 'Events',
-                        templateUrl: 'views/tabs/instrument/events-view.html'
+                        templateUrl: 'views/tabs/instrument/events-schedules-tab-view.html'
                     },
                     {
                         label: 'Pricing (old)',

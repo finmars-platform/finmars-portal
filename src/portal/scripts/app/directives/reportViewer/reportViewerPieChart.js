@@ -191,6 +191,16 @@
                     return backStyle;
                 };
 
+                scope.getLegendTextStyle = function () {
+                    var styleString = "";
+
+                    if (scope.rvChartsSettings.legends_font_size) {
+                        styleString += 'font-size: ' + scope.rvChartsSettings.legends_font_size + 'px;'
+                    }
+
+                    return styleString;
+                };
+
                 scope.setLegendsUlStyle = function () {
                     var style = '-webkit-column-count: ' + legendsColumnsNumber + ';';
                     style = style + ' -moz-column-count:' + legendsColumnsNumber + ';';

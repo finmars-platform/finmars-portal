@@ -749,6 +749,7 @@
                         number_attr: vm.componentData.settings.number_attr,
                         group_number_calc_formula: vm.componentData.settings.group_number_calc_formula,
                         show_legends: vm.componentData.settings.show_legends,
+                        legends_font_size: vm.componentData.settings.legends_font_size,
                         legends_position: vm.componentData.settings.legends_position,
                         legends_columns_number: vm.componentData.settings.legends_columns_number,
                         number_format: vm.componentData.settings.number_format,
