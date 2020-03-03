@@ -57,6 +57,10 @@
             "transaction-report": require('../models/transactionReportPropsModel').getAttributes(),
             "cash-flow-projection-report": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
             "performance-report": require('../models/performanceReportPropsModel').getAttributes(),
+
+            "currency-history-error": require('../models/currencyHistoryErrorPropsModel').getAttributes(),
+            "price-history-error": require('../models/priceHistoryErrorPropsModel').getAttributes(),
+
         };
 
         var customFieldsData = {};
