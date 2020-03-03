@@ -343,13 +343,15 @@
 
         };
 
-        vm.allowConfigurationSection = function () {
+        vm.toggleConfigurationSection = function () {
 
+            var toggleTo = !vm.checkConfigurationSection();
+            console.log("permissions toggleConfigurationSection ", toggleTo);
             vm.permissionTable.configuration.forEach(function (item) {
 
                 Object.keys(item.data).forEach(function (key) {
 
-                    item.data[key] = true
+                    item.data[key] = toggleTo;
 
                 })
 
@@ -396,6 +398,19 @@
         vm.updateCheckbox = function (item, prop) {
 
             item.data[prop] = !item.data[prop];
+
+            if (!item.data[prop]) {
+
+                switch (prop) {
+                    case 'other_view':
+                        item.data['other_change'] = false;
+                        break;
+                    case 'creator_view':
+                        item.data['creator_change'] = false;
+                        break;
+                }
+
+            }
 
             vm.isSaved = false;
 
@@ -756,6 +771,10 @@
         };
 
         vm.init = function () {
+
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.permissionsGroupManagerDialogETD');
+            }, 100);
 
             vm.getData();
 
