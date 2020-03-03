@@ -8,7 +8,9 @@
     //
 
     var getEntitiesWithoutBaseAttrsList = function () {
-        return ['price-history', 'currency-history', 'complex-transaction'
+        return ['price-history', 'currency-history',
+            'price-history-error', 'currency-history-error',
+            'complex-transaction'
             , 'transaction', 'balance-report', 'pl-report',
             'transaction-report', 'cash-flow-projection-report',
             'performance-report',
@@ -17,6 +19,7 @@
 
     var getEntitiesWithoutDynamicAttrsList = function () {
         return ['price-history', 'currency-history',
+            'price-history-error', 'currency-history-error',
             'pricing-policy',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
             'balance-report', 'pl-report',

@@ -291,11 +291,29 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li data-ng-if="vm.accessTable.data_price_history">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.data.price-history-error">
+                                        <span class="side-nav-title">Prices Errors</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
                                 <li data-ng-if="vm.accessTable.data_fx_history">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
                                                ui-sref="app.data.currency-history">
                                         <span class="side-nav-title">FX Rates</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                                <li data-ng-if="vm.accessTable.data_fx_history">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.data.currency-history-error">
+                                        <span class="side-nav-title">FX Rates Errors</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>

@@ -62,7 +62,12 @@
             case 'strategy-3-subgroup':
                 return 'strategies/3/subgroup';
             case 'strategy-3-group':
-                return 'strategies/3/group'
+                return 'strategies/3/group';
+
+            case 'price-history-error':
+                return 'pricing/price-history-error';
+            case 'currency-history-error':
+                return 'pricing/currency-history-error';
 
         }
 
