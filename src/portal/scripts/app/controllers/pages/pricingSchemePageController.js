@@ -158,19 +158,19 @@
         vm.getErrorHandler = function (item) {
 
             if (item.error_handler === 1) {
-                return 'Skip';
+                return 'Add to Error Table and notify in the End';
             }
 
             if (item.error_handler === 2) {
-                return 'Default Price';
+                return 'Add to Error Table, no notification';
             }
 
             if (item.error_handler === 3) {
-                return 'Ask For Manual Entry';
+                return 'Add to Error Table, notify directly';
             }
 
             if (item.error_handler === 3) {
-                return 'Add to Pricing Log';
+                return 'Notify Directly and request Prices';
             }
 
         };

@@ -16,7 +16,7 @@
                 <input type="text" data-ng-model="vm.item.name">
             </md-input-container>
 
-            <md-input-container>
+            <md-input-container style="height: 54px;">
                 <label>Type</label>
                 <md-select data-ng-model="vm.item.type" class="disabled-btn">
                     <md-option ng-value="item.id" data-ng-repeat="item in vm.types">{{item.name}}</md-option>
@@ -33,7 +33,7 @@
             <div class="m-t-16">
 
                 <div><label for="">Clarification for Users</label></div>
-                <textarea name="" data-ng-model="vm.item.notes_for_user" cols="60" rows="5"></textarea>
+                <textarea name="" data-ng-model="vm.item.notes_for_users" cols="60" rows="5"></textarea>
 
             </div>
 
@@ -47,46 +47,12 @@
             <md-input-container class="m-t-16">
                 <label>Error handling</label>
                 <md-select data-ng-model="vm.item.error_handler">
-                    <md-option value="1">Skip</md-option>
-                    <md-option value="2">Default Price</md-option>
-                    <md-option value="3">Ask For Manual Entry</md-option>
-                    <md-option value="4">Add to Pricing Log</md-option>
+                    <md-option value="1">Add to Error Table and notify in the End</md-option>
+                    <md-option value="2">Add to Error Table, no notification</md-option>
+                    <md-option value="3">Add to Error Table, notify directly</md-option>
+                    <md-option value="4">Notify Directly and request Prices</md-option>
                 </md-select>
             </md-input-container>
-
-            <!--DEPRECATED-->
-            <!--<div data-ng-if="vm.item.type == 2">-->
-
-            <!--<h4>Manual Pricing Settings</h4>-->
-
-            <!--<div layout="row" data-ng-if="vm.switchState == 'default_value'">-->
-
-            <!--<md-input-container>-->
-            <!--<label>Default Value</label>-->
-            <!--<input type="text" data-ng-model="vm.item.type_settings.default_value">-->
-            <!--</md-input-container>-->
-
-            <!--<md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>-->
-
-            <!--</div>-->
-
-            <!--<div layout="row" data-ng-if="vm.switchState == 'attribute_key'">-->
-
-            <!--<md-input-container class="m-t-16">-->
-            <!--<label>Options</label>-->
-            <!--<md-select data-ng-model="vm.item.type_settings.attribute_key">-->
-            <!--<md-option value="reference_for_pricing">Default Reference For Pricing</md-option>-->
-            <!--<md-option ng-value="item.user_code" data-ng-repeat="item in vm.attributeTypes">-->
-            <!--{{item.name}} ({{item.user_code}})-->
-            <!--</md-option>-->
-            <!--</md-select>-->
-            <!--</md-input-container>-->
-
-            <!--<md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>-->
-
-            <!--</div>-->
-
-            <!--</div>-->
 
             <div data-ng-if="vm.item.type == 3">
 
@@ -128,7 +94,7 @@
                     </md-select>
                 </md-input-container>
 
-                <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
+                <md-tabs md-dynamic-height md-border-bottom class="m-t-16 tabs-colored">
 
                     <md-tab>
                         <md-tab-label>
@@ -204,7 +170,7 @@
 
                                 </div>
 
-                                <div>
+                                <div class="m-t-16">
 
                                     <md-input-container>
                                         <label>If Error. Accrual Error Text</label>
@@ -269,7 +235,7 @@
                     </md-select>
                 </md-input-container>
 
-                <div>
+                <div class="m-t-16">
 
                     <div data-ng-repeat="item in vm.item.type_settings.data.parameters" layout="row">
 
@@ -337,7 +303,7 @@
                     <md-button class="md-raised" data-ng-click="vm.addParameter($event)">Add Parameter</md-button>
                 </div>
 
-                <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
+                <md-tabs md-dynamic-height md-border-bottom class="m-t-16 tabs-colored">
 
                     <md-tab>
                         <md-tab-label>
@@ -413,7 +379,7 @@
 
                                 </div>
 
-                                <div>
+                                <div class="m-t-16">
 
                                     <md-input-container>
                                         <label>If Error. Accrual Error Text</label>
@@ -530,7 +496,7 @@
                 </div>
 
 
-                <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
+                <md-tabs md-dynamic-height md-border-bottom class="m-t-16 tabs-colored">
 
                     <md-tab>
                         <md-tab-label>
@@ -606,7 +572,7 @@
 
                                 </div>
 
-                                <div>
+                                <div class="m-t-16">
 
                                     <md-input-container>
                                         <label>If Error. Accrual Error Text</label>

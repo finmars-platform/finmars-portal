@@ -60,7 +60,13 @@
 
             currencyPricingSchemeService.getTypes().then(function (data) {
 
-                vm.types = data.results;
+                var deprecatedTypes = [2]; // manual pricing
+
+                vm.types = data.results.filter(function (item) {
+
+                    return deprecatedTypes.indexOf(item.id) === -1
+
+                });
 
                 console.log('vm.types', vm.types);
 
