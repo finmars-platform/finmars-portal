@@ -37,7 +37,34 @@
                 "key": "accrued_price",
                 "name": "Accrued price",
                 "value_type": 20
+            },
+            {
+                "key": "accrual_error_text",
+                "name": "Accrual Error Text",
+                "value_type": 10
+            },
+            {
+                "key": "price_error_text",
+                "name": "Price Error Text",
+                "value_type": 10
+            },
+            {
+                "key": "pricing_scheme",
+                "name": "Pricing Scheme",
+                "value_content_type": "pricing.instrumentpricingscheme",
+                "value_entity": "pricing_scheme",
+                "code": "user_code",
+                "value_type": "field"
+            },
+            {
+                "key": "procedure_instance",
+                "name": "Procedure",
+                "value_content_type": "pricing.procedureinstance",
+                "value_entity": "procedure_instance",
+                "code": "name",
+                "value_type": "field"
             }
+
         ]
     };
 
