@@ -651,7 +651,8 @@
                     REPORT_TABLE_VIEW_CHANGED: null,
                     REPORT_EXPORT_OPTIONS_CHANGED: null,
                     DATA_LOAD_END: null,
-                    ENTITY_VIEWER_PAGINATION_CHANGED: null
+                    ENTITY_VIEWER_PAGINATION_CHANGED: null,
+                    VIEW_TYPE_CHANGED: null
                 };
 
                 var removeChangesTrackingEventListeners = function () {
@@ -864,8 +865,6 @@
 
                             var roChangeEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 
-                                /*if (!areReportOptionsTheSame() ||
-                                    !isLayoutTheSame(originReportLayoutOptions, currentReportLayoutOptions)) {*/
                                 if (!areReportOptionsTheSame()) {
                                     scope.layoutChanged = true;
                                     removeChangesTrackingEventListeners();
@@ -907,6 +906,31 @@
 
                             });
 
+                            var viewTypeChangedEI = scope.evEventService.addEventListener(evEvents.VIEW_TYPE_CHANGED, function () {
+                                var originalViewType = activeLayoutConfig.data.viewType;
+                                var originalViewSettings = activeLayoutConfig.data.viewSettings;
+
+                                var currentViewType = scope.evDataService.getViewType();
+                                var currentViewSettings = null;
+
+                                if (originalViewType === currentViewType) {
+
+                                    if (currentViewType) {
+                                        currentViewSettings = scope.evDataService.getViewSettings(currentViewType);
+                                    }
+
+                                    if (!isLayoutTheSame(originalViewSettings, currentViewSettings)) {
+                                        scope.layoutChanged = true;
+                                        removeChangesTrackingEventListeners();
+                                    }
+
+                                } else {
+                                    scope.layoutChanged = true;
+                                    removeChangesTrackingEventListeners();
+                                }
+
+                            });
+
                         }
 
                         changesTrackingEvents.GROUPS_CHANGE = groupsChangeEventIndex;
@@ -922,6 +946,7 @@
                         changesTrackingEvents.REPORT_EXPORT_OPTIONS_CHANGED = reoChangeEventIndex;
                         changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
                         changesTrackingEvents.ENTITY_VIEWER_PAGINATION_CHANGED = evpcEventIndex;
+                        changesTrackingEvents.VIEW_TYPE_CHANGED = viewTypeChangedEI;
                     }
 
                 };
@@ -1282,17 +1307,34 @@
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
                     if (listLayout.hasOwnProperty('id')) {
+
                         uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
+
+                            $mdDialog.show({
+                                controller: 'SuccessDialogController as vm',
+                                templateUrl: 'views/dialogs/success-dialog-view.html',
+                                targetEvent: $event,
+                                multiple: true,
+                                locals: {
+                                    success: {
+                                        title: "Success",
+                                        description: 'Page was saved.'
+                                    }
+                                }
+                            })
+
                         });
+
                     }
 
-                    $mdDialog.show({
+                    /*$mdDialog.show({
                         controller: 'SaveLayoutDialogController as vm',
                         templateUrl: 'views/save-layout-dialog-view.html',
                         targetEvent: $event,
                         clickOutsideToClose: false
-                    })
+                    })*/
                 };
 
                 scope.saveAsLayoutList = function ($event) {
@@ -1505,7 +1547,6 @@
                                 settings = res.data.settings;
 
                                 scope.evDataService.setViewType(newViewType);
-
                                 scope.evDataService.setViewSettings(newViewType, settings);
 
                                 scope.evEventService.dispatchEvent(evEvents.VIEW_TYPE_CHANGED)
