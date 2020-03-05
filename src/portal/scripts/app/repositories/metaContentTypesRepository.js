@@ -649,6 +649,16 @@
                 name: "Transaction Report Custom Field",
                 entity: 'transaction-report-custom-field',
                 key: "reports.transactionreportcustomfield"
+            },
+            {
+                name: 'Price History Error',
+                entity: 'price-history-error',
+                key: 'pricing.pricehistoryerror'
+            },
+            {
+                name: "Currency History Error",
+                entity: 'currency-history-error',
+                key: "pricing.currencyhistoryerror"
             }
         ]
     };
