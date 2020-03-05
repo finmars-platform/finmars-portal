@@ -44,6 +44,9 @@
 
     var costMethodService = require('./instrument/instrumentCostMethodService');
 
+    var priceHistoryErrorService = require('./pricing/priceHistoryErrorService');
+    var currencyHistoryErrorService = require('./pricing/currencyHistoryErrorService');
+
     var getList = function (entityType, options) {
 
         switch (entityType) {
@@ -191,6 +194,11 @@
             case 'tag':
                 return tagService.getByKey(id);
                 break;
+            case 'price-history-error':
+                return priceHistoryErrorService.getByKey(id);
+                break;
+            case 'currency-history-error':
+                return currencyHistoryErrorService.getByKey(id);
         }
     };
 
@@ -407,6 +415,11 @@
             case 'tag':
                 return tagService.update(id, entity);
                 break;
+            case 'price-history-error':
+                return priceHistoryErrorService.update(id, entity);
+                break;
+            case 'currency-history-error':
+                return currencyHistoryErrorService.update(id, entity);
         }
     };
 
@@ -575,6 +588,11 @@
             case 'tag':
                 return tagService.deleteByKey(id);
                 break;
+            case 'price-history-error':
+                return priceHistoryErrorService.deleteByKey(id);
+                break;
+            case 'currency-history-error':
+                return currencyHistoryErrorService.deleteByKey(id);
         }
     };
 

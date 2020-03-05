@@ -543,7 +543,7 @@
                     vm.readyStatus.entity = true;
                     // vm.readyStatus.permissions = true;
 
-                    if (vm.entityType !== 'price-history' && vm.entityType !== 'currency-history') {
+                    if (['price-history', 'currency-history', 'price-history-error', 'currency-history-error'].indexOf(vm.entityType) === -1) {
 
                         vm.loadPermissions();
 
