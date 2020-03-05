@@ -30,7 +30,7 @@
                 scope.downloadedItemsCount = null;
                 scope.contentType = scope.evDataService.getContentType();
                 scope.columnAreaCollapsed = false;
-
+                console.log("dashboard add column columns", scope.columns);
                 scope.viewContext = scope.evDataService.getViewContext();
                 scope.isReport = metaService.isReport(scope.entityType);
 
@@ -689,11 +689,56 @@
 
                 scope.removeColumn = function (column) {
 
-                    scope.columns = scope.columns.filter(function (item) {
-
+                    var colToDeleteAttr = '';
+                    /*scope.columns = scope.columns.filter(function (item) {
                         return column.___column_id !== item.___column_id;
+                    });*/
+                    for (var i = 0; i < scope.columns.length; i++) {
 
-                    });
+                        if (column.___column_id === scope.columns[i].___column_id) {
+
+                            colToDeleteAttr = JSON.parse(angular.toJson(scope.columns[i]));
+                            scope.columns.splice(i, 1);
+                            break;
+
+                        }
+
+                    }
+
+                    if (scope.viewContext === 'dashboard') {
+
+                        var hasAttrAlready = false;
+                        var availableCols = scope.attributeDataService.getAttributesAvailableForColumns();
+
+                        for (var i = 0; i < availableCols.length; i++) {
+
+                            if (availableCols[i].attribute_data.key === colToDeleteAttr.key) {
+                                hasAttrAlready = true;
+                                break;
+                            }
+
+                        }
+
+                        if (!hasAttrAlready) {
+
+                            var newAvailableCol = {
+                                attribute_data: {
+                                    key: colToDeleteAttr.key,
+                                    name: colToDeleteAttr.name,
+                                    content_type: colToDeleteAttr.content_type,
+                                    value_type: colToDeleteAttr.value_type
+                                },
+                                is_default: false,
+                                layout_name: colToDeleteAttr.layout_name || '',
+                                order: scope.colsAvailableForAdditions.length
+                            };
+
+                            availableCols.push(newAvailableCol);
+                            scope.attributeDataService.setAttributesAvailableForColumns(availableCols);
+
+                        }
+
+                    }
 
                     scope.evDataService.setColumns(scope.columns);
                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);

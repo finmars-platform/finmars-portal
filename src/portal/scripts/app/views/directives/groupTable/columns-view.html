@@ -558,20 +558,32 @@
                     </md-card>
                 </div>
 
-                <md-menu data-ng-if="viewContext === 'dashboard'" class="add-column-menu">
-                    <md-button class="md-raised g-add-column-btn"
-                               data-ng-click="$mdOpenMenu($event)">Add Column</md-button>
+                <div data-ng-if="viewContext === 'dashboard'" class="g-add-column-btn2-container">
+                    <div class="gac-btn2-tooltip-wrapper">
+                        <md-tooltip class="tooltip_1"
+                                    md-direction="top">
+                            Please set up columns to add in dashboard constructor.
+                        </md-tooltip>
+                    </div>
 
-                    <md-menu-content>
-                        <md-menu-item data-ng-repeat="column in colsAvailableForAdditions | orderBy: 'order'">
-                            <md-button class="md-button"
-                                       data-ng-click="addColumnToDashboardReport(column)">
-                                <span data-ng-if="column.layout_name">{{column.layout_name}}</span>
-                                <span data-ng-if="!column.layout_name">{{column.attribute_data.name}}</span>
-                            </md-button>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
+                    <md-menu class="add-column-menu">
+                        <md-button class="md-raised"
+                                   data-ng-click="$mdOpenMenu($event)"
+                                   data-ng-disabled="!colsAvailableForAdditions.length">
+                            Add Column
+                        </md-button>
+
+                        <md-menu-content>
+                            <md-menu-item data-ng-repeat="column in colsAvailableForAdditions | orderBy: 'order'">
+                                <md-button class="md-button"
+                                           data-ng-click="addColumnToDashboardReport(column)">
+                                    <span data-ng-if="column.layout_name">{{column.layout_name}}</span>
+                                    <span data-ng-if="!column.layout_name">{{column.attribute_data.name}}</span>
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
 
                 <div data-ng-if="viewContext !== 'dashboard'"
                      class="drop-new-field"

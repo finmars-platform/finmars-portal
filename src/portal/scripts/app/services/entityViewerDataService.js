@@ -649,14 +649,6 @@
             data.activeRequestParametersId = id;
         }
 
-        function setActiveObjectsCount(count) {
-            data.activeObjectsCount = count
-        }
-
-        function getActiveObjectsCount() {
-            return data.activeObjectsCount
-        }
-
 
         // Activated Row just for selection purpose
         // Active Object for Split panel,
@@ -860,6 +852,16 @@
                             listLayout.data.export = metaHelper.recursiveDeepCopy(getExportOptions());
                         }
 
+                        var viewType = getViewType();
+                        var viewSettings = getViewSettings(viewType);
+
+                        listLayout.data.viewType = viewType;
+                        listLayout.data.viewSettings = {};
+
+                        if (viewSettings) {
+                            listLayout.data.viewSettings[viewType] = getViewSettings(viewType);
+                        }
+
                         delete listLayout.data.reportOptions.items;
                         delete listLayout.data.reportOptions.item_complex_transactions;
                         delete listLayout.data.reportOptions.item_counterparties;
@@ -924,6 +926,16 @@
                     listLayout.data.export = metaHelper.recursiveDeepCopy(getExportOptions());
                 }
 
+                var viewType = getViewType();
+                var viewSettings = getViewSettings(viewType);
+
+                listLayout.data.viewType = viewType;
+                listLayout.data.viewSettings = {};
+
+                if (viewSettings) {
+                    listLayout.data.viewSettings[viewType] = viewSettings;
+                }
+
                 delete listLayout.data.reportOptions.items;
                 delete listLayout.data.reportOptions.item_complex_transactions;
                 delete listLayout.data.reportOptions.item_counterparties;
@@ -948,7 +960,7 @@
 
         function setLayoutCurrentConfiguration(activeListLayout, uiService, isReport) {
 
-            var listLayout = {};
+            var listLayout;
 
             if (activeListLayout) {
 
@@ -986,6 +998,16 @@
                 setRootGroupOptions(newRootGroupOptions);
 
                 setExportOptions(listLayout.data.export);
+
+                var viewType = listLayout.data.viewType;
+
+                if (viewType) {
+                    setViewType(viewType);
+
+                    if (listLayout.data.viewSettings && listLayout.data.viewSettings[viewType]) {
+                        setViewSettings(viewType, listLayout.data.viewSettings[viewType]);
+                    }
+                }
 
             } else {
                 setPagination(listLayout.data.pagination);
@@ -1026,7 +1048,6 @@
 
             setComponents(listLayout.data.components);
             setEditorTemplateUrl('views/additions-editor-view.html');
-            // setRootEntityViewer(true); // TODO what?
 
         }
 
@@ -1053,7 +1074,7 @@
         }
 
         function getViewType() {
-            return data.viewType
+            return data.viewType;
         }
 
         function setViewSettings(viewType, settings) {
@@ -1064,11 +1085,11 @@
         }
 
         function getViewSettings(viewType) {
-            return data.viewSettings[viewType]
+            return data.viewSettings[viewType];
         }
 
         function getLastViewSettings(viewType) {
-            return data.lastViewSettings[viewType]
+            return data.lastViewSettings[viewType];
         }
 
         function setViewContext(vContext) {
@@ -1297,9 +1318,6 @@
             getSplitPanelDefaultLayout: getSplitPanelDefaultLayout,
             setSplitPanelLayoutToOpen: setSplitPanelLayoutToOpen,
             getSplitPanelLayoutToOpen: getSplitPanelLayoutToOpen,
-
-            setActiveObjectsCount: setActiveObjectsCount,
-            getActiveObjectsCount: getActiveObjectsCount,
 
             setLastActivatedRow: setLastActivatedRow,
             getLastActivatedRow: getLastActivatedRow,
