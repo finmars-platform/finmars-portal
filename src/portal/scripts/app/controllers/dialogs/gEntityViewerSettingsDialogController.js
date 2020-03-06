@@ -11,12 +11,16 @@
 
         var vm = this;
 
+        vm.entityType = entityViewerDataService.getEntityType();
+
         var pagePagination = entityViewerDataService.getPagination();
         vm.itemsToLoad = pagePagination.page_size;
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
+
+        vm.complexTransactionFilters = [];
 
         vm.saveSettings = function () {
 

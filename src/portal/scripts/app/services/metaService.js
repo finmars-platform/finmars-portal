@@ -334,13 +334,13 @@
                     break;
 
                 case 'app.data.complex-transaction':
-                    name = "HISTORY > TRANSACTIONS";
+                    name = "TRANSACTIONS > TRANSACTIONS";
                     break;
                 case 'app.data.price-history':
-                    name = "HISTORY > PRICES";
+                    name = "VALUATIONS > PRICES";
                     break;
                 case 'app.data.currency-history':
-                    name = "HISTORY > FX RATES";
+                    name = "VALUATIONS > FX RATES";
                     break;
 
                 case 'app.import.simple-entity':
@@ -369,7 +369,7 @@
                     name = 'JOURNAL > TRANSACTIONS AUDIT';
                     break;
                 case 'app.data.transaction':
-                    name = 'JOURNAL > BASE TRANSACTIONS';
+                    name = 'TRANSACTIONS > BASE TRANSACTIONS';
                     break;
 
                 case 'app.developer-panel':
