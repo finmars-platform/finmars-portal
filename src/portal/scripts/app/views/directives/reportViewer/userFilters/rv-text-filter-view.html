@@ -124,6 +124,14 @@
                                 <span>Filter</span>
                             </md-button>
                             <md-menu-content class="dropdown-buttons-menu" width="3">
+                                <md-button ng-click="changeFilterType('equal')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="!showFRCheckMark('equal')"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="showFRCheckMark('equal')"></ng-md-icon>
+                                    Equal
+                                </md-button>
                                 <md-button ng-click="changeFilterType('contains')">
                                     <ng-md-icon icon="done"
                                                 ng-show="!showFRCheckMark('contains')"

@@ -1,4 +1,6 @@
-<md-dialog aria-label="" class="draggable-dialog manage-member-group width-70" drag-dialog>
+<md-dialog class="draggable-dialog manage-member-group width-70 dialog-actions-bottom permissionsGroupManagerDialogETD"
+           aria-label="manage permission group dialog"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -240,7 +242,7 @@
                 <div style="margin-top: 16px;">
 
                     <md-checkbox data-ng-checked="vm.checkConfigurationSection()"
-                                 data-ng-click="vm.allowConfigurationSection()">
+                                 data-ng-click="vm.toggleConfigurationSection()">
                         Allow Import Configuration Section
                     </md-checkbox>
                 </div>
@@ -290,6 +292,7 @@
         </div>
 
     </md-dialog-content>
+
     <md-dialog-actions layout="row" layout-align="space-between center">
 
         <md-button class="md-raised" ng-click="vm.cancel()">
@@ -308,5 +311,9 @@
 
         </div>
 
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               data-on-resize-callback="vm.rearrangeMdDialogActions()"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>

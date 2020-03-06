@@ -18,6 +18,12 @@
             </div>
 
             <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                <md-button class="md-raised clear-all full-width md-button md-ink-ripple"
+                           ng-click="openEntityViewerSettings()">Settings
+                </md-button>
+            </div>
+
+            <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
                 <span ng-show="layoutChanged"
                       class="layout-change-indicator">
                     <ng-md-icon icon="track_changes" size="20">
@@ -214,12 +220,6 @@
                  class="filters-control-btn s-f-expanded-btns layout-row">
                 <md-button class="md-raised md-button full-width"
                            ng-click="openInputFormEditor($event)">Edit form
-                </md-button>
-            </div>
-
-            <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
-                <md-button class="md-raised clear-all full-width md-button md-ink-ripple"
-                           ng-click="openEntityViewerSettings()">Settings
                 </md-button>
             </div>
 

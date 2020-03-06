@@ -1,5 +1,5 @@
 <md-dialog aria-label="transaction type add dialog"
-           class="entity-editor-dialog draggable-dialog"
+           class="entity-editor-dialog draggable-dialog dialog-actions-bottom ttypeCreationElemToDrag"
            drag-dialog
            style="height: 100%">
     <md-toolbar>
@@ -225,7 +225,8 @@
         </div>
 
     </md-dialog-content>
-    <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
+
+    <md-dialog-actions layout="row" layout-align="space-between center">
         <div>
             <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Manage attributes
@@ -243,5 +244,10 @@
                 Add and Exit
             </md-button>
         </div>
+
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               data-on-resize-callback="vm.rearrangeMdDialogActions()"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>
