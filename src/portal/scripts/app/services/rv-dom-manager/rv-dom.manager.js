@@ -429,10 +429,10 @@
         var subtotal_type;
 
         if (clickData.isShiftPressed) {
-            handleShiftSelection(evDataService, evEventService, clickData);
-        }
 
-        if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
+            handleShiftSelection(evDataService, evEventService, clickData);
+
+        } else if (clickData.isCtrlPressed) {
 
             if (clickData.___subtotal_subtype) {
                 subtotal_type = clickData.___subtotal_subtype
@@ -461,9 +461,7 @@
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-        }
-
-        if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
+        } else {
 
             clearSubtotalActiveState(evDataService, evEventService);
             clearObjectActiveState(evDataService, evEventService);

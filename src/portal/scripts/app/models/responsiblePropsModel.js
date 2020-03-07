@@ -28,6 +28,12 @@
                 "value_type": 10
             },
             {
+                "key": "public_name",
+                "name": "Public name",
+                "value_type": 10,
+                "allow_null": true
+            },
+            {
                 "key": "group",
                 "name": "Group",
                 "value_content_type": "counterparties.responsiblegroup",

@@ -140,6 +140,11 @@
             dataLoadEnded: false
         };
 
+        var dashboardData = {
+            keysOfColumnsToHide: [],
+            columnsTextAlign: ''
+        };
+
         data.interfaceLayout = getDefaultInterfaceLayout();
 
         var rootHash = stringHelper.toHash('root');
@@ -1164,6 +1169,28 @@
             return data.dataLoadEnded;
         }
 
+        // START: Methods for dashboard
+        function setKeysOfColumnsToHide (keys) {
+            dashboardData.keysOfColumnsToHide = keys;
+        }
+
+        function getKeysOfColumnsToHide () {
+            if (!Array.isArray(dashboardData.keysOfColumnsToHide)) {
+                return [];
+            }
+
+            return dashboardData.keysOfColumnsToHide
+        }
+
+        function setColumnsTextAlign (alignDirection) {
+            dashboardData.columnsTextAlign = alignDirection;
+        }
+
+        function getColumnsTextAlign () {
+            return dashboardData.columnsTextAlign;
+        }
+        // END: Methods for dashboard
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1358,7 +1385,14 @@
             getParentEventService: getParentEventService,
 
             setDataLoadStatus: setDataLoadStatus,
-            didDataLoadEnd: didDataLoadEnd
+            didDataLoadEnd: didDataLoadEnd,
+
+            dashboard: {
+                setKeysOfColumnsToHide: setKeysOfColumnsToHide,
+                getKeysOfColumnsToHide: getKeysOfColumnsToHide,
+                setColumnsTextAlign: setColumnsTextAlign,
+                getColumnsTextAlign: getColumnsTextAlign
+            }
 
         }
     }

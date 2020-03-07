@@ -279,6 +279,28 @@
 
     };
 
+    var getCellTextAlign = function (column, evDataService) {
+
+        var result = '';
+        var dashboardCellAlign = evDataService.dashboard.getColumnsTextAlign();
+
+        if (column.style && column.style.text_align) {
+
+            result = 'text-' + column.style.text_align;
+
+        } else if (dashboardCellAlign) {
+
+            result = 'text-' + dashboardCellAlign;
+
+        } else if (column.value_type === 20) {
+            result = 'text-right';
+        }
+
+
+        return result;
+
+    };
+
     var getColorNegativeNumber = function (obj, column) {
 
         var result = '';
@@ -361,13 +383,13 @@
 
         columns.forEach(function (column, index) {
 
-            var textAlign = '';
+            var textAlign = getCellTextAlign(column, evDataService);
             var columnNumber = index + 1;
             var colorNegative = getColorNegativeNumber(obj, column);
 
-            if (column.value_type === 20) {
+            /*if (column.value_type === 20) {
                 textAlign = 'text-right'
-            }
+            }*/
 
             var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
 
