@@ -38,6 +38,7 @@
 
                 var entityAttrs = [];
                 var dynamicAttrs = [];
+                var keysOfColsToHide = [];
 
                 var getAttributes = function () {
 
@@ -369,6 +370,34 @@
 
                     })
 
+                };
+
+                scope.checkColTextAlign = function (column, type) {
+
+                    if (column.hasOwnProperty('style') && column.style) {
+
+                        if (column.style.text_align === type) {
+                            return true;
+                        }
+
+                    }
+
+                    return false;
+
+                };
+
+                scope.changeColumnTextAlign = function (column, type) {
+                    if (!column.hasOwnProperty('style')) {
+                        column.style = {};
+                    }
+
+                    if (column.style.text_align === type) {
+                        delete column.style.text_align;
+                    } else {
+                        column.style.text_align = type;
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
                 scope.selectRoundFormat = function (column, type) {
@@ -952,7 +981,10 @@
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
                     evDataHelper.setColumnsDefaultWidth(scope.evDataService);
-                    getColsAvailableForAdditions();
+                    if (scope.viewContext === 'dashboard') {
+                        getColsAvailableForAdditions();
+                        //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
+                    }
 
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
@@ -961,6 +993,7 @@
 
                         scope.columns = scope.evDataService.getColumns();
                         getColsAvailableForAdditions();
+                        //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
 
                     });
 

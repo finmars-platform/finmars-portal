@@ -111,6 +111,7 @@
                             </div>
 
                             <div data-ng-if="viewContext !== 'dashboard' || !columnHasCorrespondingGroup(column.key)" class="settings-btn">
+
                                 <md-menu data-ng-if="isReport && column.value_type == 20">
                                     <md-button aria-label="report viewer numeric column settings"
                                                class="md-icon-button column-btns column-settings-menu"
@@ -391,6 +392,64 @@
                                             </md-button>
                                         </md-menu-item>
 
+                                        <md-menu-item>
+                                            <md-menu md-offset="18px 0">
+                                                <md-button aria-label="Open phone interactions menu"
+                                                           ng-click="$mdOpenMenu($event)">
+                                                    <ng-md-icon icon="done"
+                                                                class="z-menu-icon"
+                                                                style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Text aligning</span>
+                                                    <ng-md-icon icon="arrow_drop_up"
+                                                                class="z-dropdown-icon"></ng-md-icon>
+                                                </md-button>
+
+                                                <md-menu-content width="3">
+                                                    <md-menu-item>
+                                                        <md-button ng-click="changeColumnTextAlign(column, 'left')"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkColTextAlign(column, 'left')"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkColTextAlign(column, 'left')"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Left</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+
+                                                    <md-menu-item>
+                                                        <md-button ng-click="changeColumnTextAlign(column, 'center')"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkColTextAlign(column, 'center')"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkColTextAlign(column, 'center')"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Center</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+
+                                                    <md-menu-item>
+                                                        <md-button ng-click="changeColumnTextAlign(column, 'right')"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkColTextAlign(column, 'right')"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkColTextAlign(column, 'right')"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Right</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
+
                                         <md-menu-item data-ng-if="checkReportRemoveButton(column, $index)">
                                             <md-button ng-click="removeColumn(column)"
                                                        class="g-settings-option-btn">
@@ -450,6 +509,64 @@
                                             </md-button>
                                         </md-menu-item>
 
+                                        <md-menu-item>
+                                            <md-menu md-offset="18px 0">
+                                                <md-button aria-label="Open phone interactions menu"
+                                                           ng-click="$mdOpenMenu($event)">
+                                                    <ng-md-icon icon="done"
+                                                                class="z-menu-icon"
+                                                                style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Text aligning</span>
+                                                    <ng-md-icon icon="arrow_drop_up"
+                                                                class="z-dropdown-icon"></ng-md-icon>
+                                                </md-button>
+
+                                                <md-menu-content width="3">
+                                                    <md-menu-item>
+                                                        <md-button ng-click="changeColumnTextAlign(column, 'left')"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkColTextAlign(column, 'left')"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkColTextAlign(column, 'left')"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Left</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+
+                                                    <md-menu-item>
+                                                        <md-button ng-click="changeColumnTextAlign(column, 'center')"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkColTextAlign(column, 'center')"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkColTextAlign(column, 'center')"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Center</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+
+                                                    <md-menu-item>
+                                                        <md-button ng-click="changeColumnTextAlign(column, 'right')"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkColTextAlign(column, 'right')"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkColTextAlign(column, 'right')"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Right</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
+
                                         <md-menu-item data-ng-if="columnHasCorrespondingGroup(column.key)">
                                             <md-menu>
                                                 <md-button data-ng-click="removeGroup(column.___column_id)"
@@ -505,6 +622,64 @@
                                             </md-button>
                                         </md-menu-item>
 
+                                        <md-menu-item>
+                                            <md-menu>
+                                                <md-button aria-label="Open phone interactions menu"
+                                                           ng-click="$mdOpenMenu($event)">
+                                                    <ng-md-icon icon="done"
+                                                                class="z-menu-icon"
+                                                                style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Text aligning</span>
+                                                    <ng-md-icon icon="arrow_drop_up"
+                                                                class="z-dropdown-icon"></ng-md-icon>
+                                                </md-button>
+
+                                                <md-menu-content width="3">
+                                                    <md-menu-item>
+                                                        <md-button ng-click="changeColumnTextAlign(column, 'left')"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkColTextAlign(column, 'left')"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkColTextAlign(column, 'left')"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Left</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+
+                                                    <md-menu-item>
+                                                        <md-button ng-click="changeColumnTextAlign(column, 'center')"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkColTextAlign(column, 'center')"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkColTextAlign(column, 'center')"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Center</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+
+                                                    <md-menu-item>
+                                                        <md-button ng-click="changeColumnTextAlign(column, 'right')"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkColTextAlign(column, 'right')"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkColTextAlign(column, 'right')"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Right</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
+
                                         <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key)">
                                             <md-button data-ng-click="addColumnEntityToGrouping(column)"
                                                        class="g-settings-option-btn">
@@ -552,6 +727,7 @@
                                 </div>
                             </div>-->
                         </div>
+
                         <div class="resize-slider" data-group-column-resizer
                              ev-data-service="evDataService"
                              ev-event-service="evEventService"></div>

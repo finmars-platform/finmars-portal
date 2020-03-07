@@ -493,11 +493,13 @@
 
             case 'counterparty':
             case 'responsible':
-            case 'currency':
             case 'strategy-1':
             case 'strategy-2':
             case 'strategy-3':
-            case 'complex-transaction':
+                return ['name', 'short_name', 'user_code', null, 'public_name'];
+                break;
+
+            case 'currency':
                 return ['name', 'short_name', 'user_code'];
                 break;
 

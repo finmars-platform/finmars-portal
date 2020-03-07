@@ -26,7 +26,7 @@
                 scope.readyStatus = {
                     data: false
                 };
-
+                console.log("report align dashboardReportViewer items", scope.item);
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
@@ -61,6 +61,48 @@
                     scope.vm.entityViewerDataService = scope.fillInModeData.entityViewerDataService;
                     scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
                 }
+
+                scope.openComponentSettingsEditorDialog = function ($event) {
+
+                    $mdDialog.show({
+                        controller: 'DashboardReportViewerComponentSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/dashboard/component-settings/dashboard-report-viewer-component-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        autoWrap: true,
+                        multiple: true,
+                        locals: {
+                            item: scope.vm.componentData
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            componentData = res.data.item;
+
+                            scope.vm.componentData = componentData;
+
+                            if (componentData.custom_component_name) {
+                                scope.customName = componentData.custom_component_name;
+                            } else {
+                                scope.customName = null;
+                            }
+
+                            scope.dashboardDataService.updateComponent(componentData);
+
+                            if (scope.fillInModeData) { // Reloading corresponding component inside tabs from it's filled in copy
+                                scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+                            }
+
+                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                        }
+
+                    })
+
+                };
 
                 scope.enableFillInMode = function () {
 

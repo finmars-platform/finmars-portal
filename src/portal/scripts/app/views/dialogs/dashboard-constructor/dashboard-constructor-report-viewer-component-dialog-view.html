@@ -17,20 +17,20 @@
                     <div>
 
                         <div>
-                            <md-input-container style="width: 200px;">
+                            <md-input-container class="dashboard-constructor-field1">
                                 <label for="">Name</label>
                                 <input type="text" data-ng-model="vm.item.name">
                             </md-input-container>
                         </div>
 
                         <div>
-                            <md-input-container style="width: 200px;">
+                            <md-input-container class="dashboard-constructor-field1">
                                 <label for="">Report label</label>
                                 <input type="text" data-ng-model="vm.item.custom_component_name">
                             </md-input-container>
                         </div>
 
-                        <md-input-container style="width: 200px; height: 58px">
+                        <md-input-container class="dashboard-constructor-field1" style="height: 58px">
                             <label for="">Report Type</label>
                             <md-select data-ng-model="vm.item.settings.entity_type"
                                        data-ng-change="vm.reportTypeChange()">
@@ -57,34 +57,14 @@
                                                    data-dialog-title="Choose layout"
                                                    data-items="vm.layoutsWithLinkToFilters"
                                                    data-is-disabled="!vm.item.settings.entity_type"
-                                                   data-on-change-callback="vm.showLinkingToFilters()"
+                                                   data-on-change-callback="vm.onRvLayoutChange()"
                                                    class="dashboard-constructor-selector-directive"></expandable-items-selector>
-
-                        <!--<h4>Linked Components</h4>
-
-                        <div data-ng-if="vm.item.settings.entity_type == 'balance-report'">
-
-                            <div class="m-t-16 m-b-16">
-
-                                <md-input-container style="width: 200px;">
-                                    <label for="">Report Date</label>
-                                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
-                                        <md-option
-                                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                                ng-value="componentType.id">{{componentType.name}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
-
-                            </div>
-
-                        </div>-->
 
                         <div data-ng-if="vm.item.settings.entity_type == 'pl-report'">
 
                             <div class="m-t-16 m-b-16">
 
-                                <md-input-container style="width: 200px;">
+                                <md-input-container class="dashboard-constructor-field1">
                                     <label for="">Date From</label>
                                     <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
                                         <md-option
@@ -98,7 +78,7 @@
 
                             <div class="m-t-16 m-b-16">
 
-                                <md-input-container style="width: 200px;">
+                                <md-input-container class="dashboard-constructor-field1">
                                     <label for="">Date To</label>
                                     <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pl_first_date">
                                         <md-option
@@ -116,7 +96,7 @@
 
                             <div class="m-t-16 m-b-16">
 
-                                <md-input-container style="width: 200px;">
+                                <md-input-container class="dashboard-constructor-field1">
                                     <label for="">Date From</label>
                                     <md-select data-ng-model="vm.item.settings.linked_components.report_settings.begin_date">
                                         <md-option
@@ -130,7 +110,7 @@
 
                             <div class="m-t-16 m-b-16">
 
-                                <md-input-container style="width: 200px;">
+                                <md-input-container class="dashboard-constructor-field1">
                                     <label for="">Date To</label>
                                     <md-select data-ng-model="vm.item.settings.linked_components.report_settings.end_date">
                                         <md-option
@@ -146,7 +126,7 @@
 
                         <div class="m-t-16 m-b-16">
 
-                            <md-input-container style="width: 200px;">
+                            <md-input-container class="dashboard-constructor-field1">
                                 <label for="">Currency</label>
                                 <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_currency">
                                     <md-option
@@ -160,7 +140,7 @@
 
                         <div class="m-t-16 m-b-16">
 
-                            <md-input-container style="width: 200px;">
+                            <md-input-container class="dashboard-constructor-field1">
                                 <label for="">Pricing Policy</label>
                                 <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pricing_policy">
                                     <md-option
@@ -188,7 +168,7 @@
 
                                     <div class="m-t-16 m-b-16">
 
-                                        <md-input-container style="width: 200px;">
+                                        <md-input-container class="dashboard-constructor-field1">
                                             <label for="">Attribute</label>
                                             <md-select data-ng-model="filterLink.key"
                                                        md-on-close="filterLinkSearchTerm = ''"
@@ -227,7 +207,7 @@
 
                                     <div class="m-t-16 m-b-16">
 
-                                        <md-input-container style="width: 200px;">
+                                        <md-input-container class="dashboard-constructor-field1">
                                             <label for="">Control Component</label>
                                             <md-select data-ng-model="filterLink.component_id"
                                                        ng-class="{'disabled-btn': !filterLink.value_type}">
@@ -274,7 +254,7 @@
 
                                 <div class="m-t-16 m-b-16">
 
-                                    <md-input-container style="width: 200px;">
+                                    <md-input-container class="dashboard-constructor-field1">
                                         <label for="">Attribute</label>
                                         <md-select data-ng-model="vm.newFilter.key"
                                                    md-on-close="newFiltersearchTerm = ''"
@@ -314,7 +294,7 @@
 
                                 <div class="m-t-16 m-b-16">
 
-                                    <md-input-container style="width: 200px;">
+                                    <md-input-container class="dashboard-constructor-field1">
                                         <label for="">Control Component</label>
                                         <md-select data-ng-model="vm.newFilter.component_id"
                                                    ng-class="{'disabled-btn': !vm.newFilter.value_type}">
@@ -343,14 +323,48 @@
                 </md-content>
             </md-tab>
 
+            <md-tab label="ADVANCE SETTINGS">
+                <md-content class="p-16">
+
+                    <div>
+
+                        <h4 class="m-t-0">Styles</h4>
+
+                        <div>
+
+                            <md-input-container class="dashboard-constructor-field1" style="height: 68px">
+                                <label for="">Cell Text Align</label>
+                                <md-select data-ng-model="vm.item.settings.styles.cell.text_align">
+                                    <md-option value="left">Left</md-option>
+                                    <md-option value="center">Center</md-option>
+                                    <md-option value="right">Right</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                        </div>
+                    </div>
+
+                </md-content>
+            </md-tab>
+
             <md-tab label="MENU SETTINGS">
                 <md-content class="p-16">
                     <table-attributes-menu-constructor title="Available Columns"
-                                                       dialog-title="Available Columns"
+                                                       dialog-title="Available for addition columns"
                                                        model="vm.item.user_settings.manage_columns"
                                                        available-attrs="vm.attributes"></table-attributes-menu-constructor>
 
                 </md-content>
+
+                <!--<md-content class="p-16">
+                    <two-fields-multiselect ng-model="vm.item.user_settings.hidden_columns"
+                                            title="Columns to Hide"
+                                            items="vm.tableColumnsForMultiselector"
+                                            model="vm.item.user_settings.hidden_columns"
+                                            name-property="name"
+                                            data-selected-items-indication="array"></two-fields-multiselect>
+
+                </md-content>-->
             </md-tab>
 
             <md-tab label="LINKING">
