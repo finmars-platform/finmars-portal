@@ -15,7 +15,7 @@
     var instrumentService = require('../../services/instrumentService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
-    var pricingScheduleService = require('../../services/pricing/pricingScheduleService');
+    var pricingScheduleService = require('../../services/schedules/pricingScheduleService');
 
 
     module.exports = function ($scope, $mdDialog, $mdpTimePicker) {

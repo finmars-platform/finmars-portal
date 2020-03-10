@@ -7,7 +7,7 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var pricingScheduleService = require('../../services/pricing/pricingScheduleService');
+    var pricingScheduleService = require('../../services/schedules/pricingScheduleService');
 
 
     module.exports = function ($scope, $mdDialog) {

@@ -15,7 +15,7 @@
     var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
-    var pricingScheduleService = require('../pricing/pricingScheduleService');
+    var pricingScheduleService = require('../schedules/pricingScheduleService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
     var uiRepository = require('../../repositories/uiRepository');
