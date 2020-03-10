@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 25.08.2016.
+ * Created by szhitenev on 09.03.2020.
  */
 (function(){
 
@@ -14,7 +14,7 @@
 
 
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/pricing-automated-schedule/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'schedules/pricing/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -26,7 +26,7 @@
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'import/pricing-automated-schedule/' + id + '/',
+        return xhrService.fetch(baseUrl + 'schedules/pricing/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -38,7 +38,7 @@
     };
 
     var create = function (item) {
-        return xhrService.fetch(baseUrl + 'import/pricing-automated-schedule/',
+        return xhrService.fetch(baseUrl + 'schedules/pricing/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -52,7 +52,7 @@
     };
 
     var update = function (id, item) {
-        return xhrService.fetch(baseUrl + 'import/pricing-automated-schedule/' + id + '/',
+        return xhrService.fetch(baseUrl + 'schedules/pricing/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -67,7 +67,7 @@
 
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'import/pricing-automated-schedule/' + id + '/',
+        return xhrService.fetch(baseUrl + 'schedules/pricing/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -88,7 +88,7 @@
 
     // DEPRECATED SINCE 01.2020
     var updateSchedule = function(schedule){
-        return xhrService.fetch(baseUrl + 'import/pricing-automated-schedule/0/',
+        return xhrService.fetch(baseUrl + 'schedules/pricing/0/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -103,7 +103,7 @@
 
     // DEPRECATED SINCE 01.2020
     var getSchedule = function(){
-        return xhrService.fetch(baseUrl + 'import/pricing-automated-schedule/0/',
+        return xhrService.fetch(baseUrl + 'schedules/pricing/0/',
             {
                 method: 'GET',
                 credentials: 'include',

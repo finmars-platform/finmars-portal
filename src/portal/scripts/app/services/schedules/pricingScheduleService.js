@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingScheduleRepository = require('../../repositories/pricing/pricingScheduleRepository');
+    var pricingScheduleRepository = require('../../repositories/schedules/pricingScheduleRepository');
 
     var getList = function (options) {
         return pricingScheduleRepository.getList(options);
