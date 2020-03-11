@@ -50,7 +50,11 @@
 
             currencyHistoryErrorService.update(vm.entityId, vm.entity).then(function (data) {
 
-                $mdDialog.hide({res: 'agree', data: data});
+                $mdDialog.hide({
+                    status: 'agree', data: {
+                        ids: [vm.entityId]
+                    }
+                });
 
 
             });
