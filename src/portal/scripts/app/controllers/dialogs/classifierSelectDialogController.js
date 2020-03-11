@@ -143,6 +143,10 @@
         };
 
         vm.agree = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.classifierSelectorElemToDrag');
+            }, 100);
+
             var item = $('#js-tree-select-wrapper').jstree(true).get_selected();
             console.log('ite---------------m', item);
             $mdDialog.hide({status: 'agree', data: {item: item[0]}});

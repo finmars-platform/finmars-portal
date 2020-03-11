@@ -20,6 +20,13 @@
 
         if (item) {
             vm.item = item;
+
+            if (!vm.item.settings.hasOwnProperty('styles')) {
+                vm.item.settings.styles = {
+                    cell: {}
+                }
+            }
+
         } else {
 
             vm.item = {
@@ -39,6 +46,9 @@
                         splitPanel: false
                     },
                     auto_refresh: false,
+                    styles: {
+                        cell: {}
+                    },
                     linked_components: {
                         report_settings: {},
                         filter_links: []
@@ -103,9 +113,8 @@
         vm.getAttributes = function(){
             vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
 
-/*            vm.multiselectorAttrs = vm.attributes.map(function (attribute) {
-                var multiselectorName = attribute.name;
-                return {id: attribute.key, name: multiselectorName};
+            /*vm.multiselectorAttrs = vm.attributes.map(function (attribute) {
+                return {id: attribute.key, name: attribute.name};
             });*/
         };
 
@@ -116,7 +125,7 @@
                 vm.layouts = data.results;
 
                 vm.layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
-                vm.showLinkingToFilters();
+                vm.onRvLayoutChange();
 
                 $scope.$apply();
 
@@ -124,7 +133,46 @@
 
         };
 
-        vm.showLinkingToFilters = function () {
+        vm.onRvLayoutChange = function () {
+
+            vm.selectedLayout = null;
+            vm.tableColumns = [];
+            vm.tableColumnsForMultiselector = [];
+            vm.linkingToFilters = [];
+
+            if (vm.item.settings.layout) {
+
+                for (var i = 0; i < vm.layouts.length; i++) {
+
+                    if (vm.layouts[i].id === vm.item.settings.layout) {
+
+                        vm.selectedLayout = JSON.parse(JSON.stringify(vm.layouts[i]));
+                        break;
+
+                    }
+
+                }
+
+            }
+
+            if (vm.selectedLayout) {
+
+                vm.tableColumns = [];
+                if (vm.selectedLayout.data.columns && vm.selectedLayout.data.columns.length) {
+                    vm.tableColumns = JSON.parse(angular.toJson(vm.selectedLayout.data.columns));
+                }
+
+                vm.tableColumnsForMultiselector = vm.tableColumns.map(function (column) {
+                    var colName = column.layoutName || column.name;
+                    return {id: column.key, name: colName}
+                });
+
+                vm.linkingToFilters = dashboardHelper.getLinkingToFilters(vm.selectedLayout);
+            }
+
+        };
+
+        /*vm.showLinkingToFilters = function () {
 
             for (var i = 0; i < vm.layouts.length; i++) {
 
@@ -139,7 +187,7 @@
 
             }
 
-        };
+        };*/
 
         vm.getContentTypeByEntityType = function () {
 

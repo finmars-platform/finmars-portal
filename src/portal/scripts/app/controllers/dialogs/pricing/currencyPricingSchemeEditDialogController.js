@@ -92,7 +92,7 @@
 
             currencyPricingSchemeService.getTypes().then(function (data) {
 
-                var deprecatedTypes = [2, 6]; // manual pricing, world trade data
+                var deprecatedTypes = [2]; // manual pricing
 
                 vm.types = data.results.filter(function (item) {
 

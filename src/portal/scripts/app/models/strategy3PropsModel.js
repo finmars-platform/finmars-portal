@@ -28,6 +28,12 @@
                 "value_type": 10
             },
             {
+                "key": "public_name",
+                "name": "Public name",
+                "value_type": 10,
+                "allow_null": true
+            },
+            {
                 "key": "subgroup",
                 "name": "Group",
                 "value_type": "field",

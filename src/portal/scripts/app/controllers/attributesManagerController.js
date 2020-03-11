@@ -77,7 +77,7 @@
             return item;
         }
 
-        vm.editTreeAttr = function (item, ev) {
+        vm.editTreeAttr = function (ev, item) {
             $mdDialog.show({
                 controller: 'ClassificationEditorDialogController as vm',
                 templateUrl: 'views/classification-editor-dialog-view.html',

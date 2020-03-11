@@ -60,7 +60,7 @@
 
             currencyPricingSchemeService.getTypes().then(function (data) {
 
-                var deprecatedTypes = [2,6]; // manual pricing, worldtradedate
+                var deprecatedTypes = [2]; // manual pricing
 
                 vm.types = data.results.filter(function (item) {
 

@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingScheduleService = require('../../services/schedules/pricingScheduleService');
+    var pricingScheduleService = require('../../services/pricing/pricingScheduleService');
 
     module.exports = function ($scope, $mdDialog) {
 

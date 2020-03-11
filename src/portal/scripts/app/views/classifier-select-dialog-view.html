@@ -1,11 +1,13 @@
-<md-dialog aria-label="" ng-cloak class="classifier-select-dialog-view">
+<md-dialog class="classifier-select-dialog-view dialog-actions-bottom classifierSelectorElemToDrag"
+           aria-label="classifier selector dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Select classifier</h2>
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content  >
+
+    <md-dialog-content>
         <div layout="row">
             <div data-ng-show="vm.tree.length" class="js-tree-holder-dialog-select">
                 <div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>
@@ -16,8 +18,8 @@
                 </p>
             </div>
         </div>
-
     </md-dialog-content>
+
     <md-dialog-actions layout="row">
         <md-button class="md-raised md-primary" ng-click="vm.edit($event)">
             Edit
