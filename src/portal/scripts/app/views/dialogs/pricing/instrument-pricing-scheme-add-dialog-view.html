@@ -86,12 +86,23 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>
                     </md-select>
                 </md-input-container>
+
+                <div class="pricing-scheme-help-box">
+
+                    <h4>Available variables:</h4>
+
+                    <div>
+                        <b>parameter</b>
+                    </div>
+
+                </div>
 
                 <md-tabs md-dynamic-height md-border-bottom class="m-t-16 tabs-colored">
 
@@ -226,7 +237,8 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>
@@ -249,7 +261,8 @@
 
                         <md-input-container class="m-t-16">
                             <label>Value Type</label>
-                            <md-select data-ng-model="item.value_type" data-ng-change="vm.multipleParameterValueTypeUpdate(item.index)">
+                            <md-select data-ng-model="item.value_type"
+                                       data-ng-change="vm.multipleParameterValueTypeUpdate(item.index)">
                                 <md-option value="10">Text</md-option>
                                 <md-option value="20">Number</md-option>
                                 <md-option value="40">Date</md-option>
@@ -276,7 +289,8 @@
                                 <md-input-container class="m-t-16">
                                     <label>Options</label>
                                     <md-select data-ng-model="item.attribute_key">
-                                        <md-option ng-value="item.user_code" data-ng-repeat="item in vm.optionsForMultipleParameters[item.index]">
+                                        <md-option ng-value="item.user_code"
+                                                   data-ng-repeat="item in vm.optionsForMultipleParameters[item.index]">
                                             {{item.name}} ({{item.user_code}})
                                         </md-option>
                                     </md-select>
@@ -297,6 +311,20 @@
 
                 <div>
                     <md-button class="md-raised" data-ng-click="vm.addParameter($event)">Add Parameter</md-button>
+                </div>
+
+                <div class="pricing-scheme-help-box">
+
+                    <h4>Available variables:</h4>
+
+                    <div>
+                        <b>parameter</b>
+                    </div>
+
+                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters">
+                        <b>parameter{{item.index}}</b>
+                    </div>
+
                 </div>
 
                 <md-tabs md-dynamic-height md-border-bottom class="m-t-16 tabs-colored">
@@ -431,7 +459,8 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>
@@ -487,6 +516,28 @@
                         <label>Accrual</label>
                         <input type="text" data-ng-model="vm.item.type_settings.accrual_historical">
                     </md-input-container>
+
+                </div>
+
+                <div class="pricing-scheme-help-box">
+
+                    <h4>Available variables:</h4>
+
+                    <div>
+                        <b>bid</b>
+                    </div>
+
+                    <div>
+                        <b>ask</b>
+                    </div>
+
+                    <div>
+                        <b>last</b>
+                    </div>
+
+                    <div>
+                        <b>accrual</b>
+                    </div>
 
                 </div>
 
@@ -593,19 +644,6 @@
 
                 <h4>World Trading Data</h4>
 
-
-                <div>
-
-                    <md-input-container>
-                        <label>Pricing Formula</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.expr">
-                    </md-input-container>
-
-                    <expression-editor-button data-item="vm.item.type_settings.expr"
-                                              style="float: right"></expression-editor-button>
-
-                </div>
-
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
@@ -634,12 +672,136 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>
                     </md-select>
                 </md-input-container>
+
+                <div class="pricing-scheme-help-box">
+
+                    <h4>Available variables:</h4>
+
+                    <div>
+                        <b>open</b>
+                    </div>
+
+                    <div>
+                        <b>close</b>
+                    </div>
+
+                    <div>
+                        <b>low</b>
+                    </div>
+
+                    <div>
+                        <b>high</b>
+                    </div>
+
+                    <div>
+                        <b>volume</b>
+                    </div>
+
+                </div>
+
+                <md-tabs md-dynamic-height md-border-bottom class="m-t-16 tabs-colored">
+
+                    <md-tab>
+                        <md-tab-label>
+                            <span class="grey-tab">Prices</span>
+                        </md-tab-label>
+                        <md-tab-body>
+
+
+                            <div class="m-t-24">
+
+                                <div>
+
+                                    <md-input-container>
+                                        <label>Pricing Formula</label>
+                                        <input type="text" data-ng-model="vm.item.type_settings.expr">
+                                    </md-input-container>
+
+                                    <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                              style="float: right"></expression-editor-button>
+
+                                </div>
+
+                                <div>
+
+                                    <md-input-container>
+                                        <label>If Error. Pricing Error Text</label>
+                                        <input type="text"
+                                               data-ng-model="vm.item.type_settings.pricing_error_text_expr">
+                                    </md-input-container>
+
+                                    <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              style="float: right"></expression-editor-button>
+
+                                </div>
+
+                            </div>
+
+
+                        </md-tab-body>
+                    </md-tab>
+
+                    <md-tab>
+                        <md-tab-label>
+                            <span class="grey-tab">Accruals</span>
+                        </md-tab-label>
+                        <md-tab-body>
+
+                            <div class="m-t-24">
+
+                                <div>
+
+                                    <md-input-container class="m-t-16">
+                                        <label>Method</label>
+                                        <md-select data-ng-model="vm.item.type_settings.accrual_calculation_method"
+                                                   data-ng-change="vm.item.type_settings.accrual_expr = null">
+                                            <md-option ng-value="2">As per Accrual Schedule</md-option>
+                                            <md-option ng-value="3">As per Formula</md-option>
+                                            <md-option ng-value="1">Not applicable</md-option>
+                                        </md-select>
+                                    </md-input-container>
+
+                                </div>
+
+                                <div data-ng-if="vm.item.type_settings.accrual_calculation_method == 3">
+
+                                    <md-input-container>
+                                        <label>Accrual Formula</label>
+                                        <input type="text" data-ng-model="vm.item.type_settings.accrual_expr">
+                                    </md-input-container>
+
+                                    <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              style="float: right"></expression-editor-button>
+
+                                </div>
+
+                                <div class="m-t-16">
+
+                                    <md-input-container>
+                                        <label>If Error. Accrual Error Text</label>
+                                        <input type="text"
+                                               data-ng-model="vm.item.type_settings.accrual_error_text_expr">
+                                    </md-input-container>
+
+                                    <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              style="float: right"></expression-editor-button>
+
+                                </div>
+
+                            </div>
+
+                        </md-tab-body>
+                    </md-tab>
+
+
+                </md-tabs>
 
             </div>
 
