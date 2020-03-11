@@ -26,16 +26,17 @@
                 scope.components = scope.evDataService.getComponents();
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.activeObject = scope.evDataService.getActiveObject();
-                scope.activeObjectsCount = scope.evDataService.getActiveObjectsCount();
                 scope.isReport = metaService.isReport(scope.entityType);
 
                 scope.viewType = scope.evDataService.getViewType();
-                scope.viewSettings = scope.evDataService.getViewSettings();
+                scope.viewSettings = scope.evDataService.getViewSettings(scope.viewType);
 
                 console.log('scope.components', scope.components);
 
                 var interfaceLayout = scope.evDataService.getInterfaceLayout();
                 var viewContext = scope.evDataService.getViewContext();
+
+                var activeLayoutConfigIsSet = false;
 
                 scope.isInsideDashboard = false;
                 if (viewContext === 'dashboard') {
@@ -155,16 +156,20 @@
                     });
 
                     scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-
                         scope.activeObject = scope.evDataService.getActiveObject();
-                        scope.activeObjectsCount = scope.evDataService.getActiveObjectsCount();
-
                     });
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         scope.additions = scope.evDataService.getAdditions();
                         scope.activeObject = scope.evDataService.getActiveObject();
+
+                        if (scope.viewType === 'matrix' && !activeLayoutConfigIsSet) {
+                            activeLayoutConfigIsSet = true;
+
+                            scope.evDataService.setActiveLayoutConfiguration({isReport: true}); // saving layout for checking for changes
+                            scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
+                        }
 
                     });
 

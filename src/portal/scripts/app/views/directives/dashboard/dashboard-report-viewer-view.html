@@ -11,7 +11,14 @@
                 <ng-md-icon size="24" icon="close"></ng-md-icon>
                 <md-tooltip data-md-direction="top">Close Filled in Component</md-tooltip>
             </md-button>
-            <!--<md-menu data-ng-if="!fillInModeData" class="dashboard-component-settings-menu">
+
+            <md-button data-ng-if="!fillInModeData"
+                       data-ng-click="enableFillInMode()">
+                <ng-md-icon size="24" icon="zoom_out_map"></ng-md-icon>
+                <md-tooltip data-md-direction="top">Fill in dashboard space</md-tooltip>
+            </md-button>
+
+            <md-menu class="dashboard-component-settings-menu">
                 <md-button class="md-button dashboard-component-settings-btn"
                            aria-label="dashboard component settings btn"
                            data-ng-click="$mdOpenMenu($event)">
@@ -21,16 +28,14 @@
 
                 <md-menu-content>
                     <md-menu-item>
-                        <md-button data-ng-click="enableFillInMode()" aria-label="turn on fill in mode btn">Fill in dashboard space</md-button>
+                        <md-button class="md-button dashboard-component-settings-btn"
+                                   data-ng-click="openComponentSettingsEditorDialog($event)"
+                                   aria-label="dashboard component settings btn">
+                            Edit component settings
+                        </md-button>
                     </md-menu-item>
                 </md-menu-content>
-            </md-menu>-->
-
-            <md-button data-ng-if="!fillInModeData"
-                       data-ng-click="enableFillInMode()">
-                <ng-md-icon size="24" icon="zoom_out_map"></ng-md-icon>
-                <md-tooltip data-md-direction="top">Fill in dashboard space</md-tooltip>
-            </md-button>
+            </md-menu>
         </div>
     </div>
 

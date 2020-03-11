@@ -23,6 +23,8 @@
 
         attributeTypeService.getByKey(data.entityType, vm.classifier.id).then(function (attrData) {
 
+            vm.classifier = attrData;
+
             function setText(item) {
                 item.text = item.name;
                 item.type = 'default';
@@ -33,7 +35,8 @@
                 return item
             }
 
-            var tree = attrData.classifiers.map(setText);
+            //var tree = attrData.classifiers.map(setText);
+            var tree = vm.classifier.classifiers.map(setText);
 
             $('#jstree_demo').jstree({
                 "core": {

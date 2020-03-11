@@ -520,6 +520,33 @@
     .g-add-gcf-btn-mixin();
   }
 
+  .g-add-column-btn2-container {
+    position: relative;
+    float: left;
+    margin-left: 20px;
+    margin-top: 6px;
+
+    .gac-btn2-tooltip-wrapper {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    button.md-button {
+      margin: 0;
+      height: 18px;
+      .g-add-gcf-btn-mixin();
+
+      &:disabled {
+        opacity: .5;
+      }
+    }
+
+  }
+
   .g-add-group-btn {
     float: left;
     margin-top: 7px;
@@ -528,12 +555,12 @@
   }
 
   .g-add-filter-btn {
-    background-color: #AD725D;
+    background-color: #ad725d;
     transition: background-color 0.2s linear 0s;
     color: #fff;
 
     &.md-button.md-raised:not([disabled]):hover {
-      background-color: #F4AF8B;
+      background-color: #f4af8b;
     }
   }
 
@@ -1406,6 +1433,21 @@ body.md-dialog-is-showing {
 
 };
 
+.filter-side-nav-collapsed .g-filter-item {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  overflow: hidden;
+
+  md-tooltip {
+    display: block;
+  }
+
+  md-checkbox {
+    margin: 0;
+  }
+}
+
+
 .ev-backend-filter {
   background-color: #ffde89;
 
@@ -1657,12 +1699,6 @@ md-checkbox.g-filter-options-checkbox {
 
 .g-wrapper {
   .g-filter-sidebar {
-    .g-filter-item {
-      md-tooltip {
-        display: none;
-      }
-    }
-
     .f-s-expand {
       display: none;
     }
@@ -1706,15 +1742,6 @@ md-checkbox.g-filter-options-checkbox {
       display: none;
     }
 
-    .g-filter-item {
-      padding-top: 0;
-      overflow: hidden;
-
-      md-tooltip {
-        display: block;
-      }
-    }
-
     .s-f-collapsed-btns {
       display: block;
       margin-left: 3px;
@@ -1725,6 +1752,12 @@ md-checkbox.g-filter-options-checkbox {
         line-height: 1;
         min-height: 36px;
         margin: 6px 8px;
+      }
+
+      .g-add-filter-btn {
+        background-color: #ad725d;
+        min-width: 36px;
+        font-size: 24px;
       }
     }
 
@@ -2082,6 +2115,7 @@ md-checkbox.g-filter-options-checkbox {
   height: calc(100% - 60px);
   right: 10px;
   overflow: auto;
+  z-index: 1;
 }
 
 button.md-button.toggle-dashboard-filter-btn {
@@ -2109,10 +2143,36 @@ button.md-button.toggle-dashboard-filter-btn {
 
 // test top-right menu
 .top-right-menu-btns {
-  .md-button {
-    min-width: 103px;
-    width: 103px;
+
+  .g-tr-btn-holder {
+    position: relative;
+    width: 100%;
+    padding: 2px 5px;
+    box-sizing: border-box;
+
+    &.p-r-0 {
+      padding-right: 0;
+    }
+
+    .md-button {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+    }
+
   }
+
+  .layout-change-indicator {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    z-index: 1;
+  }
+
+  .md-button.long-text-btn {
+    font-size: 9px;
+  }
+
 }
 
 .test-margin-left {

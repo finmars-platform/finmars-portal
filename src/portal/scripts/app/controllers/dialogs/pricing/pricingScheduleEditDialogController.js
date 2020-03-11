@@ -5,8 +5,7 @@
 
     'use strict';
 
-    var pricingScheduleService= require('../../../services/schedules/pricingScheduleService');
-    var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
+    var pricingScheduleService= require('../../../services/pricing/pricingScheduleService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -14,7 +13,7 @@
 
         vm.itemId = data.item.id;
 
-        vm.readyStatus = {schedule: false, pricingProcedures: false};
+        vm.readyStatus = {schedule: false};
 
         vm.days = [];
         vm.schedule = {};
@@ -147,24 +146,9 @@
             })
         };
 
-        vm.getPricingProcedures = function () {
-
-            pricingProcedureService.getList().then(function (data) {
-
-                vm.pricingProcedures = data.results;
-
-                vm.readyStatus.pricingProcedures = true;
-
-                $scope.$apply();
-
-            })
-
-        };
-
         vm.init = function(){
 
             vm.getItem();
-            vm.getPricingProcedures();
 
         };
 

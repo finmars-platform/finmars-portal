@@ -117,7 +117,7 @@
 
                 });
 
-                vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_CONTENT_OF_COMPONENT, function () {
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
                     vm.getView()
                 });
 
@@ -702,6 +702,13 @@
                     if (vm.userSettings.manage_columns && vm.userSettings.manage_columns.length > 0) {
                         vm.attributeDataService.setAttributesAvailableForColumns(vm.userSettings.manage_columns);
                     }
+
+                    if (vm.componentData.settings.styles && vm.componentData.settings.styles.cell.text_align) {
+                        vm.entityViewerDataService.dashboard.setColumnsTextAlign(vm.componentData.settings.styles.cell.text_align);
+                    }
+                    /*if (vm.userSettings.hidden_columns && vm.userSettings.hidden_columns.length > 0) {
+                        vm.entityViewerDataService.setKeysOfColumnsToHide(vm.userSettings.hidden_columns);
+                    }*/
 
                 }
 

@@ -238,6 +238,16 @@
 
     };
 
+    var getCellTextAlign = function (column) {
+        var result = '';
+
+        if (column.style && column.style.text_align) {
+            result = ' text-' + column.style.text_align;
+        }
+
+        return result;
+    };
+
     var render = function (obj, columns, currentMember, viewContext, verticalAdditions) {
 
         var classList = ['g-row'];
@@ -266,6 +276,7 @@
         columns.forEach(function (column) {
 
             var cellValue = getValue(obj, column);
+            var textAlign = getCellTextAlign(column);
             var gCellTitle = '';
 
             if (cellValue !== '') {
@@ -274,7 +285,7 @@
             }
 
             cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell"' + gCellTitle + '>' +
+                '<div class="g-cell' + textAlign + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
                 cellValue +
                 '</div>' +

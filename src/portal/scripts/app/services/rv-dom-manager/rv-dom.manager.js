@@ -5,6 +5,7 @@
     var utilsHelper = require('../../helpers/utils.helper');
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var uiService = require('../../services/uiService');
@@ -346,7 +347,6 @@
         // console.log('handleObjectClick.clickData', clickData);
 
         var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
-        var count = evDataService.getActiveObjectsCount();
 
 
         if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
@@ -354,10 +354,9 @@
             obj.___is_activated = !obj.___is_activated;
             evDataService.setObject(obj);
 
-            count = count + 1;
+            //count = count + 1;
 
             evDataService.setLastActivatedRow(obj);
-            evDataService.setActiveObjectsCount(count);
 
             // evDataService.setActiveObject(obj);
             // evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
@@ -382,13 +381,12 @@
             evDataService.setObject(obj);
 
             if (obj.___is_activated) {
+
                 evDataService.setActiveObject(obj);
                 evDataService.setLastActivatedRow(obj);
-                evDataService.setActiveObjectsCount(1);
                 evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-            } else {
 
-                evDataService.setActiveObjectsCount(0);
+            } else {
                 evDataService.setActiveObject(null);
                 evDataService.setLastActivatedRow(null);
             }
@@ -427,13 +425,14 @@
     var handleSubtotalClick = function (clickData, evDataService, evEventService) {
 
         var parent = Object.assign({}, evDataService.getData(clickData.___parentId));
+        //console.log("click group handleSubtotalClick data", clickData, parent);
         var subtotal_type;
 
         if (clickData.isShiftPressed) {
-            handleShiftSelection(evDataService, evEventService, clickData);
-        }
 
-        if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
+            handleShiftSelection(evDataService, evEventService, clickData);
+
+        } else if (clickData.isCtrlPressed) {
 
             if (clickData.___subtotal_subtype) {
                 subtotal_type = clickData.___subtotal_subtype
@@ -462,9 +461,7 @@
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-        }
-
-        if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
+        } else {
 
             clearSubtotalActiveState(evDataService, evEventService);
             clearObjectActiveState(evDataService, evEventService);
@@ -483,13 +480,41 @@
                 parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
             }
 
-            evDataService.setLastActivatedRow({
-                ___id: clickData.___id,
-                ___parentId: clickData.___parentId
-            });
-
             if (!parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
+
+                evDataService.setActiveObject(null);
                 evDataService.setLastActivatedRow(null);
+
+            } else if (parent.___level > 0) {
+
+                var groups = evDataService.getGroups();
+                var groupsActiveObj = Object.assign({}, parent);
+
+                delete groupsActiveObj.next;
+                delete groupsActiveObj.previous;
+                delete groupsActiveObj.count;
+                delete groupsActiveObj.results;
+                delete groupsActiveObj.subtotal;
+
+                var parents = evRvCommonHelper.getParents(clickData.___parentId, evDataService);
+                parents.reverse();
+                parents.splice(0, 1); // removing root group
+
+                //console.log("click group groups, parents", groups, parents);
+
+                for (var i = 0; i < parents.length; i++) {
+                    groupsActiveObj[groups[i].key] = parents[i].___group_name;
+                }
+
+                evDataService.setActiveObject(groupsActiveObj);
+                evDataService.setLastActivatedRow({
+                    ___id: clickData.___id,
+                    ___parentId: clickData.___parentId
+                });
+
+                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                //console.log("click group set group activeobj", groupsActiveObj);
             }
 
             evDataService.setData(parent);
@@ -515,17 +540,14 @@
 
             } else {
 
-                if (clickData.___type === 'object') {
+                switch (clickData.___type) {
+                    case 'object':
+                        handleObjectClick(clickData, evDataService, evEventService);
+                        break;
 
-                    handleObjectClick(clickData, evDataService, evEventService);
-
-                }
-
-
-                if (clickData.___type === 'subtotal') {
-
-                    handleSubtotalClick(clickData, evDataService, evEventService);
-
+                    case 'subtotal':
+                        handleSubtotalClick(clickData, evDataService, evEventService);
+                        break;
                 }
 
             }

@@ -30,7 +30,7 @@
                  ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
-                <div class="g-grouping-section" data-ng-if="components.groupingArea">
+                <div class="g-grouping-section" data-ng-if="components.groupingArea && viewType !== 'matrix'">
                     <group-grouping ev-data-service="evDataService"
                                     ev-event-service="evEventService"
                                     attribute-data-service="attributeDataService"
@@ -41,13 +41,15 @@
                         <div class="g-table-wrap">
 
                             <div class="g-column-area-wrap">
-                                <group-columns ev-data-service="evDataService"
-                                               ev-event-service="evEventService"
-                                               attribute-data-service="attributeDataService"
-                                               content-wrap-element="contentWrapElem"
-                                ></group-columns>
+                                <div data-ng-if="components.columnArea && viewType !== 'matrix'">
+                                    <group-columns ev-data-service="evDataService"
+                                                   ev-event-service="evEventService"
+                                                   attribute-data-service="attributeDataService"
+                                                   content-wrap-element="contentWrapElem"
+                                    ></group-columns>
+                                </div>
 
-                                <md-button data-ng-if="!isInsideDashboard"
+                                <md-button data-ng-if="!isInsideDashboard && viewType !== 'matrix'"
                                            class="toggle-group-column-area-btn"
                                            ng-click="toggleGroupAndColumnArea()">
                                     <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"
@@ -66,7 +68,7 @@
                             ></group-table-body>
 
                             <report-viewer-matrix data-ng-if="viewType == 'matrix'"
-                                                  class="height-100 display-block"
+                                                  class="height-100 display-block matrix-inside-report-builder"
                                                   style="height: 600px;"
                                                   matrix-settings="viewSettings"
                                                   ev-data-service="evDataService"

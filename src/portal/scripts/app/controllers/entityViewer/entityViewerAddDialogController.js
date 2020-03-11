@@ -71,7 +71,7 @@
 
         vm.canManagePermissions = false;
 
-        vm.attributeTypesByValueTypes = {} // need for pricing;
+        vm.attributeTypesByValueTypes = {}; // need for pricing;
 
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 

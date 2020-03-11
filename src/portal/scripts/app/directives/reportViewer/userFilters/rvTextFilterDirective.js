@@ -69,6 +69,14 @@
                     return false;
                 };
 
+                scope.getFilterName = function () {
+                    if (scope.filter.layout_name) {
+                        return scope.filter.layout_name;
+                    }
+
+                    return scope.filter.name;
+                };
+
                 scope.getClassesForFilter = function () {
                     var filterClasses = '';
 
@@ -302,6 +310,18 @@
                     if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
                         dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
                     }
+
+                    scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        if (interfaceLayout.filterArea.width === 55) {
+                            scope.sideNavCollapsed = true;
+                        } else {
+                            scope.sideNavCollapsed = false;
+                        }
+
+                    });
 
                     if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
                         setTimeout(function () {

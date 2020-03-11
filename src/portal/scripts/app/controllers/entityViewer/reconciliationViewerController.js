@@ -269,9 +269,6 @@
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
-
-                    vm.checkMatchAvailability();
-
                 });
 
                 parentEntityViewerEventService.addEventListener(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT, function () {
@@ -284,15 +281,6 @@
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
 
-                });
-
-                parentEntityViewerEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
-                    vm.checkMatchAvailability();
-                });
-
-
-                vm.entityViewerEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
-                    vm.checkMatchAvailability();
                 });
 
                 vm.entityViewerEventService.addEventListener(evEvents.RECON_BOOK_SELECTED, function () {
@@ -360,8 +348,6 @@
                         }
 
                     }
-
-                    vm.checkMatchAvailability();
 
                 });
 
@@ -518,30 +504,6 @@
 
                 reconDataProviderService.processData(vm.entityViewerDataService, vm.entityViewerEventService);
 
-
-            };
-
-            vm.checkMatchAvailability = function () {
-
-                vm.matchAvailable = false;
-
-                var rootObjectsCount = parentEntityViewerDataService.getActiveObjectsCount();
-                var reconObjectsCount = vm.entityViewerDataService.getActiveObjectsCount();
-
-                console.log('checkMatchAvailability.rootObjectsCount', rootObjectsCount);
-                console.log('checkMatchAvailability.reconObjectsCount', reconObjectsCount);
-
-                if (rootObjectsCount > 0 && reconObjectsCount > 0) {
-                    vm.matchAvailable = true;
-                }
-
-                console.log('vm.matchAvailable', vm.matchAvailable);
-
-                setTimeout(function () {
-
-                    $scope.$apply();
-
-                }, 0)
 
             };
 

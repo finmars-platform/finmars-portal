@@ -845,7 +845,8 @@
         };
 
         var emptyTabSocketsWithoutAttrs = function (tab) {
-
+            console.log("emtpy socket vm.attrs ", vm.attrs);
+            console.log("emtpy socket tab ", tab);
             var i, u;
             tab.layout.fields.forEach(function (field, fieldIndex) {
 
@@ -880,7 +881,6 @@
                         }
 
                         if (!attrFound) {
-
                             var fieldCol = field.column;
                             var fieldRow = field.row;
 

@@ -6,6 +6,19 @@
                          sp-exchange-service="spExchangeService"
                          content-wrap-element="contentWrapElement"></group-actions-block>
 
+    <div data-ng-if="!isReport" layout="column">
+        <div>
+            <md-card class="g-sidebar-report-card">
+
+                <md-card-content data-ng-include="'views/entity-viewer/g-ev-rv-sidebar-settings-buttons.html'"
+                                 class="p-b-0">
+
+                </md-card-content>
+
+            </md-card>
+        </div>
+    </div>
+
     <div data-ng-if="isReport" layout="column">
         <div data-ng-if="entityType === 'balance-report' || entityType === 'pl-report'">
             <md-card class="g-sidebar-report-card">
@@ -16,75 +29,7 @@
                         Report settings
                     </p>-->
 
-                    <div class="layout-settings-layout-name-holder">
-                        <span data-ng-bind="layoutName" class="layout-settings-layout-name">
-                            <md-tooltip data-ng-if="layoutName"
-                                        md-direction="top"
-                                        data-ng-bind="layoutName"></md-tooltip>
-                        </span>
-
-                        <md-button data-ng-if="isLayoutDefault"
-                                   class="layout-settings-is-layout-default-btn">
-                            <ng-md-icon icon="star"
-                                        size="22">
-                                <md-tooltip md-direction="top">Default Layout</md-tooltip>
-                            </ng-md-icon>
-                        </md-button>
-                        <md-button data-ng-if="!isLayoutDefault"
-                                   class="layout-settings-is-layout-default-btn"
-                                   data-ng-click="setLayoutAsDefault($event)">
-                            <ng-md-icon icon="star_border"
-                                        size="22">
-                                <md-tooltip md-direction="top">Not default layout</md-tooltip>
-                            </ng-md-icon>
-                        </md-button>
-
-                        <md-button data-ng-click="renameLayout($event)"
-                                   class="layout-settings-rename-btn"
-                                   aria-label="open rename layout dialog">
-                            <ng-md-icon icon="edit" size="22">
-                                <md-tooltip md-direction="top">Rename Layout</md-tooltip>
-                            </ng-md-icon>
-                        </md-button>
-                    </div>
-
-                    <div layout="row" layout-align="space-between center" class="layout-settings-actions-btns-container">
-
-                        <dvi flex="60" layout="row" layout-align="start center">
-                            <md-button aria-label="save viewer layout" data-ng-click="saveLayoutList($event)">
-                                <ng-md-icon icon="save" size="22">
-                                    <md-tooltip md-direction="top">Save Layout</md-tooltip>
-                                </ng-md-icon>
-                            </md-button>
-
-                            <md-button aria-label="open viewer layout" data-ng-click="openLayoutList($event)">
-                                <ng-md-icon icon="folder_open" size="22">
-                                    <md-tooltip md-direction="top">Open Layout</md-tooltip>
-                                </ng-md-icon>
-                            </md-button>
-
-                            <md-button aria-label="export viewer layout configuration" data-ng-click="exportLayout($event)">
-                                <ng-md-icon icon="forward" size="22">
-                                    <md-tooltip md-direction="top">Export Layout</md-tooltip>
-                                </ng-md-icon>
-                            </md-button>
-                        </dvi>
-
-                        <div flex="40" layout="row" layout-align="end center">
-                            <md-button aria-label="open view constructor" data-ng-click="openViewConstructor($event)">
-                                <ng-md-icon icon="view_list" size="22">
-                                    <md-tooltip md-direction="top">View Constructor</md-tooltip>
-                                </ng-md-icon>
-                            </md-button>
-
-                            <md-button aria-label="open report settings" data-ng-click="openReportSettings($event)">
-                                <ng-md-icon icon="settings" size="22">
-                                    <md-tooltip md-direction="top">Settings</md-tooltip>
-                                </ng-md-icon>
-                            </md-button>
-                        </div>
-
-                    </div>
+                    <div data-ng-include="'views/entity-viewer/g-ev-rv-sidebar-settings-buttons.html'"></div>
 
                     <div layout="column" style="padding-top: 16px">
 
@@ -171,11 +116,13 @@
 
                 <md-card-content>
 
-                    <p class="g-r-card-title">
+                    <!--<p class="g-r-card-title">
                         Report settings
-                    </p>
+                    </p>-->
 
-                    <div layout="column" style="padding-top: 16px">
+                    <div data-ng-include="'views/entity-viewer/g-ev-rv-sidebar-settings-buttons.html'"></div>
+
+                    <div layout="column">
 
                         <md-input-container style="margin-bottom: 24px;">
                             <label class="uncut-text-on-focus-label" for="transaction-report-date-type">Filter by</label>
@@ -464,9 +411,14 @@
             <ng-md-icon icon="cancel"></ng-md-icon>
             <md-tooltip md-direction="top">Clear all</md-tooltip>
         </md-button>
+
+<!--        <md-button class="md-raised g-add-filter-btn" data-ng-click="addFilter()">
+            <span>+</span>
+            <md-tooltip md-direction="top">Add Filter</md-tooltip>
+        </md-button>-->
     </div>
 
-    <md-button class="md-raised g-add-filter-btn" data-ng-click="addFilter()">
+    <md-button class="md-raised g-add-filter-btn s-f-expanded-btns" data-ng-click="addFilter()">
         Add Filter
     </md-button>
     <!--<div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">-->

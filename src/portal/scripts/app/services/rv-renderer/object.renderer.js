@@ -282,15 +282,24 @@
 
     };
 
-    var getTextAlign = function (column) {
+    var getCellTextAlign = function (column, evDataService) {
 
         var result = '';
+        var dashboardCellAlign = evDataService.dashboard.getColumnsTextAlign();
 
-        if (column.value_type === 20) {
-            result = 'text-right'
+        if (column.style && column.style.text_align) {
+
+            result = 'text-' + column.style.text_align;
+
+        } else if (dashboardCellAlign) {
+
+            result = 'text-' + dashboardCellAlign;
+
+        } else if (column.value_type === 20) {
+            result = 'text-right';
         }
 
-        return result
+        return result;
 
     };
 
@@ -390,7 +399,7 @@
             columnNumber = columnIndex + 1;
 
             borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
-            textAlign = getTextAlign(column);
+            textAlign = getCellTextAlign(column, evDataService);
             value_obj = getValue(evDataService, obj, column, columnNumber, groups);
 
             colorNegative = '';

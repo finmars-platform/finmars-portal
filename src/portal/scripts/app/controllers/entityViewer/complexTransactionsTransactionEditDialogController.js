@@ -4,13 +4,8 @@
 (function () {
 
     'use strict';
-    var logService = require('../../../../../core/services/logService');
 
     var entityResolverService = require('../../services/entityResolverService');
-
-    var layoutService = require('../../services/layoutService');
-
-    var metaPermissionsService = require('../../services/metaPermissionsService');
 
     module.exports = function ($scope, $mdDialog, parentScope, entityId, $state) {
 

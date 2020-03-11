@@ -409,12 +409,12 @@
 
             if (obj.___is_activated) {
                 evDataService.setActiveObject(obj);
-                evDataService.setActiveObjectsCount(1);
+                //evDataService.setActiveObjectsCount(1);
                 evDataService.setLastActivatedRow(obj);
                 evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
             } else {
 
-                evDataService.setActiveObjectsCount(0);
+                //evDataService.setActiveObjectsCount(0);
                 evDataService.setActiveObject(null);
                 evDataService.setLastActivatedRow(null);
             }

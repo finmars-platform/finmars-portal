@@ -729,13 +729,17 @@
                     return false;
                 };
 
+                var settingsLayoutAsDefault = false; // prevent multiple PUT requests in case of multiple clicks
+
                 scope.setLayoutAsDefault = function ($event) {
 
                     var listLayout = JSON.parse(JSON.stringify(scope.evDataService.getLayoutCurrentConfiguration(scope.isReport)));
 
                     if (listLayout.hasOwnProperty('id')) {
 
-                        if (scope.isRootEntityViewer) {
+                        if (scope.isRootEntityViewer && !settingsLayoutAsDefault) {
+
+                            settingsLayoutAsDefault = true;
 
                             listLayout.is_default = true;
 
@@ -745,6 +749,7 @@
                                 scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                 checkIsLayoutDefault();
+                                settingsLayoutAsDefault = false;
                                 scope.$apply();
 
                             });
@@ -783,7 +788,7 @@
 
                 };
 
-                // Methods for report viewer inside dashboard
+                // Methods for settings buttons inside right sidebar
                 scope.renameLayout = function ($event) {
 
                     var currentLayoutName = JSON.parse(JSON.stringify(scope.layoutName));
@@ -949,37 +954,53 @@
                     }
                 };
 
-                scope.openReportSettings = function ($event) {
+                scope.openSettings = function ($event) {
 
-                    var reportOptions = scope.evDataService.getReportOptions();
+                    if (scope.isReport) {
 
-                    $mdDialog.show({
-                        controller: 'GReportSettingsDialogController as vm',
-                        templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        locals: {
-                            reportOptions: reportOptions,
-                            options: {
-                                entityType: scope.entityType
+                        var reportOptions = scope.evDataService.getReportOptions();
+
+                        $mdDialog.show({
+                            controller: 'GReportSettingsDialogController as vm',
+                            templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            locals: {
+                                reportOptions: reportOptions,
+                                options: {
+                                    entityType: scope.entityType
+                                }
                             }
-                        }
-                    }).then(function (res) {
+                        }).then(function (res) {
 
-                        if (res.status === 'agree') {
+                            if (res.status === 'agree') {
 
-                            reportOptions = res.data;
+                                reportOptions = res.data;
 
-                            scope.evDataService.setReportOptions(reportOptions);
+                                scope.evDataService.setReportOptions(reportOptions);
 
-                            scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+                                scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 
-                        }
+                            }
 
-                    })
+                        })
 
+                    } else {
+
+                        $mdDialog.show({
+                            controller: 'GEntityViewerSettingsDialogController as vm',
+                            templateUrl: 'views/dialogs/g-entity-viewer-settings-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            locals: {
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService
+                            }
+                        });
+
+                    }
                 };
-                // < Methods for report viewer inside dashboard >
+                // < Methods for settings buttons inside right sidebar >
 
                 var initEventListeners = function () {
 
