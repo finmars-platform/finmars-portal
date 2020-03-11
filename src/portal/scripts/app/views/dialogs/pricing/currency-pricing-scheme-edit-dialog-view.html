@@ -58,26 +58,6 @@
 
                 <h4>Single Parameter Formula</h4>
 
-                <div>
-
-                    <md-input-container>
-                        <label>Pricing Formula</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.expr">
-                    </md-input-container>
-
-                    <expression-editor-button data-item="vm.item.type_settings.expr"
-                                              style="float: right"></expression-editor-button>
-
-                </div>
-
-                <div>
-
-                    <md-input-container>
-                        <label>If Error. Error Text</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.error_text_expr">
-                    </md-input-container>
-
-                </div>
 
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
@@ -114,12 +94,15 @@
                     </md-select>
                 </md-input-container>
 
+                <div class="pricing-scheme-help-box">
 
-            </div>
+                    <h4>Available variables:</h4>
 
-            <div data-ng-if="vm.item.type == 4">
+                    <div>
+                        <b>parameter</b>
+                    </div>
 
-                <h4>Multiple Parameter Formula</h4>
+                </div>
 
                 <div>
 
@@ -141,6 +124,14 @@
                     </md-input-container>
 
                 </div>
+
+
+
+            </div>
+
+            <div data-ng-if="vm.item.type == 4">
+
+                <h4>Multiple Parameter Formula</h4>
 
                 <h5>Pricing Parameters</h5>
 
@@ -245,12 +236,19 @@
                     <md-button class="md-raised" data-ng-click="vm.addParameter($event)">Add Parameter</md-button>
                 </div>
 
+                <div class="pricing-scheme-help-box">
 
-            </div>
+                    <h4>Available variables:</h4>
 
-            <div data-ng-if="vm.item.type == 5">
+                    <div>
+                        <b>parameter</b>
+                    </div>
 
-                <h4>Bloomberg</h4>
+                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters">
+                        <b>parameter{{item.index}}</b>
+                    </div>
+
+                </div>
 
                 <div>
 
@@ -272,6 +270,13 @@
                     </md-input-container>
 
                 </div>
+
+
+            </div>
+
+            <div data-ng-if="vm.item.type == 5">
+
+                <h4>Bloomberg</h4>
 
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
@@ -313,6 +318,37 @@
                     <md-input-container>
                         <label>FX Rate (Requested Field ID)</label>
                         <input type="text" data-ng-model="vm.item.type_settings.fx_rate">
+                    </md-input-container>
+
+                </div>
+
+                <div class="pricing-scheme-help-box">
+
+                    <h4>Available variables:</h4>
+
+                    <div>
+                        <b>bid</b>
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <md-input-container>
+                        <label>Pricing Formula</label>
+                        <input type="text" data-ng-model="vm.item.type_settings.expr">
+                    </md-input-container>
+
+                    <expression-editor-button data-item="vm.item.type_settings.expr"
+                                              style="float: right"></expression-editor-button>
+
+                </div>
+
+                <div>
+
+                    <md-input-container>
+                        <label>If Error. Error Text</label>
+                        <input type="text" data-ng-model="vm.item.type_settings.error_text_expr">
                     </md-input-container>
 
                 </div>

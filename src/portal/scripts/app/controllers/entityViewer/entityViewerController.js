@@ -416,53 +416,33 @@
                                             vm.entityViewerDataService.setActiveObjectAction(null);
                                             vm.entityViewerDataService.setActiveObjectActionData(null);
 
-                                            if (res && res.res === 'agree') {
+                                            console.log('res.data.ids', res.data.ids);
 
+                                            if (res.status === 'agree') {
 
-                                                if (res.data.action === 'delete') {
+                                                var objects = vm.entityViewerDataService.getObjects();
 
-                                                    var objects = vm.entityViewerDataService.getObjects();
+                                                console.log('objects', objects);
 
-                                                    objects.forEach(function (obj) {
+                                                objects.forEach(function (obj) {
 
-                                                        if (activeObject.id === obj.id) {
+                                                    if (res.data.ids.indexOf(obj.id) !== -1) {
 
-                                                            var parent = vm.entityViewerDataService.getData(obj.___parentId);
+                                                        var parent = vm.entityViewerDataService.getData(obj.___parentId)
 
-                                                            parent.results = parent.results.filter(function (resultItem) {
-                                                                return resultItem.id !== activeObject.id
-                                                            });
+                                                        parent.results = parent.results.filter(function (resultItem) {
+                                                            return res.data.ids.indexOf(resultItem.id) === -1
+                                                        });
 
-                                                            vm.entityViewerDataService.setData(parent)
+                                                        console.log('parent', parent);
 
-                                                        }
+                                                        vm.entityViewerDataService.setData(parent)
 
-                                                    });
+                                                    }
 
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                                });
 
-                                                } else {
-
-                                                    var objects = vm.entityViewerDataService.getObjects();
-
-                                                    objects.forEach(function (obj) {
-
-                                                        if (res.data.id === obj.id) {
-
-                                                            Object.keys(res.data).forEach(function (key) {
-
-                                                                obj[key] = res.data[key]
-
-                                                            });
-
-                                                            vm.entityViewerDataService.setObject(obj);
-
-                                                        }
-
-                                                    });
-
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                                }
+                                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                             }
                                         });
@@ -484,53 +464,27 @@
                                             vm.entityViewerDataService.setActiveObjectAction(null);
                                             vm.entityViewerDataService.setActiveObjectActionData(null);
 
-                                            if (res && res.res === 'agree') {
+                                            if (res.status === 'agree') {
 
+                                                var objects = vm.entityViewerDataService.getObjects();
 
-                                                if (res.data.action === 'delete') {
+                                                objects.forEach(function (obj) {
 
-                                                    var objects = vm.entityViewerDataService.getObjects();
+                                                    if (res.data.ids.indexOf(obj.id) !== -1) {
 
-                                                    objects.forEach(function (obj) {
+                                                        var parent = vm.entityViewerDataService.getData(obj.___parentId)
 
-                                                        if (activeObject.id === obj.id) {
+                                                        parent.results = parent.results.filter(function (resultItem) {
+                                                            return res.data.ids.indexOf(resultItem.id) === -1
+                                                        });
 
-                                                            var parent = vm.entityViewerDataService.getData(obj.___parentId);
+                                                        vm.entityViewerDataService.setData(parent)
 
-                                                            parent.results = parent.results.filter(function (resultItem) {
-                                                                return resultItem.id !== activeObject.id
-                                                            });
+                                                    }
 
-                                                            vm.entityViewerDataService.setData(parent)
+                                                });
 
-                                                        }
-
-                                                    });
-
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                                                } else {
-
-                                                    var objects = vm.entityViewerDataService.getObjects();
-
-                                                    objects.forEach(function (obj) {
-
-                                                        if (res.data.id === obj.id) {
-
-                                                            Object.keys(res.data).forEach(function (key) {
-
-                                                                obj[key] = res.data[key]
-
-                                                            });
-
-                                                            vm.entityViewerDataService.setObject(obj);
-
-                                                        }
-
-                                                    });
-
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                                }
+                                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                             }
                                         });

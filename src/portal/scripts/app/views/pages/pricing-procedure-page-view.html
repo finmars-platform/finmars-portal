@@ -22,6 +22,9 @@
                                 Notes for Users
                             </th>
                             <th>
+                                Date Range
+                            </th>
+                            <th>
                                 Edit Procedure
                             </th>
                         </tr>
@@ -36,6 +39,10 @@
                             </td>
                             <td>
                                 {{item.notes_for_users}}
+                            </td>
+                            <td>
+                                <div data-ng-if="item.price_date_from_calculated">{{item.price_date_from_calculated}} - {{item.price_date_to_calculated}}</div>
+                                <div data-ng-if="!item.price_date_from_calculated">&nbsp;</div>
                             </td>
                             <td>
                                 <md-button class="md-raised" data-ng-click="vm.editProcedure($event, item)">Edit</md-button>
