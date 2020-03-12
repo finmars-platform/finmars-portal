@@ -32,6 +32,8 @@
                 //scope.attributesFromAbove = [];
 
                 var dataLoadEndId;
+                var toggleFilterAreaID;
+                var clearUseFromAboveId;
 
                 var getDataForSelects = function () {
                     var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
@@ -264,54 +266,40 @@
 
                 scope.initSplitPanelMode = function () {
 
-                    if (scope.useFromAbove) {
+                    scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
-                        scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+                        // TODO leave only key = scope.filter.options.use_from_above.key
+                        var key = scope.filter.options.use_from_above;
+                        if (typeof scope.filter.options.use_from_above === 'object') {
+                            key = scope.filter.options.use_from_above.key;
+                        }
+                        // < leave only key = scope.filter.options.use_from_above.key >
+                        var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
 
-                            // TODO leave only key = scope.filter.options.use_from_above.key
-                            var key = scope.filter.options.use_from_above;
-                            if (typeof scope.filter.options.use_from_above === 'object') {
-                                key = scope.filter.options.use_from_above.key;
-                            }
-                            // < leave only key = scope.filter.options.use_from_above.key >
+                        if (isUseFromAboveActive() && activeObjectFromAbove && typeof activeObjectFromAbove === 'object') {
 
-                            if (isUseFromAboveActive() && !scope.noDataForLinkingTo) {
+                            //scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
 
-                                var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+                            var value = activeObjectFromAbove[key];
 
-                                //scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+                            scope.filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
 
-                                var value = activeObjectFromAbove[key];
+                            scope.updateFilters();
 
-                                scope.filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                                scope.updateFilters();
-
-                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                            }
-
-                        });
-
-                    } else {
-
-                        if (isUseFromAboveActive()) {
-                            scope.noDataForLinkingTo = true;
                         }
 
-                    }
+                    });
 
                 };
 
-
-                scope.init = function () {
-                    scope.initSplitPanelMode();
-
+                var initEventListeners = function () {
                     if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
                         dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
                     }
 
-                    scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+                    toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
@@ -322,6 +310,16 @@
                         }
 
                     });
+                };
+
+
+                scope.init = function () {
+
+                    if (scope.useFromAbove) {
+                        scope.initSplitPanelMode();
+                    }
+
+                    initEventListeners();
 
                     if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
                         setTimeout(function () {
@@ -335,6 +333,7 @@
 
                 scope.$on("$destroy", function () {
                     scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndId);
+                    scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
                 });
 
             }

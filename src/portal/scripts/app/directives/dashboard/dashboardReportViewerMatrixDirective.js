@@ -128,6 +128,10 @@
                     scope.fillInModeData = null;
                 };
 
+                scope.clearUseFromAboveFilters = function () {
+                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
+                };
+
                 scope.initEventListeners = function () {
 
                     if (!scope.fillInModeData) {

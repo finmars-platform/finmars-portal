@@ -17,6 +17,8 @@
 
         vm.columnsNames = validationData.tableColumnsNames;
 
+        var entityType = validationData.entityType;
+
         vm.errorRows = [];
 
         vm.showDevInfo = false;
@@ -70,24 +72,51 @@
 
         };*/
 
-        if (vm.errorMessage) {
+        var parseEvErrorMessage = function () {
 
-            Object.keys(vm.errorMessage).forEach(function (messageKey) {
+            if (vm.errorMessage) {
 
-                var errorMessages = vm.errorMessage[messageKey];
+                Object.keys(vm.errorMessage).forEach(function (messageKey) {
 
-                errorMessages.forEach(function (eMessage) {
-                    var errorObj = {
-                        name: messageKey,
-                        action_notes: eMessage
-                    };
+                    var errorMessages = vm.errorMessage[messageKey];
 
-                    vm.errorRows.push(errorObj);
+                    errorMessages.forEach(function (eMessage) {
+                        var errorObj = {
+                            name: messageKey,
+                            action_notes: eMessage
+                        };
+
+                        vm.errorRows.push(errorObj);
+                    });
+
                 });
 
-            });
+            }
 
-        }
+        };
+
+        var parseComplexTransactionErrorMessage = function () {
+
+            if (vm.errorMessage && vm.errorMessage.values) {
+
+                Object.keys(vm.errorMessage.values).forEach(function (messageKey) {
+
+                    var errorMessages = vm.errorMessage.values[messageKey];
+
+                    errorMessages.forEach(function (eMessage) {
+                        var errorObj = {
+                            name: messageKey,
+                            action_notes: eMessage
+                        };
+
+                        vm.errorRows.push(errorObj);
+                    });
+
+                });
+
+            }
+
+        };
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -96,6 +125,17 @@
         vm.agree = function () {
             $mdDialog.hide({status: 'agree'});
         };
+
+        var init = function () {
+
+            if (entityType === 'complex-transaction') {
+                parseComplexTransactionErrorMessage();
+            } else {
+                parseEvErrorMessage();
+            }
+        };
+
+        init();
 
         setTimeout(function () {
             vm.dialogElemToResize = document.querySelector('.validationDialogElemToResize');

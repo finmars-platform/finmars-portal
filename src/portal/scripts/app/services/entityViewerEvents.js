@@ -2,6 +2,7 @@ module.exports = {
     'COLUMNS_CHANGE': 'COLUMNS_CHANGE',
     'FILTERS_CHANGE': 'FILTERS_CHANGE',
     'GROUPS_CHANGE': 'GROUPS_CHANGE',
+    'CLEAR_USE_FROM_ABOVE_FILTERS': 'CLEAR_USE_FROM_ABOVE_FILTERS',
 
     'UPDATE_TABLE': 'UPDATE_TABLE', // async download
     'REDRAW_TABLE': 'REDRAW_TABLE', // inmemory redraw
@@ -57,7 +58,6 @@ module.exports = {
     // < Events used only to track layout changes >
 
     // Trigger Split Panel events from root entity viewer
-
     'UPDATE_SPLIT_PANEL_TABLE_VIEWPORT': 'UPDATE_SPLIT_PANEL_TABLE_VIEWPORT',
     'SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED': 'SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED',
 

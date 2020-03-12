@@ -95,7 +95,7 @@
                                 scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
                             }
 
-                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_CONTENT_OF_COMPONENT);
+                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
                             scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                             scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
@@ -124,6 +124,10 @@
 
                 scope.disableFillInMode = function () {
                     scope.fillInModeData = null;
+                };
+
+                scope.clearUseFromAboveFilters = function () {
+                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
                 scope.initEventListeners = function () {

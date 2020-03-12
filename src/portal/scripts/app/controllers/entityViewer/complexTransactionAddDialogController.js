@@ -968,7 +968,8 @@
                                     locals: {
                                         validationData: {
                                             errorData: data,
-                                            tableColumnsNames: ['Name of fields', 'Error Cause']
+                                            tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                            entityType: 'complex-transaction'
                                         }
                                     }
                                 });
@@ -983,22 +984,6 @@
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
-                            /*$mdDialog.show({
-                                controller: 'ValidationDialogController as vm',
-                                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                targetEvent: $event,
-                                locals: {
-                                    validationData: {
-                                        complex_transaction_errors: data.complex_transaction_errors,
-                                        instruments_errors: data.instruments_errors,
-                                        transactions_errors: data.transactions_errors
-                                    }
-                                },
-                                multiple: true,
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true
-                            })*/
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
@@ -1006,7 +991,8 @@
                                 locals: {
                                     validationData: {
                                         errorData: data,
-                                        tableColumnsNames: ['Name of fields', 'Error Cause']
+                                        tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                        entityType: 'complex-transaction'
                                     }
                                 },
                                 multiple: true,
@@ -1111,22 +1097,6 @@
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
-                            /*$mdDialog.show({
-                                controller: 'ValidationDialogController as vm',
-                                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                targetEvent: $event,
-                                locals: {
-                                    validationData: {
-                                        complex_transaction_errors: data.complex_transaction_errors,
-                                        instruments_errors: data.instruments_errors,
-                                        transactions_errors: data.transactions_errors
-                                    }
-                                },
-                                multiple: true,
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true
-                            })*/
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
@@ -1134,7 +1104,8 @@
                                 locals: {
                                     validationData: {
                                         errorData: data,
-                                        tableColumnsNames: ['Name of fields', 'Error Cause']
+                                        tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                        entityType: 'complex-transaction'
                                     }
                                 },
                                 multiple: true,
@@ -1152,19 +1123,6 @@
 
                     }).catch(function (data) {
 
-                        /*$mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            parent: angular.element(document.body),
-                            locals: {
-                                validationData: data
-                            },
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })*/
                         $mdDialog.show({
                             controller: 'ValidationDialogController as vm',
                             templateUrl: 'views/dialogs/validation-dialog-view.html',
@@ -1172,7 +1130,8 @@
                             locals: {
                                 validationData: {
                                     errorData: data,
-                                    tableColumnsNames: ['Name of fields', 'Error Cause']
+                                    tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                    entityType: 'complex-transaction'
                                 }
                             },
                             multiple: true,

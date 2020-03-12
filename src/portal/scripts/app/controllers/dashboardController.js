@@ -187,6 +187,10 @@
 
         };
 
+        vm.clearActiveTabUfaFilters = function () {
+            vm.dashboardEventService.dispatchEvent(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS);
+        };
+
         vm.refreshActiveTab = function () {
 
             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ACTIVE_TAB);
