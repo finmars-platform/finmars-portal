@@ -355,31 +355,9 @@
 
             </div>
 
-            <div data-ng-if="vm.item.type == 6">
+            <div data-ng-if="vm.item.type == 7">
 
-                <h4>World Trading Data</h4>
-
-
-                <div>
-
-                    <md-input-container>
-                        <label>Pricing Formula</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.expr">
-                    </md-input-container>
-
-                    <expression-editor-button data-item="vm.item.type_settings.expr"
-                                              style="float: right"></expression-editor-button>
-
-                </div>
-
-                <div>
-
-                    <md-input-container>
-                        <label>If Error. Error Text</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.error_text_expr">
-                    </md-input-container>
-
-                </div>
+                <h4>Fixer</h4>
 
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
@@ -409,12 +387,46 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>
                     </md-select>
                 </md-input-container>
+
+                <div class="pricing-scheme-help-box">
+
+                    <h4>Available variables:</h4>
+
+                    <div>
+                        <b>close</b>
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <md-input-container>
+                        <label>Pricing Formula</label>
+                        <input type="text" data-ng-model="vm.item.type_settings.expr">
+                    </md-input-container>
+
+                    <expression-editor-button data-item="vm.item.type_settings.expr"
+                                              style="float: right"></expression-editor-button>
+
+                </div>
+
+                <div>
+
+                    <md-input-container>
+                        <label>If Error. Error Text</label>
+                        <input type="text" data-ng-model="vm.item.type_settings.error_text_expr">
+                    </md-input-container>
+
+                </div>
+
+
 
             </div>
 
