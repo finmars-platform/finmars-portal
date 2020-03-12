@@ -26,7 +26,7 @@
                 scope.readyStatus = {
                     data: false
                 };
-                console.log("report align dashboardReportViewer items", scope.item);
+
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
@@ -124,6 +124,10 @@
                 scope.disableFillInMode = function () {
                     scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
                     scope.fillInModeData = null;
+                };
+
+                scope.clearUseFromAboveFilters = function () {
+                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
                 scope.initEventListeners = function () {

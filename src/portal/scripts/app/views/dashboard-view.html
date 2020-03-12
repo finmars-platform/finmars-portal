@@ -105,15 +105,25 @@
             <div class="dashboard-tabs-control-panel">
 
                 <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                           data-ng-click="vm.refreshActiveTab($event)">
+                           data-ng-click="vm.clearActiveTabUfaFilters()">
+                    <ng-md-icon icon="leak_remove"
+                                size="20"
+                                style="fill: #777777">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Clear Link to Selection filters for Active Tab</md-tooltip>
+                    </ng-md-icon>
+                </md-button>
+
+                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
+                           data-ng-click="vm.refreshActiveTab()">
                     <ng-md-icon icon="refresh"
                                 size="20"
                                 style="fill: #777777">
                         <md-tooltip class="tooltip_1" md-direction="bottom">Refresh Active Tab</md-tooltip>
                     </ng-md-icon>
                 </md-button>
+
                 <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                           data-ng-click="vm.refreshAll($event)">
+                           data-ng-click="vm.refreshAll()">
                     <ng-md-icon icon="loop"
                                 size="20"
                                 style="fill: #777777">

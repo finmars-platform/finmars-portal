@@ -241,7 +241,6 @@
 
                 };
 
-
                 /*scope.noDataForLinkingTo = true;
                 var columns = scope.evDataService.getColumns();
 
@@ -276,9 +275,9 @@
                                 };
                             };*/
 
-                            if (isUseFromAboveActive() && !scope.noDataForLinkingTo) {
+                            var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
 
-                                var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+                            if (isUseFromAboveActive() && !scope.noDataForLinkingTo) {
 
                                 //scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
 

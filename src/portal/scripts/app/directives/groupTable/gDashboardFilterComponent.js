@@ -37,8 +37,6 @@
 
                 scope.isReport = metaService.isReport(scope.evDataService.getEntityType());
 
-                var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-
                 scope.fields = {};
 
                 var listLayout = scope.evDataService.getListLayout();
@@ -85,82 +83,18 @@
                     return field.id ? field.id : field.key;
                 };
 
-                if (scope.isReport === true) {
+                var redrawTableWithUpdatedFilters = function () {
 
-                    var ppOptions = {
-                        pageSize: 1000,
-                        page: 1
-                    };
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
 
-                    scope.pricingPolicies = [];
+                    var rootGroup = scope.evDataService.getRootGroupData();
 
-                    var getPricingPolicies = function () {
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                        new Promise(function (resolve, reject) {
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                            pricingPolicyService.getList(ppOptions).then(function (data) {
-
-                                scope.pricingPolicies = scope.pricingPolicies.concat(data.results);
-
-                                if (data.next) {
-
-                                    ppOptions.page = ppOptions.page + 1;
-                                    getPricingPolicies(resolve, reject);
-
-                                } else {
-                                    scope.$apply();
-                                    resolve(true);
-                                }
-
-                            }).catch(function (error) {
-                                reject(error);
-                            });
-
-                        });
-
-                    };
-
-                    getPricingPolicies();
-
-
-                    var currencyOptions = {
-                        pageSize: 1000,
-                        page: 1
-                    };
-
-                    scope.currencies = [];
-
-                    var getCurrencies = function () {
-
-                        new Promise(function (resolve, reject) {
-
-                            currencyService.getList(currencyOptions).then(function (data) {
-
-                                scope.currencies = scope.currencies.concat(data.results);
-
-                                if (data.next) {
-
-                                    currencyOptions.page = currencyOptions.page + 1;
-                                    getPricingPolicies(resolve, reject);
-
-                                } else {
-                                    scope.$apply();
-                                    resolve(true);
-                                };
-
-                            }).catch(function (error) {
-                                reject(error);
-                            });
-
-                        });
-
-                    };
-
-                    getCurrencies();
-
-                    prepareReportLayoutOptions();
-
-                }
+                };
 
                 scope.updateReportOptions = function () {
 
@@ -243,32 +177,6 @@
                     $mdOpenMenu(ev);
                 };
 
-                scope.toggleFilterState = function () {
-
-                    scope.evDataService.resetData();
-                    scope.evDataService.resetRequestParameters();
-
-                    var rootGroup = scope.evDataService.getRootGroupData();
-
-                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                };
-
-                scope.filterChange = function (filter) {
-
-                    scope.evDataService.resetData();
-                    scope.evDataService.resetRequestParameters();
-
-                    var rootGroup = scope.evDataService.getRootGroupData();
-
-                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
-
-                };
-
                 scope.selectAll = function () {
                     scope.filters.forEach(function (item) {
                         item.options.enabled = true;
@@ -282,14 +190,79 @@
                 };
 
                 scope.clearAll = function () {
-                    scope.filters.forEach(function (item) {
-                        item.options.query = '';
-                    });
+                    if (scope.filters && scope.filters.length > 0) {
 
-                    scope.evDataService.setFilters(scope.filters);
-                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                        var hasEnabledFilters = false;
+                        var hasFrontendFilters = false;
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+                        scope.filters.forEach(function (filter) {
+                            if (filter.options.filter_type === 'date_tree') {
+                                filter.options.dates_tree = [];
+                            }
+
+                            if (filter.options.filter_type === 'from_to') {
+                                filter.options.filter_values = {};
+                            } else {
+                                filter.options.filter_values = [];
+                            }
+
+                            if (filter.options.enabled) {
+                                hasEnabledFilters = true;
+                            }
+
+                            if (filter.options.is_frontend_filter) {
+                                hasFrontendFilters = true;
+                            }
+                        });
+
+
+                        scope.evDataService.setFilters(scope.filters);
+                        scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+
+                        if (hasEnabledFilters) {
+
+                            if (scope.isReport) {
+
+                                redrawTableWithUpdatedFilters();
+
+                            } else if (hasFrontendFilters) {
+                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            }
+
+                        }
+
+                    }
+
+                };
+
+                var clearUseFromAboveFilters = function () {
+
+                    if (scope.filters && scope.filters.length > 0) {
+
+                        var hasUseFromAboveFilter = false;
+
+                        scope.filters.forEach(function (filter) {
+
+                            if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length > 0) {
+
+                                if (filter.options.filter_values.length) {
+                                    hasUseFromAboveFilter = true;
+                                    filter.options.filter_values = [];
+                                }
+
+                            }
+
+                        });
+
+                        if (hasUseFromAboveFilter) {
+                            scope.evDataService.setFilters(scope.filters);
+                            scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+                            redrawTableWithUpdatedFilters();
+                        }
+
+                    }
 
                 };
 
@@ -570,9 +543,91 @@
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
                     });
 
+                    scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
+                        clearUseFromAboveFilters();
+                    });
+
+
                 };
 
                 var init = function () {
+
+                    if (scope.isReport === true) {
+
+                        var ppOptions = {
+                            pageSize: 1000,
+                            page: 1
+                        };
+
+                        scope.pricingPolicies = [];
+
+                        var getPricingPolicies = function () {
+
+                            new Promise(function (resolve, reject) {
+
+                                pricingPolicyService.getList(ppOptions).then(function (data) {
+
+                                    scope.pricingPolicies = scope.pricingPolicies.concat(data.results);
+
+                                    if (data.next) {
+
+                                        ppOptions.page = ppOptions.page + 1;
+                                        getPricingPolicies(resolve, reject);
+
+                                    } else {
+                                        scope.$apply();
+                                        resolve(true);
+                                    }
+
+                                }).catch(function (error) {
+                                    reject(error);
+                                });
+
+                            });
+
+                        };
+
+                        getPricingPolicies();
+
+
+                        var currencyOptions = {
+                            pageSize: 1000,
+                            page: 1
+                        };
+
+                        scope.currencies = [];
+
+                        var getCurrencies = function () {
+
+                            new Promise(function (resolve, reject) {
+
+                                currencyService.getList(currencyOptions).then(function (data) {
+
+                                    scope.currencies = scope.currencies.concat(data.results);
+
+                                    if (data.next) {
+
+                                        currencyOptions.page = currencyOptions.page + 1;
+                                        getPricingPolicies(resolve, reject);
+
+                                    } else {
+                                        scope.$apply();
+                                        resolve(true);
+                                    };
+
+                                }).catch(function (error) {
+                                    reject(error);
+                                });
+
+                            });
+
+                        };
+
+                        getCurrencies();
+
+                        prepareReportLayoutOptions();
+
+                    }
 
                     uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 

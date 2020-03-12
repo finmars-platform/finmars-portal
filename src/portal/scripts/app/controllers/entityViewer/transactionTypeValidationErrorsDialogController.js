@@ -11,6 +11,7 @@
 
         vm.actionErrors = data.actionErrors;
         vm.entityErrors = data.entityErrors;
+        //vm.inputsErrors = data.inputsErrors;
 
         vm.agree = function () {
             $mdDialog.hide({status: 'agree'});

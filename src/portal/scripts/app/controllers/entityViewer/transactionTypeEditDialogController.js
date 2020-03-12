@@ -494,7 +494,7 @@
 
         };
 
-        vm.checkActionsForEmptyFields = function (actions) {
+        var checkActionsForEmptyFields = function (actions) {
 
             var result = [];
 
@@ -601,7 +601,7 @@
             return result;
         };
 
-        vm.checkEntityForEmptyFields = function (entity) {
+        var checkEntityForEmptyFields = function (entity) {
 
             var result = [];
 
@@ -655,6 +655,38 @@
 
         };
 
+        var checkInputsForEmptyFields = function (inputs) {
+
+            var result = [];
+
+            inputs.forEach(function (input, index) {
+
+                if (!input.name) {
+
+                    result.push({
+                        action_notes: 'INPUTS',
+                        key: 'name',
+                        order_number: index + 1
+                    });
+
+                }
+
+                if (!input.value_type) {
+
+                    result.push({
+                        action_notes: 'INPUTS',
+                        key: 'value_type',
+                        order_number: index + 1
+                    });
+
+                }
+
+            });
+
+            return result;
+
+        };
+
         vm.save = function (entityToSave, withoutUpdating) {
 
             vm.processing = true;
@@ -669,8 +701,9 @@
                     vm.updateEntityBeforeSave();
                 }
 
-                var actionsErrors = vm.checkActionsForEmptyFields(entityToSave.actions);
-                var entityErrors = vm.checkEntityForEmptyFields(entityToSave);
+                var actionsErrors = checkActionsForEmptyFields(entityToSave.actions);
+                var entityErrors = checkEntityForEmptyFields(entityToSave);
+                //var inputsErrors = checkInputsForEmptyFields(entityToSave.inputs);
 
                 if (actionsErrors.length || entityErrors.length) {
 
@@ -1440,94 +1473,121 @@
             }
         };
 
-        vm.addRow = function () {
+        vm.addRow = function ($event) {
 
-            vm.entity.inputs.push({
-                name: vm.newItem.name,
-                verbose_name: vm.newItem.verbose_name,
-                value_type: vm.newItem.value_type,
-                content_type: vm.newItem.content_type,
-                is_fill_from_context: vm.newItem.is_fill_from_context,
-                reference_table: vm.newItem.reference_table,
-                account: vm.newItem.account,
-                instrument_type: vm.newItem.instrument_type,
-                instrument: vm.newItem.instrument,
-                currency: vm.newItem.currency,
-                counterparty: vm.newItem.counterparty,
-                responsible: vm.newItem.responsible,
-                portfolio: vm.newItem.portfolio,
-                strategy1: vm.newItem.strategy1,
-                strategy2: vm.newItem.strategy2,
-                strategy3: vm.newItem.strategy3,
-                daily_pricing_model: vm.newItem.daily_pricing_model,
-                payment_size_detail: vm.newItem.payment_size_detail,
-                price_download_scheme: vm.newItem.price_download_scheme,
-                pricing_policy: vm.newItem.pricing_policy,
-                value: vm.newItem.value,
-                value_expr: vm.newItem.value_expr
-            });
+            if (vm.newItem.name && vm.newItem.value_type) {
 
-            /*originalEntity.inputs.push({
-                name: vm.newItem.name,
-                verbose_name: vm.newItem.verbose_name,
-                value_type: vm.newItem.value_type,
-                content_type: vm.newItem.content_type,
-                is_fill_from_context: vm.newItem.is_fill_from_context,
-                reference_table: vm.newItem.reference_table,
-                account: vm.newItem.account,
-                instrument_type: vm.newItem.instrument_type,
-                instrument: vm.newItem.instrument,
-                currency: vm.newItem.currency,
-                counterparty: vm.newItem.counterparty,
-                responsible: vm.newItem.responsible,
-                portfolio: vm.newItem.portfolio,
-                strategy1: vm.newItem.strategy1,
-                strategy2: vm.newItem.strategy2,
-                strategy3: vm.newItem.strategy3,
-                daily_pricing_model: vm.newItem.daily_pricing_model,
-                payment_size_detail: vm.newItem.payment_size_detail,
-                price_download_scheme: vm.newItem.price_download_scheme,
-                pricing_policy: vm.newItem.pricing_policy,
-                value: vm.newItem.value,
-                value_expr: vm.newItem.value_expr
-            });*/
+                vm.entity.inputs.push({
+                    name: vm.newItem.name,
+                    verbose_name: vm.newItem.verbose_name,
+                    value_type: vm.newItem.value_type,
+                    content_type: vm.newItem.content_type,
+                    is_fill_from_context: vm.newItem.is_fill_from_context,
+                    reference_table: vm.newItem.reference_table,
+                    account: vm.newItem.account,
+                    instrument_type: vm.newItem.instrument_type,
+                    instrument: vm.newItem.instrument,
+                    currency: vm.newItem.currency,
+                    counterparty: vm.newItem.counterparty,
+                    responsible: vm.newItem.responsible,
+                    portfolio: vm.newItem.portfolio,
+                    strategy1: vm.newItem.strategy1,
+                    strategy2: vm.newItem.strategy2,
+                    strategy3: vm.newItem.strategy3,
+                    daily_pricing_model: vm.newItem.daily_pricing_model,
+                    payment_size_detail: vm.newItem.payment_size_detail,
+                    price_download_scheme: vm.newItem.price_download_scheme,
+                    pricing_policy: vm.newItem.pricing_policy,
+                    value: vm.newItem.value,
+                    value_expr: vm.newItem.value_expr
+                });
 
-            // if created input with name of deleted one, remove it from warning
-            for (var i = 0; i < inputsToDelete.length; i++) {
-                var inputToDelete = inputsToDelete[i];
+                /*originalEntity.inputs.push({
+                    name: vm.newItem.name,
+                    verbose_name: vm.newItem.verbose_name,
+                    value_type: vm.newItem.value_type,
+                    content_type: vm.newItem.content_type,
+                    is_fill_from_context: vm.newItem.is_fill_from_context,
+                    reference_table: vm.newItem.reference_table,
+                    account: vm.newItem.account,
+                    instrument_type: vm.newItem.instrument_type,
+                    instrument: vm.newItem.instrument,
+                    currency: vm.newItem.currency,
+                    counterparty: vm.newItem.counterparty,
+                    responsible: vm.newItem.responsible,
+                    portfolio: vm.newItem.portfolio,
+                    strategy1: vm.newItem.strategy1,
+                    strategy2: vm.newItem.strategy2,
+                    strategy3: vm.newItem.strategy3,
+                    daily_pricing_model: vm.newItem.daily_pricing_model,
+                    payment_size_detail: vm.newItem.payment_size_detail,
+                    price_download_scheme: vm.newItem.price_download_scheme,
+                    pricing_policy: vm.newItem.pricing_policy,
+                    value: vm.newItem.value,
+                    value_expr: vm.newItem.value_expr
+                });*/
 
-                if (inputToDelete === vm.newItem.name) {
-                    inputsToDelete.splice(i, 1);
-                    break;
+                // if created input with name of deleted one, remove it from warning
+                for (var i = 0; i < inputsToDelete.length; i++) {
+                    var inputToDelete = inputsToDelete[i];
+
+                    if (inputToDelete === vm.newItem.name) {
+                        inputsToDelete.splice(i, 1);
+                        break;
+                    }
                 }
+                // < if created input with name of deleted one, remove it from warning >
+
+
+                vm.newItem.name = null;
+                vm.newItem.verbose_name = null;
+                vm.newItem.value_type = null;
+                vm.newItem.content_type = null;
+                vm.newItem.is_fill_from_context = false;
+                vm.newItem.reference_table = null;
+                vm.newItem.account = null;
+                vm.newItem.instrument_type = null;
+                vm.newItem.instrument = null;
+                vm.newItem.currency = null;
+                vm.newItem.counterparty = null;
+                vm.newItem.responsible = null;
+                vm.newItem.portfolio = null;
+                vm.newItem.strategy1 = null;
+                vm.newItem.strategy2 = null;
+                vm.newItem.strategy3 = null;
+                vm.newItem.daily_pricing_model = null;
+                vm.newItem.payment_size_detail = null;
+                vm.newItem.price_download_scheme = null;
+                vm.newItem.pricing_policy = null;
+                vm.newItem.value = null;
+                vm.newItem.value_expr = null;
+
+                vm.updateInputFunctions();
+
+            } else {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    multiple: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: "Please, fill in 'Name' and 'Value type' fields.",
+                            actionsButtons: [
+                                {
+                                    name: 'CLOSE',
+                                    response: false
+                                }
+                            ]
+                        }
+                    }
+                });
+
             }
-            // < if created input with name of deleted one, remove it from warning >
-
-
-            vm.newItem.name = null;
-            vm.newItem.verbose_name = null;
-            vm.newItem.value_type = null;
-            vm.newItem.content_type = null;
-            vm.newItem.is_fill_from_context = false;
-            vm.newItem.reference_table = null;
-            vm.newItem.account = null;
-            vm.newItem.instrument_type = null;
-            vm.newItem.instrument = null;
-            vm.newItem.currency = null;
-            vm.newItem.counterparty = null;
-            vm.newItem.responsible = null;
-            vm.newItem.portfolio = null;
-            vm.newItem.strategy1 = null;
-            vm.newItem.strategy2 = null;
-            vm.newItem.strategy3 = null;
-            vm.newItem.daily_pricing_model = null;
-            vm.newItem.payment_size_detail = null;
-            vm.newItem.price_download_scheme = null;
-            vm.newItem.pricing_policy = null;
-            vm.newItem.value = null;
-            vm.newItem.value_expr = null;
-
-            vm.updateInputFunctions();
 
         };
 

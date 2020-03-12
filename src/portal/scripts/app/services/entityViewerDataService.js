@@ -84,6 +84,16 @@
 
     };
 
+    var emptyUseFromAboveFilters = function (filters) {
+
+        filters.forEach(function (filter) {
+            if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length > 0) {
+                filter.options.filter_values = [];
+            }
+        });
+
+    };
+
     module.exports = function () {
 
         var data = {
@@ -905,6 +915,8 @@
             listLayout.data.columns = getColumns();
             listLayout.data.grouping = getGroups();
             listLayout.data.filters = getFilters();
+            emptyUseFromAboveFilters(listLayout.data.filters);
+
             listLayout.data.additions = getAdditions();
 
             var interfaceLayout = getInterfaceLayout();
@@ -1020,6 +1032,7 @@
 
             setColumns(listLayout.data.columns);
             setGroups(listLayout.data.grouping);
+            emptyUseFromAboveFilters(listLayout.data.filters);
             setFilters(listLayout.data.filters);
 
             /*if (isRootEntityViewer()) {

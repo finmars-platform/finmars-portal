@@ -18,16 +18,21 @@
         </md-button>-->
 
         <div class="dashboard-component-header-left">
+            <md-button data-ng-click="clearUseFromAboveFilters()">
+                <ng-md-icon size="24" icon="leak_remove"></ng-md-icon>
+                <md-tooltip data-md-direction="top">Clear Link to Selection filters</md-tooltip>
+            </md-button>
+
             <md-button data-ng-if="fillInModeData"
                        data-ng-click="disableFillInMode()">
                 <ng-md-icon size="24" icon="close"></ng-md-icon>
-                <md-tooltip data-md-direction="top">Close Filled in Component</md-tooltip>
+                <md-tooltip data-md-direction="top">Collapse Component</md-tooltip>
             </md-button>
 
             <md-button data-ng-if="!fillInModeData"
                        data-ng-click="enableFillInMode()">
                 <ng-md-icon size="24" icon="zoom_out_map"></ng-md-icon>
-                <md-tooltip data-md-direction="top">Fill in dashboard space</md-tooltip>
+                <md-tooltip data-md-direction="top">Expand component</md-tooltip>
             </md-button>
 
             <md-menu class="dashboard-component-settings-menu">

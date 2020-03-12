@@ -12,7 +12,6 @@
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
-        var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
         var AttributeDataService = require('../../services/attributeDataService');
 
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
@@ -115,40 +114,6 @@
                     vm.dashboardComponentDataService.setViewerTableColumns(columns);
                     vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
 
-                });
-
-                vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
-                    vm.getView()
-                });
-
-                vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
-
-                    var columns = vm.dashboardComponentDataService.getViewerTableColumns();
-                    vm.entityViewerDataService.setColumns(columns);
-
-                    vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                });
-
-                vm.dashboardComponentEventService.addEventListener(dashboardEvents.SAVE_VIEWER_TABLE_CONFIGURATION, function () {
-
-                    var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
-                    // revert options that were change because of dashboard
-                    currentLayoutConfig.data.interfaceLayout = savedInterfaceLayout;
-                    currentLayoutConfig.data.additions = savedAddtions;
-
-                    if (currentLayoutConfig.hasOwnProperty('id')) {
-                        uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function () {
-                            vm.entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
-                        });
-                    }
-
-                    $mdDialog.show({
-                        controller: 'SaveLayoutDialogController as vm',
-                        templateUrl: 'views/save-layout-dialog-view.html',
-                        clickOutsideToClose: false
-                    })
                 });
 
                 if (vm.componentData.type === 'report_viewer_grand_total') {
@@ -612,7 +577,14 @@
             vm.initDashboardExchange = function () {
 
                 // vm.oldEventExchanges()
+                var clearUseFromAboveFilters = function () {
 
+                    vm.entityViewerDataService.setActiveObject(null);
+                    vm.entityViewerDataService.setActiveObjectFromAbove(null);
+
+                    vm.entityViewerEventService.dispatchEvent(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
+
+                };
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
 
@@ -628,12 +600,55 @@
                     console.log('$scope.$parent.vm.tabNumber', $scope.$parent.vm.tabNumber);
 
                     if (activeTab.tab_number === $scope.$parent.vm.tabNumber) {
-
                         vm.applyDashboardChanges()
-
                     }
 
-                })
+                });
+
+                vm.dashboardEventService.addEventListener(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS, function () {
+                    var activeTab = vm.dashboardDataService.getActiveTab();
+
+                    if (activeTab.tab_number === $scope.$parent.vm.tabNumber) {
+                        clearUseFromAboveFilters();
+                    }
+                });
+
+
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
+                    vm.getView()
+                });
+
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
+
+                    var columns = vm.dashboardComponentDataService.getViewerTableColumns();
+                    vm.entityViewerDataService.setColumns(columns);
+
+                    vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                });
+
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.SAVE_VIEWER_TABLE_CONFIGURATION, function () {
+
+                    var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
+                    // revert options that were change because of dashboard
+                    currentLayoutConfig.data.interfaceLayout = savedInterfaceLayout;
+                    currentLayoutConfig.data.additions = savedAddtions;
+
+                    if (currentLayoutConfig.hasOwnProperty('id')) {
+                        uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function () {
+                            vm.entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
+                        });
+                    }
+
+                    $mdDialog.show({
+                        controller: 'SaveLayoutDialogController as vm',
+                        templateUrl: 'views/save-layout-dialog-view.html',
+                        clickOutsideToClose: false
+                    })
+                });
+
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS, clearUseFromAboveFilters);
 
             };
 
@@ -775,11 +790,9 @@
 
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
-                //vm.splitPanelExchangeService = new SplitPanelExchangeService();
                 vm.attributeDataService = new AttributeDataService();
 
-
-                console.log('$scope.$parent.vm.componentData', $scope.$parent.vm.componentData);
+                //console.log('$scope.$parent.vm.componentData', $scope.$parent.vm.componentData);
 
                 setDataFromDashboard();
 
