@@ -7,6 +7,7 @@
 
     var uiService = require('../../../services/uiService');
     var dashboardHelper = require('../../../helpers/dashboard.helper');
+    var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
@@ -124,7 +125,7 @@
 
                 vm.layouts = data.results;
 
-                vm.layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+                vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
                 vm.onRvLayoutChange();
 
                 $scope.$apply();
@@ -167,7 +168,7 @@
                     return {id: column.key, name: colName}
                 });
 
-                vm.linkingToFilters = dashboardHelper.getLinkingToFilters(vm.selectedLayout);
+                vm.linkingToFilters = evRvLayoutsHelper.getLinkingToFilters(vm.selectedLayout);
             }
 
         };
@@ -179,7 +180,7 @@
                 if (vm.layouts[i].id === vm.item.settings.layout) {
 
                     var layout = vm.layouts[i];
-                    vm.linkingToFilters = dashboardHelper.getLinkingToFilters(layout);
+                    vm.linkingToFilters = evRvLayoutsHelper.getLinkingToFilters(layout);
 
                     break;
 

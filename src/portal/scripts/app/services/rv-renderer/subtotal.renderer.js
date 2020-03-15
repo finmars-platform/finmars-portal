@@ -279,23 +279,30 @@
 
     };
 
-    var getCellTextAlign = function (column, evDataService) {
+    var getCellTextAlign = function (evDataService, obj, column, columnNumber) {
 
         var result = '';
         var dashboardCellAlign = evDataService.dashboard.getColumnsTextAlign();
 
-        if (column.style && column.style.text_align) {
+        var rootGroupOptions = evDataService.getRootGroupOptions();
+        var grandTotalIsActive = rootGroupOptions.subtotal_type;
 
-            result = 'text-' + column.style.text_align;
+        if ((obj.___level > 0 || !grandTotalIsActive || columnNumber > 1) &&
+            obj.___level - 1 !== columnNumber) { // check whether cell contains grouping name or 'Grand Total' text
 
-        } else if (dashboardCellAlign) {
+            if (column.style && column.style.text_align) {
 
-            result = 'text-' + dashboardCellAlign;
+                result = 'text-' + column.style.text_align;
 
-        } else if (column.value_type === 20) {
-            result = 'text-right';
+            } else if (dashboardCellAlign) {
+
+                result = 'text-' + dashboardCellAlign;
+
+            } else if (column.value_type === 20) {
+                result = 'text-right';
+            }
+
         }
-
 
         return result;
 
@@ -383,8 +390,8 @@
 
         columns.forEach(function (column, index) {
 
-            var textAlign = getCellTextAlign(column, evDataService);
             var columnNumber = index + 1;
+            var textAlign = getCellTextAlign(evDataService, obj, column, columnNumber);
             var colorNegative = getColorNegativeNumber(obj, column);
 
             /*if (column.value_type === 20) {
