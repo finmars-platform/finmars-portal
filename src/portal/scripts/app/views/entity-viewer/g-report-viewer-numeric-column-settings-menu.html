@@ -339,7 +339,7 @@
             </md-menu>
         </md-menu-item>
 
-        <md-menu-item data-ng-if="checkReportRemoveButton(column, $index)">
+        <md-menu-item data-ng-if="!isReport || columnHasCorrespondingGroup(column.key)">
             <md-button ng-click="removeColumn(column)"
                        class="g-settings-option-btn">
                 <ng-md-icon icon="visibility_off"></ng-md-icon>

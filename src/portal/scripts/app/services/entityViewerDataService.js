@@ -223,6 +223,10 @@
         }
 
         function getColumns() {
+            if (!Array.isArray(data.columns)) {
+                return [];
+            }
+
             return data.columns;
         }
 
@@ -245,6 +249,10 @@
         }
 
         function getGroups() {
+            if (!Array.isArray(data.groups)) {
+                return [];
+            }
+
             return data.groups;
         }
 

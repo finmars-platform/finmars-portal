@@ -5,6 +5,8 @@
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
+    var uiService = require('../../services/uiService');
+
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
     var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
 
@@ -24,7 +26,7 @@
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {
-                    data: false
+                    data: 'processing'
                 };
 
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
@@ -62,7 +64,51 @@
                     scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
                 }
 
+                var saveComponentSettings = function () {
+
+                    var listLayout = scope.dashboardDataService.getListLayout();
+
+                    if (listLayout) {
+
+                        var layoutData = listLayout.data;
+
+                        for (var i = 0; i < layoutData.components_types.length; i++) {
+
+                            if (layoutData.components_types[i].id === componentData.id) {
+
+                                layoutData.components_types[i] = JSON.parse(JSON.stringify(componentData));
+                                scope.dashboardDataService.setListLayout(listLayout);
+
+                                uiService.updateDashboardLayout(listLayout.id, listLayout).then(function (data) {
+
+                                    $mdDialog.show({
+                                        controller: 'InfoDialogController as vm',
+                                        templateUrl: 'views/info-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        clickOutsideToClose: false,
+                                        locals: {
+                                            info: {
+                                                title: 'Success',
+                                                description: "Dashboard component settings saved."
+                                            }
+                                        }
+                                    });
+
+                                });
+
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+                };
+
                 scope.openComponentSettingsEditorDialog = function ($event) {
+
+                    var dashboardComponents = scope.dashboardDataService.getComponents();
 
                     $mdDialog.show({
                         controller: 'DashboardReportViewerComponentSettingsDialogController as vm',
@@ -72,8 +118,12 @@
                         autoWrap: true,
                         multiple: true,
                         locals: {
-                            item: scope.vm.componentData
+                            item: scope.vm.componentData,
+                            data: {
+                                dashboardComponents: dashboardComponents
+                            }
                         }
+
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
@@ -92,6 +142,10 @@
 
                             if (scope.fillInModeData) { // Reloading corresponding component inside tabs from it's filled in copy
                                 scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+                            }
+
+                            if (res.action === 'save') {
+                                saveComponentSettings();
                             }
 
                             scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
@@ -140,7 +194,22 @@
 
                             if (status === dashboardComponentStatuses.START) { // Init calculation of a component
 
-                                scope.readyStatus.data = true;
+                                scope.readyStatus.data = 'ready';
+
+                                setTimeout(function () {
+                                    scope.$apply();
+                                },0)
+
+                            }  else if (status === dashboardComponentStatuses.ERROR) {
+
+                                scope.compErrorMessage = 'ERROR';
+                                var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
+
+                                if (componentError) {
+                                    scope.compErrorMessage = 'ERROR: ' + componentError.displayMessage;
+                                }
+
+                                scope.readyStatus.data = 'error';
 
                                 setTimeout(function () {
                                     scope.$apply();
@@ -166,7 +235,7 @@
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     } else {
-                        scope.readyStatus.data = true;
+                        scope.readyStatus.data = 'ready';
                     }
 
                 };
