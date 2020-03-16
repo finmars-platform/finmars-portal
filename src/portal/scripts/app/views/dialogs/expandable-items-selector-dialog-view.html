@@ -39,7 +39,8 @@
             <md-card data-ng-repeat="item in vm.items | filter: {name: searchTerm} as results track by item.id"
                      class="expandable-item"
                      ng-class="{'selected': item.isSelected}"
-                     data-ng-click="vm.selectItem(item)">
+                     data-ng-click="vm.selectItem(item)"
+                     data-ng-dblclick="vm.selectItemAndSave(item)">
 
                 <div class="cb1-main-container"
                      ng-class="{'cb1-block-collapsed': vm.collapsingItems[item.id]}">

@@ -8,6 +8,7 @@
     var metaService = require('../../services/metaService');
     var evEvents = require('../../services/entityViewerEvents');
     var evHelperService = require('../../services/entityViewerHelperService');
+    var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var middlewareService = require('../../services/middlewareService');
@@ -431,6 +432,47 @@
 
                 }
 
+                var getListLayoutByEntity = function (entityType) {
+                    var options = {
+                        pageSize: 1000,
+                        page: 1,
+                        sort: {
+                            key: 'content_type',
+                            direction: 'DSC'
+                        }
+                    };
+
+                    var layouts = [];
+
+                    var getLayouts = function (resolve, reject) {
+
+                        uiService.getListLayout(entityType, options).then(function (data) {
+
+                            layouts = layouts.concat(data.results);
+
+                            if (data.next) {
+
+                                options.page = options.page + 1;
+                                getLayouts();
+
+                            } else {
+                                resolve(layouts);
+                            }
+
+                        }).catch(function (error) {
+                            reject(error);
+                        })
+
+                    };
+
+                    return new Promise(function (resolve, reject) {
+
+                        getLayouts(resolve, reject);
+
+                    });
+
+                };
+
 
                 scope.toggleSplitPanel = function ($event, type) {
 
@@ -457,47 +499,63 @@
 
                         if (entityType) {
 
-                            $mdDialog.show({
-                                controller: 'SelectLayoutDialogController as vm',
-                                templateUrl: 'views/dialogs/select-layout-dialog-view.html',
-                                targetEvent: $event,
-                                locals: {
-                                    options: {
-                                        dialogTitle: 'Choose layout to open Split Panel with',
-                                        entityType: entityType,
-                                        noFolding: true
+                            getListLayoutByEntity(entityType).then(function (layoutsList) {
+                                var layouts = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(layoutsList);
+                                //var layouts = rvHelper data;
+                                /*$mdDialog.show({
+                                                                controller: 'SelectLayoutDialogController as vm',
+                                                                templateUrl: 'views/dialogs/select-layout-dialog-view.html',
+                                                                targetEvent: $event,
+                                                                locals: {
+                                                                    options: {
+                                                                        dialogTitle: 'Choose layout to open Split Panel with',
+                                                                        entityType: entityType,
+                                                                        noFolding: true
+                                                                    }
+                                                                }*/
+                                $mdDialog.show({
+                                    controller: "ExpandableItemsSelectorDialogController as vm",
+                                    templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
+                                    targetEvent: $event,
+                                    multiple: true,
+                                    locals: {
+                                        data: {
+                                            dialogTitle: 'Choose layout to open Split Panel with',
+                                            items: layouts
+                                        }
                                     }
-                                }
 
-                            }).then(function (res) {
+                                }).then(function (res) {
 
-                                if (res.status === 'agree') {
+                                    if (res.status === 'agree') {
 
-                                    var additions = scope.evDataService.getAdditions();
+                                        var additions = scope.evDataService.getAdditions();
 
-                                    additions.isOpen = true;
-                                    additions.type = type;
+                                        additions.isOpen = true;
+                                        additions.type = type;
 
-                                    if (res.data.listLayoutId) {
+                                        if (res.selectedItem.id) {
 
-                                        if (!additions.layoutData) {
-                                            additions.layoutData = {};
+                                            if (!additions.layoutData) {
+                                                additions.layoutData = {};
+                                            }
+
+                                            additions.layoutData.layoutId = res.selectedItem.id;
+                                            additions.layoutData.name = res.selectedItem.name;
+                                            additions.layoutData.content_type = res.selectedItem.content_type;
+
+                                        } else {
+                                            delete additions.layoutData;
                                         }
 
-                                        additions.layoutData.layoutId = res.data.listLayoutId;
-                                        additions.layoutData.name = res.data.name;
-                                        additions.layoutData.content_type = res.data.content_type;
+                                        scope.evDataService.setSplitPanelStatus(true);
+                                        scope.evDataService.setAdditions(additions);
+                                        scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
+                                        scope.currentAdditions = scope.evDataService.getAdditions();
 
-                                    } else {
-                                        delete additions.layoutData;
                                     }
 
-                                    scope.evDataService.setSplitPanelStatus(true);
-                                    scope.evDataService.setAdditions(additions);
-                                    scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-                                    scope.currentAdditions = scope.evDataService.getAdditions();
-
-                                }
+                                });
 
                             });
 

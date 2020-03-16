@@ -1,4 +1,4 @@
-<div class="height-100" data-ng-if="readyStatus.data" layout="column">
+<div class="height-100" data-ng-if="readyStatus.data === 'ready'" layout="column">
     <div class="dashboard-component-header" flex="noshrink">
         <div class="dashboard-component-name">
             <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
@@ -6,15 +6,16 @@
         </div>
 
         <div class="dashboard-component-header-left">
-            <md-button data-ng-click="clearUseFromAboveFilters()">
-                <ng-md-icon size="24" icon="leak_remove"></ng-md-icon>
-                <md-tooltip data-md-direction="top">Clear Link to Selection filters</md-tooltip>
-            </md-button>
 
             <md-button data-ng-if="fillInModeData"
                        data-ng-click="disableFillInMode()">
                 <ng-md-icon size="24" icon="close"></ng-md-icon>
                 <md-tooltip data-md-direction="top">Collapse Component</md-tooltip>
+            </md-button>
+
+            <md-button data-ng-click="clearUseFromAboveFilters()">
+                <ng-md-icon size="24" icon="leak_remove"></ng-md-icon>
+                <md-tooltip data-md-direction="top">Clear Link to Selection filters</md-tooltip>
             </md-button>
 
             <md-button data-ng-if="!fillInModeData"
@@ -50,11 +51,15 @@
     </div>
 </div>
 
-<div data-ng-if="!readyStatus.data" class="dashboard-component-loader-holder">
+<div data-ng-if="readyStatus.data === 'processing'" class="dashboard-component-loader-holder">
 
     <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-component-loader">
         <!--<md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>-->
         <progress-circular diameter="50"></progress-circular>
     </div>
 
+</div>
+
+<div data-ng-if="readyStatus.data === 'error'" class="center-text-message">
+    <span data-ng-bind="compErrorMessage"></span>
 </div>

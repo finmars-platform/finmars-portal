@@ -93,25 +93,19 @@
   }
 
   .report-viewer-cell-border-left {
-    //border-left: 1px solid #ddd;
-    box-shadow: inset 1px 0px 0px #ddd
+    box-shadow: inset 1px 0px 0px #ddd;
   }
 
   .report-viewer-matrix-cell {
     float: left;
-    //padding: 10px;
-    box-sizing: border-box;
-    //text-align: center;
-    //line-height: 1.5;
-
-    padding-left: 8px;
-    padding-right: 8px;
-
     cursor: pointer;
-
     white-space: pre;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 5px 8px 0;
+    /*padding-left: 8px;
+    padding-right: 8px;*/
+    box-sizing: border-box;
 
     &.active {
       color: #fff;

@@ -2,8 +2,6 @@
 
     'use strict';
 
-    var componentsForLinking = ['report_viewer', 'report_viewer_split_panel', 'report_viewer_matrix', 'report_viewer_bars_chart', 'report_viewer_pie_chart'];
-
     var getLinkingToFilters = function (layout) {
         var linkingToFilters = [];
 
@@ -62,6 +60,7 @@
             var layoutObj = {
                 id: layout.id,
                 name: layout.name,
+                content_type: layout.content_type,
                 content: []
             };
 
@@ -75,14 +74,9 @@
 
     };
 
-    var getComponentsForLinking = function () {
-        return componentsForLinking;
-    };
-
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
-        getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
-        getComponentsForLinking: getComponentsForLinking
-    };
+        getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters
+    }
 
 }());

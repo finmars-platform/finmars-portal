@@ -8,36 +8,82 @@
         </div>
     </md-toolbar>
 
-    <md-dialog-content class="p-16">
+    <md-dialog-content>
 
-        <div class="dashboard-constructor-field1" style="margin: 0 10px;">
-            <md-input-container class="m-0 width-100">
-                <label>Chart Label</label>
-                <input type="text" data-ng-model="vm.item.custom_component_name">
-            </md-input-container>
-        </div>
+        <md-tabs md-dynamic-height>
 
-        <div class="m-b-24" layout="row">
+            <md-tab label="MAIN">
 
-            <md-input-container class="dashboard-constructor-field1" style="margin: 0 10px;">
-                <label for="">Cell Text Align</label>
-                <md-select data-ng-model="vm.item.settings.styles.cell.text_align">
-                    <md-option value="left">Left</md-option>
-                    <md-option value="center">Center</md-option>
-                    <md-option value="right">Right</md-option>
-                </md-select>
-            </md-input-container>
+                <md-content class="p-16">
 
-        </div>
+                    <div class="dashboard-constructor-field1" style="margin: 0 10px;">
+                        <md-input-container class="m-0 width-100">
+                            <label>Chart Label</label>
+                            <input type="text" data-ng-model="vm.item.custom_component_name">
+                        </md-input-container>
+                    </div>
+
+                    <div class="m-b-24" layout="row">
+
+                        <md-input-container class="dashboard-constructor-field1" style="margin: 0 10px;">
+                            <label for="">Cell Text Align</label>
+                            <md-select data-ng-model="vm.item.settings.styles.cell.text_align">
+                                <md-option value="left">Left</md-option>
+                                <md-option value="center">Center</md-option>
+                                <md-option value="right">Right</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                    </div>
+
+                </md-content>
+
+            </md-tab>
+
+            <md-tab label="LINKING">
+                <md-content class="p-16">
+
+                    <h4>Linked to</h4>
+
+                    <div class="dashboard-linked-filters-container">
+                        <ui>
+                            <li data-ng-repeat="compName in vm.linkedToComps">
+                                <span data-ng-bind="compName"></span>
+                            </li>
+                        </ui>
+                    </div>
+
+                    <h4>Linked by</h4>
+
+                    <div class="dashboard-linked-filters-container">
+                        <ui>
+                            <li data-ng-repeat="compName in vm.linkedByComps">
+                                <span data-ng-bind="compName"></span>
+                            </li>
+                        </ui>
+                    </div>
+
+                </md-content>
+            </md-tab>
+
+        </md-tabs>
 
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
-        <md-button ng-click="vm.cancel()" style="margin-right:20px;">
-            Cancel
-        </md-button>
-        <md-button ng-click="vm.agree()" style="margin-right:20px;">
-            Apply
-        </md-button>
+    <md-dialog-actions layout="row" layout-align="space-between center">
+        <div>
+            <md-button ng-click="vm.cancel()" style="margin-right:20px;">
+                Cancel
+            </md-button>
+            <md-button ng-click="vm.agree('apply')" style="margin-right:20px;">
+                Apply
+            </md-button>
+        </div>
+
+        <div>
+            <md-button ng-click="vm.agree('save')" style="margin-right:20px;">
+                Save
+            </md-button>
+        </div>
     </md-dialog-actions>
 </md-dialog>

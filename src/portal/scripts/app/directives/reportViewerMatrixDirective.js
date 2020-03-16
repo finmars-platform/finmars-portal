@@ -49,10 +49,11 @@
                     // console.log('columnsCount', columnsCount);
 
                     var minWidth = 100;
-                    var minHeight = 20;
+                    //var minHeight = 20;
 
                     cellWidth = Math.floor(elemWidth / columnsCount);
-                    var cellHeight = Math.floor(elemHeight / rowsCount);
+                    //var cellHeight = Math.floor(elemHeight / rowsCount);
+                    var cellHeight = 25;
 
                     // cellHeight = cellHeight - 2; // 1px for border top / border bottom
                     // cellWidth = cellWidth - 2; // 1px for border left / border right
@@ -72,9 +73,9 @@
                         cellWidth = minWidth
                     }
 
-                    if (cellHeight < minHeight) {
+                    /*if (cellHeight < minHeight) {
                         cellHeight = minHeight
-                    }
+                    }*/
 
                     var matrixMaxWidth = columnsCount * cellWidth;
                     var matrixMaxHeight = rowsCount * cellHeight;
@@ -82,8 +83,6 @@
                     var matrixVCContainerWidth = matrixMaxWidth - cellWidth; // subtract width of column with names
                     var matrixVCContainerHeight = matrixMaxHeight - cellHeight; // subtract height of matrix header
 
-                    /*holder.style.width = columnsCount * cellWidth + 'px';
-                    holder.style.height = rowsCount * cellHeight + 'px';*/
                     headerScrollableElem.style.width = matrixMaxWidth + 'px';
                     headerScrollableElem.style.left = cellWidth + 'px';
 
