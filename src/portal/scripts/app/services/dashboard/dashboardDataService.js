@@ -9,9 +9,14 @@
             }
         };
 
+        var data = {
+            listLayout: null
+        };
+
         var tmpData = { // data that stored only in active session
             componentsStatuses: {},
-            componentsRefreshRestriction: {}
+            componentsRefreshRestriction: {},
+            componentsErrors: {}
         };
 
         function setData(data) {
@@ -64,6 +69,14 @@
 
         function getComponentStatus(componentId) {
             return tmpData.componentsStatuses[componentId]
+        }
+
+        function setComponentError (componentId, error) {
+            tmpData.componentsErrors[componentId] = error;
+        }
+
+        function getComponentError (componentId) {
+            return tmpData.componentsErrors[componentId];
         }
 
         function setComponentRefreshRestriction (componentId, restrictionStatus) {
@@ -122,10 +135,20 @@
             return tmpData.activeTab
         }
 
+        function setListLayout (listLayout) {
+            data.listLayout = listLayout;
+        }
+
+        function getListLayout () {
+            return data.listLayout;
+        }
+
         return {
 
             setData: setData,
             getData: getData,
+            setListLayout: setListLayout,
+            getListLayout: getListLayout,
 
             setAllComponentsOutputs: setAllComponentsOutputs,
             getAllComponentsOutputs: getAllComponentsOutputs,
@@ -133,6 +156,8 @@
             getComponentOutput: getComponentOutput,
             setComponentStatus: setComponentStatus,
             getComponentStatus: getComponentStatus,
+            setComponentError: setComponentError,
+            getComponentError: getComponentError,
             setComponentRefreshRestriction: setComponentRefreshRestriction,
             /*getComponentRefreshRestriction: getComponentRefreshRestriction,
             setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction,*/

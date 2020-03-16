@@ -81,6 +81,11 @@
             selectedItem = item;
         };
 
+        vm.selectItemAndSave = function (item) {
+            vm.selectItem(item);
+            vm.agree();
+        };
+
         vm.agree = function () {
             $mdDialog.hide({status: 'agree', selectedItem: selectedItem});
         };

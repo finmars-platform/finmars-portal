@@ -5,7 +5,7 @@
 
     'use strict';
 
-    module.exports = function ($scope, $mdDialog, item, attributeDataService) {
+    module.exports = function ($scope, $mdDialog, item, data) {
 
         var vm = this;
 
@@ -18,6 +18,12 @@
 
         vm.availableAttrs = vm.item.user_settings.available_attrs_keys;
         vm.availableNumericAttrs = vm.item.user_settings.available_numeric_attrs_keys;
+
+        vm.linkedToComps = [];
+        vm.linkedByComps = [];
+
+        var linkedToCompsIds = vm.item.settings.linked_components.active_object;
+        var dashboardComponents = data.dashboardComponents;
 
         vm.chartType = vm.item.type;
 
@@ -78,12 +84,49 @@
 
         };*/
 
+        var init = function () {
+            linkedToCompsIds.forEach(function (compId) {
+
+                for (var i = 0; i < dashboardComponents.length; i++) {
+                    if (dashboardComponents[i].id === compId) {
+
+                        vm.linkedToComps.push(dashboardComponents[i].name);
+                        break;
+
+                    }
+                }
+
+            });
+
+            dashboardComponents.forEach(function (comp) {
+
+                if (comp.settings.linked_components && comp.settings.linked_components.active_object) {
+                    var linkedTo = comp.settings.linked_components.active_object;
+
+                    if (linkedTo.indexOf(vm.item.id) > -1) {
+                        vm.linkedByComps.push(comp.name);
+                    }
+                }
+
+            });
+        };
+
+        init();
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.agree = function () {
-            $mdDialog.hide({status: 'agree', data: {item: vm.item}});
+        vm.agree = function (actionAfterClosing) {
+            $mdDialog.hide(
+                {
+                    status: 'agree',
+                    data: {
+                        item: vm.item
+                    },
+                    action: actionAfterClosing
+                }
+            );
         };
 
         //getAttributes();

@@ -130,20 +130,15 @@
 
                 };
 
-                scope.checkReportRemoveButton = function (column, index) {
-                    var groups = scope.evDataService.getGroups();
+                scope.columnHasCorrespondingGroup = function (columnKey) {
 
-                    if (scope.isReport && index < groups.length) {
-
-                        if (column.key === groups[index].key) {
-                            return false;
+                    for (var i = 0; i < scope.groups.length; i++) {
+                        if (scope.groups[i].key === columnKey) {
+                            return true;
                         }
-
-                        return true;
-
                     }
 
-                    return true;
+                    return false;
 
                 };
 
@@ -632,20 +627,6 @@
 
                 };
 
-                scope.columnHasCorrespondingGroup = function (columnKey) {
-
-                    var groups = scope.evDataService.getGroups();
-
-                    for (var i = 0; i < groups.length; i++) {
-                        if (groups[i].key === columnKey) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-
-                };
-
                 scope.addColumnEntityToGrouping = function (column) {
 
                     var groups = scope.evDataService.getGroups();
@@ -985,6 +966,10 @@
                         getColsAvailableForAdditions();
                         //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
                     }
+
+                    scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+                        scope.groups = scope.evDataService.getGroups();
+                    });
 
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 

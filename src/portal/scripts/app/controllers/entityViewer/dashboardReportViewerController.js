@@ -690,9 +690,9 @@
 
                         resolve();
 
-                    }).catch(function () {
+                    }).catch(function (error) {
 
-                        resolve();
+                        resolve({errorObj: error, errorCause: 'dynamicAttributes'});
 
                     })
 
@@ -847,15 +847,15 @@
 
                             vm.readyStatus.layout = true;
 
-                            resolve();
-
                             $scope.$apply();
+
+                            resolve();
 
                         });
 
                     }).catch(function (error) {
 
-                        reject(error);
+                        reject({errorObj: error, errorCause: 'layout'});
 
                     });
 
@@ -874,9 +874,12 @@
 
                 }).catch(function (error) {
 
+                    if (error.errorCause === 'layout') {
+                        vm.dashboardDataService.setComponentError(vm.componentData.id,{displayMessage: 'failed to load report layout'});
+                    }
                     vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ERROR);
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                    console.log("dashboard report viewer component promise error", error);
+                    console.log("ERROR: dashboard component that uses report viewer error", error);
                 });
 
             };

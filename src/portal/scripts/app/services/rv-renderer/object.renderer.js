@@ -282,24 +282,28 @@
 
     };
 
-    var getCellTextAlign = function (column, evDataService) {
+    var getCellTextAlign = function (evDataService, column, columnNumber, groups) {
 
         var result = '';
         var dashboardCellAlign = evDataService.dashboard.getColumnsTextAlign();
 
-        if (column.style && column.style.text_align) {
+        if (!groups.length || groups.length < columnNumber) { // if column is not grouping column
 
-            result = 'text-' + column.style.text_align;
+            if (column.style && column.style.text_align) {
 
-        } else if (dashboardCellAlign) {
+                result = 'text-' + column.style.text_align;
 
-            result = 'text-' + dashboardCellAlign;
+            } else if (dashboardCellAlign) {
 
-        } else if (column.value_type === 20) {
-            result = 'text-right';
+                result = 'text-' + dashboardCellAlign;
+
+            } else if (column.value_type === 20) {
+                result = 'text-right';
+            }
+
+            return result;
+
         }
-
-        return result;
 
     };
 
@@ -399,7 +403,7 @@
             columnNumber = columnIndex + 1;
 
             borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
-            textAlign = getCellTextAlign(column, evDataService);
+            textAlign = getCellTextAlign(evDataService, column, columnNumber, groups);
             value_obj = getValue(evDataService, obj, column, columnNumber, groups);
 
             colorNegative = '';

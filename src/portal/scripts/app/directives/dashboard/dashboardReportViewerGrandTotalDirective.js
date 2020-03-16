@@ -23,19 +23,26 @@
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {
-                    data: false
+                    data: 'processing'
                 };
 
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
+                var componentData;
+
+                if (scope.item && scope.item.data) {
+                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+                }
+
                 scope.vm = {
                     tabNumber: scope.tabNumber,
                     rowNumber: scope.rowNumber,
                     columnNumber: scope.columnNumber,
-                    componentType: scope.item,
+                    componentData: componentData,
+                    //componentType: scope.item,
                     entityType: scope.item.data.settings.entity_type,
-                    startupSettings: scope.item.data.settings,
+                    //startupSettings: scope.item.data.settings,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,
@@ -46,11 +53,26 @@
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                        var status = scope.dashboardDataService.getComponentStatus(scope.vm.componentType.data.id);
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
 
                         if (status === dashboardComponentStatuses.START) { // Init calculation of a component
 
-                            scope.readyStatus.data = true;
+                            scope.readyStatus.data = 'ready';
+
+                            setTimeout(function () {
+                                scope.$apply();
+                            },0)
+
+                        } else if (status === dashboardComponentStatuses.ERROR) {
+
+                            scope.compErrorMessage = 'ERROR';
+                            var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
+
+                            if (componentError) {
+                                scope.compErrorMessage = 'ERROR: ' + componentError.displayMessage;
+                            }
+
+                            scope.readyStatus.data = 'error';
 
                             setTimeout(function () {
                                 scope.$apply();
@@ -66,7 +88,7 @@
 
                     scope.initEventListeners();
 
-                    scope.dashboardDataService.setComponentStatus(scope.vm.componentType.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                 };

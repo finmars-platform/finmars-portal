@@ -1,4 +1,4 @@
-<div class="height-100" data-ng-if="readyStatus.data" layout="column" style="min-height: 100%;">
+<div class="height-100" data-ng-if="readyStatus.data === 'ready'" layout="column" style="min-height: 100%;">
     <div class="dashboard-component-header" flex="noshrink">
         <div class="dashboard-component-name">
             <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
@@ -57,11 +57,15 @@
     </div>
 </div>
 
-<div data-ng-if="!readyStatus.data" class="dashboard-component-loader-holder">
+<div data-ng-if="readyStatus.data === 'processing'" class="dashboard-component-loader-holder">
 
     <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-component-loader">
         <!--<md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>-->
         <progress-circular diameter="50"></progress-circular>
     </div>
 
+</div>
+
+<div data-ng-if="readyStatus.data === 'error'" class="center-text-message">
+    <span data-ng-bind="compErrorMessage"></span>
 </div>
