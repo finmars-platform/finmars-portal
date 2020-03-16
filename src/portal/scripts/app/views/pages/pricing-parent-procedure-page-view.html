@@ -1,0 +1,56 @@
+<div class="p-24">
+
+    <div data-ng-if="vm.readyStatus.procedures">
+
+        <div>
+
+            <h4>Pricing Procedures</h4>
+
+            <div>
+
+                <table>
+                    <thead>
+                        <tr class="p-10">
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                Started
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="item in vm.procedures" class="p-10">
+                            <td>
+                                {{item.pricing_procedure_object.name}}
+                            </td>
+                            <td>
+                                {{item.created}}
+                            </td>
+                            <td>
+                                {{item.status}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.procedures">
+        <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+</div>
