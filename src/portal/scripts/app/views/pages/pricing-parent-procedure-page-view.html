@@ -10,33 +10,38 @@
 
                 <table>
                     <thead>
-                        <tr class="p-10">
-                            <th>
-                                Name
-                            </th>
+                    <tr>
+                        <th class="p-8">
+                            Name
+                        </th>
 
-                            <th>
-                                Started
-                            </th>
+                        <th class="p-8">
+                            Notes
+                        </th>
 
-                            <th>
-                                Status
-                            </th>
+                        <th class="p-8">
+                            Started
+                        </th>
 
-                        </tr>
+                        <th class="p-8">
+                            Status
+                        </th>
+
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr data-ng-repeat="item in vm.procedures" class="p-10">
-                            <td>
-                                {{item.pricing_procedure_object.name}}
-                            </td>
-                            <td>
-                                {{item.created}}
-                            </td>
-                            <td>
-                                {{item.status}}
-                            </td>
-                        </tr>
+                    <tr data-ng-repeat="item in vm.procedures">
+                        <td class="p-8">
+                            {{item.pricing_procedure_object.name}}
+                        </td>
+                        <td class="p-8">
+                            {{item.pricing_procedure_object.notes_for_users}}
+                        </td>
+                        <td class="p-8" data-ng-bind="item.created | date: 'yyyy/MM/dd HH:mm:ss'"></td>
+                        <td class="p-8">
+                            {{item.progress_percent}}%
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
