@@ -8,11 +8,17 @@
         </div>
     </md-toolbar>
     <md-dialog-content class="p-24">
-        <div layout="column">
+
+        <div layout="column" data-ng-if="vm.readyStatus.pricingProcedures">
 
             <md-input-container>
                 <label>Name</label>
                 <input type="text" data-ng-model="vm.schedule.name">
+            </md-input-container>
+
+            <md-input-container>
+                <label>User Code</label>
+                <input type="text" data-ng-model="vm.schedule.user_code">
             </md-input-container>
 
             <div class="m-t-16">
@@ -108,43 +114,32 @@
                     <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
                 </ng-md-icon>
             </div>
+
+            <h4>Pricing Procedures</h4>
+
             <div>
-                <md-input-container>
-                    <label for="">Days to load</label>
-                    <input type="text" data-ng-model="vm.schedule.load_days">
-                </md-input-container>
-                <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
-                    <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
-                </ng-md-icon>
-            </div>
-            <div>
-                <md-input-container>
-                    <label for="">Portfolio balance days</label>
-                    <input type="text" data-ng-model="vm.schedule.balance_day" placeholder="days">
-                </md-input-container>
-                <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
-                    <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
-                </ng-md-icon>
-            </div>
-            <div style="margin-bottom: 18px">
-                <md-checkbox style="margin-left: 12px" ng-model="vm.schedule.override_existed" aria-label="override">
-                    Override old prices
-                </md-checkbox>
-                <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
-                    <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
-                </ng-md-icon>
-            </div>
-            <div>
-                <md-input-container>
-                    <label for="">Roll prices for N days forward</label>
-                    <input type="text" data-ng-model="vm.schedule.fill_days" placeholder="days">
-                </md-input-container>
-                <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
-                    <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
-                </ng-md-icon>
+
+                <two-fields-multiselect ng-model="vm.schedule.pricing_procedures"
+                                        data-title="Pricing Procedures"
+                                        data-items="vm.pricingProcedures"
+                                        data-model="vm.schedule.pricing_procedures"
+
+                                        data-name-property="name"
+                                        class="table-filter-input-container">
+                </two-fields-multiselect>
+
             </div>
 
         </div>
+
+        <div data-ng-if="!vm.readyStatus.pricingProcedures">
+
+            <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+
+        </div>
+
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <md-button ng-click="vm.cancel()">
