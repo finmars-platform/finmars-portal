@@ -31,10 +31,36 @@
 
                 var cellWidth = 0;
 
+                var matrixHolder;
+                var bodyScrollElem;
+                var rvmHeaderScrollableRow;
+                var rvmBottomRowScrollableElem;
+                var bodyScrollableElem;
+                var rvMatrixValueRowsHolder;
+                var rvMatrixFixedBottomRow;
+                var rvMatrixLeftCol;
+                var rvMatrixRightCol;
+
+                var getElemsForScripts = function () {
+                    matrixHolder = elem[0].querySelector('.rvMatrixHolder');
+
+                    bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
+                    rvmHeaderScrollableRow = elem[0].querySelector('.rvmHeaderScrollableRow');
+                    rvmBottomRowScrollableElem = elem[0].querySelector('.rvmBottomRowScrollableElem');
+
+                    bodyScrollableElem = elem[0].querySelectorAll('.scrollableMatrixBodyColumn');
+
+                    rvMatrixValueRowsHolder = elem[0].querySelector('.rvMatrixValueRowsHolder');
+                    rvMatrixFixedBottomRow = elem[0].querySelector('.rvMatrixFixedBottomRow');
+
+                    rvMatrixLeftCol = elem[0].querySelector('.rvMatrixLeftCol');
+                    rvMatrixRightCol = elem[0].querySelector('.rvMatrixRightCol');
+                };
+
                 scope.alignGrid = function () {
 
                     var elemWidth = elem.width();
-                    var elemHeight = elem.height();
+                    //var elemHeight = elem.height();
 
                     // console.log('elemHeight', elemHeight);
                     // console.log('elemWidth', elemWidth);
@@ -60,13 +86,6 @@
 
                     var items = elem[0].querySelectorAll('.rvMatrixCell');
 
-                    //var holder = elem[0].querySelector('.rvMatrixHolder');
-
-                    var headerScrollableElem = elem[0].querySelector('.rvmScrollableHeaderRow');
-                    var bodyScrollableElem = elem[0].querySelector('.scrollableMatrixBodyColumn');
-                    var rvMatrixValRowsContainer = elem[0].querySelector('.rvMatrixValueRowsHolder');
-                    var rvMatrixRowsNames = elem[0].querySelector('.rvMatrixRowsNames');
-
                     var fontSize = 16;
 
                     if (cellWidth < minWidth) {
@@ -83,15 +102,32 @@
                     var matrixVCContainerWidth = matrixMaxWidth - cellWidth; // subtract width of column with names
                     var matrixVCContainerHeight = matrixMaxHeight - cellHeight; // subtract height of matrix header
 
-                    headerScrollableElem.style.width = matrixMaxWidth + 'px';
-                    headerScrollableElem.style.left = cellWidth + 'px';
+                    // whether matrix has scrolls
+                    if (bodyScrollElem.clientWidth < matrixVCContainerWidth) {
+                        matrixHolder.classList.add('has-x-scroll');
+                    }
+
+                    if (bodyScrollElem.clientHeight < matrixVCContainerHeight) {
+                        matrixHolder.classList.add('has-y-scroll');
+                    }
 
                     // because of children with absolute positioning, elem below requires manual width setting
-                    rvMatrixRowsNames.style.width = cellWidth + 'px';
+                    rvMatrixLeftCol.style.width = cellWidth + 'px';
+                    rvMatrixRightCol.style.width = cellWidth + 'px';
+                    // same with manual height setting
+                    rvMatrixFixedBottomRow.style.height = cellHeight + 'px';
 
-                    bodyScrollableElem.style.height = matrixVCContainerHeight + 'px';
-                    rvMatrixValRowsContainer.style.width = matrixVCContainerWidth + 'px';
-                    rvMatrixValRowsContainer.style.height = matrixVCContainerHeight + 'px';
+                    rvMatrixValueRowsHolder.style.width = matrixVCContainerWidth + 'px';
+                    rvMatrixValueRowsHolder.style.height = matrixVCContainerHeight + 'px';
+
+                    for (var i = 0; i < bodyScrollableElem.length; i++) {
+                        bodyScrollableElem[i].style.height = matrixVCContainerHeight + 'px';
+                    }
+
+                    rvmHeaderScrollableRow.style.width = matrixMaxWidth + 'px';
+
+                    rvmBottomRowScrollableElem.style.width = matrixMaxWidth + 'px';
+                    rvmBottomRowScrollableElem.style.left = cellWidth + 'px';
 
                     for (var i = 0; i < items.length; i = i + 1) {
 
@@ -104,16 +140,19 @@
                 };
 
                 var scrollHeaderAndColumn = function () {
+                    rvmHeaderScrollableRow.style.left = -bodyScrollElem.scrollLeft + 'px';
+                    rvmBottomRowScrollableElem.style.left = (cellWidth - bodyScrollElem.scrollLeft) + 'px';
 
-                    var headerScrollableElem = elem[0].querySelector('.rvmScrollableHeaderRow');
-                    var bodyScrollableElem = elem[0].querySelector('.scrollableMatrixBodyColumn');
-                    var bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
+                    for (var c = 0; c < bodyScrollableElem.length; c++) {
+                        bodyScrollableElem[c].style.top = -bodyScrollElem.scrollTop + 'px';
+                    }
+                };
 
-                    bodyScrollElem.addEventListener('scroll', function () {
-                        headerScrollableElem.style.left = (cellWidth - bodyScrollElem.scrollLeft) + 'px';
-                        bodyScrollableElem.style.top = -bodyScrollElem.scrollTop + 'px';
-                    });
+                var initMatrixMethods = function () {
+                    getElemsForScripts();
+                    scope.alignGrid();
 
+                    bodyScrollElem.addEventListener('scroll', scrollHeaderAndColumn);
                 };
 
                 scope.checkNegative = function (val) {
@@ -208,8 +247,6 @@
                 };
 
                 scope.singleColumnTotalClick = function ($event, index) {
-
-                    console.log('singleColumnTotalClick index', index);
 
                     scope.activeItem = 'column_total:' + index;
 
@@ -360,9 +397,7 @@
 
                         scope.$apply();
 
-                        scope.alignGrid();
-
-                        scrollHeaderAndColumn();
+                        initMatrixMethods();
                     }, 0)
 
                 };
@@ -387,9 +422,7 @@
 
                             scope.$apply();
 
-                            scope.alignGrid();
-
-                            scrollHeaderAndColumn();
+                            initMatrixMethods();
                         }, 0)
                     }
 
@@ -403,9 +436,7 @@
 
                         scope.$apply();
 
-                        scope.alignGrid();
-
-                        scrollHeaderAndColumn();
+                        initMatrixMethods();
 
                     });
 
