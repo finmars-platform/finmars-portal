@@ -102,13 +102,20 @@
                     var matrixVCContainerWidth = matrixMaxWidth - cellWidth; // subtract width of column with names
                     var matrixVCContainerHeight = matrixMaxHeight - cellHeight; // subtract height of matrix header
 
+                    var matrixProbableHeight = rowsCount * cellHeight;
+
                     // whether matrix has scrolls
                     if (bodyScrollElem.clientWidth < matrixVCContainerWidth) {
                         matrixHolder.classList.add('has-x-scroll');
+                        matrixProbableHeight = matrixProbableHeight + 15.5; // add space for scroll
                     }
 
                     if (bodyScrollElem.clientHeight < matrixVCContainerHeight) {
                         matrixHolder.classList.add('has-y-scroll');
+                    }
+
+                    if (matrixProbableHeight < matrixHolder.clientHeight) {
+                        matrixHolder.style.height = matrixProbableHeight + 'px';
                     }
 
                     // because of children with absolute positioning, elem below requires manual width setting
