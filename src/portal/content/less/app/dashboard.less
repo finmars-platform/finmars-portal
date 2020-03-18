@@ -12,6 +12,26 @@
     background-color: #fff;
   }
 
+  .dashboard-main-area {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .dashboard-fixed-area-container {
+    flex: 0 0 auto;
+    margin-bottom: 10px;
+  }
+
+  .dashboard-tabs-holder {
+    flex: 0 1 100%;
+    overflow: auto;
+  }
+
+  .dashboard-top-row {
+    position: relative;
+  }
+
   .dashboard-title {
     padding: 10px;
     font-size: 20px;
@@ -46,11 +66,11 @@
     height: 50px;
   }
 
-  .dashboard-layout {
+  /*.dashboard-layout {
     overflow: auto;
-  }
+  }*/
 
-  md-tabs-content-wrapper {
+  /*md-tabs-content-wrapper {
     height: 100%;
 
     md-tab-content {
@@ -63,7 +83,7 @@
       height: 100%;
 
     }
-  }
+  }*/
 
   .dashboard-row {
     &:after {

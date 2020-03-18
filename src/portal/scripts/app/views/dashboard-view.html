@@ -96,80 +96,82 @@
 
         </div>
 
-        <div data-ng-if="vm.layout" class="dashboard-tabs-holder height-100">
+        <div data-ng-if="vm.layout" class="dashboard-main-area">
 
-            <div class="dashboard-title">
-                Layout: <b>{{vm.layout.name}}</b>
-            </div>
+            <div class="dashboard-top-row">
+                <div class="dashboard-title">
+                    Layout: <b>{{vm.layout.name}}</b>
+                </div>
 
-            <div class="dashboard-tabs-control-panel">
+                <div class="dashboard-tabs-control-panel">
 
-                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                           data-ng-click="vm.clearActiveTabUfaFilters()">
-                    <ng-md-icon icon="leak_remove"
-                                size="20"
-                                style="fill: #777777">
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Clear Link to Selection filters for Active Tab</md-tooltip>
-                    </ng-md-icon>
-                </md-button>
-
-                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                           data-ng-click="vm.refreshActiveTab()">
-                    <ng-md-icon icon="refresh"
-                                size="20"
-                                style="fill: #777777">
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Refresh Active Tab</md-tooltip>
-                    </ng-md-icon>
-                </md-button>
-
-                <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                           data-ng-click="vm.refreshAll()">
-                    <ng-md-icon icon="loop"
-                                size="20"
-                                style="fill: #777777">
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Refresh All Tabs</md-tooltip>
-                    </ng-md-icon>
-                </md-button>
-
-                <md-menu class="full-width dashboard-control-menu" layout="row">
-                    <md-button class="dashboard-control-button"
-                               ng-click="$mdOpenMenu($event)"
-                               type="button">
-                        <ng-md-icon icon="list"
+                    <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
+                               data-ng-click="vm.clearActiveTabUfaFilters()">
+                        <ng-md-icon icon="leak_remove"
                                     size="20"
                                     style="fill: #777777">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Layouts</md-tooltip>
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Clear Link to Selection filters for Active Tab</md-tooltip>
                         </ng-md-icon>
-
                     </md-button>
 
-                    <md-menu-content width="4">
-                        <md-menu-item>
-                            <md-button ng-click="vm.openLayoutList($event)" class="g-settings-option-btn">
-                                <span>Open Layout Manager</span>
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn">
-                                <span>Save Dashboard Layout</span>
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-button data-ui-sref="app.dashboard-constructor({id: vm.layout.id})" class="g-settings-option-btn">
-                                <span>Edit Layout</span>
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-button  data-ng-click="vm.exportDashboardLayout($event)" class="g-settings-option-btn">
-                                <span>Export Layout</span>
-                            </md-button>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
+                    <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
+                               data-ng-click="vm.refreshActiveTab()">
+                        <ng-md-icon icon="refresh"
+                                    size="20"
+                                    style="fill: #777777">
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Refresh Active Tab</md-tooltip>
+                        </ng-md-icon>
+                    </md-button>
 
+                    <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
+                               data-ng-click="vm.refreshAll()">
+                        <ng-md-icon icon="loop"
+                                    size="20"
+                                    style="fill: #777777">
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Refresh All Tabs</md-tooltip>
+                        </ng-md-icon>
+                    </md-button>
+
+                    <md-menu class="full-width dashboard-control-menu" layout="row">
+                        <md-button class="dashboard-control-button"
+                                   ng-click="$mdOpenMenu($event)"
+                                   type="button">
+                            <ng-md-icon icon="list"
+                                        size="20"
+                                        style="fill: #777777">
+                                <md-tooltip class="tooltip_1" md-direction="bottom">Layouts</md-tooltip>
+                            </ng-md-icon>
+
+                        </md-button>
+
+                        <md-menu-content width="4">
+                            <md-menu-item>
+                                <md-button ng-click="vm.openLayoutList($event)" class="g-settings-option-btn">
+                                    <span>Open Layout Manager</span>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn">
+                                    <span>Save Dashboard Layout</span>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button data-ui-sref="app.dashboard-constructor({id: vm.layout.id})" class="g-settings-option-btn">
+                                    <span>Edit Layout</span>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button  data-ng-click="vm.exportDashboardLayout($event)" class="g-settings-option-btn">
+                                    <span>Export Layout</span>
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+
+                </div>
             </div>
 
-            <div data-ng-if="vm.layout.data.fixed_area.status === 'active'">
+            <div data-ng-if="vm.layout.data.fixed_area.status === 'active'" class="dashboard-fixed-area-container">
 
                 <div class="dashboard-layout position-relative height-100"
                      dashboard-grid-aligner
@@ -327,175 +329,179 @@
 
             </div>
 
-            <md-tabs md-border-bottom md-dynamic-height class="dashboard-tabs height-100">
-                <md-tab data-ng-repeat="tab in vm.layout.data.tabs | orderBy: 'tab_number' track by tab.tab_number" md-on-select="vm.setActiveTab(tab)">
-                    <md-tab-label>
-                        <span>
-                            {{tab.name}}
-                        </span>
-                    </md-tab-label>
-                    <md-tab-body>
+            <div class="dashboard-tabs-holder">
+                <md-tabs md-border-bottom md-dynamic-height class="dashboard-tabs">
 
-                        <div class="dashboard-layout position-relative height-100"
-                             dashboard-grid-aligner
-                             dashboard-data-service="vm.dashboardDataService"
-                             dashboard-event-service="vm.dashboardEventService"
-                             tab-number="tab.tab_number">
+                    <md-tab data-ng-repeat="tab in vm.layout.data.tabs | orderBy: 'tab_number' track by tab.tab_number"
+                            md-on-select="vm.setActiveTab(tab)">
+                        <md-tab-label>
+                            <span>
+                                {{tab.name}}
+                            </span>
+                        </md-tab-label>
+
+                        <md-tab-body>
+
+                            <div class="dashboard-layout position-relative height-100"
+                                 dashboard-grid-aligner
+                                 dashboard-data-service="vm.dashboardDataService"
+                                 dashboard-event-service="vm.dashboardEventService"
+                                 tab-number="tab.tab_number">
 
 
-                            <div class="dashboard-rows-holder" data-ng-repeat="row in tab.layout.rows">
+                                <div class="dashboard-rows-holder" data-ng-repeat="row in tab.layout.rows">
 
-                                <div data-ng-repeat="item in row.columns"
-                                     class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}}"
-                                     data-tab="{{tab.tab_number}}"
-                                     data-row="{{row.row_number}}"
-                                     data-column="{{item.column_number}}"
-                                     data-cell-type="{{item.cell_type}}">
+                                    <div data-ng-repeat="item in row.columns"
+                                         class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}}"
+                                         data-tab="{{tab.tab_number}}"
+                                         data-row="{{row.row_number}}"
+                                         data-column="{{item.column_number}}"
+                                         data-cell-type="{{item.cell_type}}">
 
-                                    <div data-ng-if="item.cell_type == 'empty'">
-                                        &nbsp;
-                                    </div>
-
-                                    <div data-ng-if="item.cell_type == 'component'" class="height-100">
-
-                                        <div data-ng-if="item.data.type == 'control'">
-                                            <dashboard-control
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                            ></dashboard-control>
+                                        <div data-ng-if="item.cell_type == 'empty'">
+                                            &nbsp;
                                         </div>
 
-                                        <div data-ng-if="item.data.type == 'button_set'">
-                                            <dashboard-button-set
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                            ></dashboard-button-set>
-                                        </div>
+                                        <div data-ng-if="item.cell_type == 'component'" class="height-100">
 
-                                        <div data-ng-if="item.data.type == 'input_form'">
-                                            <dashboard-input-form
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                            ></dashboard-input-form>
-                                        </div>
+                                            <div data-ng-if="item.data.type == 'control'">
+                                                <dashboard-control
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                ></dashboard-control>
+                                            </div>
 
-                                        <div data-ng-if="item.data.type === 'report_viewer' || item.data.type === 'report_viewer_split_panel'" class="height-100">
-                                            <dashboard-report-viewer
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                                    fill-in-mode-data="vm.componentFillInModeData"
-                                            ></dashboard-report-viewer>
-                                        </div>
+                                            <div data-ng-if="item.data.type == 'button_set'">
+                                                <dashboard-button-set
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                ></dashboard-button-set>
+                                            </div>
 
-                                        <!--<div data-ng-if="item.data.type == 'report_viewer_split_panel'"
-                                             class="height-100">
-                                            <dashboard-report-viewer-split-panel
-                                                    class="height-100 display-block"
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                                    fill-in-mode-data="vm.componentFillInModeData"
-                                            ></dashboard-report-viewer-split-panel>
-                                        </div>-->
+                                            <div data-ng-if="item.data.type == 'input_form'">
+                                                <dashboard-input-form
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                ></dashboard-input-form>
+                                            </div>
 
-                                        <div data-ng-if="item.data.type == 'report_viewer_grand_total'"
-                                             class="height-100">
-                                            <dashboard-report-viewer-grand-total
-                                                    class="height-100 display-block"
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                            ></dashboard-report-viewer-grand-total>
-                                        </div>
+                                            <div data-ng-if="item.data.type === 'report_viewer' || item.data.type === 'report_viewer_split_panel'" class="height-100">
+                                                <dashboard-report-viewer
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                        fill-in-mode-data="vm.componentFillInModeData"
+                                                ></dashboard-report-viewer>
+                                            </div>
 
-                                        <div data-ng-if="item.data.type === 'report_viewer_bars_chart' || item.data.type === 'report_viewer_pie_chart'"
-                                             class="height-100">
-                                            <dashboard-report-viewer-charts
-                                                    class="height-100 display-block"
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                                    fill-in-mode-data="vm.componentFillInModeData"
-                                            ></dashboard-report-viewer-charts>
-                                        </div>
+                                            <!--<div data-ng-if="item.data.type == 'report_viewer_split_panel'"
+                                                 class="height-100">
+                                                <dashboard-report-viewer-split-panel
+                                                        class="height-100 display-block"
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                        fill-in-mode-data="vm.componentFillInModeData"
+                                                ></dashboard-report-viewer-split-panel>
+                                            </div>-->
 
-                                        <div data-ng-if="item.data.type == 'report_viewer_matrix'"
-                                             class="height-100">
-                                            <dashboard-report-viewer-matrix
-                                                    class="height-100 display-block"
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                                    fill-in-mode-data="vm.componentFillInModeData"
-                                            ></dashboard-report-viewer-matrix>
-                                        </div>
+                                            <div data-ng-if="item.data.type == 'report_viewer_grand_total'"
+                                                 class="height-100">
+                                                <dashboard-report-viewer-grand-total
+                                                        class="height-100 display-block"
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                ></dashboard-report-viewer-grand-total>
+                                            </div>
 
-                                        <div data-ng-if="item.data.type == 'entity_viewer'" class="height-100">
-                                            <dashboard-entity-viewer
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                            ></dashboard-entity-viewer>
-                                        </div>
+                                            <div data-ng-if="item.data.type === 'report_viewer_bars_chart' || item.data.type === 'report_viewer_pie_chart'"
+                                                 class="height-100">
+                                                <dashboard-report-viewer-charts
+                                                        class="height-100 display-block"
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                        fill-in-mode-data="vm.componentFillInModeData"
+                                                ></dashboard-report-viewer-charts>
+                                            </div>
 
-                                        <div data-ng-if="item.data.type == 'entity_viewer_split_panel'"
-                                             class="height-100">
-                                            <dashboard-entity-viewer-split-panel
-                                                    tab-number="tab.tab_number"
-                                                    row-number="row.row_number"
-                                                    column-number="item.column_number"
-                                                    item="item"
-                                                    dashboard-data-service="vm.dashboardDataService"
-                                                    dashboard-event-service="vm.dashboardEventService"
-                                            ></dashboard-entity-viewer-split-panel>
+                                            <div data-ng-if="item.data.type == 'report_viewer_matrix'"
+                                                 class="height-100">
+                                                <dashboard-report-viewer-matrix
+                                                        class="height-100 display-block"
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                        fill-in-mode-data="vm.componentFillInModeData"
+                                                ></dashboard-report-viewer-matrix>
+                                            </div>
+
+                                            <div data-ng-if="item.data.type == 'entity_viewer'" class="height-100">
+                                                <dashboard-entity-viewer
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                ></dashboard-entity-viewer>
+                                            </div>
+
+                                            <div data-ng-if="item.data.type == 'entity_viewer_split_panel'"
+                                                 class="height-100">
+                                                <dashboard-entity-viewer-split-panel
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                ></dashboard-entity-viewer-split-panel>
+                                            </div>
+
                                         </div>
 
                                     </div>
 
                                 </div>
 
+                                <div class="dashboard-empty-space"></div>
+
                             </div>
 
-                            <div class="dashboard-empty-space"></div>
+                        </md-tab-body>
+                    </md-tab>
 
-                        </div>
-
-                    </md-tab-body>
-                </md-tab>
-
-
-            </md-tabs>
+                </md-tabs>
+            </div>
 
         </div>
 
