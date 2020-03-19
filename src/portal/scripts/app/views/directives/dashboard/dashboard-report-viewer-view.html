@@ -24,7 +24,14 @@
                 <md-tooltip data-md-direction="top">Expand component</md-tooltip>
             </md-button>
 
-            <md-menu class="dashboard-component-settings-menu">
+            <md-button class="md-button dashboard-component-settings-btn"
+                       aria-label="dashboard component settings btn"
+                       data-ng-click="openComponentSettingsEditorDialog($event)">
+                <ng-md-icon size="24" icon="settings"></ng-md-icon>
+                <md-tooltip md-direction="top">Edit component settings</md-tooltip>
+            </md-button>
+
+            <!--<md-menu class="dashboard-component-settings-menu">
                 <md-button class="md-button dashboard-component-settings-btn"
                            aria-label="dashboard component settings btn"
                            data-ng-click="$mdOpenMenu($event)">
@@ -41,7 +48,7 @@
                         </md-button>
                     </md-menu-item>
                 </md-menu-content>
-            </md-menu>
+            </md-menu>-->
         </div>
     </div>
 

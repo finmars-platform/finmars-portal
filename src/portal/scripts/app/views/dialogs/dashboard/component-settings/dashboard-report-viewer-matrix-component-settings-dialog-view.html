@@ -93,11 +93,11 @@
 
                     <div class="m-b-24" layout="row">
 
-                        <div class="dashboard-constructor-field1"
+                        <div data-ng-if="vm.availableValueAttrs && vm.availableValueAttrs.length > 0"
+                             class="dashboard-constructor-field1"
                              style="margin: 0 10px;">
 
-                            <md-input-container data-ng-if="vm.availableValueAttrs && vm.availableValueAttrs.length > 0"
-                                                class="m-0 width-100"
+                            <md-input-container class="m-0 width-100"
                                                 aria-label="select with filter">
                                 <label>Values</label>
                                 <md-select ng-model="vm.item.settings.value_key"

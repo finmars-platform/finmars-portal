@@ -157,6 +157,8 @@
 
                     scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
                         scope.activeObject = scope.evDataService.getActiveObject();
+
+
                     });
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {

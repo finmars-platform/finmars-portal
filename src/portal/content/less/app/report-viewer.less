@@ -41,7 +41,6 @@
       .g-row-selection {
         background: #ffeee8;
         fill: #4C334D;
-
       }
 
     }
@@ -153,17 +152,27 @@
   .g-row {
 
     &.selected {
-      //background: #ffeee8;
-      background: #eacec5;
+      background: #ffeee8;
 
       .g-row-selection {
         fill: #4C334D;
+
+        svg {
+          fill: #000
+        }
       }
     }
 
-    &.activated {
-      //background: #ffeee8;
-      background: #eacec5;
+    &.last-selected {
+      background: #e4c1b5;
+
+      .g-row-selection {
+        fill: #4C334D;
+
+        svg {
+          fill: #000
+        }
+      }
     }
   }
 

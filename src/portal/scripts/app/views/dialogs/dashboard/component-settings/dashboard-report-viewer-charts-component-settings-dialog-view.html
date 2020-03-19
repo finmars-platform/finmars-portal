@@ -22,12 +22,11 @@
                         </md-input-container>
                     </div>
 
-                    <div data-ng-if="vm.chartType === 'report_viewer_bars_chart'"
+                    <div data-ng-if="vm.chartType === 'report_viewer_bars_chart' && vm.availableAttrs && vm.availableAttrs.length"
                          class="dashboard-constructor-field1"
                          style="margin: 0 10px 24px;">
 
-                        <md-input-container data-ng-if="vm.availableAttrs && vm.availableAttrs.length > 0"
-                                            class="m-0 width-100"
+                        <md-input-container class="m-0 width-100"
                                             aria-label="select with filter">
                             <label>Category</label>
                             <md-select ng-model="vm.item.settings.bar_name_key"
@@ -57,12 +56,11 @@
 
                     </div>
 
-                    <div data-ng-if="vm.chartType === 'report_viewer_pie_chart'"
+                    <div data-ng-if="vm.chartType === 'report_viewer_pie_chart' && vm.availableAttrs && vm.availableAttrs.length"
                          class="dashboard-constructor-field1"
                          style="margin: 0 10px 24px;">
 
-                        <md-input-container data-ng-if="vm.availableAttrs && vm.availableAttrs.length > 0"
-                                            class="m-0 width-100"
+                        <md-input-container class="m-0 width-100"
                                             aria-label="select with filter">
                             <label>Category</label>
                             <md-select ng-model="vm.item.settings.group_attr"
@@ -130,12 +128,11 @@
 
                         </div>
 
-                        <div data-ng-if="vm.chartType === 'report_viewer_pie_chart'"
+                        <div data-ng-if="vm.chartType === 'report_viewer_pie_chart' && vm.availableNumericAttrs && vm.availableNumericAttrs.length"
                              class="dashboard-constructor-field1"
                              style="margin: 0 10px;">
 
-                            <md-input-container data-ng-if="vm.availableNumericAttrs && vm.availableNumericAttrs.length > 0"
-                                                class="m-0 width-100"
+                            <md-input-container class="m-0 width-100"
                                                 aria-label="select with filter">
                                 <label>Value</label>
                                 <md-select ng-model="vm.item.settings.number_attr"

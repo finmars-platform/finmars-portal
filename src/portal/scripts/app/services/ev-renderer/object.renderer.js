@@ -254,15 +254,13 @@
 
         var rowSelection;
 
-        if (obj.___is_activated) {
+        if (obj.___is_last_selected) {
+            classList.push('last-selected');
+        } else if (obj.___is_activated) {
             classList.push('selected');
         }
 
         rowSelection = '<div class="g-row-selection">' + getIcon(obj, currentMember, classList) + '</div>';
-
-        if (obj.___is_activated) {
-            classList.push('activated');
-        }
 
         addReconColorization(obj, classList, viewContext, verticalAdditions);
 

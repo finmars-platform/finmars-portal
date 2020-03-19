@@ -132,7 +132,8 @@
 
         <div class="g-additions-data-editor min-height" data-ng-if="additions.type === 'editor'">
 
-            <div data-ng-if="activeObjectsCount > 1">
+            <!-- Delete if it won't be needed -->
+            <!--<div data-ng-if="activeObjectsCount > 1">
                 <div class="g-additions-editor-caption">
                     Too many rows selected
                 </div>
@@ -145,15 +146,28 @@
                         Select row to start
                     </div>
                 </div>
+
                 <div data-ng-show="activeObject" class="min-height">
                     <group-editor-binder ev-data-service="evDataService"
                                          ev-event-service="evEventService"></group-editor-binder>
                 </div>
 
+            </div>-->
+
+            <div data-ng-show="!activeObject">
+                <div class="g-additions-editor-caption">
+                    Select row to start
+                </div>
+            </div>
+
+            <div data-ng-show="activeObject" class="min-height">
+                <group-editor-binder ev-data-service="evDataService"
+                                     ev-event-service="evEventService"></group-editor-binder>
             </div>
 
 
         </div>
+
         <div class="g-additions-workarea" data-ng-if="additions.type === 'permission-editor'">
 
             <group-permission-editor-binder class="display-block height-100" ev-data-service="evDataService"
@@ -161,6 +175,7 @@
                                             sp-exchange-service="spExchangeService"></group-permission-editor-binder>
 
         </div>
+
         <div class="g-additions-workarea"
              data-ng-if="additions.type === 'balance-report'">
             <group-split-panel-report-binder ev-data-service="evDataService"

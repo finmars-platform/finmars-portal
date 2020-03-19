@@ -105,21 +105,35 @@
   .g-row {
 
     &.selected {
-      //background: #ffeee8;
-      background: #eacec5;
+      background: #ffeee8;
 
       .g-row-selection {
         fill: #4C334D;
+
+        svg {
+          fill: #000
+        }
+      }
+
+      &.selected-blue {
+        background: #b6d1ec;
       }
     }
 
-    &.selected.selected-blue {
-      background: #b6d1ec;
-    }
+    &.last-selected {
+      background: #e4c1b5;
 
-    &.activated {
-      //background: #ffeee8;
-      background: #eacec5;
+      .g-row-selection {
+        fill: #4C334D;
+
+        svg {
+          fill: #000
+        }
+      }
+
+      &.selected-blue {
+        background: #65a1ea;
+      }
     }
 
     .g-cell-wrap {
