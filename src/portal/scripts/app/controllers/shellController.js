@@ -108,7 +108,7 @@
 
                 if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
                     middlewareService.masterUserChanged();
-                    console.log("context menu master user changed");
+
                     $state.go('app.home');
                     vm.getMasterUsersList();
                 }
@@ -140,7 +140,7 @@
                 middlewareService.masterUserChanged();
 
                 usersService.setMasterUser(master.id).then(function (value) {
-                    console.log("context menu master user changed");
+
                     $state.go('app.home');
 
                     if (vm.broadcastManager) {

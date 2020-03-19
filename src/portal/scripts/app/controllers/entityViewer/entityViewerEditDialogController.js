@@ -538,7 +538,7 @@
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
 
                     vm.entity = data;
-                    console.log("fixed fields vm.entity", vm.entity);
+
                     vm.entity.$_isValid = true;
                     vm.readyStatus.entity = true;
                     // vm.readyStatus.permissions = true;

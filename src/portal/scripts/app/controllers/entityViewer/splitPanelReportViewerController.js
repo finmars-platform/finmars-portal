@@ -255,8 +255,8 @@
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
 
                 if (locals.entityType && locals.entityType === 'complex-transaction') {
-                    dialogController = 'EntityViewerEditDialogController as vm';
-                    dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
+                    dialogController = 'ComplexTransactionEditDialogController as vm';
+                    dialogTemplateUrl = 'views/entity-viewer/complex-transaction-edit-dialog-view.html';
                 }
 
                 $mdDialog.show({
@@ -603,7 +603,7 @@
                                 break;
 
                             case 'book_transaction':
-                                var contextData = getContextDataForComplexTransaction();
+                                var contextData = getContextDataForComplexTransaction(reportOptions, activeObject);
 
                                 var entity = {
                                     contextData: contextData
@@ -619,7 +619,7 @@
                                 break;
 
                             case 'book_transaction_specific':
-                                var contextData = getContextDataForComplexTransaction();
+                                var contextData = getContextDataForComplexTransaction(reportOptions, activeObject);
 
                                 var entity = {
                                     contextData: contextData

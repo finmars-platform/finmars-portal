@@ -139,6 +139,8 @@
 
         objects.forEach(function (item) {
             item.___is_activated = false;
+            item.___is_last_selected = false;
+
             evDataService.setObject(item);
         });
 
@@ -384,39 +386,46 @@
 
         var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
 
-        if (clickData.isShiftPressed) {
-
-            handleShiftSelection(evDataService, evEventService, clickData);
-
-        }
-
         if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
-            obj.___is_activated = true;
+            obj.___is_activated = !obj.___is_activated;
+
+            if (!obj.___is_activated) {
+                obj.___is_last_selected = false;
+            }
+
             evDataService.setObject(obj);
             evDataService.setLastActivatedRow(obj);
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-        }
 
-        if (!clickData.isShiftPressed && !clickData.isCtrlPressed) {
+        } else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
 
+            handleShiftSelection(evDataService, evEventService, clickData);
+
+        } else if (!clickData.isShiftPressed && !clickData.isCtrlPressed) {
 
             clearObjectActiveState(evDataService, evEventService);
 
             obj.___is_activated = !obj.___is_activated;
+            obj.___is_last_selected = !obj.___is_last_selected;
+
             evDataService.setObject(obj);
 
-            if (obj.___is_activated) {
+            if (obj.___is_last_selected || obj.___is_activated) {
+
+                obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
+
                 evDataService.setActiveObject(obj);
-                //evDataService.setActiveObjectsCount(1);
+
                 evDataService.setLastActivatedRow(obj);
                 evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
             } else {
 
-                //evDataService.setActiveObjectsCount(0);
                 evDataService.setActiveObject(null);
                 evDataService.setLastActivatedRow(null);
+
             }
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);

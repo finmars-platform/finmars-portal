@@ -19,18 +19,21 @@
         var dashboardComponents = data.dashboardComponents;
 
         var init = function () {
-            linkedToCompsIds.forEach(function (compId) {
 
-                for (var i = 0; i < dashboardComponents.length; i++) {
-                    if (dashboardComponents[i].id === compId) {
+            if (Array.isArray(linkedToCompsIds)) {
+                linkedToCompsIds.forEach(function (compId) {
 
-                        vm.linkedToComps.push(dashboardComponents[i].name);
-                        break;
+                    for (var i = 0; i < dashboardComponents.length; i++) {
+                        if (dashboardComponents[i].id === compId) {
 
+                            vm.linkedToComps.push(dashboardComponents[i].name);
+                            break;
+
+                        }
                     }
-                }
 
-            });
+                });
+            }
 
             dashboardComponents.forEach(function (comp) {
 

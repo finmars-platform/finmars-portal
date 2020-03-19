@@ -370,15 +370,18 @@
 
         var rowSelection;
 
-        if (obj.___is_activated) {
+        if (obj.___is_last_selected) {
+
+            classList.push('last-selected');
+            rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
+
+        } else if (obj.___is_activated) {
+
             classList.push('selected');
             rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
+
         } else {
             rowSelection = '<div class="g-row-selection"></div>';
-        }
-
-        if (obj.___is_activated) {
-            classList.push('activated');
         }
 
         var classes = classList.join(' ');

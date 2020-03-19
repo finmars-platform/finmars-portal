@@ -251,8 +251,8 @@
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
 
                 if (locals.entityType && locals.entityType === 'complex-transaction') {
-                    dialogController = 'EntityViewerEditDialogController as vm';
-                    dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
+                    dialogController = 'ComplexTransactionEditDialogController as vm';
+                    dialogTemplateUrl = 'views/entity-viewer/complex-transaction-edit-dialog-view.html';
                 }
 
                 $mdDialog.show({
@@ -1329,7 +1329,7 @@
                                     content_type: "strategies.strategy3"
                                 };
                             }*/
-                            var contextData = getContextDataForComplexTransaction();
+                            var contextData = getContextDataForComplexTransaction(reportOptions, activeObject);
 
                             var entity = {
                                 contextData: contextData
@@ -1373,7 +1373,7 @@
 
                         if (action === 'book_transaction_specific') {
 
-                            var contextData = getContextDataForComplexTransaction();
+                            var contextData = getContextDataForComplexTransaction(reportOptions, activeObject);
 
                             var entity = {
                                 contextData: contextData
