@@ -28,6 +28,8 @@
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
+    var instrumentTypeService = require('../../services/instrumentTypeService');
+
 
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
 
@@ -1308,6 +1310,28 @@
         vm.applyPricingToAllInstruments = function ($event, item) {
 
             console.log('vm.applyPricingToAllInstruments', item);
+
+            instrumentTypeService.updatePricing(vm.entity.id, item).then(function (data) {
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Success',
+                            description: "New Pricing Settings were applied"
+                        }
+                    }
+                });
+
+            })
 
         };
 
