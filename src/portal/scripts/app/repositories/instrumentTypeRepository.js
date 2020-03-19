@@ -36,7 +36,7 @@
             })
     };
 
-    var create = function (instrument) {
+    var create = function (data) {
         return xhrService.fetch(baseUrl + 'instruments/instrument-type/',
             {
                 method: 'POST',
@@ -46,11 +46,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(instrument)
+                body: JSON.stringify(data)
             })
     };
 
-    var update = function (id, instrument) {
+    var update = function (id, data) {
         return xhrService.fetch(baseUrl + 'instruments/instrument-type/' + id + '/',
             {
                 method: 'PUT',
@@ -60,7 +60,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(instrument)
+                body: JSON.stringify(data)
             })
     };
 
@@ -116,6 +116,20 @@
             })
     };
 
+    var updatePricing = function(id, data) {
+        return xhrService.fetch(baseUrl + 'instruments/instrument-type/' + id + '/update-pricing/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
@@ -124,7 +138,9 @@
         deleteByKey: deleteByKey,
 
         updateBulk: updateBulk,
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+
+        updatePricing: updatePricing
     }
 
 }());
