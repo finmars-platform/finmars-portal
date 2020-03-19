@@ -8,6 +8,7 @@
     var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
 
     var instrumentService = require('../../../services/instrumentService');
+    var instrumentTypeService = require('../../../services/instrumentTypeService');
     var pricingPolicyService = require('../../../services/pricingPolicyService');
 
     module.exports = function ($scope, $mdDialog, data) {
@@ -107,6 +108,10 @@
                 vm.item.instrument_filters = vm.item.instrument_filters.join(',');
             }
 
+            if (vm.item.instrument_type_filters) {
+                vm.item.instrument_type_filters = vm.item.instrument_type_filters.join(',');
+            }
+
             pricingProcedureService.update(vm.item.id, vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
@@ -130,6 +135,29 @@
                 });
 
                 console.log('vm.instruments', vm.instruments);
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getInstrumentTypes = function () {
+
+            instrumentTypeService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+
+                vm.instrument_types = data.results.map(function (item) {
+
+                    return {
+                        id: item.user_code,
+                        name: item.user_code
+                    }
+
+                });
+
+                console.log('vm.instrument_types', vm.instrument_types);
 
                 $scope.$apply();
 
@@ -173,6 +201,12 @@
                 if (vm.item.instrument_filters) {
 
                     vm.item.instrument_filters = vm.item.instrument_filters.split(',');
+
+                }
+
+                if (vm.item.instrument_type_filters) {
+
+                    vm.item.instrument_type_filters = vm.item.instrument_type_filters.split(',');
 
                 }
 
@@ -225,6 +259,7 @@
             vm.getItem();
 
             vm.getInstruments();
+            vm.getInstrumentTypes();
             vm.getPricingPolicies();
 
         };

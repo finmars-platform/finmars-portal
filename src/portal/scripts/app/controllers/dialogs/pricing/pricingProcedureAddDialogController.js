@@ -8,6 +8,7 @@
     var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
 
     var instrumentService = require('../../../services/instrumentService');
+    var instrumentTypeService = require('../../../services/instrumentTypeService');
     var pricingPolicyService = require('../../../services/pricingPolicyService');
 
 
@@ -105,6 +106,10 @@
                 vm.item.instrument_filters = vm.item.instrument_filters.join(',');
             }
 
+            if (vm.item.instrument_type_filters) {
+                vm.item.instrument_type_filters = vm.item.instrument_type_filters.join(',');
+            }
+
             pricingProcedureService.create(vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
@@ -136,6 +141,29 @@
 
         };
 
+        vm.getInstrumentTypes = function () {
+
+            instrumentTypeService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+
+                vm.instrument_types = data.results.map(function (item) {
+
+                    return {
+                        id: item.user_code,
+                        name: item.user_code
+                    }
+
+                });
+
+                console.log('vm.instrument_types', vm.instrument_types);
+
+                $scope.$apply();
+
+            })
+
+        };
+
         vm.getPricingPolicies = function () {
 
             pricingPolicyService.getList({
@@ -160,7 +188,7 @@
         vm.init = function () {
 
             vm.getPricingPolicies();
-
+            vm.getInstrumentTypes();
             vm.getInstruments();
 
         };

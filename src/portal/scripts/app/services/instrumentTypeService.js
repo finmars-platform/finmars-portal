@@ -33,6 +33,10 @@
         return instrumentTypeRepository.deleteBulk(data)
     };
 
+    var updatePricing = function(id, data) {
+        return instrumentTypeRepository.updatePricing(id, data)
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
@@ -41,7 +45,9 @@
         deleteByKey: deleteByKey,
 
         updateBulk: updateBulk,
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+
+        updatePricing: updatePricing
 
     }
 
