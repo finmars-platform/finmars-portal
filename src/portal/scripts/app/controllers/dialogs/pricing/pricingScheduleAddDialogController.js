@@ -1,17 +1,18 @@
 /**
  * Created by szhitenev on 30.01.2020.
  */
-(function(){
+(function () {
 
     'use strict';
 
-    var pricingScheduleService= require('../../../services/pricing/pricingScheduleService');
+    var pricingScheduleService = require('../../../services/schedules/pricingScheduleService');
+    var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
 
-    module.exports = function($scope, $mdDialog, data){
+    module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
-        vm.readyStatus = {schedule: false};
+        vm.readyStatus = {pricingProcedures: false};
 
         vm.days = [];
         vm.schedule = {};
@@ -92,8 +93,22 @@
             })
         };
 
-        vm.init = function(){
+        vm.getPricingProcedures = function () {
 
+            pricingProcedureService.getList().then(function (data) {
+
+                vm.pricingProcedures = data.results;
+
+                vm.readyStatus.pricingProcedures = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.init = function () {
+            vm.getPricingProcedures();
         };
 
         vm.init();
