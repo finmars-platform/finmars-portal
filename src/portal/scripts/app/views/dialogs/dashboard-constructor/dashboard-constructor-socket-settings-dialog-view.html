@@ -23,10 +23,10 @@
                 aria-label="select with filter"
                 style="width: 150px;">
             <label>Element width</label>
-            <md-select ng-model="vm.item.colspan"
+            <md-select ng-model="vm.colspan"
                        md-container-class="common-select-container"
                        md-on-close="searchTerm = ''"
-                       ng-change="vm.changeSpan()">
+                       ng-change="vm.onSpanChange()">
                 <div class="select-options-holder">
                     <md-option
                             data-ng-repeat="colspan in vm.colspanList"
@@ -43,10 +43,10 @@
                 aria-label="select with filter"
                 style="width: 150px;">
             <label>Element height</label>
-            <md-select ng-model="vm.item.rowspan"
+            <md-select ng-model="vm.rowspan"
                        md-container-class="common-select-container"
                        md-on-close="searchTerm = ''"
-                       ng-change="vm.changeSpan()">
+                       ng-change="vm.onSpanChange()">
                 <div class="select-options-holder">
                     <md-option
                             data-ng-repeat="rowspan in vm.rowspanList"

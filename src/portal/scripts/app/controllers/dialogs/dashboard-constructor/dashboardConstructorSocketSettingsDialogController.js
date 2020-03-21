@@ -20,11 +20,14 @@
         vm.dashboardConstructorEventService = dashboardConstructorEventService;
         vm.attributeDataService = attributeDataService;
 
+        vm.colspan = vm.item.colspan;
+        vm.rowspan = vm.item.rowspan;
         vm.colspanList = [1];
         vm.rowspanList = [1];
 
         vm.component = vm.dashboardConstructorDataService.getComponentById(vm.item.data.id);
         var componentChanged = false;
+        var socketSettingsChanged = false;
 
         vm.getVerboseType = function () {
 
@@ -69,7 +72,7 @@
 
         };
 
-        var calculateColspanList = function () {
+        /*var calculateColspanList = function () {
 
             var result = [vm.columnNumber];
 
@@ -117,9 +120,51 @@
                 return index + 1
             });
 
+        };*/
+
+        var calculateColspanList = function () {
+
+            var result = [];
+
+            var colspan = vm.item.colspan;
+
+            for (var i = vm.columnNumber; i < vm.columnNumber + colspan; i++) {
+                result.push(i);
+            }
+
+            var layout = vm.dashboardConstructorDataService.getData();
+            var tab;
+            var row;
+            var item;
+
+            if (vm.tabNumber === 'fixed_area') {
+                row = layout.data.fixed_area.layout.rows[vm.rowNumber];
+            } else {
+                tab = layout.data.tabs[vm.tabNumber];
+                row = tab.layout.rows[vm.rowNumber];
+            }
+
+            for (var c = vm.columnNumber + colspan; c < row.columns.length; c++) {
+
+                item = row.columns[c];
+
+                if (item.cell_type === 'empty' && !item.is_hidden) {
+
+                    result.push(item.column_number);
+
+                } else {
+                    break;
+                }
+
+            }
+
+            vm.colspanList = result.map(function (item, index) {
+                return index + 1
+            });
+
         };
 
-        var calculateRowspanList = function () {
+        /*var calculateRowspanList = function () {
 
             var result = [vm.rowNumber];
 
@@ -168,9 +213,62 @@
                 return index + 1
             });
 
+        };*/
+
+        var calculateRowspanList = function () {
+
+            var result = [];
+
+            var rowspan = vm.item.rowspan;
+            var colspan = vm.item.colspan;
+
+            for (var i = vm.rowNumber; i < vm.rowNumber + rowspan; i++) {
+                result.push(i);
+            }
+
+            var layout = vm.dashboardConstructorDataService.getData();
+            var tab;
+            var row;
+            var item;
+
+            if (vm.tabNumber === 'fixed_area') {
+                tab = layout.data.fixed_area;
+            } else {
+                tab = layout.data.tabs[vm.tabNumber];
+            }
+
+            var r,c;
+            rowLoop: for (r = vm.rowNumber + rowspan; r < tab.layout.rows.length; r++) {
+
+                row = tab.layout.rows[r];
+
+                for (c = vm.columnNumber; c < vm.columnNumber + colspan; c++) {
+                    item = row.columns[c];
+
+                    if (item.cell_type !== 'empty' || item.is_hidden) {
+                        break rowLoop;
+                    }
+                }
+
+                result.push(row.row_number);
+
+            }
+
+            vm.rowspanList = result.map(function (item, index) {
+                return index + 1
+            });
+
         };
 
-        vm.clearElemSpans = function () {
+        vm.onSpanChange = function () {
+            socketSettingsChanged = true;
+            clearElemSpans();
+            vm.item.colspan = vm.colspan;
+            vm.item.rowspan = vm.rowspan;
+            hideOverlaidSockets();
+        };
+
+        var clearElemSpans = function () {
 
             var layout = vm.dashboardConstructorDataService.getData();
 
@@ -184,7 +282,10 @@
                 tab = layout.data.tabs[vm.tabNumber];
             }
 
-            for (var r = 0; r < tab.layout.rows.length; r = r + 1) {
+            var colspan = vm.item.colspan;
+            var rowspan = vm.item.rowspan;
+
+            /*for (var r = 0; r < tab.layout.rows.length; r = r + 1) {
 
                 row = tab.layout.rows[r];
 
@@ -192,7 +293,7 @@
 
                     item = row.columns[c];
 
-                    if (item.is_hidden === true) {
+                    if (item.is_hidden) {
 
                         if (item.hidden_by.row_number === vm.rowNumber &&
                             item.hidden_by.column_number === vm.columnNumber) {
@@ -207,20 +308,39 @@
 
                 }
 
+            }*/
+
+            for (var r = vm.rowNumber; r < vm.rowNumber + rowspan; r++) {
+
+                row = tab.layout.rows[r];
+
+                for (var c = vm.columnNumber; c < vm.columnNumber + colspan; c++) {
+
+                    item = row.columns[c];
+
+                    if (item.is_hidden) {
+                        delete row.columns[c].is_hidden;
+                        delete row.columns[c].hidden_by;
+
+                    }
+
+                }
+
             }
 
-            vm.dashboardConstructorDataService.setData(layout);
+            vm.dashboardConstructorDataService.setData(layout)
 
         };
 
-        vm.changeSpan = function () {
+        var hideOverlaidSockets = function () {
+
+            //vm.clearElemSpans();
 
             var layout = vm.dashboardConstructorDataService.getData();
+
             var tab;
             var row;
             var item;
-
-            vm.clearElemSpans();
 
             if (vm.tabNumber === 'fixed_area') {
                 tab = layout.data.fixed_area;
@@ -238,10 +358,10 @@
 
                         item = row.columns[c];
                         item.is_hidden = true;
-                        item.hidden_by = {
+                        /*item.hidden_by = {
                             row_number: vm.rowNumber,
                             column_number: vm.columnNumber
-                        }
+                        }*/
 
                     }
 
@@ -250,8 +370,6 @@
             }
 
             vm.dashboardConstructorDataService.setData(layout)
-
-            componentChanged = true;
 
         };
 
@@ -345,13 +463,14 @@
         };
 
         vm.agree = function () {
-            var status = {status: 'disagree'};
+            var response = {};
+            response.status = 'disagree';
 
-            if (componentChanged) {
-                status.status = 'agree';
+            if (componentChanged || socketSettingsChanged) {
+                response.status = 'agree';
             }
 
-            $mdDialog.hide(status);
+            $mdDialog.hide(response);
         };
 
         init();

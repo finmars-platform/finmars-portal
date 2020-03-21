@@ -43,7 +43,7 @@
                 vm.initEventListeners();
 
                 vm.dashboardDataService.setData(vm.layout);
-                vm.dashboardDataService.setListLayout(JSON.parse(JSON.stringify(data)));
+                vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(data)));
 
                 vm.readyStatus.data = true;
 
@@ -69,7 +69,7 @@
                 console.log('vm.layout', vm.layout);
 
                 vm.dashboardDataService.setData(vm.layout);
-                vm.dashboardDataService.setListLayout(JSON.parse(JSON.stringify(vm.layout)));
+                vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
                 vm.readyStatus.data = true;
 
@@ -104,7 +104,7 @@
                     console.log('vm.layout', vm.layout);
 
                     vm.dashboardDataService.setData(vm.layout);
-                    vm.dashboardDataService.setListLayout(JSON.parse(JSON.stringify(vm.layout)));
+                    vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
                     vm.readyStatus.data = true;
 

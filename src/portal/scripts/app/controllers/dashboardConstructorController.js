@@ -140,7 +140,7 @@
             vm.layout.data.fixed_area.layout.rows_count = rows_count;
             vm.layout.data.fixed_area.layout.columns_count = columns_count;
 
-            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
             setTimeout(function () {
                 vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
             }, 0)
@@ -323,7 +323,6 @@
                 for (var i = 0; i < vm.layout.data.tabs.length; i++) {
                     if (vm.layout.data.tabs[i].id === tabId) {
                         vm.layout.data.tabs[i].captionName = tabNewName;
-                        console.log("space tab tabNewName", tabNewName, vm.layout.data.tabs[i]);
                         break;
                     }
                 }
@@ -360,7 +359,7 @@
             tab.editState = !tab.editState;
 
             if (tab.editState) {
-                console.log("space tab editTabInit");
+
                 setTimeout(function () {
                     allowSpacesInTabName();
                 }, 100);
@@ -372,14 +371,13 @@
         vm.saveEditedTab = function (tab) {
 
             var tabIsReadyToSave = true;
-            console.log("tab space tab.captionName", tab.captionName, tab);
+
             if (tab.captionName && tab.captionName !== '') {
 
                 vm.layout.data.tabs.forEach(function (singleTab) {
 
                     if (tab.captionName.toLowerCase() === singleTab.name.toLowerCase()) {
                         tabIsReadyToSave = false;
-                        console.log("tab space tab with same name", singleTab, singleTab.name);
                     }
 
                 });
@@ -390,7 +388,6 @@
                 }
 
             } else {
-                console.log("tab space empty tab.captionName");
                 tabIsReadyToSave = false;
             }
 
@@ -529,14 +526,15 @@
 
                     if (item.is_hidden === true) {
 
-                        if (item.hidden_by.row_number === rowNumber &&
+                        /*if (item.hidden_by.row_number === rowNumber &&
                             item.hidden_by.column_number === colNumber) {
 
                             delete item.is_hidden;
                             delete item.hidden_by;
 
-                        }
-
+                        }*/
+                        delete item.is_hidden;
+                        delete item.hidden_by;
 
                     }
 
@@ -602,6 +600,7 @@
 
                             draggedFromSocket = true;
 
+                            var layout = vm.dashboardConstructorDataService.getData();
                             var component_id = elem.dataset.componentId;
                             var data_source = target.parentElement.parentElement; // root of the cell (.dashboard-constructor-cell)
                             var tab_number;
@@ -623,12 +622,12 @@
 
                                 if (dc_tab_number === 'fixed_area') {
 
-                                    var dcTab = vm.layout.data.fixed_area;
+                                    var dcTab = layout.data.fixed_area;
 
                                 } else {
 
                                     dc_tab_number = parseInt(elem.dataset.tabNumber, 10);
-                                    var dcTab = vm.layout.data.tabs[dc_tab_number];
+                                    var dcTab = layout.data.tabs[dc_tab_number];
 
                                 }
 
@@ -640,10 +639,10 @@
 
                                 if (tab_number === 'fixed_area') {
 
-                                    var targetRow = vm.layout.data.fixed_area.layout.rows[row_number];
+                                    var targetRow = layout.data.fixed_area.layout.rows[row_number];
 
                                 } else { // when dragged from area with available cards
-                                    var targetRow = vm.layout.data.tabs[tab_number].layout.rows[row_number];
+                                    var targetRow = layout.data.tabs[tab_number].layout.rows[row_number];
                                 }
 
                                 targetRow.columns[column_number].cell_type = 'component';
@@ -667,10 +666,10 @@
 
                                 if (tab_number === 'fixed_area') {
 
-                                    var targetRow = vm.layout.data.fixed_area.layout.rows[row_number];
+                                    var targetRow = layout.data.fixed_area.layout.rows[row_number];
 
                                 } else { // when dragged from area with available cards
-                                    var targetRow = vm.layout.data.tabs[tab_number].layout.rows[row_number];
+                                    var targetRow = layout.data.tabs[tab_number].layout.rows[row_number];
                                 }
 
                                 targetRow.columns[column_number].cell_type = 'component';
@@ -679,6 +678,7 @@
 
                             }
 
+                            vm.dashboardConstructorDataService.setData(layout);
 
                             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
 
@@ -911,13 +911,10 @@
                 if (tab.id === layoutTab.id) {
 
                     tab.layout.rows = tab.layout.rows.filter(function (tabRow) {
-
                         return row.row_number !== tabRow.row_number
-
                     });
 
                     tab.layout.rows = tab.layout.rows.map(function (row, index) {
-
                         row.row_number = index;
 
                         return row
@@ -973,7 +970,7 @@
 
             vm.dashboardConstructorDataService.setData(layout);
 
-            vm.updateDrakeContainers();
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
         };
@@ -1021,7 +1018,7 @@
 
             vm.dashboardConstructorDataService.setData(layout);
 
-            vm.updateDrakeContainers();
+            vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
             vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
         };
@@ -1064,9 +1061,11 @@
             var components = vm.dashboardConstructorDataService.getComponents();
             vm.layout.data.components_types = components;
 
-            if (vm.layout.id) {
+            var layout = JSON.parse(angular.toJson(vm.layout)); // removing angular properties
 
-                uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
+            if (layout.id) {
+
+                uiService.updateDashboardLayout(layout.id, layout).then(function (data) {
 
                     vm.layout = data;
 
@@ -1090,7 +1089,7 @@
 
             } else {
 
-                uiService.createDashboardLayout(vm.layout).then(function (data) {
+                uiService.createDashboardLayout(layout).then(function (data) {
 
                     vm.layout = data;
 

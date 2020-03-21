@@ -103,10 +103,10 @@
 
                         }
 
-                        if (layoutElem.cell_type === 'component') {
+                        /*if (layoutElem.cell_type === 'component') {
 
                             // nothing here yet
-                        }
+                        }*/
 
                         domElem.style.width = (layoutElem.colspan * scope.cellWidth) + 'px';
                         domElem.style.height = (layoutElem.rowspan * scope.cellHeight) + 'px';
@@ -186,10 +186,8 @@
                         scope.dashboardConstructorEventService.addEventListener(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE, function () {
 
                             setTimeout(function () {
-
                                 scope.resize()
-
-                            }, 0)
+                            }, 0);
 
                         });
 

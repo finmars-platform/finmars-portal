@@ -24,6 +24,7 @@
 
                 scope.$watch('item', function () {
                     scope.componentData = scope.dashboardConstructorDataService.getComponentById(scope.item.data.id);
+
                 });
 
                 scope.getVerboseType = function () {
@@ -101,7 +102,6 @@
 
                             scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
 
-                            console.log("dashboard settings res", res);
                             scope.saveField();
                         }
 
@@ -146,7 +146,13 @@
 
                 scope.calculateColspanList = function () {
 
-                    var result = [scope.columnNumber];
+                    var result = [];
+
+                    var colspan = scope.item.colspan;
+
+                    for (var i = scope.columnNumber; i < scope.columnNumber + colspan; i++) {
+                        result.push(i);
+                    }
 
                     var layout = scope.dashboardConstructorDataService.getData();
                     var tab;
@@ -160,7 +166,7 @@
                         row = tab.layout.rows[scope.rowNumber];
                     }
 
-                    for (var c = scope.columnNumber + 1; c < row.columns.length; c = c + 1) {
+                    /*for (var c = scope.columnNumber + 1; c < row.columns.length; c = c + 1) {
 
                         item = row.columns[c];
 
@@ -186,6 +192,20 @@
                             break;
                         }
 
+                    }*/
+
+                    for (var c = scope.columnNumber + colspan; c < row.columns.length; c++) {
+
+                        item = row.columns[c];
+
+                        if (item.cell_type === 'empty' && !item.is_hidden) {
+
+                            result.push(item.column_number);
+
+                        } else {
+                            break;
+                        }
+
                     }
 
                     scope.colspanList = result.map(function (item, index) {
@@ -196,7 +216,14 @@
 
                 scope.calculateRowspanList = function () {
 
-                    var result = [scope.rowNumber];
+                    var result = [];
+
+                    var rowspan = scope.item.rowspan;
+                    var colspan = scope.item.colspan;
+
+                    for (var i = scope.rowNumber; i < scope.rowNumber + rowspan; i++) {
+                        result.push(i);
+                    }
 
                     var layout = scope.dashboardConstructorDataService.getData();
                     var tab;
@@ -209,7 +236,7 @@
                         tab = layout.data.tabs[scope.tabNumber];
                     }
 
-                    for (var r = scope.rowNumber + 1; r < tab.layout.rows.length; r = r + 1) {
+                    /*for (var r = scope.rowNumber + 1; r < tab.layout.rows.length; r = r + 1) {
 
                         row = tab.layout.rows[r];
                         item = row.columns[scope.columnNumber];
@@ -236,8 +263,24 @@
                             break
                         }
 
-                    }
+                    }*/
 
+                    var r,c;
+                    rowLoop: for (r = scope.rowNumber + rowspan; r < tab.layout.rows.length; r++) {
+
+                        row = tab.layout.rows[r];
+
+                        for (c = scope.columnNumber; c < scope.columnNumber + colspan; c++) {
+                            item = row.columns[c];
+
+                            if (item.cell_type !== 'empty' || item.is_hidden) {
+                                break rowLoop;
+                            }
+                        }
+
+                        result.push(item.row_number);
+
+                    }
 
                     scope.rowspanList = result.map(function (item, index) {
                         return index + 1
@@ -259,7 +302,10 @@
                         tab = layout.data.tabs[scope.tabNumber];
                     }
 
-                    for (var r = 0; r < tab.layout.rows.length; r = r + 1) {
+                    var colspan = scope.item.colspan;
+                    var rowspan = scope.item.rowspan;
+
+                    /*for (var r = 0; r < tab.layout.rows.length; r = r + 1) {
 
                         row = tab.layout.rows[r];
 
@@ -267,7 +313,7 @@
 
                             item = row.columns[c];
 
-                            if (item.is_hidden === true) {
+                            if (item.is_hidden) {
 
                                 if (item.hidden_by.row_number === scope.rowNumber &&
                                     item.hidden_by.column_number === scope.columnNumber) {
@@ -282,18 +328,39 @@
 
                         }
 
+                    }*/
+
+                    for (var r = scope.rowNumber; r < scope.rowNumber + rowspan; r++) {
+
+                        row = tab.layout.rows[r];
+
+                        for (var c = scope.columnNumber; c < scope.columnNumber + colspan; c++) {
+
+                            item = row.columns[c];
+
+                            if (item.is_hidden) {
+                                delete row.columns[c].is_hidden;
+                                delete row.columns[c].hidden_by;
+
+                            }
+
+                        }
+
                     }
+
+                    scope.dashboardConstructorDataService.setData(layout)
 
                 };
 
-                scope.changeSpan = function () {
+                scope.hideOverlaidSockets = function () {
+
+                    //scope.clearElemSpans();
 
                     var layout = scope.dashboardConstructorDataService.getData();
+
                     var tab;
                     var row;
                     var item;
-
-                    scope.clearElemSpans();
 
                     if (scope.tabNumber === 'fixed_area') {
                         tab = layout.data.fixed_area;
@@ -311,10 +378,10 @@
 
                                 item = row.columns[c];
                                 item.is_hidden = true;
-                                item.hidden_by = {
+                                /*item.hidden_by = {
                                     row_number: scope.rowNumber,
                                     column_number: scope.columnNumber
-                                }
+                                }*/
 
                             }
 
@@ -326,45 +393,59 @@
 
                 };
 
-                scope.increaseColspan = function (item) {
+                scope.increaseColspan = function () {
 
                     var maxColspan = scope.colspanList[scope.colspanList.length - 1];
 
-                    if (item.colspan < maxColspan) {
-                        item.colspan += 1;
-                        scope.changeSpan();
+                    if (scope.item.colspan < maxColspan) {
+                        scope.clearElemSpans();
+
+                        scope.item.colspan += 1;
+
+                        scope.hideOverlaidSockets();
+
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+                    }
+
+                };
+
+                scope.decreaseColspan = function () {
+
+                    if (scope.item.colspan > 1) {
+                        scope.clearElemSpans();
+
+                        scope.item.colspan -= 1;
+
+                        scope.hideOverlaidSockets();
 
                         scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
                         scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
                     }
                 };
 
-                scope.decreaseColspan = function (item) {
-                    if (item.colspan > 1) {
-                        item.colspan -= 1;
-                        scope.changeSpan();
-
-                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
-                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
-                    }
-                };
-
-                scope.increaseRowspan = function (item) {
+                scope.increaseRowspan = function () {
                     var maxRowspan = scope.rowspanList[scope.rowspanList.length - 1];
 
-                    if (item.rowspan < maxRowspan) {
-                        item.rowspan += 1;
-                        scope.changeSpan();
+                    if (scope.item.rowspan < maxRowspan) {
+                        scope.clearElemSpans();
+
+                        scope.item.rowspan += 1;
+
+                        scope.hideOverlaidSockets();
 
                         scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
                         scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
                     }
                 };
 
-                scope.decreaseRowspan = function (item) {
-                    if (item.rowspan > 1) {
-                        item.rowspan -= 1;
-                        scope.changeSpan();
+                scope.decreaseRowspan = function () {
+                    if (scope.item.rowspan > 1) {
+                        scope.clearElemSpans();
+
+                        scope.item.rowspan -= 1;
+
+                        scope.hideOverlaidSockets();
 
                         scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
                         scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
