@@ -337,6 +337,8 @@
                     return 'Instrument Pricing Scheme';
                 case 'pricing.pricingprocedure':
                     return 'Pricing Procedure';
+                case 'schedules.pricingschedule':
+                    return 'Pricing Schedule';
                 default:
                     return "Unknown"
             }
