@@ -54,6 +54,11 @@
                 "key": "error_text",
                 "name": "Error Text",
                 "value_type": 10
+            },
+            {
+                "key": "status",
+                "name": "Status",
+                "value_type": 10
             }
 
         ]
