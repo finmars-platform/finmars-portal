@@ -63,6 +63,11 @@
                 "value_entity": "procedure_instance",
                 "code": "name",
                 "value_type": "field"
+            },
+            {
+                "key": "status",
+                "name": "Status",
+                "value_type": 10
             }
 
         ]
