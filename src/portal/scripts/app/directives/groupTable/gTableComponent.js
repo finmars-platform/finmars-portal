@@ -123,7 +123,7 @@
                     scope.dashboardFilterCollapsed = !scope.dashboardFilterCollapsed
                 };
 
-                scope.init = function () {
+                var initEventListeners = function () {
 
                     scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
 
@@ -157,8 +157,6 @@
 
                     scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
                         scope.activeObject = scope.evDataService.getActiveObject();
-
-
                     });
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -196,6 +194,17 @@
                         }
 
                     });
+
+                };
+
+                scope.init = function () {
+                    initEventListeners();
+
+                    if (document.querySelector('body').classList.contains('filter-side-nav-collapsed')) {
+
+                        scope.evDataService.toggleRightSidebar(true);
+
+                    }
                 };
 
                 scope.init();

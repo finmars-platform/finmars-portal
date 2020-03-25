@@ -1343,9 +1343,16 @@ body.md-dialog-is-showing {
 }
 
 .g-sidebar-filter-component {
-  .area-title {
-    position: relative;
-    margin-left: 10px;
+
+  .area-title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .area-title {
+      position: relative;
+      margin-left: 10px;
+    }
   }
 
   .filters-holder {
@@ -1570,7 +1577,6 @@ md-checkbox.g-filter-options-checkbox {
 }
 
 .g-scroll-wrapper {
-  //width:100%;
   display: inline-block;
   height: 28px;
   max-height: 28px;
@@ -1579,7 +1585,6 @@ md-checkbox.g-filter-options-checkbox {
 
 .g-scrollable-area {
   height: 100%;
-  //width: 10000000px;
 }
 
 .g-group-table-holder {
@@ -1691,18 +1696,20 @@ md-checkbox.g-filter-options-checkbox {
     .f-s-expand {
       display: none;
     }
+  }
 
-    .s-f-collapsed-btns {
-      display: none;
-    }
+  .s-f-collapsed-btns {
+    display: none;
   }
 }
 
 .filter-side-nav-collapsed {
   .g-wrapper {
     .g-filter-sidebar {
-      width: 55px;
-      min-width: 55px;
+      /*width: 55px;
+      min-width: 55px;*/
+      width: 74px;
+      min-width: 74px;
       transition: width ease .25s;
 
       .g-sidebar-report-card {
@@ -1718,7 +1725,6 @@ md-checkbox.g-filter-options-checkbox {
         display: none;
       }
 
-
       .g-meta-circle {
         width: 30px;
         height: 30px;
@@ -1732,8 +1738,8 @@ md-checkbox.g-filter-options-checkbox {
     }
 
     .s-f-collapsed-btns {
-      display: block;
-      margin-left: 3px;
+      display: flex;
+      //margin-left: 3px;
 
       .md-button {
         background-color: #fff;
@@ -1754,18 +1760,41 @@ md-checkbox.g-filter-options-checkbox {
       display: none;
     }
 
-    .g-section-title {
-      margin-bottom: 5px;
-      margin-left: 14px;
+    .area-title-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
 
-      .tooltips-sign {
-        display: none;
-      }
+      .g-section-title {
+        margin-left: 0;
 
-      .after-text {
-        display: none;
+        .tooltips-sign {
+          display: none;
+        }
+
+        .after-text {
+          display: none;
+        }
       }
     }
+
+    .g-filters-holder.g-filters-holder-container {
+      float: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: center;
+
+      .g-filter-elem {
+        width: 36px;
+      }
+
+      .g-filter-item {
+        padding-right: 8px;
+        padding-left: 8px;
+      }
+    }
+
   }
 }
 
@@ -2104,7 +2133,7 @@ md-checkbox.g-filter-options-checkbox {
   height: calc(100% - 60px);
   right: 10px;
   overflow: auto;
-  z-index: 1;
+  z-index: 10;
 }
 
 button.md-button.toggle-dashboard-filter-btn {

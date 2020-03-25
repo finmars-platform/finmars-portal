@@ -1,6 +1,10 @@
-<md-dialog aria-label="" ng-cloak class="entity-search-dialog">
+<md-dialog class="entity-search-dialog draggable-dialog entityEditorElemToResize"
+           drag-dialog
+           aria-label="entity search dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
             <h2>Search {{vm.entityType}}</h2>
             <span flex></span>
         </div>
@@ -130,5 +134,9 @@
         <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
             Select
         </md-button>
+
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>

@@ -1,11 +1,10 @@
 <md-card ng-class="getClassesForFilter()"
          class="g-filter-item">
 
-    <md-tooltip data-ng-if="sideNavCollapsed"
-                md-direction="top"
-                data-ng-bind="getFilterName()"></md-tooltip>
-
     <div data-ng-if="sideNavCollapsed">
+        <md-tooltip md-direction="top"
+                    data-ng-bind="getFilterName()"></md-tooltip>
+
         <md-checkbox ng-model="filter.options.enabled"
                      aria-label="filters"
                      class="md-primary table-filter-activity-checkbox"
@@ -82,7 +81,6 @@
                                        ng-bind="rowContent.name"
                                        ng-click="selectFilterOption(rowContent.name)">
                             </md-button>
-
                         </md-menu-content>
                     </md-menu>
 
@@ -102,7 +100,6 @@
                             </md-button>
                         </div>
                     </div>-->
-
                 </div>
 
             </div>
@@ -137,6 +134,7 @@
                                                 class="z-arrow-left-icon"></ng-md-icon>
                                     <span>Filter</span>
                                 </md-button>
+
                                 <md-menu-content class="dropdown-buttons-menu" width="3">
                                     <md-button ng-click="changeFilterType('equal')">
                                         <ng-md-icon icon="done"

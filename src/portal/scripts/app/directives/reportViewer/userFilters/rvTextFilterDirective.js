@@ -29,11 +29,9 @@
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.useFromAbove = scope.evDataService.getUseFromAbove();
-                //scope.attributesFromAbove = [];
 
                 var dataLoadEndId;
                 var toggleFilterAreaID;
-                var clearUseFromAboveId;
 
                 var getDataForSelects = function () {
                     var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
@@ -303,11 +301,7 @@
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                        if (interfaceLayout.filterArea.width === 55) {
-                            scope.sideNavCollapsed = true;
-                        } else {
-                            scope.sideNavCollapsed = false;
-                        }
+                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                     });
                 };
@@ -320,6 +314,9 @@
                     }
 
                     initEventListeners();
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                     if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
                         setTimeout(function () {

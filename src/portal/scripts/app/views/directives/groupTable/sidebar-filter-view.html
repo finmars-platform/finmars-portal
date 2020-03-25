@@ -336,12 +336,13 @@
                class="md-button md-raised viewer-table-toggle-contextmenu-btn"
                data-ng-click="openContextMenu($event)">Selected Item(s)</md-button>
 
-    <div layout="row" layout-align="space-between center">
+    <div class="area-title-container">
         <p class="area-title g-section-title"><span class="g-meta-circle blue">F</span><span class="after-text">ILTER AREA</span>
             <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #777777">
                 <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
             </ng-md-icon>
         </p>
+
         <md-button aria-label="resize"
                    class="to-small-btn filter-sidenav f-s-collapse fab md-raised"
                    data-ng-click="resizeFilterSideNav('collapse')">
@@ -349,7 +350,8 @@
             <ng-md-icon icon="chevron_right"></ng-md-icon>
         </md-button>
     </div>
-    <div layout="row">
+
+    <div layout="row" layout-align="center start">
         <md-button aria-label="resize"
                    class="to-small-btn filter-sidenav f-s-expand fab md-raised"
                    data-ng-click="resizeFilterSideNav('expand')">
@@ -398,7 +400,7 @@
         </md-button>
     </div>
 
-    <div class="s-f-collapsed-btns" layout="column">
+    <div class="s-f-collapsed-btns" layout="column" layout-align="start center">
         <md-button class="md-raised to-small-btn filters-management-btn" data-ng-click="selectAll()">
             <ng-md-icon icon="check_box"></ng-md-icon>
             <md-tooltip md-direction="top">Select all</md-tooltip>
@@ -424,7 +426,7 @@
     <!--<div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">-->
     <div data-ng-if="isReport">
         <div class="g-filters-holder g-filters-holder-container">
-            <div data-ng-repeat="filter in filters track by filter.key">
+            <div data-ng-repeat="filter in filters track by filter.key" class="g-filter-elem">
                 <div class="filterCardHolder"
                      data-filter-key="{{filter.key}}">
 
@@ -456,7 +458,7 @@
 
     <div data-ng-if="!isReport">
         <div class="g-filters-holder g-filters-holder-container">
-            <div data-ng-repeat="filter in filters track by filter.key">
+            <div data-ng-repeat="filter in filters track by filter.key" class="g-filter-elem">
                 <div class="filterCardHolder"
                      data-filter-key="{{filter.key}}">
 

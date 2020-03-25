@@ -26,6 +26,8 @@
                 scope.filterSelectOptions = [];
                 scope.nItemsValue = null;
 
+                var toggleFilterAreaID;
+
                 if (!scope.filter.options) {
                     scope.filter.options = {};
                 }
@@ -47,6 +49,14 @@
                 }
 
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
+
+                scope.getFilterName = function () {
+                    if (scope.filter.layout_name) {
+                        return scope.filter.layout_name;
+                    }
+
+                    return scope.filter.name;
+                };
 
                 scope.getClassesForFilter = function () {
                     var filterClasses = '';
@@ -110,8 +120,7 @@
                     return false;
                 };
 
-                scope.filterSettingsChanged = function () {
-                    // console.log("filter filterSettingsChanged", scope.filter.options);
+                scope.filterSettingsChange = function () {
 
                     if (scope.filter.options.enabled || filterEnabled) {
 
@@ -145,12 +154,12 @@
 
                     }
 
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
                 };
 
                 scope.toggleFrontendFilter = function () {
                     scope.filter.options.is_frontend_filter = !scope.filter.options.is_frontend_filter;
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
                 };
 
                 scope.clearFilter = function () {
@@ -164,7 +173,7 @@
 
                     }
 
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
@@ -223,6 +232,25 @@
                     scope.evDataService.setFilters(scope.filters);
 
                 };
+
+                var init = function () {
+                    toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+
+                    });
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+                };
+
+                init();
+
+                scope.$on("$destroy", function () {
+                    scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
+                });
 
             }
         }

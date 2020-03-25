@@ -525,13 +525,14 @@
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                        if (scope.sideNavCollapsed) {
+                        /*if (scope.sideNavCollapsed) {
                             interfaceLayout.filterArea.width = 239;
                         } else {
-                            interfaceLayout.filterArea.width = 55;
+                            interfaceLayout.filterArea.width = 74;
                         }
 
-                        scope.sideNavCollapsed = !scope.sideNavCollapsed;
+                        scope.sideNavCollapsed = !scope.sideNavCollapsed;*/
+                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
 
