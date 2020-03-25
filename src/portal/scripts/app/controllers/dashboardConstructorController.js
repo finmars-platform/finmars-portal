@@ -1058,16 +1058,14 @@
 
         vm.saveLayout = function ($event) {
 
-            var components = vm.dashboardConstructorDataService.getComponents();
-            vm.layout.data.components_types = components;
-
             var layout = JSON.parse(angular.toJson(vm.layout)); // removing angular properties
+
+            var components = vm.dashboardConstructorDataService.getComponents();
+            layout.data.components_types = components;
 
             if (layout.id) {
 
                 uiService.updateDashboardLayout(layout.id, layout).then(function (data) {
-
-                    vm.layout = data;
 
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
@@ -1082,8 +1080,6 @@
                             }
                         }
                     });
-
-                    $scope.$apply();
 
                 })
 
@@ -1093,6 +1089,9 @@
 
                     vm.layout = data;
 
+                    vm.dashboardConstructorDataService.setData(vm.layout);
+                    vm.dashboardConstructorDataService.setComponents(vm.layout.data.components_types);
+
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
@@ -1107,7 +1106,7 @@
                         }
                     });
 
-                    $scope.$apply();
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
                 })
 

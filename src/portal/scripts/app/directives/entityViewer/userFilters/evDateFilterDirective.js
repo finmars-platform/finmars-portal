@@ -29,6 +29,7 @@
                 scope.columnRowsContent = [];
 
                 var dataLoadEndId;
+                var toggleFilterAreaID;
 
                 var getDataForSelects = function () {
                     var columnRowsContent  = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
@@ -104,6 +105,14 @@
                     return filterClasses;
                 };
 
+                scope.getFilterName = function () {
+                    if (scope.filter.layout_name) {
+                        return scope.filter.layout_name;
+                    }
+
+                    return scope.filter.name;
+                };
+
                 scope.getFilterRegime = function () {
 
                     var filterRegime = "";
@@ -165,7 +174,7 @@
 
                     }
 
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
                 };
 
                 scope.showFRCheckMark = function (filterRegime) {
@@ -193,7 +202,7 @@
 
                     }
 
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
 
                 };
 
@@ -242,7 +251,7 @@
 
                 };
 
-                scope.filterSettingsChanged = function () {
+                scope.filterSettingsChange = function () {
 
                     if (scope.filter.options.filter_type === 'date_tree') {
                         scope.filter.options.filter_values = convertDatesTreeToFlatList();
@@ -264,7 +273,7 @@
                         scope.filter.options.filter_values = [];
                     }
 
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
 
                 };
 
@@ -325,10 +334,26 @@
 
                 };
 
-                var init = function () {
+                var initEventListeners = function () {
                     if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
                         dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
                     }
+
+                    toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+
+                    });
+                };
+
+                var init = function () {
+
+                    initEventListeners();
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                     if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
                         setTimeout(function () {
@@ -341,6 +366,7 @@
 
                 scope.$on("$destroy", function () {
                     scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndId);
+                    scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
                 })
 
             }

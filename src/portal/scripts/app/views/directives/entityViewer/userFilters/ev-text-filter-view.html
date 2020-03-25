@@ -1,224 +1,235 @@
 <md-card ng-class="getClassesForFilter()"
          class="g-filter-item">
-    <!--<md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span
-            data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>-->
 
-    <div layout="row"
-         layout-align="center center"
-         style="margin-bottom: 13px;">
+    <div data-ng-if="sideNavCollapsed">
+        <md-tooltip md-direction="top"
+                    data-ng-bind="getFilterName()"></md-tooltip>
+
+        <md-checkbox ng-model="filter.options.enabled"
+                     aria-label="filters"
+                     class="md-primary table-filter-activity-checkbox"
+                     ng-change="filterSettingsChange()"
+                     flex="15"></md-checkbox>
+    </div>
+
+    <div data-ng-if="!sideNavCollapsed">
+        <div layout="row"
+             layout-align="center center"
+             style="margin-bottom: 13px;">
         <span data-ng-if="!filter.layout_name"
               ng-bind="filter.name"
               flex="100"
               style="text-align: center;"></span>
-        <span data-ng-if="filter.layout_name"
-              ng-bind="filter.layout_name"
-              flex="100"
-              style="text-align: center;"></span>
-    </div>
+            <span data-ng-if="filter.layout_name"
+                  ng-bind="filter.layout_name"
+                  flex="100"
+                  style="text-align: center;"></span>
+        </div>
 
-    <div layout="row" layout-align="center start">
-        <md-checkbox ng-model="filter.options.enabled"
-                     aria-label="filters"
-                     class="md-primary table-filter-activity-checkbox"
-                     ng-change="filterSettingsChanged()"
-                     flex="15"></md-checkbox>
+        <div layout="row" layout-align="center start">
+            <md-checkbox ng-model="filter.options.enabled"
+                         aria-label="filters"
+                         class="md-primary table-filter-activity-checkbox"
+                         ng-change="filterSettingsChange()"
+                         flex="15"></md-checkbox>
 
-        <div ng-if="filter.options.filter_type !== 'multiselector'"
-             flex="70">
-            <div ng-if="filter.options.filter_type !== 'selector'" class="table-filter-input-container">
-                <md-input-container>
-                    <label>
-                        <span ng-bind="getFilterRegime()"></span>
-                    </label>
-
-                    <input data-ng-model="filter.options.filter_values[0]"
-                           data-ng-change="filterSettingsChanged()"
-                           data-ng-model-options="{debounce: 1000}">
-                </md-input-container>
-            </div>
-
-            <div ng-if="filter.options.filter_type === 'selector'"
-                 class="table-filter-input-container text-filter-select">
-
-                <md-menu>
+            <div ng-if="filter.options.filter_type !== 'multiselector'"
+                 flex="70">
+                <div ng-if="filter.options.filter_type !== 'selector'" class="table-filter-input-container">
                     <md-input-container>
                         <label>
                             <span ng-bind="getFilterRegime()"></span>
                         </label>
 
-                        <input ng-model="filter.options.filter_values[0]"
-                               ng-change="filterSettingsChanged()"
-                               ng-model-options="{debounce: 1000}"
-                               ng-click="$mdOpenMenu($event)">
-                        <!--<input ng-model="filter.options.filter_values[0]"
-                               ng-change="filterSettingsChanged()"
-                               ng-model-options="{debounce: 1000}"
-                               ng-click="toggleFilterSelectMenu('show')">-->
+                        <input data-ng-model="filter.options.filter_values[0]"
+                               data-ng-change="filterSettingsChange()"
+                               data-ng-model-options="{debounce: 1000}">
                     </md-input-container>
+                </div>
 
-                    <md-menu-content class="text-filter-select-menu">
-                        <md-input-container md-no-float class="no-error-spacer">
+                <div ng-if="filter.options.filter_type === 'selector'"
+                     class="table-filter-input-container text-filter-select">
+
+                    <md-menu>
+                        <md-input-container>
+                            <label>
+                                <span ng-bind="getFilterRegime()"></span>
+                            </label>
+
+                            <input ng-model="filter.options.filter_values[0]"
+                                   ng-change="filterSettingsChange()"
+                                   ng-model-options="{debounce: 1000}"
+                                   ng-click="$mdOpenMenu($event)">
+                            <!--<input ng-model="filter.options.filter_values[0]"
+                                   ng-change="filterSettingsChange()"
+                                   ng-model-options="{debounce: 1000}"
+                                   ng-click="toggleFilterSelectMenu('show')">-->
+                        </md-input-container>
+
+                        <md-menu-content class="text-filter-select-menu">
+                            <md-input-container md-no-float class="no-error-spacer">
+                                <input type="search"
+                                       ng-model="searchTerm"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern simple-search-filter-input"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-input-container>
+                            <md-button ng-repeat="rowContent in columnRowsContent | orderBy: 'name' | filter: searchTerm as results track by $index"
+                                       ng-bind="rowContent.name"
+                                       ng-click="selectFilterOption(rowContent.name)">
+                            </md-button>
+
+                        </md-menu-content>
+                    </md-menu>
+
+                    <!--<div class="table-filter-select-options text-filter-select-menu visibility-hidden">
+                        <md-input-container md-no-float>
                             <input type="search"
                                    ng-model="searchTerm"
                                    placeholder="Search for a ..."
                                    class="md-text md-select-search-pattern simple-search-filter-input"
                                    ng-keydown="$event.stopPropagation()">
                         </md-input-container>
-                        <md-button ng-repeat="rowContent in columnRowsContent | orderBy: 'name' | filter: searchTerm as results track by $index"
-                                   ng-bind="rowContent.name"
-                                   ng-click="selectFilterOption(rowContent.name)">
-                        </md-button>
+                        <div class="table-filter-select-options-holder">
+                            <md-button
+                                    ng-repeat="rowContent in columnRowsContent | filter: searchTerm as results track by $index"
+                                    ng-bind="rowContent"
+                                    ng-click="selectFilterOption(rowContent)">
+                            </md-button>
+                        </div>
+                    </div>-->
+
+                </div>
+
+            </div>
+
+            <div ng-if="filter.options.filter_type === 'multiselector'"
+                 flex="70">
+                <two-fields-multiselect ng-model="filter.options.filter_values"
+                                        ng-change="filterSettingsChange()"
+                                        title="{{getMultiselectorName()}}"
+                                        items="columnRowsContent"
+                                        model="filter.options.filter_values"
+                                        nothing-selected-text="Off"
+                                        name-property="name"
+                                        class="table-filter-input-container"></two-fields-multiselect>
+            </div>
+
+            <div class="settings-btn" flex="15">
+                <md-menu>
+
+                    <md-button aria-label="entity viewer filter types menu"
+                               class="md-icon-button"
+                               ng-click="$mdMenu.open($event)">
+                        <ng-md-icon icon="settings"></ng-md-icon>
+                    </md-button>
+
+                    <md-menu-content width="3">
+                        <md-menu-item>
+                            <md-menu>
+                                <md-button class="g-settings-option-btn"
+                                           ng-click="$mdOpenMenu($event)"
+                                           aria-label="show submenu with filter types">
+                                    <ng-md-icon icon="arrow_drop_up"
+                                                class="z-arrow-left-icon"></ng-md-icon>
+                                    <span>Filter</span>
+                                </md-button>
+                                <md-menu-content class="dropdown-buttons-menu" width="3">
+                                    <md-button ng-click="changeFilterType('contains')">
+                                        <ng-md-icon icon="done"
+                                                    ng-show="!showFRCheckMark('contains')"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <ng-md-icon icon="done"
+                                                    ng-show="showFRCheckMark('contains')"></ng-md-icon>
+                                        Contains
+                                    </md-button>
+                                    <md-button ng-click="changeFilterType('does_not_contains')">
+                                        <ng-md-icon icon="done"
+                                                    ng-show="!showFRCheckMark('does_not_contains')"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <ng-md-icon icon="done"
+                                                    ng-show="showFRCheckMark('does_not_contains')"></ng-md-icon>
+                                        Does not contains
+                                    </md-button>
+                                    <md-button ng-click="changeFilterType('selector')" ng-disabled="!filter.options.is_frontend_filter">
+                                        <ng-md-icon icon="done"
+                                                    ng-show="!showFRCheckMark('selector')"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <ng-md-icon icon="done"
+                                                    ng-show="showFRCheckMark('selector')"></ng-md-icon>
+                                        Select
+                                    </md-button>
+                                    <md-button ng-click="changeFilterType('multiselector')" ng-disabled="!filter.options.is_frontend_filter">
+                                        <ng-md-icon icon="done"
+                                                    ng-show="!showFRCheckMark('multiselector')"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <ng-md-icon icon="done"
+                                                    ng-show="showFRCheckMark('multiselector')"></ng-md-icon>
+                                        Multiple Select
+                                    </md-button>
+                                    <md-button ng-click="changeFilterType('empty')">
+                                        <ng-md-icon icon="done"
+                                                    ng-show="!showFRCheckMark('empty')"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <ng-md-icon icon="done"
+                                                    ng-show="showFRCheckMark('empty')"></ng-md-icon>
+                                        Empty cells
+                                    </md-button>
+
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-checkbox ng-checked="!filter.options.is_frontend_filter"
+                                         ng-click="toggleFrontendFilter()"
+                                         class="md-primary g-filter-options-checkbox"
+                                         aria-label="toggle filtering on frontend">
+                                Database Filter
+                            </md-checkbox>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-checkbox ng-model="filter.options.exclude_empty_cells"
+                                         ng-change="filterSettingsChange()"
+                                         class="md-primary g-filter-options-checkbox"
+                                         aria-label="hide rows with empty cells checkbox">
+                                Exclude cells with no value
+                            </md-checkbox>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-button ng-click="clearFilter()" class="g-settings-option-btn">
+                                <ng-md-icon icon="visibility_off"
+                                            style="visibility: hidden;"></ng-md-icon>
+                                <span>Clear</span>
+                            </md-button>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
+                                       class="g-settings-option-btn">
+                                <ng-md-icon icon="visibility_off"
+                                            style="visibility: hidden;"></ng-md-icon>
+                                <span>Rename</span>
+                            </md-button>
+                            <md-menu-content style="display: none"></md-menu-content>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-button ng-click="removeFilter(filter)" class="g-settings-option-btn">
+                                <ng-md-icon icon="visibility_off"></ng-md-icon>
+                                <span>Remove</span>
+                            </md-button>
+                        </md-menu-item>
 
                     </md-menu-content>
                 </md-menu>
 
-                <!--<div class="table-filter-select-options text-filter-select-menu visibility-hidden">
-                    <md-input-container md-no-float>
-                        <input type="search"
-                               ng-model="searchTerm"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern simple-search-filter-input"
-                               ng-keydown="$event.stopPropagation()">
-                    </md-input-container>
-                    <div class="table-filter-select-options-holder">
-                        <md-button
-                                ng-repeat="rowContent in columnRowsContent | filter: searchTerm as results track by $index"
-                                ng-bind="rowContent"
-                                ng-click="selectFilterOption(rowContent)">
-                        </md-button>
-                    </div>
-                </div>-->
-
             </div>
 
-        </div>
-
-        <div ng-if="filter.options.filter_type === 'multiselector'"
-             flex="70">
-            <two-fields-multiselect ng-model="filter.options.filter_values"
-                                    ng-change="filterSettingsChanged()"
-                                    title="{{getMultiselectorName()}}"
-                                    items="columnRowsContent"
-                                    model="filter.options.filter_values"
-                                    nothing-selected-text="Off"
-                                    name-property="name"
-                                    class="table-filter-input-container"></two-fields-multiselect>
-        </div>
-
-        <div class="settings-btn" flex="15">
-            <md-menu>
-
-                <md-button aria-label="entity viewer filter types menu"
-                           class="md-icon-button"
-                           ng-click="$mdMenu.open($event)">
-                    <ng-md-icon icon="settings"></ng-md-icon>
-                </md-button>
-
-                <md-menu-content width="3">
-                    <md-menu-item>
-                        <md-menu>
-                            <md-button class="g-settings-option-btn"
-                                       ng-click="$mdOpenMenu($event)"
-                                       aria-label="show submenu with filter types">
-                                <ng-md-icon icon="arrow_drop_up"
-                                            class="z-arrow-left-icon"></ng-md-icon>
-                                <span>Filter</span>
-                            </md-button>
-                            <md-menu-content class="dropdown-buttons-menu" width="3">
-                                <md-button ng-click="changeFilterType('contains')">
-                                    <ng-md-icon icon="done"
-                                                ng-show="!showFRCheckMark('contains')"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <ng-md-icon icon="done"
-                                                ng-show="showFRCheckMark('contains')"></ng-md-icon>
-                                    Contains
-                                </md-button>
-                                <md-button ng-click="changeFilterType('does_not_contains')">
-                                    <ng-md-icon icon="done"
-                                                ng-show="!showFRCheckMark('does_not_contains')"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <ng-md-icon icon="done"
-                                                ng-show="showFRCheckMark('does_not_contains')"></ng-md-icon>
-                                    Does not contains
-                                </md-button>
-                                <md-button ng-click="changeFilterType('selector')" ng-disabled="!filter.options.is_frontend_filter">
-                                    <ng-md-icon icon="done"
-                                                ng-show="!showFRCheckMark('selector')"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <ng-md-icon icon="done"
-                                                ng-show="showFRCheckMark('selector')"></ng-md-icon>
-                                    Select
-                                </md-button>
-                                <md-button ng-click="changeFilterType('multiselector')" ng-disabled="!filter.options.is_frontend_filter">
-                                    <ng-md-icon icon="done"
-                                                ng-show="!showFRCheckMark('multiselector')"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <ng-md-icon icon="done"
-                                                ng-show="showFRCheckMark('multiselector')"></ng-md-icon>
-                                    Multiple Select
-                                </md-button>
-                                <md-button ng-click="changeFilterType('empty')">
-                                    <ng-md-icon icon="done"
-                                                ng-show="!showFRCheckMark('empty')"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <ng-md-icon icon="done"
-                                                ng-show="showFRCheckMark('empty')"></ng-md-icon>
-                                    Empty cells
-                                </md-button>
-
-                            </md-menu-content>
-                        </md-menu>
-                    </md-menu-item>
-
-                    <md-menu-item>
-                        <md-checkbox ng-checked="!filter.options.is_frontend_filter"
-                                     ng-click="toggleFrontendFilter()"
-                                     class="md-primary g-filter-options-checkbox"
-                                     aria-label="toggle filtering on frontend">
-                            Database Filter
-                        </md-checkbox>
-                    </md-menu-item>
-
-                    <md-menu-item>
-                        <md-checkbox ng-model="filter.options.exclude_empty_cells"
-                                     ng-change="filterSettingsChanged()"
-                                     class="md-primary g-filter-options-checkbox"
-                                     aria-label="hide rows with empty cells checkbox">
-                            Exclude cells with no value
-                        </md-checkbox>
-                    </md-menu-item>
-
-                    <md-menu-item>
-                        <md-button ng-click="clearFilter()" class="g-settings-option-btn">
-                            <ng-md-icon icon="visibility_off"
-                                        style="visibility: hidden;"></ng-md-icon>
-                            <span>Clear</span>
-                        </md-button>
-                    </md-menu-item>
-
-                    <md-menu-item>
-                        <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
-                                   class="g-settings-option-btn">
-                            <ng-md-icon icon="visibility_off"
-                                        style="visibility: hidden;"></ng-md-icon>
-                            <span>Rename</span>
-                        </md-button>
-                        <md-menu-content style="display: none"></md-menu-content>
-                    </md-menu-item>
-
-                    <md-menu-item>
-                        <md-button ng-click="removeFilter(filter)" class="g-settings-option-btn">
-                            <ng-md-icon icon="visibility_off"></ng-md-icon>
-                            <span>Remove</span>
-                        </md-button>
-                    </md-menu-item>
-
-                </md-menu-content>
-            </md-menu>
 
         </div>
-
-
     </div>
 
 </md-card>

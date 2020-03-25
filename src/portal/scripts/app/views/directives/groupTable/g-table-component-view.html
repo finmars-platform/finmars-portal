@@ -16,13 +16,13 @@
                                                       ev-event-service="evEventService"
                                                       sp-exchange-service="spExchangeService"
                                                       root-wrap-elem="rootWrapElem"
-                                                      class="display-block height-100"
-            ></group-vertical-split-panel-report-binder>
+                                                      class="display-block height-100"></group-vertical-split-panel-report-binder>
         </div>
 
     </div>
 
-    <div class="g-content-wrap" data-ng-class="{'g-content-wrap-right': verticalAdditions.isOpen, 'g-root-content-wrap': isRootEntityViewer}" >
+    <div class="g-content-wrap"
+         data-ng-class="{'g-content-wrap-right': verticalAdditions.isOpen, 'g-root-content-wrap': isRootEntityViewer}">
 
         <div class="g-workarea-wrap">
             <div class="g-workarea main-area"
@@ -30,12 +30,14 @@
                  ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
-                <div class="g-grouping-section" data-ng-if="components.groupingArea && viewType !== 'matrix'">
+                <div class="g-grouping-section"
+                     data-ng-if="components.groupingArea && viewType !== 'matrix'">
                     <group-grouping ev-data-service="evDataService"
                                     ev-event-service="evEventService"
                                     attribute-data-service="attributeDataService"
                                     content-wrap-element="contentWrapElem"></group-grouping>
                 </div>
+
                 <div class="g-table-section">
                     <div>
                         <div class="g-table-wrap">
@@ -80,7 +82,6 @@
                                  content-wrap-element="contentWrapElem"
                                  root-wrap-element="rootWrapElem"
                             ></div>
-
 
                         </div>
                     </div>

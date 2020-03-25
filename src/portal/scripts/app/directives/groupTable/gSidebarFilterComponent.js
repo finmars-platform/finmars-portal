@@ -379,6 +379,7 @@
                         $('body').removeClass('filter-side-nav-collapsed');
                     }
 
+                    scope.evDataService.toggleRightSidebar();
                     scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_AREA);
 
                 };
@@ -1019,13 +1020,15 @@
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                        if (scope.sideNavCollapsed) {
+                        /*if (scope.sideNavCollapsed) {
                             interfaceLayout.filterArea.width = 239;
                         } else {
-                            interfaceLayout.filterArea.width = 55;
+                            interfaceLayout.filterArea.width = 74;
                         }
 
-                        scope.sideNavCollapsed = !scope.sideNavCollapsed;
+                        scope.sideNavCollapsed = !scope.sideNavCollapsed;*/
+
+                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
 
@@ -1149,6 +1152,9 @@
                     initEventListeners();
 
                     checkIsLayoutDefault();
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 

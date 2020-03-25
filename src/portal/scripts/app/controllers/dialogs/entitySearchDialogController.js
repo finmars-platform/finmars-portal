@@ -400,9 +400,12 @@
                     }, 2000)
                 });
             })
-        }
+        };
 
         vm.init = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.entityEditorElemToResize');
+            }, 100);
 
             entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
 

@@ -171,6 +171,24 @@
             data.interfaceLayout = interfaceLayout;
         }
 
+        function toggleRightSidebar (collapse) {
+            var interfaceLayout = getInterfaceLayout();
+
+            if (collapse || interfaceLayout.filterArea.width === 239) {
+
+                interfaceLayout.filterArea.width = 74;
+                interfaceLayout.filterArea.collapsed = true;
+
+            } else {
+
+                interfaceLayout.filterArea.width = 239;
+                interfaceLayout.filterArea.collapsed = false;
+
+            }
+
+            setInterfaceLayout(interfaceLayout);
+        }
+
         function setRootEntityViewer(isRootEntityViewer) {
             data.rootEntityViewer = isRootEntityViewer;
         }
@@ -1347,6 +1365,8 @@
 
             getInterfaceLayout: getInterfaceLayout,
             setInterfaceLayout: setInterfaceLayout,
+
+            toggleRightSidebar: toggleRightSidebar,
 
             setExportOptions: setExportOptions,
             getExportOptions: getExportOptions,

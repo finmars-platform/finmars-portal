@@ -34,6 +34,7 @@
                 //scope.attributesFromAbove = [];
 
                 var dataLoadEndId;
+                var toggleFilterAreaID;
 
                 var getDataForSelects = function () {
 
@@ -103,6 +104,14 @@
                     }
 
                     return false;
+                };
+
+                scope.getFilterName = function () {
+                    if (scope.filter.layout_name) {
+                        return scope.filter.layout_name;
+                    }
+
+                    return scope.filter.name;
                 };
 
                 scope.getClassesForFilter = function () {
@@ -399,13 +408,28 @@
 
                 };
 
+                var initEventListeners = function () {
+                    if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
+                        dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
+                    }
+
+                    toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+
+                    });
+                };
+
 
                 scope.init = function () {
                     scope.initSplitPanelMode();
 
-                    if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
-                        dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
-                    }
+                    initEventListeners();
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                     if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
                         setTimeout(function () {
@@ -418,6 +442,7 @@
                 scope.init();
 
                 scope.$on("$destroy", function () {
+                    scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
                     scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndId);
                 });
 

@@ -27,6 +27,7 @@
                 scope.showSelectMenu = false;
 
                 var dataLoadEndId;
+                var toggleFilterAreaID;
 
                 var getDataForSelects = function () {
 
@@ -61,6 +62,14 @@
                 }
 
                 var filterEnabled = scope.filter.options.enabled; // check for filter turning off
+
+                scope.getFilterName = function () {
+                    if (scope.filter.layout_name) {
+                        return scope.filter.layout_name;
+                    }
+
+                    return scope.filter.name;
+                };
 
                 scope.getClassesForFilter = function () {
                     var filterClasses = '';
@@ -122,7 +131,7 @@
                         scope.filter.options.exclude_empty_cells = false;
                     }
                     scope.filter.options.filter_values = [];
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
                 };
 
                 scope.toggleFrontendFilter = function () {
@@ -141,11 +150,11 @@
 
                     }
 
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
 
                 };
 
-                scope.filterSettingsChanged = function () {
+                scope.filterSettingsChange = function () {
 
                     /*if (scope.filter.options.filter_type === "contain" || scope.filter.option.filter_type === "does_not_contain") {
                         scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();
@@ -167,12 +176,12 @@
                 scope.selectFilterOption = function (selectOption) {
 
                     scope.filter.options.filter_values[0] = selectOption;
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
                 };
 
                 scope.clearFilter = function () {
                     scope.filter.options.filter_values = [];
-                    scope.filterSettingsChanged();
+                    scope.filterSettingsChange();
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
@@ -221,11 +230,26 @@
                     scope.evDataService.setFilters(scope.filters);
 
                 };*/
-
-                var init = function () {
+                var initEventListeners = function () {
                     if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
                         dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
                     }
+
+                    toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+
+                    });
+                };
+
+                var init = function () {
+
+                    initEventListeners();
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                     if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
                         setTimeout(function () {
@@ -238,6 +262,7 @@
 
                 scope.$on("$destroy", function () {
                     scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndId);
+                    scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
                 });
 
             }

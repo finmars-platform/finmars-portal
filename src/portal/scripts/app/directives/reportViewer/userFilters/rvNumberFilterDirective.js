@@ -32,7 +32,8 @@
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.useFromAbove = scope.evDataService.getUseFromAbove();
-                //scope.attributesFromAbove = [];
+
+                var toggleFilterAreaID;
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
@@ -72,6 +73,14 @@
                     }
 
                     return filterClasses;
+                };
+
+                scope.getFilterName = function () {
+                    if (scope.filter.layout_name) {
+                        return scope.filter.layout_name;
+                    }
+
+                    return scope.filter.name;
                 };
 
                 scope.getFilterRegime = function () {
@@ -303,12 +312,31 @@
 
                 };
 
+                var initEventListeners = function () {
+
+                    toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+
+                    });
+                };
 
                 scope.init = function () {
+                    initEventListeners();
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+
                     scope.initSplitPanelMode();
                 };
 
                 scope.init();
+
+                scope.$on("$destroy", function () {
+                    scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
+                });
 
             }
         }
