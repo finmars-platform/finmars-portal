@@ -26,7 +26,7 @@
                 scope.filterSelectOptions = [];
                 scope.nItemsValue = null;
 
-                var toggleFilterAreaID;
+                //var toggleFilterAreaID;
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
@@ -233,7 +233,7 @@
 
                 };
 
-                var init = function () {
+                /*var init = function () {
                     toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
@@ -250,7 +250,7 @@
 
                 scope.$on("$destroy", function () {
                     scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
-                });
+                });*/
 
             }
         }

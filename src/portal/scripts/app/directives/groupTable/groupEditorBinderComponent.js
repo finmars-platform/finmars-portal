@@ -14,22 +14,22 @@
                 evEventService: '='
             },
             restrict: 'AE',
-            template: '<div class="split-panel-controller-container"></div>',
+            templateUrl: 'views/directives/groupTable/group-editor-binder-component-view.html',
             link: function (scope, elem, attrs) {
 
-                var container = $(elem).find('.split-panel-controller-container');
+                var container = $(elem).find('.splitPanelContentContainer');
 
                 function createController() {
 
                     var entityType = scope.evDataService.getEntityType();
-                    var activeObject = scope.evDataService.getActiveObject();
+                    scope.activeObject = scope.evDataService.getActiveObject();
 
                     var editorTemplateUrl;
                     var tpl;
                     var templateScope;
                     var ctrl;
 
-                    if (activeObject) {
+                    if (scope.activeObject) {
 
                         $(container).html('');
 
@@ -45,7 +45,7 @@
                                 '$mdDialog': $mdDialog,
                                 '$state': $state,
                                 'entityType': entityType,
-                                'entityId': activeObject.id
+                                'entityId': scope.activeObject.id
                             });
 
                             container.html(tpl);
@@ -67,7 +67,7 @@
                                     '$mdDialog': $mdDialog,
                                     '$state': $state,
                                     'entityType': entityType,
-                                    'entityId': activeObject.id
+                                    'entityId': scope.activeObject.id
                                 });
 
                                 container.html(tpl);
@@ -87,7 +87,7 @@
                                     '$mdDialog': $mdDialog,
                                     '$state': $state,
                                     'entityType': entityType,
-                                    'entityId': activeObject.id
+                                    'entityId': scope.activeObject.id
                                 });
 
                                 container.html(tpl);
@@ -99,7 +99,10 @@
 
 
                         }
+
                     }
+
+
 
                 }
 

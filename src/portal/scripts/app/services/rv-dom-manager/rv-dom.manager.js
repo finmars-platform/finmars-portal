@@ -607,46 +607,22 @@
         if (components.sidebar) {
             viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
         } else {
-            viewportWidth = contentWrapElemWidth
+            viewportWidth = contentWrapElemWidth;
         }
 
         // console.log('viewportWidth', viewportWidth);
 
         viewportTop = interfaceLayout.progressBar.height;
 
-        if (isRootEntityViewer) {
-
-            if (components.groupingArea) {
-                viewportTop = viewportTop + interfaceLayout.groupingArea.height
-            }
-
-            if (components.columnArea) {
-                viewportTop = viewportTop + interfaceLayout.columnArea.height
-            }
-
-            // console.log('contentWrapElemHeight', contentWrapElemHeight);
-            // console.log('viewportTop', viewportTop);
-            // console.log('interfaceLayout.splitPanel.height', interfaceLayout.splitPanel.height);
-
-
-            // viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - interfaceLayout.splitPanel.height);
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
-
-        } else {
-
-            if (components.columnArea) {
-                viewportTop = viewportTop + interfaceLayout.columnArea.height
-            }
-
-            if (components.groupingArea) {
-                viewportTop = viewportTop + interfaceLayout.groupingArea.height;
-            }
-
-            console.log('rootviewer split', viewportTop);
-
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
-
+        if (components.columnArea) {
+            viewportTop = viewportTop + interfaceLayout.columnArea.height
         }
+
+        if (components.groupingArea) {
+            viewportTop = viewportTop + interfaceLayout.groupingArea.height;
+        }
+
+        viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
         // console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);

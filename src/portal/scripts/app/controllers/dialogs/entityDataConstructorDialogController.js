@@ -1345,7 +1345,9 @@
                         }
 
                         vm.createFieldsTree();
-                        vm.createFixedAreaFieldsTree();
+                        if (vm.fixedArea.isActive) {
+                            vm.createFixedAreaFieldsTree();
+                        }
 
                         vm.syncItems();
 

@@ -32,7 +32,8 @@
                                 {{item.name}}
                             </td>
                             <td>
-                                Value must be not null.
+                                <span data-ng-if="!item.message">Value must be not null.</span>
+                                <span data-ng-if="item.message" data-ng-bind="item.message"></span>
                             </td>
                         </tr>
 

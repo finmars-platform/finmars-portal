@@ -878,32 +878,62 @@
         evScrollManager.setViewportElem(elements.viewportElem);
         evScrollManager.setContentElem(elements.contentElem);
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
+        evScrollManager.setRootWrapElem(elements.rootWrapElem);
 
         var isRootEntityViewer = evDataService.isRootEntityViewer();
 
         var interfaceLayout = evDataService.getInterfaceLayout();
+        var components = evDataService.getComponents();
 
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = evScrollManager.getContentWrapElemWidth();
 
-        var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+        //var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
         //var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
-        var viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
+        var viewportTop;
+        var viewportWidth;
 
         var viewportHeight;
 
-        if (!isRootEntityViewer) {
+        if (components.sidebar) {
+            viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
+        } else {
+            viewportWidth = contentWrapElemWidth;
+        }
 
-            viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+        viewportTop = interfaceLayout.progressBar.height;
+
+        if (components.columnArea) {
+            viewportTop = viewportTop + interfaceLayout.columnArea.height
+        }
+
+        if (components.groupingArea) {
+            viewportTop = viewportTop + interfaceLayout.groupingArea.height;
+        }
+
+        viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+
+        /*if (!isRootEntityViewer) {
+
+            if (components.groupingArea) {
+                viewportTop = viewportTop + interfaceLayout.groupingArea.height
+            }
+
+            if (components.columnArea) {
+                viewportTop = viewportTop + interfaceLayout.columnArea.height
+            }
+
+            //viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
             viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
         } else {
 
             viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
 
-        }
+        }*/
 
         evScrollManager.setViewportHeight(viewportHeight);
+
         if (viewportWidth) {
             evScrollManager.setViewportWidth(viewportWidth);
         }

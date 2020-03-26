@@ -1,7 +1,7 @@
 <md-card ng-class="getClassesForFilter()"
          class="g-filter-item">
 
-    <div data-ng-if="sideNavCollapsed">
+    <div class="s-f-collapsed-elems">
         <md-tooltip md-direction="top"
                     data-ng-bind="getFilterName()"></md-tooltip>
 
@@ -12,7 +12,7 @@
                      flex="15"></md-checkbox>
     </div>
 
-    <div data-ng-if="!sideNavCollapsed">
+    <div class="s-f-expanded-elems">
         <div layout="row"
              layout-align="center center"
              style="margin-bottom: 13px;">

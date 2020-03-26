@@ -146,21 +146,18 @@
 
                 };
 
-                scope.resizeFilterSideNav = function (actionType) {
-
-                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                // not needed for dashboard component rv filters
+                /*scope.resizeFilterSideNav = function (actionType) {
 
                     if (actionType === 'collapse') {
                         $('body').addClass('filter-side-nav-collapsed');
-                        /*scope.sideNavCollapsed = true;
-                        interfaceLayout.filterArea.width = 55;*/
+                        /!*scope.sideNavCollapsed = true;
+                        interfaceLayout.filterArea.width = 55;*!/
                     } else {
                         $('body').removeClass('filter-side-nav-collapsed');
-                        /*scope.sideNavCollapsed = false;
-                        interfaceLayout.filterArea.width = 239;*/
+                        /!*scope.sideNavCollapsed = false;
+                        interfaceLayout.filterArea.width = 239;*!/
                     }
-
-                    scope.evDataService.setInterfaceLayout(interfaceLayout);
 
                     scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_AREA);
 
@@ -171,7 +168,7 @@
                     setTimeout(function () {
                         clearInterval(interval)
                     }, 300);
-                };
+                };*/
 
                 scope.openFilterSettings = function ($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);
@@ -521,17 +518,18 @@
 
                     });
 
-                    scope.evEventService.addEventListener(evEvents.UPDATE_FILTER_AREA_SIZE, function () {
+                    // not needed for dashboard component rv filters
+                    /*scope.evEventService.addEventListener(evEvents.UPDATE_FILTER_AREA_SIZE, function () {
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                        /*if (scope.sideNavCollapsed) {
+                        /!*if (scope.sideNavCollapsed) {
                             interfaceLayout.filterArea.width = 239;
                         } else {
                             interfaceLayout.filterArea.width = 74;
                         }
 
-                        scope.sideNavCollapsed = !scope.sideNavCollapsed;*/
+                        scope.sideNavCollapsed = !scope.sideNavCollapsed;*!/
                         scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
@@ -542,7 +540,7 @@
 
                     scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
-                    });
+                    });*/
 
                     scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
                         clearUseFromAboveFilters();

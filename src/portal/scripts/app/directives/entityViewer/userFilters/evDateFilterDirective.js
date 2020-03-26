@@ -29,7 +29,7 @@
                 scope.columnRowsContent = [];
 
                 var dataLoadEndId;
-                var toggleFilterAreaID;
+                //var toggleFilterAreaID;
 
                 var getDataForSelects = function () {
                     var columnRowsContent  = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
@@ -339,21 +339,21 @@
                         dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
                     }
 
-                    toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+                    /*toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
                         scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
-                    });
+                    });*/
                 };
 
                 var init = function () {
 
                     initEventListeners();
 
-                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
-                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+                    /*var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;*/
 
                     if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
                         setTimeout(function () {
@@ -366,7 +366,7 @@
 
                 scope.$on("$destroy", function () {
                     scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndId);
-                    scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
+                    //scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
                 })
 
             }
