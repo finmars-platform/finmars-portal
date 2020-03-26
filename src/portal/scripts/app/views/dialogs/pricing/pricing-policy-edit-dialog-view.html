@@ -8,7 +8,9 @@
         </div>
     </md-toolbar>
     <md-dialog-content class="p-24">
-        <div layout="column">
+
+        <div layout="column"
+             data-ng-if="vm.readyStatus.policy && vm.readyStatus.currencyPricingSchemes && vm.instrumentPricingSchemes">
 
             <md-input-container>
                 <label>Name</label>
@@ -30,19 +32,30 @@
             <md-input-container class="m-t-16">
                 <label>Default Instrument Pricing Scheme</label>
                 <md-select data-ng-model="vm.item.default_instrument_pricing_scheme">
-                    <md-option ng-value="item.id" data-ng-repeat="item in vm.instrumentPricingSchemes">{{item.name}}</md-option>
+                    <md-option ng-value="item.id" data-ng-repeat="item in vm.instrumentPricingSchemes">{{item.name}}
+                    </md-option>
                 </md-select>
             </md-input-container>
 
             <md-input-container class="m-t-16">
                 <label>Default Currency Pricing Scheme</label>
                 <md-select data-ng-model="vm.item.default_currency_pricing_scheme">
-                    <md-option ng-value="item.id" data-ng-repeat="item in vm.currencyPricingSchemes">{{item.name}}</md-option>
+                    <md-option ng-value="item.id" data-ng-repeat="item in vm.currencyPricingSchemes">{{item.name}}
+                    </md-option>
                 </md-select>
             </md-input-container>
 
 
         </div>
+
+        <div data-ng-if="!vm.readyStatus.policy || !vm.readyStatus.currencyPricingSchemes || !vm.instrumentPricingSchemes">
+
+            <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+
+        </div>
+
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <md-button ng-click="vm.cancel()">

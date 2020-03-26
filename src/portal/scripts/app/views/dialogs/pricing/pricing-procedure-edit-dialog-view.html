@@ -8,7 +8,8 @@
         </div>
     </md-toolbar>
     <md-dialog-content class="p-24">
-        <div layout="column">
+
+        <div layout="column" data-ng-if="vm.readyStatus.procedure">
 
             <div>
 
@@ -259,6 +260,14 @@
 
                 </div>
 
+            </div>
+
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.procedure">
+
+            <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
             </div>
 
         </div>

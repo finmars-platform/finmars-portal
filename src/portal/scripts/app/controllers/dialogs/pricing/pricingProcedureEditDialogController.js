@@ -17,6 +17,8 @@
 
         vm.itemId = data.item.id;
 
+        vm.readyStatus = {procedure: false};
+
         vm.instruments = [];
         vm.pricingPolicies = [];
 
@@ -246,7 +248,7 @@
                     vm.toggleStatus.accrual_date_to = 'expr';
                 }
 
-                vm.readyStatus.content = true;
+                vm.readyStatus.procedure = true;
 
                 $scope.$apply();
 
