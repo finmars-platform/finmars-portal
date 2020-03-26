@@ -22,7 +22,7 @@
         vm.currencyPricingSchemes = [];
         vm.instrumentPricingSchemes = [];
 
-        vm.readyStatus = {content: false, currencyPricingSchemes: false, instrumentPricingSchemes: false};
+        vm.readyStatus = {policy: false, currencyPricingSchemes: false, instrumentPricingSchemes: false};
 
         vm.getCurrencyPricingSchemesList = function () {
 
@@ -74,7 +74,7 @@
 
                 vm.item = data;
 
-                vm.readyStatus.content = true;
+                vm.readyStatus.policy = true;
 
                 $scope.$apply();
 
