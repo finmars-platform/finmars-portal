@@ -104,11 +104,6 @@
     }
 
     group-editor-binder {
-      width: 100%;
-      display: inline-block;
-      height: 100%;
-      overflow: hidden;
-
       .mCSB_scrollTools_vertical {
         opacity: 1;
         will-change: scroll-position, height, top;
@@ -133,8 +128,11 @@
     }
 
     .g-additions-editor-caption {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
       font-size: 3em;
-      margin-top: 150px;
       text-align: center;
     }
 
@@ -1590,6 +1588,7 @@ md-checkbox.g-filter-options-checkbox {
 .g-group-table-holder {
   overflow: hidden;
   max-width: 100%;
+  height: 100%;
 }
 
 .app-md-content.g-table-overflow {
@@ -1701,6 +1700,10 @@ md-checkbox.g-filter-options-checkbox {
   .s-f-collapsed-btns {
     display: none;
   }
+
+  .s-f-collapsed-elems {
+    display: none;
+  }
 }
 
 .filter-side-nav-collapsed {
@@ -1731,6 +1734,14 @@ md-checkbox.g-filter-options-checkbox {
         line-height: 30px;
 
       }
+    }
+
+    .s-f-expanded-elems {
+      display: none;
+    }
+
+    .s-f-collapsed-elems {
+      display: initial;
     }
 
     .s-f-expanded-btns {

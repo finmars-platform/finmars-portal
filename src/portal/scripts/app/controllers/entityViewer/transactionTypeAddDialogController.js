@@ -324,19 +324,20 @@
 
         };
 
-        var checkActionsFieldsExpr = function (actionFieldValue, actionItemKey, actionNotes) {
+        var checkFieldExprForDeletedInput = function (actionFieldValue, actionItemKey, actionNotes) {
 
             for (var a = 0; a < inputsToDelete.length; a++) {
                 var dInputName = inputsToDelete[a];
 
-                var propWithSameName = '.' + dInputName;
+                var regExpParams = '(?<![A-Za-z_.])' + dInputName + '(?![A-Za-z1-9_])';
+                var dInputRegExpObj = new RegExp(regExpParams, "g");
 
-                if (actionFieldValue.indexOf(dInputName) !== -1 &&
-                    actionFieldValue.indexOf(propWithSameName) === -1) { // check whether expression refers to input and not property with same name
+                if (actionFieldValue.match(dInputRegExpObj)) {
 
                     var actionFieldLocation = {
                         action_notes: actionNotes,
-                        key: actionItemKey,
+                        key: actionItemKey, // for actions errors
+                        name: actionItemKey, // for entity errors
                         message: "The deleted input is used in the Expression."
                     };
 
@@ -372,70 +373,81 @@
 
                         actionItemKeys.forEach(function (actionItemKey) {
 
-                            if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
+                            if (actionItemKey === 'notes' && actionItem[actionItemKey]) {
 
-                                var inputValue = actionItem[actionItemKey + '_input'];
-                                var relationValue = actionItem[actionItemKey];
+                                var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
 
-                                var valueIsEmpty = false;
-
-                                console.log('actionItemKey', actionItemKey);
-                                console.log('inputValue', inputValue);
-                                console.log('relationValue', relationValue);
-
-                                if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
-
-                                    var phantomValue = actionItem[actionItemKey + '_phantom'];
-
-                                    console.log('phantomValue', phantomValue);
-
-                                    if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
-                                        valueIsEmpty = true;
-                                    }
-
-                                } else {
-
-                                    if (!inputValue && !relationValue) {
-                                        valueIsEmpty = true;
-                                    }
-
+                                if (fieldWithInvalidExpr) {
+                                    result.push(fieldWithInvalidExpr);
                                 }
-
-                                if (valueIsEmpty) {
-
-                                    result.push({
-                                        action_notes: action.action_notes,
-                                        key: actionItemKey,
-                                        value: actionItem[actionItemKey]
-                                    })
-
-                                }
-
 
                             } else {
 
-                                if (actionItem[actionItemKey] === null ||
-                                    actionItem[actionItemKey] === undefined ||
-                                    actionItem[actionItemKey] === "") {
+                                if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
 
-                                    result.push({
-                                        action_notes: action.action_notes,
-                                        key: actionItemKey,
-                                        value: actionItem[actionItemKey]
-                                    })
+                                    var inputValue = actionItem[actionItemKey + '_input'];
+                                    var relationValue = actionItem[actionItemKey];
 
-                                } else if (typeof actionItem[actionItemKey] === 'string') {
+                                    var valueIsEmpty = false;
 
-                                    var fieldWithInvalidExpr = checkActionsFieldsExpr(actionItem[actionItemKey], actionItemKey, action.action_notes);
+                                    console.log('actionItemKey', actionItemKey);
+                                    console.log('inputValue', inputValue);
+                                    console.log('relationValue', relationValue);
 
-                                    if (fieldWithInvalidExpr) {
-                                        result.push(fieldWithInvalidExpr);
+                                    if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
+
+                                        var phantomValue = actionItem[actionItemKey + '_phantom'];
+
+                                        console.log('phantomValue', phantomValue);
+
+                                        if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
+                                            valueIsEmpty = true;
+                                        }
+
+                                    } else {
+
+                                        if (!inputValue && !relationValue) {
+                                            valueIsEmpty = true;
+                                        }
+
+                                    }
+
+                                    if (valueIsEmpty) {
+
+                                        result.push({
+                                            action_notes: action.action_notes,
+                                            key: actionItemKey,
+                                            value: actionItem[actionItemKey]
+                                        })
+
+                                    }
+
+
+                                } else {
+
+                                    if (actionItem[actionItemKey] === null ||
+                                        actionItem[actionItemKey] === undefined ||
+                                        actionItem[actionItemKey] === "") {
+
+                                        result.push({
+                                            action_notes: action.action_notes,
+                                            key: actionItemKey,
+                                            value: actionItem[actionItemKey]
+                                        })
+
+                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') {
+
+                                        var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
+
+                                        if (fieldWithInvalidExpr) {
+                                            result.push(fieldWithInvalidExpr);
+                                        }
+
                                     }
 
                                 }
 
                             }
-
 
                         })
 
@@ -449,6 +461,27 @@
 
 
             return result;
+        };
+
+        var validateUserFields = function (entity, result) {
+
+            var entityKeys = Object.keys(entity);
+
+            entityKeys.forEach(function (entityKey) {
+
+                if (entityKey.indexOf('user_text_') === 0 ||
+                    entityKey.indexOf('user_number_') === 0 ||
+                    entityKey.indexOf('user_date_') === 0) {
+
+                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(entity[entityKey], entityKey, 'FIELDS');
+
+                    if (fieldWithInvalidExpr) {
+                        result.push(fieldWithInvalidExpr);
+                    }
+
+                }
+
+            });
         };
 
         vm.checkEntityForEmptyFields = function (entity) {
@@ -500,6 +533,7 @@
                 })
             }
 
+            validateUserFields(entity, result);
 
             return result;
 

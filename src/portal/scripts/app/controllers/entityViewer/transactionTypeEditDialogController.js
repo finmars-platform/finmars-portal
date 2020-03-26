@@ -471,19 +471,20 @@
 
         };
 
-        var checkActionsFieldsExpr = function (actionFieldValue, actionItemKey, actionNotes) {
+        var checkFieldExprForDeletedInput = function (actionFieldValue, actionItemKey, actionNotes) {
 
             for (var a = 0; a < inputsToDelete.length; a++) {
                 var dInputName = inputsToDelete[a];
 
-                var propWithSameName = '.' + dInputName;
+                var regExpParams = '(?<![A-Za-z_.])' + dInputName + '(?![A-Za-z1-9_])';
+                var dInputRegExpObj = new RegExp(regExpParams, "g");
 
-                if (actionFieldValue.indexOf(dInputName) !== -1 &&
-                    actionFieldValue.indexOf(propWithSameName) === -1) { // check whether expression refers to input and not property with same name
+                if (actionFieldValue.match(dInputRegExpObj)) {
 
                     var actionFieldLocation = {
                         action_notes: actionNotes,
-                        key: actionItemKey,
+                        key: actionItemKey, // for actions errors
+                        name: actionItemKey, // for entity errors
                         message: "The deleted input is used in the Expression."
                     };
 
@@ -511,13 +512,21 @@
 
                         actionItemKeys = actionItemKeys.filter(function (key) {
 
-                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1 && key !== 'action_notes'
+                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1 && key !== 'action_notes';
 
                         });
 
                         actionItemKeys.forEach(function (actionItemKey) {
 
-                            if (actionItemKey !== 'notes') {
+                            if (actionItemKey === 'notes' && actionItem[actionItemKey]) {
+
+                                var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
+
+                                if (fieldWithInvalidExpr) {
+                                    result.push(fieldWithInvalidExpr);
+                                }
+
+                            } else {
 
                                 if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
 
@@ -565,9 +574,9 @@
                                             value: actionItem[actionItemKey]
                                         })
 
-                                    } else if (typeof actionItem[actionItemKey] === 'string') {
+                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // deleted inputs use
 
-                                        var fieldWithInvalidExpr = checkActionsFieldsExpr(actionItem[actionItemKey], actionItemKey, action.action_notes);
+                                        var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
 
                                         if (fieldWithInvalidExpr) {
                                             result.push(fieldWithInvalidExpr);
@@ -578,7 +587,6 @@
                                 }
 
                             }
-
 
                         })
 
@@ -601,13 +609,34 @@
             return result;
         };
 
+        var validateUserFields = function (entity, result) {
+
+            var entityKeys = Object.keys(entity);
+
+            entityKeys.forEach(function (entityKey) {
+
+                if (entityKey.indexOf('user_text_') === 0 ||
+                    entityKey.indexOf('user_number_') === 0 ||
+                    entityKey.indexOf('user_date_') === 0) {
+
+                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(entity[entityKey], entityKey, 'FIELDS');
+
+                    if (fieldWithInvalidExpr) {
+                        result.push(fieldWithInvalidExpr);
+                    }
+
+                }
+
+            });
+        };
+
         var checkEntityForEmptyFields = function (entity) {
 
             var result = [];
 
             if (entity.name === null || entity.name === undefined || entity.name === '') {
                 result.push({
-                    action_notes: 'General',
+                    action_notes: 'GENERAL',
                     key: 'name',
                     name: 'Name',
                     value: entity.name
@@ -616,7 +645,7 @@
 
             if (entity.user_code === null || entity.user_code === undefined || entity.user_code === '') {
                 result.push({
-                    action_notes: 'General',
+                    action_notes: 'GENERAL',
                     key: 'user_code',
                     name: 'User code',
                     value: entity.user_code
@@ -625,7 +654,7 @@
 
             if (entity.display_expr === null || entity.display_expr === undefined || entity.display_expr === '') {
                 result.push({
-                    action_notes: 'General',
+                    action_notes: 'GENERAL',
                     key: 'display_expr',
                     name: 'Display Expression',
                     value: entity.display_expr
@@ -634,7 +663,7 @@
 
             if (entity.date_expr === null || entity.date_expr === undefined || entity.date_expr === '') {
                 result.push({
-                    action_notes: 'General',
+                    action_notes: 'GENERAL',
                     key: 'date_expr',
                     name: 'Complex Transaction Date',
                     value: entity.date_expr
@@ -643,45 +672,14 @@
 
             if (entity.group === null || entity.group === undefined) {
                 result.push({
-                    action_notes: 'General',
+                    action_notes: 'GENERAL',
                     key: 'group',
                     name: 'Group',
                     value: entity.group
                 })
             }
 
-
-            return result;
-
-        };
-
-        var checkInputsForEmptyFields = function (inputs) {
-
-            var result = [];
-
-            inputs.forEach(function (input, index) {
-
-                if (!input.name) {
-
-                    result.push({
-                        action_notes: 'INPUTS',
-                        key: 'name',
-                        order_number: index + 1
-                    });
-
-                }
-
-                if (!input.value_type) {
-
-                    result.push({
-                        action_notes: 'INPUTS',
-                        key: 'value_type',
-                        order_number: index + 1
-                    });
-
-                }
-
-            });
+            validateUserFields(entity, result);
 
             return result;
 

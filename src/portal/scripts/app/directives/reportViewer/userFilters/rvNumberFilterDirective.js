@@ -33,7 +33,7 @@
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.useFromAbove = scope.evDataService.getUseFromAbove();
 
-                var toggleFilterAreaID;
+                //var toggleFilterAreaID;
 
                 if (!scope.filter.options) {
                     scope.filter.options = {};
@@ -312,7 +312,7 @@
 
                 };
 
-                var initEventListeners = function () {
+                /*var initEventListeners = function () {
 
                     toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
 
@@ -321,22 +321,22 @@
                         scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
                     });
-                };
+                };*/
 
                 scope.init = function () {
-                    initEventListeners();
+                    //initEventListeners();
 
-                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
-                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+                    /*var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;*/
 
                     scope.initSplitPanelMode();
                 };
 
                 scope.init();
 
-                scope.$on("$destroy", function () {
+                /*scope.$on("$destroy", function () {
                     scope.evEventService.removeEventListener(evEvents.TOGGLE_FILTER_AREA, toggleFilterAreaID);
-                });
+                });*/
 
             }
         }

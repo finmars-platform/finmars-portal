@@ -379,7 +379,6 @@
                         $('body').removeClass('filter-side-nav-collapsed');
                     }
 
-                    scope.evDataService.toggleRightSidebar();
                     scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_AREA);
 
                 };
@@ -1018,6 +1017,7 @@
 
                     scope.evEventService.addEventListener(evEvents.UPDATE_FILTER_AREA_SIZE, function () {
 
+                        scope.evDataService.toggleRightSidebar();
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
                         /*if (scope.sideNavCollapsed) {
@@ -1037,7 +1037,9 @@
                     });
 
                     scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
+
                     });
 
                     if (scope.isRootEntityViewer) {

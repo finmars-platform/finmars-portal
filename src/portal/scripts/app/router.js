@@ -91,7 +91,7 @@
             .state('app.data', {
                 url: '/data',
                 abstract: true,
-                template: '<div data-ui-view></div>'
+                template: '<div data-ui-view class="ev-abstract-elem"></div>'
             })
             .state('app.data.portfolio', {
                 url: '/portfolios',
@@ -281,7 +281,7 @@
             .state('app.reports', {
                 url: '/reports',
                 abstract: true,
-                template: '<div data-ui-view></div>'
+                template: '<div data-ui-view class="ev-abstract-elem"></div>'
             })
             .state('app.reports.balance-report', {
                 url: '/balance',
