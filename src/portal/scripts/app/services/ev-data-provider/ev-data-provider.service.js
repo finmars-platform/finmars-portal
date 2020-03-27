@@ -5,9 +5,16 @@
     var objectsService = require('../ev-data-provider/objects.service');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-    var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
-    var injectRegularFilters = function (entityViewerDataService, entityViewerEventService) {
+    var injectEntityViewerOptions = function (entityViewerDataService) {
+        var requestParameters = entityViewerDataService.getActiveRequestParameters();
+
+        requestParameters.body['ev_options'] = entityViewerDataService.getEntityViewerOptions();
+
+        entityViewerDataService.setRequestParameters(requestParameters);
+    };
+
+    var injectRegularFilters = function (entityViewerDataService) {
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
@@ -15,21 +22,6 @@
         newRequestParametersBody['filter_settings'] = [];
 
         var filters = entityViewerDataService.getFilters();
-
-        /*filters.forEach(function (item) {
-
-            if (item.options && item.options.enabled) {
-
-                if (item.options.query && item.options.enabled) {
-
-                    var key = queryParamsHelper.entityPluralToSingular(item.key);
-
-                    newRequestParametersBody[key] = item.options.query
-                }
-
-            }
-
-        });*/
 
         var isFilterValid = function (filterItem) {
 
@@ -70,9 +62,6 @@
         filters.forEach(function (item) {
 
             if (isFilterValid(item)) {
-
-                // var key = queryParamsHelper.entityPluralToSingular(item.key);
-                //var filterSettings = queryParamsHelper.formatFilterSettingsForQueryParams(item);
 
                 var filterSettings = {
                     key: item.key,
@@ -361,8 +350,6 @@
 
             var pagination = entityViewerDataService.getPagination();
             var itemsPerPage = pagination.page_size;
-            console.log("ev events");
-
 
             var activeColumnSort = entityViewerDataService.getActiveColumnSort();
 
@@ -384,7 +371,6 @@
                         if (!optionsFilter.is_frontend_filter) {
                             return true;
                         }
-                        ;
 
                         return false;
                     });
@@ -549,8 +535,8 @@
     var updateDataStructure = function (entityViewerDataService, entityViewerEventService) {
 
         console.time('Updating data structure');
-
-        injectRegularFilters(entityViewerDataService, entityViewerEventService);
+        injectEntityViewerOptions(entityViewerDataService);
+        injectRegularFilters(entityViewerDataService);
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 

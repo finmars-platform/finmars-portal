@@ -14,13 +14,10 @@
         vm.entityType = entityViewerDataService.getEntityType();
 
         var pagePagination = entityViewerDataService.getPagination();
-        vm.itemsToLoad = pagePagination.page_size;
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
-
-        vm.complexTransactionFilters = [];
 
         vm.saveSettings = function () {
 
@@ -35,8 +32,25 @@
 
             }
 
+            var entityViewerOptions = {};
+            entityViewerOptions.complex_transaction_filters = vm.complexTransactionFilters;
+
+            entityViewerDataService.setEntityViewerOptions(entityViewerOptions);
+
             $mdDialog.hide({status: 'agree'});
         };
+
+        var init = function () {
+
+            var entityViewerOptions = entityViewerDataService.getEntityViewerOptions();
+
+            vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters || [];
+
+            vm.itemsToLoad = pagePagination.page_size;
+
+        };
+
+        init();
 
     }
 
