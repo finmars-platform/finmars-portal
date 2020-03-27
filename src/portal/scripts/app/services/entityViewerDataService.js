@@ -137,6 +137,7 @@
             viewType: 'report_viewer',
             viewSettings: {},
             lastViewSettings: {},
+            ev_options: {},
             activeLayoutConfiguration: {},
             interfaceLayout: null,
             requestParameters: {},
@@ -1144,6 +1145,14 @@
             return data.viewContext;
         }
 
+        function setEntityViewerOptions(evOptions) {
+            data.ev_options = evOptions;
+        }
+
+        function getEntityViewerOptions() {
+            return data.ev_options || {};
+        }
+
         function setCurrentMember(member) {
             data.currentMember = member;
         }
@@ -1403,6 +1412,9 @@
 
             setViewContext: setViewContext,
             getViewContext: getViewContext,
+
+            setEntityViewerOptions: setEntityViewerOptions,
+            getEntityViewerOptions: getEntityViewerOptions,
 
             setCurrentMember: setCurrentMember,
             getCurrentMember: getCurrentMember,
