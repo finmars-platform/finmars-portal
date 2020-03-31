@@ -329,8 +329,10 @@
             for (var a = 0; a < inputsToDelete.length; a++) {
                 var dInputName = inputsToDelete[a];
 
-                var regExpParams = '(?<![A-Za-z_.])' + dInputName + '(?![A-Za-z1-9_])';
-                var dInputRegExpObj = new RegExp(regExpParams, "g");
+                var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
+                var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])';
+
+                var dInputRegExpObj = new RegExp(beginningOfExpr + '|' + middleOfExpr, 'g');
 
                 if (actionFieldValue.match(dInputRegExpObj)) {
 
@@ -373,12 +375,16 @@
 
                         actionItemKeys.forEach(function (actionItemKey) {
 
-                            if (actionItemKey === 'notes' && actionItem[actionItemKey]) {
+                            if (actionItemKey === 'notes') {
 
-                                var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
+                                if (actionItem[actionItemKey]) {
 
-                                if (fieldWithInvalidExpr) {
-                                    result.push(fieldWithInvalidExpr);
+                                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
+
+                                    if (fieldWithInvalidExpr) {
+                                        result.push(fieldWithInvalidExpr);
+                                    }
+
                                 }
 
                             } else {
