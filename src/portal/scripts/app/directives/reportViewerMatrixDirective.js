@@ -28,6 +28,7 @@
 
                 scope.viewContext = scope.evDataService.getViewContext();
                 scope.dashboardFilterCollapsed = true;
+                scope.matrixView = scope.matrixSettings.matrix_view;
 
                 var cellWidth = 0;
 
@@ -65,14 +66,8 @@
                     // console.log('elemHeight', elemHeight);
                     // console.log('elemWidth', elemWidth);
 
-                    var rowsCount = scope.rows.length + 2; // header / footer rows
-                    var columnsCount = scope.columns.length + 2; // first empty cell and last "Total" cell
-
-                    // console.log('elemWidth', elemWidth);
-                    // console.log('elemHeight', elemHeight);
-                    //
-                    // console.log('rowsCount', rowsCount);
-                    // console.log('columnsCount', columnsCount);
+                    var rowsCount = scope.rows.length + 2; // add header and footer rows
+                    var columnsCount = scope.columns.length + 2; // add left and right fixed columns
 
                     var minWidth = 100;
                     //var minHeight = 20;
@@ -81,48 +76,56 @@
                     //var cellHeight = Math.floor(elemHeight / rowsCount);
                     var cellHeight = 25;
 
-                    // cellHeight = cellHeight - 2; // 1px for border top / border bottom
-                    // cellWidth = cellWidth - 2; // 1px for border left / border right
-
                     var items = elem[0].querySelectorAll('.rvMatrixCell');
 
                     var fontSize = 16;
 
                     if (cellWidth < minWidth) {
-                        cellWidth = minWidth
+                        cellWidth = minWidth;
                     }
 
-                    /*if (cellHeight < minHeight) {
-                        cellHeight = minHeight
-                    }*/
+                    if (scope.matrixView === 'fixed-totals') {
+
+                        rvmBottomRowScrollableElem.style.left = cellWidth + 'px';
+                        rvMatrixRightCol.style.width = cellWidth + 'px';
+                        rvMatrixFixedBottomRow.style.height = cellHeight + 'px';
+
+                    }
+
+                    // because of children with absolute positioning, elem below requires manual width setting
+                    rvMatrixLeftCol.style.width = cellWidth + 'px';
 
                     var matrixMaxWidth = columnsCount * cellWidth;
                     var matrixMaxHeight = rowsCount * cellHeight;
+
+                    if (scope.matrixView === 'fixed-totals') {
+                        rvmBottomRowScrollableElem.style.width = matrixMaxWidth + 'px';
+                    }
 
                     var matrixVCContainerWidth = matrixMaxWidth - cellWidth; // subtract width of column with names
                     var matrixVCContainerHeight = matrixMaxHeight - cellHeight; // subtract height of matrix header
 
                     var matrixProbableHeight = rowsCount * cellHeight;
 
+                    var matrixVCAvailableWidth = matrixHolder.clientWidth - cellWidth;
+                    var matrixVCAvailableHeight = matrixHolder.clientHeight - cellHeight;
                     // whether matrix has scrolls
-                    if (bodyScrollElem.clientWidth < matrixVCContainerWidth) {
+                    if (matrixVCAvailableWidth < matrixVCContainerWidth) {
                         matrixHolder.classList.add('has-x-scroll');
-                        matrixProbableHeight = matrixProbableHeight + 15.5; // add space for scroll
+                        matrixProbableHeight = matrixProbableHeight + 14; // add space for scroll
+                    } else {
+                        matrixHolder.classList.remove('has-x-scroll');
                     }
 
-                    if (bodyScrollElem.clientHeight < matrixVCContainerHeight) {
+                    if (matrixVCAvailableHeight < matrixVCContainerHeight) {
                         matrixHolder.classList.add('has-y-scroll');
+                    } else {
+                        matrixHolder.classList.remove('has-y-scroll');
                     }
 
                     if (matrixProbableHeight < matrixHolder.clientHeight) {
                         matrixHolder.style.height = matrixProbableHeight + 'px';
                     }
-
-                    // because of children with absolute positioning, elem below requires manual width setting
-                    rvMatrixLeftCol.style.width = cellWidth + 'px';
-                    rvMatrixRightCol.style.width = cellWidth + 'px';
-                    // same with manual height setting
-                    rvMatrixFixedBottomRow.style.height = cellHeight + 'px';
 
                     rvMatrixValueRowsHolder.style.width = matrixVCContainerWidth + 'px';
                     rvMatrixValueRowsHolder.style.height = matrixVCContainerHeight + 'px';
@@ -132,9 +135,6 @@
                     }
 
                     rvmHeaderScrollableRow.style.width = matrixMaxWidth + 'px';
-
-                    rvmBottomRowScrollableElem.style.width = matrixMaxWidth + 'px';
-                    rvmBottomRowScrollableElem.style.left = cellWidth + 'px';
 
                     for (var i = 0; i < items.length; i = i + 1) {
 
@@ -148,7 +148,9 @@
 
                 var scrollHeaderAndColumn = function () {
                     rvmHeaderScrollableRow.style.left = -bodyScrollElem.scrollLeft + 'px';
-                    rvmBottomRowScrollableElem.style.left = (cellWidth - bodyScrollElem.scrollLeft) + 'px';
+                    if (rvmBottomRowScrollableElem) {
+                        rvmBottomRowScrollableElem.style.left = (cellWidth - bodyScrollElem.scrollLeft) + 'px';
+                    }
 
                     for (var c = 0; c < bodyScrollableElem.length; c++) {
                         bodyScrollableElem[c].style.top = -bodyScrollElem.scrollTop + 'px';
@@ -447,9 +449,15 @@
 
                     });
 
+                    window.addEventListener('resize', scope.alignGrid);
+
                 };
 
                 scope.init();
+
+                scope.$on('$destroy', function () {
+                    window.removeEventListener('resize', scope.alignGrid);
+                });
 
             }
         }

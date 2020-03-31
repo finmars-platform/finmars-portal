@@ -735,6 +735,7 @@
                         ordinate: vm.componentData.settings.ordinate,
                         value_key: vm.componentData.settings.value_key,
                         subtotal_formula_id: vm.componentData.settings.subtotal_formula_id,
+                        matrix_view: vm.componentData.settings.matrix_view,
                         styles: vm.componentData.settings.styles
                     };
                 }

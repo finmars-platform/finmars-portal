@@ -31,6 +31,7 @@
                     ordinate: '',
                     value_key: '',
                     subtotal_formula_id: 1,
+                    matrix_view: 'usual',
                     styles: {
                         cell: {
                             text_align: 'center'

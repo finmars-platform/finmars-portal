@@ -328,19 +328,26 @@
                 };
 
                 scope.onNumericInputFocus = function () {
-                    if (!numberIsInvalid) {
+                    if (!numberIsInvalid && fieldHasValue) {
                         scope.numericInputValue.numberVal = JSON.parse(JSON.stringify(scope.entity[scope.getModelKey()]));
                     }
                 };
 
+                var fieldHasValue = true;
                 var numberIsInvalid;
 
                 scope.numericItemChange = function () {
 
                     numberIsInvalid = false;
+                    fieldHasValue = true;
                     var changedValue = scope.numericInputValue.numberVal;
 
-                    if (!isNaN(changedValue) &&
+                    if (changedValue === '') {
+
+                        scope.entity[scope.getModelKey()] = null;
+                        fieldHasValue = false;
+
+                    } else if (!isNaN(changedValue) &&
                         changedValue !== null) {
 
                         if (Number.isInteger(changedValue)) {
@@ -381,8 +388,10 @@
                         }
                         // < negative numbers processing >
 
-                    } else if (changedValue !== '') {
+                    } else {
+
                         numberIsInvalid = true;
+
                     }
 
                     if (numberIsInvalid) {
@@ -401,7 +410,7 @@
                 };
 
                 scope.onNumericInputBlur = function () {
-                    if (!numberIsInvalid) {
+                    if (!numberIsInvalid && fieldHasValue) {
                         var itemNumberValue = JSON.parse(JSON.stringify(scope.entity[scope.getModelKey()]));
                         scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
                     }
