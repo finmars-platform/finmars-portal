@@ -42,8 +42,30 @@
                 </td>
 
                 <td>
-                    <div data-ng-if="item.price_date_from_calculated">{{item.price_date_from_calculated}} - {{item.price_date_to_calculated}}</div>
-                    <div data-ng-if="!item.price_date_from_calculated">&nbsp;</div>
+
+                    <div layout="row">
+                        <div>
+
+                            <md-input-container>
+                                <label for="">Date from</label>
+                                <zh-date-picker data-date-value="item.user_price_date_from"></zh-date-picker>
+                            </md-input-container>
+
+                        </div>
+
+                        <div>
+
+                            <md-input-container>
+                                <label for="">Date To</label>
+                                <zh-date-picker data-date-value="item.user_price_date_to"></zh-date-picker>
+                            </md-input-container>
+
+                        </div>
+
+                    </div>
+
+                    <!--<div data-ng-if="item.price_date_from_calculated">{{item.price_date_from_calculated}} - {{item.price_date_to_calculated}}</div>-->
+                    <!--<div data-ng-if="!item.price_date_from_calculated">&nbsp;</div>-->
                 </td>
 
                 <td>
