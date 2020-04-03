@@ -1533,6 +1533,15 @@
 
             }
 
+
+            if(item.pricing_scheme_object && item.pricing_scheme_object.type_settings) {
+
+                item.data = item.pricing_scheme_object.type_settings.data;
+                item.attribute_key = item.pricing_scheme_object.type_settings.attribute_key;
+                item.default_value = item.pricing_scheme_object.type_settings.default_value;
+
+            }
+
             vm.entity.pricing_policies = vm.entity.pricing_policies.map(function (policy) {
 
                 if (policy.id === item.id) {
