@@ -40,27 +40,53 @@
     <div layout="row">
 
         <md-input-container class="md-block" style="width: 550px;">
-            <label>Pricing Algorithm</label>
-            <md-select md-on-close="vm.searchTermDailyPricingModel = ''"
-                       data-ng-model="vm.entity.daily_pricing_model"
-                       md-on-open="vm.getDailyPricingModelFields()"
+            <label>Pricing Condition</label>
+            <md-select md-on-close="vm.searchTermPricingCondition = ''"
+                       data-ng-model="vm.entity.pricing_condition"
                        md-container-class="common-select-container">
                 <md-select-header>
-                    <input data-ng-model="vm.searchTermDailyPricingModel"
+                    <input data-ng-model="vm.searchTermPricingCondition"
                            type="search"
                            placeholder="Search for a ..."
                            class="md-text md-select-search-pattern select-input-filter"
                            ng-keydown="$event.stopPropagation()">
                 </md-select-header>
                 <div class="select-options-holder">
-                    <md-option
-                            data-ng-repeat="field in vm.dailyPricingModelFields | orderBy:'-'+field.name | filter:{name: vm.searchTermDailyPricingModel} as results track by field.id "
-                            ng-value="field.id">
-                        {{field.name}}
+                    <md-option ng-value="1">
+                        Don't Run Valuation
+                    </md-option>
+                    <md-option ng-value="2">
+                        Run Valuation: if non-zero position
+                    </md-option>
+                    <md-option ng-value="3">
+                        Run Valuation: always
                     </md-option>
                 </div>
             </md-select>
         </md-input-container>
+
+        <!--<md-input-container class="md-block" style="width: 550px;">-->
+            <!--<label>Pricing Algorithm</label>-->
+            <!--<md-select md-on-close="vm.searchTermDailyPricingModel = ''"-->
+                       <!--data-ng-model="vm.entity.daily_pricing_model"-->
+                       <!--md-on-open="vm.getDailyPricingModelFields()"-->
+                       <!--md-container-class="common-select-container">-->
+                <!--<md-select-header>-->
+                    <!--<input data-ng-model="vm.searchTermDailyPricingModel"-->
+                           <!--type="search"-->
+                           <!--placeholder="Search for a ..."-->
+                           <!--class="md-text md-select-search-pattern select-input-filter"-->
+                           <!--ng-keydown="$event.stopPropagation()">-->
+                <!--</md-select-header>-->
+                <!--<div class="select-options-holder">-->
+                    <!--<md-option-->
+                            <!--data-ng-repeat="field in vm.dailyPricingModelFields | orderBy:'-'+field.name | filter:{name: vm.searchTermDailyPricingModel} as results track by field.id "-->
+                            <!--ng-value="field.id">-->
+                        <!--{{field.name}}-->
+                    <!--</md-option>-->
+                <!--</div>-->
+            <!--</md-select>-->
+        <!--</md-input-container>-->
 
         <md-input-container class="md-block" style="width: 200px;">
             <label>Price Download Scheme</label>

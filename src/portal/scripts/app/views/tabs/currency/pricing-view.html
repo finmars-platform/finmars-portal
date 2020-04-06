@@ -1,5 +1,31 @@
 <div>
 
+    <md-input-container class="md-block" style="width: 550px;">
+        <label>Pricing Condition</label>
+        <md-select md-on-close="vm.searchTermPricingCondition = ''"
+                   data-ng-model="vm.entity.pricing_condition"
+                   md-container-class="common-select-container">
+            <md-select-header>
+                <input data-ng-model="vm.searchTermPricingCondition"
+                       type="search"
+                       placeholder="Search for a ..."
+                       class="md-text md-select-search-pattern select-input-filter"
+                       ng-keydown="$event.stopPropagation()">
+            </md-select-header>
+            <div class="select-options-holder">
+                <md-option ng-value="1">
+                    Don't Run Valuation
+                </md-option>
+                <md-option ng-value="2">
+                    Run Valuation: if non-zero position
+                </md-option>
+                <md-option ng-value="3">
+                    Run Valuation: always
+                </md-option>
+            </div>
+        </md-select>
+    </md-input-container>
+
     <table>
 
         <thead>
