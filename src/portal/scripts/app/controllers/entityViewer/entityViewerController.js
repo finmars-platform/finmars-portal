@@ -416,8 +416,6 @@
                                             vm.entityViewerDataService.setActiveObjectAction(null);
                                             vm.entityViewerDataService.setActiveObjectActionData(null);
 
-                                            console.log('res.data.ids', res.data.ids);
-
                                             if (res.status === 'agree') {
 
                                                 var objects = vm.entityViewerDataService.getObjects();
@@ -452,7 +450,7 @@
                                     case 'currency-history-error':
 
                                         $mdDialog.show({
-                                            controller: 'PriceHistoryErrorEditDialogController as vm',
+                                            controller: 'CurrencyHistoryErrorEditDialogController as vm',
                                             templateUrl: 'views/entity-viewer/currency-history-error-edit-dialog-view.html',
                                             parent: angular.element(document.body),
                                             targetEvent: activeObject.event,
