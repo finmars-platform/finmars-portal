@@ -709,11 +709,6 @@
                 key: "portfolios.portfolio"
             },
             {
-                name: "Instrument Type",
-                entity: 'instrument-type',
-                key: "instruments.instrumenttype"
-            },
-            {
                 name: "Strategy 1",
                 entity: 'strategy-1',
                 key: "strategies.strategy1"
