@@ -925,7 +925,7 @@
                             $mdDialog.hide({res: 'agree', data: data});
                         }
 
-                    }).catch(function(data) {
+                    }).catch(function (data) {
                         vm.handleErrors(data);
                     });
 
@@ -1185,7 +1185,6 @@
 
         vm.recalculateInstrumentsPermissions = function ($event) {
 
-
             vm.updateItem().then(function (value) {
 
                 entityResolverService.getList('instrument', {pageSize: 1000}).then(function (data) {
@@ -1233,6 +1232,83 @@
 
             });
 
+
+        };
+
+        vm.saveAndApplyPermissionsToInstrumentsByGroup = function ($event, group) {
+
+            vm.updateItem().then(function (value) {
+
+                entityResolverService.getList('instrument', {pageSize: 1000}).then(function (data) {
+
+                    console.log('data', data);
+
+                    var has_view = group.objectPermissions.view;
+                    var has_change = group.objectPermissions.change;
+                    var has_manage = group.objectPermissions.manage;
+
+                    var instrumentsWithPermissions = data.results.map(function (item) {
+
+                        var permissions = item.object_permissions.filter(function (perm) {
+                            return perm.group !== group.id
+                        });
+
+                        if (has_view) {
+                            permissions.push({
+                                group: group.id,
+                                member: null,
+                                permission: 'view_instrument'
+                            });
+                        }
+
+                        if (has_change) {
+                            permissions.push({
+                                group: group.id,
+                                member: null,
+                                permission: 'change_instrument'
+                            });
+                        }
+
+                        if (has_manage) {
+                            permissions.push({
+                                group: group.id,
+                                member: null,
+                                permission: 'manage_instrument'
+                            });
+                        }
+
+                        return {
+                            id: item.id,
+                            object_permissions: permissions
+                        }
+
+                    });
+
+                    entityResolverService.updateBulk('instrument', instrumentsWithPermissions).then(function () {
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Instrument Permissions successfully updated"
+                                }
+                            }
+                        });
+
+                    });
+
+                });
+
+            });
 
         };
 
@@ -1339,15 +1415,9 @@
 
             vm.attributeTypesByValueTypes = {
 
-                10: [
-
-                ],
-                20: [
-
-                ],
-                40: [
-
-                ]
+                10: [],
+                20: [],
+                40: []
 
             };
 
@@ -1534,7 +1604,7 @@
             }
 
 
-            if(item.pricing_scheme_object && item.pricing_scheme_object.type_settings) {
+            if (item.pricing_scheme_object && item.pricing_scheme_object.type_settings) {
 
                 item.data = item.pricing_scheme_object.type_settings.data;
                 item.attribute_key = item.pricing_scheme_object.type_settings.attribute_key;
