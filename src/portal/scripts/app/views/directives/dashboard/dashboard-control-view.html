@@ -1,6 +1,6 @@
 <div>
 
-    <div data-ng-if="item.data.settings.value_type == 10">
+    <div data-ng-if="componentData.settings.value_type == 10">
 
         <md-input-container class="md-block no-error-spacer textarea-bind-field">
             <label data-ng-bind="item.data.name"></label>
@@ -11,7 +11,7 @@
 
     </div>
 
-    <div data-ng-if="item.data.settings.value_type == 20">
+    <div data-ng-if="componentData.settings.value_type == 20">
 
         <md-input-container class="md-block">
             <label data-ng-bind="item.data.name"></label>
@@ -23,7 +23,7 @@
 
     </div>
 
-    <div data-ng-if="item.data.settings.value_type == 40">
+    <div data-ng-if="componentData.settings.value_type == 40">
 
         <md-input-container class="field-date-pick-holder no-error-spacer md-block">
             <label data-ng-bind="item.data.name"></label>
@@ -32,11 +32,11 @@
 
     </div>
 
-    <div data-ng-if="item.data.settings.value_type == 100" class="position-relative">
+    <div data-ng-if="componentData.settings.value_type == 100" class="position-relative">
 
-        <div data-ng-if="item.data.settings.content_type == 'currencies.currency' || item.data.settings.content_type == 'instruments.pricingpolicy'">
+        <div data-ng-if="componentData.settings.content_type == 'currencies.currency' || componentData.settings.content_type == 'instruments.pricingpolicy'">
 
-            <div data-ng-if="!item.data.settings.multiple">
+            <div data-ng-if="!componentData.settings.multiple">
                 <md-input-container class="md-block no-error-spacer">
                     <label data-ng-bind="item.data.name"></label>
 
@@ -67,7 +67,7 @@
                 </md-input-container>
             </div>
 
-            <div data-ng-if="item.data.settings.multiple">
+            <div data-ng-if="componentData.settings.multiple">
                 <two-fields-multiselect data-title="{{item.data.name}}"
                                         data-items="fields"
                                         data-model="item.data.store.value"
@@ -79,16 +79,16 @@
 
         </div>
 
-        <div data-ng-if="item.data.settings.content_type != 'currencies.currency' && item.data.settings.content_type != 'instruments.pricingpolicy'">
+        <div data-ng-if="componentData.settings.content_type != 'currencies.currency' && componentData.settings.content_type != 'instruments.pricingpolicy'">
 
-            <entity-search-select data-ng-if="!item.data.settings.multiple"
+            <entity-search-select data-ng-if="!componentData.settings.multiple"
                                   data-item="item.data.store.value"
                                   data-label="item.data.name"
                                   data-input-text="item.data.store.name"
                                   data-entity-type="entityType"
                                   data-callback="valueChanged()"></entity-search-select>
 
-            <div data-ng-if="item.data.settings.multiple">
+            <div data-ng-if="componentData.settings.multiple">
                 <two-fields-multiselect data-title="{{item.data.name}}"
                                         data-items="fields"
                                         data-model="item.data.store.value"
