@@ -102,7 +102,7 @@
                     scope.dashboardDataService.setComponentOutput(scope.item.data.id, changedData);
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
 
-                    if (scope.item.data.settings.auto_refresh) {
+                    if (scope.componentData.settings.auto_refresh) {
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
                     }
 
@@ -133,7 +133,11 @@
 
                 scope.init = function () {
 
-                    scope.entityType = scope.getEntityTypeByContentType(scope.item.data.settings.content_type);
+                    scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                    console.log('scope.componentData', scope.componentData);
+
+                    scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
                     console.log('dashboard control scope.entityType', scope.entityType);
                     if (!scope.item.data.store) {
                         scope.item.data.store = {} // "store" - property for all dashboard data related properties
