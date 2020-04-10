@@ -100,11 +100,14 @@
                 $scope.$apply();
             }, 100);
 
-            vm.items.forEach(function (item) {
-                if (item.content.length) {
-                    vm.collapsingItems[item.id] = false;
-                }
-            });
+
+            if (vm.items) {
+                vm.items.forEach(function (item) {
+                    if (item.content.length) {
+                        vm.collapsingItems[item.id] = false;
+                    }
+                });
+            }
 
             setTimeout(function () {
                 setCollapsingContainersHeight();
