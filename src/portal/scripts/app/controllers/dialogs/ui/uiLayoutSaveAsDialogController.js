@@ -17,7 +17,7 @@
 
         vm.complexSaveAsLayoutDialog = false;
 
-        var layoutsNames = ["New Layout"];
+        var layoutsUserCodes = ["New Layout"];
 
         if (options) {
 
@@ -31,7 +31,7 @@
                     var layouts = data.results;
 
                     layouts.map(function (layout) {
-                        layoutsNames.push(layout.name);
+                        layoutsUserCodes.push(layout.user_code);
                     });
 
                 });
@@ -42,6 +42,10 @@
 
                 vm.layoutName = options.layoutName;
 
+            }
+
+            if (options.layoutUserCode) {
+                vm.layoutUserCode = options.layoutUserCode;
             }
 
         }
@@ -57,9 +61,9 @@
             if (vm.complexSaveAsLayoutDialog) {
 
                 var i;
-                for (i = 0; i < layoutsNames.length; i++) {
+                for (i = 0; i < layoutsUserCodes.length; i++) {
 
-                    if (layoutsNames[i] == vm.layoutName) {
+                    if (layoutsUserCodes[i] === vm.layoutUserCode) {
                         layoutNameOccupied = true;
 
                         $mdDialog.show({
@@ -72,7 +76,7 @@
                             locals: {
                                 warning: {
                                     title: 'Warning',
-                                    description: 'There is already layout with such name. Layouts should have unique names.'
+                                    description: 'There is already layout with such user code. Layouts should have unique user codes.'
                                 }
                             }
                         });
@@ -83,7 +87,7 @@
             }
 
             if (!layoutNameOccupied) {
-                $mdDialog.hide({status: 'agree', data: {name: vm.layoutName}});
+                $mdDialog.hide({status: 'agree', data: {name: vm.layoutName, user_code: vm.layoutUserCode}});
             }
 
         };
