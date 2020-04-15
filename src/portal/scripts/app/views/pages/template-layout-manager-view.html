@@ -28,6 +28,11 @@
                             </md-select>
                         </md-input-container>
 
+                        <md-input-container style="width: 200px;">
+                            <label for="">User Code</label>
+                            <input type="text" data-ng-model="vm.activeInputTemplate.user_code">
+                        </md-input-container>
+
                         <md-button class="md-raised" ng-class="{'disabled-btn': !vm.activeInputTemplate.id}"
                                    data-ng-click="vm.saveTemplate($event, vm.activeInputTemplate)">Save
                             Template
