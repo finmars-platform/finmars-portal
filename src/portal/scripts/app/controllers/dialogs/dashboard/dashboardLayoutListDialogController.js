@@ -83,7 +83,8 @@
                 clickOutsideToClose: false,
                 locals: {
                     options: {
-                        layoutName: layoutData.name
+                        layoutName: layoutData.name,
+                        layoutUserCode: layoutData.user_code
                     }
                 }
 
