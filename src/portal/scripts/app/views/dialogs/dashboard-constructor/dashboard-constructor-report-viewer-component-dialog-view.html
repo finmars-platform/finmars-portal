@@ -5,6 +5,11 @@
         <div class="md-toolbar-tools">
             <h2>New Report Viewer Component</h2>
             <span flex></span>
+
+            <div data-ng-if="vm.processing" class="dialog-toolbar-loader">
+                <progress-circular diameter="20"></progress-circular>
+            </div>
+
         </div>
     </md-toolbar>
 
@@ -59,6 +64,24 @@
                                                    data-is-disabled="!vm.item.settings.entity_type"
                                                    data-on-change-callback="vm.onRvLayoutChange()"
                                                    class="dashboard-constructor-selector-directive"></expandable-items-selector>
+
+                        <div data-ng-if="vm.item.settings.entity_type == 'balance-report'">
+
+                            <div class="m-t-16 m-b-16">
+
+                                <md-input-container class="dashboard-constructor-field1">
+                                    <label for="">Date</label>
+                                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
+                                        <md-option
+                                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
+                                                ng-value="componentType.id">{{componentType.name}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                            </div>
+
+                        </div>
 
                         <div data-ng-if="vm.item.settings.entity_type == 'pl-report'">
 
