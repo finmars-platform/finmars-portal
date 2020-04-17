@@ -149,6 +149,11 @@
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
 
+                    if (scope.componentData.custom_component_name) {
+                        scope.customName = scope.componentData.custom_component_name;
+                    }
+
+
                     scope.initEventListeners()
 
 

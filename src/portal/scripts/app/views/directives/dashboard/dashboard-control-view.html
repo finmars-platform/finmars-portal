@@ -1,5 +1,10 @@
 <div>
 
+    <div class="dashboard-component-name text-center">
+        <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
+        <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
+    </div>
+
     <div data-ng-if="componentData.settings.value_type == 10">
 
         <md-input-container class="md-block no-error-spacer textarea-bind-field">
