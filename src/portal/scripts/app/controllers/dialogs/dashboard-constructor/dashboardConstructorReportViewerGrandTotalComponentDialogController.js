@@ -6,6 +6,8 @@
     'use strict';
 
     var uiService = require('../../../services/uiService');
+    var dashboardHelper = require('../../../helpers/dashboard.helper');
+    var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
@@ -14,6 +16,8 @@
         vm.newFilter = {};
 
         vm.filterLinks = [];
+        vm.componentsForMultiselector = [];
+        var componentsForLinking = dashboardHelper.getComponentsForLinking();
 
         if (item) {
             vm.item = item;
@@ -165,6 +169,38 @@
             console.log('dataService', dataService);
 
             vm.componentsTypes = dataService.getComponents();
+
+            vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control';
+            });
+
+            vm.dateControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' && componentType.settings.value_type === 40
+            });
+
+            vm.currencyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' &&
+                    componentType.settings.value_type === 100 &&
+                    componentType.settings.content_type === 'currencies.currency'
+            });
+
+            vm.pricingPolicyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' &&
+                    componentType.settings.value_type === 100 &&
+                    componentType.settings.content_type === 'instruments.pricingpolicy'
+            });
+
+            vm.componentsTypes.forEach(function (comp) {
+                if (componentsForLinking.indexOf(comp.type) !== -1 &&
+                    comp.id !== vm.item.id) {
+                    vm.componentsForMultiselector.push(
+                        {
+                            id: comp.id,
+                            name: comp.name
+                        });
+                }
+            });
+
 
             console.log('vm', vm);
 
