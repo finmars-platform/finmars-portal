@@ -90,6 +90,7 @@
             }
 
             vm.getAttributes();
+            vm.getLayouts();
 
         };
 
