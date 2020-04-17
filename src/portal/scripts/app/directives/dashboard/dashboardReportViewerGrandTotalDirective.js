@@ -31,9 +31,17 @@
 
                 var componentData;
 
+                console.log('componentData scope.item', scope.item);
+
                 if (scope.item && scope.item.data) {
                     componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                    if (componentData.custom_component_name) {
+                        scope.customName = componentData.custom_component_name;
+                    }
+
                 }
+
 
                 scope.vm = {
                     tabNumber: scope.tabNumber,
@@ -82,6 +90,10 @@
 
                     });
 
+                };
+
+                scope.clearUseFromAboveFilters = function () {
+                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
                 scope.init = function () {

@@ -390,6 +390,8 @@
 
             vm.applyDashboardChanges = function () {
 
+                console.log('applyDashboardChanges.vm.componentData', vm.componentData)
+
                 if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                     vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
@@ -406,20 +408,24 @@
 
                         var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                        if (componentOutput) {
+                        if (componentOutput && componentOutput.data) {
 
                             var reportOptions = vm.entityViewerDataService.getReportOptions();
 
-                            console.log('reportOptions', reportOptions);
-                            console.log('componentOutput', componentOutput);
+                            // console.log('reportOptions', reportOptions);
+                            // console.log('componentOutput', componentOutput);
+                            //
+                            // console.log('reportOptions[property]', reportOptions[property]);
+                            // console.log('componentOutput.data.value', componentOutput.data.value);
 
-                            if (reportOptions[property] !== componentOutput.value) {
+                            if (reportOptions[property] !== componentOutput.data.value) {
 
-                                reportOptions[property] = componentOutput.value;
+                                reportOptions[property] = componentOutput.data.value;
 
                                 vm.entityViewerDataService.setReportOptions(reportOptions);
 
-                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 
                             }
 
