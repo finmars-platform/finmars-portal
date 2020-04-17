@@ -588,6 +588,9 @@
                     vm.entityViewerDataService.setActiveObject(null);
                     vm.entityViewerDataService.setActiveObjectFromAbove(null);
 
+                    console.log('CLEARED ACTIVE OBJECT ', vm.entityViewerDataService.getActiveObject());
+                    console.log('CLEARED ACTIVE OBJECT FROM ABOVE ', vm.entityViewerDataService.getActiveObjectFromAbove());
+
                     vm.entityViewerEventService.dispatchEvent(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
 
                 };

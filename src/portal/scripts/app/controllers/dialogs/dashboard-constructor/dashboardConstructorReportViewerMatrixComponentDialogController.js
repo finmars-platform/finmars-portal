@@ -110,6 +110,7 @@
             vm.item.user_settings = {};
 
             vm.getAttributes();
+            vm.getLayouts();
 
         };
 
