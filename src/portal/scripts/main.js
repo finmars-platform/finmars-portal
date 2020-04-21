@@ -101,6 +101,15 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
     $transitions.onSuccess({}, function (trans) {
 
+        var count_cached_requests = 0;
+
+        if (window.cached_requests) {
+            count_cached_requests = Object.keys(window.cached_requests).length;
+        }
+
+        window.cached_requests = {};
+        console.log('Clear Cached Requests. Total: ', count_cached_requests);
+
         var location = metaService.getCurrentLocation($state);
 
         var title = 'Finmars';
