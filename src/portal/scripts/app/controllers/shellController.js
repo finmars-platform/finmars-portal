@@ -181,6 +181,15 @@
 
                     if (res.status === 'agree') {
 
+                        var count_cached_requests = 0;
+
+                        if (window.cached_requests) {
+                            count_cached_requests = Object.keys(window.cached_requests).length;
+                        }
+
+                        window.cached_requests = {};
+                        console.log('Clear Cached Requests. Total: ', count_cached_requests);
+
                         changeMasterUser();
 
                     }

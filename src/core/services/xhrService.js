@@ -16,6 +16,24 @@
         return window
             .fetch(url, params)
             .then(errorService.handleXhrErrors)
+            .then(function (data) {
+
+                if (params.method === 'GET') {
+
+                    if (!window.cached_requests) {
+                        window.cached_requests = {}
+                    }
+
+                    window.cached_requests[url] = {
+                        time: new Date(),
+                        data: data,
+                        requested_count: 1
+                    };
+
+                }
+
+                return data
+            })
             .catch(errorService.notifyError)
 
     };
@@ -24,30 +42,40 @@
 
         return new Promise(function (resolve, reject) {
 
-            console.log('requestsCount', requestsCount);
+            if (params.method === 'GET' && window.cached_requests && window.cached_requests[url]) {
 
-            if (requestsCount > requestsPerMinuteLimit) {
+                window.cached_requests[url].requested_count = window.cached_requests[url].requested_count + 1;
 
-                setTimeout(function () {
-
-                    makeRequest(url, params).then(function (data) {
-
-                        console.log("Timeout 60s");
-
-                        requestsCount = 0;
-
-                        resolve(data)
-
-                    })
-
-                }, minute + 1000)
+                resolve(window.cached_requests[url].data)
 
             } else {
 
-                requestsCount = requestsCount + 1;
-                lastRequestTime = new Date().getTime();
+                // console.log('requestsCount', requestsCount);
 
-                resolve(makeRequest(url, params))
+                if (requestsCount > requestsPerMinuteLimit) {
+
+                    setTimeout(function () {
+
+                        makeRequest(url, params).then(function (data) {
+
+                            console.log("Timeout 60s");
+
+                            requestsCount = 0;
+
+                            resolve(data)
+
+                        })
+
+                    }, minute + 1000)
+
+                } else {
+
+                    requestsCount = requestsCount + 1;
+                    lastRequestTime = new Date().getTime();
+
+                    resolve(makeRequest(url, params))
+
+                }
 
             }
 
