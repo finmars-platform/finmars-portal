@@ -59,6 +59,59 @@
                 fillInModeEnabled = true;
             }
 
+            vm.updateGrandTotalComponent = function(){
+
+                rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                vm.grandTotalProcessing = false;
+
+                console.log('Grand Total Status: Data is Loaded');
+
+                var rootGroup = vm.entityViewerDataService.getRootGroup();
+
+                var flatList = rvDataHelper.getFlatStructure(vm.entityViewerDataService);
+
+                console.log('Grand Total Status: rootGroup', rootGroup);
+                console.log('Grand Total Status: flatList', flatList);
+
+                var root = flatList[0];
+
+                var column_key = vm.componentData.settings.grand_total_column;
+
+                var val = root.subtotal[column_key];
+
+                vm.grandTotalNegative = false;
+
+                if (vm.componentData.settings.number_format) {
+
+                    if (vm.componentData.settings.number_format.negative_color_format_id === 1) {
+
+                        if (val % 1 === 0) { // check whether number is float or integer
+                            if (parseInt(val) < 0) {
+                                vm.grandTotalNegative = true
+                            }
+                        } else {
+                            if (parseFloat(val) < 0) {
+                                vm.grandTotalNegative = true
+                            }
+                        }
+                    }
+
+                    vm.grandTotalValue = renderHelper.formatValue({
+                        value: val
+                    }, {
+                        key: 'value',
+                        report_settings: vm.componentData.settings.number_format
+                    });
+
+                } else {
+                    vm.grandTotalValue = val
+                }
+
+                $scope.$apply();
+
+            };
+
             vm.setEventListeners = function () {
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
@@ -116,58 +169,14 @@
 
                 });
 
+
+
                 if (vm.componentData.type === 'report_viewer_grand_total') {
 
 
                     vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                        vm.grandTotalProcessing = false;
-
-                        console.log('Grand Total Status: Data is Loaded')
-
-                        var rootGroup = vm.entityViewerDataService.getRootGroup();
-
-                        var flatList = rvDataHelper.getFlatStructure(vm.entityViewerDataService);
-
-                        console.log('Grand Total Status: rootGroup', rootGroup);
-                        console.log('Grand Total Status: flatList', flatList);
-
-                        var root = flatList[0];
-
-                        var column_key = vm.componentData.settings.grand_total_column;
-
-                        var val = root.subtotal[column_key];
-
-                        vm.grandTotalNegative = false;
-
-                        if (vm.componentData.settings.number_format) {
-
-                            if (vm.componentData.settings.number_format.negative_color_format_id === 1) {
-
-                                if (val % 1 === 0) { // check whether number is float or integer
-                                    if (parseInt(val) < 0) {
-                                        vm.grandTotalNegative = true
-                                    }
-                                } else {
-                                    if (parseFloat(val) < 0) {
-                                        vm.grandTotalNegative = true
-                                    }
-                                }
-                            }
-
-                            vm.grandTotalValue = renderHelper.formatValue({
-                                value: val
-                            }, {
-                                key: 'value',
-                                report_settings: vm.componentData.settings.number_format
-                            });
-
-                        } else {
-                            vm.grandTotalValue = val
-                        }
-
-                        $scope.$apply();
-
+                        vm.updateGrandTotalComponent();
 
                     })
 
@@ -176,6 +185,10 @@
                 if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
 
                     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                        console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', vm.componentData.type);
+                        console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', gotActiveObjectFromLinkedComp);
+
                         var activeObject = vm.entityViewerDataService.getActiveObject();
 
                         if (!gotActiveObjectFromLinkedComp) {
@@ -207,8 +220,14 @@
 
                             }
 
+
                         } else {
                             gotActiveObjectFromLinkedComp = false;
+                        }
+
+                        if (vm.componentData.type === 'report_viewer_grand_total') {
+
+                            vm.updateGrandTotalComponent();
                         }
 
                     });

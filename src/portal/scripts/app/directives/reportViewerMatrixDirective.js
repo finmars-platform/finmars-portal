@@ -463,6 +463,15 @@
 
                     });
 
+                    scope.evEventService.addEventListener(evEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS, function () {
+
+                        console.log("Align Grid");
+
+                        scope.alignGrid();
+
+
+                    });
+
 
                     window.addEventListener('resize', scope.alignGrid);
 
