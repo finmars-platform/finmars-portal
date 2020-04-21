@@ -110,6 +110,9 @@
 
                 vm.layouts = data.results;
 
+                vm.layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+                vm.showLinkingToFilters();
+
                 $scope.$apply();
 
             })
@@ -162,6 +165,23 @@
             dataService.setComponents(vm.componentsTypes);
 
             $mdDialog.hide({status: 'agree'});
+        };
+
+        vm.showLinkingToFilters = function () {
+
+            for (var i = 0; i < vm.layouts.length; i++) {
+
+                if (vm.layouts[i].id === vm.item.settings.layout) {
+
+                    var layout = vm.layouts[i];
+                    vm.linkingToFilters = dashboardHelper.getLinkingToFilters(layout);
+
+                    break;
+
+                }
+
+            }
+
         };
 
         vm.init = function () {
