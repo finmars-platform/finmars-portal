@@ -13,9 +13,9 @@
 
         var searchParams = new URLSearchParams(window.location.search);
 
-        if (searchParams.get('debug') === 'true') {
+        // if (searchParams.get('debug') === 'true') {
             toastr.error(message);
-        }
+        // }
 
     };
 

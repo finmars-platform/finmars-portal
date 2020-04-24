@@ -89,13 +89,13 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
     document.title = metaService.getCurrentLocation($state);
 
-    if ('__PROJECT_ENV__' === 'development') {
+    // if ('__PROJECT_ENV__' === 'development') {
 
-        window.addEventListener('error', function (e) {
-            toastr.error(e.error);
-        });
+    window.addEventListener('error', function (e) {
+        toastr.error(e.error);
+    });
 
-    }
+    // }
 
     enableAccessHandler($transitions);
 
