@@ -101,6 +101,7 @@
             vm.item.settings.grand_total_column = null;
 
             vm.getAttributes();
+            vm.getLayouts();
 
         };
 

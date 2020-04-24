@@ -89,11 +89,13 @@
         };
 
         var getEntityAttrs = function () {
+
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
             vm.fixedFieldsAttributes = [];
 
             var i, a;
             for (i = 0; i < keysOfFixedFieldsAttrs.length; i++) {
+
                 var attrKey = keysOfFixedFieldsAttrs[i];
 
                 if (!attrKey) {
@@ -103,6 +105,7 @@
                 } else {
 
                     for (a = 0; a < vm.entityAttrs.length; a++) {
+
                         if (vm.entityAttrs[a].key === attrKey) {
 
                             if (vm.entityAttrs[a]) {
