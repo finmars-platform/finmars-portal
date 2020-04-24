@@ -94,6 +94,8 @@
 
                     layoutData.name = res.data.name;
                     layout.name = res.data.name;
+                    layoutData.user_code = res.data.user_code;
+                    layout.user_code = res.data.user_code;
 
                     uiService.updateDashboardLayout(layoutData.id, layoutData).then(function () {
 

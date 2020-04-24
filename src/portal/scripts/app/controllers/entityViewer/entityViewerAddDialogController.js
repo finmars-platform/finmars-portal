@@ -655,6 +655,8 @@
                     vm.readyStatus.entity = true;
                     // vm.readyStatus.permissions = true;
 
+                    console.log("vm.entity", vm.entity);
+
                     $scope.$apply();
 
                 });
