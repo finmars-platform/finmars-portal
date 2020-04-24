@@ -1417,6 +1417,7 @@
                             var saveAsLayout = function () {
 
                                 listLayout.name = res.data.name;
+                                listLayout.user_code = res.data.user_code;
 
                                 uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
 
