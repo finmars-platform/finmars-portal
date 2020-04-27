@@ -108,7 +108,9 @@
                     vm.grandTotalValue = val
                 }
 
-                $scope.$apply();
+                console.log('vm.grandTotalValue', vm.grandTotalValue);
+
+                // $scope.$apply();
 
             };
 
