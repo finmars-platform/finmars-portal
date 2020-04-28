@@ -38,6 +38,8 @@
                 '</div>',
             link: function (scope, elem) {
 
+                console.log('gTableBodyComponent.rootWrapElement', scope.rootWrapElement);
+
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
