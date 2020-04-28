@@ -30,7 +30,7 @@
             },
             template: '<div>' +
                 '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
-                '            <md-progress-linear class="ev-progressbar" md-mode="indeterminate"></md-progress-linear>\n' +
+                '            <progress-linear class="ev-progressbar"></progress-linear>\n' +
                 '        </div>' +
                 '<div class="ev-viewport">' +
                 '<div class="ev-content"></div>' +
