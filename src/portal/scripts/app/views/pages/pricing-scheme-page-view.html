@@ -19,6 +19,9 @@
                                         Name
                                     </th>
                                     <th>
+                                        User Code
+                                    </th>
+                                    <th>
                                         Type
                                     </th>
                                     <th>
@@ -37,6 +40,9 @@
                                 <tr data-ng-repeat="item in vm.instrumentPricingSchemes">
                                     <td>
                                         {{item.name}}
+                                    </td>
+                                    <td>
+                                        {{item.user_code}}
                                     </td>
                                     <td>
                                         {{item.type_object.name}}
@@ -83,6 +89,9 @@
                                         Name
                                     </th>
                                     <th>
+                                        User Code
+                                    </th>
+                                    <th>
                                         Type
                                     </th>
                                     <th>
@@ -101,6 +110,9 @@
                                 <tr data-ng-repeat="item in vm.currencyPricingSchemes">
                                     <td>
                                         {{item.name}}
+                                    </td>
+                                    <td>
+                                        {{item.user_code}}
                                     </td>
                                     <td>
                                         {{item.type_object.name}}
