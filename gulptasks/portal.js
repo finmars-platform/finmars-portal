@@ -149,7 +149,7 @@
             .pipe(replace(/__PASS__/g, credentials[PROJECT_ENV].pass))
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
             .pipe(gulpif(PROJECT_ENV === 'production', stripDebug()))
-            .pipe(uglify()) // if you need to debug minified build locally
+            // .pipe(uglify()) // if you need to debug minified build locally
             // .pipe(stripDebug()) // if you need to debug minified build locally
             .pipe(rename({basename: 'main', suffix: '.min'}))
             .on('error', function (error) {
