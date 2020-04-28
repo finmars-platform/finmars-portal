@@ -50,6 +50,19 @@
 
             } else {
 
+                if (params.method === 'POST' || params.method === 'PUT' || params.method === 'PATCH') {
+
+                    var count_cached_requests = 0;
+
+                    if (window.cached_requests) {
+                        count_cached_requests = Object.keys(window.cached_requests).length;
+                    }
+
+                    window.cached_requests = {};
+                    console.log('Clear Cached Requests. Total: ', count_cached_requests);
+
+                }
+
                 // console.log('requestsCount', requestsCount);
 
                 if (requestsCount > requestsPerMinuteLimit) {
