@@ -227,17 +227,17 @@
                 scope.init();
 
             },
-            controller: function ($scope) {
-
-                $scope.domElemsAreReady = false;
-
-                console.log("gTableComponent.Controller", $scope);
-
-                this.$postLink = function () {
-                    console.log("gTableComponent.PostLink", $scope);
-                }
-
-            }
+            // controller: function ($scope) {
+            //
+            //     $scope.domElemsAreReady = false;
+            //
+            //     console.log("gTableComponent.Controller", $scope);
+            //
+            //     this.$postLink = function () {
+            //         console.log("gTableComponent.PostLink", $scope);
+            //     }
+            //
+            // }
         }
     }
 
