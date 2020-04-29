@@ -13,7 +13,7 @@
 
             <div>
 
-                <h4>General</h4>
+                <h3>General</h3>
 
                 <md-input-container>
                     <label>Name</label>
@@ -34,7 +34,7 @@
 
                 <div class="m-t-16">
 
-                    <div><label for="">Notes</label></div>
+                    <div><label for="">Notes for Users</label></div>
                     <textarea name="" data-ng-model="vm.item.notes_for_users" cols="60" rows="5"></textarea>
 
                 </div>
@@ -47,144 +47,69 @@
 
                 <div>
 
-                    <div>
-                        <md-checkbox ng-model="vm.item.isRange" aria-label="override">
-                            Date range
-                        </md-checkbox>
-                    </div>
-
-                    <div data-ng-if="!vm.item.isRange" layout="row">
-
-                        <md-button class="md-icon-button md-raised md-primary" data-ng-click="vm.toggle('date_both')">
-
-                            T
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>
-
-                        </md-button>
-
-                        <div data-ng-if="vm.toggleStatus.date_both == 'datepicker'">
-
-                            <md-input-container>
-                                <label for="">Date</label>
-                                <zh-date-picker data-date-value="vm.item.date_both"></zh-date-picker>
-                            </md-input-container>
-
-                        </div>
-
-                        <div data-ng-if="vm.toggleStatus.date_both == 'expr'">
-
-                            <md-input-container style="width: 60%">
-                                <label for="">Date (Expression)</label>
-                                <input type="text" data-ng-model="vm.item.date_both_expr">
-                            </md-input-container>
-
-                            <expression-editor-button data-item="vm.item.date_both_expr">
-                            </expression-editor-button>
-
-                        </div>
-
-                    </div>
-
-                    <div data-ng-if="vm.item.isRange">
-
-                        <div layout="row">
-
-                            <md-button class="md-icon-button md-raised md-primary"
-                                       data-ng-click="vm.toggle('price_date_from')">
-
-                                T
-                                <md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>
-
-                            </md-button>
-
-                            <div data-ng-if="vm.toggleStatus.price_date_from == 'datepicker'">
-
-                                <md-input-container>
-                                    <label for="">Date from</label>
-                                    <zh-date-picker data-date-value="vm.item.price_date_from"></zh-date-picker>
-                                </md-input-container>
-
-                            </div>
-
-                            <div data-ng-if="vm.toggleStatus.price_date_from == 'expr'">
-
-                                <md-input-container style="width: 60%">
-                                    <label for="">Date from (Expression)</label>
-                                    <input type="text" data-ng-model="vm.item.price_date_from_expr">
-                                </md-input-container>
-
-                                <expression-editor-button data-item="vm.item.price_date_from_expr">
-                                </expression-editor-button>
-
-                            </div>
-
-                        </div>
-
-                        <div layout="row">
-
-                            <md-button class="md-icon-button md-raised md-primary"
-                                       data-ng-click="vm.toggle('price_date_to')">
-
-                                T
-                                <md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>
-
-                            </md-button>
-
-
-                            <div data-ng-if="vm.toggleStatus.price_date_to == 'datepicker'">
-
-                                <md-input-container>
-                                    <label for="">Date to</label>
-                                    <zh-date-picker data-date-value="vm.item.price_date_to"></zh-date-picker>
-                                </md-input-container>
-
-                            </div>
-
-                            <div data-ng-if="vm.toggleStatus.price_date_to == 'expr'">
-
-                                <md-input-container style="width: 60%">
-                                    <label for="">Date to (Expression)</label>
-                                    <input type="text" data-ng-model="vm.item.price_date_to_expr">
-                                </md-input-container>
-
-                                <expression-editor-button data-item="vm.item.price_date_to_expr">
-                                </expression-editor-button>
-
-
-                            </div>
-
-
-                        </div>
-
-                    </div>
-                    <div data-ng-if="vm.item.isRange" layout="row">
+                    <div layout="row">
 
                         <md-button class="md-icon-button md-raised md-primary"
-                                   data-ng-click="vm.toggle('price_balance_date')">
+                                   data-ng-click="vm.toggle('price_date_from')">
 
                             T
                             <md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>
 
                         </md-button>
 
-                        <div data-ng-if="vm.toggleStatus.price_balance_date == 'datepicker'">
+                        <div data-ng-if="vm.toggleStatus.price_date_from == 'datepicker'">
 
                             <md-input-container>
-                                <label for="">Portfolio balance date</label>
-                                <zh-date-picker data-date-value="vm.item.price_balance_date"></zh-date-picker>
+                                <label for="">Date from</label>
+                                <zh-date-picker data-date-value="vm.item.price_date_from"></zh-date-picker>
                             </md-input-container>
 
                         </div>
 
-                        <div data-ng-if="vm.toggleStatus.price_balance_date == 'expr'">
+                        <div data-ng-if="vm.toggleStatus.price_date_from == 'expr'">
 
                             <md-input-container style="width: 60%">
-                                <label for="">Portfolio Balance Date (Expression)</label>
-                                <input type="text" data-ng-model="vm.item.price_balance_date_expr">
+                                <label for="">Date from (Expression)</label>
+                                <input type="text" data-ng-model="vm.item.price_date_from_expr">
                             </md-input-container>
 
-                            <expression-editor-button data-item="vm.item.price_balance_date_expr">
+                            <expression-editor-button data-item="vm.item.price_date_from_expr">
                             </expression-editor-button>
+
+                        </div>
+
+                    </div>
+
+                    <div layout="row">
+
+                        <md-button class="md-icon-button md-raised md-primary"
+                                   data-ng-click="vm.toggle('price_date_to')">
+
+                            T
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>
+
+                        </md-button>
+
+
+                        <div data-ng-if="vm.toggleStatus.price_date_to == 'datepicker'">
+
+                            <md-input-container>
+                                <label for="">Date to</label>
+                                <zh-date-picker data-date-value="vm.item.price_date_to"></zh-date-picker>
+                            </md-input-container>
+
+                        </div>
+
+                        <div data-ng-if="vm.toggleStatus.price_date_to == 'expr'">
+
+                            <md-input-container style="width: 60%">
+                                <label for="">Date to (Expression)</label>
+                                <input type="text" data-ng-model="vm.item.price_date_to_expr">
+                            </md-input-container>
+
+                            <expression-editor-button data-item="vm.item.price_date_to_expr">
+                            </expression-editor-button>
+
 
                         </div>
 
@@ -202,15 +127,96 @@
                                 <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
                             </ng-md-icon>
                         </div>
-                        <div style="padding-left: 12px">
-                            <md-checkbox ng-model="vm.item.price_override_existed" aria-label="override">
-                                Override old prices
-                                <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
-                                            style="fill: #777777">
-                                    <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
-                                </ng-md-icon>
-                            </md-checkbox>
+
+
+                        <div>
+
+                            <div layout="row" layout-align="space-between center">
+
+                                <div style="width: 240px">
+
+                                    <md-checkbox ng-model="vm.item.price_get_principal_prices">
+                                        Get Principal Prices
+                                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
+                                                    style="fill: #777777">
+                                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                                        </ng-md-icon>
+                                    </md-checkbox>
+
+                                </div>
+
+                                <div style="width: 240px">
+
+                                    <md-checkbox ng-model="vm.item.price_get_accrued_prices">
+                                        Get Accruals
+                                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
+                                                    style="fill: #777777">
+                                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                                        </ng-md-icon>
+                                    </md-checkbox>
+
+                                </div>
+
+                                <div style="width: 240px">
+
+                                    <md-checkbox ng-model="vm.item.price_get_fx_rates">
+                                        Get FX Rates
+                                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
+                                                    style="fill: #777777">
+                                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                                        </ng-md-icon>
+                                    </md-checkbox>
+
+                                </div>
+
+
+                            </div>
+
+                            <div layout="row" layout-align="space-between center">
+
+                                <div style="width: 240px">
+
+                                    <md-checkbox ng-model="vm.item.price_overwrite_principal_prices"
+                                                 aria-label="override">
+                                        Overwrite Principal Prices
+                                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
+                                                    style="fill: #777777">
+                                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                                        </ng-md-icon>
+                                    </md-checkbox>
+
+                                </div>
+
+                                <div style="width: 240px">
+
+                                    <md-checkbox ng-model="vm.item.price_overwrite_accrued_prices"
+                                                 aria-label="override">
+                                        Overwrite Accruals
+                                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
+                                                    style="fill: #777777">
+                                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                                        </ng-md-icon>
+                                    </md-checkbox>
+
+                                </div>
+
+                                <div style="width: 240px">
+
+                                    <md-checkbox ng-model="vm.item.price_overwrite_fx_rates" aria-label="override">
+                                        Overwrite FX Rates
+                                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
+                                                    style="fill: #777777">
+                                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                                        </ng-md-icon>
+                                    </md-checkbox>
+
+                                </div>
+
+                            </div>
+
                         </div>
+
+
                     </div>
 
                 </div>
@@ -219,7 +225,7 @@
 
             <div>
 
-                <h4>Filters</h4>
+                <h3>Filters</h3>
 
                 <div>
 
@@ -234,31 +240,90 @@
 
                 </div>
 
-                <!--<div>-->
-
-                    <!--<two-fields-multiselect ng-model="vm.instrument_filters"-->
-                                            <!--data-title="Instruments"-->
-                                            <!--data-items="vm.instruments"-->
-                                            <!--data-model="vm.item.instrument_filters"-->
-
-                                            <!--data-name-property="name"-->
-                                            <!--class="table-filter-input-container">-->
-                    <!--</two-fields-multiselect>-->
-
-                <!--</div>-->
-
                 <div>
 
-                    <two-fields-multiselect ng-model="vm.instrument_type_filters"
-                                            data-title="Instrument Types"
-                                            data-items="vm.instrument_types"
-                                            data-model="vm.item.instrument_type_filters"
+                    <two-fields-multiselect ng-model="vm.portfolio_filters"
+                                            data-title="Portfolios"
+                                            data-items="vm.portfolios"
+                                            data-model="vm.item.portfolio_filters"
 
                                             data-name-property="name"
                                             class="table-filter-input-container">
                     </two-fields-multiselect>
 
                 </div>
+
+
+                <div layout="row">
+
+                    <div style="width: 49%; border-right: 1px solid #ddd; padding: 0 10px;">
+
+                        <h4>Instruments</h4>
+
+
+                        <two-fields-multiselect ng-model="vm.instrument_type_filters"
+                                                data-title="Instrument Types"
+                                                data-items="vm.instrumentTypes"
+                                                data-model="vm.item.instrument_type_filters"
+
+                                                data-name-property="name"
+                                                class="table-filter-input-container">
+                        </two-fields-multiselect>
+
+                        <two-fields-multiselect ng-model="vm.instrument_pricing_scheme_filters"
+                                                data-title="Pricing Schemes"
+                                                data-items="vm.instrumentPricingSchemes"
+                                                data-model="vm.item.instrument_pricing_scheme_filters"
+
+                                                data-name-property="name"
+                                                class="table-filter-input-container">
+                        </two-fields-multiselect>
+
+                        <md-input-container class="md-block no-error-spacer m-0">
+                            <label>Pricing Condition</label>
+                            <md-select data-ng-model="vm.item.instrument_pricing_condition_filters" multiple="true">
+                                <md-option ng-value="3">
+                                    Run Valuation: Always
+                                </md-option>
+                                <md-option ng-value="2">
+                                    Run valuation: Open Position
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+
+
+                    </div>
+
+                    <div style="width: 49%; padding: 0 10px;">
+
+                        <h4>Currencies</h4>
+
+                        <two-fields-multiselect ng-model="vm.currency_pricing_scheme_filters"
+                                                data-title="Pricing Schemes"
+                                                data-items="vm.currencyPricingSchemes"
+                                                data-model="vm.item.currency_pricing_scheme_filters"
+
+                                                data-name-property="name"
+                                                class="table-filter-input-container">
+                        </two-fields-multiselect>
+
+                        <md-input-container class="md-block no-error-spacer m-0">
+                            <label>Pricing Condition</label>
+                            <md-select data-ng-model="vm.item.currency_pricing_condition_filters" multiple="true">
+                                <md-option ng-value="3">
+                                    Run Valuation: Always
+                                </md-option>
+                                <md-option ng-value="2">
+                                    Run valuation: Open Position
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+
+                    </div>
+
+
+                </div>
+
 
             </div>
 

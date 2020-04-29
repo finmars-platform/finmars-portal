@@ -21,6 +21,8 @@
             },
             link: function (scope, elem, attrs) {
 
+                console.log("gTableComponent.Link", scope, elem, attrs);
+
                 scope.additions = scope.evDataService.getAdditions();
                 scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
                 scope.components = scope.evDataService.getComponents();
@@ -30,6 +32,7 @@
 
                 scope.viewType = scope.evDataService.getViewType();
                 scope.viewSettings = scope.evDataService.getViewSettings(scope.viewType);
+
 
                 console.log('scope.components', scope.components);
 
@@ -66,28 +69,41 @@
                     scope.isRecon = true;
                 }
 
-                setTimeout(function () {
+                scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
+                scope.workareaWrapElem = elem[0].querySelector('.g-workarea-wrap');
 
-                    // wait until ng-class (.g-root-wrapper) will be applied
+                scope.rootWrapElem = document.querySelector('.g-wrapper.g-root-wrapper');  // we are looking for parent
 
-                    scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
-                    scope.workareaWrapElem = elem[0].querySelector('.g-workarea-wrap');
+                if (scope.isRootEntityViewer) {
 
-                    if (scope.isRootEntityViewer) {
-                        scope.rootWrapElem = elem[0].querySelector('.g-root-wrapper');
-                    } else {
-                        //scope.rootWrapElem = $(elem).parents('.g-root-wrapper');
-                        scope.rootWrapElem = document.querySelector('.g-root-wrapper');
-                    }
+                    // we took a local root wrapper = .g-wrapper
+                    // because there is a issue with ng-class, we can't set 'g-root-wrapper' before querying it from DOM
 
-                    if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
-                        var splitPanelHeight = elem.parents(".g-additions").height();
-                        scope.contentWrapElem.style.height = splitPanelHeight + 'px';
-                    }
+                    scope.rootWrapElem = elem[0].querySelector('.g-wrapper');
+                }
 
-                    scope.$apply();
+                if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
+                    var splitPanelHeight = elem.parents(".g-additions").height();
+                    scope.contentWrapElem.style.height = splitPanelHeight + 'px';
+                }
 
-                }, 0);
+                console.log('updateDomElementsReadyStatus. scope', scope);
+                console.log('groupTable.rootWrapElem', scope.rootWrapElem);
+                console.log('groupTable.contentWrapElem', scope.contentWrapElem);
+                console.log('groupTable.workareaWrapElem', scope.workareaWrapElem);
+
+                // IMPORTANT, that variable blocks child component rendering
+                // because child components require some elements that render in this component
+                // we need to query from DOM scope.rootWrapElem, scope.contentWrapElem,scope.workareaWrapElem
+                // Here how it looks like in 2 steps:
+                // 1) template create .g-wrapper, .g-content-wrap, .g-workarea-wrap' and we query them here
+                // 2) then we set domElemsAreReady to true, and child components start rendering and we pass queried elements to them
+                scope.domElemsAreReady = true;
+
+                // The point of this complexity is to remove extra
+                // setTimeout(function() {... scope.$apply()}, 0)
+                // That trigger $digest and everything start refreshing
+                // Slowdown really visible in dashboard
 
                 console.log('scope.additions', scope.additions);
 
@@ -198,6 +214,7 @@
                 };
 
                 scope.init = function () {
+
                     initEventListeners();
 
                     if (document.querySelector('body').classList.contains('filter-side-nav-collapsed')) {
@@ -209,7 +226,18 @@
 
                 scope.init();
 
-            }
+            },
+            // controller: function ($scope) {
+            //
+            //     $scope.domElemsAreReady = false;
+            //
+            //     console.log("gTableComponent.Controller", $scope);
+            //
+            //     this.$postLink = function () {
+            //         console.log("gTableComponent.PostLink", $scope);
+            //     }
+            //
+            // }
         }
     }
 

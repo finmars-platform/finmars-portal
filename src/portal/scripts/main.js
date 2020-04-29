@@ -89,17 +89,26 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
     document.title = metaService.getCurrentLocation($state);
 
-    if ('__PROJECT_ENV__' === 'development') {
+    // if ('__PROJECT_ENV__' === 'development') {
 
-        window.addEventListener('error', function (e) {
-            toastr.error(e.error);
-        });
+    window.addEventListener('error', function (e) {
+        toastr.error(e.error);
+    });
 
-    }
+    // }
 
     enableAccessHandler($transitions);
 
     $transitions.onSuccess({}, function (trans) {
+
+        var count_cached_requests = 0;
+
+        if (window.cached_requests) {
+            count_cached_requests = Object.keys(window.cached_requests).length;
+        }
+
+        window.cached_requests = {};
+        console.log('Clear Cached Requests. Total: ', count_cached_requests);
 
         var location = metaService.getCurrentLocation($state);
 
@@ -151,7 +160,7 @@ app.controller('DashboardConstructorReportViewerComponentDialogController', ['$s
 app.controller('DashboardConstructorReportViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerSplitPanelComponentDialogController')]);
 app.controller('DashboardConstructorReportViewerGrandTotalComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerGrandTotalComponentDialogController')]);
 app.controller('DashboardConstructorReportViewerMatrixComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerMatrixComponentDialogController')]);
-app.controller('DashboardConstructorReportViewerChartsComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/DashboardConstructorReportViewerChartsComponentDialogController')]);
+app.controller('DashboardConstructorReportViewerChartsComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerChartsComponentDialogController')]);
 
 app.controller('DashboardConstructorEntityViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerComponentDialogController')]);
 app.controller('DashboardConstructorEntityViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerSplitPanelComponentDialogController')]);
@@ -326,7 +335,7 @@ app.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams',
 app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
 app.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
-app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
+app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', 'contextData', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 app.controller('EntityViewerDeleteBulkDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', require('./app/controllers/entityViewer/entityViewerDeleteBulkDialogController')]);
 app.controller('EvAddEditValidationDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/evAddEditValidationDialogController')]);
@@ -488,6 +497,7 @@ app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirecti
 app.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);
 
 app.directive('progressCircular', [require('./app/directives/progressCircularDirective')]);
+app.directive('progressLinear', [require('./app/directives/progressLinearDirective')]);
 
 // Pages
 
@@ -510,6 +520,7 @@ app.controller('PricingSchedulePageController', ['$scope', '$mdDialog', require(
 app.controller('PricingProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingProcedurePageController')]);
 app.controller('PricingParentProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingParentProcedurePageController')]);
 app.controller('RunPricingProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/runPricingProcedurePageController')]);
+app.controller('RunPricingInstrumentDialog', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingInstrumentDialogController')]);
 
 
 app.controller('CurrencyPricingSchemeAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/currencyPricingSchemeAddDialogController')]);

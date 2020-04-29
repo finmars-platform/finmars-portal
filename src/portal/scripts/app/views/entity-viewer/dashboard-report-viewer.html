@@ -23,7 +23,11 @@
 
             <div data-ng-if="vm.componentData.type === 'report_viewer_grand_total'" class="height-100">
 
-                <div class="grand-total-title">{{vm.componentData.name}}</div>
+                <!--<div class="grand-total-title">{{vm.componentData.name}}</div>-->
+
+                <group-dashboard-filter style="display: none"
+                                        ev-data-service="vm.entityViewerDataService"
+                                        ev-event-service="vm.entityViewerEventService"></group-dashboard-filter>
 
                 <div data-ng-if="vm.grandTotalProcessing" class="text-center">
                     <i>Calculating</i>

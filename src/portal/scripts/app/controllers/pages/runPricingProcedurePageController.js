@@ -18,7 +18,15 @@
 
             pricingProcedureService.getList().then(function (data) {
 
-                vm.procedures = data.results;
+                vm.procedures = data.results.map(function (item) {
+
+                    item.user_price_date_from =  item.price_date_from_calculated;
+                    item.user_price_date_to =  item.price_date_to_calculated;
+
+                    return item
+                });
+
+                console.log('vm.procedures', vm.procedures);
 
                 vm.readyStatus.data = true;
 
@@ -29,7 +37,7 @@
 
         vm.executeProcedure = function ($event, item) {
 
-            console.log("Execute Procedure", item)
+            console.log("Execute Procedure", item);
 
             pricingProcedureService.runProcedure(item.id, item).then(function (data) {
 

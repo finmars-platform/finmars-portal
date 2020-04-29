@@ -118,13 +118,16 @@
             //item.report_currency_history_object = findEntityObject(report, 'item_currencies');
 
             if (item.strategy1) {
-                item.strategy1_object = findEntityObject(report, 'item_strategies1');
+                item.strategy1_object = findEntityObject(report, 'item_strategies1', item.strategy1);
+
+                console.log('Strategy injected')
+
             }
             if (item.strategy2) {
-                item.strategy2_object = findEntityObject(report, 'item_strategies2');
+                item.strategy2_object = findEntityObject(report, 'item_strategies2', item.strategy2);
             }
             if (item.strategy3) {
-                item.strategy3_object = findEntityObject(report, 'item_strategies3');
+                item.strategy3_object = findEntityObject(report, 'item_strategies3', item.strategy3);
             }
             if (item.strategy1_cash) {
                 item.strategy1_cash_object = findEntityObject(report, 'item_strategies1', item.strategy1_cash);
@@ -403,6 +406,9 @@
             'complex_transaction': 'transactions.complextransaction',
             'responsible': 'counterparties.responsible',
             'counterparty': 'counterparties.counterparty',
+            'strategy1': 'strategies.strategy1',
+            'strategy2': 'strategies.strategy2',
+            'strategy3': 'strategies.strategy3',
             'strategy1_cash': 'strategies.strategy1',
             'strategy1_position': 'strategies.strategy1',
             'strategy2_cash': 'strategies.strategy2',

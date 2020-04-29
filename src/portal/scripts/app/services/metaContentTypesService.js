@@ -312,6 +312,35 @@
             case 'ui.dashboardlayout':
                 result = 'Dashboard Layout';
                 break;
+            case 'reports.balancereportcustomfield':
+                result = 'Balance Report Custom Field';
+                break;
+            case 'integrations.instrumentdownloadscheme':
+                result = 'Instrument Download Scheme';
+                break;
+            case 'ui.instrumentuserfieldmodel':
+                result = 'Instrument User Field';
+                break;
+            case 'reference_tables.referencetable':
+                result = 'Reference Table';
+                break;
+            case 'pricing.pricingprocedure':
+                result = 'Pricing Procedure';
+                break;
+            case 'pricing.instrumentpricingscheme':
+                result = 'Instrument Pricing Scheme';
+                break;
+            case 'pricing.currencypricingscheme':
+                result = 'Currency Pricing Scheme';
+                break;
+            case 'schedules.pricingschedule':
+                result = 'Pricing Schedule';
+                break;
+            case 'integrations.pricingautomatedschedule':
+                result = 'Automated Schedule';
+                break;
+
+
 
         }
 

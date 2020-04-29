@@ -11,6 +11,8 @@
 
     module.exports = function ($scope, $mdDialog, options) {
 
+        console.log('selectLayoutDialogController.options', options);
+
         var vm = this;
 
         var layoutsToLoad = options.entityType;

@@ -144,8 +144,20 @@
           "content_type": "strategies.strategy3subgroup",
           "name": "Strategy 3 Subgroup",
           "firstElementExist": false
-        }
+        },
 
+
+        {
+          "content_type": "pricing.pricehistoryerror",
+          "name": "Price History Error",
+          "firstElementExist": false
+        },
+
+        {
+          "content_type": "pricing.currencyhistoryerror",
+          "name": "Currency History Error",
+          "firstElementExist": false
+        }
       ],
       "ui.reportlayout": [
         {

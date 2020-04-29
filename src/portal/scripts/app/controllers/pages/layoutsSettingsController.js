@@ -343,7 +343,8 @@
                 clickOutsideToClose: false,
                 locals: {
                     options: {
-                        layoutName: layout.name
+                        layoutName: layout.name,
+                        layoutUserCode: layout.user_code
                     }
                 }
 
@@ -352,6 +353,8 @@
                 if (res.status === 'agree') {
 
                     layout.name = res.data.name;
+                    layout.user_code = res.data.user_code;
+
                     uiService.updateListLayout(layout.id, layout).then(function () {
                         getLayoutsByEntity(layout.content_type).then(function () {
                             $scope.$apply();

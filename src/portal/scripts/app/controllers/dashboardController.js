@@ -12,6 +12,7 @@
 
     var dashboardEvents = require('../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
+    var metaHelper = require('../helpers/meta.helper');
 
     module.exports = function ($scope, $stateParams, $mdDialog) {
 
@@ -285,7 +286,8 @@
 
             componentBuildingTimeTimeout = setTimeout(function () {
 
-                var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
+                // var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
+                var statusesObject = metaHelper.recursiveDeepCopy(vm.dashboardDataService.getComponentStatusesAll());
 
                 if (statusesObject[compId] === dashboardComponentStatuses.PROCESSING || statusesObject[compId] === dashboardComponentStatuses.START) {
                     vm.dashboardDataService.setComponentStatus(compId, dashboardComponentStatuses.ERROR);
@@ -293,7 +295,8 @@
                     throw "id of defective dashboard component " + compId;
                 }
 
-            }, 8000);
+            // }, 8000);
+            }, 15000);
 
         };
 

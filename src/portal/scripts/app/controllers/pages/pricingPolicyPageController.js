@@ -82,6 +82,38 @@
 
         };
 
+        vm.deletePricingPolicy = function($event, item, $index){
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "<p>Are you sure you want to delete Pricing Policy <b>" + item.name + '</b>?</p><p>All Settings for instruments and currencies will be also deleted.</p>'
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    pricingPolicyService.deleteByKey(item.id).then(function (value) {
+                        vm.getList();
+                    })
+
+                }
+
+            })
+
+        };
+
         vm.init = function () {
 
             vm.getList();

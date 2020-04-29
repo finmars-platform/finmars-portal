@@ -19,7 +19,8 @@
                 targetEvent: ev,
                 locals: {
                     entityType: 'transaction',
-                    entityId: entityId
+                    entityId: entityId,
+                    contextData: {}
                 },
                 preserveScope: true,
                 autoWrap: true,

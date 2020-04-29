@@ -56,6 +56,38 @@
 
         };
 
+        vm.deleteProcedure = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure you want to delete Pricing Procedure <b>" + item.name + '</b>?'
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    pricingProcedureService.deleteByKey(item.id).then(function (data) {
+                        vm.getList();
+                    })
+
+                }
+
+            })
+
+        };
+
         vm.addProcedure = function ($event) {
 
             $mdDialog.show({

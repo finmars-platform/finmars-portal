@@ -246,6 +246,13 @@
                                                                          data-ng-class="{'disabled-btn': !group.objectPermissions.manage  && !vm.currentMember.is_admin}"
                                                                          ng-model="group.objectPermissions.view"></md-checkbox>
                                                         </div>
+
+                                                        <div data-ng-if="vm.entityType === 'instrument-type'">
+                                                            <md-button ng-click="vm.saveAndApplyPermissionsToInstrumentsByGroup($event, group)" class="md-raised">
+                                                                Save and Apply for All Instruments
+                                                            </md-button>
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                                 <md-divider></md-divider>
@@ -257,11 +264,11 @@
                                             <div data-ng-if="vm.entityType === 'account-type'">
 
                                                 <md-button ng-click="vm.recalculateAccountPermissions()" class="md-raised">
-                                                    Save and Recalculate Account Permissions
+                                                    Save and Apply for All Accounts and Groups
                                                 </md-button>
 
                                                 <md-button ng-click="vm.recalculateAccountWithTransactionPermissions()" class="md-raised">
-                                                    Save Recalculate Account Permissions and Transaction Permissions
+                                                    Save and Apply for All Accounts,Transactions and Groups
                                                 </md-button>
 
                                             </div>
@@ -269,14 +276,14 @@
                                             <div data-ng-if="vm.entityType === 'instrument-type'">
 
                                                 <md-button ng-click="vm.recalculateInstrumentsPermissions()" class="md-raised">
-                                                    Save and Recalculate Instruments Permissions
+                                                    Save and Apply for All Instruments and Groups
                                                 </md-button>
 
                                             </div>
 
                                             <md-button ng-click="vm.recalculatePermissions()" class="md-raised"
                                                        data-ng-if="vm.entityType === 'portfolio' || vm.entityType === 'account'">
-                                                Save and Recalculate Transaction Permissions
+                                                Save and Apply for All Transactions And Groups
                                             </md-button>
 
                                         </div>

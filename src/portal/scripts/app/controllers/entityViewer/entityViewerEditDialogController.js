@@ -31,9 +31,13 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
 
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
+    module.exports = function ($scope, $mdDialog, $state, entityType, entityId, contextData) {
 
         var vm = this;
+
+        console.log('contextData', contextData);
+
+        vm.contextData = contextData;
 
         vm.entityType = entityType;
         vm.entityId = entityId;
@@ -76,6 +80,8 @@
 
         vm.attributeTypesByValueTypes = {}; // need for pricing tab
 
+        vm.currencies = []; // need for instrument pricing tab;
+
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
         vm.rearrangeMdDialogActions = function () {
@@ -89,11 +95,13 @@
         };
 
         var getEntityAttrs = function () {
+
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
             vm.fixedFieldsAttributes = [];
             console.log("front validator vm.entityAttrs", vm.entityAttrs);
             var i, a;
             for (i = 0; i < keysOfFixedFieldsAttrs.length; i++) {
+
                 var attrKey = keysOfFixedFieldsAttrs[i];
 
                 if (!attrKey) {
@@ -103,6 +111,7 @@
                 } else {
 
                     for (a = 0; a < vm.entityAttrs.length; a++) {
+
                         if (vm.entityAttrs[a].key === attrKey) {
 
                             if (vm.entityAttrs[a]) {
@@ -121,6 +130,17 @@
 
         };
 
+        vm.getCurrencies = function(){
+
+            entityResolverService.getList('currency').then(function (data) {
+
+                vm.currencies = data.results;
+
+                $scope.$apply();
+
+            })
+
+        };
 
         /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
@@ -326,6 +346,7 @@
             var promises = [];
 
             promises.push(vm.getCurrentMember());
+            promises.push(vm.getCurrentMasterUser());
             promises.push(vm.getGroupList());
 
             Promise.all(promises).then(function (data) {
@@ -392,6 +413,20 @@
 
                 });
             });
+
+        };
+
+        vm.getCurrentMasterUser = function() {
+
+            return usersService.getCurrentMasterUser().then(function (data) {
+
+                vm.currentMasterUser = data;
+                vm.system_currency = data.system_currency;
+                vm.systemCurrencies = [data.system_currency_object];
+
+                $scope.$apply();
+
+            })
 
         };
 
@@ -935,7 +970,7 @@
                             $mdDialog.hide({res: 'agree', data: data});
                         }
 
-                    }).catch(function(data) {
+                    }).catch(function (data) {
                         vm.handleErrors(data);
                     });
 
@@ -1057,7 +1092,6 @@
 
                                 if (field.attribute.key === userField.key) {
 
-                                    console.log('here?', field);
 
                                     if (!field.options) {
                                         field.options = {};
@@ -1230,7 +1264,6 @@
 
         vm.recalculateInstrumentsPermissions = function ($event) {
 
-
             vm.updateItem().then(function (value) {
 
                 entityResolverService.getList('instrument', {pageSize: 1000}).then(function (data) {
@@ -1278,6 +1311,83 @@
 
             });
 
+
+        };
+
+        vm.saveAndApplyPermissionsToInstrumentsByGroup = function ($event, group) {
+
+            vm.updateItem().then(function (value) {
+
+                entityResolverService.getList('instrument', {pageSize: 1000}).then(function (data) {
+
+                    console.log('data', data);
+
+                    var has_view = group.objectPermissions.view;
+                    var has_change = group.objectPermissions.change;
+                    var has_manage = group.objectPermissions.manage;
+
+                    var instrumentsWithPermissions = data.results.map(function (item) {
+
+                        var permissions = item.object_permissions.filter(function (perm) {
+                            return perm.group !== group.id
+                        });
+
+                        if (has_view) {
+                            permissions.push({
+                                group: group.id,
+                                member: null,
+                                permission: 'view_instrument'
+                            });
+                        }
+
+                        if (has_change) {
+                            permissions.push({
+                                group: group.id,
+                                member: null,
+                                permission: 'change_instrument'
+                            });
+                        }
+
+                        if (has_manage) {
+                            permissions.push({
+                                group: group.id,
+                                member: null,
+                                permission: 'manage_instrument'
+                            });
+                        }
+
+                        return {
+                            id: item.id,
+                            object_permissions: permissions
+                        }
+
+                    });
+
+                    entityResolverService.updateBulk('instrument', instrumentsWithPermissions).then(function () {
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Instrument Permissions successfully updated"
+                                }
+                            }
+                        });
+
+                    });
+
+                });
+
+            });
 
         };
 
@@ -1384,15 +1494,9 @@
 
             vm.attributeTypesByValueTypes = {
 
-                10: [
-
-                ],
-                20: [
-
-                ],
-                40: [
-
-                ]
+                10: [],
+                20: [],
+                40: []
 
             };
 
@@ -1578,6 +1682,15 @@
 
             }
 
+
+            if (item.pricing_scheme_object && item.pricing_scheme_object.type_settings) {
+
+                item.data = item.pricing_scheme_object.type_settings.data;
+                item.attribute_key = item.pricing_scheme_object.type_settings.attribute_key;
+                item.default_value = item.pricing_scheme_object.type_settings.default_value;
+
+            }
+
             vm.entity.pricing_policies = vm.entity.pricing_policies.map(function (policy) {
 
                 if (policy.id === item.id) {
@@ -1620,12 +1733,66 @@
 
         };
 
+        vm.runPricingInstrument = function($event) {
+
+            var report_date = null;
+
+            if (vm.contextData) {
+                report_date = vm.contextData.report_date
+            }
+
+            $mdDialog.show({
+                controller: 'RunPricingInstrumentDialog as vm',
+                templateUrl: 'views/dialogs/pricing/run-pricing-instrument-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        instrument: vm.entity,
+                        report_date: report_date
+                    }
+
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: "Pricing Process Initialized."
+                            }
+                        }
+                    });
+
+                }
+
+            });
+
+        };
+
         vm.init = function () {
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
             }, 100);
 
             getEntityAttrs();
+            vm.getCurrencies();
 
             vm.getItem().then(function () {
                 getEntityStatus();

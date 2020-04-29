@@ -1,6 +1,9 @@
 /**
  * Created by szhitenev on 25.08.2016.
  */
+
+// DEPRECATED  SINCE 29.04.2020
+
 (function () {
 
     'use strict';
