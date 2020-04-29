@@ -1,4 +1,4 @@
-<div class="p-24">
+<div class="p-24 pricing-parent-procedure-page">
 
     <div data-ng-if="vm.readyStatus.procedures">
 
@@ -6,45 +6,81 @@
 
             <h4>Pricing Procedures</h4>
 
-            <div>
+            <div layout="row">
+                <div class="p-8 width-20">
+                    <b>Name</b>
+                </div>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th class="p-8">
-                            Name
-                        </th>
+                <div class="p-8 width-40">
+                    <b>Notes</b>
+                </div>
 
-                        <th class="p-8">
-                            Notes
-                        </th>
+                <div class="p-8 width-20">
+                    <b>Started</b>
+                </div>
 
-                        <th class="p-8">
-                            Started
-                        </th>
+                <div class="p-8 width-20">
+                    <b>Status</b>
+                </div>
 
-                        <th class="p-8">
-                            Status
-                        </th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr data-ng-repeat="item in vm.procedures">
-                        <td class="p-8">
+            </div>
+            <div layout="column">
+                <div data-ng-repeat="item in vm.procedures" layout="column">
+                    <div layout="row">
+                        <div class="p-8 width-20">
                             {{item.pricing_procedure_object.name}}
-                        </td>
-                        <td class="p-8">
+                        </div>
+                        <div class="p-8 width-40">
                             {{item.pricing_procedure_object.notes_for_users}}
-                        </td>
-                        <td class="p-8" data-ng-bind="item.created | date: 'yyyy/MM/dd HH:mm:ss'"></td>
-                        <td class="p-8">
+                        </div>
+                        <div class="p-8 width-20" data-ng-bind="item.created | date: 'yyyy/MM/dd HH:mm:ss'"></div>
+                        <div class="p-8 width-20">
                             {{item.progress_percent}}%
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
 
+                            <md-button data-ng-if="item.procedures.length"
+                                       class="md-raised pricing-procedure-show-more-btn"
+                                       data-ng-click="item.opened = !item.opened">
+
+                                <span data-ng-if="!item.opened">Show More</span>
+                                <span data-ng-if="item.opened">Show Less</span>
+
+                            </md-button>
+                        </div>
+                    </div>
+                    <div data-ng-if="item.opened" class="pricing-procedure-more-info-box">
+
+                        <div layout="column">
+
+                            <div layout="row">
+                                <div class="p-8 width-20"><b>Provider</b></div>
+                                <div class="p-8 width-60"><b>Action</b></div>
+                                <div class="p-8 width-20"><b>Status</b></div>
+                            </div>
+
+                            <div data-ng-repeat="procedure in item.procedures" layout="row">
+
+                                <div class="p-8 width-20">
+                                    <span data-ng-if="procedure.provider_verbose">{{procedure.provider_verbose}}</span>
+                                    <span data-ng-if="!procedure.provider_verbose">-</span>
+                                </div>
+                                <div class="p-8 width-60">
+                                    <span data-ng-if="procedure.action_verbose">{{procedure.action_verbose}}</span>
+                                    <span data-ng-if="!procedure.action_verbose">-</span>
+                                </div>
+                                <div class="p-8 width-20">
+
+                                    <span data-ng-if="procedure.status == 'I'">Init</span>
+                                    <span data-ng-if="procedure.status == 'D'">Done</span>
+                                    <span data-ng-if="procedure.status == 'P'">Processing</span>
+                                    <span data-ng-if="procedure.status == 'E'">Error</span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
