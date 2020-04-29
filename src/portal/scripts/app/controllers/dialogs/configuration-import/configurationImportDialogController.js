@@ -1088,6 +1088,10 @@
 
         vm.init = function () {
 
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.configImportDialogElemToResize');
+            }, 100);
+
             vm.sections = vm.file.body;
 
             vm.getCurrentMember();

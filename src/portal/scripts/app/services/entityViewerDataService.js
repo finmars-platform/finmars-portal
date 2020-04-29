@@ -996,7 +996,10 @@
                 delete listLayout.data.reportOptions.item_accounts;
 
             } else {
+
                 listLayout.data.pagination = getPagination();
+                listLayout.data.ev_options = getEntityViewerOptions();
+
             }
 
             return listLayout;
@@ -1054,7 +1057,25 @@
                 }
 
             } else {
+
                 setPagination(listLayout.data.pagination);
+
+                var entityViewerOptions = listLayout.data.ev_options;
+
+                if (!entityViewerOptions) {
+
+                    entityViewerOptions = {
+                        complex_transaction_filters: ['ignored', 'locked', 'partially_visible']
+                    }
+
+                } else if (!entityViewerOptions.complex_transaction_filters) {
+
+                    entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
+
+                }
+
+                setEntityViewerOptions(entityViewerOptions);
+
             }
 
             setColumns(listLayout.data.columns);

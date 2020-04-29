@@ -1,5 +1,10 @@
 (function () {
 
+    var metaService = require('../services/metaService');
+    var evHelperService = require('../services/entityViewerHelperService');
+
+    'use strict';
+
     var removeNullFields = function (item) {
 
         var i;
@@ -15,7 +20,9 @@
                 }
             }
         }
+
         return result;
+
     };
 
     var clearUnusedAttributeValues = function (attributes) {
@@ -77,7 +84,8 @@
             classifier: null,
             value_date: null,
             value_float: null,
-            value_string: null
+            value_string: null,
+            attribute_type_object: attr
         };
 
         if (attr['value_type'] === 10) {
@@ -119,12 +127,71 @@
         return entityAttr;
     };
 
-    var checkForNotNullRestriction = function (item, entityAttrs, attrs) {
+    var getLocationOfAttribute = function (attrKey, tabs, fixedFieldsAttrs, entityType) {
 
-        var i, e, b, a;
+        if (fixedFieldsAttrs.length &&
+            attrKey &&
+            fixedFieldsAttrs.indexOf(attrKey) > -1) {
+
+            return 'Top of dialog window.';
+
+        } else {
+
+            if (entityType === 'instrument' &&
+                attrKey === 'maturity_date') { // special case
+
+                return 'tab: EVENTS';
+
+            } else {
+
+                var i, a;
+                for (i = 0; i < tabs.length; i++) {
+
+                    var tab = tabs[i];
+
+                    for (a = 0; a < tab.layout.fields.length; a++) {
+
+                        var socket = tab.layout.fields[a];
+
+                        if (socket.type === 'field') {
+
+                            if (socket.attribute.hasOwnProperty('key')) {
+
+                                if (socket.attribute.key === attrKey) {
+                                    return 'tab: ' + tab.name.toUpperCase();
+                                }
+
+                            } else if (socket.attribute.hasOwnProperty('user_code')) {
+
+                                if (socket.attribute.user_code === attrKey) {
+                                    return 'tab: ' + tab.name.toUpperCase();
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return null;
+
+    };
+
+    /*var checkForNotNullRestriction = function (key, value, entityAttrs, attrsTypes) {
+
+        var fieldAttr = null;
+        /!*var i, e, b, a;
         var keys = Object.keys(item);
         var isValid = true;
+
         for (i = 0; i < keys.length; i = i + 1) {
+
             for (e = 0; e < entityAttrs.length; e = e + 1) {
                 if (keys[i] === entityAttrs[e].key) {
                     if (entityAttrs[e].options && entityAttrs[e].options.notNull === true) {
@@ -135,23 +202,123 @@
                 }
             }
 
-            for (a = 0; a < attrs.length; a = a + 1) {
-                if (keys[i] === attrs[a].name) {
-                    if (attrs[a].options && attrs[a].options.notNull === true) {
+            for (a = 0; a < attrsTypes.length; a = a + 1) {
+                if (keys[i] === attrsTypes[a].name) {
+                    if (attrsTypes[a].options && attrsTypes[a].options.notNull === true) {
                         if (item[keys[i]] === '' || item[keys[i]] == null || item[keys[i]] === undefined) {
                             isValid = false;
                         }
                     }
                 }
             }
+        }*!/
+
+        var a, e;
+
+        for (e = 0; e < entityAttrs.length; e = e + 1) {
+            if (key === entityAttrs[e].key) {
+                fieldAttr = entityAttrs[e];
+                /!*if (entityAttrs[e].options && entityAttrs[e].options.notNull === true) {
+                    if (value !== 0 && !value) {
+
+                        return {
+                            fieldName: entityAttrs[e].options.fieldName || entityAttrs[e].verbose_name || entityAttrs[e].name,
+                            message: 'Field should not be empty'
+                        }
+
+                    }
+                }*!/
+            }
         }
 
-        return isValid
+        if (!fieldAttr) {
+            for (a = 0; a < attrsTypes.length; a = a + 1) {
+                if (key === attrsTypes[a].user_code || key === attrsTypes[a].key) {
+                    fieldAttr = attrsTypes[a];
+                    /!*if (attrsTypes[a].options && attrsTypes[a].options.notNull === true) {
+                        if (value !== 0 && !value) {
+
+                            return {
+                                fieldName: attrsTypes[a].options.fieldName || attrsTypes[a].verbose_name || attrsTypes[a].name,
+                                message: 'Field should not be empty'
+                            }
+
+                        }
+                    }*!/
+                }
+            }
+        }
+
+        if (fieldAttr) {
+
+            if (fieldAttr.options && fieldAttr.options.notNull === true) {
+
+                if (value !== 0 && !value) {
+
+                    return {
+                        fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
+                        message: 'Field should not be empty'
+                    }
+
+                }
+
+            }
+
+        }
+
+        return false;
+
+    };*/
+
+    var checkForNotNullRestriction = function (key, value, attrData, tabs, fixedFieldsAttrs, entityType, errorsList) {
+
+        if (attrData.options && attrData.options.notNull === true) {
+
+            if (value !== 0 && !value) {
+
+                errorsList.push({
+                    location: getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType),
+                    fieldName: attrData.options.fieldName || attrData.verbose_name || attrData.name,
+                    message: 'Field should not be empty.'
+                })
+
+            }
+
+        }
+
+        //return false;
+
     };
 
-    var checkForNegNumsRestriction = function (item, entityAttrs, userInputs, layoutAttrs) {
+    var validateDateField = function (value, fieldAttr) {
 
-        var fieldsWithNegVal = [];
+        if (!value) {
+
+            value = null;
+
+        } else if (!moment(value, 'YYYY-MM-DD', true).isValid()) {
+
+            var errorObj = {
+                fieldName: fieldAttr.verbose_name || fieldAttr.name,
+                message: 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.'
+            };
+
+            if (fieldAttr.options && fieldAttr.options.fieldName) {
+                return {
+                    fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
+                    message: 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.'
+                }
+            }
+
+            return errorObj;
+
+        }
+
+    };
+
+    /*var checkForNegNumsRestriction = function (key, value, entityAttrs, attrsTypes, userInputs, layoutAttrs) {
+
+        /!*var fieldsWithNegVal = [];
 
         var i, e, a, b;
         var keys = Object.keys(item);
@@ -208,11 +375,288 @@
                 }
             }
 
+        }*!/
+        var i, a;
+
+        for (i = 0; i < entityAttrs.length; i++) {
+            if (key === entityAttrs[i].key) {
+                if (entityAttrs[i].options && entityAttrs[i].options.onlyPositive === true) {
+                    if (value === null || value === undefined) {
+
+                        return {
+                            fieldName: entityAttrs[i].options.fieldName || entityAttrs[i].verbose_name || entityAttrs[i].name,
+                            message: 'Field should have positive number'
+                        }
+
+                    }
+                }
+            }
         }
 
-        return fieldsWithNegVal;
+        for (a = 0; a < userInputs.length; a = a + 1) {
+            if (key === userInputs[a].name) {
+                if (userInputs[a].options && userInputs[a].options.onlyPositive === true) {
+                    if (value === null || value === undefined) {
+
+                        return {
+                            fieldName: userInputs[a].options.fieldName || userInputs[a].verbose_name || userInputs[a].name,
+                            message: 'Field should have positive number'
+                        }
+
+                    }
+                }
+            }
+        }
+
+        /!*for (b = 0; b < layoutAttrs.length; b = b + 1) {
+            if (key === layoutAttrs[b].name) {
+                if (layoutAttrs[b].options && layoutAttrs[b].options.onlyPositive === true) {
+                    if (value === null || value === undefined) {
+
+                        return {
+                            fieldName: layoutAttrs[b].options.fieldName || layoutAttrs[b].verbose_name || layoutAttrs[b].name,
+                            message: 'Field should have positive number'
+                        }
+
+                    }
+                }
+            }
+        }*!/
+
+        return false;
+    };*/
+
+    var checkForNegNumsRestriction = function (key, value, attrData, tabs, fixedFieldsAttrs, entityType, errorsList) {
+
+        if (attrData.options && attrData.options.onlyPositive === true) {
+            if (value === null || value === undefined) {
+
+                errorsList.push({
+                    location: getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType),
+                    fieldName: attrData.options.fieldName || attrData.verbose_name || attrData.name,
+                    message: 'Field should have positive number'
+                })
+
+            }
+        }
+        //return false;
     };
 
+    var validateRequiredEntityFields = function (key, value, requiredAttrs, entityAttrs) {
+
+        for (var i = 0; i < entityAttrs.length; i++) {
+
+            if (key === entityAttrs[i].key) {
+
+                var errorObj = null;
+
+                if (!value && value !== 0) {
+
+                    errorObj = {
+                        message: 'Field should not be empty'
+                    };
+
+                } else if (entityAttrs[i].value_type === 40) {
+
+                    if (!moment(value, 'YYYY-MM-DD', true).isValid()) {
+
+                        errorObj = {
+                            message: 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.'
+                        };
+
+                    }
+
+                }
+
+                if (errorObj) {
+
+                    if (entityAttrs[i].options && entityAttrs[i].options.fieldName) {
+
+                        errorObj.fieldName = entityAttrs[i].options.fieldName;
+
+                    } else if (entityAttrs[i].verbose_name) {
+                        errorObj.fieldName = entityAttrs[i].verbose_name;
+                    } else {
+                        errorObj.fieldName = entityAttrs[i].name;
+                    }
+
+                    return errorObj;
+
+                }
+
+            }
+
+        }
+
+        return false;
+
+    };
+
+    var validateEvField = function (key, fieldValue, attr, tabs, fixedFieldsAttrs, entityType, errorsList) {
+
+        if ((attr.attribute_type_object && attr.attribute_type_object.value_type === 40) ||
+            attr.value_type === 40) {
+
+            var dateFieldError = validateDateField(fieldValue, attr);
+            if (dateFieldError) {
+                dateFieldError.location = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
+                errorsList.push(dateFieldError);
+            }
+
+        } else {
+
+            checkForNotNullRestriction(key, fieldValue, attr, tabs, fixedFieldsAttrs, entityType, errorsList);
+            checkForNegNumsRestriction(key, fieldValue, attr, tabs, fixedFieldsAttrs, entityType, errorsList);
+
+        }
+
+    };
+
+    var validateEntityFields = function (item, entityType, tabs, fixedFieldsAttrs, entityAttrs, attrsTypes) {
+
+        var dynamicAttrs = item.attributes;
+        var requiredAttrs = metaService.getRequiredEntityAttrs(entityType);
+        var errors = [];
+
+        entityAttrs.forEach(function (entityAttr) {
+
+            var key = entityAttr.key;
+            var fieldValue = item[key];
+
+            if (requiredAttrs.indexOf(key) > -1) {
+
+                var reqFieldError = validateRequiredEntityFields(key, fieldValue, requiredAttrs, entityAttrs);
+
+                if (reqFieldError) {
+
+                    reqFieldError.location = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
+                    errors.push(reqFieldError);
+
+                }
+
+            } else {
+
+                validateEvField(key, fieldValue, entityAttr, tabs, fixedFieldsAttrs, entityType, errors);
+
+            }
+
+        });
+
+        if (dynamicAttrs && dynamicAttrs.length) {
+
+            dynamicAttrs.forEach(function (dAttrData) {
+
+                var key = dAttrData.attribute_type_object.user_code;
+                var fieldValue = evHelperService.getDynamicAttrValue(dAttrData);
+                var attrType;
+
+                for (var i = 0; i < attrsTypes.length; i++) {
+
+                    if (attrsTypes[i].user_code === key) {
+                        attrType = attrsTypes[i];
+                    }
+
+                }
+
+                if (attrType) {
+                    validateEvField(key, fieldValue, attrType, tabs, fixedFieldsAttrs, entityType, errors);
+                }
+
+            });
+
+        }
+
+        return errors;
+
+    };
+
+    var validateComplexTransactionUserInput = function (userInput, fieldValue, transactionsTypeActions, tabs, errorsList) {
+
+        validateEvField(userInput.name, fieldValue, userInput, tabs, [], 'complex-transaction', errorsList);
+
+        if (!userInput.options || !userInput.options.notNull) { // fields of user inputs that are used inside of actions should be filled
+
+            var i, a;
+            for (i = 0; i < transactionsTypeActions.length; i++) {
+
+                var action = transactionsTypeActions[i];
+                var actionKeys = Object.keys(action);
+
+                for (a = 0; a < actionKeys.length; a++) {
+
+                    var aKey = actionKeys[a];
+
+                    if (action[aKey] && typeof action[aKey] === 'object') {
+
+                        var actionItem = action[aKey];
+                        var actionItemKeys = Object.keys(actionItem);
+
+                        actionItemKeys.forEach(function (aItemKey) {
+
+                            if (aItemKey.indexOf('_object') < 0 &&
+                                aItemKey.indexOf('_input') < 0 &&
+                                aItemKey.indexOf('_phantom') && aItemKey !== 'action_notes') {
+
+                                if ((aItemKey === 'notes' || !actionItem.hasOwnProperty(aItemKey + '_input')) &&
+                                    actionItem[aItemKey] && typeof actionItem[aItemKey] === 'string') {
+
+                                    var middleOfExpr = '[^A-Za-z_.]' + userInput.name + '(?![A-Za-z1-9_])';
+                                    var beginningOfExpr = '^' + userInput.name + '(?![A-Za-z1-9_])';
+
+                                    var inputRegExpObj = new RegExp(beginningOfExpr + '|' + middleOfExpr, 'g');
+
+                                    if (actionItem[aItemKey].match(inputRegExpObj) && !fieldValue) {
+
+                                        var errorObj = {
+                                            location: getLocationOfAttribute(userInput.name, tabs, []),
+                                            fieldName: userInput.verbose_name || userInput.name,
+                                            message: 'Field should not be empty.'
+                                        };
+
+                                        if (userInput.options && userInput.options.fieldName) {
+                                            errorObj.fieldName = userInput.options.fieldName;
+                                        }
+
+                                        errorsList.push(errorObj);
+
+                                    }
+
+                                }
+
+                            }
+
+                        });
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+    };
+
+    var validateComplexTransactionFields = function (item, transactionsTypeActions, tabs, entityAttrs, attrsTypes, userInputs) {
+
+        var errors = validateEntityFields(item, 'complex-transaction', tabs, [], entityAttrs, attrsTypes);
+
+        if (userInputs && userInputs.length) {
+
+            userInputs.forEach(function (uInput) {
+
+                var iName = uInput.name;
+                var fieldValue = item[iName];
+
+                validateComplexTransactionUserInput(uInput, fieldValue, transactionsTypeActions, tabs, errors);
+
+            });
+
+        }
+
+        return errors;
+    };
 
     var createFieldsTree = function (tabs) {
 
@@ -560,6 +1004,8 @@
         updateValue: updateValue,
         checkForNotNullRestriction: checkForNotNullRestriction,
         checkForNegNumsRestriction: checkForNegNumsRestriction,
+        validateEntityFields: validateEntityFields,
+        validateComplexTransactionFields: validateComplexTransactionFields,
 
         generateAttributesFromLayoutFields: generateAttributesFromLayoutFields,
         fixCustomTabs: fixCustomTabs

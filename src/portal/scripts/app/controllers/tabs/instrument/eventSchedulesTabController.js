@@ -45,9 +45,11 @@
             $scope.$apply();
         });
 
-        if (vm.entity.event_schedules) {
-            vm.readyStatus.eventSchedulesReady = true;
+        if (!vm.entity.event_schedules) {
+            vm.entity.event_schedules = [];
         }
+
+        vm.readyStatus.eventSchedulesReady = true;
 
         var getAttributeByKey = function (key) {
 

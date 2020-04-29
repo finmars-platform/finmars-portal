@@ -17,6 +17,10 @@
         return metaRepository.getEntityAttrs(entity);
     };
 
+    var getRequiredEntityAttrs = function (entityType) {
+        return metaRepository.getRequiredEntityAttrs(entityType);
+    };
+
     var getValueTypes = function () {
         return metaRepository.getValueTypes();
     };
@@ -378,6 +382,9 @@
                 case 'app.dashboard':
                     name = 'DASHBOARD';
                     break;
+                case 'app.dashboard-constructor':
+                    name = 'DASHBOARD CONSTRUCTOR';
+                    break;
 
                 case 'app.dashboard-layout-manager':
                     name = 'SETTINGS > DASHBOARD LAYOUTS';
@@ -522,6 +529,7 @@
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
+        getRequiredEntityAttrs: getRequiredEntityAttrs,
         getValueTypes: getValueTypes,
         getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
         getDynamicAttrsValueTypesCaptions: getDynamicAttrsValueTypesCaptions,

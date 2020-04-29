@@ -1,5 +1,7 @@
 (function() {
 
+    var evHelperService = require('../../services/entityViewerHelperService');
+
     'use strict';
 
     var convertToExcel = function () {
@@ -72,7 +74,7 @@
 
     };
 
-    var getEntityViewerDynamicAttrCellVal = function (flatListItem, column) {
+    /*var getEntityViewerDynamicAttrCellVal = function (flatListItem, column) {
 
         var daKey = column.key.slice(11);
         var cellValue = '';
@@ -110,7 +112,7 @@
         }
 
         return cellValue;
-    };
+    };*/
 
     var getReportViewerCellVal = function (flatListItem, column, columnOrder, numberOfGroups, proxylineGroupData) {
 
@@ -180,7 +182,8 @@
         } else if (flatListItem.hasOwnProperty('attributes') &&
             column.key.indexOf("attributes.") === 0) {  // for dynamic attributes
 
-            cellText = getEntityViewerDynamicAttrCellVal(flatListItem, column);
+            var daKey = column.key.slice(11);
+            cellText = evHelperService.getValueFromDynamicAttrsByUserCode(daKey, flatListItem.attributes);
 
             if (cellText || cellText === 0) {
 

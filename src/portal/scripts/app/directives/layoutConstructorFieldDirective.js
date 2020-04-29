@@ -409,6 +409,7 @@
                                 scope.tab.layout.fields[i].attribute = null;
                                 scope.tab.layout.fields[i].attribute_class = null;
                                 scope.tab.layout.fields[i].disabled = false;
+                                scope.tab.layout.fields[i].options = null;
                                 scope.tab.layout.fields[i].colspan = 1;
                                 scope.tab.layout.fields[i].name = '';
                                 scope.tab.layout.fields[i].backgroundColor = null;

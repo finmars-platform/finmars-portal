@@ -247,18 +247,15 @@
 
                     }
 
-
                     if (scope.item.buttons && scope.item.buttons.length > 0) {
 
                         buttonsCount = buttonsCount + scope.item.buttons.length;
 
                     }
 
-
                     if (buttonsCount > 0) {
                         styleValue = 'padding-right: ' + (buttonsCount * 34) + 'px; ';
                     }
-
 
                     // ----------------------- Background Color -----------------
 
@@ -414,6 +411,14 @@
                         var itemNumberValue = JSON.parse(JSON.stringify(scope.entity[scope.getModelKey()]));
                         scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
                     }
+                };
+
+                scope.onDateChange = function () {
+
+                    if (scope.entity[scope.getModelKey()] === "") {
+                        scope.entity[scope.getModelKey()] = null;
+                    }
+
                 };
 
                 scope.init = function () {
