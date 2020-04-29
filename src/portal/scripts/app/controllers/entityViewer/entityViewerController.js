@@ -23,9 +23,6 @@
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
         var middlewareService = require('../../services/middlewareService');
 
-        var currencyHistoryService = require('../../services/currencyHistoryService');
-
-
 
         module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog) {
 

@@ -170,10 +170,78 @@
 
     };
 
+    /**
+     * Get value of dynamic attribute by it's user_code
+     * @param {object} dAttrData - Data of dynamic attribute
+     * @memberOf module:EntityViewerHelperService
+     * @return {string|float|date} Return value of dynamic attribute
+     */
+    var getDynamicAttrValue = function (dAttrData) {
+
+        var attrVal;
+
+        if (dAttrData.attribute_type_object.value_type === 30) {
+
+            if (dAttrData.classifier_object) {
+                attrVal = dAttrData.classifier_object.name;
+            } else {
+                attrVal = '';
+            }
+
+        } else {
+
+            switch (dAttrData.attribute_type_object.value_type) {
+                case 10:
+                    attrVal = dAttrData.value_string;
+                    break;
+                case 20:
+                    attrVal = dAttrData.value_float;
+                    break;
+                case 40:
+                    attrVal = dAttrData.value_date;
+                    break;
+            }
+
+        }
+
+        return attrVal;
+
+    };
+
+    /**
+     * Get value of dynamic attribute by it's user_code
+     * @param {string} userCode - Dynamic attribute user code
+     * @param {array} dAttrsList - Array of objects with data of dynamic attribute
+     * @memberOf module:EntityViewerHelperService
+     * @return {string|float|date} Return value of dynamic attribute
+     */
+    var getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
+
+        var cellValue;
+
+        for (var da = 0; da < dAttrsList.length; da++) {
+            var dynamicAttributeData = dAttrsList[da];
+
+            if (dynamicAttributeData.attribute_type_object.user_code === userCode) {
+
+                cellValue = getDynamicAttrValue(dynamicAttributeData);
+                break;
+
+            }
+
+        }
+
+        return cellValue;
+
+    };
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
-        getTableAttrInFormOf: getTableAttrInFormOf
+        getTableAttrInFormOf: getTableAttrInFormOf,
+
+        getDynamicAttrValue: getDynamicAttrValue,
+        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode
     }
 
 }());

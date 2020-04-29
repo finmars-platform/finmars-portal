@@ -1,5 +1,9 @@
 (function () {
 
+    var evHelperService = require('../entityViewerHelperService');
+
+    'use strict';
+
     var getCellValueByKey = function (entityViewerDataService, key) {
 
         var data = entityViewerDataService.getUnfilteredFlatList();
@@ -13,7 +17,7 @@
 
                 var dynamicAttrKey = key.slice(11);
 
-                for (var da = 0; da < item.attributes.length; da++) {
+                /*for (var da = 0; da < item.attributes.length; da++) {
                     var dynamicAttributeData = item.attributes[da];
 
                     if (dynamicAttributeData.attribute_type_object.user_code === dynamicAttrKey) {
@@ -45,6 +49,11 @@
 
                     }
 
+                }*/
+                var cellVal = evHelperService.getValueFromDynamicAttrsByUserCode(dynamicAttrKey, item.attributes);
+
+                if (cellVal || cellVal === 0) {
+                    cellValue = cellVal;
                 }
 
             } else {

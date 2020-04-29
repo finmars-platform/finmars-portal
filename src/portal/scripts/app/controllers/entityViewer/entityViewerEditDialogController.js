@@ -91,7 +91,7 @@
         var getEntityAttrs = function () {
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
             vm.fixedFieldsAttributes = [];
-
+            console.log("front validator vm.entityAttrs", vm.entityAttrs);
             var i, a;
             for (i = 0; i < keysOfFixedFieldsAttrs.length; i++) {
                 var attrKey = keysOfFixedFieldsAttrs[i];
@@ -497,8 +497,10 @@
                     }
 
                 } else {
+
                     vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
                     vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
+
                 }
 
                 if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
@@ -903,11 +905,19 @@
 
             vm.updateEntityBeforeSave();
 
-            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
+            /*vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
 
-            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, [], vm.layoutAttrs);
+            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, [], vm.layoutAttrs);*/
 
-            if (vm.entity.$_isValid) {
+            var errors = entityEditorHelper.validateEntityFields(vm.entity,
+                                                                 vm.entityType,
+                                                                 vm.tabs,
+                                                                 keysOfFixedFieldsAttrs,
+                                                                 vm.entityAttrs,
+                                                                 vm.attributeTypes,
+                                                                 []);
+
+            /*if (vm.entity.$_isValid) {
 
                 if (hasProhibitNegNums.length === 0) {
 
@@ -960,6 +970,41 @@
                     });
 
                 }
+
+            }*/
+            if (errors.length) {
+
+                $mdDialog.show({
+                    controller: 'EvAddEditValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            errorsList: errors
+                        }
+                    }
+                })
+
+            } else {
+
+                var result = entityEditorHelper.removeNullFields(vm.entity);
+
+                if (dcLayoutHasBeenFixed) {
+                    uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+                }
+
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                    if (data.status === 400) {
+                        vm.handleErrors(data);
+                    } else {
+                        $mdDialog.hide({res: 'agree', data: data});
+                    }
+
+                }).catch(function(data) {
+                    vm.handleErrors(data);
+                });
 
             }
 

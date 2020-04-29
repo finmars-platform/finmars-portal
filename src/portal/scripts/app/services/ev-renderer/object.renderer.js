@@ -7,6 +7,7 @@
     var lock2Icon = renderHelper.getLock2Icon();
     var starIcon = renderHelper.getStarIcon();
     var cancelIcon = renderHelper.getCancelIcon();
+    var partiallyVisibleIcon = renderHelper.getPartiallyVisibleIcon();
 
     var getIcon = function (obj, currentMember, classList) {
 
@@ -16,6 +17,7 @@
 
             var hasChange = false;
             var hasManage = false;
+            var partVisible = false;
 
             result = lockIcon; // lock
 
@@ -31,18 +33,28 @@
                         hasManage = true
                     }
 
+                    if (perm.permission === 'view_complextransaction_show_parameters' ||
+                        perm.permission === 'view_complextransaction_hide_parameters') {
+                        partVisible = true;
+                    }
+
                 }
 
             });
 
             if (hasManage) {
-                result = starIcon
+                result = starIcon;
+
             } else if (hasChange) {
-                result = ''
+                result = '';
+
+            } else if (partVisible) {
+                result = partiallyVisibleIcon;
+
             }
 
             if (obj.___is_activated && result !== '') { // Be aware of specific mutation
-                classList.push('selected-blue')
+                classList.push('selected-blue');
             }
 
         }

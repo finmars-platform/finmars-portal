@@ -1,0 +1,71 @@
+<md-dialog aria-label="entity viewer validation errors"
+           class="import-entity-errors-dialog-view draggable-dialog dialog-actions-bottom evValidationDialogElemToResize"
+           style="width: 40%;"
+           drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Errors list</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content style="background: #E5E5E5;">
+
+        <md-content>
+
+            <md-card>
+
+                <md-card-content>
+                    <h3>Please see below the list of errors</h3>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Field name</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr data-ng-repeat="item in vm.errors track by $index">
+                                <td>
+                                    <span data-ng-if="!item.location">Field is not inside the form.</span>
+                                    <span data-ng-if="item.location" data-ng-bind="item.location"></span>
+                                </td>
+
+                                <td>
+                                    {{item.fieldName}}
+                                </td>
+
+                                <td>
+                                    <span data-ng-if="!item.message">Field should not be empty.</span>
+                                    <span data-ng-if="item.message" data-ng-bind="item.message"></span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </md-card-content>
+
+            </md-card>
+
+        </md-content>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right: 10px">
+            Close
+        </md-button>
+
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
+    </md-dialog-actions>
+</md-dialog>

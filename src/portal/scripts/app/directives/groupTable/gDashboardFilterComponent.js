@@ -612,7 +612,7 @@
                                     } else {
                                         scope.$apply();
                                         resolve(true);
-                                    };
+                                    }
 
                                 }).catch(function (error) {
                                     reject(error);

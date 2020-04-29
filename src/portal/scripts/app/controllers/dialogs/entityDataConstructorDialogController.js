@@ -1242,7 +1242,7 @@
                     if (field.attribute.hasOwnProperty('id')) {
 
                         field.attribute_class = 'attr';
-                        field.id = field.attribute.id;
+                        field.id = field.attribjute.id;
 
                     } else if (entityAttrsKeys.indexOf(field.attribute.key) !== -1) {
 

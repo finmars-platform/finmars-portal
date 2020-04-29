@@ -843,8 +843,64 @@
 
             vm.updateEntityBeforeSave();
 
-            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
-            console.log('vm.entity before save', vm.entity);
+            var errors = entityEditorHelper.validateEntityFields(vm.entity,
+                                                                 vm.entityType,
+                                                                 vm.tabs,
+                                                                 keysOfFixedFieldsAttrs,
+                                                                 vm.entityAttrs,
+                                                                 vm.attributeTypes,
+                                                                 []);
+
+            if (errors.length) {
+
+                $mdDialog.show({
+                    controller: 'EvAddEditValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            errorsList: errors
+                        }
+                    }
+                })
+
+            } else {
+
+                var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+
+                console.log('resultEntity', resultEntity);
+
+                if (dcLayoutHasBeenFixed) {
+                    uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+                }
+
+                entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
+
+                    $mdDialog.hide({res: 'agree', data: data});
+
+                }).catch(function (data) {
+
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        parent: angular.element(document.body),
+                        multiple: true,
+                        locals: {
+                            validationData: {
+                                errorData: data,
+                                tableColumnsNames: ['Name of fields', 'Error Cause']
+                            },
+
+                        }
+                    })
+
+                });
+
+            }
+
+            /*vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
 
             var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, [], vm.layoutAttrs);
 
@@ -915,7 +971,7 @@
 
                 }
 
-            }
+            }*/
 
         };
 
@@ -1089,8 +1145,6 @@
 
         };
 
-
-
         vm.getEntityPricingSchemes = function () {
 
             if (vm.entityType === 'currency') {
@@ -1152,9 +1206,6 @@
             } else {
                 vm.loadPermissions();
             }
-
-
-
 
         };
 

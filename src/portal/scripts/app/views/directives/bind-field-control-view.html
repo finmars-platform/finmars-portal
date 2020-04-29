@@ -177,6 +177,7 @@
             <label data-ng-bind="getName()"></label>
             <zh-date-picker data-date-value="entity[getModelKey()]"
                             ng-class="{'disabled-btn': isDisabled}"
+                            data-callback-method="onDateChange()"
                             style="{{inputBackgroundColor()}}"></zh-date-picker>
             <div class="bind-field-buttons-block">
                 <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayMinus"
@@ -244,6 +245,7 @@
             </div>
         </div>
     </div>
+
     <div data-ng-if="fieldType['display_name'] === 'Decoration'" class="ec-decoration-container">
         <span class="ec-decoration line"
               data-ng-if="!item.options.labelText"

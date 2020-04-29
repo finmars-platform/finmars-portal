@@ -319,7 +319,7 @@
 
         vm.getFormLayout = function () {
 
-            return new Promise(function (resolve, rejec) {
+            return new Promise(function (resolve, reject) {
 
 
                 vm.readyStatus.layout = false;
@@ -912,136 +912,128 @@
 
             vm.updateEntityBeforeSave();
 
-            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+            /*vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
-            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
+            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);*/
 
-            if (vm.entity.$_isValid) {
+            /*var errors = entityEditorHelper.validateEntityFields(vm.entity,
+                                                                 vm.entityType,
+                                                                 vm.tabs,
+                                                                 [],
+                                                                 vm.entityAttrs,
+                                                                 vm.attrs,
+                                                                 vm.userInputs);*/
 
-                if (hasProhibitNegNums.length === 0) {
+            var errors = entityEditorHelper.validateComplexTransactionFields(vm.entity,
+                                                                             vm.transactionType.actions,
+                                                                             vm.tabs,
+                                                                             vm.entityAttrs,
+                                                                             vm.attrs,
+                                                                             vm.userInputs);
 
-                    // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
-                    var resultEntity = vm.entity;
+            if (errors.length) {
 
-                    resultEntity.values = {};
-
-                    vm.userInputs.forEach(function (userInput) {
-
-                        if (userInput !== null) {
-                            var keys = Object.keys(vm.entity);
-                            keys.forEach(function (key) {
-                                if (key === userInput.name) {
-                                    resultEntity.values[userInput.name] = vm.entity[userInput.name];
-                                }
-                            });
+                $mdDialog.show({
+                    controller: 'EvAddEditValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            errorsList: errors
                         }
-                    });
+                    }
+                })
 
-                    resultEntity.store = true;
-                    resultEntity.calculate = true;
+            } else {
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                var resultEntity = vm.entity;
 
-                    console.log('resultEntity', resultEntity);
+                resultEntity.values = {};
 
-                    new Promise(function (resolve, reject) {
+                vm.userInputs.forEach(function (userInput) {
 
-                        transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type, {}).then(function (data) {
-
-                            var res = Object.assign(data, resultEntity);
-
-                            res.complex_transaction.is_locked = resultEntity.is_locked;
-                            res.complex_transaction.is_canceled = resultEntity.is_canceled;
-
-                            if (dcLayoutHasBeenFixed) {
-                                uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
+                    if (userInput !== null) {
+                        var keys = Object.keys(vm.entity);
+                        keys.forEach(function (key) {
+                            if (key === userInput.name) {
+                                resultEntity.values[userInput.name] = vm.entity[userInput.name];
                             }
-
-                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
-                                resolve(data);
-                            }).catch(function (data) {
-
-                                $mdDialog.show({
-                                    controller: 'ValidationDialogController as vm',
-                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                    targetEvent: $event,
-                                    parent: angular.element(document.body),
-                                    multiple: true,
-                                    locals: {
-                                        validationData: {
-                                            errorData: data,
-                                            tableColumnsNames: ['Name of fields', 'Error Cause'],
-                                            entityType: 'complex-transaction'
-                                        }
-                                    }
-                                });
-
-                                reject(data);
-
-                            });
-
                         });
+                    }
+                });
 
-                    }).then(function (data) {
+                resultEntity.store = true;
+                resultEntity.calculate = true;
 
-                        if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+                console.log('resultEntity', resultEntity);
+
+                new Promise(function (resolve, reject) {
+
+                    transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type, {}).then(function (data) {
+
+                        var res = Object.assign(data, resultEntity);
+
+                        res.complex_transaction.is_locked = resultEntity.is_locked;
+                        res.complex_transaction.is_canceled = resultEntity.is_canceled;
+
+                        if (dcLayoutHasBeenFixed) {
+                            uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
+                        }
+
+                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                            resolve(data);
+
+                        }).catch(function (data) {
 
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
                                 targetEvent: $event,
+                                parent: angular.element(document.body),
+                                multiple: true,
                                 locals: {
                                     validationData: {
                                         errorData: data,
                                         tableColumnsNames: ['Name of fields', 'Error Cause'],
                                         entityType: 'complex-transaction'
                                     }
-                                },
-                                multiple: true,
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true
-                            })
+                                }
+                            });
 
-                        } else {
+                            reject(data);
 
-                            $mdDialog.hide({res: 'agree', data: data});
-
-                        }
-
-
-                    })
-
-                } else {
-
-                    var warningDescription = '<p>Next fields should have positive number value to proceed:';
-
-                    hasProhibitNegNums.forEach(function (field) {
-                        warningDescription = warningDescription + '<br>' + field;
-                    });
-
-                    warningDescription = warningDescription + '</p>';
-
-                    $mdDialog.show({
-                        controller: "WarningDialogController as vm",
-                        templateUrl: "views/warning-dialog-view.html",
-                        multiple: true,
-                        clickOutsideToClose: false,
-                        locals: {
-                            warning: {
-                                title: "Warning",
-                                description: warningDescription,
-                                actionsButtons: [
-                                    {
-                                        name: "CLOSE",
-                                        response: {status: 'disagree'}
-                                    }
-                                ]
-                            }
-                        }
+                        });
 
                     });
 
-                }
+                }).then(function (data) {
 
+                    if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: {
+                                    errorData: data,
+                                    tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                    entityType: 'complex-transaction'
+                                }
+                            },
+                            multiple: true
+                        })
+
+                    } else {
+
+                        $mdDialog.hide({res: 'agree', data: data});
+
+                    }
+
+
+                })
             }
 
         };
