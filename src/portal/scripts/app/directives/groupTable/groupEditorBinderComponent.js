@@ -87,7 +87,8 @@
                                     '$mdDialog': $mdDialog,
                                     '$state': $state,
                                     'entityType': entityType,
-                                    'entityId': scope.activeObject.id
+                                    'entityId': scope.activeObject.id,
+                                    'contextData': {}
                                 });
 
                                 container.html(tpl);
