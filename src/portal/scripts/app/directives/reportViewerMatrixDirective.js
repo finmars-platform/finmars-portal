@@ -72,6 +72,10 @@
                     var minWidth = 100;
                     //var minHeight = 20;
 
+                    var matrixHolderMinHeight = elem[0].querySelector('.report-viewer-matrix').clientHeight;
+
+                    console.log('matrixHolderMinHeight', matrixHolderMinHeight);
+
                     cellWidth = Math.floor(elemWidth / columnsCount);
                     //var cellHeight = Math.floor(elemHeight / rowsCount);
                     var cellHeight = 25;
@@ -125,6 +129,8 @@
 
                     if (matrixProbableHeight < matrixHolder.clientHeight) {
                         matrixHolder.style.height = matrixProbableHeight + 'px';
+                    } else {
+                        matrixHolder.style.height = matrixHolderMinHeight + 'px';
                     }
 
                     rvMatrixValueRowsHolder.style.width = matrixVCContainerWidth + 'px';
@@ -448,6 +454,24 @@
                         initMatrixMethods();
 
                     });
+
+                    scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
+
+                        console.log("Align Grid");
+
+                        scope.alignGrid();
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS, function () {
+
+                        console.log("Align Grid");
+
+                        scope.alignGrid();
+
+
+                    });
+
 
                     window.addEventListener('resize', scope.alignGrid);
 

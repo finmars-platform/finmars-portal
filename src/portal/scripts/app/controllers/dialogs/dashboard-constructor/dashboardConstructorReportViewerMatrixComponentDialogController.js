@@ -110,6 +110,7 @@
             vm.item.user_settings = {};
 
             vm.getAttributes();
+            vm.getLayouts();
 
         };
 
@@ -225,6 +226,27 @@
                 }
 
             });
+
+            vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control';
+            });
+
+            vm.dateControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' && componentType.settings.value_type === 40
+            });
+
+            vm.currencyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' &&
+                    componentType.settings.value_type === 100 &&
+                    componentType.settings.content_type === 'currencies.currency'
+            });
+
+            vm.pricingPolicyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' &&
+                    componentType.settings.value_type === 100 &&
+                    componentType.settings.content_type === 'instruments.pricingpolicy'
+            });
+
 
             console.log('vm', vm);
 

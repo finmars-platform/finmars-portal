@@ -948,7 +948,23 @@
 
                         setLayout(spLayoutData);
 
-                    });
+                    }).catch(function (reason) {
+
+                        uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
+
+                            var defaultLayout = null;
+                            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+
+                                defaultLayout = defaultLayoutData.results[0];
+                                middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
+
+                            }
+
+                            setLayout(defaultLayout);
+
+                        });
+
+                    })
 
                 } else {
 

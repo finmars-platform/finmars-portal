@@ -1,7 +1,11 @@
+<!-- .g-content-wrap -->
+<!-- .g-workarea-wrap -->
+<!-- .g-root-wrapper -->
+
 <div class="g-wrapper position-relative" data-ng-class="{'g-root-wrapper': isRootEntityViewer, 'g-reconciliation-wrapper': isRecon}">
 
     <div class="g-recon verticalSplitPanelWrapper"
-         data-ng-if="isRootEntityViewer && verticalAdditions.isOpen">
+         data-ng-if="isRootEntityViewer && verticalAdditions.isOpen && domElemsAreReady">
 
         <div group-width-aligner
              root-wrap-elem="rootWrapElem"
@@ -26,7 +30,7 @@
 
         <div class="g-workarea-wrap">
             <div class="g-workarea main-area"
-                 data-ng-if="contentWrapElem"
+                 data-ng-if="domElemsAreReady"
                  ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
@@ -109,7 +113,7 @@
 
         </div>
 
-        <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar">
+        <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar && domElemsAreReady">
             <div>
                 <div class="g-filter" id="filtersbag">
                     <group-sidebar-filter ev-data-service="evDataService"
@@ -132,28 +136,6 @@
         <div class="g-height-slider"></div>
 
         <div class="g-additions-workarea" data-ng-if="additions.type === 'editor'">
-
-            <!-- Delete if it won't be needed -->
-            <!--<div data-ng-if="activeObjectsCount > 1">
-                <div class="g-additions-editor-caption">
-                    Too many rows selected
-                </div>
-            </div>
-
-            <div data-ng-if="activeObjectsCount <= 1">
-
-                <div data-ng-show="!activeObject">
-                    <div class="g-additions-editor-caption">
-                        Select row to start
-                    </div>
-                </div>
-
-                <div data-ng-show="activeObject" class="min-height">
-                    <group-editor-binder ev-data-service="evDataService"
-                                         ev-event-service="evEventService"></group-editor-binder>
-                </div>
-
-            </div>-->
 
             <div class="height-100">
                 <group-editor-binder ev-data-service="evDataService"
@@ -195,14 +177,14 @@
         <div class="g-additions-workarea" data-ng-if="additions.type === 'reconciliation_match_editor'">
 
             <group-reconciliation-match-editor-binder class="display-block height-100" ev-data-service="evDataService"
-                                            ev-event-service="evEventService"
-                                            sp-exchange-service="spExchangeService"></group-reconciliation-match-editor-binder>
+                                                      ev-event-service="evEventService"
+                                                      sp-exchange-service="spExchangeService"></group-reconciliation-match-editor-binder>
 
         </div>
 
     </div>
 
-    <div ng-if="workareaWrapElem">
+    <div ng-if="domElemsAreReady">
 
         <div group-layout-resizer
              ev-data-service="evDataService"
@@ -211,4 +193,5 @@
              workarea-wrap-element="workareaWrapElem"></div>
 
     </div>
+
 </div>

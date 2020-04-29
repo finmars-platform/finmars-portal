@@ -103,6 +103,14 @@
                 "value_type": "field"
             },
             {
+                "key": "pricing_condition",
+                "name": "Pricing Condition",
+                "value_content_type": "instruments.pricingcondition",
+                "value_entity": "pricing-condition",
+                "code": "system_code",
+                "value_type": "field"
+            },
+            {
                 "key": "payment_size_detail",
                 "name": "Payment size detail",
                 "value_content_type": "instruments.paymentsizedetail",

@@ -295,7 +295,8 @@
                 skipHide: true,
                 locals: {
                     entityType: vm.entityType,
-                    entityId: itemId
+                    entityId: itemId,
+                    contextData: {}
                 }
             }).then(function (data) {
 

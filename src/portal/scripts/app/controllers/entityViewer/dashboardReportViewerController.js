@@ -59,6 +59,61 @@
                 fillInModeEnabled = true;
             }
 
+            vm.updateGrandTotalComponent = function(){
+
+                rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                vm.grandTotalProcessing = false;
+
+                console.log('Grand Total Status: Data is Loaded');
+
+                var rootGroup = vm.entityViewerDataService.getRootGroup();
+
+                var flatList = rvDataHelper.getFlatStructure(vm.entityViewerDataService);
+
+                console.log('Grand Total Status: rootGroup', rootGroup);
+                console.log('Grand Total Status: flatList', flatList);
+
+                var root = flatList[0];
+
+                var column_key = vm.componentData.settings.grand_total_column;
+
+                var val = root.subtotal[column_key];
+
+                vm.grandTotalNegative = false;
+
+                if (vm.componentData.settings.number_format) {
+
+                    if (vm.componentData.settings.number_format.negative_color_format_id === 1) {
+
+                        if (val % 1 === 0) { // check whether number is float or integer
+                            if (parseInt(val) < 0) {
+                                vm.grandTotalNegative = true
+                            }
+                        } else {
+                            if (parseFloat(val) < 0) {
+                                vm.grandTotalNegative = true
+                            }
+                        }
+                    }
+
+                    vm.grandTotalValue = renderHelper.formatValue({
+                        value: val
+                    }, {
+                        key: 'value',
+                        report_settings: vm.componentData.settings.number_format
+                    });
+
+                } else {
+                    vm.grandTotalValue = val
+                }
+
+                console.log('vm.grandTotalValue', vm.grandTotalValue);
+
+                // $scope.$apply();
+
+            };
+
             vm.setEventListeners = function () {
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
@@ -116,58 +171,14 @@
 
                 });
 
+
+
                 if (vm.componentData.type === 'report_viewer_grand_total') {
 
 
                     vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                        vm.grandTotalProcessing = false;
-
-                        console.log('Grand Total Status: Data is Loaded')
-
-                        var rootGroup = vm.entityViewerDataService.getRootGroup();
-
-                        var flatList = rvDataHelper.getFlatStructure(vm.entityViewerDataService);
-
-                        console.log('Grand Total Status: rootGroup', rootGroup);
-                        console.log('Grand Total Status: flatList', flatList);
-
-                        var root = flatList[0];
-
-                        var column_key = vm.componentData.settings.grand_total_column;
-
-                        var val = root.subtotal[column_key];
-
-                        vm.grandTotalNegative = false;
-
-                        if (vm.componentData.settings.number_format) {
-
-                            if (vm.componentData.settings.number_format.negative_color_format_id === 1) {
-
-                                if (val % 1 === 0) { // check whether number is float or integer
-                                    if (parseInt(val) < 0) {
-                                        vm.grandTotalNegative = true
-                                    }
-                                } else {
-                                    if (parseFloat(val) < 0) {
-                                        vm.grandTotalNegative = true
-                                    }
-                                }
-                            }
-
-                            vm.grandTotalValue = renderHelper.formatValue({
-                                value: val
-                            }, {
-                                key: 'value',
-                                report_settings: vm.componentData.settings.number_format
-                            });
-
-                        } else {
-                            vm.grandTotalValue = val
-                        }
-
-                        $scope.$apply();
-
+                        vm.updateGrandTotalComponent();
 
                     })
 
@@ -176,6 +187,10 @@
                 if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
 
                     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                        console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', vm.componentData.type);
+                        console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', gotActiveObjectFromLinkedComp);
+
                         var activeObject = vm.entityViewerDataService.getActiveObject();
 
                         if (!gotActiveObjectFromLinkedComp) {
@@ -207,8 +222,14 @@
 
                             }
 
+
                         } else {
                             gotActiveObjectFromLinkedComp = false;
+                        }
+
+                        if (vm.componentData.type === 'report_viewer_grand_total') {
+
+                            vm.updateGrandTotalComponent();
                         }
 
                     });
@@ -390,6 +411,8 @@
 
             vm.applyDashboardChanges = function () {
 
+                console.log('applyDashboardChanges.vm.componentData', vm.componentData)
+
                 if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                     vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
@@ -406,20 +429,24 @@
 
                         var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                        if (componentOutput) {
+                        if (componentOutput && componentOutput.data) {
 
                             var reportOptions = vm.entityViewerDataService.getReportOptions();
 
-                            console.log('reportOptions', reportOptions);
-                            console.log('componentOutput', componentOutput);
+                            // console.log('reportOptions', reportOptions);
+                            // console.log('componentOutput', componentOutput);
+                            //
+                            // console.log('reportOptions[property]', reportOptions[property]);
+                            // console.log('componentOutput.data.value', componentOutput.data.value);
 
-                            if (reportOptions[property] !== componentOutput.value) {
+                            if (reportOptions[property] !== componentOutput.data.value) {
 
-                                reportOptions[property] = componentOutput.value;
+                                reportOptions[property] = componentOutput.data.value;
 
                                 vm.entityViewerDataService.setReportOptions(reportOptions);
 
-                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 
                             }
 
@@ -581,6 +608,9 @@
 
                     vm.entityViewerDataService.setActiveObject(null);
                     vm.entityViewerDataService.setActiveObjectFromAbove(null);
+
+                    console.log('CLEARED ACTIVE OBJECT ', vm.entityViewerDataService.getActiveObject());
+                    console.log('CLEARED ACTIVE OBJECT FROM ABOVE ', vm.entityViewerDataService.getActiveObjectFromAbove());
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
 

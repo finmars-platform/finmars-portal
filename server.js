@@ -11,6 +11,21 @@ var app = express();
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/portal', express.static('dist'));
 
+app.use('/healthcheck', function (req, res) {
+
+    var data = {};
+
+    data['version'] = 1;
+    data['checks'] = {};
+    data['status'] = 'pass';
+    data['notes'] = '';
+    data['description'] = '';
+    data['output'] = '';
+
+    res.send(data)
+
+});
+
 // var proxyOptions = url.parse('https://dev.finmars.com');
 
 

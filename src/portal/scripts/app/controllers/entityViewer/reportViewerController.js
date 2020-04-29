@@ -56,7 +56,7 @@
 
             };
 
-            var getContextDataForComplexTransaction = function (reportOptions, activeObject) {
+            var getContextData = function (reportOptions, activeObject) {
 
                 var report_date = null;
                 var report_start_date = null;
@@ -400,6 +400,8 @@
                     console.log('actionData', actionData);
                     console.log('action', action);
 
+                    var contextData = getContextData(reportOptions, activeObject);
+
                     if (activeObject) {
 
                         if (action === 'edit_instrument') {
@@ -430,9 +432,13 @@
                                     vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
                                 }
                             });*/
+
+
+
                             var locals = {
                                 entityType: 'instrument',
-                                entityId: activeObject['instrument.id']
+                                entityId: activeObject['instrument.id'],
+                                contextData: contextData
                             };
 
                             editEntity(activeObject, locals);
@@ -468,7 +474,8 @@
                             });*/
                             var locals = {
                                 entityType: 'account',
-                                entityId: activeObject['account.id']
+                                entityId: activeObject['account.id'],
+                                contextData: contextData
                             };
 
                             editEntity(activeObject, locals);
@@ -505,7 +512,8 @@
                             });*/
                             var locals = {
                                 entityType: 'portfolio',
-                                entityId: activeObject['portfolio.id']
+                                entityId: activeObject['portfolio.id'],
+                                contextData: contextData
                             };
 
                             editEntity(activeObject, locals);
@@ -542,7 +550,8 @@
                             });*/
                             var locals = {
                                 entityType: 'currency',
-                                entityId: activeObject['currency.id']
+                                entityId: activeObject['currency.id'],
+                                contextData: contextData
                             };
 
                             editEntity(activeObject, locals);
@@ -579,7 +588,8 @@
                             });*/
                             var locals = {
                                 entityType: 'currency',
-                                entityId: activeObject['pricing_currency.id']
+                                entityId: activeObject['pricing_currency.id'],
+                                contextData: contextData
                             };
 
                             editEntity(activeObject, locals);
@@ -616,7 +626,8 @@
                             });*/
                             var locals = {
                                 entityType: 'currency',
-                                entityId: activeObject['accrued_currency.id']
+                                entityId: activeObject['accrued_currency.id'],
+                                contextData: contextData
                             };
 
                             editEntity(activeObject, locals);
@@ -666,7 +677,8 @@
                                     });*/
                                     var locals = {
                                         entityType: 'price-history',
-                                        entityId: item.id
+                                        entityId: item.id,
+                                        contextData: contextData
                                     };
 
                                     editEntity(activeObject, locals);
@@ -800,7 +812,8 @@
                                     });*/
                                     var locals = {
                                         entityType: 'currency-history',
-                                        entityId: item.id
+                                        entityId: item.id,
+                                        contextData: contextData
                                     };
 
                                     editEntity(activeObject, locals);
@@ -931,7 +944,8 @@
                                     });*/
                                     var locals = {
                                         entityType: 'currency-history',
-                                        entityId: item.id
+                                        entityId: item.id,
+                                        contextData: contextData
                                     };
 
                                     editEntity(activeObject, locals);
@@ -1071,7 +1085,8 @@
                                     });*/
                                     var locals = {
                                         entityType: 'currency-history',
-                                        entityId: item.id
+                                        entityId: item.id,
+                                        contextData: contextData
                                     };
 
                                     editEntity(activeObject, locals);
@@ -1329,7 +1344,7 @@
                                     content_type: "strategies.strategy3"
                                 };
                             }*/
-                            var contextData = getContextDataForComplexTransaction(reportOptions, activeObject);
+                            var contextData = getContextData(reportOptions, activeObject);
 
                             var entity = {
                                 contextData: contextData
@@ -1373,7 +1388,7 @@
 
                         if (action === 'book_transaction_specific') {
 
-                            var contextData = getContextDataForComplexTransaction(reportOptions, activeObject);
+                            var contextData = getContextData(reportOptions, activeObject);
 
                             var entity = {
                                 contextData: contextData

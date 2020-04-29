@@ -73,6 +73,8 @@
 
         vm.attributeTypesByValueTypes = {}; // need for pricing;
 
+        vm.currencies = []; // need for instrument pricing tab;
+
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
         var getEntityAttrs = function () {
@@ -104,6 +106,18 @@
 
                 }
             }
+
+        };
+
+        vm.getCurrencies = function(){
+
+            entityResolverService.getList('currency').then(function (data) {
+
+                vm.currencies = data.results;
+
+                $scope.$apply();
+
+            })
 
         };
 
@@ -315,6 +329,7 @@
             var promises = [];
 
             promises.push(vm.getCurrentMember());
+            promises.push(vm.getCurrentMasterUser());
             promises.push(vm.getGroupList());
 
             Promise.all(promises).then(function (data) {
@@ -337,6 +352,19 @@
                 $scope.$apply();
 
             });
+
+        };
+
+        vm.getCurrentMasterUser = function() {
+
+            return usersService.getCurrentMasterUser().then(function (data) {
+
+                vm.currentMasterUser = data;
+                vm.system_currency = data.system_currency;
+
+                $scope.$apply();
+
+            })
 
         };
 
@@ -654,6 +682,8 @@
                     vm.readyStatus.content = true;
                     vm.readyStatus.entity = true;
                     // vm.readyStatus.permissions = true;
+
+                    console.log("vm.entity", vm.entity);
 
                     $scope.$apply();
 
@@ -1199,7 +1229,7 @@
 
             getEntityAttrs();
             vm.getFormLayout();
-
+            vm.getCurrencies();
 
             if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
                 vm.readyStatus.permissions = true;

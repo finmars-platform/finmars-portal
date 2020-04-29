@@ -69,7 +69,9 @@
 
                     scope.components = scope.evDataService.getComponents();
 
-                    resizeWorkarea();
+                    setTimeout(function () {
+                        resizeWorkarea();
+                    }, 0);
 
                     window.addEventListener('resize', function () {
                         resizeWorkarea();

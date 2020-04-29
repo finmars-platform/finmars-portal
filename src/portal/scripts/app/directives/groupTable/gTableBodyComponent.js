@@ -30,13 +30,15 @@
             },
             template: '<div>' +
                 '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
-                '            <md-progress-linear class="ev-progressbar" md-mode="indeterminate"></md-progress-linear>\n' +
+                '            <progress-linear class="ev-progressbar"></progress-linear>\n' +
                 '        </div>' +
                 '<div class="ev-viewport">' +
                 '<div class="ev-content"></div>' +
                 '</div>' +
                 '</div>',
             link: function (scope, elem) {
+
+                console.log('gTableBodyComponent.rootWrapElement', scope.rootWrapElement);
 
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');

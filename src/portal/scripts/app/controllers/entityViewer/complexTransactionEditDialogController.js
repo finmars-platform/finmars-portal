@@ -585,7 +585,16 @@
 
                 $scope.$apply();
 
-            });
+            }).catch(function (reason) {
+
+                console.log("Something went wrong with recalculation");
+
+                vm.recalculating = false;
+                vm.readyStatus.layout = true;
+
+                $scope.$apply();
+
+            })
 
         };
 
@@ -707,7 +716,16 @@
 
                 $scope.$apply();
 
-            });
+            }).catch(function (reason) {
+
+                console.log("Something went wrong with recalculation");
+
+                vm.recalculating = false;
+                vm.readyStatus.layout = true;
+
+                $scope.$apply();
+
+            })
 
         };
 
@@ -769,7 +787,8 @@
                 multiple: true,
                 locals: {
                     entityType: 'transaction',
-                    entityId: item.id
+                    entityId: item.id,
+                    contextData: {}
                 }
             })
         };

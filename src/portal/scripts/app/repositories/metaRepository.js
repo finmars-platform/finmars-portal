@@ -201,11 +201,11 @@
                     {
                         label: 'Pricing',
                         templateUrl: 'views/tabs/currency/pricing-view.html'
-                    },
-                    {
-                        label: 'Pricing (Old)',
-                        templateUrl: 'views/tabs/currency/pricing-view-old.html'
                     }
+                    // {
+                    //     label: 'Pricing (Old)',
+                    //     templateUrl: 'views/tabs/currency/pricing-view-old.html'
+                    // }
                 ];
             case 'instrument':
                 return [
@@ -217,10 +217,10 @@
                         label: 'Events',
                         templateUrl: 'views/tabs/instrument/events-schedules-tab-view.html'
                     },
-                    {
-                        label: 'Pricing (old)',
-                        templateUrl: 'views/tabs/instrument/manual-pricing-formulas-view.html'
-                    },
+                    // {
+                    //     label: 'Pricing (old)',
+                    //     templateUrl: 'views/tabs/instrument/manual-pricing-formulas-view.html'
+                    // },
                     {
                         label: 'Factors',
                         templateUrl: 'views/tabs/instrument/factor-schedule-view.html'

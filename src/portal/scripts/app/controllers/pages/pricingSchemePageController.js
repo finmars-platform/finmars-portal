@@ -155,6 +155,70 @@
 
         };
 
+        vm.deleteCurrencyPricingScheme = function($event, item){
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "<p>Are you sure you want to delete Currency Pricing Scheme <b>" + item.name + '</b>?</p>'
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    currencyPricingSchemeService.deleteByKey(item.id).then(function (value) {
+                        vm.getCurrencyPricingSchemesList();
+                    })
+
+                }
+
+            })
+
+        };
+
+        vm.deleteInstrumentPricingScheme = function($event, item){
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "<p>Are you sure you want to delete Instrument Pricing Scheme <b>" + item.name + '</b>?</p>'
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    instrumentPricingSchemeService.deleteByKey(item.id).then(function (value) {
+                        vm.getInstrumentPricingSchemesList();
+                    })
+
+                }
+
+            })
+
+        };
+
         vm.getErrorHandler = function (item) {
 
             if (item.error_handler === 1) {

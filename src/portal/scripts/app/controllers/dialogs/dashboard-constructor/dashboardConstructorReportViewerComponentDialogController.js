@@ -14,6 +14,7 @@
         var vm = this;
 
         vm.newFilter = {};
+        vm.processing = false;
         vm.filterLinks = [];
 
         vm.componentsForMultiselector = [];
@@ -102,11 +103,14 @@
 
         vm.reportTypeChange = function(){
 
+            console.log("ReportTypeChange", vm.item.settings.entity_type);
+
             vm.item.settings.layout = null;
             vm.item.settings.linked_components= {};
             vm.item.user_settings = {};
 
             vm.getAttributes();
+            vm.getLayouts();
 
         };
 
@@ -121,12 +125,16 @@
 
         vm.getLayouts = function () {
 
+            vm.processing = true;
+
             uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
 
                 vm.layouts = data.results;
 
                 vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
                 vm.onRvLayoutChange();
+
+                vm.processing = false;
 
                 $scope.$apply();
 

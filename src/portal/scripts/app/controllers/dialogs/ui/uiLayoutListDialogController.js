@@ -92,7 +92,8 @@
                 clickOutsideToClose: false,
                 locals: {
                     options: {
-                        layoutName: layoutData.name
+                        layoutName: layoutData.name,
+                        layoutUserCode: layoutData.user_code
                     }
                 }
 
@@ -102,6 +103,8 @@
 
                     layoutData.name = res.data.name;
                     layout.name = res.data.name;
+                    layoutData.user_code = res.data.user_code;
+                    layot.user_code = res.data.user_code;
 
                     uiService.updateListLayout(layoutData.id, layoutData).then(function () {
 
