@@ -1,30 +1,53 @@
 <div>
 
-    <md-input-container class="md-block" style="width: 550px;">
-        <label>Pricing Condition</label>
-        <md-select md-on-close="vm.searchTermPricingCondition = ''"
-                   data-ng-model="vm.entity.pricing_condition"
-                   md-container-class="common-select-container">
-            <md-select-header>
-                <input data-ng-model="vm.searchTermPricingCondition"
-                       type="search"
-                       placeholder="Search for a ..."
-                       class="md-text md-select-search-pattern select-input-filter"
-                       ng-keydown="$event.stopPropagation()">
-            </md-select-header>
-            <div class="select-options-holder">
-                <md-option ng-value="1">
-                    Don't Run Valuation
-                </md-option>
-                <md-option ng-value="2">
-                    Run Valuation: if non-zero position
-                </md-option>
-                <md-option ng-value="3">
-                    Run Valuation: always
-                </md-option>
-            </div>
-        </md-select>
-    </md-input-container>
+    <div layout="row">
+
+        <md-input-container class="md-block disabled-btn" style="width: 200px;">
+            <label>System Currency</label>
+            <md-select data-ng-model="vm.system_currency"
+                       md-container-class="common-select-container">
+                <div class="select-options-holder">
+                    <md-option
+                            data-ng-repeat="item in vm.systemCurrencies track by item.id "
+                            ng-value="item.id">
+                        {{item.name}}
+                    </md-option>
+                </div>
+            </md-select>
+        </md-input-container>
+
+        <md-input-container class="md-block" style="width: 550px;">
+            <label>Pricing Condition</label>
+            <md-select md-on-close="vm.searchTermPricingCondition = ''"
+                       data-ng-model="vm.entity.pricing_condition"
+                       md-container-class="common-select-container">
+                <md-select-header>
+                    <input data-ng-model="vm.searchTermPricingCondition"
+                           type="search"
+                           placeholder="Search for a ..."
+                           class="md-text md-select-search-pattern select-input-filter"
+                           ng-keydown="$event.stopPropagation()">
+                </md-select-header>
+                <div class="select-options-holder">
+                    <md-option ng-value="1">
+                        Don't Run Valuation
+                    </md-option>
+                    <md-option ng-value="2">
+                        Run Valuation: if non-zero position
+                    </md-option>
+                    <md-option ng-value="3">
+                        Run Valuation: always
+                    </md-option>
+                </div>
+            </md-select>
+        </md-input-container>
+
+        <md-input-container style="width: 200px;">
+            <label for="">ID for FX Download</label>
+            <input type="text" data-ng-model="vm.entity.reference_for_pricing">
+        </md-input-container>
+
+    </div>
 
     <table>
 
@@ -79,8 +102,11 @@
 
             <td>
                 <md-input-container class="m-t-16">
-                    <md-select data-ng-model="item.pricing_scheme" data-ng-change="vm.pricingSchemeChange($event, item)">
-                        <md-option ng-value="scheme.id" data-ng-repeat="scheme in vm.currencyPricingSchemes">{{scheme.name}}</md-option>
+                    <md-select data-ng-model="item.pricing_scheme"
+                               data-ng-change="vm.pricingSchemeChange($event, item)">
+                        <md-option ng-value="scheme.id" data-ng-repeat="scheme in vm.currencyPricingSchemes">
+                            {{scheme.name}}
+                        </md-option>
                     </md-select>
                 </md-input-container>
             </td>
@@ -99,7 +125,8 @@
                     -
                 </div>
 
-                <div data-ng-if="item.pricing_scheme_object.type_object.input_type != 1" class="m-t-16" data-ng-init="item.default_value ? item.switchState = 'default_value' : item.switchState = 'attribute_key'">
+                <div data-ng-if="item.pricing_scheme_object.type_object.input_type != 1" class="m-t-16"
+                     data-ng-init="item.default_value ? item.switchState = 'default_value' : item.switchState = 'attribute_key'">
 
                     <div layout="row" data-ng-if="item.switchState == 'default_value'">
 
@@ -108,7 +135,9 @@
                             <input type="text" data-ng-model="item.default_value">
                         </md-input-container>
 
-                        <md-button class="md-raised md-primary" data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch</md-button>
+                        <md-button class="md-raised md-primary"
+                                   data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch
+                        </md-button>
 
                     </div>
 
@@ -117,11 +146,16 @@
                         <md-input-container class="m-t-16">
                             <label>Options</label>
                             <md-select data-ng-model="item.attribute_key">
-                                <md-option ng-value="attribute.user_code" data-ng-repeat="attribute in vm.attributeTypesByValueTypes[item.pricing_scheme_object.type_settings.value_type]">{{attribute.name}}</md-option>
+                                <md-option ng-value="attribute.user_code"
+                                           data-ng-repeat="attribute in vm.attributeTypesByValueTypes[item.pricing_scheme_object.type_settings.value_type]">
+                                    {{attribute.name}}
+                                </md-option>
                             </md-select>
                         </md-input-container>
 
-                        <md-button class="md-raised md-primary" data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch</md-button>
+                        <md-button class="md-raised md-primary"
+                                   data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch
+                        </md-button>
 
                     </div>
 
@@ -137,14 +171,18 @@
 
                 <div class="m-t-16" data-ng-if="item.pricing_scheme_object.type_object.input_type == 3">
 
-                    <md-button class="md-raised" data-ng-click="vm.openPricingMultipleParametersDialog($event, item)">...</md-button>
+                    <md-button class="md-raised" data-ng-click="vm.openPricingMultipleParametersDialog($event, item)">
+                        ...
+                    </md-button>
 
                 </div>
 
             </td>
 
             <td>
-                <md-button class="md-raised" data-ng-click="vm.editPricingScheme($event, item.pricing_scheme_object)">Edit</md-button>
+                <md-button class="md-raised" data-ng-click="vm.editPricingScheme($event, item.pricing_scheme_object)">
+                    Edit
+                </md-button>
             </td>
 
             <td>
