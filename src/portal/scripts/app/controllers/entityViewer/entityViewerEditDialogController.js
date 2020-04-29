@@ -31,9 +31,13 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
 
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
+    module.exports = function ($scope, $mdDialog, $state, entityType, entityId, contextData) {
 
         var vm = this;
+
+        console.log('contextData', contextData);
+
+        vm.contextData = contextData;
 
         vm.entityType = entityType;
         vm.entityId = entityId;
@@ -1043,7 +1047,6 @@
 
                                 if (field.attribute.key === userField.key) {
 
-                                    console.log('here?', field);
 
                                     if (!field.options) {
                                         field.options = {};
@@ -1682,6 +1685,59 @@
                 }
 
             })
+
+        };
+
+        vm.runPricingInstrument = function($event) {
+
+            var report_date = null;
+
+            if (vm.contextData) {
+                report_date = vm.contextData.report_date
+            }
+
+            $mdDialog.show({
+                controller: 'RunPricingInstrumentDialog as vm',
+                templateUrl: 'views/dialogs/pricing/run-pricing-instrument-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        instrument: vm.entity,
+                        report_date: report_date
+                    }
+
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: "Pricing Process Initialized."
+                            }
+                        }
+                    });
+
+                }
+
+            });
 
         };
 

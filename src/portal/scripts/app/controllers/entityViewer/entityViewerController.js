@@ -498,7 +498,8 @@
                                             //clickOutsideToClose: false,
                                             locals: {
                                                 entityType: entitytype,
-                                                entityId: activeObject.id
+                                                entityId: activeObject.id,
+                                                contextData: {}
                                             }
                                         }).then(function (res) {
 
@@ -568,7 +569,8 @@
                                     targetEvent: activeObject.event,
                                     locals: {
                                         entityType: 'instrument',
-                                        entityId: activeObject.instrument
+                                        entityId: activeObject.instrument,
+                                        contextData: {}
                                     }
                                 }).then(function (res) {
 

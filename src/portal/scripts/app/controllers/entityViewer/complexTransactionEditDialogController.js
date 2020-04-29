@@ -787,7 +787,8 @@
                 multiple: true,
                 locals: {
                     entityType: 'transaction',
-                    entityId: item.id
+                    entityId: item.id,
+                    contextData: {}
                 }
             })
         };
