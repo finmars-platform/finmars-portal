@@ -8,6 +8,7 @@
     </md-toolbar>
     <md-dialog-content>
         <div data-ng-if="vm.readyStatus" style="padding:20px">
+
             <two-fields-options data-all-options="vm.items"
                                 data-selected-options="vm.selectedItems"
                                 data-name-property="{{vm.nameProperty}}"></two-fields-options>
@@ -20,6 +21,6 @@
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
-        <md-button class="md-raised" data-ng-click="vm.agree()">Save</md-button>
+        <md-button class="md-raised" ng-class="{'disabled-btn': !vm.readyStatus}" data-ng-click="vm.agree()">Save</md-button>
     </md-dialog-actions>
 </md-dialog>

@@ -55,7 +55,7 @@
 
             getDataMethod().then(function (resData) {
 
-                vm.items = resData.results;
+                vm.items = JSON.parse(JSON.stringify(resData.results));
 
                 if (vm.items && selectedItems) {
                     separateUnselectedItems(vm.items, selectedItems);

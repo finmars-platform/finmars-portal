@@ -59,7 +59,7 @@
                 setTimeout(function () {
                     usersService.login('__LOGIN__', '__PASS__').then(function () {
                         console.log('after login', cookiesService.getCookie('csrftoken'));
-                        $scope.$apply();
+                        // $scope.$apply();
                     });
                 }, 1000);
             });

@@ -104,6 +104,30 @@
             .pipe(gulp.dest('dist/' + appName + '/scripts/'));
     });
 
+    gulp.task(appName + '-angular-dev-js-min', function () {
+
+        var pathToJS = [
+            'node_modules/angular/angular.js',
+            'node_modules/angular-animate/angular-animate.js',
+            'node_modules/angular-aria/angular-aria.js',
+            'node_modules/angular-messages/angular-messages.js',
+            'node_modules/angular-touch/angular-touch.js',
+            'node_modules/angular-resource/angular-resource.js',
+            'node_modules/angular-sanitize/angular-sanitize.js',
+            'node_modules/v-accordion/dist/v-accordion.js',
+            'node_modules/angular-paging/dist/paging.js',
+            'node_modules/angular-material/angular-material.js',
+            'node_modules/mdPickers/dist/mdPickers.js',
+            'node_modules/angular-material-icons/angular-material-icons.js'
+        ];
+
+        return gulp.src(pathToJS)
+            .pipe(concat('angular.js'))
+            // .pipe(uglify())
+            .pipe(rename('angular.min.js'))
+            .pipe(gulp.dest('dist/' + appName + '/scripts/'));
+    });
+
     gulp.task(appName + '-min-Angular-UI-JS', function () {
 
         var pathToJS = [
@@ -115,6 +139,20 @@
         return gulp.src(pathToJS)
             .pipe(concat('angular-ui.min.js'))
             .pipe(uglify())
+            .pipe(gulp.dest('dist/' + appName + '/scripts/'));
+    });
+
+    gulp.task(appName + '-min-dev-Angular-UI-JS', function () {
+
+        var pathToJS = [
+            'node_modules/angular-ui-router/release/angular-ui-router.js',
+            'node_modules/angular-ui-scroll/dist/ui-scroll.js',
+            'node_modules/ui-select/dist/select.js'
+        ];
+
+        return gulp.src(pathToJS)
+            .pipe(concat('angular-ui.min.js'))
+            // .pipe(uglify())
             .pipe(gulp.dest('dist/' + appName + '/scripts/'));
     });
 
