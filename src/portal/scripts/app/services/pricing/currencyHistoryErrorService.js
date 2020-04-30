@@ -21,12 +21,17 @@
         return currencyHistoryErrorRepository.deleteByKey(id);
     };
 
+    var deleteBulk = function(data) {
+        return currencyHistoryErrorRepository.deleteBulk(data)
+    };
+
     module.exports = {
 
         getList: getList,
         getByKey: getByKey,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        deleteBulk: deleteBulk
     }
 
 }());
