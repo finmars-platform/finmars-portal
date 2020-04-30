@@ -11,7 +11,7 @@
 
     module.exports = function ($scope, $mdDialog, evDataService, evEventService) {
 
-        logService.controller('EntityViewerDeleteDialogController', 'initialized');
+        logService.controller('EntityViewerDeleteBulkDialogController', 'initialized');
 
         var vm = this;
 

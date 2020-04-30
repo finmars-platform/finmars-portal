@@ -21,12 +21,18 @@
         return priceHistoryErrorRepository.deleteByKey(id);
     };
 
+    var deleteBulk = function(data) {
+        return priceHistoryErrorRepository.deleteBulk(data)
+    };
+
+
     module.exports = {
 
         getList: getList,
         getByKey: getByKey,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        deleteBulk: deleteBulk
     }
 
 }());
