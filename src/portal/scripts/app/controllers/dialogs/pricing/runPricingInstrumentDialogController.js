@@ -16,7 +16,12 @@
         var vm = this;
 
         vm.instrument = data.instrument;
-        vm.report_date = data.report_date;
+        vm.contextData = data.contextData;
+
+        if (vm.contextData && vm.contextData.report_date) {
+            vm.report_date = vm.contextData.report_date;
+        }
+
         vm.item = {};
 
         vm.pricingPolicies = [];

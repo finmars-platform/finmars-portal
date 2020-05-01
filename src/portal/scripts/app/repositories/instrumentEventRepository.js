@@ -106,7 +106,7 @@
     };
 
     var generateEventsRange = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument/generate-events-range/', options),
+        return xhrService.fetch(baseUrl + 'instruments/instrument/generate-events-range/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -114,7 +114,8 @@
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
-                }
+                },
+                body: JSON.stringify(options)
             })
     };
 
@@ -131,6 +132,20 @@
             })
     };
 
+    var generateEventsRangeForSingleInstrument = function (options) {
+        return xhrService.fetch(baseUrl + 'instruments/instrument/generate-events-range-for-single-instrument/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(options)
+            })
+    };
+
     module.exports = {
         getList: getList,
         getEventAction: getEventAction,
@@ -139,6 +154,7 @@
         errorEventAction: errorEventAction,
         generateEvents: generateEvents,
         generateEventsRange: generateEventsRange,
-        generateAndProcessAsSystem: generateAndProcessAsSystem
+        generateAndProcessAsSystem: generateAndProcessAsSystem,
+        generateEventsRangeForSingleInstrument: generateEventsRangeForSingleInstrument
     }
 }());

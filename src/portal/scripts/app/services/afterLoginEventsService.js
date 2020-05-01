@@ -3,7 +3,7 @@
  */
 (function () {
 
-    var eventsService = require('./eventsService');
+    var instrumentEventService = require('./instrumentEventService');
 
     var openDoNotReactDialog = function ($mdDialog, $event, item) {
 
@@ -243,7 +243,7 @@
             options.filters.effective_date_0 = effective_date_from;
             options.filters.effective_date_1 = effective_date_to;
 
-            eventsService.getList(options).then(function (effectiveData) {
+            instrumentEventService.getList(options).then(function (effectiveData) {
 
                 var effective_date_events = effectiveData.results;
 
@@ -258,7 +258,7 @@
                 options.filters.notification_date_0 = notification_date_from;
                 options.filters.notification_date_1 = notification_date_to;
 
-                eventsService.getList(options).then(function (notificationData) {
+                instrumentEventService.getList(options).then(function (notificationData) {
 
                     var notification_date_events = notificationData.results;
 

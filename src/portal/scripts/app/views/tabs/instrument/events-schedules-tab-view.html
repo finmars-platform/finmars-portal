@@ -13,6 +13,14 @@
                                     entity="vm.entity"
                                     item="vm.maturityPriceAttr"></bind-field-control>
             </div>
+
+            <div data-ng-if="vm.entity.id">
+
+                <md-button class="md-raised md-primary" data-ng-if="vm.entity.id"
+                           data-ng-click="vm.generateEventInstrument($event)">Generate Events
+                </md-button>
+
+            </div>
         </div>
 
         <table class="bordered margin-bottom-20">
