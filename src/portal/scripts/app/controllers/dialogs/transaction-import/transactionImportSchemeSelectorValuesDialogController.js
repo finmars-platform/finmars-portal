@@ -9,7 +9,7 @@
 
     var scrollHelper = new ScrollHelper();
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function transactionImportSchemeSelectorValuesDialogController($scope, $mdDialog, data) {
 
         var vm = this;
 
