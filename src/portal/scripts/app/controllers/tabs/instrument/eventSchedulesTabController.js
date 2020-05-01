@@ -5,17 +5,13 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     //var instrumentEventScheduleService = require('../../services/instrument/instrumentEventScheduleService');
     var metaNotificationClassService = require('../../../services/metaNotificationClassService');
     var metaEventClassService = require('../../../services/metaEventClassService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
     var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventScheduleService');
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('eventSchedulesTabController', 'initialized');
+    module.exports = function eventSchedulesTabController($scope, $mdDialog) {
 
         var vm = this;
 
