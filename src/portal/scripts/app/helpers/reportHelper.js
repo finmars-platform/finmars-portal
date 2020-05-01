@@ -47,18 +47,55 @@
 
             if (item.instrument) {
                 item.instrument_object = findEntityObject(report, 'item_instruments', item.instrument);
+
+                if(item.instrument_object.instrument_type) {
+                    item.instrument_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.instrument_object.instrument_type);
+                }
+
             }
+
+
+
+
             if (item.linked_instrument) {
+
                 item.linked_instrument_object = findEntityObject(report, 'item_instruments', item.linked_instrument);
+
+                if(item.linked_instrument_object.instrument_type) {
+                    item.linked_instrument_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.linked_instrument_object.instrument_type);
+                }
+
             }
+
             if (item.allocation_balance) {
+
                 item.allocation_balance_object = findEntityObject(report, 'item_instruments', item.allocation_balance);
+
+                if(item.allocation_balance_object.instrument_type) {
+                    item.allocation_balance_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.allocation_balance_object.instrument_type);
+                }
+
             }
+
             if (item.allocation) {
+
                 item.allocation_object = findEntityObject(report, 'item_instruments', item.allocation);
+
+                if(item.allocation_object.instrument_type) {
+                    item.allocation_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.allocation_object.instrument_type);
+                }
+
             }
+
             if (item.allocation_pl) {
+
                 item.allocation_pl_object = findEntityObject(report, 'item_instruments', item.allocation_pl);
+
+
+                if(item.allocation_pl_object.instrument_type) {
+                    item.allocation_pl_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.allocation_pl_object.instrument_type);
+                }
+
             }
 
             //item.instrument_pricing_currency_history_object = findEntityObject(report, 'item_currencies');
