@@ -6,7 +6,7 @@
     'use strict';
 
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
-    var eventsService = require('../../services/eventsService');
+    var instrumentEventService = require('../../services/instrumentEventService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -137,7 +137,7 @@
 
         vm.eventsAsSystem = function ($event) {
 
-            eventsService.generateAndProcessAsSystem().then(function (value) {
+            instrumentEventService.generateAndProcessAsSystem().then(function (value) {
                 $mdDialog.show({
                     controller: 'SuccessDialogController as vm',
                     templateUrl: 'views/dialogs/success-dialog-view.html',

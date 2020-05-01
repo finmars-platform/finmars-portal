@@ -1690,14 +1690,8 @@
 
         vm.runPricingInstrument = function($event) {
 
-            var report_date = null;
-
-            if (vm.contextData) {
-                report_date = vm.contextData.report_date
-            }
-
             $mdDialog.show({
-                controller: 'RunPricingInstrumentDialog as vm',
+                controller: 'runPricingInstrumentDialogController as vm',
                 templateUrl: 'views/dialogs/pricing/run-pricing-instrument-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
@@ -1709,7 +1703,7 @@
                 locals: {
                     data: {
                         instrument: vm.entity,
-                        report_date: report_date
+                        contextData: vm.contextData
                     }
 
                 }
