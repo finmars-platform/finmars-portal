@@ -8,7 +8,7 @@
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
-    module.exports = function ($scope, $mdDialog, schemeId) {
+    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, schemeId) {
 
         var vm = this;
         vm.scheme = {};

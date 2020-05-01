@@ -1691,7 +1691,7 @@
         vm.runPricingInstrument = function($event) {
 
             $mdDialog.show({
-                controller: 'runPricingInstrumentDialogController as vm',
+                controller: 'RunPricingInstrumentDialogController as vm',
                 templateUrl: 'views/dialogs/pricing/run-pricing-instrument-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
