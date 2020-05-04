@@ -1,8 +1,7 @@
 (function () {
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-    var eventsService = require('../../../services/eventsService');
+    var instrumentEventService = require('../../../services/instrumentEventService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -35,7 +34,7 @@
 
             var action = actions[index];
 
-            eventsService.getEventAction(vm.event.id, action.id).then(function (event) {
+            instrumentEventService.getEventAction(vm.event.id, action.id).then(function (event) {
 
                 console.log('event', event);
 
@@ -45,7 +44,7 @@
                     status = 8; // 'Booked, pending (user, default)';
                 }
 
-                eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
+                instrumentEventService.putEventAction(vm.event.id, action.id, event, status).then(function () {
 
                     index = index + 1;
 
@@ -109,7 +108,7 @@
                         multiple: true
                     }).then(function (value) {
 
-                        eventsService.errorEventAction(vm.event.id, action.id, event).then(function () {
+                        instrumentEventService.errorEventAction(vm.event.id, action.id, event).then(function () {
 
                             console.log('Handle Error Event #', vm.event.id, event);
 
@@ -173,7 +172,7 @@
 
         vm.informed = function () {
 
-            eventsService.informedEventAction(vm.event.id).then(function () {
+            instrumentEventService.informedEventAction(vm.event.id).then(function () {
 
                 $mdDialog.hide({status: 'agree'});
 

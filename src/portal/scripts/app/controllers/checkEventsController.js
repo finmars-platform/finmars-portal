@@ -5,9 +5,9 @@
 
     'use strict';
 
-    var eventsService = require('../services/eventsService');
+    var instrumentEventService = require('../services/instrumentEventService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function checkEventsController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -222,7 +222,7 @@
             options.filters.effective_date_1 = vm.effective_date_to;
 
             // options.filters = filters;
-            eventsService.getList(options).then(function (data) {
+            instrumentEventService.getList(options).then(function (data) {
 
                 vm.events = data.results;
 
@@ -272,12 +272,12 @@
 
                 vm.loading = true;
 
-                var filters = {};
+                var options = {};
 
-                filters.effective_date_0 = vm.effective_date_from;
-                filters.effective_date_1 = vm.effective_date_to;
+                options.effective_date_0 = vm.effective_date_from;
+                options.effective_date_1 = vm.effective_date_to;
 
-                eventsService.generateEventsRange({filters: filters}).then(function (eventsData) {
+                instrumentEventService.generateEventsRange(options).then(function (eventsData) {
 
                     var len = eventsData.tasks_ids.length;
                     var time = 2000;

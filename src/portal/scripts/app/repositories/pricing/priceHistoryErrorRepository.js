@@ -70,11 +70,31 @@
             })
     };
 
+    var deleteBulk = function (data) {
+        return xhrService.fetch(baseUrl + 'pricing/price-history-error/bulk-delete/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(function (data) {
+                return new Promise(function (resolve, reject) {
+                    resolve({status: 'deleted'});
+                });
+            })
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        deleteBulk: deleteBulk
     }
 
 }());

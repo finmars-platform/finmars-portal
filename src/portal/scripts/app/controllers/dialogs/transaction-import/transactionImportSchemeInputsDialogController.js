@@ -10,7 +10,7 @@
     var transactionTypeService = require('../../../services/transactionTypeService');
     var metaContentTypesService = require('../../../services/metaContentTypesService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function transactionImportSchemeInputsDialogController($scope, $mdDialog, data) {
 
         logService.controller('TransactionImportSchemeInputsDialogController', 'initialized');
 

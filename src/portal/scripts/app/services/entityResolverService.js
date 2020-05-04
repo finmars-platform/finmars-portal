@@ -659,6 +659,11 @@
             case 'tag':
                 //return tagService.deleteBulk(data);
                 break;
+
+            case 'price-history-error':
+                return priceHistoryErrorService.deleteBulk(data);
+            case 'currency-history-error':
+                return currencyHistoryErrorService.deleteBulk(data);
         }
     };
 

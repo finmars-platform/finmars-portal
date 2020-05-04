@@ -46,7 +46,7 @@
 
                 window.cached_requests[url].requested_count = window.cached_requests[url].requested_count + 1;
 
-                resolve(window.cached_requests[url].data)
+                resolve(JSON.parse(JSON.stringify(window.cached_requests[url].data)))
 
             } else {
 
