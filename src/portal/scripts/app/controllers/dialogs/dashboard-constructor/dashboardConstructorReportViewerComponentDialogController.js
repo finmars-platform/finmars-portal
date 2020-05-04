@@ -16,6 +16,7 @@
         vm.newFilter = {};
         vm.processing = false;
         vm.filterLinks = [];
+        vm.smallRvSelectedCols = [];
 
         vm.componentsForMultiselector = [];
         var componentsForLinking = dashboardHelper.getComponentsForLinking();
@@ -134,6 +135,20 @@
                 vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
                 vm.onRvLayoutChange();
 
+                // for small rv columns multiselector
+                if (vm.item.user_settings.columns) {
+
+                    vm.smallRvSelectedCols = vm.item.user_settings.columns.map(function (selCol) {
+                        return selCol.key;
+                    })
+
+                } else {
+
+                    vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
+
+                }
+                // < for small rv columns multiselector >
+
                 vm.processing = false;
 
                 $scope.$apply();
@@ -146,6 +161,7 @@
 
             vm.selectedLayout = null;
             vm.tableColumns = [];
+            vm.tableGroups = [];
             vm.tableColumnsForMultiselector = [];
             vm.linkingToFilters = [];
 
@@ -166,14 +182,42 @@
 
             if (vm.selectedLayout) {
 
-                vm.tableColumns = [];
                 if (vm.selectedLayout.data.columns && vm.selectedLayout.data.columns.length) {
                     vm.tableColumns = JSON.parse(angular.toJson(vm.selectedLayout.data.columns));
                 }
 
-                vm.tableColumnsForMultiselector = vm.tableColumns.map(function (column) {
-                    var colName = column.layoutName || column.name;
-                    return {id: column.key, name: colName}
+                if (vm.selectedLayout.data.grouping && vm.selectedLayout.data.grouping.length) {
+                    vm.tableGroups = JSON.parse(angular.toJson(vm.selectedLayout.data.grouping));
+                }
+
+                vm.tableColumnsForMultiselector = [];
+
+                vm.tableColumns.forEach(function (column) {
+
+                    var columnWithoutGroup = true;
+
+                    for (var i = 0; i < vm.tableGroups.length; i++) { // excluding columns under groups
+
+                        if (vm.tableGroups[i].key === column.key) {
+                            columnWithoutGroup = false;
+                            break;
+                        }
+
+                    }
+
+                    if (columnWithoutGroup) {
+
+                        var colName = column.layoutName || column.name;
+
+                        vm.tableColumnsForMultiselector.push({id: column.key, name: colName});
+
+                    }
+
+
+                });
+
+                vm.smallRvSelectedCols = vm.tableColumnsForMultiselector.map(function (column) {
+                    return column.id;
                 });
 
                 vm.linkingToFilters = evRvLayoutsHelper.getLinkingToFilters(vm.selectedLayout);
@@ -197,6 +241,55 @@
             }
 
         };*/
+
+        vm.smallRvColumnsChanged = function () {
+
+            // remove not deselected columns
+            vm.item.user_settings.columns = vm.item.user_settings.columns.filter(function (column) {
+
+                for (var i = 0; i < vm.tableGroups.length; i++) { // for columns under groups
+                    if (column.key === vm.tableGroups[i].key) {
+                        return true;
+                    }
+                }
+
+                return vm.smallRvSelectedCols.indexOf(column.key) > -1;
+            });
+
+            vm.smallRvSelectedCols.forEach(function (selColKey) {
+
+                var columnIsNotSelected = true;
+                var i, a;
+                for (i = 0; i < vm.item.user_settings.columns.length; i++) {
+
+                    var column = vm.item.user_settings.columns[i];
+
+                    if (selColKey === column.key) {
+                        columnIsNotSelected = false;
+                        break;
+                    }
+
+                }
+
+                if (columnIsNotSelected) {
+
+                    for (a = 0; a < vm.tableColumns.length; a++) {
+
+                        var column = JSON.parse(JSON.stringify(vm.tableColumns[a]));
+
+                        if (column.key === selColKey) {
+
+                            vm.item.user_settings.columns.push(column);
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+        };
 
         vm.getContentTypeByEntityType = function () {
 

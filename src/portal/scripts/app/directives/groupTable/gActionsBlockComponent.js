@@ -1661,6 +1661,31 @@
 
                 };
 
+                /*scope.editDashboardComponent = function () {
+
+                };*/
+
+                scope.openEvLayout = function () {
+                    var currentState;
+                    switch (scope.entityType) {
+                        case 'balance-report':
+                            currentState = 'app.reports.balance-report';
+                            break;
+                        case 'balance-report':
+                            currentState = 'app.reports.pl-report';
+                            break;
+                        case 'balance-report':
+                            currentState = 'app.reports.transaction-report';
+                            break;
+                    }
+                    var listLayout = scope.evDataService.getListLayout();
+
+                    var url = $state.href(currentState);
+                    url += '?layout=' + listLayout.name;
+
+                    window.open(url, '_bland');
+                };
+
                 scope.init = function () {
 
                     scope.getCurrentMember();

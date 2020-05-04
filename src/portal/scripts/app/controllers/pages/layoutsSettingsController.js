@@ -438,7 +438,7 @@
         vm.openLayout = function (layout) {
 
             var stateToGo = getLayoutDataByContentType(layout.content_type, 'state');
-            $state.transitionTo(stateToGo, {layout: layout.name});
+            $state.transitionTo(stateToGo, {layoutName: layout.name});
 
         };
 

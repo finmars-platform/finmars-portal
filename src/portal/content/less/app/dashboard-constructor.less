@@ -78,10 +78,16 @@
   }
 
   .dashboard-constructor-cell {
-
-    display: block;
+    //display: block;
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     padding: 10px;
+
+    .dashboard-constructor-cell-container {
+      width: 100%;
+      flex: 1 0 100%;
+    }
 
   }
 

@@ -30,7 +30,7 @@
                 scope.downloadedItemsCount = null;
                 scope.contentType = scope.evDataService.getContentType();
                 scope.columnAreaCollapsed = false;
-                console.log("dashboard add column columns", scope.columns);
+
                 scope.viewContext = scope.evDataService.getViewContext();
                 scope.isReport = metaService.isReport(scope.entityType);
 

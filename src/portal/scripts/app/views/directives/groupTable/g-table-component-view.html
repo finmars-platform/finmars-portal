@@ -93,7 +93,7 @@
             </div>
         </div>
 
-        <div data-ng-if="isInsideDashboard" class="g-dashboard-filter-holder">
+        <div data-ng-if="isInsideDashboard && !components.sidebar" class="g-dashboard-filter-holder">
 
             <md-button class="toggle-dashboard-filter-btn"
                        ng-click="toggleDashboardFilter()">

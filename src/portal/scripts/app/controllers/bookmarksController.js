@@ -49,7 +49,7 @@
 
                     var openActiveLayout = function () {
 
-                        $state.transitionTo(stateToGo, {layout: layout.name});
+                        $state.transitionTo(stateToGo, {layoutName: layout.name});
 
                         vm.entityUpdating = false;
 
