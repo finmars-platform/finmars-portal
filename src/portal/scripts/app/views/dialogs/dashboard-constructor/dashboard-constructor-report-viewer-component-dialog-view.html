@@ -349,22 +349,32 @@
             <md-tab label="ADVANCE SETTINGS">
                 <md-content class="p-16">
 
+                    <h4 class="m-t-0">Styles</h4>
+
                     <div>
 
-                        <h4 class="m-t-0">Styles</h4>
+                        <md-input-container class="dashboard-constructor-field1" style="height: 68px">
+                            <label for="">Cell Text Align</label>
+                            <md-select data-ng-model="vm.item.settings.styles.cell.text_align">
+                                <md-option value="left">Left</md-option>
+                                <md-option value="center">Center</md-option>
+                                <md-option value="right">Right</md-option>
+                            </md-select>
+                        </md-input-container>
 
-                        <div>
+                    </div>
 
-                            <md-input-container class="dashboard-constructor-field1" style="height: 68px">
-                                <label for="">Cell Text Align</label>
-                                <md-select data-ng-model="vm.item.settings.styles.cell.text_align">
-                                    <md-option value="left">Left</md-option>
-                                    <md-option value="center">Center</md-option>
-                                    <md-option value="right">Right</md-option>
-                                </md-select>
-                            </md-input-container>
+                    <div>
+                        <h4>Small report columns</h4>
 
-                        </div>
+                        <two-fields-multiselect ng-model="vm.smallRvSelectedCols"
+                                                title="Columns to show in small report"
+                                                items="vm.tableColumnsForMultiselector"
+                                                model="vm.smallRvSelectedCols"
+                                                name-property="name"
+                                                data-selected-items-indication="array"
+                                                data-on-change-callback="vm.smallRvColumnsChanged()"
+                                                class="dashboard-constructor-selector-directive"></two-fields-multiselect>
                     </div>
 
                 </md-content>

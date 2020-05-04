@@ -65,8 +65,6 @@
 
                 vm.grandTotalProcessing = false;
 
-                console.log('Grand Total Status: Data is Loaded');
-
                 var rootGroup = vm.entityViewerDataService.getRootGroup();
 
                 var flatList = rvDataHelper.getFlatStructure(vm.entityViewerDataService);
@@ -165,12 +163,10 @@
                 vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
                     var columns = vm.entityViewerDataService.getColumns();
-
                     vm.dashboardComponentDataService.setViewerTableColumns(columns);
-                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
+                    //vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
 
                 });
-
 
 
                 if (vm.componentData.type === 'report_viewer_grand_total') {
@@ -195,7 +191,7 @@
 
                         if (!gotActiveObjectFromLinkedComp) {
 
-                            var activeObject = vm.entityViewerDataService.getActiveObject();
+                            //var activeObject = vm.entityViewerDataService.getActiveObject();
 
                             var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
                             var compsKeys = Object.keys(componentsOutputs);
@@ -234,6 +230,23 @@
 
                     });
 
+                }
+
+                if (!fillInModeEnabled) {
+
+                    vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+                        var columns = vm.entityViewerDataService.getColumns();
+                        vm.userSettings.columns = JSON.parse(angular.toJson(columns));
+
+                    });
+
+                    vm.entityViewerEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
+
+                        var columns = vm.entityViewerDataService.getColumns();
+                        vm.userSettings.columns = JSON.parse(angular.toJson(columns));
+
+                    });
                 }
 
             };
@@ -473,8 +486,10 @@
                                 var compOutputData = componentOutput.data;
 
                                 if (lastActiveComponentId !== componentId) {
+
                                     lastActiveComponentId = componentId;
                                     lastActiveCompChanged = true;
+
                                 } else {
 
                                     if (compOutputData && typeof compOutputData === 'object' &&
@@ -864,12 +879,28 @@
                                 var evComponents = vm.entityViewerDataService.getComponents();
 
                                 Object.keys(vm.componentData.settings.components).forEach(function (key) {
-
-                                    evComponents[key] = vm.componentData.settings.components[key]
-
+                                    evComponents[key] = vm.componentData.settings.components[key];
                                 });
 
                                 vm.entityViewerDataService.setComponents(evComponents);
+
+                                // set dashboard columns list for small rv table
+                                if (vm.userSettings && vm.userSettings.columns) {
+
+                                    if (fillInModeEnabled) {
+
+                                        var listLayout = vm.entityViewerDataService.getListLayout();
+                                        var columns = listLayout.data.columns;
+                                        vm.entityViewerDataService.setColumns(columns);
+
+                                    } else {
+
+                                        var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
+                                        vm.entityViewerDataService.setColumns(columns);
+
+                                    }
+                                }
+                                // < set dashboard columns list for small rv table >
                             }
 
                             vm.initDashboardExchange();
@@ -901,18 +932,29 @@
 
                     var columns = vm.entityViewerDataService.getColumns();
                     vm.dashboardComponentDataService.setViewerTableColumns(columns);
-                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
+                    //vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
 
                 }).catch(function (error) {
 
                     if (error.errorCause === 'layout') {
-                        vm.dashboardDataService.setComponentError(vm.componentData.id,{displayMessage: 'failed to load report layout'});
+                        vm.dashboardDataService.setComponentError(vm.componentData.id, {displayMessage: 'failed to load report layout'});
                     }
+
                     vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ERROR);
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     console.log("ERROR: dashboard component that uses report viewer error", error);
                 });
 
+            };
+
+            var applySettingsForFilledInMode = function () {
+
+                var listLayout = vm.entityViewerDataService.getListLayout();
+                var columns = listLayout.data.columns;
+                vm.entityViewerDataService.setColumns(columns);
+
+                var components = vm.entityViewerDataService.getComponents();
+                components.sidebar = true;
             };
 
             var getViewInsideFilledInComponent = function () {
@@ -923,6 +965,8 @@
 
                 setDataFromDashboard();
                 vm.setEventListeners();
+
+                applySettingsForFilledInMode();
 
                 vm.readyStatus.layout = true;
                 vm.readyStatus.attributes = true;

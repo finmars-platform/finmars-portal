@@ -1741,7 +1741,7 @@
                         var value = pieces[1];
 
                         if (key === 'layout') {
-                            layoutName = value
+                            layoutName = value;
 
                             if (layoutName.indexOf('%20') !== -1) {
                                 layoutName = layoutName.replace(/%20/g, " ")
@@ -1779,7 +1779,6 @@
                 });
 
                 vm.getView();
-
 
             };
 

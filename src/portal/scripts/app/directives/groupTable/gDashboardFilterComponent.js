@@ -24,7 +24,7 @@
                 evEventService: '=',
                 attributeDataService: '='
             },
-            templateUrl: 'views/directives/groupTable/dashboard-filter-view.html',
+            templateUrl: 'views/directives/groupTable/g-dashboard-filter-view.html',
             link: function (scope, elem, attrs) {
 
                 scope.filters = scope.evDataService.getFilters();
@@ -483,7 +483,8 @@
                         locals: {
                             reportOptions: reportOptions,
                             options: {
-                                entityType: scope.entityType
+                                entityType: scope.entityType,
+                                disableChangesSaving: true
                             }
                         }
                     }).then(function (res) {

@@ -65,6 +65,7 @@
 
 
         vm.entityType = options.entityType;
+        vm.disableChangesSaving = options.disableChangesSaving; // when opened inside dashboard
 
         vm.readyStatus = {
             pricingPolicy: false,

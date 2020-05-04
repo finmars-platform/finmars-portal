@@ -52,7 +52,6 @@
 
                 $scope.$apply();
 
-
             })
 
         };
@@ -201,12 +200,31 @@
 
             var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
-            var restrictions = vm.dashboardDataService.getAllComponentsRefreshRestriction();
-
             if (!Object.keys(statusesObject).length) {
                 vm.processing = false;
             } else {
+
                 vm.processing = true;
+
+                setTimeout(function () { // enable refresh buttons if no components uses active object
+
+                    var componentsIds = Object.keys(statusesObject);
+                    vm.processing = false;
+
+                    for (var i = 0; i < componentsIds.length; i++) {
+
+                        if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
+                            statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
+
+                            vm.processing = true;
+                            break;
+
+                        }
+
+                    }
+
+                }, 100);
+
             }
 
         };
@@ -220,7 +238,28 @@
             if (!Object.keys(statusesObject).length) {
                 vm.processing = false;
             } else {
+
                 vm.processing = true;
+
+                setTimeout(function () { // enable refresh buttons if no components uses active object
+
+                    var componentsIds = Object.keys(statusesObject);
+                    vm.processing = false;
+
+                    for (var i = 0; i < componentsIds.length; i++) {
+
+                        if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
+                            statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
+
+                            vm.processing = true;
+                            break;
+
+                        }
+
+                    }
+
+                }, 100);
+
             }
 
         };
