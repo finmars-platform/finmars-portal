@@ -5,21 +5,18 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     //var instrumentEventScheduleService = require('../../services/instrument/instrumentEventScheduleService');
     var metaNotificationClassService = require('../../../services/metaNotificationClassService');
     var metaEventClassService = require('../../../services/metaEventClassService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
     var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventScheduleService');
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('eventSchedulesTabController', 'initialized');
+    module.exports = function eventSchedulesTabController($scope, $mdDialog) {
 
         var vm = this;
 
         vm.entity = $scope.$parent.vm.entity;
+        vm.contextData = $scope.$parent.vm.contextData;
         vm.entityType = 'instrument';
         vm.entityAttrs = $scope.$parent.vm.entityAttrs;
 
@@ -240,6 +237,55 @@
                 "event_class": null
             };
         }
+
+        vm.generateEventInstrument = function($event) {
+
+            console.log("Generate Events")
+
+            $mdDialog.show({
+                controller: 'SingleInstrumentGenerateEventDialogController as vm',
+                templateUrl: 'views/dialogs/single-instrument-generate-event-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        instrument: vm.entity,
+                        contextData: vm.contextData
+                    }
+
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: res.data.events.length + " Events were generated."
+                            }
+                        }
+                    });
+
+                }
+
+            });
+
+        };
 
     }
 

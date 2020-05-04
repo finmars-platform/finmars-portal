@@ -86,14 +86,18 @@
 
         <div data-ng-if="componentData.settings.content_type != 'currencies.currency' && componentData.settings.content_type != 'instruments.pricingpolicy'">
 
-            <entity-search-select data-ng-if="!componentData.settings.multiple"
-                                  data-item="item.data.store.value"
-                                  data-label="item.data.name"
-                                  data-input-text="item.data.store.name"
-                                  data-entity-type="entityType"
-                                  data-callback="valueChanged()"></entity-search-select>
+            <div data-ng-if="!componentData.settings.multiple">
+
+                <entity-search-select
+                        data-item="item.data.store.value"
+                        data-label="item.data.name"
+                        data-input-text="item.data.store.name"
+                        data-entity-type="entityType"
+                        data-callback="valueChanged()"></entity-search-select>
+            </div>
 
             <div data-ng-if="componentData.settings.multiple">
+
                 <two-fields-multiselect data-title="{{item.data.name}}"
                                         data-items="fields"
                                         data-model="item.data.store.value"

@@ -31,7 +31,7 @@
 
             <div class="transactionImportSchemeSelectorValues">
 <!--        <div data-ng-repeat="selector in vm.scheme.selector_values track by $index" layout="row">-->
-                <div data-ng-repeat="selector in vm.scheme.selector_values | orderBy: 'order' | filter: vm.filterTerms as results track by selector.order"
+                <div data-ng-repeat="selector in vm.scheme.selector_values | orderBy: 'order' | filter: vm.filterTerms as results track by $index"
                      data-ng-init="$last && !vm.dragAndDropInited && vm.dragAndDrop.init()"
                      data-row-order="{{selector.order}}">
 

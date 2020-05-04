@@ -731,7 +731,7 @@
                     Promise.all(promises).then(function (data) {
 
                         vm.readyStatus.attributes = true;
-                        $scope.$apply();
+                        // $scope.$apply();
 
                         resolve();
 

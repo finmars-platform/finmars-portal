@@ -2,7 +2,7 @@
     'use strict';
 
 
-    var eventsService = require('../../../services/eventsService');
+    var instrumentEventService = require('../../../services/instrumentEventService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -22,7 +22,7 @@
 
         vm.informed = function () {
 
-            eventsService.informedEventAction(vm.event.id).then(function () {
+            instrumentEventService.informedEventAction(vm.event.id).then(function () {
 
                 $mdDialog.hide({status: 'agree'});
 
