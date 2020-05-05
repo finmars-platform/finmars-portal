@@ -22,7 +22,7 @@
 
         </div>
     </md-toolbar>
-    <md-dialog-content style="height: 100%">
+    <md-dialog-content style="height: 100%" class="position-relative">
 
         <div style="min-width: 1450px">
 
@@ -192,6 +192,13 @@
                             </md-tab>
                         </md-tabs>
 
+                        <div class="transaction-recalculating-overlay" data-ng-show="vm.recalculating">
+                            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                                <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                                <progress-circular diameter="100"></progress-circular>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div data-ng-if="!vm.readyStatus.layout && vm.transactionTypeId">
@@ -267,13 +274,13 @@
             </md-button>
 
             <md-button class="md-raised"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid}"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.recalculating}"
                        ng-click="vm.bookAsPending()"
                        style="margin-right:20px;">
                 Book as pending
             </md-button>
             <md-button class="md-raised"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid}"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.recalculating}"
                        ng-click="vm.save()"
                        style="margin-right:20px;">
                 Book

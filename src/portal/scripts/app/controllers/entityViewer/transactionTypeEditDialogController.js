@@ -132,7 +132,7 @@
                                     }
                                     if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
                                         group.objectPermissions.manage = true;
-                                        vm.canManagePermissions  = true;
+                                        vm.canManagePermissions = true;
                                     }
                                     if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
                                         group.objectPermissions.change = true;
@@ -299,6 +299,16 @@
 
                     });
 
+                    if (vm.entity.inputs) {
+                        vm.entity.inputs.forEach(function (input) {
+
+                            if (input.settings && input.settings.linked_inputs_names) {
+                                input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                            }
+
+                        });
+                    }
+
 
                     /*vm.editLayout = function () {
                         $state.go('app.data-constructor', {
@@ -443,6 +453,16 @@
                 });
             }
 
+
+            vm.entity.inputs.forEach(function (input) {
+
+                if (input.settings && input.settings.linked_inputs_names) {
+                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+                }
+
+            });
+
+
         };
 
         vm.updateItem = function () {
@@ -460,6 +480,18 @@
                     var result = entityEditorHelper.removeNullFields(vm.entity);
 
                     entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                        if (vm.entity.inputs) {
+
+                            vm.entity.inputs.forEach(function (input) {
+
+                                if (input.settings && input.settings.linked_inputs_names) {
+                                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                                }
+
+                            });
+
+                        }
 
                         resolve(data);
 
@@ -997,15 +1029,15 @@
         vm.getInstrumentTypes();
         //vm.getTags();
 
-/*        vm.tagTransform = function (newTag) {
-            //console.log('newTag', newTag);
-            var item = {
-                name: newTag,
-                id: null
-            };
+        /*        vm.tagTransform = function (newTag) {
+                    //console.log('newTag', newTag);
+                    var item = {
+                        name: newTag,
+                        id: null
+                    };
 
-            return item;
-        };*/
+                    return item;
+                };*/
 
         /*$scope.$watch('vm.entity.tags', function () {
 
@@ -2564,6 +2596,27 @@
 
             });
 
+        };
+
+
+        vm.getInputForLinking = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                var inputs = vm.entity.inputs.map(function (input) {
+
+                    return {
+                        id: input.name,
+                        name: input.name
+                    }
+
+                });
+
+                resolve({
+                    results: inputs
+                })
+
+            })
         };
 
 

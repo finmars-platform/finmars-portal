@@ -322,6 +322,15 @@
                 });
             }
 
+            vm.entity.inputs.forEach(function (input) {
+
+                if (input.settings && input.settings.linked_inputs_names) {
+                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+                }
+
+            });
+
+
         };
 
         var checkFieldExprForDeletedInput = function (actionFieldValue, actionItemKey, actionNotes) {
@@ -741,6 +750,17 @@
                 } else {
 
                     entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
+
+                        if (vm.entity.inputs) {
+                            vm.entity.inputs.forEach(function (input) {
+
+                                if (input.settings && input.settings.linked_inputs_names) {
+                                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                                }
+
+                            });
+
+                        }
 
                         createDefaultEditLayout(data).then(function () {
                             vm.processing = false;

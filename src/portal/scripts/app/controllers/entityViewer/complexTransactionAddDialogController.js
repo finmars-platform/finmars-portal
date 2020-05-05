@@ -533,8 +533,7 @@
         vm.recalculate = function (item) {
 
             vm.recalculating = true;
-            vm.readyStatus.layout = false;
-
+        
             var values = {};
 
             vm.userInputs.forEach(function (item) {
@@ -619,8 +618,6 @@
                 }
 
                 mapAttributesAndFixFieldsLayout();
-
-                vm.readyStatus.layout = true;
 
                 inputsWithCalculations.forEach(function (inputWithCalc) {
 
