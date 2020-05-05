@@ -466,7 +466,6 @@
         vm.recalculate = function (item) {
 
             vm.recalculating = true;
-            vm.readyStatus.layout = false;
 
             var values = {};
 
@@ -556,8 +555,6 @@
 
                 mapAttributesAndFixFieldsLayout();
 
-                vm.readyStatus.layout = true;
-
                 if (inputsWithCalculations) {
                     inputsWithCalculations.forEach(function (inputWithCalc) {
 
@@ -601,7 +598,6 @@
         vm.recalculateInputs = function (inputs) {
 
             vm.recalculating = true;
-            vm.readyStatus.layout = false;
 
             var values = {};
 
@@ -686,8 +682,6 @@
                 }
 
                 mapAttributesAndFixFieldsLayout();
-
-                vm.readyStatus.layout = true;
 
                 if (inputsWithCalculations) {
                     inputsWithCalculations.forEach(function (inputWithCalc) {
