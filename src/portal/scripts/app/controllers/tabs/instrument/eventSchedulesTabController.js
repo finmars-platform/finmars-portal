@@ -9,7 +9,6 @@
     var metaNotificationClassService = require('../../../services/metaNotificationClassService');
     var metaEventClassService = require('../../../services/metaEventClassService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
-    var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventScheduleService');
 
     module.exports = function eventSchedulesTabController($scope, $mdDialog) {
 
@@ -162,49 +161,6 @@
             });
         };
 
-        vm.generateEventsSchedule = function ($event) {
-
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                clickOutsideToClose: false,
-                locals: {
-                    warning: {
-                        title: 'Warning',
-                        description: 'All changes will be saved, OK?'
-                    }
-                },
-                multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    vm.readyStatus.eventSchedulesReady = false;
-
-                    $scope.$parent.vm.updateItem().then(function (value) {
-
-                        instrumentEventScheduleService.rebuildEvents(vm.entity.id, vm.entity).then(function (data) {
-
-                            console.log('events rebuilt data', data);
-
-                            $scope.$parent.vm.getItem().then(function (getItemData) {
-                                vm.entity = $scope.$parent.vm.entity;
-                                vm.readyStatus.eventSchedulesReady = true;
-                            });
-
-                        })
-
-                    })
-                }
-
-            });
-
-        };
 
         vm.addRow = function () {
             vm.entity.event_schedules.push({
