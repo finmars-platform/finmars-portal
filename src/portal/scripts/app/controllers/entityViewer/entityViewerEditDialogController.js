@@ -754,6 +754,8 @@
 
         vm.updateItem = function () {
 
+            console.log('updateItem', vm.entity.$_isValid);
+
             // TMP save method for instrument
 
             return new Promise(function (resolve) {
@@ -762,17 +764,13 @@
 
                 vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
 
-                if (vm.entity.$_isValid) {
+                var result = entityEditorHelper.removeNullFields(vm.entity);
 
-                    var result = entityEditorHelper.removeNullFields(vm.entity);
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
-                    entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+                    resolve(data);
 
-                        resolve(data);
-
-                    });
-
-                }
+                });
 
             })
 

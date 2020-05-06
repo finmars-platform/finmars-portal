@@ -59,6 +59,10 @@
                 <input type="text" data-ng-model="vm.entity.default_accrued">
             </md-input-container>
 
+            <md-button data-ng-click="vm.generateEventsSchedule($event)" data-ng-if="vm.entity.id"
+                       class="md-raised md-primary">Build Events
+            </md-button>
+
         </div>
 
         <div style="font-size: 18px; padding-left: 6px; margin-bottom: 24px;
