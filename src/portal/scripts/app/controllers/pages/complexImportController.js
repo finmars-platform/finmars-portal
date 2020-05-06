@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
 
     var complexImportService = require('../../services/complex-import/complexImportService');
@@ -15,9 +13,7 @@
     var usersService = require('../../services/usersService');
 
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('ComplexImport', 'initialized');
+    module.exports = function complexImportController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -73,7 +69,9 @@
                 autoWrap: true,
                 skipHide: true,
                 locals: {
-                    schemeId: vm.config.scheme
+                    data: {
+
+                    }
                 }
             }).then(function () {
 
@@ -84,6 +82,7 @@
         };
 
         vm.editScheme = function ($event) {
+
             $mdDialog.show({
                 controller: 'ComplexImportSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/complex-import/complex-import-scheme-edit-dialog-view.html',
@@ -95,7 +94,16 @@
                 locals: {
                     schemeId: vm.config.scheme
                 }
+            }).then(function (res) {
+
+                if(res && res.status === 'agree') {
+
+                    vm.getSchemeList();
+
+                }
+
             })
+
         };
 
         vm.cancel = function () {
@@ -437,7 +445,6 @@
                     actionFields = action.complex_transaction_import_scheme;
 
                 }
-                ;
 
                 actionKeys = Object.keys(actionFields);
 
