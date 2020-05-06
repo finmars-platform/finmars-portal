@@ -5,17 +5,13 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     var metaContentTypesService = require('../../../services/metaContentTypesService');
     var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
 
     var complexImportService = require('../../../services/complex-import/complexImportService');
     var complexImportValidateService = require('../../../services/complex-import/complexImportValidateService');
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('ComplexImportDialogController', 'initialized');
+    module.exports = function complexImportDialogController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -64,7 +60,9 @@
                 autoWrap: true,
                 skipHide: true,
                 locals: {
-                    schemeId: vm.config.scheme
+                    data: {
+
+                    }
                 }
             }).then(function () {
 

@@ -6,6 +6,8 @@
     'use strict';
 
 
+    var instrumentEventService = require('../../services/instrumentEventService');
+
     module.exports = function singleInstrumentGenerateEventDialogController($scope, $mdDialog, data) {
 
         var vm = this;

@@ -185,6 +185,7 @@
                 if (res.status === 'agree') {
 
                     vm.readyStatus.eventSchedulesReady = false;
+
                     $scope.$parent.vm.updateItem().then(function (value) {
 
                         instrumentEventScheduleService.rebuildEvents(vm.entity.id, vm.entity).then(function (data) {
