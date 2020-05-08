@@ -238,6 +238,11 @@
                         resolve({type: 'id', key: 'strategy1', data: data.results});
                     });
                     break;
+                case 'strategy_1': // TODO do something with inconsistency of entity name
+                    strategyRepository.getList(1).then(function (data) {
+                        resolve({type: 'id', key: 'strategy_1', data: data.results});
+                    });
+                    break;
                 case 'strategy1_position':
                     strategyRepository.getList(1).then(function (data) {
                         resolve({type: 'id', key: 'strategy1_position', data: data.results});
@@ -250,7 +255,12 @@
                     break;
                 case 'strategy2':
                     strategyRepository.getList(2).then(function (data) {
-                        resolve({type: 'id', key: 'strategy1', data: data.results});
+                        resolve({type: 'id', key: 'strategy2', data: data.results});
+                    });
+                    break;
+                case 'strategy_2': // TODO do something with inconsistency of entity name
+                    strategyRepository.getList(2).then(function (data) {
+                        resolve({type: 'id', key: 'strategy_2', data: data.results});
                     });
                     break;
                 case 'strategy2_position':
@@ -265,7 +275,12 @@
                     break;
                 case 'strategy3':
                     strategyRepository.getList(3).then(function (data) {
-                        resolve({type: 'id', key: 'strategy1', data: data.results});
+                        resolve({type: 'id', key: 'strategy3', data: data.results});
+                    });
+                    break;
+                case 'strategy_3': // TODO do something with inconsistency of entity name
+                    strategyRepository.getList(3).then(function (data) {
+                        resolve({type: 'id', key: 'strategy_3', data: data.results});
                     });
                     break;
                 case 'strategy3_position':

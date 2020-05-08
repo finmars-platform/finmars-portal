@@ -1201,16 +1201,19 @@
         };
 
         vm.resolveRelation = function (item) {
+
             var entityKey;
 
             for (var i = 0; i < vm.contentTypes.length; i++) {
-                if (vm.contentTypes[i].key == item.content_type) {
+
+                if (vm.contentTypes[i].key === item.content_type) {
                     entityKey = vm.contentTypes[i].entity;
                     entityKey = entityKey.replace(/-/g, '_');
 
                     return entityKey;
                 }
             }
+
         };
 
         vm.resolveDefaultValue = function (item) {
