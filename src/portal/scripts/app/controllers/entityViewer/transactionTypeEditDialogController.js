@@ -395,11 +395,13 @@
 
         };
 
-        vm.updateEntityBeforeSave = function () {
+        vm.updateEntityBeforeSave = function (entity) {
 
-            if (vm.entity.attributes) {
+            var updatedEntity = JSON.parse(JSON.stringify(entity));
 
-                vm.entity.attributes.forEach(function (attribute) {
+            if (updatedEntity.attributes) {
+
+                updatedEntity.attributes.forEach(function (attribute) {
 
                     var value_type = attribute.attribute_type_object.value_type;
                     var key = attribute.attribute_type_object.user_code;
@@ -421,7 +423,7 @@
 
             }
 
-            vm.entity.object_permissions = [];
+            updatedEntity.object_permissions = [];
 
             if (vm.groups) {
                 vm.groups.forEach(function (group) {
@@ -454,13 +456,15 @@
             }
 
 
-            vm.entity.inputs.forEach(function (input) {
+            updatedEntity.inputs.forEach(function (input) {
 
                 if (input.settings && input.settings.linked_inputs_names) {
                     input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
                 }
 
             });
+
+            return updatedEntity
 
 
         };
@@ -471,27 +475,15 @@
 
             return new Promise(function (resolve) {
 
-                vm.updateEntityBeforeSave();
+                var entityToSave =  vm.updateEntityBeforeSave(vm.entity);
 
-                var isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+                var isValid = entityEditorHelper.checkForNotNullRestriction(entityToSave, vm.entityAttrs, vm.attrs);
 
                 if (isValid) {
 
-                    var result = entityEditorHelper.removeNullFields(vm.entity);
+                    entityToSave = entityEditorHelper.removeNullFields(entityToSave);
 
-                    entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
-
-                        if (vm.entity.inputs) {
-
-                            vm.entity.inputs.forEach(function (input) {
-
-                                if (input.settings && input.settings.linked_inputs_names) {
-                                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
-                                }
-
-                            });
-
-                        }
+                    entityResolverService.update(vm.entityType, entityToSave.id, entityToSave).then(function (data) {
 
                         resolve(data);
 
@@ -723,19 +715,13 @@
 
         };
 
-        vm.save = function (entityToSave, withoutUpdating) {
+        vm.save = function () {
 
             vm.processing = true;
 
             var saveTTypePromise = new Promise(function (resolve, reject) {
 
-                if (!entityToSave) {
-                    entityToSave = JSON.parse(angular.toJson(vm.entity));
-                }
-
-                if (!withoutUpdating) {
-                    vm.updateEntityBeforeSave();
-                }
+                var entityToSave =  vm.updateEntityBeforeSave(vm.entity);
 
                 var actionsErrors = checkActionsForEmptyFields(entityToSave.actions);
                 var entityErrors = checkEntityForEmptyFields(entityToSave);
@@ -763,11 +749,12 @@
 
                 } else {
 
-                    entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
+                    entityResolverService.update(vm.entityType, entityToSave.id, entityToSave).then(function (data) {
 
                         console.log('data', data);
                         //originalEntity = JSON.parse(angular.toJson(vm.entity));
                         originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
+
 
                         vm.processing = false;
                         $scope.$apply();
@@ -776,10 +763,7 @@
                             vm.handleErrors(data);
                         } else {
 
-                            if (!withoutUpdating) {
-                                // $mdDialog.hide({res: 'agree', data: data});
-                                resolve(data)
-                            }
+                            resolve(data)
 
                         }
 
