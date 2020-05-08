@@ -30,10 +30,13 @@
 
     var instrumentTypeService = require('../../services/instrumentTypeService');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId, contextData) {
 
         var vm = this;
+
+        vm.processing = false;
 
         console.log('contextData', contextData);
 
@@ -936,6 +939,8 @@
 
         vm.save = function ($event) {
 
+            vm.processing = true;
+
             vm.updateEntityBeforeSave();
 
             /*vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
@@ -1029,13 +1034,23 @@
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
+                    vm.processing = false;
+
                     if (data.status === 400) {
                         vm.handleErrors(data);
                     } else {
+
+                        var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
+
+                        toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' successfully saved');
+
                         $mdDialog.hide({res: 'agree', data: data});
                     }
 
                 }).catch(function(data) {
+
+                    vm.processing = false;
+
                     vm.handleErrors(data);
                 });
 
