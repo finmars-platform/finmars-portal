@@ -34,6 +34,8 @@
 
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
     module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
 
         var vm = this;
@@ -762,6 +764,8 @@
                         if (data.status === 400) {
                             vm.handleErrors(data);
                         } else {
+
+                            toastNotificationService.success("Transaction Type " + vm.entity.name + ' successfully saved');
 
                             resolve(data)
 
