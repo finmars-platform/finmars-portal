@@ -560,7 +560,7 @@
 
         vm.getSchemes = function(){
 
-            transactionSchemeService.getList().then(function (data) {
+            transactionSchemeService.getListLight().then(function (data) {
 
                 vm.transactionSchemes = data.results;
                 vm.readyStatus.schemes = true;
