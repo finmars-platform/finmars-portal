@@ -11,6 +11,10 @@
         return transactionSchemeRepository.getList();
     };
 
+    var getListLight = function () {
+        return transactionSchemeRepository.getListLight();
+    };
+
     var create = function (scheme) {
         return transactionSchemeRepository.create(scheme);
     };
@@ -29,6 +33,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         create: create,
         getByKey: getByKey,
         update: update,

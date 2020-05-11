@@ -11,6 +11,10 @@
         return csvImportSchemeRepository.getList(options);
     };
 
+    var getListLight = function (options) {
+        return csvImportSchemeRepository.getListLight(options);
+    };
+
     var create = function (scheme) {
         return csvImportSchemeRepository.create(scheme);
     };
@@ -29,6 +33,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         create: create,
         getByKey: getByKey,
         update: update,

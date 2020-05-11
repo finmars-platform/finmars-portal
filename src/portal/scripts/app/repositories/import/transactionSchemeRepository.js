@@ -24,6 +24,19 @@
             })
     };
 
+    var getListLight = function () {
+        return xhrService.fetch(baseUrl + 'import/complex-transaction-import-scheme-light/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+    
+    
     var create = function (scheme) {
         return xhrService.fetch(baseUrl + 'import/complex-transaction-import-scheme/',
             {
@@ -80,6 +93,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         create: create,
         getByKey: getByKey,
         update: update,

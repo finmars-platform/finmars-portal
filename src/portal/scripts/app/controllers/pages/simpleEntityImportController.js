@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
 
@@ -19,9 +17,7 @@
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('SimpleEntityImportControllers', 'initialized');
+    module.exports = function simpleEntityImportController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -66,7 +62,7 @@
 
             var options = {filters: {'content_type': vm.activeContentType}};
 
-            csvImportSchemeService.getList(options).then(function (data) {
+            csvImportSchemeService.getListLight(options).then(function (data) {
                 vm.entitySchemes = data.results;
                 vm.readyStatus.schemes = true;
                 $scope.$apply();
