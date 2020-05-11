@@ -33,6 +33,10 @@
         return transactionTypeRepository.update(id, transaction);
     };
 
+    var patch = function (id, data) {
+        return transactionTypeRepository.patch(id, data);
+    };
+
     var deleteByKey = function (id) {
         return transactionTypeRepository.deleteByKey(id);
     };
@@ -73,6 +77,7 @@
         getByKeyLight: getByKeyLight,
         create: create,
         update: update,
+        patch: patch,
         deleteByKey: deleteByKey,
 
         initBookComplexTransaction: initBookComplexTransaction,

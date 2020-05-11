@@ -18,7 +18,7 @@
                 </span>
                 <span flex></span>
 
-                <div data-ng-if="vm.recalculating" layout="row" class="m-l-16">
+                <div data-ng-if="vm.processing" layout="row" class="m-l-16">
                     <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
                         <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
                         <progress-circular diameter="20"></progress-circular>
@@ -138,7 +138,7 @@
 
                 </md-tabs>
 
-                <div class="transaction-recalculating-overlay" data-ng-show="vm.recalculating">
+                <div class="transaction-recalculating-overlay" data-ng-show="vm.processing">
                     <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
                         <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
                         <progress-circular diameter="100"></progress-circular>
@@ -168,7 +168,7 @@
 
                 <md-button ng-click="vm.toggleLockStatus($event)"
                            ng-if="vm.entity.is_locked == false"
-                           ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.recalculating"
+                           ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing"
                            class="md-raised">
                     Lock
                 </md-button>
@@ -176,14 +176,14 @@
                 <md-button
                         ng-click="vm.toggleLockStatus($event)"
                         ng-if="vm.entity.is_locked == true"
-                        ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.recalculating"
+                        ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing"
                         class="md-raised">
                     Unlock
                 </md-button>
 
                 <md-button ng-click="vm.toggleCancelStatus($event)"
                            ng-if="vm.entity.is_canceled == true"
-                           ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.recalculating"
+                           ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
                            class="md-raised">
                     Activate
                 </md-button>
@@ -191,14 +191,14 @@
                 <md-button
                         ng-click="vm.toggleCancelStatus($event)"
                         ng-if="vm.entity.is_canceled == false"
-                        ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.recalculating"
+                        ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
                         class="md-raised">
                     Ignore
                 </md-button>
 
                 <md-button
                         ng-click="vm.delete($event)"
-                        ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.recalculating"
+                        ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
                         class="md-raised md-warn">
                     Delete
                 </md-button>
@@ -209,20 +209,20 @@
 
         <div style="margin-right: 10px;">
             <md-button class="md-raised m-r-24" ng-click="vm.copy()"
-                       ng-disabled="!vm.checkReadyStatus() || vm.entity.is_canceled || !vm.hasEditPermission || vm.recalculating" >
+                       ng-disabled="!vm.checkReadyStatus() || vm.entity.is_canceled || !vm.hasEditPermission || vm.processing" >
                 Make a copy
             </md-button>
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
             <md-button class="md-raised m-r-24" data-ng-if="vm.entity.status == 2"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.recalculating}"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.rebookAsPending()">
                 Rebook as pending
             </md-button>
             <md-button class="md-raised m-r-24"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.recalculating}"
-                       ng-click="vm.save()">
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
+                       ng-click="vm.rebook()">
                 Rebook
             </md-button>
         </div>

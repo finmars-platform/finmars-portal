@@ -605,19 +605,25 @@
 
                                     var inputRegExpObj = new RegExp(beginningOfExpr + '|' + middleOfExpr, 'g');
 
-                                    if (actionItem[aItemKey].match(inputRegExpObj) && !fieldValue) {
+                                    if (actionItem[aItemKey].match(inputRegExpObj)) {
 
-                                        var errorObj = {
-                                            location: getLocationOfAttribute(userInput.name, tabs, []),
-                                            fieldName: userInput.verbose_name || userInput.name,
-                                            message: 'Field should not be empty.'
-                                        };
+                                        if ((typeof fieldValue === 'number' && isNaN(fieldValue)) || fieldValue === undefined || fieldValue === null || fieldValue === '') {
 
-                                        if (userInput.options && userInput.options.fieldName) {
-                                            errorObj.fieldName = userInput.options.fieldName;
+                                            console.log('fieldValue', fieldValue);
+
+                                            var errorObj = {
+                                                location: getLocationOfAttribute(userInput.name, tabs, []),
+                                                fieldName: userInput.verbose_name || userInput.name,
+                                                message: 'Field should not be empty.'
+                                            };
+
+                                            if (userInput.options && userInput.options.fieldName) {
+                                                errorObj.fieldName = userInput.options.fieldName;
+                                            }
+
+                                            errorsList.push(errorObj);
+
                                         }
-
-                                        errorsList.push(errorObj);
 
                                     }
 
@@ -641,6 +647,8 @@
     var validateComplexTransactionFields = function (item, transactionsTypeActions, tabs, entityAttrs, attrsTypes, userInputs) {
 
         var errors = validateEntityFields(item, 'complex-transaction', tabs, [], entityAttrs, attrsTypes);
+
+        console.log('validateComplexTransactionFields.errors', errors);
 
         if (userInputs && userInputs.length) {
 

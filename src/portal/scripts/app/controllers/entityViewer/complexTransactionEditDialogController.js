@@ -16,13 +16,15 @@
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
-    var metaPermissionsService = require('../../services/metaPermissionsService');
-
-    var uiService = require('../../services/uiService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
+    var transactionTypeService = require('../../services/transactionTypeService');
+
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
+
+    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $state, entityType, entityId) {
 
         var vm = this;
 
@@ -38,7 +40,7 @@
         vm.editLayoutEntityInstanceId = null;
         vm.editLayoutByEntityInsance = false;
 
-        vm.recalculating = false;
+        vm.processing = false;
         vm.formIsValid = true;
         vm.updateTableOnClose = {lockedStatusChanged: false, cancelStatusChanged: false};
 
@@ -465,7 +467,7 @@
 
         vm.recalculate = function (item) {
 
-            vm.recalculating = true;
+            vm.processing = true;
 
             var values = {};
 
@@ -578,7 +580,7 @@
 
                 }
 
-                vm.recalculating = false;
+                vm.processing = false;
 
                 $scope.$apply();
 
@@ -586,7 +588,7 @@
 
                 console.log("Something went wrong with recalculation");
 
-                vm.recalculating = false;
+                vm.processing = false;
                 vm.readyStatus.layout = true;
 
                 $scope.$apply();
@@ -597,7 +599,7 @@
 
         vm.recalculateInputs = function (inputs) {
 
-            vm.recalculating = true;
+            vm.processing = true;
 
             var values = {};
 
@@ -706,7 +708,7 @@
 
                 }
 
-                vm.recalculating = false;
+                vm.processing = false;
 
                 $scope.$apply();
 
@@ -714,7 +716,7 @@
 
                 console.log("Something went wrong with recalculation");
 
-                vm.recalculating = false;
+                vm.processing = false;
                 vm.readyStatus.layout = true;
 
                 $scope.$apply();
@@ -1278,7 +1280,9 @@
 
         };
 
-        vm.save = function ($event) {
+        vm.rebook = function ($event) {
+
+            vm.processing = true;
 
             vm.updateEntityBeforeSave();
 
@@ -1359,14 +1363,25 @@
                         result.process_mode = 'rebook';
 
                         if (dcLayoutHasBeenFixed) {
-                            uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
+
+                            vm.transactionType.book_transaction_layout = dataConstructorLayout;
+
+                            transactionTypeService.update(vm.transactionType.id, vm.transactionType);
+
                         }
 
                         complexTransactionService.rebookComplexTransaction(result.id, result).then(function (data) {
+
+                            toastNotificationService.success('Transaction was successfully rebooked');
+
+                            vm.processing = false;
+
                             resolve(data);
                         }).catch(function (data) {
 
                             console.log('data', data);
+
+                            vm.processing = false;
 
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
@@ -1403,6 +1418,8 @@
         };
 
         vm.rebookAsPending = function ($event) {
+
+            vm.processing = true;
 
             vm.updateEntityBeforeSave();
 
@@ -1457,6 +1474,11 @@
                             });
 
                             complexTransactionService.rebookPendingComplexTransaction(result.id, result).then(function (data) {
+
+                                toastNotificationService.success('Transaction was successfully rebooked');
+
+                                vm.processing = false;
+
                                 resolve(data);
                             });
                         });
