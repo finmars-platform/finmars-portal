@@ -13,7 +13,7 @@
     var configurationImportService = require('../../../services/configuration-import/configurationImportService');
     var mappingsImportService = require('../../../services/mappings-import/mappingsImportService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function configurationImportDialogController($scope, $mdDialog, data) {
 
         console.log("file", data.file);
 

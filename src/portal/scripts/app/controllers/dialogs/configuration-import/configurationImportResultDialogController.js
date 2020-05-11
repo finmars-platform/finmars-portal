@@ -39,16 +39,18 @@
                 content.push(vm.getName(errorItem));
 
                 if (errorItem.error) {
-                    content.push(errorItem.error.message);
+                    if (errorItem.error.message) {
+                        content.push('"' + errorItem.error.message + '"');
+                    } else {
+                        content.push('""');
+                    }
                 } else {
-                    content.push('');
+                    content.push('""');
                 }
 
                 content.push(errorItem.mode);
 
                 result.push(content.join(','));
-
-                result.push('\n')
 
             });
 
