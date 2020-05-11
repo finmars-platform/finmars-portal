@@ -91,7 +91,7 @@
             })
     };
 
-    var update = function (id, transaction) {
+    var update = function (id, data) {
         return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
             {
                 method: 'PUT',
@@ -101,7 +101,21 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(transaction)
+                body: JSON.stringify(data)
+            })
+    };
+
+    var patch = function (id, data) {
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
+            {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
             })
     };
 
@@ -250,6 +264,7 @@
         getByKeyLight: getByKeyLight,
         create: create,
         update: update,
+        patch: patch,
         deleteByKey: deleteByKey,
 
 

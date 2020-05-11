@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
     var fieldResolverService = require('../../services/fieldResolverService');
 
     var usersGroupService = require('../../services/usersGroupService');
@@ -36,7 +35,9 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
+    var transactionTypeService = require('../../services/transactionTypeService');
+
+    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $state, entityType, entityId) {
 
         var vm = this;
 
@@ -281,7 +282,7 @@
 
             return new Promise(function (res, rej) {
 
-                entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+                transactionTypeService.getByKey(vm.entityId).then(function (data) {
 
                     vm.entity = data;
 
@@ -485,7 +486,7 @@
 
                     entityToSave = entityEditorHelper.removeNullFields(entityToSave);
 
-                    entityResolverService.update(vm.entityType, entityToSave.id, entityToSave).then(function (data) {
+                    transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
                         resolve(data);
 
@@ -751,7 +752,7 @@
 
                 } else {
 
-                    entityResolverService.update(vm.entityType, entityToSave.id, entityToSave).then(function (data) {
+                    transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
                         console.log('data', data);
                         //originalEntity = JSON.parse(angular.toJson(vm.entity));
@@ -1378,14 +1379,16 @@
 
                 if (inputsToDelete.length > 0) {
 
-                    uiService.getEditLayoutByInstanceId('complex-transaction', vm.entityId).then(function (editLayoutData) {
+                    transactionTypeService.getByKey(vm.entityId).then(function (data) {
 
-                        if (editLayoutData && editLayoutData.data) {
+                        var book_transaction_layout = data.book_transaction_layout;
 
-                            if (Array.isArray(editLayoutData.data)) {
-                                var editLayoutTabs = editLayoutData.data;
+                        if (book_transaction_layout && book_transaction_layout.data) {
+
+                            if (Array.isArray(book_transaction_layout.data)) {
+                                var editLayoutTabs = book_transaction_layout.data;
                             } else {
-                                var editLayoutTabs = editLayoutData.data.tabs;
+                                var editLayoutTabs = book_transaction_layout.data.tabs;
                             }
 
                             editLayoutTabs.forEach(function (tab) {
@@ -1407,7 +1410,9 @@
 
                             });
 
-                            uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, editLayoutData).then(function () {
+                            transactionTypeService.patch(vm.entityId, {
+                                book_transaction_layout: book_transaction_layout
+                            }).then(function () {
                                 resolve();
                             }).catch(function (error) {
                                 reject(error);
