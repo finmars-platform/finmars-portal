@@ -222,8 +222,9 @@
 
 
         <div class="configuration-import-loader" data-ng-if="vm.processing || !vm.readyStatus.duplicates">
-            <md-progress-circular md-mode="indeterminate"
-                                  md-diameter="48"></md-progress-circular>
+            <div class="m-16" layout="row" layout-sm="column" layout-align="space-around" style="margin-top: 150px;">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
         </div>
 
     </md-dialog-content>

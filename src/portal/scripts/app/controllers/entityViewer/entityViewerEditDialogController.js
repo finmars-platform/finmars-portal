@@ -32,7 +32,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entityId, contextData) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $state, entityType, entityId, contextData) {
 
         var vm = this;
 
