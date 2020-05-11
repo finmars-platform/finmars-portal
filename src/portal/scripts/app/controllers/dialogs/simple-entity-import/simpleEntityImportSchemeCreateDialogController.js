@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
     var metaContentTypesService = require('../../../services/metaContentTypesService');
     var metaService = require('../../../services/metaService');
@@ -13,12 +12,14 @@
 
     var modelService = require('../../../services/modelService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
-        logService.controller('SimpleEntityImportCreateDialogController', 'initialized');
+    module.exports = function simpleEntityImportSchemeCreateDialogController($scope, $mdDialog, data) {
 
         var vm = this;
         vm.entityType = undefined;
+
+        vm.processing = false;
 
         console.log('data', data);
 
@@ -368,11 +369,19 @@
 
             } else {
 
+                vm.processing = true;
+
                 csvImportSchemeService.create(vm.scheme).then(function (data) {
+
+                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.scheme_name + 'was successfully created');
+
+                    vm.processing = false;
 
                     $mdDialog.hide({res: 'agree'});
 
                 }).catch(function (reason) {
+
+                    vm.processing = false;
 
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',

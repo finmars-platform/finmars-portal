@@ -11,7 +11,6 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
     var attributeTypeService = require('../../../services/attributeTypeService');
 
@@ -19,14 +18,17 @@
 
     var modelService = require('../../../services/modelService');
 
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $mdDialog, schemeId) {
 
-        logService.controller('EntityMappingEditDialogController', 'initialized');
+    module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, schemeId) {
 
-        /** JSDOC ignores vm methods, only works for var variable. */
         var vm = this;
+
         vm.entityType = undefined;
+
+        vm.processing = false;
+
         vm.scheme = {};
         vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
 
@@ -79,71 +81,74 @@
             }
         };
 
-        csvImportSchemeService.getByKey(schemeId).then(function (data) {
+        vm.getItem = function(){
 
-            vm.scheme = data;
+            csvImportSchemeService.getByKey(schemeId).then(function (data) {
 
-            vm.readyStatus.scheme = true;
+                vm.scheme = data;
 
-            if (vm.scheme.content_type !== 'instruments.pricehistory' && vm.scheme.content_type !== 'currencyhistorys.currencyhistory') {
+                vm.readyStatus.scheme = true;
 
-                vm.getAttrs();
-            }
+                if (vm.scheme.content_type !== 'instruments.pricehistory' && vm.scheme.content_type !== 'currencyhistorys.currencyhistory') {
 
-            vm.scheme.csv_fields = vm.scheme.csv_fields.sort(function (a, b) {
-                if (a.column > b.column) {
-                    return 1;
-                }
-                if (a.column < b.column) {
-                    return -1;
+                    vm.getAttrs();
                 }
 
-                return 0;
-            });
+                vm.scheme.csv_fields = vm.scheme.csv_fields.sort(function (a, b) {
+                    if (a.column > b.column) {
+                        return 1;
+                    }
+                    if (a.column < b.column) {
+                        return -1;
+                    }
 
-            var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
+                    return 0;
+                });
 
-            vm.scheme.entity_fields.map(function (entityField, entityFieldIndex) {
+                var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
 
-                if (entityField.system_property_key) {
+                vm.scheme.entity_fields.map(function (entityField, entityFieldIndex) {
 
-                    modelAttributes.forEach(function (attribute) {
+                    if (entityField.system_property_key) {
 
-                        if (attribute.key === entityField.system_property_key) {
+                        modelAttributes.forEach(function (attribute) {
 
-                            if (attribute.value_type === 'mc_field') { // remove multiple relation attributes
+                            if (attribute.key === entityField.system_property_key) {
 
-                                vm.scheme.entity_fields.splice(entityFieldIndex, 1)
+                                if (attribute.value_type === 'mc_field') { // remove multiple relation attributes
 
-                            } else {
+                                    vm.scheme.entity_fields.splice(entityFieldIndex, 1)
 
-                                // console.log('entityField', entityField);
-                                // console.log('attribute', attribute);
+                                } else {
 
-                                entityField.value_type = attribute.value_type;
-                                entityField.entity = attribute.value_entity;
-                                entityField.content_type = attribute.content_type;
-                                entityField.code = attribute.code;
+                                    // console.log('entityField', entityField);
+                                    // console.log('attribute', attribute);
+
+                                    entityField.value_type = attribute.value_type;
+                                    entityField.entity = attribute.value_entity;
+                                    entityField.content_type = attribute.content_type;
+                                    entityField.code = attribute.code;
+                                }
+
                             }
 
-                        }
+                        })
 
-                    })
+                    }
 
-                }
+                });
+
+                console.log("classifier vm.scheme.entity_fields", vm.scheme.entity_fields);
+
+                vm.inputsFunctions = vm.getFunctions();
+
+                findPickedDynamicAttrs();
+
+                $scope.$apply();
 
             });
 
-            console.log("classifier vm.scheme.entity_fields", vm.scheme.entity_fields);
-
-            vm.inputsFunctions = vm.getFunctions();
-
-            findPickedDynamicAttrs();
-
-            $scope.$apply();
-
-        });
-
+        };
 
         /**
          * Get list of dynamic attributes .
@@ -439,11 +444,19 @@
 
             } else {
 
+                vm.processing = true;
+
                 csvImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+
+                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.scheme_name + 'was successfully saved');
+
+                    vm.processing = false;
 
                     $mdDialog.hide({status: 'agree'});
 
                 }).catch(function (reason) {
+
+                    vm.processing = false;
 
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
@@ -580,6 +593,14 @@
                 }
             });
         };
+
+        vm.init = function () {
+
+            vm.getItem();
+
+        };
+
+        vm.init()
 
     };
 
