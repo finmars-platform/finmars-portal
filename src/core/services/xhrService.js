@@ -50,7 +50,7 @@
 
             } else {
 
-                if (params.method === 'POST' || params.method === 'PUT' || params.method === 'PATCH') {
+                if (params.method === 'POST' || params.method === 'PUT' || params.method === 'PATCH' || params.method === 'DELETE') {
 
                     var count_cached_requests = 0;
 
