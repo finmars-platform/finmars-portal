@@ -755,7 +755,7 @@
 
                     transactionTypeService.create(vm.entity).then(function (data) {
 
-                        toastNotificationService.success("Transaction Type " + " " + vm.entity.name + ' successfully created');
+                        toastNotificationService.success("Transaction Type " + " " + vm.entity.name + ' was successfully created');
 
                         if (vm.entity.inputs) {
                             vm.entity.inputs.forEach(function (input) {

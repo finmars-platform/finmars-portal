@@ -917,7 +917,7 @@
 
                     var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
 
-                    toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' successfully created');
+                    toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully created');
 
                     $mdDialog.hide({res: 'agree', data: data});
 

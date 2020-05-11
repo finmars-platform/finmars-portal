@@ -766,7 +766,7 @@
                             vm.handleErrors(data);
                         } else {
 
-                            toastNotificationService.success("Transaction Type " + vm.entity.name + ' successfully saved');
+                            toastNotificationService.success("Transaction Type " + vm.entity.name + ' was successfully saved');
 
                             resolve(data)
 
