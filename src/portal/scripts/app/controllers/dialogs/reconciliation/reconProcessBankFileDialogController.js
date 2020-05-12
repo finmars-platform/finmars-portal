@@ -8,7 +8,7 @@
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
     var reconciliationProcessFileService = require('../../../services/reconciliation/reconciliationProcessFileService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function reconProcessBankFileDialogController($scope, $mdDialog, data) {
 
         var vm = this;
 
@@ -67,9 +67,9 @@
 
         };
 
-        vm.getSchemes = function () {
+        vm.getSchemesList = function () {
 
-            transactionSchemeService.getList().then(function (data) {
+            transactionSchemeService.getListLight().then(function (data) {
                 vm.schemes = data.results;
                 vm.readyStatus.schemes = true;
                 $scope.$apply();
@@ -90,13 +90,11 @@
                 autoWrap: true,
                 skipHide: true
             }).then(function (res) {
+
                 if (res && res.status === 'agree') {
-                    console.log('res', res.data);
-                    transactionSchemeService.update(vm.config.scheme, res.data).then(function () {
-                        //vm.getList();
-                        $scope.$apply();
-                    })
+                    vm.getSchemesList();
                 }
+
             });
         };
 
@@ -153,7 +151,7 @@
 
         vm.init = function () {
 
-            vm.getSchemes();
+            vm.getSchemesList();
 
         };
 

@@ -11,7 +11,7 @@
 
     var reconMatchHelper = require('../../../helpers/reconMatchHelper');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function reconMatchDialogController($scope, $mdDialog, data) {
 
         var vm = this;
 
