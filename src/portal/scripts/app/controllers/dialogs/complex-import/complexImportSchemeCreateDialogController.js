@@ -5,23 +5,18 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
     var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
 
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
-    var metaService = require('../../../services/metaService');
-    var attributeTypeService = require('../../../services/attributeTypeService');
 
-    var modelService = require('../../../services/modelService');
-
-    module.exports = function ($scope, $mdDialog, data) {
-
-        logService.controller('SimpleEntityImportCreateDialogController', 'initialized');
+    module.exports = function complexImportSchemeCreateDialogController($scope, $mdDialog, data) {
 
         var vm = this;
+
+        vm.processing = false;
 
         vm.scheme = {
             scheme_name: [],
@@ -79,9 +74,9 @@
             })
         };
 
-        vm.getTransactionImportSchemes = function () {
+        vm.getTransactionImportSchemesList = function () {
 
-            transactionSchemeService.getList().then(function (data) {
+            transactionSchemeService.getListLight().then(function (data) {
 
                 vm.transactionImportSchemes = data.results;
                 vm.readyStatus.transactionImportSchemes = true;
@@ -91,9 +86,9 @@
 
         };
 
-        vm.getCsvImportSchemes = function () {
+        vm.getCsvImportSchemesList = function () {
 
-            csvImportSchemeService.getList().then(function (data) {
+            csvImportSchemeService.getListLight().then(function (data) {
 
                 vm.csvImportSchemes = data.results;
                 vm.readyStatus.csvImportSchemes = true;
@@ -105,11 +100,19 @@
 
         vm.agree = function ($event) {
 
+            vm.processing = true;
+
             complexImportSchemeService.create(vm.scheme).then(function (data) {
+
+                toastNotificationService.success("Complex Import Scheme " + vm.scheme.scheme_name + ' was successfully created');
+
+                vm.processing = false;
 
                 $mdDialog.hide({status: 'agree'});
 
             }).catch(function (reason) {
+
+                vm.processing = false;
 
                 $mdDialog.show({
                     controller: 'ValidationDialogController as vm',
@@ -128,8 +131,8 @@
 
         vm.init = function () {
 
-            vm.getTransactionImportSchemes();
-            vm.getCsvImportSchemes();
+            vm.getTransactionImportSchemesList();
+            vm.getCsvImportSchemesList();
 
             if (data && data.hasOwnProperty('scheme')) {
                 vm.scheme = data.scheme;

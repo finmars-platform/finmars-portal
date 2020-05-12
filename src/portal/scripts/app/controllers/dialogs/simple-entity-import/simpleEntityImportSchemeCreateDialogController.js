@@ -373,7 +373,7 @@
 
                 csvImportSchemeService.create(vm.scheme).then(function (data) {
 
-                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.scheme_name + 'was successfully created');
+                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.scheme_name + ' was successfully created');
 
                     vm.processing = false;
 

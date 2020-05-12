@@ -510,7 +510,7 @@
 
                 if (res && res.status === 'agree') {
 
-                    vm.getSchemes();
+                    vm.getSchemeList();
 
                 }
 
@@ -558,7 +558,7 @@
 
         };
 
-        vm.getSchemes = function(){
+        vm.getSchemeList = function(){
 
             transactionSchemeService.getListLight().then(function (data) {
 
@@ -572,7 +572,7 @@
 
         vm.init = function () {
 
-            vm.getSchemes();
+            vm.getSchemeList();
             vm.getMember();
 
         };

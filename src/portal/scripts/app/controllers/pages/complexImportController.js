@@ -33,12 +33,12 @@
 
         vm.processing = false;
         vm.loaderData = {};
-
+        vm.schemeIsValid = true;
 
         vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
-            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
+            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.schemeIsValid) {
                 return true;
             }
             return false;
@@ -49,6 +49,11 @@
 
                 vm.schemes = data.results;
                 vm.readyStatus.scheme = true;
+
+                if (vm.config.scheme) {
+                    vm.validateScheme();
+                }
+
                 $scope.$apply();
 
             });
@@ -69,9 +74,7 @@
                 autoWrap: true,
                 skipHide: true,
                 locals: {
-                    data: {
-
-                    }
+                    data: {}
                 }
             }).then(function () {
 
@@ -96,7 +99,7 @@
                 }
             }).then(function (res) {
 
-                if(res && res.status === 'agree') {
+                if (res && res.status === 'agree') {
 
                     vm.getSchemeList();
 
@@ -282,7 +285,6 @@
                     actionFields = action.complex_transaction_import_scheme;
 
                 }
-                ;
 
                 actionKeys = Object.keys(actionFields);
 
@@ -301,7 +303,7 @@
                         }
 
                     }
-                    ;
+
                 });
 
                 if (actionFieldsErrors.empty_fields) {
@@ -463,7 +465,7 @@
                         }
 
                     }
-                    ;
+
                 });
 
                 if (actionFieldsErrors.empty_fields) {
@@ -671,17 +673,17 @@
 
                 vm.currentMember = data;
 
-                if(vm.currentMember.is_admin) {
+                if (vm.currentMember.is_admin) {
                     vm.hasSchemeEditPermission = true
                 }
 
                 vm.currentMember.groups_object.forEach(function (group) {
 
-                    if(group.permission_table) {
+                    if (group.permission_table) {
 
                         group.permission_table.configuration.forEach(function (item) {
 
-                            if(item.content_type === 'complex_import.compleximportscheme') {
+                            if (item.content_type === 'complex_import.compleximportscheme') {
                                 if (item.data.creator_change) {
                                     vm.hasSchemeEditPermission = true
                                 }
@@ -698,6 +700,66 @@
                 $scope.$apply();
 
             });
+
+        };
+
+        vm.validateScheme = function () {
+
+            vm.schemeIsValid = true;
+
+            var schemeObject;
+
+            vm.schemes.forEach(function (scheme) {
+
+                if (scheme.id === vm.config.scheme) {
+                    schemeObject = scheme;
+                }
+
+            });
+
+            if (schemeObject.actions && schemeObject.actions.length) {
+
+                schemeObject.actions.forEach(function (action) {
+
+                    if (action.complex_transaction_import_scheme) {
+
+                        if (!action.complex_transaction_import_scheme.complex_transaction_import_scheme && !action.skip) {
+
+                            vm.schemeIsValid = false;
+
+                            vm.schemeValidationErrorMessage = 'Action #' + action.order + ' has wrong configuration.'
+                        }
+
+                    }
+
+                    if (action.csv_import_scheme) {
+
+                        if (!action.csv_import_scheme.csv_import_scheme && !action.skip) {
+
+                            vm.schemeIsValid = false;
+
+                            vm.schemeValidationErrorMessage = 'Action #' + action.order + ' has wrong configuration.'
+
+                        }
+
+                    }
+
+
+                });
+
+            } else {
+
+                vm.schemeIsValid = false;
+
+                vm.schemeValidationErrorMessage = 'Scheme has no actions to process.'
+
+            }
+
+            if (vm.schemeIsValid) {
+                vm.schemeValidationErrorMessage = '';
+            }
+
+            console.log('vm.validateScheme.scheme', schemeObject)
 
         };
 

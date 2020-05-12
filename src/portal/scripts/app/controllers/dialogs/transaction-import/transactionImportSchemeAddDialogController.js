@@ -441,7 +441,7 @@
 
                 transactionSchemeService.create(vm.scheme).then(function (data) {
 
-                    toastNotificationService.success("Transaction Import Scheme " + vm.scheme.scheme_name + 'was successfully created');
+                    toastNotificationService.success("Transaction Import Scheme " + vm.scheme.scheme_name + ' was successfully created');
 
                     vm.processing = false;
 

@@ -11,17 +11,19 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
     var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
 
-    module.exports = function ($scope, $mdDialog, schemeId) {
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
-        logService.controller('EntityMappingEditDialogController', 'initialized');
 
-        /** JSDOC ignores vm methods, only works for var variable. */
+    module.exports = function complexImportSchemeEditDialogController($scope, $mdDialog, schemeId) {
+
         var vm = this;
+
+        vm.processing = false;
+
         vm.scheme = {};
         vm.readyStatus = {
             scheme: false,
@@ -53,7 +55,7 @@
 
         };
 
-        vm.getScheme = function () {
+        vm.getItem = function () {
 
             complexImportSchemeService.getByKey(schemeId).then(function (data) {
 
@@ -85,9 +87,9 @@
             })
         };
 
-        vm.getTransactionImportSchemes = function () {
+        vm.getTransactionImportSchemesList = function () {
 
-            transactionSchemeService.getList().then(function (data) {
+            transactionSchemeService.getListLight().then(function (data) {
 
                 vm.transactionImportSchemes = data.results;
                 vm.readyStatus.transactionImportSchemes = true;
@@ -97,9 +99,9 @@
 
         };
 
-        vm.getCsvImportSchemes = function () {
+        vm.getCsvImportSchemesList = function () {
 
-            csvImportSchemeService.getList().then(function (data) {
+            csvImportSchemeService.getListLight().then(function (data) {
 
                 vm.csvImportSchemes = data.results;
                 vm.readyStatus.csvImportSchemes = true;
@@ -115,11 +117,19 @@
 
         vm.agree = function ($event) {
 
+            vm.processing = true;
+
             complexImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+
+                toastNotificationService.success("Complex Import Scheme " + vm.scheme.scheme_name + ' was successfully saved');
+
+                vm.processing = false;
 
                 $mdDialog.hide({status: 'agree'});
 
             }).catch(function (reason) {
+
+                vm.processing = false;
 
                 $mdDialog.show({
                     controller: 'ValidationDialogController as vm',
@@ -161,9 +171,9 @@
         };
 
         vm.init = function () {
-            vm.getScheme();
-            vm.getTransactionImportSchemes();
-            vm.getCsvImportSchemes();
+            vm.getItem();
+            vm.getTransactionImportSchemesList();
+            vm.getCsvImportSchemesList();
         };
 
         vm.init();
