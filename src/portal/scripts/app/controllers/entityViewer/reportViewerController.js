@@ -118,19 +118,19 @@
                     contextData.pricing_policy_object = Object.assign({}, reportOptions.pricing_policy_object)
                 }
 
-                if (activeObject['pricing_currency.id']) {
-                    contextData.pricing_currency = activeObject['pricing_currency.id'];
+                if (activeObject['instrument.pricing_currency.id']) {
+                    contextData.pricing_currency = activeObject['instrument.pricing_currency.id'];
                     contextData.pricing_currency_object = {
-                        id: activeObject['pricing_currency.id'],
-                        name: activeObject['pricing_currency.name'],
-                        user_code: activeObject['pricing_currency.user_code'],
+                        id: activeObject['instrument.pricing_currency.id'],
+                        name: activeObject['instrument.pricing_currency.name'],
+                        user_code: activeObject['instrument.pricing_currency.user_code'],
                         content_type: "currencies.currency"
                     };
                 }
 
                 if (activeObject['instrument.accrued_currency.id']) {
-                    contextData.accured_currency = activeObject['instrument.accrued_currency.id'];
-                    contextData.accured_currency_object = {
+                    contextData.accrued_currency = activeObject['instrument.accrued_currency.id'];
+                    contextData.accrued_currency_object = {
                         id: activeObject['instrument.accrued_currency.id'],
                         name: activeObject['instrument.accrued_currency.name'],
                         user_code: activeObject['instrument.accrued_currency.user_code'],
@@ -588,7 +588,7 @@
                             });*/
                             var locals = {
                                 entityType: 'currency',
-                                entityId: activeObject['pricing_currency.id'],
+                                entityId: activeObject['instrument.pricing_currency.id'],
                                 contextData: contextData
                             };
 
@@ -626,7 +626,7 @@
                             });*/
                             var locals = {
                                 entityType: 'currency',
-                                entityId: activeObject['accrued_currency.id'],
+                                entityId: activeObject['instrument.accrued_currency.id'],
                                 contextData: contextData
                             };
 
