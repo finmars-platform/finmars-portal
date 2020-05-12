@@ -448,7 +448,7 @@
 
                 csvImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
 
-                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.scheme_name + 'was successfully saved');
+                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.scheme_name + ' was successfully saved');
 
                     vm.processing = false;
 

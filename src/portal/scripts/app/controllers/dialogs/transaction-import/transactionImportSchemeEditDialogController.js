@@ -513,7 +513,7 @@
 
                 transactionSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
 
-                    toastNotificationService.success("Transaction Import Scheme " + vm.scheme.scheme_name + 'was successfully saved');
+                    toastNotificationService.success("Transaction Import Scheme " + vm.scheme.scheme_name + ' was successfully saved');
 
                     vm.processing = false;
 
