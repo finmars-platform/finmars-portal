@@ -6,7 +6,7 @@
         <div data-ng-repeat="item in vm.referenceTables">
 
             <div layout="row">
-                <button class="md-button md-primary" style="min-width: 350px; text-align: left;" data-ng-click="vm.openReferenceTable($event, item)">
+                <button class="md-button md-primary" style="min-width: 350px; text-align: left; text-transform: initial;" data-ng-click="vm.openReferenceTable($event, item)">
                     {{item.name}}
                 </button>
                 <button class="md-button md-raised" data-ng-click="vm.renameReferenceTable($event, item)">Rename
