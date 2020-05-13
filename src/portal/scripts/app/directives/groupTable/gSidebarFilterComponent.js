@@ -31,7 +31,7 @@
                 spExchangeService: '=',
                 contentWrapElement: '='
             },
-            templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
+            templateUrl: 'views/directives/groupTable/g-sidebar-filter-view.html',
             link: function (scope, elem, attrs) {
 
                 scope.filters = scope.evDataService.getFilters();
@@ -45,7 +45,10 @@
 
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                scope.viewContext = scope.evDataService.getViewContext();
                 scope.isLayoutDefault = false;
+
+                scope.isReportFilterFromDashboard = scope.evDataService.dashboard.isReportDateFromDashboard();
 
                 scope.fields = {};
 
@@ -55,7 +58,6 @@
                 var entityAttrs = [];
                 var dynamicAttrs = [];
 
-                var viewContext = scope.evDataService.getViewContext();
                 var contextMenu = {};
                 var ttypes = null;
 
@@ -83,7 +85,7 @@
 
                     var allAttrsList = [];
 
-                    if (viewContext === 'reconciliation_viewer') {
+                    if (scope.viewContext === 'reconciliation_viewer') {
 
                         allAttrsList = scope.attributeDataService.getReconciliationAttributes();
 
@@ -213,6 +215,14 @@
                     }
                     /* < preparing data for complexZhDatePickerDirective > */
 
+                };
+
+                scope.getNameOfReportLastDate = function () {
+                    if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
+                        return 'To';
+                    }
+
+                    return 'Report Date';
                 };
 
                 scope.resolveFilterValue = function (field) {
@@ -960,6 +970,14 @@
 
                         var reportOptions = scope.evDataService.getReportOptions();
 
+                        var options = {
+                            entityType: scope.entityType
+                        };
+
+                        if (scope.viewContext === 'dashboard') {
+                            options.disableChangesSaving = true;
+                        }
+
                         $mdDialog.show({
                             controller: 'GReportSettingsDialogController as vm',
                             templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
@@ -967,9 +985,7 @@
                             targetEvent: $event,
                             locals: {
                                 reportOptions: reportOptions,
-                                options: {
-                                    entityType: scope.entityType
-                                }
+                                options: options
                             }
                         }).then(function (res) {
 

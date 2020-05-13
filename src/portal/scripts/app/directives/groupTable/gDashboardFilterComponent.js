@@ -36,11 +36,13 @@
                 }
 
                 scope.isReport = metaService.isReport(scope.evDataService.getEntityType());
+                scope.viewContext = scope.evDataService.getViewContext();
 
                 scope.fields = {};
 
                 var listLayout = scope.evDataService.getListLayout();
                 scope.layoutName = listLayout.name;
+                scope.isReportFilterFromDashboard = scope.evDataService.dashboard.isReportDateFromDashboard();
 
                 var prepareReportLayoutOptions = function () {
 
@@ -77,6 +79,14 @@
                     }
                     /* < preparing data for complexZhDatePickerDirective > */
 
+                };
+
+                scope.getNameOfReportLastDate = function () {
+                    if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
+                        return 'To';
+                    }
+
+                    return 'Report Date';
                 };
 
                 scope.resolveFilterValue = function (field) {
@@ -132,8 +142,6 @@
                             }
                         }
                     }).then(function (res) {
-
-                        console.log('res', res);
 
                         if (res.status === 'agree') {
 
@@ -517,6 +525,8 @@
                         scope.reportOptions = scope.evDataService.getReportOptions();
                         scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
 
+                        scope.isReportFilterFromDashboard = scope.evDataService.dashboard.isReportDateFromDashboard();
+
                     });
 
                     // not needed for dashboard component rv filters
@@ -546,7 +556,6 @@
                     scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
                         clearUseFromAboveFilters();
                     });
-
 
                 };
 

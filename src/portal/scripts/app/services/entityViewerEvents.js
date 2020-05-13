@@ -71,6 +71,10 @@ module.exports = {
     // < Trigger Split Panel events from root entity viewer >
 
     // Trigger Entity Viewer methods from Split Panel
-    'RECON_TOGGLE_MATCH_EDITOR': 'RECON_TOGGLE_MATCH_EDITOR'
+    'RECON_TOGGLE_MATCH_EDITOR': 'RECON_TOGGLE_MATCH_EDITOR',
     // < Trigger Entity Viewer methods from Split Panel >
+
+    // Event for dashboard
+    'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR'
+    // < Event for dashboard >
 };

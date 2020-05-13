@@ -168,14 +168,10 @@
 
                 });
 
-
                 if (vm.componentData.type === 'report_viewer_grand_total') {
 
-
                     vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
                         vm.updateGrandTotalComponent();
-
                     })
 
                 }
@@ -232,19 +228,39 @@
 
                 }
 
-                if (!fillInModeEnabled) {
+                if (fillInModeEnabled) {
+
+                    if (vm.componentData.type === 'report_viewer' ||
+                        vm.componentData.type === 'report_viewer_split_panel') {
+
+                        vm.entityViewerEventService.addEventListener(evEvents.OPEN_DASHBOARD_COMPONENT_EDITOR, function () {
+                            vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.OPEN_COMPONENT_EDITOR);
+                        });
+
+                    }
+
+                } else {
 
                     vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
                         var columns = vm.entityViewerDataService.getColumns();
-                        vm.userSettings.columns = JSON.parse(angular.toJson(columns));
+
+                        if (vm.componentData.type === 'report_viewer' ||
+                            vm.componentData.type === 'report_viewer_split_panel') {
+                            vm.userSettings.columns = JSON.parse(angular.toJson(columns));
+                        }
+
 
                     });
 
                     vm.entityViewerEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
 
                         var columns = vm.entityViewerDataService.getColumns();
-                        vm.userSettings.columns = JSON.parse(angular.toJson(columns));
+
+                        if (vm.componentData.type === 'report_viewer' ||
+                            vm.componentData.type === 'report_viewer_split_panel') {
+                            vm.userSettings.columns = JSON.parse(angular.toJson(columns));
+                        }
 
                     });
                 }
@@ -424,8 +440,6 @@
 
             vm.applyDashboardChanges = function () {
 
-                console.log('applyDashboardChanges.vm.componentData', vm.componentData)
-
                 if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                     vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
@@ -435,7 +449,7 @@
                 }
 
                 if (vm.componentData.settings.linked_components.hasOwnProperty('report_settings')) {
-
+                    console.log("report settings report settings", vm.componentData.settings.linked_components.report_settings);
                     Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
 
                         var componentId = vm.componentData.settings.linked_components.report_settings[property];
@@ -457,6 +471,7 @@
                                 reportOptions[property] = componentOutput.data.value;
 
                                 vm.entityViewerDataService.setReportOptions(reportOptions);
+                                vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
 
                                 vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                                 vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
@@ -464,7 +479,6 @@
                             }
 
                         }
-
 
                     })
 
@@ -616,7 +630,7 @@
 
             }; */
 
-            vm.initDashboardExchange = function () {
+            vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
 
                 // vm.oldEventExchanges()
                 var clearUseFromAboveFilters = function () {
@@ -658,11 +672,6 @@
                     }
                 });
 
-
-                vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
-                    vm.getView()
-                });
-
                 vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
 
                     var columns = vm.dashboardComponentDataService.getViewerTableColumns();
@@ -694,6 +703,10 @@
                 });
 
                 vm.dashboardComponentEventService.addEventListener(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS, clearUseFromAboveFilters);
+
+                vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
+                    vm.getView()
+                });
 
             };
 
@@ -766,9 +779,6 @@
                     if (vm.componentData.settings.styles && vm.componentData.settings.styles.cell.text_align) {
                         vm.entityViewerDataService.dashboard.setColumnsTextAlign(vm.componentData.settings.styles.cell.text_align);
                     }
-                    /*if (vm.userSettings.hidden_columns && vm.userSettings.hidden_columns.length > 0) {
-                        vm.entityViewerDataService.setKeysOfColumnsToHide(vm.userSettings.hidden_columns);
-                    }*/
 
                 }
 

@@ -98,7 +98,7 @@
                             if (layoutElem.is_hidden) {
                                 domElem.style.display = 'none';
                             } else {
-                                domElem.style.display = 'block';
+                                domElem.style.display = 'flex';
                             }
 
                         }

@@ -118,6 +118,7 @@
                                             <ng-md-icon icon="delete"></ng-md-icon>
                                         </md-button>
                                     </div>
+
                                     <div data-ng-if="tab.editState">
                                         <md-input-container class="ec-tab-item-edit">
                                             <label>Tab name</label>
@@ -220,7 +221,7 @@
             <div>
                 <md-button data-ng-if="vm.attributesAvailable(vm.entityType)"
                            class="md-raised md-primary manage-attrs-btn"
-                           data-ng-click="vm.manageAttrs()">
+                           data-ng-click="vm.manageAttrs($event)">
                     Manage attributes
                 </md-button>
                 <md-button class="md-raised manage-attrs-btn"

@@ -153,7 +153,8 @@
 
         var dashboardData = {
             keysOfColumnsToHide: [],
-            columnsTextAlign: ''
+            columnsTextAlign: '',
+            reportDataFromDashboard: false
         };
 
         data.interfaceLayout = getDefaultInterfaceLayout();
@@ -1258,6 +1259,14 @@
         function getColumnsTextAlign () {
             return dashboardData.columnsTextAlign;
         }
+
+        function isReportDateFromDashboard () {
+            return dashboardData.reportDataFromDashboard;
+        }
+
+        function setReportDateFromDashboardProp (fromDashboard) {
+            dashboardData.reportDataFromDashboard = fromDashboard;
+        }
         // END: Methods for dashboard
 
         return {
@@ -1465,7 +1474,9 @@
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,
                 getKeysOfColumnsToHide: getKeysOfColumnsToHide,
                 setColumnsTextAlign: setColumnsTextAlign,
-                getColumnsTextAlign: getColumnsTextAlign
+                getColumnsTextAlign: getColumnsTextAlign,
+                setReportDateFromDashboardProp: setReportDateFromDashboardProp,
+                isReportDateFromDashboard: isReportDateFromDashboard
             }
 
         }

@@ -1,9 +1,14 @@
-.attributes-manager-view {
+.attributes-manager-dialog {
+  height: 90%;
+  max-height: 90%;
+  width: 90%;
+  max-width: 90%;
+}
 
+.attributes-manager-view {
   .attribute-with-recalculation {
     background-color: #ffde89;
   }
-
 }
 
 .attribute-manager-mixin() {
@@ -110,12 +115,15 @@
 }*/
 
 .attribute-manager-dialog-view {
+  width: 60%;
+
   md-dialog-content {
     //padding: 20px;
     .a-m-tab-content {
       padding: 20px;
     }
   }
+
   md-input-container {
     margin-right: 60px;
     &:last-child {

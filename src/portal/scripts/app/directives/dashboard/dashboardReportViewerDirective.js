@@ -130,14 +130,6 @@
 
                             componentData = res.data.item;
 
-                            scope.vm.componentData = componentData;
-
-                            if (componentData.custom_component_name) {
-                                scope.customName = componentData.custom_component_name;
-                            } else {
-                                scope.customName = null;
-                            }
-
                             scope.dashboardDataService.updateComponent(componentData);
 
                             if (scope.fillInModeData) { // Reloading corresponding component inside tabs from it's filled in copy
@@ -176,6 +168,10 @@
                 };
 
                 scope.disableFillInMode = function () {
+                    var tableComponents = scope.fillInModeData.entityViewerDataService.getComponents();
+                    tableComponents.sidebar = false;
+                    scope.fillInModeData.entityViewerDataService.setComponents(tableComponents);
+
                     scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
                     scope.fillInModeData = null;
                 };
@@ -186,7 +182,56 @@
 
                 scope.initEventListeners = function () {
 
-                    if (!scope.fillInModeData) {
+                    if (scope.fillInModeData) { // if dashboard is in fillIn mode
+
+                        scope.dashboardComponentEventService.addEventListener(dashboardEvents.OPEN_COMPONENT_EDITOR, function () {
+
+                            var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
+
+                            $mdDialog.show({
+                                controller: 'DashboardConstructorReportViewerComponentDialogController as vm',
+                                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html',
+                                multiple: true,
+                                locals: {
+                                    item: scope.vm.componentData,
+                                    dataService: scope.dashboardDataService,
+                                    eventService: {},
+                                    attributeDataService: attributeDataService,
+                                    data: {
+                                        openedFromDashboard: true
+                                    }
+                                }
+
+                            }).then(function (res) {
+
+                                if (res.status === 'agree') {
+
+                                    if (componentData.custom_component_name) {
+                                        scope.customName = componentData.custom_component_name;
+                                    } else {
+                                        scope.customName = null;
+                                    }
+
+                                    scope.dashboardDataService.updateComponent(componentData);
+
+                                    scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+
+
+                                    if (res.action === 'save') {
+                                        saveComponentSettings();
+                                    }
+
+                                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+                                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                                }
+
+                            });
+
+                        });
+
+                    } else {
 
                         scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
@@ -198,9 +243,9 @@
 
                                 setTimeout(function () {
                                     scope.$apply();
-                                },0)
+                                }, 0)
 
-                            }  else if (status === dashboardComponentStatuses.ERROR) {
+                            } else if (status === dashboardComponentStatuses.ERROR) {
 
                                 scope.compErrorMessage = 'ERROR';
                                 var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
@@ -213,7 +258,7 @@
 
                                 setTimeout(function () {
                                     scope.$apply();
-                                },0)
+                                }, 0)
 
                             }
 
@@ -221,21 +266,37 @@
 
                     }
 
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
+
+                        componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                        scope.vm.componentData = componentData;
+
+                        if (componentData.custom_component_name) {
+                            scope.customName = componentData.custom_component_name;
+                        } else {
+                            scope.customName = null;
+                        }
+
+                    });
+
                 };
 
                 scope.init = function () {
 
                     scope.initEventListeners();
 
-                    if (!scope.fillInModeData) {
+                    if (scope.fillInModeData) {
+
+                        scope.readyStatus.data = 'ready';
+
+                    } else {
 
                         scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
 
                         scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    } else {
-                        scope.readyStatus.data = 'ready';
                     }
 
                 };

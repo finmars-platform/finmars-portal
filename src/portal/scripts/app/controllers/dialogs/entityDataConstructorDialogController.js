@@ -762,9 +762,11 @@
             if (!tab.editState) {
                 tab.editState = false;
             }
+
             if (!tab.captionName) {
                 tab.captionName = tab.name;
             }
+
             if (action === 'back') {
 
                 if (!tab.captionName && tab.name === '') {
@@ -773,6 +775,7 @@
                     tab.captionName = tab.name;
                 }
             }
+
             tab.editState = !tab.editState;
         };
 
@@ -824,12 +827,51 @@
             return true;
         };
 
-        vm.manageAttrs = function () {
-            var entityAddress = {entityType: vm.entityType};
+        vm.manageAttrs = function ($event) {
+
+            /*var entityAddress = {entityType: vm.entityType};
             if (vm.fromEntityType) {
                 entityAddress = {entityType: vm.fromEntityType, from: vm.fromEntityType, instanceId: vm.instanceId};
             }
-            $state.go('app.attributesManager', entityAddress);
+            $state.go('app.attributesManager', entityAddress);*/
+            $mdDialog.show({
+                controller: 'AttributesManagerDialogController as vm',
+                templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                preserveScope: false,
+                locals: {
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    attributeTypeService.getList(vm.entityType).then(function (data) {
+
+                        vm.readyStatus.constructor = false;
+
+                        vm.attrs = data.results;
+
+                        emptySocketsWithoutAttrFromLayout();
+
+                        vm.createFieldsTree();
+
+                        vm.readyStatus.constructor = true;
+
+                        vm.updateDrakeContainers();
+                        vm.syncItems();
+
+                        $scope.$apply();
+
+                    });
+
+                }
+
+            });
         };
 
         vm.editLayout = function () {
@@ -848,8 +890,7 @@
         };
 
         var emptyTabSocketsWithoutAttrs = function (tab) {
-            console.log("emtpy socket vm.attrs ", vm.attrs);
-            console.log("emtpy socket tab ", tab);
+
             var i, u;
             tab.layout.fields.forEach(function (field, fieldIndex) {
 
@@ -1245,7 +1286,7 @@
                     if (field.attribute.hasOwnProperty('id')) {
 
                         field.attribute_class = 'attr';
-                        field.id = field.attribjute.id;
+                        field.id = field.attribute.id;
 
                     } else if (entityAttrsKeys.indexOf(field.attribute.key) !== -1) {
 

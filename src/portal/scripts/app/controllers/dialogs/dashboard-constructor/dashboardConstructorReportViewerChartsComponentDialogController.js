@@ -30,6 +30,9 @@
                 name: '',
                 settings: {
                     auto_refresh: false,
+                    linked_components: {
+                        report_settings: {}
+                    }
                 },
                 user_settings: {}
             }
@@ -66,7 +69,9 @@
         vm.reportTypeChange = function() {
 
             vm.item.settings.layout = null;
-            vm.item.settings.linked_components = {};
+            vm.item.settings.linked_components = {
+                report_settings: {}
+            };
 
             deleteChartTypeBasedProps();
             vm.item.user_settings = {};
@@ -106,6 +111,12 @@
         vm.chartTypeChanged = function () {
 
             deleteChartTypeBasedProps();
+            vm.item.settings = {
+                linked_components: {
+                    report_settings: {}
+                }
+            };
+
             vm.item.user_settings = {};
 
             switch (vm.item.type) {

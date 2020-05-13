@@ -34,31 +34,53 @@
                     <div layout="column" style="padding-top: 16px">
 
                         <div data-ng-if="entityType === 'pl-report'">
-                            <complex-zh-date-picker data-date="reportOptions.pl_first_date"
+                            <complex-zh-date-picker data-ng-if="!isReportFilterFromDashboard"
+                                                    data-date="reportOptions.pl_first_date"
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
                                                     data-display-options="datepickerFromDisplayOptions"
                                                     data-callback-method="updateReportOptions()"
                                                     data-ev-data-service="evDataService"
                                                     data-ev-event-service="evEventService"
-                                                    data-attribute-data-service="attributeDataService">
+                                                    data-attribute-data-service="attributeDataService"
+                                                    data-is-disabled="viewContext === 'dashboard'">
                             </complex-zh-date-picker>
+
+                            <md-input-container data-ng-if="isReportFilterFromDashboard">
+                                <label class="uncut-text-on-focus-label">From</label>
+                                <input data-ng-model="reportOptions.pl_first_date"
+                                       type="text"
+                                       class="disabled-element"
+                                       readonly>
+                            </md-input-container>
                         </div>
 
-                        <complex-zh-date-picker data-date="reportOptions.report_date"
+                        <complex-zh-date-picker data-ng-if="!isReportFilterFromDashboard"
+                                                data-date="reportOptions.report_date"
                                                 data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
                                                 data-display-options="datepickerToDisplayOptions"
                                                 data-callback-method="updateReportOptions()"
                                                 ev-data-service="evDataService"
                                                 ev-event-service="evEventService"
-                                                data-attribute-data-service="attributeDataService">
+                                                data-attribute-data-service="attributeDataService"
+                                                data-is-disabled="viewContext === 'dashboard'">
                         </complex-zh-date-picker>
+
+                        <md-input-container data-ng-if="isReportFilterFromDashboard">
+                            <label class="uncut-text-on-focus-label"
+                                   data-ng-bind="getNameOfReportLastDate()"></label>
+                            <input data-ng-model="reportOptions.report_date"
+                                   type="text"
+                                   class="disabled-element"
+                                   readonly>
+                        </md-input-container>
 
                         <md-input-container style="margin-bottom: 20px;">
                             <label>Currency</label>
                             <md-select ng-model="reportOptions.report_currency"
                                        md-container-class="common-select-container"
                                        md-on-close="searchTerm = ''"
-                                       ng-change="updateReportOptions()">
+                                       ng-change="updateReportOptions()"
+                                       data-ng-disabled="viewContext === 'dashboard'">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -84,7 +106,8 @@
                             <md-select ng-model="reportOptions.pricing_policy"
                                        md-container-class="common-select-container"
                                        md-on-close="searchTerm = ''"
-                                       ng-change="updateReportOptions()">
+                                       ng-change="updateReportOptions()"
+                                       data-ng-disabled="viewContext === 'dashboard'">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -150,25 +173,45 @@
                         </md-input-container>
 
                         <div>
-                            <complex-zh-date-picker data-date="reportOptions.begin_date"
+                            <complex-zh-date-picker data-ng-if="!isReportFilterFromDashboard"
+                                                    data-date="reportOptions.begin_date"
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
                                                     data-display-options="datepickerFromDisplayOptions"
                                                     data-callback-method="updateReportOptions()"
                                                     ev-data-service="evDataService"
                                                     ev-event-service="evEventService"
-                                                    data-attribute-data-service="attributeDataService">
+                                                    data-attribute-data-service="attributeDataService"
+                                                    data-is-disabled="viewContext === 'dashboard'">
                             </complex-zh-date-picker>
+
+                            <md-input-container data-ng-if="isReportFilterFromDashboard">
+                                <label class="uncut-text-on-focus-label">Date From</label>
+                                <input data-ng-model="reportOptions.begin_date"
+                                       type="text"
+                                       class="disabled-element"
+                                       readonly>
+                            </md-input-container>
                         </div>
 
                         <div>
-                            <complex-zh-date-picker data-date="reportOptions.end_date"
+                            <complex-zh-date-picker data-ng-if="!isReportFilterFromDashboard"
+                                                    data-date="reportOptions.end_date"
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
                                                     data-display-options="datepickerToDisplayOptions"
                                                     data-callback-method="updateReportOptions()"
                                                     ev-data-service="evDataService"
                                                     ev-event-service="evEventService"
-                                                    data-attribute-data-service="attributeDataService">
+                                                    data-attribute-data-service="attributeDataService"
+                                                    data-is-disabled="viewContext === 'dashboard'">
                             </complex-zh-date-picker>
+
+                            <md-input-container data-ng-if="isReportFilterFromDashboard">
+                                <label class="uncut-text-on-focus-label">Date From</label>
+                                <input data-ng-model="reportOptions.end_date"
+                                       type="text"
+                                       class="disabled-element"
+                                       readonly>
+                            </md-input-container>
                         </div>
 
                     </div>
@@ -274,7 +317,8 @@
                             <md-select ng-model="reportOptions.report_currency"
                                        md-container-class="common-select-container"
                                        md-on-close="searchTerm = ''"
-                                       ng-change="updateReportOptions()">
+                                       ng-change="updateReportOptions()"
+                                       data-ng-disabled="viewContext === 'dashboard'">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -298,7 +342,8 @@
                             <md-select ng-model="reportOptions.pricing_policy"
                                        ng-change="updateReportOptions()"
                                        md-container-class="common-select-container"
-                                       md-on-close="searchTerm = ''">
+                                       md-on-close="searchTerm = ''"
+                                       data-ng-disabled="viewContext === 'dashboard'">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"

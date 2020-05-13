@@ -634,7 +634,8 @@
                         item: JSON.parse(JSON.stringify(scope.componentData)),
                         dataService: scope.dashboardConstructorDataService,
                         eventService: scope.dashboardConstructorEventService,
-                        attributeDataService: scope.attributeDataService
+                        attributeDataService: scope.attributeDataService,
+                        data: {}
                     };
 
                     switch (scope.componentData.type) {

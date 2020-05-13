@@ -9,7 +9,7 @@
     var dashboardHelper = require('../../../helpers/dashboard.helper');
     var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
 
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
+    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService, data) {
 
         var vm = this;
 
@@ -17,6 +17,8 @@
         vm.processing = false;
         vm.filterLinks = [];
         vm.smallRvSelectedCols = [];
+
+        vm.launchedFromDashboard = data.openedFromDashboard;
 
         vm.componentsForMultiselector = [];
         var componentsForLinking = dashboardHelper.getComponentsForLinking();
@@ -98,25 +100,24 @@
 
         vm.layouts = [];
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.reportTypeChange = function(){
-
-            console.log("ReportTypeChange", vm.item.settings.entity_type);
+        vm.reportTypeChange = function() {
 
             vm.item.settings.layout = null;
-            vm.item.settings.linked_components= {};
+            vm.item.settings.linked_components = {};
+            vm.item.settings.linked_components.report_settings = {};
             vm.item.user_settings = {};
 
             vm.getAttributes();
-            vm.getLayouts();
+            vm.getLayouts().then(function () {
+
+                vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
+                vm.smallRvColumnsChanged();
+
+            });
 
         };
 
-
-        vm.getAttributes = function(){
+        vm.getAttributes = function() {
             vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
 
             /*vm.multiselectorAttrs = vm.attributes.map(function (attribute) {
@@ -128,41 +129,49 @@
 
             vm.processing = true;
 
-            uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.layouts = data.results;
+                uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
 
-                vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
-                vm.onRvLayoutChange();
+                    vm.layouts = data.results;
 
-                // for small rv columns multiselector
-                if (vm.item.user_settings.columns) {
+                    vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+                    extractDataFromSelectedLayout();
 
-                    vm.smallRvSelectedCols = vm.item.user_settings.columns.map(function (selCol) {
-                        return selCol.key;
-                    })
+                    // for small rv columns multiselector
+                    if (vm.item.user_settings.columns) {
 
-                } else {
+                        vm.smallRvSelectedCols = vm.item.user_settings.columns.map(function (selCol) {
+                            return selCol.key;
+                        })
 
-                    vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
+                    } else {
 
-                }
-                // < for small rv columns multiselector >
+                        vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
 
-                vm.processing = false;
+                    }
+                    // < for small rv columns multiselector >
 
-                $scope.$apply();
+                    vm.processing = false;
 
-            })
+                    $scope.$apply();
+
+                    resolve();
+
+                })
+
+            });
+
 
         };
 
-        vm.onRvLayoutChange = function () {
+        var extractDataFromSelectedLayout = function () {
 
             vm.selectedLayout = null;
             vm.tableColumns = [];
             vm.tableGroups = [];
             vm.tableColumnsForMultiselector = [];
+            vm.smallRvSelectedCols = [];
             vm.linkingToFilters = [];
 
             if (vm.item.settings.layout) {
@@ -222,6 +231,15 @@
 
                 vm.linkingToFilters = evRvLayoutsHelper.getLinkingToFilters(vm.selectedLayout);
             }
+
+        };
+
+        vm.onRvLayoutChange = function () {
+
+            extractDataFromSelectedLayout();
+
+            vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
+            vm.smallRvColumnsChanged();
 
         };
 
@@ -307,7 +325,11 @@
 
         };
 
-        vm.agree = function () {
+        vm.cancel = function () {
+            $mdDialog.hide({status: 'disagree'});
+        };
+
+        var updateComponentsBeforeSaving = function () {
 
             if (!vm.item.settings.linked_components.filter_links) {
                 vm.item.settings.linked_components.filter_links = [];
@@ -349,7 +371,22 @@
 
             dataService.setComponents(vm.componentsTypes);
 
+        };
+
+        vm.customAgree = function (actionAfterClosing) {
+
+            updateComponentsBeforeSaving();
+
+            $mdDialog.hide({status: 'agree', action: actionAfterClosing});
+
+        };
+
+        vm.agree = function () {
+
+            updateComponentsBeforeSaving();
+
             $mdDialog.hide({status: 'agree'});
+
         };
 
         vm.init = function () {
