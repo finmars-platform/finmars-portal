@@ -6,16 +6,12 @@
     'use strict';
 
     var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/layoutService');
     var metaService = require('../../services/metaService');
 
     var gridHelperService = require('../../services/gridHelperService');
     var attributeTypeService = require('../../services/attributeTypeService');
-    var metaPermissionsService = require('../../services/metaPermissionsService');
-
-    var uiService = require('../../services/uiService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var portfolioService = require('../../services/portfolioService');
@@ -23,9 +19,10 @@
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entity) {
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-        console.log('ComplexTransactionAddDialog entityType, entity', entityType, entity);
+
+    module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $state, entityType, entity) {
 
         var vm = this;
         vm.readyStatus = {content: false, entity: true, permissions: true, transactionTypes: false, layout: false};
@@ -36,7 +33,7 @@
         var dcLayoutHasBeenFixed = false;
         vm.transactionType = null;
 
-        vm.recalculating = false;
+        vm.processing = false;
 
         vm.transactionTypes = [];
 
@@ -346,69 +343,80 @@
                         vm.entity[item] = data.values[item];
                     });
 
-                    if (Array.isArray(data.book_transaction_layout.data)) {
-                        vm.tabs = data.book_transaction_layout.data;
+                    if (data.book_transaction_layout) {
+
+                        vm.missingLayoutError = false;
+
+                        if (Array.isArray(data.book_transaction_layout.data)) {
+                            vm.tabs = data.book_transaction_layout.data;
+                        } else {
+                            vm.tabs = data.book_transaction_layout.data.tabs;
+                            vm.fixedArea = data.book_transaction_layout.data.fixedArea;
+                        }
+
+
+                        dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
+
+                        vm.userInputs = [];
+                        vm.tabs.forEach(function (tab) {
+                            tab.layout.fields.forEach(function (field) {
+                                if (field.attribute_class === 'userInput') {
+                                    vm.userInputs.push(field.attribute);
+                                }
+                            });
+                        });
+
+                        if (vm.fixedArea && vm.fixedArea.isActive) {
+                            vm.fixedArea.layout.fields.forEach(function (field) {
+                                if (field.attribute_class === 'userInput') {
+                                    vm.userInputs.push(field.attribute);
+                                }
+                            });
+                        }
+
+                        if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
+                            vm.tabs.forEach(function (tab, index) {
+                                tab.tabOrder = index;
+                            });
+                        }
+
+                        mapAttributesAndFixFieldsLayout();
+
+
+                        inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                            vm.userInputs.forEach(function (userInput) {
+                                if (userInput.name === inputWithCalc.name) {
+                                    if (inputWithCalc.can_recalculate === true) {
+                                        userInput.buttons = [
+                                            {
+                                                icon: 'iso',
+                                                tooltip: 'Recalculate',
+                                                caption: '',
+                                                classes: 'md-raised',
+                                                action: vm.recalculate
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+
+                        });
+
+                        vm.oldValues = {};
+
+                        vm.userInputs.forEach(function (item) {
+                            vm.oldValues[item.name] = vm.entity[item.name]
+                        });
+
+
                     } else {
-                        vm.tabs = data.book_transaction_layout.data.tabs;
-                        vm.fixedArea = data.book_transaction_layout.data.fixedArea;
+                        vm.missingLayoutError = true;
                     }
-
-                    dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
-
-                    vm.userInputs = [];
-                    vm.tabs.forEach(function (tab) {
-                        tab.layout.fields.forEach(function (field) {
-                            if (field.attribute_class === 'userInput') {
-                                vm.userInputs.push(field.attribute);
-                            }
-                        });
-                    });
-
-                    if (vm.fixedArea && vm.fixedArea.isActive) {
-                        vm.fixedArea.layout.fields.forEach(function (field) {
-                            if (field.attribute_class === 'userInput') {
-                                vm.userInputs.push(field.attribute);
-                            }
-                        });
-                    }
-
-                    if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
-                        vm.tabs.forEach(function (tab, index) {
-                            tab.tabOrder = index;
-                        });
-                    }
-
-                    mapAttributesAndFixFieldsLayout();
 
                     vm.readyStatus.layout = true;
-
-                    inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                        vm.userInputs.forEach(function (userInput) {
-                            if (userInput.name === inputWithCalc.name) {
-                                if (inputWithCalc.can_recalculate === true) {
-                                    userInput.buttons = [
-                                        {
-                                            icon: 'iso',
-                                            tooltip: 'Recalculate',
-                                            caption: '',
-                                            classes: 'md-raised',
-                                            action: vm.recalculate
-                                        }
-                                    ]
-                                }
-                            }
-                        })
-
-                    });
-
-                    vm.oldValues = {};
-
-                    vm.userInputs.forEach(function (item) {
-                        vm.oldValues[item.name] = vm.entity[item.name]
-                    });
-
                     resolve();
+
 
                 });
 
@@ -544,8 +552,7 @@
 
         vm.recalculate = function (item) {
 
-            vm.recalculating = true;
-            vm.readyStatus.layout = false;
+            vm.processing = true;
 
             var values = {};
 
@@ -598,6 +605,7 @@
                     }
                 });
 
+
                 if (Array.isArray(data.book_transaction_layout.data)) {
                     vm.tabs = data.book_transaction_layout.data;
                 } else {
@@ -632,8 +640,6 @@
 
                 mapAttributesAndFixFieldsLayout();
 
-                vm.readyStatus.layout = true;
-
                 inputsWithCalculations.forEach(function (inputWithCalc) {
 
                     vm.userInputs.forEach(function (userInput) {
@@ -656,7 +662,8 @@
 
                 console.log('vm.entity', vm.entity);
 
-                vm.recalculating = false;
+
+                vm.processing = false;
 
                 $scope.$apply();
 
@@ -664,7 +671,7 @@
 
                 console.log("Something went wrong with recalculation");
 
-                vm.recalculating = false;
+                vm.processing = false;
                 vm.readyStatus.layout = true;
 
                 $scope.$apply();
@@ -675,7 +682,7 @@
 
         vm.recalculateInputs = function (inputs) {
 
-            vm.recalculating = true;
+            vm.processing = true;
             vm.readyStatus.layout = false;
 
             var values = {};
@@ -729,6 +736,7 @@
                     }
                 });
 
+
                 if (Array.isArray(data.book_transaction_layout.data)) {
                     vm.tabs = data.book_transaction_layout.data;
                 } else {
@@ -763,8 +771,6 @@
 
                 mapAttributesAndFixFieldsLayout();
 
-                vm.readyStatus.layout = true;
-
                 inputsWithCalculations.forEach(function (inputWithCalc) {
 
                     vm.userInputs.forEach(function (userInput) {
@@ -787,7 +793,9 @@
 
                 console.log('vm.entity', vm.entity);
 
-                vm.recalculating = false;
+
+                vm.readyStatus.layout = true;
+                vm.processing = false;
 
                 $scope.$apply();
 
@@ -795,7 +803,7 @@
 
                 console.log("Something went wrong with recalculation");
 
-                vm.recalculating = false;
+                vm.processing = false;
                 vm.readyStatus.layout = true;
 
                 $scope.$apply();
@@ -938,7 +946,7 @@
 
         };
 
-        vm.save = function ($event) {
+        vm.book = function ($event) {
 
             vm.updateEntityBeforeSave();
 
@@ -955,11 +963,11 @@
                                                                  vm.userInputs);*/
 
             var errors = entityEditorHelper.validateComplexTransactionFields(vm.entity,
-                                                                             vm.transactionType.actions,
-                                                                             vm.tabs,
-                                                                             vm.entityAttrs,
-                                                                             vm.attrs,
-                                                                             vm.userInputs);
+                vm.transactionType.actions,
+                vm.tabs,
+                vm.entityAttrs,
+                vm.attrs,
+                vm.userInputs);
 
             if (errors.length) {
 
@@ -1000,6 +1008,8 @@
 
                 new Promise(function (resolve, reject) {
 
+                    vm.processing = true;
+
                     transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type, {}).then(function (data) {
 
                         var res = Object.assign(data, resultEntity);
@@ -1008,14 +1018,24 @@
                         res.complex_transaction.is_canceled = resultEntity.is_canceled;
 
                         if (dcLayoutHasBeenFixed) {
-                            uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, dataConstructorLayout);
+
+                            vm.transactionType.book_transaction_layout = dataConstructorLayout;
+
+                            transactionTypeService.update(vm.transactionType.id, vm.transactionType);
+
                         }
 
                         transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
 
+                            vm.processing = false;
+
+                            toastNotificationService.success('Transaction was successfully booked');
+
                             resolve(data);
 
                         }).catch(function (data) {
+
+                            vm.processing = false;
 
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
@@ -1039,6 +1059,7 @@
                     });
 
                 }).then(function (data) {
+
 
                     if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
@@ -1111,6 +1132,9 @@
                             res.complex_transaction.is_canceled = resultEntity.is_canceled;
 
                             transactionTypeService.bookPendingComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                toastNotificationService.success('Transaction was successfully booked');
+
                                 resolve(data);
                             });
                         });
@@ -1409,7 +1433,7 @@
 
             vm.transactionType.inputs.forEach(function (item) {
 
-                if(item.name === changedInput.name) {
+                if (item.name === changedInput.name) {
                     resultInput = item;
                 }
             });

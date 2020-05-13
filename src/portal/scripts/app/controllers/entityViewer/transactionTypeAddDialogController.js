@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
     var fieldResolverService = require('../../services/fieldResolverService');
 
     var usersGroupService = require('../../services/usersGroupService');
@@ -25,12 +24,15 @@
     var tagService = require('../../services/tagService');
     var usersService = require('../../services/usersService');
 
+    var transactionTypeService = require('../../services/transactionTypeService');
 
     var uiService = require('../../services/uiService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entity) {
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
+    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $state, entityType, entity) {
 
         var vm = this;
         vm.readyStatus = {content: false, entity: true, permissions: true};
@@ -333,6 +335,15 @@
 
                 });
             }
+
+            vm.entity.inputs.forEach(function (input) {
+
+                if (input.settings && input.settings.linked_inputs_names) {
+                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+                }
+
+            });
+
 
         };
 
@@ -712,7 +723,9 @@
                 ]
             };
 
-            return uiService.updateEditLayoutByInstanceId('complex-transaction', instanceId, editLayoutData);
+            return transactionTypeService.patch(instanceId, {
+                book_transaction_layout: editLayoutData
+            });
 
         };
 
@@ -752,7 +765,20 @@
 
                 } else {
 
-                    entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
+                    transactionTypeService.create(vm.entity).then(function (data) {
+
+                        toastNotificationService.success("Transaction Type " + " " + vm.entity.name + ' was successfully created');
+
+                        if (vm.entity.inputs) {
+                            vm.entity.inputs.forEach(function (input) {
+
+                                if (input.settings && input.settings.linked_inputs_names) {
+                                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                                }
+
+                            });
+
+                        }
 
                         createDefaultEditLayout(data).then(function () {
                             vm.processing = false;

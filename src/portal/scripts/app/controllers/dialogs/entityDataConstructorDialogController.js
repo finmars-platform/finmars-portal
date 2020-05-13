@@ -17,9 +17,11 @@
     var ScrollHelper = require('../../helpers/scrollHelper');
     var layoutService = require('../../services/layoutService');
 
+    var transactionTypeService = require('../../services/transactionTypeService');
+
     var scrollHelper = new ScrollHelper();
 
-    module.exports = function ($scope, data, $stateParams, $state, $mdDialog) {
+    module.exports = function entityDataConstructorDialogController($scope, data, $stateParams, $state, $mdDialog) {
 
         var vm = this;
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
@@ -162,10 +164,10 @@
 
                 if (vm.instanceId) {
 
-                    uiService.getEditLayoutByInstanceId(vm.entityType, vm.instanceId).then(function (data) {
+                    transactionTypeService.getByKey(vm.instanceId).then(function (data) {
 
-                        if (data) {
-                            vm.ui = data;
+                        if (data.book_transaction_layout) {
+                            vm.ui = data.book_transaction_layout;
                         } else {
                             vm.uiIsDefault = true;
                             vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
@@ -174,6 +176,7 @@
                         setDataConstructorLayout();
 
                         resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+
 
                     });
 
@@ -574,7 +577,7 @@
 
                 if (vm.uiIsDefault) {
                     if (vm.instanceId) {
-                        uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
+                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data) {
                             console.log('layout saved1');
 
                             $scope.$apply();
@@ -592,7 +595,7 @@
                     }
                 } else {
                     if (vm.instanceId) {
-                        uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
+                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data) {
                             console.log('layout saved3');
 
                             $scope.$apply();

@@ -13,7 +13,14 @@
                         <md-tooltip md-direction="bottom">You don't have permission to edit this form</md-tooltip>
                 </ng-md-icon>
             </span>
-            <span flex></span>
+
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                    <progress-circular diameter="20"></progress-circular>
+                </div>
+                — Processing
+            </div>
+
         </div>
     </md-toolbar>
     <md-dialog-content style="height: 100%">

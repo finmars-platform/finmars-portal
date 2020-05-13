@@ -52,6 +52,14 @@
                     item.instrument_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.instrument_object.instrument_type);
                 }
 
+                if (item.instrument_object.pricing_currency) {
+                    item.instrument_object.pricing_currency_object = findEntityObject(report, 'item_currencies', item.instrument_object.pricing_currency);
+                }
+
+                if (item.instrument_object  .accrued_currency) {
+                    item.instrument_object.accrued_currency_object = findEntityObject(report, 'item_currencies', item.instrument_object.accrued_currency);
+                }
+
             }
 
 
@@ -322,6 +330,8 @@
 
             if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key] && source[attribute.key + '_object']) {
 
+                result[resultKey + '.id'] = source[attribute.key + '_object'].id
+
                 recursiveUnwrapRelation(result, resultKey, attribute.value_content_type, source[attribute.key + '_object'])
 
             } else {
@@ -437,6 +447,7 @@
             'account_position': 'accounts.account',
             'currency': 'currencies.currency',
             'pricing_currency': 'currencies.currency',
+            'accrued_currency': 'currencies.currency',
             'settlement_currency': 'currencies.currency',
             'transaction_currency': 'currencies.currency',
             'portfolio': 'portfolios.portfolio',

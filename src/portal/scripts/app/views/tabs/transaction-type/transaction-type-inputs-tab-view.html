@@ -161,9 +161,16 @@
 
                 </td>
                 <td>
-                    <md-input-container class="no-error-spacer">
-                        <input type="text" data-ng-model="item.settings.linked_inputs_names">
-                    </md-input-container>
+
+                    <two-fields-multiselect ng-model="item.settings.linked_inputs_names"
+                                            data-get-data-method="vm.getInputForLinking()"
+                                            data-model="item.settings.linked_inputs_names"
+
+                                            data-name-property="name"
+                                            class="table-filter-input-container">
+                    </two-fields-multiselect>
+
+
                 </td>
                 <td class="ttype-inputs-actions-td">
                     <!--<md-button ng-if="vm.entity.id"

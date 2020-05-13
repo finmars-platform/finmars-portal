@@ -27,12 +27,16 @@
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entity) {
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $state, entityType, entity) {
 
         console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
 
         var vm = this;
+
+        vm.processing = false;
+
         vm.readyStatus = {content: false, entity: true, permissions: true};
         vm.entityType = entityType;
 
@@ -883,6 +887,8 @@
 
         vm.save = function ($event) {
 
+            vm.processing = true;
+
             vm.updateEntityBeforeSave();
 
             var errors = entityEditorHelper.validateEntityFields(vm.entity,
@@ -919,9 +925,17 @@
 
                 entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
+                    vm.processing = false;
+
+                    var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
+
+                    toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully created');
+
                     $mdDialog.hide({res: 'agree', data: data});
 
                 }).catch(function (data) {
+
+                    vm.processing = false;
 
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
