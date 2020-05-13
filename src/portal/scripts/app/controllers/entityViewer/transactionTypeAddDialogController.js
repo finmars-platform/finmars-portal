@@ -838,7 +838,7 @@
         };
 
         vm.getInstrumentTypes = function () {
-            instrumentTypeService.getList().then(function (data) {
+            instrumentTypeService.getListLight().then(function (data) {
                 vm.instrumentTypes = data.results;
                 vm.readyStatus.instrumentTypes = true;
                 $scope.$apply();
