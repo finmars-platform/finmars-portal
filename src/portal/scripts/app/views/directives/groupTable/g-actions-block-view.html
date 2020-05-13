@@ -119,9 +119,12 @@
                         </div>
 
                         <div class="g-tr-btn-holder" flex="50">
-                            <md-button class="md-raised long-text-btn"
+                            <!--<md-button class="md-raised long-text-btn"
                                        data-ng-click="openViewConstructor($event)"
                                        data-ui-sref="app.attributesManager({entityType: entityType})">Manage Attr
+                            </md-button>-->
+                            <md-button class="md-raised long-text-btn"
+                                       data-ng-click="openManageAttrsDialog($event)">Manage Attr
                             </md-button>
                         </div>
                     </div>
@@ -498,6 +501,7 @@
                                             <span>Open Balance Report view panel</span>
                                         </md-button>
                                     </md-menu-item>
+
                                     <md-menu-item>
                                         <md-button ng-click="toggleSplitPanel($event, 'pl-report')"
                                                    class="g-settings-option-btn">
@@ -511,6 +515,7 @@
                                             <span>Open P&L Report view panel</span>
                                         </md-button>
                                     </md-menu-item>
+
                                     <md-menu-item>
                                         <md-button ng-click="toggleSplitPanel($event, 'transaction-report')"
                                                    class="g-settings-option-btn">
@@ -634,6 +639,14 @@
                         <div class="g-tr-btn-holder width-100">
                             <md-button class="md-raised"
                                        data-ng-click="openEvLayout()">Edit layout
+                            </md-button>
+                        </div>
+                    </div>
+
+                    <div layout="row">
+                        <div class="g-tr-btn-holder width-100">
+                            <md-button class="md-raised"
+                                       data-ng-click="openDashboardComponentConstructor()">Edit component
                             </md-button>
                         </div>
                     </div>

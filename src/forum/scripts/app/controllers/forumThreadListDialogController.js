@@ -11,8 +11,8 @@
 		var vm = this;
 
 		vm.cancel = function () {
-			$mdDialog.cancel();
-		}
+			$mdDialog.hide();
+		};
 
 		vm.agree = function () {
 			$mdDialog.hide({status: 'agree', data: {threadListTitle: vm.listTitle}});

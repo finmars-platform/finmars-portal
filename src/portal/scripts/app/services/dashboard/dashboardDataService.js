@@ -105,6 +105,10 @@
             return layoutData.data.components_types;
         }
 
+        function setComponents (components) {
+            layoutData.data.components_types = components;
+        }
+
         function getComponentById (componentId) {
 
             for (var i = 0; i < layoutData.data.components_types.length; i++) {
@@ -163,6 +167,7 @@
             setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction,*/
             getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
             getComponents: getComponents,
+            setComponents: setComponents,
             updateComponent: updateComponent,
             getComponentById: getComponentById,
 

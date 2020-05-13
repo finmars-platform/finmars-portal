@@ -1,6 +1,11 @@
-<md-dialog aria-label="" ng-cloak class="attribute-manager-dialog-view" style="width: 60%">
+<md-dialog aria-label="attribute manager dialog"
+           class="attribute-manager-dialog-view draggable-dialog attrManagerElemToResize"
+           drag-dialog
+           style="width: 60%">
     <md-toolbar>
         <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
             <h2>Attribute manager</h2>
             <span flex></span>
         </div>
@@ -266,5 +271,9 @@
                    style="margin-right:20px;">
             Save
         </md-button>
+
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>
