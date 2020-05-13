@@ -7,7 +7,13 @@
             <is-draggable-sign></is-draggable-sign>
 
             <h2>Add {{vm.entityTypeSlug()}}</h2>
-            <span flex></span>
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                    <progress-circular diameter="20"></progress-circular>
+                </div>
+                — Processing
+            </div>
+
         </div>
     </md-toolbar>
     <md-dialog-content style="height: 100%">
@@ -259,7 +265,7 @@
                 Cancel
             </md-button>
             <md-button class="md-raised"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid}"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
                        ng-click="vm.save()"
                        style="margin-right:20px;">
                 Add

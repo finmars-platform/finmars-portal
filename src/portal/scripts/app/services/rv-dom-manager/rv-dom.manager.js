@@ -772,11 +772,11 @@
             return true;
         }
 
-        if (obj['item_type'] === 1 && obj['pricing_currency.id'] && option.action === 'edit_pricing_currency') { // item_type = 1 - instrument
+        if (obj['item_type'] === 1 && obj['instrument.pricing_currency.id'] && option.action === 'edit_pricing_currency') { // item_type = 1 - instrument
             return true;
         }
 
-        if (obj['item_type'] === 1 && obj['accrued_currency.id'] && option.action === 'edit_accrued_currency') { // item_type = 1 - instrument
+        if (obj['item_type'] === 1 && obj['instrument.accrued_currency.id'] && option.action === 'edit_accrued_currency') { // item_type = 1 - instrument
             return true;
         }
 

@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
     var importTransactionService = require('../../services/import/importTransactionService');
 
@@ -17,8 +15,6 @@
     var baseUrl = baseUrlService.resolve();
 
     module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('TransactionImportController', 'initialized');
 
         var vm = this;
 
@@ -49,8 +45,6 @@
         vm.loadIsAvailable = function () {
             return !vm.readyStatus.processing && vm.config.scheme && vm.config.error_handling;
         };
-
-
 
         vm.checkExtension = function (file, extension, $event) {
             console.log('file', file);
@@ -500,6 +494,7 @@
         };
 
         vm.editScheme = function ($event) {
+
             $mdDialog.show({
                 controller: 'TransactionImportSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
@@ -512,14 +507,15 @@
                 autoWrap: true,
                 skipHide: true
             }).then(function (res) {
+
                 if (res && res.status === 'agree') {
-                    console.log('res', res.data);
-                    transactionSchemeService.update(vm.config.scheme, res.data).then(function () {
-                        //vm.getList();
-                        $scope.$apply();
-                    })
+
+                    vm.getSchemeList();
+
                 }
+
             });
+
         };
 
         vm.cancel = function () {
@@ -562,14 +558,21 @@
 
         };
 
-        vm.init = function () {
+        vm.getSchemeList = function(){
 
-            transactionSchemeService.getList().then(function (data) {
+            transactionSchemeService.getListLight().then(function (data) {
+
                 vm.transactionSchemes = data.results;
                 vm.readyStatus.schemes = true;
                 $scope.$apply();
+
             });
 
+        };
+
+        vm.init = function () {
+
+            vm.getSchemeList();
             vm.getMember();
 
         };

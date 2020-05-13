@@ -12,7 +12,7 @@
 
         <md-input-container data-ng-class="{'disabled-btn': vm.loading}">
             <label for="">Effective date to</label>
-            <zh-date-picker date-data-value="vm.effective_date_to"
+            <zh-date-picker data-date-value="vm.effective_date_to"
                             data-callback-method="vm.events = []"
             ></zh-date-picker>
         </md-input-container>
@@ -28,7 +28,8 @@
         <div class="m-l-16" layout="row" layout-sm="column" layout-align="space-around"
              data-ng-if="vm.loading"
         >
-            <md-progress-circular md-diameter="30" md-mode="indeterminate"></md-progress-circular>
+            <!--<md-progress-circular md-diameter="30" md-mode="indeterminate"></md-progress-circular>-->
+            <progress-circular diameter="30"></progress-circular>
         </div>
 
     </div>

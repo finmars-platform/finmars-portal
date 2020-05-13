@@ -77,22 +77,6 @@
         return uiRepository.getDefaultEditLayout(entityType);
     };
 
-    var getEditLayoutByInstanceId = function (entityType, id) {
-        return uiRepository.getEditLayoutByInstanceId(entityType, id).then(function (data) {
-            if (entityType == 'complex-transaction') {
-                return data.book_transaction_layout;
-            }
-        });
-    };
-
-    var updateEditLayoutByInstanceId = function (entityType, id, editLayout) {
-
-        if (entityType == 'complex-transaction') {
-            return uiRepository.updateEditLayoutByInstanceId(entityType, id, {book_transaction_layout: editLayout})
-        }
-
-    };
-
     var getConfigurationList = function () {
         return uiRepository.getConfigurationList();
     };
@@ -226,11 +210,8 @@
         getListLayoutByKey: getListLayoutByKey,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
-        getEditLayoutByInstanceId: getEditLayoutByInstanceId,
-        updateEditLayoutByInstanceId: updateEditLayoutByInstanceId,
 
         deleteListLayoutByKey: deleteListLayoutByKey,
-
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,
@@ -263,7 +244,6 @@
         createTemplateLayout: createTemplateLayout,
         updateTemplateLayout: updateTemplateLayout,
         deleteTemplateLayoutByKey: deleteTemplateLayoutByKey,
-
 
 
         getContextMenuLayoutList: getContextMenuLayoutList,

@@ -3,13 +3,9 @@
  */
 (function () {
 
-    var logService = require('../../../../../../core/services/logService');
-
     var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('SettingsGeneralComplexImportController', 'initialized');
+    module.exports = function settingsGeneralComplexImportController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -31,7 +27,10 @@
             $mdDialog.show({
                 controller: 'ComplexImportSchemeCreateDialogController as vm',
                 templateUrl: 'views/dialogs/complex-import/complex-import-scheme-create-dialog-view.html',
-                targetEvent: $event
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                }
             }).then(function (res) {
 
                 console.log('res', res);

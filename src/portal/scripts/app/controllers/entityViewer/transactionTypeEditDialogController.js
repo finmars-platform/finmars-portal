@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
     var fieldResolverService = require('../../services/fieldResolverService');
 
     var usersGroupService = require('../../services/usersGroupService');
@@ -34,7 +33,11 @@
 
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entityId) {
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
+    var transactionTypeService = require('../../services/transactionTypeService');
+
+    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $state, entityType, entityId) {
 
         var vm = this;
 
@@ -132,7 +135,7 @@
                                     }
                                     if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
                                         group.objectPermissions.manage = true;
-                                        vm.canManagePermissions  = true;
+                                        vm.canManagePermissions = true;
                                     }
                                     if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
                                         group.objectPermissions.change = true;
@@ -291,7 +294,7 @@
 
             return new Promise(function (res, rej) {
 
-                entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+                transactionTypeService.getByKey(vm.entityId).then(function (data) {
 
                     vm.entity = data;
 
@@ -310,6 +313,25 @@
                         }
 
                     });
+
+                    if (vm.entity.inputs) {
+                        vm.entity.inputs.forEach(function (input) {
+
+                            if (input.settings && input.settings.linked_inputs_names) {
+                                input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                            }
+
+                        });
+                    }
+
+                    /*vm.editLayout = function () {
+                        $state.go('app.data-constructor', {
+                            entityType: 'complex-transaction',
+                            from: vm.entityType,
+                            instanceId: data.id
+                        });
+                        $mdDialog.hide();
+                    };*/
 
                     /*vm.manageAttrs = function () {
                         $state.go('app.attributesManager', {
@@ -387,11 +409,13 @@
 
         };
 
-        vm.updateEntityBeforeSave = function () {
+        vm.updateEntityBeforeSave = function (entity) {
 
-            if (vm.entity.attributes) {
+            var updatedEntity = JSON.parse(JSON.stringify(entity));
 
-                vm.entity.attributes.forEach(function (attribute) {
+            if (updatedEntity.attributes) {
+
+                updatedEntity.attributes.forEach(function (attribute) {
 
                     var value_type = attribute.attribute_type_object.value_type;
                     var key = attribute.attribute_type_object.user_code;
@@ -413,7 +437,7 @@
 
             }
 
-            vm.entity.object_permissions = [];
+            updatedEntity.object_permissions = [];
 
             if (vm.groups) {
                 vm.groups.forEach(function (group) {
@@ -445,6 +469,18 @@
                 });
             }
 
+
+            updatedEntity.inputs.forEach(function (input) {
+
+                if (input.settings && input.settings.linked_inputs_names) {
+                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+                }
+
+            });
+
+            return updatedEntity
+
+
         };
 
         vm.updateItem = function () {
@@ -453,15 +489,15 @@
 
             return new Promise(function (resolve) {
 
-                vm.updateEntityBeforeSave();
+                var entityToSave =  vm.updateEntityBeforeSave(vm.entity);
 
-                var isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+                var isValid = entityEditorHelper.checkForNotNullRestriction(entityToSave, vm.entityAttrs, vm.attrs);
 
                 if (isValid) {
 
-                    var result = entityEditorHelper.removeNullFields(vm.entity);
+                    entityToSave = entityEditorHelper.removeNullFields(entityToSave);
 
-                    entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+                    transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
                         resolve(data);
 
@@ -693,19 +729,13 @@
 
         };
 
-        vm.save = function (entityToSave, withoutUpdating) {
+        vm.save = function () {
 
             vm.processing = true;
 
             var saveTTypePromise = new Promise(function (resolve, reject) {
 
-                if (!entityToSave) {
-                    entityToSave = JSON.parse(angular.toJson(vm.entity));
-                }
-
-                if (!withoutUpdating) {
-                    vm.updateEntityBeforeSave();
-                }
+                var entityToSave =  vm.updateEntityBeforeSave(vm.entity);
 
                 var actionsErrors = checkActionsForEmptyFields(entityToSave.actions);
                 var entityErrors = checkEntityForEmptyFields(entityToSave);
@@ -733,11 +763,12 @@
 
                 } else {
 
-                    entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
+                    transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
                         console.log('data', data);
                         //originalEntity = JSON.parse(angular.toJson(vm.entity));
                         originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
+
 
                         vm.processing = false;
                         $scope.$apply();
@@ -746,10 +777,9 @@
                             vm.handleErrors(data);
                         } else {
 
-                            if (!withoutUpdating) {
-                                // $mdDialog.hide({res: 'agree', data: data});
-                                resolve(data)
-                            }
+                            toastNotificationService.success("Transaction Type " + vm.entity.name + ' was successfully saved');
+
+                            resolve(data)
 
                         }
 
@@ -999,7 +1029,7 @@
         vm.getInstrumentTypes();
         //vm.getTags();
 
-/*        vm.tagTransform = function (newTag) {
+        /*vm.tagTransform = function (newTag) {
             //console.log('newTag', newTag);
             var item = {
                 name: newTag,
@@ -1171,16 +1201,19 @@
         };
 
         vm.resolveRelation = function (item) {
+
             var entityKey;
 
             for (var i = 0; i < vm.contentTypes.length; i++) {
-                if (vm.contentTypes[i].key == item.content_type) {
+
+                if (vm.contentTypes[i].key === item.content_type) {
                     entityKey = vm.contentTypes[i].entity;
                     entityKey = entityKey.replace(/-/g, '_');
 
                     return entityKey;
                 }
             }
+
         };
 
         vm.resolveDefaultValue = function (item) {
@@ -1357,14 +1390,16 @@
 
                 if (inputsToDelete.length > 0) {
 
-                    uiService.getEditLayoutByInstanceId('complex-transaction', vm.entityId).then(function (editLayoutData) {
+                    transactionTypeService.getByKey(vm.entityId).then(function (data) {
 
-                        if (editLayoutData && editLayoutData.data) {
+                        var book_transaction_layout = data.book_transaction_layout;
 
-                            if (Array.isArray(editLayoutData.data)) {
-                                var editLayoutTabs = editLayoutData.data;
+                        if (book_transaction_layout && book_transaction_layout.data) {
+
+                            if (Array.isArray(book_transaction_layout.data)) {
+                                var editLayoutTabs = book_transaction_layout.data;
                             } else {
-                                var editLayoutTabs = editLayoutData.data.tabs;
+                                var editLayoutTabs = book_transaction_layout.data.tabs;
                             }
 
                             editLayoutTabs.forEach(function (tab) {
@@ -1386,7 +1421,9 @@
 
                             });
 
-                            uiService.updateEditLayoutByInstanceId('complex-transaction', vm.entityId, editLayoutData).then(function () {
+                            transactionTypeService.patch(vm.entityId, {
+                                book_transaction_layout: book_transaction_layout
+                            }).then(function () {
                                 resolve();
                             }).catch(function (error) {
                                 reject(error);
@@ -1530,31 +1567,6 @@
                         value: vm.newItem.value,
                         value_expr: vm.newItem.value_expr
                     });
-
-                    /*originalEntity.inputs.push({
-                        name: vm.newItem.name,
-                        verbose_name: vm.newItem.verbose_name,
-                        value_type: vm.newItem.value_type,
-                        content_type: vm.newItem.content_type,
-                        is_fill_from_context: vm.newItem.is_fill_from_context,
-                        reference_table: vm.newItem.reference_table,
-                        account: vm.newItem.account,
-                        instrument_type: vm.newItem.instrument_type,
-                        instrument: vm.newItem.instrument,
-                        currency: vm.newItem.currency,
-                        counterparty: vm.newItem.counterparty,
-                        responsible: vm.newItem.responsible,
-                        portfolio: vm.newItem.portfolio,
-                        strategy1: vm.newItem.strategy1,
-                        strategy2: vm.newItem.strategy2,
-                        strategy3: vm.newItem.strategy3,
-                        daily_pricing_model: vm.newItem.daily_pricing_model,
-                        payment_size_detail: vm.newItem.payment_size_detail,
-                        price_download_scheme: vm.newItem.price_download_scheme,
-                        pricing_policy: vm.newItem.pricing_policy,
-                        value: vm.newItem.value,
-                        value_expr: vm.newItem.value_expr
-                    });*/
 
                     // if created input with name of deleted one, remove it from warning
                     for (var i = 0; i < inputsToDelete.length; i++) {
@@ -2613,6 +2625,27 @@
 
             });
 
+        };
+
+
+        vm.getInputForLinking = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                var inputs = vm.entity.inputs.map(function (input) {
+
+                    return {
+                        id: input.name,
+                        name: input.name
+                    }
+
+                });
+
+                resolve({
+                    results: inputs
+                })
+
+            })
         };
 
 

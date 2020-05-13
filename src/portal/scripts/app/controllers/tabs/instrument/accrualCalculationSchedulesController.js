@@ -5,17 +5,14 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     var accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 
     var fieldResolverService = require('../../../services/fieldResolverService');
+    var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventScheduleService');
 
 
-    module.exports = function ($scope) {
-
-        logService.controller('AccrualCalculationSchedulesController', 'initialized');
+    module.exports = function accrualCalculationSchedulesController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -180,6 +177,55 @@
             }
 
         };
+
+        vm.generateEventsSchedule = function ($event) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: 'All changes will be saved, OK?'
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.readyStatus.eventSchedulesReady = false;
+
+                    console.log("rebuild Events", $scope);
+
+                    $scope.$parent.vm.updateItem().then(function (value) {
+
+                        console.log("rebuild Events")
+
+                        instrumentEventScheduleService.rebuildEvents(vm.entity.id, vm.entity).then(function (data) {
+
+                            console.log('events rebuilt data', data);
+
+                            $scope.$parent.vm.getItem().then(function (getItemData) {
+                                vm.entity = $scope.$parent.vm.entity;
+                                vm.readyStatus.eventSchedulesReady = true;
+                            });
+
+                        })
+
+                    })
+                }
+
+            });
+
+        };
+
 
         vm.init = function () {
 

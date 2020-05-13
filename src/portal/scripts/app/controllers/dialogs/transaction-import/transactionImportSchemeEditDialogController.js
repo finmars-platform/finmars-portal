@@ -8,9 +8,15 @@
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
+
+
     module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, schemeId) {
 
         var vm = this;
+
+        vm.processing = false;
+
         vm.scheme = {};
         vm.readyStatus = {scheme: false, transactionTypes: false};
 
@@ -145,7 +151,7 @@
             vm.reconFields.splice($index, 1);
         };
 
-        vm.getScheme = function () {
+        vm.getItem = function () {
 
             transactionSchemeService.getByKey(schemeId).then(function (data) {
                 vm.scheme = data;
@@ -503,11 +509,19 @@
 
             } else {
 
+                vm.processing = true;
+
                 transactionSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+
+                    toastNotificationService.success("Transaction Import Scheme " + vm.scheme.scheme_name + ' was successfully saved');
+
+                    vm.processing = false;
 
                     $mdDialog.hide({res: 'agree'});
 
                 }).catch(function (reason) {
+
+                    vm.processing = false;
 
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
@@ -581,11 +595,12 @@
         };
 
         vm.init = function () {
+
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
             }, 100);
 
-            vm.getScheme();
+            vm.getItem();
             vm.getTransactionTypes();
 
         };

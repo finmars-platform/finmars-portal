@@ -22,6 +22,7 @@
 
                 <label for="">Import scheme</label>
                 <md-select ng-model="vm.config.scheme"
+                           data-ng-change="vm.validateScheme()"
                            md-container-class="common-select-container"
                            md-on-close="searchTerm = ''"
                            style="width: 200px">
@@ -68,9 +69,13 @@
                     data-ng-click="vm.import($event)">
                 Load
             </md-button>
+
             <div data-ng-if="vm.processing" class="m-l-16 m-t-8">
-                <md-progress-circular md-mode="indeterminate"
-                                      md-diameter="24"></md-progress-circular>
+                <progress-circular diameter="20"></progress-circular>
+            </div>
+
+            <div data-ng-show="!vm.schemeIsValid" class="text-warning-red m-l-16 p-t-8">
+                {{vm.schemeValidationErrorMessage}}
             </div>
         </div>
     </div>
@@ -107,7 +112,7 @@
             </div>
 
             <div layout="row" layout-sm="column" layout-align="space-around" class="loader-spinner">
-                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                <progress-circular diameter="100"></progress-circular>
             </div>
 
         </div>
@@ -117,6 +122,6 @@
 </div>
 <div data-ng-if="!vm.readyStatus.scheme">
     <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-        <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+        <progress-circular diameter="100"></progress-circular>
     </div>
 </div>

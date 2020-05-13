@@ -30,10 +30,13 @@
 
     var instrumentTypeService = require('../../services/instrumentTypeService');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $mdDialog, $state, entityType, entityId, contextData) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $state, entityType, entityId, contextData) {
 
         var vm = this;
+
+        vm.processing = false;
 
         console.log('contextData', contextData);
 
@@ -766,6 +769,8 @@
 
         vm.updateItem = function () {
 
+            console.log('updateItem', vm.entity.$_isValid);
+
             // TMP save method for instrument
 
             return new Promise(function (resolve) {
@@ -774,17 +779,13 @@
 
                 vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
 
-                if (vm.entity.$_isValid) {
+                var result = entityEditorHelper.removeNullFields(vm.entity);
 
-                    var result = entityEditorHelper.removeNullFields(vm.entity);
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
-                    entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+                    resolve(data);
 
-                        resolve(data);
-
-                    });
-
-                }
+                });
 
             })
 
@@ -950,6 +951,8 @@
 
         vm.save = function ($event) {
 
+            vm.processing = true;
+
             vm.updateEntityBeforeSave();
 
             /*vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
@@ -1043,13 +1046,23 @@
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
+                    vm.processing = false;
+
                     if (data.status === 400) {
                         vm.handleErrors(data);
                     } else {
+
+                        var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
+
+                        toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully saved');
+
                         $mdDialog.hide({res: 'agree', data: data});
                     }
 
                 }).catch(function(data) {
+
+                    vm.processing = false;
+
                     vm.handleErrors(data);
                 });
 

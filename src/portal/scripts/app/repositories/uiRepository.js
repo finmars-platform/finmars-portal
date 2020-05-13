@@ -299,38 +299,6 @@
         }]
     };
 
-    var getEditLayoutByInstanceId = function (entityType, id) {
-        if (entityType == 'complex-transaction') {
-            return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
-                {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
-                        'Content-type': 'application/json'
-                    }
-                })
-        }
-    };
-
-    var updateEditLayoutByInstanceId = function (entityType, id, editLayout) {
-
-        if (entityType == 'complex-transaction') {
-            return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
-                {
-                    method: 'PATCH',
-                    credentials: 'include',
-                    headers: {
-                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify(editLayout)
-                })
-        }
-    };
-
     var getConfigurationList = function () {
 
         return xhrService.fetch(baseUrl + 'ui/configuration/',
@@ -821,9 +789,6 @@
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
         deleteListLayoutByKey: deleteListLayoutByKey,
-
-        getEditLayoutByInstanceId: getEditLayoutByInstanceId,
-        updateEditLayoutByInstanceId: updateEditLayoutByInstanceId,
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,

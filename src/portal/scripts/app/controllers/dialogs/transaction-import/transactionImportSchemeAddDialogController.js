@@ -8,9 +8,14 @@
     var transactionSchemeService = require('../../../services/import/transactionSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
+
+
+    module.exports = function transactionImportSchemeAddDialogController ($scope, $mdDialog, data) {
 
         var vm = this;
+
+        vm.processing = false;
 
         vm.dataProviders = [];
 
@@ -376,7 +381,6 @@
                     warningMessage = "should not have value 0 (column's count starts from 1)";
                     importedColumnsNumberZero = true;
                 }
-                ;
 
                 if (field.column === null && !importedColumnsNumberEmpty) {
 
@@ -388,7 +392,6 @@
 
                     importedColumnsNumberEmpty = true;
                 }
-                ;
 
                 if (!importedColumnsNumberZero &&
                     !importedColumnsNumberEmpty &&
@@ -397,9 +400,9 @@
                     warningMessage += '<p>Imported Columns Field # ' + field.column + ' has no F(X) expression</p>';
 
                 }
-                ;
+
             }
-            ;
+
 
             if (warningMessage) {
 
@@ -434,11 +437,19 @@
 
             } else {
 
+                vm.processing = true;
+
                 transactionSchemeService.create(vm.scheme).then(function (data) {
+
+                    toastNotificationService.success("Transaction Import Scheme " + vm.scheme.scheme_name + ' was successfully created');
+
+                    vm.processing = false;
 
                     $mdDialog.hide({status: 'agree'});
 
                 }).catch(function (reason) {
+
+                    vm.processing = false;
 
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',

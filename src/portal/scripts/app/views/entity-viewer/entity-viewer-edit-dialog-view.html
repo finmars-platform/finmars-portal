@@ -15,7 +15,13 @@
                         <md-tooltip md-direction="bottom">You don't have permission to edit this form</md-tooltip>
                 </ng-md-icon>
             </span>
-            <span flex></span>
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                    <progress-circular diameter="20"></progress-circular>
+                </div>
+                — Processing
+            </div>
+
         </div>
     </md-toolbar>
 
@@ -325,7 +331,7 @@
             <md-button
                     data-ng-if="vm.hasEnabledStatus && vm.entityType != 'transaction'"
                     ng-click="vm.toggleEnableStatus()"
-                    data-ng-class="{'disabled-btn': !vm.hasEditPermission}"
+                    data-ng-class="{'disabled-btn': !vm.hasEditPermission || vm.processing}"
                     class="md-raised">
                 <span data-ng-show="vm.entity.is_enabled">Disable</span>
                 <span data-ng-show="!vm.entity.is_enabled">Enable</span>
@@ -342,7 +348,7 @@
             <md-button
                     data-ng-if="vm.entityType != 'transaction'"
                     ng-click="vm.delete($event)"
-                    data-ng-class="{'disabled-btn': !vm.hasEditPermission}"
+                    data-ng-class="{'disabled-btn': !vm.hasEditPermission || vm.processing}"
                     class="md-raised md-warn">
                 Delete
             </md-button>
@@ -350,12 +356,12 @@
 
         <div style="margin-right: 10px;">
             <md-button class="md-raised m-r-24" ng-click="vm.copy()" data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType != 'transaction'"
-                       ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission">
+                       ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing">
                 Make a copy
             </md-button>
 
             <md-button class="md-raised m-r-24" ng-click="vm.copy()" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history' && vm.entityType != 'transaction'"
-                       ng-disabled="!vm.checkReadyStatus() || !vm.hasEditPermission">
+                       ng-disabled="!vm.checkReadyStatus() || !vm.hasEditPermission || vm.processing">
                 Make a copy
             </md-button>
             <md-button class="md-raised" ng-click="vm.cancel()">
@@ -363,13 +369,13 @@
                 <span data-ng-if="vm.entityType === 'transaction'">Close</span>
             </md-button>
             <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission}"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.save()"
                        class="md-raised m-r-24">
                 Save
             </md-button>
             <md-button class="md-raised m-r-24" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history'"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.hasEditPermission}"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.save()">
                 Save
             </md-button>
