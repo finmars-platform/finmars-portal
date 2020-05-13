@@ -238,6 +238,7 @@
                 });
             }
 
+            result.push('transactions');
             result.push('custom_fields');
             result.push('this');
 
@@ -535,6 +536,8 @@
             var propertiesWords = getPropertiesWords();
             var inputWords = getInputWords();
 
+            var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False']
+
             var processing = true;
             var currentIndex = 0;
             var previousIndex = null;
@@ -601,6 +604,8 @@
 
                 if (token) {
 
+                    console.log('token', token);
+
                     if (token.type === 'property') {
 
                         if (propertiesWords.indexOf(token.value) !== -1 ||
@@ -620,8 +625,16 @@
                             result = result + '<span class="eb-highlight-input">' + token.value + '</span>';
 
                         } else {
-                            result = result + '<span class="eb-highlight-error">' + token.value + '</span>';
-                            vm.status = 'inputs-error';
+
+                            if (reservedWords.indexOf(token.value) === -1) {
+
+                                result = result + '<span class="eb-highlight-error">' + token.value + '</span>';
+                                vm.status = 'inputs-error';
+
+                            } else {
+                                result = result + token.value
+                            }
+
                         }
 
                     } else if (token.type === 'function') {

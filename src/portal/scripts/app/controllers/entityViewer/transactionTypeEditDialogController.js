@@ -955,7 +955,7 @@
         };
 
         vm.getInstrumentTypes = function () {
-            instrumentTypeService.getList().then(function (data) {
+            instrumentTypeService.getListLight().then(function (data) {
                 vm.instrumentTypes = data.results;
                 vm.readyStatus.instrumentTypes = true;
                 $scope.$apply();
@@ -1013,9 +1013,7 @@
             return fallback;
         };*/
 
-        vm.getTransactionTypeGroups();
-        vm.getPortfolios();
-        vm.getInstrumentTypes();
+
         //vm.getTags();
 
         /*        vm.tagTransform = function (newTag) {
@@ -2629,6 +2627,10 @@
             vm.getItem();
             vm.getAttrs();
             vm.getReferenceTables();
+
+            vm.getTransactionTypeGroups();
+            vm.getPortfolios();
+            vm.getInstrumentTypes();
 
             vm.getInputTemplates();
             vm.getFieldTemplates();
