@@ -22,6 +22,8 @@
         var groups = evDataService.getGroups();
         var level = groups.length;
 
+        console.log('calculateItemSubtotal.item', item)
+
         if (item.___level === level) {
 
             item.subtotal = rvSubtotalHelper.calculate(item.results, columns);
@@ -528,6 +530,9 @@
 
         var groups = evDataService.getGroups();
 
+        console.log('getFlatStructure.rootGroupOptions', rootGroupOptions);
+        console.log('getFlatStructure.groups', groups);
+
         var data;
 
         if (groups.length || rootGroupOptions.subtotal_type) {
@@ -537,7 +542,6 @@
             calculateSubtotals(evDataService);
 
             console.timeEnd("Calculating subtotals");
-
 
             console.time("Copying data");
 
