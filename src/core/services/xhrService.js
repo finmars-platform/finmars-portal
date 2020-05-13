@@ -42,6 +42,8 @@
 
         return new Promise(function (resolve, reject) {
 
+            window.cached_requests = {}; // temp disable cache
+
             if (params.method === 'GET' && window.cached_requests && window.cached_requests[url]) {
 
                 window.cached_requests[url].requested_count = window.cached_requests[url].requested_count + 1;

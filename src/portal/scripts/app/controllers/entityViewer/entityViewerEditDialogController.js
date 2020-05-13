@@ -1042,7 +1042,7 @@
 
                         var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
 
-                        toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + 'was successfully saved');
+                        toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully saved');
 
                         $mdDialog.hide({res: 'agree', data: data});
                     }

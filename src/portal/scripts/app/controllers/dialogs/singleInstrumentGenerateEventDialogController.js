@@ -32,14 +32,14 @@
 
                 var options = {};
                 if (sortingOptions && sortingOptions.hasOwnProperty("sort")) {
-                    options.sort = new Object();
+                    options.sort = {};
                     options.sort = sortingOptions.sort;
                 }
 
-                // var filters = {};
-                options.filters = new Object();
+                options.filters = {};
                 options.filters.effective_date_0 = vm.options.effective_date_0;
                 options.filters.effective_date_1 = vm.options.effective_date_1;
+                options.filters.status = 1;
 
                 // options.filters = filters;
                 instrumentEventService.getList(options).then(function (data) {
