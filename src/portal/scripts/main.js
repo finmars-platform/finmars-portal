@@ -152,15 +152,15 @@ app.controller('DashboardLayoutManagerController', ['$scope', '$mdDialog', requi
 app.controller('DashboardConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dashboardConstructorController')]);
 app.controller('DashboardConstructorSocketSettingsDialogController', ['$scope', '$mdDialog', 'dashboardConstructorDataService', 'dashboardConstructorEventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorSocketSettingsDialogController')]);
 
-app.controller('DashboardConstructorControlComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorControlComponentDialogController')]);
+app.controller('DashboardConstructorControlComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorControlComponentDialogController')]);
 app.controller('DashboardConstructorButtonSetComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorButtonSetComponentDialogController')]);
 app.controller('DashboardConstructorInputFormComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorInputFormComponentDialogController')]);
 
-app.controller('DashboardConstructorReportViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerComponentDialogController')]);
+app.controller('DashboardConstructorReportViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerComponentDialogController')]);
 app.controller('DashboardConstructorReportViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerSplitPanelComponentDialogController')]);
-app.controller('DashboardConstructorReportViewerGrandTotalComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerGrandTotalComponentDialogController')]);
-app.controller('DashboardConstructorReportViewerMatrixComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerMatrixComponentDialogController')]);
-app.controller('DashboardConstructorReportViewerChartsComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerChartsComponentDialogController')]);
+app.controller('DashboardConstructorReportViewerGrandTotalComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerGrandTotalComponentDialogController')]);
+app.controller('DashboardConstructorReportViewerMatrixComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerMatrixComponentDialogController')]);
+app.controller('DashboardConstructorReportViewerChartsComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerChartsComponentDialogController')]);
 
 app.controller('DashboardConstructorEntityViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerComponentDialogController')]);
 app.controller('DashboardConstructorEntityViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerSplitPanelComponentDialogController')]);
@@ -320,6 +320,7 @@ app.controller('EventApplyDefaultDialogController', ['$scope', '$mdDialog', 'dat
 // Attribute Manager
 
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
+app.controller('AttributesManagerDialogController', ['$scope', '$state', 'data', '$mdDialog', require('./app/controllers/dialogs/attributesManagerDialogController')]);
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
 app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/attributesManagerAddDialogController')]);
 app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classificationEditorDialogController')]);

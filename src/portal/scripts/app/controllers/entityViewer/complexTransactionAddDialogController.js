@@ -522,12 +522,24 @@
         };
 
         vm.manageAttrs = function (ev) {
-            var entityAddress = {entityType: vm.entityType};
+            /*var entityAddress = {entityType: vm.entityType};
             if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
                 entityAddress = {entityType: vm.entityType, from: vm.entityType};
             }
             $state.go('app.attributesManager', entityAddress);
-            $mdDialog.hide();
+            $mdDialog.hide();*/
+
+            $mdDialog.show({
+                controller: 'AttributesManagerDialogController as vm',
+                templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+            });
         };
 
         vm.recalculate = function (item) {

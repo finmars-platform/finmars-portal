@@ -202,12 +202,24 @@
         };
 
         vm.manageAttrs = function (ev) {
-            var entityType = {entityType: vm.entityType};
+            /*var entityType = {entityType: vm.entityType};
             if (vm.fromEntityType) {
                 entityType = {entityType: vm.entityType, from: vm.fromEntityType};
             }
             $state.go('app.attributesManager', entityType);
-            $mdDialog.hide();
+            $mdDialog.hide();*/
+
+            $mdDialog.show({
+                controller: 'AttributesManagerDialogController as vm',
+                templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+            });
         };
 
         vm.copy = function ($event) {
@@ -299,24 +311,14 @@
 
                     });
 
-
-                    /*vm.editLayout = function () {
-                        $state.go('app.data-constructor', {
-                            entityType: 'complex-transaction',
-                            from: vm.entityType,
-                            instanceId: data.id
-                        });
-                        $mdDialog.hide();
-                    };*/
-
-                    vm.manageAttrs = function () {
+                    /*vm.manageAttrs = function () {
                         $state.go('app.attributesManager', {
                             entityType: 'transaction-type',
                             from: vm.entityType,
                             instanceId: data.id
                         });
                         $mdDialog.hide();
-                    };
+                    };*/
 
 
                     //originalEntity = JSON.parse(angular.toJson(vm.entity));
@@ -1477,96 +1479,143 @@
             }
         };
 
+        vm.validateInputName = function () {
+
+            var errorText = "";
+
+            if (vm.newItem.name.match('[^1-9a-zA-Z_]')) {
+                errorText = "Only english letters and 1-9 numbers allowed for input name.";
+            }
+
+            if (vm.newItem.name.match('^[0-9]')) {
+                if (errorText) {
+                    errorText += "\n";
+                }
+
+                errorText += "Input name should not start with number.";
+            }
+
+            return errorText;
+
+        };
+
         vm.addRow = function ($event) {
 
             if (vm.newItem.name && vm.newItem.value_type) {
+                var inputNameErrors = vm.validateInputName();
 
-                vm.entity.inputs.push({
-                    name: vm.newItem.name,
-                    verbose_name: vm.newItem.verbose_name,
-                    value_type: vm.newItem.value_type,
-                    content_type: vm.newItem.content_type,
-                    is_fill_from_context: vm.newItem.is_fill_from_context,
-                    reference_table: vm.newItem.reference_table,
-                    account: vm.newItem.account,
-                    instrument_type: vm.newItem.instrument_type,
-                    instrument: vm.newItem.instrument,
-                    currency: vm.newItem.currency,
-                    counterparty: vm.newItem.counterparty,
-                    responsible: vm.newItem.responsible,
-                    portfolio: vm.newItem.portfolio,
-                    strategy1: vm.newItem.strategy1,
-                    strategy2: vm.newItem.strategy2,
-                    strategy3: vm.newItem.strategy3,
-                    daily_pricing_model: vm.newItem.daily_pricing_model,
-                    payment_size_detail: vm.newItem.payment_size_detail,
-                    price_download_scheme: vm.newItem.price_download_scheme,
-                    pricing_policy: vm.newItem.pricing_policy,
-                    value: vm.newItem.value,
-                    value_expr: vm.newItem.value_expr
-                });
+                if (!inputNameErrors) {
 
-                /*originalEntity.inputs.push({
-                    name: vm.newItem.name,
-                    verbose_name: vm.newItem.verbose_name,
-                    value_type: vm.newItem.value_type,
-                    content_type: vm.newItem.content_type,
-                    is_fill_from_context: vm.newItem.is_fill_from_context,
-                    reference_table: vm.newItem.reference_table,
-                    account: vm.newItem.account,
-                    instrument_type: vm.newItem.instrument_type,
-                    instrument: vm.newItem.instrument,
-                    currency: vm.newItem.currency,
-                    counterparty: vm.newItem.counterparty,
-                    responsible: vm.newItem.responsible,
-                    portfolio: vm.newItem.portfolio,
-                    strategy1: vm.newItem.strategy1,
-                    strategy2: vm.newItem.strategy2,
-                    strategy3: vm.newItem.strategy3,
-                    daily_pricing_model: vm.newItem.daily_pricing_model,
-                    payment_size_detail: vm.newItem.payment_size_detail,
-                    price_download_scheme: vm.newItem.price_download_scheme,
-                    pricing_policy: vm.newItem.pricing_policy,
-                    value: vm.newItem.value,
-                    value_expr: vm.newItem.value_expr
-                });*/
+                    vm.entity.inputs.push({
+                        name: vm.newItem.name,
+                        verbose_name: vm.newItem.verbose_name,
+                        value_type: vm.newItem.value_type,
+                        content_type: vm.newItem.content_type,
+                        is_fill_from_context: vm.newItem.is_fill_from_context,
+                        reference_table: vm.newItem.reference_table,
+                        account: vm.newItem.account,
+                        instrument_type: vm.newItem.instrument_type,
+                        instrument: vm.newItem.instrument,
+                        currency: vm.newItem.currency,
+                        counterparty: vm.newItem.counterparty,
+                        responsible: vm.newItem.responsible,
+                        portfolio: vm.newItem.portfolio,
+                        strategy1: vm.newItem.strategy1,
+                        strategy2: vm.newItem.strategy2,
+                        strategy3: vm.newItem.strategy3,
+                        daily_pricing_model: vm.newItem.daily_pricing_model,
+                        payment_size_detail: vm.newItem.payment_size_detail,
+                        price_download_scheme: vm.newItem.price_download_scheme,
+                        pricing_policy: vm.newItem.pricing_policy,
+                        value: vm.newItem.value,
+                        value_expr: vm.newItem.value_expr
+                    });
 
-                // if created input with name of deleted one, remove it from warning
-                for (var i = 0; i < inputsToDelete.length; i++) {
-                    var inputToDelete = inputsToDelete[i];
+                    /*originalEntity.inputs.push({
+                        name: vm.newItem.name,
+                        verbose_name: vm.newItem.verbose_name,
+                        value_type: vm.newItem.value_type,
+                        content_type: vm.newItem.content_type,
+                        is_fill_from_context: vm.newItem.is_fill_from_context,
+                        reference_table: vm.newItem.reference_table,
+                        account: vm.newItem.account,
+                        instrument_type: vm.newItem.instrument_type,
+                        instrument: vm.newItem.instrument,
+                        currency: vm.newItem.currency,
+                        counterparty: vm.newItem.counterparty,
+                        responsible: vm.newItem.responsible,
+                        portfolio: vm.newItem.portfolio,
+                        strategy1: vm.newItem.strategy1,
+                        strategy2: vm.newItem.strategy2,
+                        strategy3: vm.newItem.strategy3,
+                        daily_pricing_model: vm.newItem.daily_pricing_model,
+                        payment_size_detail: vm.newItem.payment_size_detail,
+                        price_download_scheme: vm.newItem.price_download_scheme,
+                        pricing_policy: vm.newItem.pricing_policy,
+                        value: vm.newItem.value,
+                        value_expr: vm.newItem.value_expr
+                    });*/
 
-                    if (inputToDelete === vm.newItem.name) {
-                        inputsToDelete.splice(i, 1);
-                        break;
+                    // if created input with name of deleted one, remove it from warning
+                    for (var i = 0; i < inputsToDelete.length; i++) {
+                        var inputToDelete = inputsToDelete[i];
+
+                        if (inputToDelete === vm.newItem.name) {
+                            inputsToDelete.splice(i, 1);
+                            break;
+                        }
                     }
+                    // < if created input with name of deleted one, remove it from warning >
+
+                    vm.newItem.name = null;
+                    vm.newItem.verbose_name = null;
+                    vm.newItem.value_type = null;
+                    vm.newItem.content_type = null;
+                    vm.newItem.is_fill_from_context = false;
+                    vm.newItem.reference_table = null;
+                    vm.newItem.account = null;
+                    vm.newItem.instrument_type = null;
+                    vm.newItem.instrument = null;
+                    vm.newItem.currency = null;
+                    vm.newItem.counterparty = null;
+                    vm.newItem.responsible = null;
+                    vm.newItem.portfolio = null;
+                    vm.newItem.strategy1 = null;
+                    vm.newItem.strategy2 = null;
+                    vm.newItem.strategy3 = null;
+                    vm.newItem.daily_pricing_model = null;
+                    vm.newItem.payment_size_detail = null;
+                    vm.newItem.price_download_scheme = null;
+                    vm.newItem.pricing_policy = null;
+                    vm.newItem.value = null;
+                    vm.newItem.value_expr = null;
+
+                    vm.updateInputFunctions();
+
+                } else {
+
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        multiple: true,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: inputNameErrors,
+                                actionsButtons: [
+                                    {
+                                        name: 'CLOSE',
+                                        response: false
+                                    }
+                                ]
+                            }
+                        }
+                    });
+
                 }
-                // < if created input with name of deleted one, remove it from warning >
-
-
-                vm.newItem.name = null;
-                vm.newItem.verbose_name = null;
-                vm.newItem.value_type = null;
-                vm.newItem.content_type = null;
-                vm.newItem.is_fill_from_context = false;
-                vm.newItem.reference_table = null;
-                vm.newItem.account = null;
-                vm.newItem.instrument_type = null;
-                vm.newItem.instrument = null;
-                vm.newItem.currency = null;
-                vm.newItem.counterparty = null;
-                vm.newItem.responsible = null;
-                vm.newItem.portfolio = null;
-                vm.newItem.strategy1 = null;
-                vm.newItem.strategy2 = null;
-                vm.newItem.strategy3 = null;
-                vm.newItem.daily_pricing_model = null;
-                vm.newItem.payment_size_detail = null;
-                vm.newItem.price_download_scheme = null;
-                vm.newItem.pricing_policy = null;
-                vm.newItem.value = null;
-                vm.newItem.value_expr = null;
-
-                vm.updateInputFunctions();
 
             } else {
 
