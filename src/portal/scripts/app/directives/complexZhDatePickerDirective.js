@@ -20,7 +20,8 @@
                 date: '=',
                 evDataService: '=',
                 evEventService: '=',
-                attributeDataService: '='
+                attributeDataService: '=',
+                isDisabled: '<'
             },
             templateUrl: 'views/directives/complex-zh-date-picker-view.html',
             link: function (scope, elem, attrs) {
@@ -73,6 +74,10 @@
                 }
 
                 scope.datepickerActiveModeTitle = '';
+
+                if (scope.isDisabled) {
+
+                }
 
                 scope.getDatepickerName = function () {
                     if (scope.displayOptions.labelName) {
@@ -167,7 +172,12 @@
                     setTimeout(function () {
                         scope.callbackMethod()
                     }, 500);
-                    input.removeAttribute('disabled');
+
+                    if (scope.isDisabled) {
+                        input.setAttribute('disabled', '');
+                    } else {
+                        input.removeAttribute('disabled');
+                    }
 
                     if (linkToAboveEventIndex) {
                         scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
@@ -220,7 +230,6 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            console.log("res", res.data);
 
                             scope.datepickerOptions.expression = res.data.item.expression;
 

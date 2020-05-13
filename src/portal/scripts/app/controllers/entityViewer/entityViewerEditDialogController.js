@@ -476,12 +476,24 @@
 
         vm.manageAttrs = function (ev) {
 
-            var entityType = {entityType: vm.entityType};
+            /*var entityType = {entityType: vm.entityType};
             if (vm.fromEntityType) {
                 entityType = {entityType: vm.entityType, from: vm.fromEntityType};
             }
             $state.go('app.attributesManager', entityType);
-            $mdDialog.hide();
+            $mdDialog.hide();*/
+
+            $mdDialog.show({
+                controller: 'AttributesManagerDialogController as vm',
+                templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+            });
         };
 
         vm.copy = function ($event) {

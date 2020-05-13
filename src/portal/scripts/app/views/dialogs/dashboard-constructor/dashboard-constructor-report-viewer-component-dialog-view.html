@@ -444,12 +444,33 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row">
-        <md-button ng-click="vm.cancel()" style="margin-right:20px;">
-            Cancel
-        </md-button>
-        <md-button ng-click="vm.agree()" style="margin-right:20px;">
-            OK
-        </md-button>
+        <div data-ng-if="!vm.launchedFromDashboard"
+             layout="row"
+             layout-align="space-between center">
+            <md-button data-ng-click="vm.cancel()" style="margin-right:20px;">
+                Cancel
+            </md-button>
+            <md-button data-ng-click="vm.agree()" style="margin-right:20px;">
+                OK
+            </md-button>
+        </div>
+
+        <div data-ng-if="vm.launchedFromDashboard"
+             layout="row"
+             layout-align="space-between center"
+             class="width-100">
+            <div>
+                <md-button data-ng-click="vm.cancel()" style="margin-right:20px;">
+                    Cancel
+                </md-button>
+
+                <md-button data-ng-click="vm.customAgree('apply')" style="margin-right:20px;">
+                    Apply
+                </md-button>
+            </div>
+
+            <md-button data-ng-click="vm.customAgree('save')">Save</md-button>
+        </div>
 
         <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
                                data-elem-to-resize="vm.dialogElemToResize"

@@ -221,16 +221,18 @@
                        ng-disabled="!vm.checkReadyStatus() || vm.processing">
                 Edit transaction form
             </md-button>
-            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
+
+            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Manage attributes
             </md-button>
+
             <md-button
                     ng-click="vm.delete($event)" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}"
                     class="md-raised md-warn">
                 Delete
             </md-button>
-
         </div>
+
         <div style="margin-right: 10px;">
             <md-button class="md-raised m-r-24" ng-click="vm.copy()"
                        ng-disabled="!vm.checkReadyStatus()" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">

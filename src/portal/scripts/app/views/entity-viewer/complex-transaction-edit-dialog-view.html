@@ -70,6 +70,7 @@
                         <md-tab-label>
                             <span>{{tab.name}}</span>
                         </md-tab-label>
+
                         <md-tab-body>
                             <md-content class="md-padding p-t-26"
                                         ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
@@ -135,7 +136,6 @@
                         </md-tab-body>
                     </md-tab>
 
-
                 </md-tabs>
             </div>
             <div data-ng-if="!vm.checkReadyStatus()">
@@ -152,7 +152,7 @@
             <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary">
                 Edit Form
             </md-button>
-            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary">
+            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary">
                 Manage attributes
             </md-button>
 
@@ -204,9 +204,12 @@
                        ng-disabled="!vm.checkReadyStatus() || vm.entity.is_canceled || !vm.hasEditPermission">
                 Make a copy
             </md-button>
+
             <md-button class="md-raised" ng-click="vm.cancel()">
-                Cancel
+                <span data-ng-show="!vm.entity.is_locked && !vm.entity.is_canceled">Cancel</span>
+                <span data-ng-show="vm.entity.is_locked || vm.entity.is_canceled">Ok</span>
             </md-button>
+
             <md-button class="md-raised m-r-24" data-ng-if="vm.entity.status == 2"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission}"
                        ng-click="vm.rebookAsPending()">

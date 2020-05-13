@@ -382,7 +382,8 @@
                 item: JSON.parse(JSON.stringify(vm.component)),
                 dataService: vm.dashboardConstructorDataService,
                 eventService: vm.dashboardConstructorEventService,
-                attributeDataService: vm.attributeDataService
+                attributeDataService: vm.attributeDataService,
+                data: {}
             };
 
             switch (vm.component.type) {

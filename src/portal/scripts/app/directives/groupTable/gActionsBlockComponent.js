@@ -619,6 +619,22 @@
 
                 };
 
+                scope.openManageAttrsDialog = function ($event) {
+
+                    $mdDialog.show({
+                        controller: 'AttributesManagerDialogController as vm',
+                        templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                entityType: scope.entityType
+                            }
+                        }
+                    });
+
+                };
+
                 scope.openInputFormEditor = function (ev) {
 
                     $mdDialog.show({
@@ -1678,12 +1694,19 @@
                             currentState = 'app.reports.transaction-report';
                             break;
                     }
+
                     var listLayout = scope.evDataService.getListLayout();
 
                     var url = $state.href(currentState);
                     url += '?layout=' + listLayout.name;
 
                     window.open(url, '_bland');
+                };
+
+                scope.openDashboardComponentConstructor = function () {
+
+                    scope.evEventService.dispatchEvent(evEvents.OPEN_DASHBOARD_COMPONENT_EDITOR);
+
                 };
 
                 scope.init = function () {

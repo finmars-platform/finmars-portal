@@ -235,6 +235,14 @@
 
         };
 
+        var init = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.attrManagerElemToResize');
+            }, 100);
+        };
+
+        init();
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };

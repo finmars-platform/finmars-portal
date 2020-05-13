@@ -1085,30 +1085,38 @@
 
             } else {
 
-                uiService.createDashboardLayout(layout).then(function (data) {
+                uiService.getDashboardLayoutList().then(function (data) {
 
-                    vm.layout = data;
+                    if (!data.results || !data.results.length) {
+                        layout.is_default = true;
+                    }
 
-                    vm.dashboardConstructorDataService.setData(vm.layout);
-                    vm.dashboardConstructorDataService.setComponents(vm.layout.data.components_types);
+                    uiService.createDashboardLayout(layout).then(function (data) {
 
-                    $mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        locals: {
-                            info: {
-                                title: 'Success',
-                                description: "Dashboard Layout is Saved"
+                        vm.layout = data;
+
+                        vm.dashboardConstructorDataService.setData(vm.layout);
+                        vm.dashboardConstructorDataService.setComponents(vm.layout.data.components_types);
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            locals: {
+                                info: {
+                                    title: 'Success',
+                                    description: "Dashboard Layout is Saved"
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+                        vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
-                })
+                    })
+
+                });
 
             }
 
@@ -1197,7 +1205,8 @@
                     item: null,
                     dataService: vm.dashboardConstructorDataService,
                     eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    attributeDataService: vm.attributeDataService,
+                    data: {}
                 }
             }).then(function (res) {
 
@@ -1220,7 +1229,8 @@
                     item: JSON.parse(JSON.stringify(item)),
                     dataService: vm.dashboardConstructorDataService,
                     eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    attributeDataService: vm.attributeDataService,
+                    data: {}
                 }
             }).then(function (value) {
 
@@ -1242,7 +1252,8 @@
                     item: JSON.parse(JSON.stringify(item)),
                     dataService: vm.dashboardConstructorDataService,
                     eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService
+                    attributeDataService: vm.attributeDataService,
+                    data: {}
                 }
             }).then(function (value) {
 
