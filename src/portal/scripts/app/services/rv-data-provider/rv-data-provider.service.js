@@ -213,7 +213,9 @@
 
                 var groupData = entityViewerDataService.getData(event.___id);
 
-                // console.log('groupData', groupData);
+                console.log('getObjects.data', data);
+                console.log('getObjects.groupData', groupData);;
+                console.log('getObjects.event', event);
 
                 var obj;
 
@@ -226,12 +228,13 @@
                     obj.count = data.count;
                     obj.next = data.next;
                     obj.previous = data.previous;
+                    obj.results = data.results;
 
-                    for (i = 0; i < step; i = i + 1) {
-                        if (page * step + i < obj.count) {
-                            obj.results[page * step + i] = data.results[i];
-                        }
-                    }
+                    // for (i = 0; i < step; i = i + 1) {
+                    //     if (page * step + i < obj.count) {
+                    //         obj.results[page * step + i] = data.results[i];
+                    //     }
+                    // }
 
                 } else {
 
@@ -245,12 +248,12 @@
                         obj.count = data.count;
                         obj.next = data.next;
                         obj.previous = data.previous;
-
-                        for (i = 0; i < step; i = i + 1) {
-                            if (page * step + i < obj.count) {
-                                obj.results[page * step + i] = data.results[i];
-                            }
-                        }
+                        obj.results = data.results;
+                        // for (i = 0; i < step; i = i + 1) {
+                        //     if (page * step + i < obj.count) {
+                        //         obj.results[page * step + i] = data.results[i];
+                        //     }
+                        // }
 
                     } else {
 
