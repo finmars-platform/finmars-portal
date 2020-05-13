@@ -936,8 +936,6 @@
 
         vm.book = function ($event) {
 
-            vm.processing = true;
-
             vm.updateEntityBeforeSave();
 
             /*vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
@@ -998,6 +996,8 @@
 
                 new Promise(function (resolve, reject) {
 
+                    vm.processing = true;
+
                     transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type, {}).then(function (data) {
 
                         var res = Object.assign(data, resultEntity);
@@ -1047,6 +1047,7 @@
                     });
 
                 }).then(function (data) {
+
 
                     if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
