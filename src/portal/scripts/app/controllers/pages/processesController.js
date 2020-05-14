@@ -30,6 +30,8 @@
 
         // TODO Add pagination?
 
+        vm.interval = null;
+
 
         vm.getData = function () {
 
@@ -42,14 +44,6 @@
                     resolve();
 
                     $scope.$apply();
-
-                    if (vm.autoRefresh) {
-
-                        setTimeout(function () {
-                            vm.getData();
-                        }, 1000);
-
-                    }
 
                 })
 
@@ -198,10 +192,12 @@
 
             processesService.deleteByKey(item.id).then(function (data) {
 
-                if (!vm.autoRefresh) {
+                $scope.$apply();
 
-                    vm.getData();
-                }
+                // if (!vm.autoRefresh) {
+                //
+                //     vm.getData();
+                // }
 
             })
 

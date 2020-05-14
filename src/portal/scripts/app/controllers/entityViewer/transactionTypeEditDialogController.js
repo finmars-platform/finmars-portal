@@ -321,8 +321,12 @@
                                 input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
                             }
 
+                            vm.resolveDefaultValue(input)
+
                         });
                     }
+
+                    console.log('vm.relationItems', vm.relationItems)
 
                     /*vm.editLayout = function () {
                         $state.go('app.data-constructor', {
@@ -489,7 +493,7 @@
 
             return new Promise(function (resolve) {
 
-                var entityToSave =  vm.updateEntityBeforeSave(vm.entity);
+                var entityToSave = vm.updateEntityBeforeSave(vm.entity);
 
                 var isValid = entityEditorHelper.checkForNotNullRestriction(entityToSave, vm.entityAttrs, vm.attrs);
 
@@ -733,7 +737,7 @@
 
             var saveTTypePromise = new Promise(function (resolve, reject) {
 
-                var entityToSave =  vm.updateEntityBeforeSave(vm.entity);
+                var entityToSave = vm.updateEntityBeforeSave(vm.entity);
 
                 var actionsErrors = checkActionsForEmptyFields(entityToSave.actions);
                 var entityErrors = checkEntityForEmptyFields(entityToSave);
@@ -1206,9 +1210,20 @@
 
                 if (vm.contentTypes[i].key === item.content_type) {
                     entityKey = vm.contentTypes[i].entity;
-                    entityKey = entityKey.replace(/-/g, '_');
 
-                    return entityKey;
+                    if (entityKey === 'strategy-1') {
+                        return 'strategy1'
+                    } else if (entityKey === 'strategy-2') {
+                        return 'strategy2'
+                    } else if (entityKey === 'strategy-3') {
+                        return 'strategy3'
+                    } else {
+
+                        entityKey = entityKey.replace(/-/g, '_');
+
+                        return entityKey;
+
+                    }
                 }
             }
 
@@ -1216,39 +1231,59 @@
 
         vm.resolveDefaultValue = function (item) {
 
-            //console.log('item', item);
+            console.log('vm.resolveDefaultValue.item', item);
 
-            if (item.value_type == 100) {
+            var entityKey = '';
 
-                var itemEntity = '';
-
-                vm.contentTypes.forEach(function (contentType) {
-                    if (item.content_type == contentType.key) {
-                        itemEntity = contentType.entity;
-                    }
-                });
-
-                if (item[itemEntity + '_object']) {
-                    return item[itemEntity + '_object'].name;
-                } else {
-
-                    var entityName = '';
-
-                    if (vm.relationItems[itemEntity]) {
-                        vm.relationItems[itemEntity].forEach(function (relationItem) {
-                            if (relationItem.id == item[itemEntity]) {
-                                entityName = relationItem.name;
-                            }
-                        });
-                    }
-
-                    return entityName;
+            vm.contentTypes.forEach(function (contentType) {
+                if (item.content_type === contentType.key) {
+                    entityKey = contentType.entity;
                 }
+            });
+
+            if (entityKey === 'strategy-1') {
+                entityKey = 'strategy1'
+            } else if (entityKey === 'strategy-2') {
+                entityKey = 'strategy2'
+            } else if (entityKey === 'strategy-3') {
+                entityKey = 'strategy3'
             } else {
-                return item.value;
+                entityKey = entityKey.replace(/-/g, '_');
             }
 
-        };
+            var obj_from_input = item[entityKey + '_object'];
+
+            if (obj_from_input) {
+
+                if (!vm.relationItems[entityKey]) {
+                    vm.relationItems[entityKey] = [];
+                }
+
+                var exist = false;
+
+                vm.relationItems[entityKey].forEach(function (item) {
+
+                    if (item.user_code) {
+                        if (item.user_code === obj_from_input.user_code) {
+                            exist = true;
+                        }
+                    }
+
+                    if (item.system_code) {
+                        if (item.system_code === obj_from_input.system_code) {
+                            exist = true;
+                        }
+                    }
+
+                });
+
+                if (!exist) {
+                    vm.relationItems[entityKey].push(obj_from_input)
+                }
+
+            }
+
+        }
 
         vm.toggleQuery = function () {
             vm.queryStatus = !vm.queryStatus;
