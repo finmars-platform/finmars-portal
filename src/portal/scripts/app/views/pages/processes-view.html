@@ -4,7 +4,7 @@
         <h1>Active Processes</h1>
 
         <button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"
-                data-ng-class="{'disabled-btn': !vm.readyStatus.data || vm.autoRefresh}"
+                data-ng-class="{'disabled-btn': !vm.readyStatus.data}"
                 data-ng-click="vm.toggleShowAll()">
 
             <span data-ng-if="vm.showAll">Show Active</span>
@@ -13,21 +13,21 @@
         </button>
 
         <button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"
-                data-ng-class="{'disabled-btn': !vm.readyStatus.data || vm.autoRefresh}"
+                data-ng-class="{'disabled-btn': !vm.readyStatus.data}"
                 data-ng-click="vm.getData()">
 
             <span>Refresh list</span>
 
         </button>
 
-        <button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"
-                data-ng-class="{'disabled-btn': !vm.readyStatus.data || vm.showAll}"
-                data-ng-click="vm.autoRefresh = !vm.autoRefresh">
+        <!--<button class="md-raised md-button" style="height: 24px; margin-top: 22px; margin-left: 16px;"-->
+                <!--data-ng-class="{'disabled-btn': !vm.readyStatus.data || vm.showAll}"-->
+                <!--data-ng-click="vm.autoRefresh = !vm.autoRefresh">-->
 
-            <span data-ng-if="vm.autoRefresh">Disable Auto Refresh</span>
-            <span data-ng-if="!vm.autoRefresh">Enable Auto Refresh</span>
+            <!--<span data-ng-if="vm.autoRefresh">Disable Auto Refresh</span>-->
+            <!--<span data-ng-if="!vm.autoRefresh">Enable Auto Refresh</span>-->
 
-        </button>
+        <!--</button>-->
 
     </div>
 
