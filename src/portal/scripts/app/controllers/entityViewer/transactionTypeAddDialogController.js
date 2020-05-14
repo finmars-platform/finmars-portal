@@ -731,7 +731,7 @@
 
         vm.save = function ($event) {
 
-            vm.processing = true;
+
 
             return new Promise(function (resolve, reject) {
 
@@ -764,6 +764,8 @@
                     reject();
 
                 } else {
+
+                    vm.processing = true;
 
                     transactionTypeService.create(vm.entity).then(function (data) {
 

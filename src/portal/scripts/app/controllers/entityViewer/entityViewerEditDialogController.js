@@ -951,7 +951,7 @@
 
         vm.save = function ($event) {
 
-            vm.processing = true;
+
 
             vm.updateEntityBeforeSave();
 
@@ -1043,6 +1043,8 @@
                 if (dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
                 }
+
+                vm.processing = true;
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
