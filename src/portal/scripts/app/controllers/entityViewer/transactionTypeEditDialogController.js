@@ -731,8 +731,6 @@
 
         vm.save = function () {
 
-            vm.processing = true;
-
             var saveTTypePromise = new Promise(function (resolve, reject) {
 
                 var entityToSave =  vm.updateEntityBeforeSave(vm.entity);
@@ -762,6 +760,8 @@
                     reject();
 
                 } else {
+
+                    vm.processing = true;
 
                     transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
