@@ -315,7 +315,7 @@
                                 locals: {
                                     info: {
                                         title: 'Success',
-                                        description: "Recalculation is finished"
+                                        description: "<p>Recalculation in progress.</p> <p>If you would like to check progress, please go to <a href='/#!/processes' target='_blank'>Active Processes Page</a>.</p>"
                                     }
                                 }
                             })

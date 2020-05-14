@@ -665,8 +665,7 @@
             <md-button class="md-raised md-primary" data-ng-click="vm.save()">Save</md-button>
 
             <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
-                <md-progress-circular md-mode="indeterminate"
-                                      md-diameter="24"></md-progress-circular>
+                <progress-circular diameter="30"></progress-circular>
             </div>
 
         </div>
@@ -676,7 +675,7 @@
 
     <div data-ng-if="!vm.readyStatus.content">
         <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-            <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            <progress-circular diameter="100"></progress-circular>
         </div>
     </div>
 

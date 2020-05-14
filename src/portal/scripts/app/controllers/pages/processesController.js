@@ -5,14 +5,14 @@
 
     'use strict';
 
-    var processesService = require('../../services/processesService')
+    var processesService = require('../../services/processesService');
 
     var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function processesController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -166,6 +166,10 @@
 
             if (item.task_type === 'configuration_import') {
                 result = 'Configuration Import';
+            }
+
+            if (item.task_type === 'attribute_recalculation') {
+                result = "Attribute Recalculation"
             }
 
             if (!result) {

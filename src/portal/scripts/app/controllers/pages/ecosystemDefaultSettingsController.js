@@ -8,7 +8,7 @@
     var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
     var fieldResolverService = require('../../services/fieldResolverService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ecosystemDefaultSettingsController($scope, $mdDialog) {
 
         var vm = this;
 
