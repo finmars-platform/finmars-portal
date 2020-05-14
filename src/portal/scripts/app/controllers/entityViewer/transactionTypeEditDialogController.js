@@ -2309,18 +2309,27 @@
             field = field.replace(/-/g, "_"); // replace all '_' with '-'
 
             return new Promise(function (resolve, reject) {
-                if (!vm.relationItems[field]) {
 
-                    fieldResolverService.getFields(field).then(function (data) {
-                        vm.relationItems[field] = data.data;
+                fieldResolverService.getFields(field).then(function (data) {
+                    vm.relationItems[field] = data.data;
 
-                        $scope.$apply();
+                    $scope.$apply();
 
-                        resolve(vm.relationItems[field]);
-                    })
-                } else {
                     resolve(vm.relationItems[field]);
-                }
+                })
+
+                // if (!vm.relationItems[field]) {
+                //
+                //     fieldResolverService.getFields(field).then(function (data) {
+                //         vm.relationItems[field] = data.data;
+                //
+                //         $scope.$apply();
+                //
+                //         resolve(vm.relationItems[field]);
+                //     })
+                // } else {
+                //     resolve(vm.relationItems[field]);
+                // }
 
             })
         };
