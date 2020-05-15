@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 29.04.2020.
+ * Created by szhitenev on 14.05.2020.
  */
 (function () {
 
@@ -9,13 +9,13 @@
     var pricingPolicyService = require('../../../services/pricingPolicyService');
 
 
-    module.exports = function runPricingInstrumentDialogController($scope, $mdDialog, data) {
+    module.exports = function runPricingCurrencyDialogController($scope, $mdDialog, data) {
 
-        console.log('runPricingInstrumentDialogController.data', data);
+        console.log('runPricingCurrencyDialogController.data', data);
 
         var vm = this;
 
-        vm.instrument = data.instrument;
+        vm.currency = data.currency;
         vm.contextData = data.contextData;
 
         if (vm.contextData && vm.contextData.report_date) {
@@ -35,11 +35,11 @@
 
         vm.agree = function () {
 
-            vm.item.type = 2; // Created By Instrument
+            vm.item.type = 3; // Created By Currency
             vm.item.name = 'name_placeholder'; // backend will reassign this property
             vm.item.user_code = 'user_code_placeholder'; // backend will reassign this property
 
-            vm.item.instrument_filters = vm.instrument.user_code;
+            vm.item.currency_filters = vm.currency.user_code;
 
             vm.item.pricing_policy_filters = [];
 
