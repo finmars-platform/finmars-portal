@@ -11,9 +11,23 @@
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
     var baseUrl = baseUrlService.resolve();
+
     var getList = function (options) {
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument-type/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getListLight = function (options) {
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument-type-light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -132,6 +146,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

@@ -103,7 +103,7 @@
                     </thead>
                     <tbody class="members-groups-tbody">
                     <tr data-ng-repeat="group in vm.groups">
-                        <td>
+                        <td ng-class="{'admin-group-row': group.role == 1}">
                             <md-button class="members-groups-name" data-ng-bind="group.name"
                                        data-ng-click="vm.manageGroupDialog($event, group.id)"></md-button>
                         </td>

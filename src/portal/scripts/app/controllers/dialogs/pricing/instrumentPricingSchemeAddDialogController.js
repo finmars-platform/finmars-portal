@@ -9,7 +9,7 @@
     var attributeTypeService = require('../../../services/attributeTypeService');
 
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function instrumentPricingSchemeAddDialogController($scope, $mdDialog, data) {
 
         var vm = this;
 
