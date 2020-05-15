@@ -1807,6 +1807,53 @@
 
         };
 
+        vm.runPricingCurrency = function($event) {
+
+            $mdDialog.show({
+                controller: 'RunPricingCurrencyDialogController as vm',
+                templateUrl: 'views/dialogs/pricing/run-pricing-currency-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        currency: vm.entity,
+                        contextData: vm.contextData
+                    }
+
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: "Pricing Process Initialized."
+                            }
+                        }
+                    });
+
+                }
+
+            });
+
+        };
+
         vm.init = function () {
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
