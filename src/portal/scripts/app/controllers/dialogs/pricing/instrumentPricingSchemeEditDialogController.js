@@ -8,7 +8,7 @@
     var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
     var attributeTypeService = require('../../../services/attributeTypeService')
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function instrumentPricingSchemeEditDialogController($scope, $mdDialog, data) {
 
         console.log('data', data);
 
