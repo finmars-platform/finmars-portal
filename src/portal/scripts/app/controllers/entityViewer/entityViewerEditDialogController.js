@@ -951,7 +951,7 @@
 
         vm.save = function ($event) {
 
-            vm.processing = true;
+
 
             vm.updateEntityBeforeSave();
 
@@ -1043,6 +1043,8 @@
                 if (dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
                 }
+
+                vm.processing = true;
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
@@ -1773,6 +1775,53 @@
                 locals: {
                     data: {
                         instrument: vm.entity,
+                        contextData: vm.contextData
+                    }
+
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: "Pricing Process Initialized."
+                            }
+                        }
+                    });
+
+                }
+
+            });
+
+        };
+
+        vm.runPricingCurrency = function($event) {
+
+            $mdDialog.show({
+                controller: 'RunPricingCurrencyDialogController as vm',
+                templateUrl: 'views/dialogs/pricing/run-pricing-currency-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        currency: vm.entity,
                         contextData: vm.contextData
                     }
 

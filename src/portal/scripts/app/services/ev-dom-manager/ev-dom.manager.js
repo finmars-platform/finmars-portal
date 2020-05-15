@@ -526,23 +526,49 @@
 
             console.log('clickData', clickData);
 
-            if (clickData.___type === 'group') {
+            console.log('detail', event.detail);
 
-                handleGroupClick(clickData, evDataService, evEventService);
+            if (event.detail === 1) {
+
+                if (clickData.___type === 'group') {
+
+                    handleGroupClick(clickData, evDataService, evEventService);
+
+                }
+
+                if (clickData.___type === 'control') {
+                    handleControlClick(clickData, evDataService, evEventService);
+                }
+
+                if (clickData.___type === 'object') {
+
+                    handleObjectClick(clickData, evDataService, evEventService);
+
+                }
+            }
+
+            if (event.detail === 2) {
+
+                if (clickData.___type === 'object') {
+
+                    var objectId = clickData.___id;
+                    var parentGroupHashId = clickData.___parentId;
+
+                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                    var dropdownAction = 'edit';
+
+                    evDataService.setActiveObject(obj);
+                    evDataService.setActiveObjectAction(dropdownAction);
+
+                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                }
 
             }
 
-            if (clickData.___type === 'control') {
-                handleControlClick(clickData, evDataService, evEventService);
-            }
+        });
 
-            if (clickData.___type === 'object') {
-
-                handleObjectClick(clickData, evDataService, evEventService);
-
-            }
-
-        })
 
     };
 
@@ -558,7 +584,7 @@
 
     var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
 
-        function sendContextMenuActionToActiveObj (event) {
+        function sendContextMenuActionToActiveObj(event) {
             var objectId = event.target.dataset.objectId;
             var parentGroupHashId = event.target.dataset.parentGroupHashId;
             var dropdownAction = event.target.dataset.evDropdownAction;
@@ -714,7 +740,7 @@
 
         if (!metaService.isReport(entityType)) {
 
-            function sendContextMenuActionToActiveObj (event) {
+            function sendContextMenuActionToActiveObj(event) {
 
                 var objectId = event.target.dataset.objectId;
                 var parentGroupHashId = event.target.dataset.parentGroupHashId;

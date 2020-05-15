@@ -5,7 +5,7 @@
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function settingsMembersAndGroupsController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -73,7 +73,6 @@
                 });
             });
         };
-
 
         vm.deleteGroup = function ($event, group) {
 

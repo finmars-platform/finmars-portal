@@ -731,7 +731,7 @@
 
         vm.save = function ($event) {
 
-            vm.processing = true;
+
 
             return new Promise(function (resolve, reject) {
 
@@ -764,6 +764,8 @@
                     reject();
 
                 } else {
+
+                    vm.processing = true;
 
                     transactionTypeService.create(vm.entity).then(function (data) {
 
@@ -850,7 +852,7 @@
         };
 
         vm.getInstrumentTypes = function () {
-            instrumentTypeService.getList().then(function (data) {
+            instrumentTypeService.getListLight().then(function (data) {
                 vm.instrumentTypes = data.results;
                 vm.readyStatus.instrumentTypes = true;
                 $scope.$apply();
@@ -1066,48 +1068,23 @@
             var entityKey;
 
             for (var i = 0; i < vm.contentTypes.length; i++) {
-                if (vm.contentTypes[i].key == item.content_type) {
+                if (vm.contentTypes[i].key === item.content_type) {
                     entityKey = vm.contentTypes[i].entity;
-                    entityKey = entityKey.replace(/-/g, '_');
 
-                    return entityKey;
-                }
-            }
+                    if (entityKey === 'strategy-1') {
+                        return 'strategy1'
+                    } else if (entityKey === 'strategy-2') {
+                        return 'strategy2'
+                    } else if (entityKey === 'strategy-3') {
+                        return 'strategy3'
+                    } else {
 
-        };
+                        entityKey = entityKey.replace(/-/g, '_');
 
-        vm.resolveDefaultValue = function (item) {
+                        return entityKey;
 
-            //console.log('item', item);
-
-            if (item.value_type == 100) {
-
-                var itemEntity = '';
-
-                vm.contentTypes.forEach(function (contentType) {
-                    if (item.content_type == contentType.key) {
-                        itemEntity = contentType.entity;
                     }
-                });
-
-                if (item[itemEntity + '_object']) {
-                    return item[itemEntity + '_object'].name;
-                } else {
-
-                    var entityName = '';
-
-                    if (vm.relationItems[itemEntity]) {
-                        vm.relationItems[itemEntity].forEach(function (relationItem) {
-                            if (relationItem.id == item[itemEntity]) {
-                                entityName = relationItem.name;
-                            }
-                        });
-                    }
-
-                    return entityName;
                 }
-            } else {
-                return item.value;
             }
 
         };

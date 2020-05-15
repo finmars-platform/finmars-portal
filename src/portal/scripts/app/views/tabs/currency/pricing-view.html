@@ -47,6 +47,14 @@
             <input type="text" data-ng-model="vm.entity.reference_for_pricing">
         </md-input-container>
 
+        <div>
+
+            <md-button class="md-raised md-primary" data-ng-if="vm.entity.id"
+                       data-ng-click="vm.runPricingCurrency($event)">Run Pricing
+            </md-button>
+
+        </div>
+
     </div>
 
     <table>

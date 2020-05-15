@@ -5,14 +5,14 @@
 
     'use strict';
 
-    var processesService = require('../../services/processesService')
+    var processesService = require('../../services/processesService');
 
     var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function processesController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -30,6 +30,8 @@
 
         // TODO Add pagination?
 
+        vm.interval = null;
+
 
         vm.getData = function () {
 
@@ -42,14 +44,6 @@
                     resolve();
 
                     $scope.$apply();
-
-                    if (vm.autoRefresh) {
-
-                        setTimeout(function () {
-                            vm.getData();
-                        }, 1000);
-
-                    }
 
                 })
 
@@ -168,6 +162,10 @@
                 result = 'Configuration Import';
             }
 
+            if (item.task_type === 'attribute_recalculation') {
+                result = "Attribute Recalculation"
+            }
+
             if (!result) {
                 result = 'Unknown Task'
             }
@@ -194,10 +192,12 @@
 
             processesService.deleteByKey(item.id).then(function (data) {
 
-                if (!vm.autoRefresh) {
+                $scope.$apply();
 
-                    vm.getData();
-                }
+                // if (!vm.autoRefresh) {
+                //
+                //     vm.getData();
+                // }
 
             })
 
