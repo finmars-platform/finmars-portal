@@ -580,7 +580,7 @@
                                             icon: 'iso',
                                             tooltip: 'Recalculate',
                                             caption: '',
-                                            classes: 'md-raised',
+                                            classes: '',
                                             action: vm.recalculate
                                         }
                                     ]

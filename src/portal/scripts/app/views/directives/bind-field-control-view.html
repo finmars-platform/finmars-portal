@@ -1,7 +1,9 @@
 <div ng-class="{'disabled-field': !isEditableField()}">
-    <div data-ng-if="fieldType['display_name'] === 'Number'" class="bind-field-number-field-container">
+    <div data-ng-if="fieldType['display_name'] === 'Number'"
+         class="bind-field-number-field-container"
+         style="{{inputBackgroundColor()}}">
 
-        <md-input-container class="md-block no-error-spacer bfNumberInputContainer">
+        <!--<md-input-container class="md-block no-error-spacer bfNumberInputContainer">
             <label data-ng-bind="getName()"></label>
 
             <input type="text"
@@ -12,7 +14,7 @@
                    class="no-input-arrows bfNumberInput"
                    style="{{styleForInputsWithButtons()}}">
 
-            <!--<input data-ng-model="entity[getModelKey()]"
+            &lt;!&ndash;<input data-ng-model="entity[getModelKey()]"
                    type="number"
                    data-ng-change="itemChange()"
                    data-ng-if="!item.options.onlyPositive"
@@ -24,7 +26,7 @@
                    data-ng-if="item.options.onlyPositive"
                    data-ng-change="itemChange()"
                    class="no-input-arrows"
-                   style="{{styleForInputsWithButtons()}}">-->
+                   style="{{styleForInputsWithButtons()}}">&ndash;&gt;
 
             <div class="bind-field-buttons-block">
                 <md-button class="bind-field-calculator-btn" ng-click="openCalculatorDialog($event)">
@@ -45,12 +47,17 @@
                 </div>
             </div>
 
-        </md-input-container>
+        </md-input-container>-->
+        <number-input label="{{getName()}}"
+                      model="fieldValue"
+                      only-positive="item.options"
+                      number-format="numberFormat"
+                      on-change-callback="itemChange()" number-></number-input>
 
     </div>
 
-    <div data-ng-if="fieldType['display_name'] === 'String'">
-        <div data-ng-if="getModelKey() === 'notes' ">
+    <div data-ng-if="fieldType['display_name'] === 'String'" style="{{inputBackgroundColor()}}">
+        <!--<div data-ng-if="getModelKey() === 'notes' ">
             <md-input-container class="md-block no-error-spacer textarea-bind-field">
                 <label data-ng-bind="getName()"></label>
                 <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}"
@@ -59,7 +66,6 @@
                           cols="30"
                           rows="{{item.options.rowCount}}"
                           style="{{inputBackgroundColor()}}"></textarea>
-
             </md-input-container>
         </div>
 
@@ -94,7 +100,11 @@
                 </div>
 
             </md-input-container>
-        </div>
+        </div>-->
+
+        <text-input label="{{getName()}}"
+                    model="fieldValue"
+                    on-change-callback="itemChange()"></text-input>
     </div>
 
     <!--<div data-ng-if="fieldType['display_name'] === 'Float'">

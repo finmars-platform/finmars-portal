@@ -230,6 +230,7 @@ app.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('
 app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
 app.controller('CalculatorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/calculatorDialogController')]);
 app.controller('TabsEditorDialogController', ['$scope', '$mdDialog', 'tabs', 'data', require('./app/controllers/dialogs/tabsEditorDialogController')]);
+app.controller('TextInputDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/textInputDialogController')]);
 
 app.controller('InputTemplateLayoutViewerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/inputTemplateLayoutViewerDialogController')]);
 app.controller('TemplateLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateLayoutManagerController')]);
@@ -663,6 +664,9 @@ app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDire
 app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
+
+app.directive('textInput', ['$mdDialog', require('./app/directives/textInputDirective.js')]);
+app.directive('numberInput', ['$mdDialog', require('./app/directives/numberInputDirective.js')]);
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
 
