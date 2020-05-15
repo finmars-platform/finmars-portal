@@ -1,0 +1,30 @@
+<div class="custom-input-container number-input-container numberInputContainer"
+     data-ng-class="{'custom-input-error': error}">
+    <div class="custom-input-top-row">
+        <div data-ng-if="!error"
+             data-ng-bind="label"
+             class="custom-input-label"></div>
+
+        <div data-ng-if="error" data-ng-bind="error" class="red-text p-l-8"></div>
+
+        <div class="custom-input-tooltip">
+            <ng-md-icon icon="info"
+                        size="16"
+                        class="tooltip-sign"
+                        style="fill: #777777"></ng-md-icon>
+            <md-tooltip class="tooltip_2" md-direction="top">Text field</md-tooltip>
+        </div>
+    </div>
+
+    <div class="flex-row position-relative">
+        <input type="text"
+               data-ng-model="numberToShow"
+               data-ng-change="onValueChange()"
+               placeholder="{{label}}"
+               class="custom-input number-input numberInputElem">
+
+        <button class="custom-input-indicator-btn position-relative" data-ng-click="openCalculatorDialog($event)">
+            <ng-md-icon icon="chrome_reader_mode" size="20" class="number-input-calculator-btn"></ng-md-icon>
+        </button>
+    </div>
+</div>

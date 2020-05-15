@@ -24,7 +24,7 @@
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {classifier: false};
-
+                // console.log("new inputs scope.item", scope.item);
                 var attrs = scope.$parent.vm.attrs || [];
                 var userInputs = scope.$parent.vm.userInputs || [];
                 var choices = metaService.getValueTypes() || [];
@@ -38,11 +38,8 @@
                 scope.isRecalculate = false;
 
                 scope.numberFormat = null;
-                if (scope.item.options && scope.item.options.number_format) {
-                    scope.numberFormat = scope.item.options.number_format;
-                }
 
-                scope.numericInputValue = {};
+                //scope.numericInputValue = {};
 
                 scope.isEditableField = function () {
 
@@ -277,7 +274,7 @@
                     return backgroundColor;
                 };
 
-                scope.openCalculatorDialog = function ($event) {
+                /*scope.openCalculatorDialog = function ($event) {
 
                     var fieldModel = scope.entity[scope.getModelKey()];
                     var calculatorTitle = "Calculator for: " + scope.getName();
@@ -354,7 +351,7 @@
                         }
 
                         // negative numbers processing
-                        /*if (scope.item.options.onlyPositive) {
+                        /!*if (scope.item.options.onlyPositive) {
 
                             if (parseFloat(changedValue) < 0) {
                                 numberIsInvalid = true;
@@ -365,7 +362,7 @@
                         } else {
 
                             scope.entity[scope.getModelKey()] = JSON.parse(JSON.stringify(changedValue));
-                        }*/
+                        }*!/
 
                         if (parseFloat(changedValue) < 0) {
 
@@ -411,7 +408,7 @@
                         var itemNumberValue = JSON.parse(JSON.stringify(scope.entity[scope.getModelKey()]));
                         scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
                     }
-                };
+                };*/
 
                 scope.onDateChange = function () {
 
@@ -459,6 +456,25 @@
                             scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
                         }
 
+
+                        if (scope.item.options) {
+
+                            // prepare data for number field
+                            if (scope.fieldType && scope.fieldType.value === 20) {
+
+                                if (scope.item.options.number_format) {
+                                    scope.numberFormat = scope.item.options.number_format;
+                                }
+
+                                if (scope.fieldType.value === 20) {
+                                    scope.onlyPositive = scope.item.options.onlyPositive;
+                                }
+
+                            }
+                            // < prepare data for number field >
+
+                        }
+
                     }
 
                     if (scope.fieldType && scope.fieldType.value === 30) {
@@ -473,7 +489,7 @@
                         }
                     }
 
-                    if (scope.fieldType && scope.fieldType.value === 20) {
+                    /*if (scope.fieldType && scope.fieldType.value === 20) {
 
                         scope.numericInputValue.numberVal = null;
                         setTimeout(function () {
@@ -488,12 +504,16 @@
 
                         }
 
-                    }
+                    }*/
+
+                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
 
                 };
 
                 scope.itemChange = function(){
 
+                    scope.entity[scope.getModelKey()] = scope.fieldValue.value;
+                    // console.log("new inputs fieldValue", scope.fieldValue);
                     if (scope.entityChange) {
                         scope.entityChange();
                     }
