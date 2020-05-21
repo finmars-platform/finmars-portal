@@ -485,6 +485,17 @@
                     }
                 }
             })
+
+            .state('app.settings.general.data-providers-bloomberg', {
+                url: '/data-providers/bloomberg/:id',
+                views: {
+                    'data-providers': {
+                        templateUrl: 'views/settings/data-providers-bloomberg-settings-view.html',
+                        controller: 'SettingsGeneralDataProvidersBloombergController as vm'
+                    }
+                }
+            })
+
             .state('app.settings.general.instrument-import', {
                 url: '/instrument-import',
                 views: {
@@ -634,6 +645,11 @@
                 url: '/data-providers/:dataProviderId',
                 templateUrl: 'views/settings/data-providers-config-settings-view.html',
                 controller: 'SettingsGeneralDataProvidersConfigController as vm'
+            })
+            .state('app.settings.data-providers-bloomberg', {
+                url: '/data-providers/bloomberg/:id',
+                templateUrl: 'views/settings/data-providers-bloomberg-settings-view.html',
+                controller: 'SettingsGeneralDataProvidersBloombergController as vm'
             })
             .state('app.settings.init-configuration', {
                 url: '/init-configuration',

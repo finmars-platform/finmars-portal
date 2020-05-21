@@ -3,13 +3,11 @@
  */
 (function () {
 
-    var logService = require('../../../../../../core/services/logService');
-
     var dataProvidersService = require('../../../services/import/dataProvidersService');
 
-    module.exports = function ($scope, $mdDialog) {
+    var bloombergDataProviderService = require('../../../services/data-providers/bloombergDataProviderService');
 
-        logService.controller('SettingsGeneralDataProvidersController', 'initialized');
+    module.exports = function settingsGeneralDataProvidersController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -140,39 +138,40 @@
 
         };
 
+        vm.getBloombergCredentialList = function(){
+
+            vm.readyStatus.bloombergCredentials = false;
+
+            bloombergDataProviderService.getCredentialList().then(function (data) {
+
+                vm.bloombergCredentials = data.results;
+
+                vm.readyStatus.bloombergCredentials = true;
+
+
+                if(!vm.bloombergCredentials.length) {
+                    vm.bloombergCredentials = [{
+                        id: 'new'
+                    }]
+                }
+
+                console.log('vm.bloombergCredentials', vm.bloombergCredentials);
+
+                $scope.$apply();
+
+            })
+
+        };
+
         vm.init = function () {
 
             vm.getProviders();
+            vm.getBloombergCredentialList();
 
         };
 
         vm.init();
 
-
-        /*$mdDialog.show({
-            controller: 'WarningDialogController as vm',
-            templateUrl: 'views/warning-dialog-view.html',
-            clickOutsideToClose: false,
-            locals: {
-                warning: {
-                    title: 'Bloomberg certificate import',
-                    description: 'Error'
-                }
-            }
-        });
-
-        $mdDialog.show({
-            controller: 'SuccessDialogController as vm',
-            templateUrl: 'views/dialogs/success-dialog-view.html',
-            autoWrap: true,
-            locals: {
-                success: {
-                    title: "Bloomberg certificate import",
-                    description: "Success"
-                }
-            }
-
-        });*/
 
     }
 
