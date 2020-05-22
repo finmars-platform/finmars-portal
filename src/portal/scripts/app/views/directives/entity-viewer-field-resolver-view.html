@@ -4,7 +4,7 @@
         <div data-ng-if="isSpecialSearchRelation()" style="{{inputBackgroundColor()}}">
             <entity-search-select item="entity[getModelKey()]"
                                   label="getName()"
-                                  input-text="inputText"
+                                  item-name="inputText"
                                   callback="changeHandler()"
                                   entity-type="getModelKeyEntity()"></entity-search-select>
         </div>
@@ -120,6 +120,7 @@
             </div>
         </div>
     </div>
+
     <div data-ng-if="type === 'multiple-ids'">
         <div data-ng-if="checkComplexEntityType()">
             <md-input-container class="md-block no-error-spacer">

@@ -203,19 +203,34 @@ md-optgroup.bold-field-select > label {
   }
 }
 
-.bind-field-input {
-  &.with-button {
-    input {
-      width: 80%;
-    }
-    .bf-copy-btn {
-      min-width: 29px;
-      width: 29px;
-      min-height: 29px;
-      height: 29px;
-      margin: 0 4px 0 0;
+bind-field-control {
+
+  .bind-field-input {
+    &.with-button {
+      input {
+        width: 80%;
+      }
+      .bf-copy-btn {
+        min-width: 29px;
+        width: 29px;
+        min-height: 29px;
+        height: 29px;
+        margin: 0 4px 0 0;
+      }
     }
   }
+
+  date-input {
+    .date-input-specific-btns {
+      width: 30px;
+      font-size: 11px;
+
+      &:hover {
+        background-color: #cecece;
+      }
+    }
+  }
+
 }
 
 textarea.bordered {

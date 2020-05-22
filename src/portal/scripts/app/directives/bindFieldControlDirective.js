@@ -24,19 +24,19 @@
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {classifier: false};
-                // console.log("new inputs scope.item", scope.item);
+                //console.log("new inputs scope.item", scope.item);
                 var attrs = scope.$parent.vm.attrs || [];
                 var userInputs = scope.$parent.vm.userInputs || [];
                 var choices = metaService.getValueTypes() || [];
                 var entityAttrs = metaService.getEntityAttrs(scope.entityType) || [];
 
-                var numberInputElem = null;
-                var numberInputContainerElem = null;
+                /*var numberInputElem = null;
+                var numberInputContainerElem = null;*/
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
+                scope.customStyles = null;
 
                 scope.isRecalculate = false;
-
                 scope.numberFormat = null;
 
                 //scope.numericInputValue = {};
@@ -153,14 +153,17 @@
 
                 scope.setDateToday = function () {
                     scope.entity[scope.getModelKey()] = moment(new Date()).format('YYYY-MM-DD');
+                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
                 };
 
                 scope.setDatePlus = function () {
                     scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).add(1, 'days').format('YYYY-MM-DD');
+                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
                 };
 
                 scope.setDateMinus = function () {
                     scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).subtract(1, 'days').format('YYYY-MM-DD');
+                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
                 };
 
                 scope.node = scope.node || null;
@@ -410,14 +413,6 @@
                     }
                 };*/
 
-                scope.onDateChange = function () {
-
-                    if (scope.entity[scope.getModelKey()] === "") {
-                        scope.entity[scope.getModelKey()] = null;
-                    }
-
-                };
-
                 scope.init = function () {
 
                     var fieldKey = scope.getModelKey();
@@ -425,9 +420,11 @@
                     scope.options = {};
 
                     if (fieldKey === 'tags') {
+
                         scope.options = {
                             entityType: scope.entityType
                         }
+
                     } else {
                         if (metaService.getEntitiesWithSimpleFields().indexOf(scope.entityType) !== -1) {
                             scope.options = {
@@ -456,7 +453,6 @@
                             scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
                         }
 
-
                         if (scope.item.options) {
 
                             // prepare data for number field
@@ -473,20 +469,83 @@
                             }
                             // < prepare data for number field >
 
+                            // prepare data for date field
+                            if (scope.fieldType.value === 40) {
+
+                                if (!scope.item.buttons) {
+                                    scope.item.buttons = [];
+                                }
+
+                                if (scope.item.options.dateToday) {
+                                    scope.item.buttons.push({
+                                        icon: '',
+                                        tooltip: "Set today's date",
+                                        caption: 'T',
+                                        classes: 'date-input-specific-btns',
+                                        action: {callback: scope.setDateToday}
+                                    });
+                                }
+
+                                if (scope.item.options.dateTodayPlus) {
+                                    scope.item.buttons.push({
+                                        icon: '',
+                                        tooltip: "Increase by one day",
+                                        caption: 'T+1',
+                                        classes: 'date-input-specific-btns',
+                                        action: {callback: scope.setDatePlus}
+                                    });
+                                }
+
+                                if (scope.item.options.dateTodayMinus) {
+                                    scope.item.buttons.push({
+                                        icon: '',
+                                        tooltip: "Decrease by one day",
+                                        caption: 'T-1',
+                                        classes: 'date-input-specific-btns',
+                                        action: {callback: scope.setDateMinus}
+                                    });
+                                }
+
+                            }
+                            // < prepare data for date field >
+
+                        }
+
+                        if (scope.item.buttons) {
+                            scope.item.buttons.forEach(function (btnObj) {
+
+                                if (btnObj.action.key === 'input-recalculation') {
+                                    btnObj.action.parameters = {item: scope.item};
+                                }
+
+                            })
+                        }
+
+                        if (scope.item.backgroundColor) {
+
+                            scope.customStyles = {
+                                'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';'
+                            }
+
                         }
 
                     }
 
-                    if (scope.fieldType && scope.fieldType.value === 30) {
+                    if (scope.fieldType) {
 
-                        if (scope.entity) {
+                        if (scope.fieldType.value === 30) {
 
-                            scope.classifierId = scope.entity[scope.getModelKey()];
+                            if (scope.entity) {
 
-                            scope.findNodeItem().then(function () {
-                                scope.$apply();
-                            })
+                                scope.classifierId = scope.entity[scope.getModelKey()];
+
+                                scope.findNodeItem().then(function () {
+                                    scope.$apply();
+                                })
+                            }
+
                         }
+
                     }
 
                     /*if (scope.fieldType && scope.fieldType.value === 20) {
@@ -511,13 +570,28 @@
                 };
 
                 scope.itemChange = function(){
-
-                    scope.entity[scope.getModelKey()] = scope.fieldValue.value;
-                    // console.log("new inputs fieldValue", scope.fieldValue);
+                    //console.log("new inputs itemChange", scope.entity[scope.getModelKey()]);
                     if (scope.entityChange) {
                         scope.entityChange();
                     }
+                };
 
+                scope.onDateChange = function () {
+                    //console.log("new inputs onDateChange", scope.entity, scope.entity[scope.getModelKey()]);
+                    scope.entity[scope.getModelKey()] = scope.fieldValue.value;
+
+                    if (scope.entity[scope.getModelKey()] === "") {
+                        scope.entity[scope.getModelKey()] = null;
+                    }
+
+                    scope.itemChange();
+
+                };
+
+                scope.onFieldChange = function () {
+                    scope.entity[scope.getModelKey()] = scope.fieldValue.value;
+                    //console.log("new inputs onFieldChange", scope.entity[scope.getModelKey()]);
+                    scope.itemChange();
                 };
 
                 scope.init()

@@ -162,7 +162,6 @@
 
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-
                 /*if (parts[1]) { // fraction digits
                     parts[1] = parts[1].replace(/(\d{3})(?=\d)/g, "$1 ")
                 }*/
@@ -238,14 +237,6 @@
 
             }*/
 
-            if (column.report_settings.number_prefix) {
-                number = column.report_settings.number_prefix + number;
-            }
-
-            if (column.report_settings.number_suffix) {
-                number = number + column.report_settings.number_suffix;
-            }
-
         }
 
         return number;
@@ -271,6 +262,13 @@
 
         value = formatNegative(value, column);
 
+        if (column.report_settings.number_prefix) {
+            value = column.report_settings.number_prefix + value;
+        }
+
+        if (column.report_settings.number_suffix) {
+            value = value + column.report_settings.number_suffix;
+        }
 
         return value;
 

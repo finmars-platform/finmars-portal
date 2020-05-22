@@ -339,9 +339,6 @@
             case 'integrations.pricingautomatedschedule':
                 result = 'Automated Schedule';
                 break;
-
-
-
         }
 
         if (!result) {

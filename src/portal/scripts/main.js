@@ -668,6 +668,7 @@ app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResi
 
 app.directive('textInput', ['$mdDialog', require('./app/directives/textInputDirective.js')]);
 app.directive('numberInput', ['$mdDialog', require('./app/directives/numberInputDirective.js')]);
+app.directive('dateInput', [require('./app/directives/dateInputDirective.js')]);
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
 

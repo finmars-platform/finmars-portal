@@ -477,8 +477,9 @@
 
         };
 
-        vm.recalculate = function (item) {
+        vm.recalculate = function (paramsObj) {
 
+            var item = paramsObj.item;
             vm.processing = true;
 
             var values = {};
@@ -581,7 +582,7 @@
                                             tooltip: 'Recalculate',
                                             caption: '',
                                             classes: '',
-                                            action: vm.recalculate
+                                            action: {key: 'input-recalculation', callback: vm.recalculate}
                                         }
                                     ]
                                 }
@@ -708,8 +709,8 @@
                                             icon: 'iso',
                                             tooltip: 'Recalculate',
                                             caption: '',
-                                            classes: 'md-raised',
-                                            action: vm.recalculate
+                                            classes: '',
+                                            action: {key: 'input-recalculation', callback: vm.recalculate}
                                         }
                                     ]
                                 }
@@ -964,8 +965,8 @@
                                                 icon: 'iso',
                                                 tooltip: 'Recalculate',
                                                 caption: '',
-                                                classes: 'md-raised',
-                                                action: vm.recalculate
+                                                classes: '',
+                                                action: {key: 'input-recalculation', callback: vm.recalculate}
                                             }
                                         ]
                                     }

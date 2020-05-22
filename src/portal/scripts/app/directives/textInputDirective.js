@@ -9,6 +9,7 @@
             scope: {
                 label: '@',
                 model: '=',
+                customStyles: '<',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/text-input-view.html',
@@ -22,6 +23,19 @@
                         scope.onChangeCallback();
                     }
                 }
+
+                var applyCustomStyles = function () {
+
+                    Object.keys(scope.customStyles).forEach(function (className) {
+
+                        var elemClass = '.' + className;
+                        var elemToApplyStyles = elem[0].querySelector(elemClass);
+
+                        elemToApplyStyles.style.cssText = scope.customStyles[className];
+
+                    });
+
+                };
 
                 var initEventListeners = function () {
                     elem[0].addEventListener('mouseover', function () {
@@ -41,7 +55,14 @@
                     });
                 }
 
-                initEventListeners();
+                var init = function () {
+
+                    initEventListeners();
+
+                    if (scope.customStyles) {
+                        applyCustomStyles();
+                    }
+                };
 
                 scope.openTextInDialog = function ($event) {
 
@@ -67,6 +88,8 @@
                     });
 
                 };
+
+                init();
 
             }
         }

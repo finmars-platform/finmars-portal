@@ -11,7 +11,7 @@
     var tagService = require('../services/tagService');
     var metaContentTypesService = require('../services/metaContentTypesService');
 
-    module.exports = function ($scope) {
+    module.exports = function () {
 
         return {
             scope: {
@@ -228,18 +228,28 @@
 
                     var result = '';
 
-                    // console.log("scope.fields[0]", scope.fields[0]);
-
-                    if (scope.fields[0]) {
+                    /*if (scope.fields[0]) {
                         if (scope.fields[0].name) {
                             result = scope.fields[0].name;
                         } else {
                             result = scope.fields[0].public_name;
                         }
+                    }*/
+                    if (scope.fields[0]) {
+
+                        if (scope.fields[0].short_name) {
+                            result = scope.fields[0].short_name;
+
+                        } else if (scope.fields[0].name) {
+                            result = scope.fields[0].name;
+
+                        } else {
+                            result = scope.fields[0].public_name;
+                        }
+
                     }
 
-
-                    return result
+                    return result;
                 };
 
                 scope.getModelKey = scope.$parent.getModelKey;
@@ -334,6 +344,8 @@
                 });
 
                 scope.changeHandler = function () {
+                    /*scope.entity[scope.getModelKey()] = scope.fieldValue.value;
+                    console.log("new inputs changeHandler called", JSON.parse(JSON.stringify(scope.entity[scope.getModelKey()])));*/
                     if (scope.itemChange) {
                         scope.itemChange()
                     }
@@ -359,7 +371,7 @@
                         }
                     }
 
-
+                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
                     scope.inputText = scope.getInputTextForEntitySearch()
 
                 };

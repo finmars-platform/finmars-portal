@@ -12,9 +12,14 @@
   top: 2px;
 }
 
+.custom-input-main-container {
+  border-radius: 8px 8px;
+}
+
 .custom-input-label {
   font-size: 14px;
-  color: rgba(0,0,0,0.54);
+  //color: rgba(0,0,0,0.54);
+  color: #000;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -24,42 +29,120 @@
   height: 27px;
   width: 100%;
   padding-left: 8px;
-  border: 2px solid rgba(150, 150, 150, .5);
+  border: 2px solid #7d7d7d;
   border-right: none;
   border-radius: 8px 0 0 8px;
   background: transparent;
   box-sizing: border-box;
 
   &:focus {
-    border-color: rgba(26, 26, 236, 0.6);
+    //border-color: rgba(26, 26, 236, 0.6);
+    border-color: #000;
     outline: none;
   }
 
 }
 
 .custom-input:focus + .custom-input-indicator-btn {
-  border-color: rgba(26, 26, 236, 0.6);
+  //border-color: rgba(26, 26, 236, 0.6);
+  border-color: #000000;
   outline: none;
+}
+
+.custom-input-custom-btns-holder {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  height: 27px;
+  opacity: 0;
+  top: 0;
+  right: 30px;
+  box-sizing: border-box;
+
+  .custom-input-custom-btn {
+    height: 23px;
+    background: transparent;
+    border: none;
+    padding: 0 2px;
+    margin: 2px 0;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
 }
 
 .custom-input-indicator-btn {
   flex: 0 0 30px;
   height: 27px;
-  border: 2px solid rgba(150, 150, 150, .5);
+  border: 2px solid #7d7d7d;
   border-left: none;
   background-color: transparent;
   border-radius: 0 8px 8px 0;
   padding: 2px 2px;
+  fill: #7b7b7b;
 
   &:hover {
     background-color: #cecece;
   }
 }
 
+.custom-input-sel-menu-container {
+  width: 100%;
+  position: relative;
+}
+
+.custom-input-sel-menu-block {
+  position: absolute;
+  width: 100%;
+  min-height: 48px;
+  max-height: 256px;
+  top: 2px;
+  left: 0;
+  background: #fff;
+  padding: 5px 0;
+  box-shadow: 0 0 2px rgba(0,0,0,1);
+  overflow: auto;
+  z-index: 1;
+  box-sizing: border-box;
+
+  .custom-input-sel-option {
+    padding: 4px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: rgba(158,158,158,0.18);
+    }
+  }
+}
+
+
+
+.custom-input-container.custom-input-set-from-outside {
+  .custom-input {
+    border-color: rgba(26, 26, 236, 0.6);
+    color: rgba(26, 26, 236, 0.6);
+  }
+}
+
 .custom-input-container.custom-input-hovered, .custom-input-container.custom-input-focused {
+  .custom-input-custom-btns-holder {
+    opacity: 1;
+  }
+
   .custom-input-tooltip {
     opacity: 1;
   }
+}
+
+.custom-input-container.custom-input-focused {
+
+  .custom-input-indicator-btn {
+    border-color: #000;
+    outline: none;
+  }
+
 }
 
 .number-input-calculator-btn {
@@ -73,17 +156,28 @@
 }
 
 .custom-input-container.custom-input-error {
+  .custom-input-label {
+    font-weight: bold;
+    color: #fa393e;
+  }
+
+  .custom-input-error-tooltip {
+    position: absolute;
+    top: 4px;
+    left: 3px;
+
+    ng-md-icon {
+      fill: #fa393e;
+    }
+  }
+
   .custom-input {
+    padding-left: 20px;
     border-color: #fa393e;
   }
 
   .custom-input-indicator-btn {
     border-color: #fa393e;
-  }
-
-  .custom-input:focus + .custom-input-indicator-btn {
-    border-color: #fa393e;
-    outline: none;
   }
 
   .custom-input:focus {

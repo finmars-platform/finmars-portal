@@ -286,8 +286,6 @@
 
         }
 
-        //return false;
-
     };
 
     var validateDateField = function (value, fieldAttr) {
@@ -607,7 +605,10 @@
 
                                     if (actionItem[aItemKey].match(inputRegExpObj)) {
 
-                                        if ((typeof fieldValue === 'number' && isNaN(fieldValue)) || fieldValue === undefined || fieldValue === null || fieldValue === '') {
+                                        if ((typeof fieldValue === 'number' && isNaN(fieldValue)) ||
+                                            fieldValue === undefined ||
+                                            fieldValue === null ||
+                                            fieldValue === '') {
 
                                             console.log('fieldValue', fieldValue);
 
