@@ -1,11 +1,9 @@
 <div class="custom-input-container number-input-container numberInputContainer"
      data-ng-class="{'custom-input-error': error}">
     <div class="custom-input-top-row">
-        <div data-ng-if="!error"
-             data-ng-bind="label"
-             class="custom-input-label"></div>
+        <div data-ng-bind="label" class="custom-input-label"></div>
 
-        <div data-ng-if="error" data-ng-bind="error" class="red-text p-l-8"></div>
+        <!-- <div data-ng-bind="error" class="red-text p-l-8"></div> -->
 
         <div class="custom-input-tooltip">
             <ng-md-icon icon="info"
@@ -16,15 +14,35 @@
         </div>
     </div>
 
-    <div class="flex-row position-relative">
+    <div class="custom-input-main-container flex-row position-relative">
+        <div data-ng-if="error" class="custom-input-error-tooltip">
+            <ng-md-icon icon="info"
+                        size="18"
+                        class="tooltip-sign"></ng-md-icon>
+            <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
+        </div>
+
         <input type="text"
                data-ng-model="numberToShow"
                data-ng-change="onValueChange()"
-               placeholder="{{label}}"
+               placeholder="{{placeholderText}}"
                class="custom-input number-input numberInputElem">
 
+        <div data-ng-if="customButtons && customButtons.length"
+             class="custom-input-custom-btns-holder">
+            <button data-ng-repeat="button in customButtons"
+                    class="{{button.classes}} custom-input-custom-btn"
+                    data-ng-click="callFnForCustomBtn(button.action)">
+                {{button.caption}}
+                <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
+                <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
+                </md-tooltip>
+            </button>
+        </div>
+
         <button class="custom-input-indicator-btn position-relative" data-ng-click="openCalculatorDialog($event)">
-            <ng-md-icon icon="chrome_reader_mode" size="20" class="number-input-calculator-btn"></ng-md-icon>
+<!--            <ng-md-icon icon="chrome_reader_mode" size="20" class="number-input-calculator-btn"></ng-md-icon>-->
+            <i class="fas fa-calculator"></i>
         </button>
     </div>
 </div>

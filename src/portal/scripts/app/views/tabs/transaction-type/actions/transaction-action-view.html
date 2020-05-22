@@ -29,7 +29,7 @@
                     <div data-ng-if="item.transaction.portfolio_toggle">
                         <entity-search-select data-item="item.transaction.portfolio"
                                               data-label="'Portfolio'"
-                                              data-input-text="item.transaction.portfolio_object.name"
+                                              data-item-name="item.transaction.portfolio_object.name"
                                               data-entity-type="'portfolio'"
                                               is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
@@ -126,7 +126,7 @@
                         <div data-ng-if="item.transaction.instrument_toggle">
                             <entity-search-select data-item="item.transaction.instrument"
                                                   data-label="'Instrument'"
-                                                  data-input-text="item.transaction.instrument_object.name"
+                                                  data-item-name="item.transaction.instrument_object.name"
                                                   data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
 
@@ -304,7 +304,7 @@
                     <div data-ng-if="item.transaction.account_position_toggle">
                         <entity-search-select data-item="item.transaction.account_position"
                                               data-label="'Account position'"
-                                              data-input-text="item.transaction.account_position_object.name"
+                                              data-item-name="item.transaction.account_position_object.name"
                                               data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_position_toggle">
@@ -345,7 +345,7 @@
                     <div data-ng-if="item.transaction.account_cash_toggle">
                         <entity-search-select data-item="item.transaction.account_cash"
                                               data-label="'Account cash'"
-                                              data-input-text="item.transaction.account_cash_object.name"
+                                              data-item-name="item.transaction.account_cash_object.name"
                                               data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_cash_toggle">
@@ -393,7 +393,7 @@
                     <div data-ng-if="item.transaction.account_interim_toggle">
                         <entity-search-select data-item="item.transaction.account_interim"
                                               data-label="'Account interim'"
-                                              data-input-text="item.transaction.account_interim_object.name"
+                                              data-item-name="item.transaction.account_interim_object.name"
                                               data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_interim_toggle">
@@ -424,7 +424,7 @@
                         <div data-ng-if="item.transaction.linked_instrument_toggle">
                             <entity-search-select data-item="item.transaction.linked_instrument"
                                                   data-label="'Linked instrument'"
-                                                  data-input-text="item.transaction.linked_instrument_object.name"
+                                                  data-item-name="item.transaction.linked_instrument_object.name"
                                                   data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
 
@@ -472,7 +472,7 @@
                         <div data-ng-if="item.transaction.allocation_pl_toggle">
                             <entity-search-select data-item="item.transaction.allocation_pl"
                                                   data-label="'Allocation-P&L'"
-                                                  data-input-text="item.transaction.allocation_pl_object.name"
+                                                  data-item-name="item.transaction.allocation_pl_object.name"
                                                   data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
 
@@ -520,7 +520,7 @@
                         <div data-ng-if="item.transaction.allocation_balance_toggle">
                             <entity-search-select data-item="item.transaction.allocation_balance"
                                                   data-label="'Allocation-Balance'"
-                                                  data-input-text="item.transaction.allocation_balance_object.name"
+                                                  data-item-name="item.transaction.allocation_balance_object.name"
                                                   data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                         </div>
 
@@ -575,7 +575,7 @@
                     <div data-ng-if="item.transaction.strategy1_position_toggle">
                         <entity-search-select data-item="item.transaction.strategy1_position"
                                               data-label="'Strategy1 position'"
-                                              data-input-text="item.transaction.strategy1_position_object.name"
+                                              data-item-name="item.transaction.strategy1_position_object.name"
                                               data-entity-type="'strategy-1'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_position_toggle">
@@ -602,7 +602,7 @@
                     <div data-ng-if="item.transaction.strategy2_position_toggle">
                         <entity-search-select data-item="item.transaction.strategy2_position"
                                               data-label="'Strategy2 position'"
-                                              data-input-text="item.transaction.strategy2_position_object.name"
+                                              data-item-name="item.transaction.strategy2_position_object.name"
                                               data-entity-type="'strategy-2'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_position_toggle">
@@ -629,7 +629,7 @@
                     <div data-ng-if="item.transaction.strategy3_position_toggle">
                         <entity-search-select data-item="item.transaction.strategy3_position"
                                               data-label="'Strategy3 position'"
-                                              data-input-text="item.transaction.strategy3_position_object.name"
+                                              data-item-name="item.transaction.strategy3_position_object.name"
                                               data-entity-type="'strategy-3'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_position_toggle">
@@ -659,7 +659,7 @@
                     <div data-ng-if="item.transaction.strategy1_cash_toggle">
                         <entity-search-select data-item="item.transaction.strategy1_cash"
                                               data-label="'Strategy1 cash'"
-                                              data-input-text="item.transaction.strategy1_cash_object.name"
+                                              data-item-name="item.transaction.strategy1_cash_object.name"
                                               data-entity-type="'strategy-1'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_cash_toggle">
@@ -685,7 +685,7 @@
                     <div data-ng-if="item.transaction.strategy2_cash_toggle">
                         <entity-search-select data-item="item.transaction.strategy2_cash"
                                               data-label="'Strategy2 cash'"
-                                              data-input-text="item.transaction.strategy2_cash_object.name"
+                                              data-item-name="item.transaction.strategy2_cash_object.name"
                                               data-entity-type="'strategy-2'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_cash_toggle">
@@ -712,7 +712,7 @@
                     <div data-ng-if="item.transaction.strategy3_cash_toggle">
                         <entity-search-select data-item="item.transaction.strategy3_cash"
                                               data-label="'Strategy3 cash'"
-                                              data-input-text="item.transaction.strategy3_cash_object.name"
+                                              data-item-name="item.transaction.strategy3_cash_object.name"
                                               data-entity-type="'strategy-3'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_cash_toggle">
@@ -743,7 +743,7 @@
                     <div data-ng-if="item.transaction.counterparty_toggle">
                         <entity-search-select data-item="item.transaction.counterparty"
                                               data-label="'Counterparty'"
-                                              data-input-text="item.transaction.counterparty_object.name"
+                                              data-item-name="item.transaction.counterparty_object.name"
                                               data-entity-type="'counterparty'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.counterparty_toggle">
@@ -770,7 +770,7 @@
                     <div data-ng-if="item.transaction.responsible_toggle">
                         <entity-search-select data-item="item.transaction.responsible"
                                               data-label="'Responsible'"
-                                              data-input-text="item.transaction.responsible_object.name"
+                                              data-item-name="item.transaction.responsible_object.name"
                                               data-entity-type="'responsible'"
                                               is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
                     </div>

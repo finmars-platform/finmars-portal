@@ -1,7 +1,6 @@
 <div ng-class="{'disabled-field': !isEditableField()}">
     <div data-ng-if="fieldType['display_name'] === 'Number'"
-         class="bind-field-number-field-container"
-         style="{{inputBackgroundColor()}}">
+         class="bind-field-number-field-container">
 
         <!--<md-input-container class="md-block no-error-spacer bfNumberInputContainer">
             <label data-ng-bind="getName()"></label>
@@ -13,20 +12,6 @@
                    data-ng-blur="onNumericInputBlur()"
                    class="no-input-arrows bfNumberInput"
                    style="{{styleForInputsWithButtons()}}">
-
-            &lt;!&ndash;<input data-ng-model="entity[getModelKey()]"
-                   type="number"
-                   data-ng-change="itemChange()"
-                   data-ng-if="!item.options.onlyPositive"
-                   class="no-input-arrows"
-                   style="{{styleForInputsWithButtons()}}">
-            <input data-ng-model="entity[getModelKey()]"
-                   type="number"
-                   min="0"
-                   data-ng-if="item.options.onlyPositive"
-                   data-ng-change="itemChange()"
-                   class="no-input-arrows"
-                   style="{{styleForInputsWithButtons()}}">&ndash;&gt;
 
             <div class="bind-field-buttons-block">
                 <md-button class="bind-field-calculator-btn" ng-click="openCalculatorDialog($event)">
@@ -50,9 +35,11 @@
         </md-input-container>-->
         <number-input label="{{getName()}}"
                       model="fieldValue"
-                      only-positive="item.options"
-                      number-format="numberFormat"
-                      on-change-callback="itemChange()" number-></number-input>
+                      only-positive="item.options.onlyPositive"
+                      number-format="item.options.number_format"
+                      custom-buttons="item.buttons"
+                      custom-styles="customStyles"
+                      on-change-callback="onFieldChange()"></number-input>
 
     </div>
 
@@ -104,7 +91,9 @@
 
         <text-input label="{{getName()}}"
                     model="fieldValue"
-                    on-change-callback="itemChange()"></text-input>
+                    custom-buttons="item.buttons"
+                    custom-styles="customStyles"
+                    on-change-callback="onFieldChange()"></text-input>
     </div>
 
     <!--<div data-ng-if="fieldType['display_name'] === 'Float'">
@@ -161,6 +150,7 @@
                                data-item-change="itemChange()"
                                data-entity-type="entityType"></ev-field-resolver>
         </div>
+
         <div data-ng-if="item.buttons.length" class="bind-field-number-btn">
             <md-button data-ng-repeat="button in item.buttons"
                        class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
@@ -183,7 +173,7 @@
 
     <div ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
 
-        <md-input-container class="field-date-pick-holder no-error-spacer md-block">
+        <!--<md-input-container class="field-date-pick-holder no-error-spacer md-block">
             <label data-ng-bind="getName()"></label>
             <zh-date-picker data-date-value="entity[getModelKey()]"
                             ng-class="{'disabled-btn': isDisabled}"
@@ -217,7 +207,12 @@
 
             </div>
 
-        </md-input-container>
+        </md-input-container>-->
+        <date-input label="{{getName()}}"
+                    model="fieldValue"
+                    custom-buttons="item.buttons"
+                    custom-styles="customStyles"
+                    on-change-callback="onDateChange()"></date-input>
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">

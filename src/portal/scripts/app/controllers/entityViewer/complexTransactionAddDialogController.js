@@ -393,8 +393,8 @@
                                                 icon: 'iso',
                                                 tooltip: 'Recalculate',
                                                 caption: '',
-                                                classes: 'md-raised',
-                                                action: vm.recalculate
+                                                classes: '',
+                                                action: {key: 'input-recalculation', callback: vm.recalculate}
                                             }
                                         ]
                                     }
@@ -650,8 +650,8 @@
                                         icon: 'iso',
                                         tooltip: 'Recalculate',
                                         caption: '',
-                                        classes: 'md-raised',
-                                        action: vm.recalculate
+                                        classes: '',
+                                        action: {key: 'input-recalculation', callback: vm.recalculate}
                                     }
                                 ]
                             }
@@ -781,8 +781,8 @@
                                         icon: 'iso',
                                         tooltip: 'Recalculate',
                                         caption: '',
-                                        classes: 'md-raised',
-                                        action: vm.recalculate
+                                        classes: '',
+                                        action: {key: 'input-recalculation', callback: vm.recalculate}
                                     }
                                 ]
                             }

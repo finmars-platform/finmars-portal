@@ -13,6 +13,8 @@
                 model: '=',
                 onlyPositive: '<',
                 numberFormat: '<',
+                customButtons: '=',
+                customStyles: '<',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/number-input-view.html',
@@ -24,7 +26,6 @@
                 var inputContainer = elem[0].querySelector('.numberInputContainer');
                 var inputElem = elem[0].querySelector('.numberInputElem');
 
-                // console.log("new inputs numberFormat", scope.numberFormat);
                 scope.onValueChange = function () {
 
                     scope.error = '';
@@ -90,8 +91,6 @@
                                                                             report_settings: scope.numberFormat
                                                                         });
 
-                        //scope.$apply();
-                        // console.log("new inputs formatNumber numberToShow", scope.numberToShow);
                     }
 
                 }
@@ -125,6 +124,29 @@
 
                 };
 
+                scope.callFnForCustomBtn = function (actionData) {
+
+                    if (actionData.parameters) {
+                        actionData.callback(actionData.parameters);
+                    } else {
+                        actionData.callback();
+                    }
+
+                };
+
+                var applyCustomStyles = function () {
+
+                    Object.keys(scope.customStyles).forEach(function (className) {
+
+                        var elemClass = '.' + className;
+                        var elemToApplyStyles = elem[0].querySelector(elemClass);
+
+                        elemToApplyStyles.style.cssText = scope.customStyles[className];
+
+                    });
+
+                };
+
                 var initEventListeners = function () {
                     elem[0].addEventListener('mouseover', function () {
                         inputContainer.classList.add('custom-input-hovered');
@@ -151,17 +173,64 @@
                             scope.$apply();
                         }
                     });
-                }
+                };
+
+                var init = function () {
+
+                    initEventListeners();
+
+                    if (scope.numberFormat) {
+
+                        switch (scope.numberFormat.round_format_id) {
+                            case 0:
+                            case 1:
+                                scope.placeholderText = "0"
+                                break;
+
+                            case 2:
+                                scope.placeholderText = "0.0"
+                                break;
+
+                            case 3:
+                                scope.placeholderText = "0.00"
+                                break;
+
+                            case 4:
+                                scope.placeholderText = "0.0000"
+                                break;
+                        }
+
+                        if (scope.numberFormat.number_prefix) {
+                            scope.placeholderText  = scope.numberFormat.number_prefix + scope.placeholderText;
+                        }
+
+                        if (scope.numberFormat.number_suffix) {
+                            scope.placeholderText = scope.placeholderText + scope.numberFormat.number_suffix;
+                        }
+
+                    }
+
+                    if (scope.customStyles) {
+                        applyCustomStyles();
+                    }
+
+                };
 
                 scope.$watch('model', function () {
-                    scope.numberToShow = JSON.parse(JSON.stringify(scope.model.value));
 
-                    if (!inputContainer.classList.contains('custom-input-focused')) {
-                        applyNumberFormatToInput();
+                    if (scope.model && scope.model.value) {
+
+                        scope.numberToShow = JSON.parse(JSON.stringify(scope.model.value));
+
+                        if (!inputContainer.classList.contains('custom-input-focused')) {
+                            applyNumberFormatToInput();
+                        }
+
                     }
+
                 })
 
-                initEventListeners();
+                init();
 
             }
         }

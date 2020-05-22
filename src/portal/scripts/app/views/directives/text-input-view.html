@@ -11,6 +11,13 @@
     </div>
 
     <div class="flex-row position-relative">
+        <div data-ng-if="error" class="custom-input-error-tooltip">
+            <ng-md-icon icon="info"
+                        size="18"
+                        class="tooltip-sign"></ng-md-icon>
+            <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
+        </div>
+
         <input type="text"
                data-ng-model="model.value"
                data-ng-change="initOnChangeCallback()"
@@ -18,7 +25,7 @@
                class="custom-input text-input textInputElem">
 
         <button class="custom-input-indicator-btn" data-ng-click="openTextInDialog($event)">
-            <ng-md-icon icon="edit" size="20"></ng-md-icon>
+            <i class="fas fa-edit"></i>
         </button>
     </div>
 </div>

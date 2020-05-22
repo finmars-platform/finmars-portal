@@ -249,6 +249,30 @@
 
     });
 
+    gulp.task(appName + '-fontawesome-css-min', function () {
+
+        var pathToCSS = [
+            'node_modules/@fortawesome/fontawesome-free/css/all.css'
+        ];
+
+        return gulp.src(pathToCSS)
+            .pipe(concat('fontawesome.css'))
+            .pipe(minifyCSS())
+            .pipe(rename('fontawesome.min.css'))
+            .pipe(gulp.dest('dist/' + appName + '/content/css/'));
+
+    });
+
+    gulp.task(appName + '-fontawesome-fonts-move', function () {
+
+        var pathToCSS = [
+            'node_modules/@fortawesome/fontawesome-free/webfonts/*'
+        ];
+
+        return gulp.src(pathToCSS)
+            .pipe(gulp.dest('dist/' + appName + '/content/webfonts/'));
+    });
+
     gulp.task(appName + '-plugins-js-min', function () {
 
         var pathToJS = [
@@ -296,7 +320,9 @@
         appName + '-jquery-js-min',
         appName + '-plugins-css-min',
         appName + '-dragula-js-min',
-        appName + '-dragula-css-min'
+        appName + '-dragula-css-min',
+        appName + '-fontawesome-css-min',
+        appName + '-fontawesome-fonts-move'
     ))
 
 }());

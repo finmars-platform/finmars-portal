@@ -1,18 +1,9 @@
-<!--<div>
-    <md-input-container class="md-block no-error-spacer" ng-class="{'cursor-pointer': !isDisabled}">
-        <label ng-class="{'cursor-pointer': !isDisabled}" data-ng-bind="label"></label>
-        <input type="text"
-               data-ng-model="inputText"
-               ng-class="{'cursor-pointer': !isDisabled}"
-               data-ng-disabled="isDisabled"
-               readonly>
-    </md-input-container>
-</div>-->
-
-<div class="custom-input-container smart-search-input-container smartSearchInputContainer"
+<div class="custom-input-container number-input-container numberInputContainer"
      data-ng-class="{'custom-input-error': error}">
     <div class="custom-input-top-row">
         <div data-ng-bind="label" class="custom-input-label"></div>
+
+        <!-- <div data-ng-bind="error" class="red-text p-l-8"></div> -->
 
         <div class="custom-input-tooltip">
             <ng-md-icon icon="info"
@@ -32,12 +23,9 @@
         </div>
 
         <input type="text"
+               data-ng-model="dateValue"
                placeholder="{{placeholderText}}"
-               data-ng-model="inputText"
-               data-ng-model-options="{debounce: 1000}"
-               data-ng-change="onInputTextChange()"
-               data-ng-disabled="isDisabled"
-               class="custom-input smart-search-input smartSearchInputElem">
+               class="custom-input date-input pick-me-up numberInputElem">
 
         <div data-ng-if="customButtons && customButtons.length"
              class="custom-input-custom-btns-holder">
@@ -54,21 +42,8 @@
             </div>
         </div>
 
-        <button class="custom-input-indicator-btn position-relative" data-ng-click="openSmartSearch($event)">
-            <i data-ng-if="!indicatorIcon" class="fas fa-link"></i>
-            <i data-ng-if="indicatorIcon" class="fas" ng-class="indicatorIcon"></i>
+        <button class="custom-input-indicator-btn position-relative" data-ng-click="focusDateInput()">
+            <i class="fas fa-calendar-alt"></i>
         </button>
     </div>
-
-    <div data-ng-if="selectorOptions" class="custom-input-sel-menu-container selectMenuContainer">
-
-        <div class="custom-input-sel-menu-block">
-            <div data-ng-repeat="option in selectorOptions"
-                 data-ng-mousedown="selectOption(option)"
-                 data-ng-bind="option.short_name"
-                 class="custom-input-sel-option"></div>
-        </div>
-
-    </div>
-
 </div>
