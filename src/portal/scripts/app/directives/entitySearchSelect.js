@@ -17,8 +17,8 @@
                 itemName: '<',
                 entityType: '<',
                 customStyles: '<',
-                indicatorIcon: '<',
                 isDisabled: '<',
+                smallOptions: '=',
                 callback: '&'
             },
             templateUrl: 'views/directives/entity-search-select-view.html',
@@ -26,14 +26,60 @@
 
                 scope.error = '';
                 scope.inputValue = '';
-                scope.placeholderText = '';
+                scope.placeholderText = 'Relation';
 
                 if (scope.itemName) {
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
                 }
 
+                if (scope.smallOptions) {
+                    if (scope.smallOptions.tooltipText) {
+                        scope.tooltipText = scope.smallOptions.tooltipText;
+                    }
+                }
+
                 var inputContainer = elem[0].querySelector('.smartSearchInputContainer');
                 var inputElem = elem[0].querySelector('.smartSearchInputElem');
+
+                var entityIndicatorIcons = {
+                    'account': {
+                        type: 'class',
+                        icon: 'fas fa-university'
+                    },
+                    'counterparty': {
+                        type: 'class',
+                        icon: 'far fa-id-badge'
+                    },
+                    'responsible': {
+                        type: 'class',
+                        icon: 'far fa-user'
+                    },
+                    'currency': {
+                        type: 'class',
+                        icon: 'fas fa-money-bill'
+                    },
+                    'instrument': {
+                        type: 'class',
+                        icon: 'far fa-money-bill-alt'
+                    },
+                    'portfolio': {
+                        type: 'class',
+                        icon: 'fas fa-briefcase'
+                    },
+                    'strategy-1': {
+                        type: 'class',
+                        icon: 'fas fa-tag'
+                    },
+                    'strategy-2': {
+                        type: 'class',
+                        icon: 'fas fa-tag'
+                    },
+                    'strategy-3': {
+                        type: 'class',
+                        icon: 'fas fa-tag'
+                    }
+
+                }
 
                 scope.selectOption = function (item) {
 
@@ -50,49 +96,89 @@
                         scope.inputText = item.name;
                     }
 
-                    scope.selectorOptions = null;
+                    closeDropdownMenu(true);
 
                     setTimeout(function () {
 
                         scope.callback();
                         scope.$apply();
 
-                    }, 0)
+                    }, 0);
 
 
                 };
 
-                scope.onInputTextChange = function () {
+                var getOptionsList = function () {
 
-                    scope.selectorOptions = null;
+                    var options = {
+                        page: 1,
+                        pageSize: 20,
+                    }
 
                     if (scope.inputText) {
 
                         var inputText = scope.inputText;
 
-                        var options = {
-                            page: 1,
-                            pageSize: 20,
-                            filters: {
-                                'short_name': inputText
-                            }
+                        options.filters = {
+                            'short_name': inputText
                         }
 
-                        entityResolverService.getList(scope.entityType, options).then(function (data) {
-
-                            scope.selectorOptions = data.results;
-
-                            scope.$apply();
-
-                        });
                     }
 
+                    entityResolverService.getListLight(scope.entityType, options).then(function (data) {
+
+                        scope.selectorOptions = data.results;
+
+                        window.addEventListener('click', closeDDMenuOnClick);
+                        document.addEventListener('keydown', onTabKeyPress);
+
+                        scope.$apply();
+
+                    });
+
+                }
+
+                scope.onInputTextChange = function () {
+                    getOptionsList();
                 };
+
+                var closeDropdownMenu = function (updateScope) {
+
+                    scope.selectorOptions = null;
+
+                    window.removeEventListener('click', closeDDMenuOnClick);
+                    document.removeEventListener('keydown', onTabKeyPress);
+
+                    if (updateScope) {
+                        scope.$apply();
+                    }
+
+                }
+
+                var closeDDMenuOnClick = function (event) {
+                    var targetElem = event.target;
+
+                    if (!inputContainer.contains(targetElem)) {
+                        closeDropdownMenu(true);
+                    }
+                };
+
+                var onTabKeyPress = function (event) {
+
+                    var pressedKey = event.key;
+
+                    if (pressedKey === "Tab") {
+                        closeDropdownMenu(true);
+                    }
+
+                }
 
                 scope.openSmartSearch = function ($event) {
 
                     $event.preventDefault();
                     $event.stopPropagation();
+
+                    closeDropdownMenu();
 
                     if (!scope.isDisabled) {
 
@@ -121,8 +207,6 @@
 
                                 scope.itemName = res.data.item.short_name;
                                 scope.inputText = res.data.item.short_name;
-
-                                console.log('res', res);
 
                                 setTimeout(function () {
 
@@ -188,6 +272,19 @@
 
                 });*/
 
+                var applyCustomStyles = function () {
+
+                    Object.keys(scope.customStyles).forEach(function (className) {
+
+                        var elemClass = '.' + className;
+                        var elemToApplyStyles = elem[0].querySelector(elemClass);
+
+                        elemToApplyStyles.style.cssText = scope.customStyles[className];
+
+                    });
+
+                };
+
                 var initEventListeners = function () {
                     elem[0].addEventListener('mouseover', function () {
                         inputContainer.classList.add('custom-input-hovered');
@@ -199,18 +296,13 @@
 
                     inputElem.addEventListener('focus', function () {
                         inputContainer.classList.add('custom-input-focused');
+
+                        getOptionsList();
                     });
 
                     inputElem.addEventListener('blur', function (event) {
 
                         inputContainer.classList.remove('custom-input-focused');
-
-                        scope.inputText = '';
-                        if (scope.itemName) {
-                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
-                        }
-
-                        scope.selectorOptions = null;
                         scope.$apply();
 
                     });
@@ -219,6 +311,8 @@
                 var init = function () {
 
                     initEventListeners();
+
+                    scope.iconData = entityIndicatorIcons[scope.entityType];
 
                     var entitiesData = metaContentTypeService.getList();
 
@@ -231,9 +325,18 @@
 
                     }
 
+                    if (scope.customStyles) {
+                        applyCustomStyles();
+                    }
+
                 }
 
                 init();
+
+                scope.$on("$destroy", function () {
+                    window.removeEventListener('click', closeDDMenuOnClick);
+                    document.removeEventListener('keydown', onTabKeyPress);
+                });
 
             }
         };

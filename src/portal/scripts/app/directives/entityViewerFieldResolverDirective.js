@@ -371,6 +371,18 @@
                         }
                     }
 
+                    if (scope.item) {
+
+                        if (scope.item.backgroundColor) {
+
+                            scope.customStyles = {
+                                'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';'
+                            }
+
+                        }
+
+                    }
+
                     scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
                     scope.inputText = scope.getInputTextForEntitySearch()
 

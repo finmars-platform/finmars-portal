@@ -34,16 +34,16 @@
 
         </md-input-container>-->
         <number-input label="{{getName()}}"
-                      model="fieldValue"
-                      only-positive="item.options.onlyPositive"
+                      model="entity[getModelKey()]"
                       number-format="item.options.number_format"
                       custom-buttons="item.buttons"
                       custom-styles="customStyles"
-                      on-change-callback="onFieldChange()"></number-input>
+                      small-options="{onlyPositive: item.options.onlyPositive, tooltipText: item.options.tooltipValue}"
+                      on-change-callback="itemChange()"></number-input>
 
     </div>
 
-    <div data-ng-if="fieldType['display_name'] === 'String'" style="{{inputBackgroundColor()}}">
+    <div data-ng-if="fieldType['display_name'] === 'String'">
         <!--<div data-ng-if="getModelKey() === 'notes' ">
             <md-input-container class="md-block no-error-spacer textarea-bind-field">
                 <label data-ng-bind="getName()"></label>
@@ -90,10 +90,11 @@
         </div>-->
 
         <text-input label="{{getName()}}"
-                    model="fieldValue"
+                    model="entity[getModelKey()]"
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
-                    on-change-callback="onFieldChange()"></text-input>
+                    small-options="{tooltipText: item.options.tooltipValue}"
+                    on-change-callback="itemChange()"></text-input>
     </div>
 
     <!--<div data-ng-if="fieldType['display_name'] === 'Float'">
@@ -209,9 +210,10 @@
 
         </md-input-container>-->
         <date-input label="{{getName()}}"
-                    model="fieldValue"
+                    model="entity[getModelKey()]"
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
+                    small-options="{tooltipText: item.options.tooltipValue}"
                     on-change-callback="onDateChange()"></date-input>
     </div>
 

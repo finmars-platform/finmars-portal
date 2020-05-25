@@ -12,7 +12,29 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
+
+        if (!options) {
+            options = {};
+        }
+
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getListLight = function (options) {
+
+        if (!options) {
+            options = {};
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument-light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -116,6 +138,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

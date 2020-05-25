@@ -29,6 +29,23 @@
             })
     };
 
+    var getListLight = function (options) {
+
+        if (!options) {
+            options = {};
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'currencies/currency-light/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var getByKey = function (id) {
         return xhrService.fetch(baseUrl + 'currencies/currency/' + id + '/',
             {
@@ -110,6 +127,7 @@
     module.exports = {
 
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

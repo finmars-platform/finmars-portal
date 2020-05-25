@@ -155,10 +155,11 @@
                             </div>
 
                             <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
-                                <md-tab data-ng-repeat="tab in vm.tabs track by $index">
+                                <md-tab data-ng-repeat="tab in vm.tabs">
                                     <md-tab-label>
                                         <span>{{tab.name}}</span>
                                     </md-tab-label>
+
                                     <md-tab-body>
                                         <md-content class="md-padding p-t-26 "
                                                     ng-class="{'locked-tab-overlay': vm.entity.is_locked}">

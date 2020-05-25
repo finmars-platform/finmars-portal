@@ -73,8 +73,6 @@
                 return instrumentPeriodicityService.getList(options);
             case 'accrual-calculation-model':
                 return accrualCalculationModelService.getList(options);
-            case 'daily-pricing-model':
-                return instrumentDailyPricingModelService.getList(options);
             case 'payment-size-detail':
                 return instrumentPaymentSizeDetailService.getList(options);
             case 'event-class':
@@ -105,6 +103,38 @@
                 return costMethodService.getList(options);
             case 'transaction-class':
                 return transactionClassService.getList(options)
+        }
+    };
+
+    var getListLight = function (entityType, options) {
+
+        switch (entityType) {
+            case 'portfolio':
+                return portfolioService.getListLight(options);
+            case 'account':
+                return accountService.getListLight(options);
+            case 'account-type':
+                return accountTypeService.getList(options);
+            case 'responsible':
+                return responsibleService.getListLight(options);
+            case 'counterparty':
+                return counterpartyService.getListLight(options);
+            case 'currency':
+                return currencyService.getListLight(options);
+            case 'instrument':
+                return instrumentService.getListLight(options);
+            case 'instrument-type':
+                return instrumentTypeService.getList(options);
+            case 'transaction-type':
+                return transactionTypeService.getListLight(options);
+            case 'strategy-1':
+                return strategyService.getListLight(1);
+            case 'strategy-2':
+                return strategyService.getListLight(2);
+            case 'strategy-3':
+                return strategyService.getListLight(3);
+            case 'pricing-policy':
+                return pricingPolicyService.getListLight(options);
         }
     };
 
@@ -669,6 +699,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

@@ -14,16 +14,16 @@
     <div class="custom-input-top-row">
         <div data-ng-bind="label" class="custom-input-label"></div>
 
-        <div class="custom-input-tooltip">
+        <div data-ng-if="tooltipText" class="custom-input-tooltip">
             <ng-md-icon icon="info"
                         size="16"
                         class="tooltip-sign"
                         style="fill: #777777"></ng-md-icon>
-            <md-tooltip class="tooltip_2" md-direction="top">Text field</md-tooltip>
+            <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
         </div>
     </div>
 
-    <div class="flex-row position-relative">
+    <div class="custom-input-main-container flex-row position-relative">
         <div data-ng-if="error" class="custom-input-error-tooltip">
             <ng-md-icon icon="info"
                         size="18"
@@ -41,22 +41,28 @@
 
         <div data-ng-if="customButtons && customButtons.length"
              class="custom-input-custom-btns-holder">
-            <div data-ng-repeat="button in customButtons">
-                <button class="{{button.classes}} custom-input-custom-btn"
-                        data-ng-click="callFnForCustomBtn(button.action)">
-                    {{button.caption}}
-                    <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                </button>
+            <button data-ng-repeat="button in customButtons"
+                    class="{{button.classes}} custom-input-custom-btn"
+                    data-ng-click="callFnForCustomBtn(button.action)">
+                {{button.caption}}
+
+                <ng-md-icon data-ng-if="button.iconObj.type === 'angular-material'"
+                            size="22"
+                            icon="{{button.iconObj.icon}}"></ng-md-icon>
+
+                <i data-ng-if="button.iconObj.type === 'fontawesome'"
+                   class="{{button.iconObj.icon}}"></i>
+
                 <md-tooltip data-ng-if="button.tooltip"
                             class="tooltip_1"
-                            md-direction="top">{{button.tooltip}}
-                </md-tooltip>
-            </div>
+                            md-direction="top">{{button.tooltip}}</md-tooltip>
+            </button>
         </div>
 
         <button class="custom-input-indicator-btn position-relative" data-ng-click="openSmartSearch($event)">
-            <i data-ng-if="!indicatorIcon" class="fas fa-link"></i>
-            <i data-ng-if="indicatorIcon" class="fas" ng-class="indicatorIcon"></i>
+            <i data-ng-if="!iconData" class="fas fa-link"></i>
+            <i data-ng-if="iconData && iconData.type === 'class'"
+               class="{{iconData.icon}}"></i>
         </button>
     </div>
 

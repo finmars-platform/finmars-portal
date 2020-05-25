@@ -24,6 +24,18 @@
             })
     };
 
+    var getListLight = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'counterparties/responsible-light/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var getByKey = function (id) {
         return xhrService.fetch(baseUrl + 'counterparties/responsible/' + id + '/',
             {
@@ -117,6 +129,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

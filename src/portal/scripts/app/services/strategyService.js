@@ -11,6 +11,10 @@
         return strategyRepository.getList(strategyNumber, options);
     };
 
+    var getListLight = function(strategyNumber, options){
+        return strategyRepository.getListLight(strategyNumber, options);
+    };
+
     var getByKey = function(strategyNumber, id){
         return strategyRepository.getByKey(strategyNumber, id);
     };
@@ -38,6 +42,7 @@
     module.exports = {
 
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

@@ -2,6 +2,7 @@
 
     'use strict';
 
+    var evEvents = require('../../services/entityViewerEvents');
     var attributeTypeService = require('../../services/attributeTypeService');
 
     var metaService = require('../../services/metaService');
@@ -20,6 +21,24 @@
         //vm.isInstanceId = data.instanceId;
         var attributesWereChanged = false;
 
+        /*vm.getList = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                vm.attributeDataService.downloadDynamicAttributesByEntityType(vm.entityType).then(function (data) {
+                    vm.attrs = data;
+                    $scope.$apply();
+
+                    resolve();
+
+                }).catch(function (error) {
+                    reject(error);
+                });
+
+            })
+
+        };*/
+
         vm.getList = function () {
             attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
@@ -27,6 +46,7 @@
                 $scope.$apply();
             });
         };
+
 
         vm.addAttribute = function (ev) {
             $mdDialog.show({
@@ -42,8 +62,10 @@
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
+
                     attributesWereChanged = true;
                     vm.getList();
+
                 }
             });
         };

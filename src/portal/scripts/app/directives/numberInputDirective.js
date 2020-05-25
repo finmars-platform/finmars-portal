@@ -11,10 +11,10 @@
             scope: {
                 label: '@',
                 model: '=',
-                onlyPositive: '<',
                 numberFormat: '<',
                 customButtons: '=',
                 customStyles: '<',
+                smallOptions: '=',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/number-input-view.html',
@@ -22,6 +22,15 @@
 
                 scope.placeholderText = "0";
                 scope.error = '';
+                scope.tooltipText = 'Tooltip text';
+
+                if (scope.smallOptions) {
+                    scope.onlyPositive = scope.smallOptions.onlyPositive;
+
+                    if (scope.smallOptions.tooltipText) {
+                        scope.tooltipText = scope.smallOptions.tooltipText;
+                    }
+                }
 
                 var inputContainer = elem[0].querySelector('.numberInputContainer');
                 var inputElem = elem[0].querySelector('.numberInputElem');
@@ -33,7 +42,7 @@
 
                     if (changedValue === '') {
 
-                        scope.model.value = null;
+                        scope.model = null;
 
                     } else if (!isNaN(changedValue) &&
                         changedValue !== null) {
@@ -53,16 +62,19 @@
                             }
 
                             if (scope.onlyPositive) {
+
                                 scope.error = 'field should have positive number';
+                                scope.model = null;
+
                             } else {
-                                scope.model.value = JSON.parse(JSON.stringify(changedValue));
+                                scope.model = JSON.parse(JSON.stringify(changedValue));
                             }
 
                         } else {
 
                             inputContainer.classList.remove('custom-input-error');
                             inputElem.classList.remove('red-text');
-                            scope.model.value = JSON.parse(JSON.stringify(changedValue));
+                            scope.model = JSON.parse(JSON.stringify(changedValue));
 
                         }
                         // < negative numbers processing >
@@ -70,12 +82,16 @@
                     } else {
 
                         scope.error = 'invalid character used';
-                        scope.model.value = null;
+                        scope.model = null;
 
                     }
 
                     if (scope.onChangeCallback) {
-                        scope.onChangeCallback();
+
+                        setTimeout(function () {
+                            scope.onChangeCallback();
+                        }, 0);
+
                     }
                 }
 
@@ -85,7 +101,7 @@
                         (scope.numberToShow || scope.numberToShow === 0)) {
 
                         scope.numberToShow = renderHelper.formatValue({
-                                                                            value: scope.model.value
+                                                                            value: scope.model
                                                                         }, {
                                                                             key: 'value',
                                                                             report_settings: scope.numberFormat
@@ -106,7 +122,7 @@
                         multiple: true,
                         locals: {
                             data: {
-                                numberValue: scope.model.value,
+                                numberValue: scope.model,
                                 calculatorTitle: calculatorTitle
                             }
                         }
@@ -114,7 +130,7 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            scope.model.value = res.numberValue;
+                            scope.model = res.numberValue;
 
                             scope.numberToShow = res.numberValue;
                             applyNumberFormatToInput();
@@ -160,7 +176,7 @@
                         inputContainer.classList.add('custom-input-focused');
 
                         if (!scope.error) {
-                            scope.numberToShow = JSON.parse(JSON.stringify(scope.model.value));
+                            scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
                             scope.$apply();
                         }
                     });
@@ -218,9 +234,9 @@
 
                 scope.$watch('model', function () {
 
-                    if (scope.model && scope.model.value) {
+                    if (scope.model) {
 
-                        scope.numberToShow = JSON.parse(JSON.stringify(scope.model.value));
+                        scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
 
                         if (!inputContainer.classList.contains('custom-input-focused')) {
                             applyNumberFormatToInput();
