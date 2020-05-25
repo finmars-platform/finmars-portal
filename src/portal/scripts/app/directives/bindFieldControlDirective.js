@@ -24,7 +24,7 @@
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {classifier: false};
-                //console.log("new inputs scope.item", scope.item);
+
                 var attrs = scope.$parent.vm.attrs || [];
                 var userInputs = scope.$parent.vm.userInputs || [];
                 var choices = metaService.getValueTypes() || [];
@@ -34,7 +34,6 @@
                 var numberInputContainerElem = null;*/
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
-                scope.customStyles = null;
 
                 scope.isRecalculate = false;
                 scope.numberFormat = null;
@@ -153,17 +152,14 @@
 
                 scope.setDateToday = function () {
                     scope.entity[scope.getModelKey()] = moment(new Date()).format('YYYY-MM-DD');
-                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
                 };
 
                 scope.setDatePlus = function () {
                     scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).add(1, 'days').format('YYYY-MM-DD');
-                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
                 };
 
                 scope.setDateMinus = function () {
                     scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).subtract(1, 'days').format('YYYY-MM-DD');
-                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
                 };
 
                 scope.node = scope.node || null;
@@ -515,7 +511,7 @@
                             scope.item.buttons.forEach(function (btnObj) {
 
                                 if (btnObj.action.key === 'input-recalculation') {
-                                    btnObj.action.parameters = {item: scope.item};
+                                    btnObj.action.parameters = {inputs: [scope.item.name]};
                                 }
 
                             })
@@ -565,20 +561,15 @@
 
                     }*/
 
-                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
-
                 };
 
-                scope.itemChange = function(){
-                    //console.log("new inputs itemChange", scope.entity[scope.getModelKey()]);
+                scope.itemChange = function() {
                     if (scope.entityChange) {
                         scope.entityChange();
                     }
                 };
 
                 scope.onDateChange = function () {
-                    //console.log("new inputs onDateChange", scope.entity, scope.entity[scope.getModelKey()]);
-                    scope.entity[scope.getModelKey()] = scope.fieldValue.value;
 
                     if (scope.entity[scope.getModelKey()] === "") {
                         scope.entity[scope.getModelKey()] = null;
@@ -586,12 +577,6 @@
 
                     scope.itemChange();
 
-                };
-
-                scope.onFieldChange = function () {
-                    scope.entity[scope.getModelKey()] = scope.fieldValue.value;
-                    //console.log("new inputs onFieldChange", scope.entity[scope.getModelKey()]);
-                    scope.itemChange();
                 };
 
                 scope.init()

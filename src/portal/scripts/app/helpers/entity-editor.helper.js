@@ -809,10 +809,6 @@
 
                 }
 
-                if (field.backgroundColor) {
-                    fieldResult.backgroundColor = field.backgroundColor;
-                }
-
                 if (forComplexTransaction) {
 
                     var userInputs = attributes.userInputs;
@@ -844,6 +840,10 @@
 
                     fieldResult.editable = field.editable;
 
+                }
+
+                if (field.backgroundColor) {
+                    fieldResult.backgroundColor = field.backgroundColor;
                 }
 
             }

@@ -694,6 +694,20 @@
 
         };
 
+        vm.manageAttrs = function (ev) {
+            $mdDialog.show({
+                controller: 'AttributesManagerDialogController as vm',
+                templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+            });
+        };
+
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
             $mdDialog.hide();

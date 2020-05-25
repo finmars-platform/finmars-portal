@@ -1,11 +1,12 @@
 <div>
 
     <div data-ng-if="type === 'id'">
-        <div data-ng-if="isSpecialSearchRelation()" style="{{inputBackgroundColor()}}">
+        <div data-ng-if="isSpecialSearchRelation()">
             <entity-search-select item="entity[getModelKey()]"
                                   label="getName()"
                                   item-name="inputText"
                                   callback="changeHandler()"
+                                  custom-styles="customStyles"
                                   entity-type="getModelKeyEntity()"></entity-search-select>
         </div>
 

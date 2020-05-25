@@ -12,7 +12,6 @@
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
-    var attributeTypeService = require('../../services/attributeTypeService');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
@@ -21,6 +20,7 @@
 
         vm.entityViewerDataService = entityViewerDataService;
         vm.entityViewerEventService = entityViewerEventService;
+        vm.attributeDataService = attributeDataService;
 
         vm.entityType = vm.entityViewerDataService.getEntityType();
         vm.contentType = vm.entityViewerDataService.getContentType();
@@ -89,7 +89,7 @@
                     return item
                 });*/
 
-                vm.entityAttrs = attributeDataService.getReconciliationAttributes();
+                vm.entityAttrs = vm.attributeDataService.getReconciliationAttributes();
 
                 syncAttrs();
                 getSelectedAttrs();
@@ -99,9 +99,9 @@
 
             } else {
 
-                vm.entityAttrs = attributeDataService.getEntityAttributesByEntityType(vm.entityType);
+                vm.entityAttrs = vm.attributeDataService.getEntityAttributesByEntityType(vm.entityType);
 
-                var transactionUserFields = attributeDataService.getTransactionUserFields();
+                var transactionUserFields = vm.attributeDataService.getTransactionUserFields();
 
                 vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
 
@@ -133,7 +133,7 @@
                     return true;
                 });
 
-                vm.attrs = attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
+                vm.attrs = vm.attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
 
                 console.log('vm.attrs', vm.attrs);
 
@@ -163,6 +163,40 @@
                 vm.readyStatus.content = true;
 
             }
+
+        };
+
+        var updateCustomAttrs = function () {
+
+            vm.attributeDataService.downloadDynamicAttributesByEntityType(vm.entityType).then(function (data) {
+
+                vm.attrs = data;
+
+                vm.attrs = vm.attrs.map(function (attribute) {
+
+                    var result = {};
+
+                    result.attribute_type = Object.assign({}, attribute);
+                    result.value_type = attribute.value_type;
+                    result.content_type = vm.contentType;
+                    result.key = 'attributes.' + attribute.user_code;
+                    result.name = attribute.name;
+
+                    return result
+
+                });
+
+                vm.attrsList = [];
+
+                vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
+                vm.attrsList = vm.attrsList.concat(vm.userTextFields);
+                vm.attrsList = vm.attrsList.concat(vm.userNumberFields);
+                vm.attrsList = vm.attrsList.concat(vm.userDateFields);
+                vm.attrsList = vm.attrsList.concat(vm.attrs);
+
+                vm.updateAttrs(vm.attrs);
+
+            });
 
         };
 
@@ -1314,6 +1348,29 @@
 
                     }
 
+                }
+
+            });
+
+        };
+
+        vm.manageAttrs = function (ev) {
+
+            $mdDialog.show({
+                controller: 'AttributesManagerDialogController as vm',
+                templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res && res.status === 'agree') {
+                    updateCustomAttrs();
                 }
 
             });

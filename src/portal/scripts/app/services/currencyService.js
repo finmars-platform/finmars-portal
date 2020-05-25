@@ -9,6 +9,10 @@
         return currencyRepository.getList(options);
     };
 
+    var getListLight = function (options) {
+        return currencyRepository.getListLight(options);
+    };
+
     var getByKey = function (id) {
         return currencyRepository.getByKey(id);
     };
@@ -31,6 +35,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

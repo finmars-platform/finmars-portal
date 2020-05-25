@@ -124,6 +124,12 @@
                 <input data-ng-model="item.options.fieldName">
             </md-input-container>
 
+            <md-input-container class="md-block no-error-spacer ec-attr-row"
+                                data-ng-if="item.attribute && item.attribute.value_type !== 'decoration'">
+                <label>Tooltip text</label>
+                <input data-ng-model="item.options.tooltipValue">
+            </md-input-container>
+
             <div data-ng-if="checkForSpecialOptions()" class="ec-attr-row">
                 <div data-ng-include="specialOptionTemplate"></div>
             </div>

@@ -10,6 +10,7 @@
                 label: '@',
                 model: '=',
                 customStyles: '<',
+                smallOptions: '=',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/text-input-view.html',
@@ -18,10 +19,22 @@
                 var inputContainer = elem[0].querySelector('.textInputContainer');
                 var inputElem = elem[0].querySelector('.textInputElem');
 
-                scope.initOnChangeCallback = function () {
-                    if (scope.onChangeCallback) {
-                        scope.onChangeCallback();
+                scope.tooltipText = 'Tooltip text';
+
+                if (scope.smallOptions) {
+                    if (scope.smallOptions.tooltipText) {
+                        scope.tooltipText = scope.smallOptions.tooltipText;
                     }
+                }
+
+                scope.onInputChange = function () {
+
+                    if (scope.onChangeCallback) {
+                        setTimeout(function () {
+                            scope.onChangeCallback();
+                        }, 0);
+                    }
+
                 }
 
                 var applyCustomStyles = function () {
@@ -67,8 +80,8 @@
                 scope.openTextInDialog = function ($event) {
 
                     $mdDialog.show({
-                        controller: 'TextInputDialogController as vm',
-                        templateUrl: 'views/dialogs/text-input-dialog-view.html',
+                        controller: 'TextEditorDialogController as vm',
+                        templateUrl: 'views/dialogs/text-editor-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         multiple: true,

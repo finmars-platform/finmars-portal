@@ -314,10 +314,177 @@
 
         };
 
+        var postBookComplexTransactionActions = function (ttypeData) {
+
+            // ng-repeat with bindFieldControlDirective may not update without this
+            vm.tabs = {};
+            vm.fixedArea = {};
+            // < ng-repeat with bindFieldControlDirective may not update without this >
+
+            if (Array.isArray(ttypeData.book_transaction_layout.data)) {
+                vm.tabs = ttypeData.book_transaction_layout.data;
+            } else {
+                vm.tabs = ttypeData.book_transaction_layout.data.tabs;
+                vm.fixedArea = ttypeData.book_transaction_layout.data.fixedArea;
+            }
+
+            dataConstructorLayout = JSON.parse(JSON.stringify(ttypeData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
+
+            vm.userInputs = [];
+            vm.tabs.forEach(function (tab) {
+                tab.layout.fields.forEach(function (field) {
+                    if (field.attribute_class === 'userInput') {
+                        vm.userInputs.push(field.attribute);
+                    }
+                });
+            });
+
+            if (vm.fixedArea && vm.fixedArea.isActive) {
+                vm.fixedArea.layout.fields.forEach(function (field) {
+                    if (field.attribute_class === 'userInput') {
+                        vm.userInputs.push(field.attribute);
+                    }
+                });
+            }
+
+            if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
+                vm.tabs.forEach(function (tab, index) {
+                    tab.tabOrder = index;
+                });
+            }
+
+            mapAttributesAndFixFieldsLayout();
+
+
+            var inputsWithCalculations = ttypeData.transaction_type_object.inputs;
+
+            if (inputsWithCalculations) {
+                inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                    vm.userInputs.forEach(function (userInput) {
+                        if (userInput.name === inputWithCalc.name) {
+
+                            if (!userInput.buttons) {
+                                userInput.buttons = [];
+                            }
+
+                            if (inputWithCalc.can_recalculate === true) {
+                                userInput.buttons.push({
+                                    iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    tooltip: 'Recalculate this field',
+                                    caption: '',
+                                    classes: '',
+                                    action: {key: 'input-recalculation', callback: vm.recalculate}
+                                })
+                            }
+
+                            if (inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
+                                var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
+
+                                userInput.buttons.push({
+                                    iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                                    tooltip: 'Recalculate linked fields',
+                                    caption: '',
+                                    classes: '',
+                                    action: {
+                                        key: 'linked-inputs-recalculation',
+                                        callback: vm.recalculate,
+                                        parameters: {inputs: linkedInputsList}
+                                    }
+                                })
+                            }
+
+                        }
+                    })
+
+                });
+            }
+
+
+        };
+
+        var bookComplexTransaction = function (inputsToRecalculate) {
+
+            vm.processing = true;
+
+            var values = {};
+
+            vm.userInputs.forEach(function (item) {
+                values[item.name] = vm.entity[item.name]
+            });
+
+            var book = {
+                transaction_type: vm.entity.transaction_type,
+                recalculate_inputs: inputsToRecalculate,
+                process_mode: 'recalculate',
+                values: values
+            };
+
+            transactionTypeService.bookComplexTransaction(book.transaction_type, book).then(function (data) {
+
+                vm.transactionTypeId = data.transaction_type;
+                vm.editLayoutEntityInstanceId = data.transaction_type;
+
+                vm.entity = data.complex_transaction;
+
+                vm.transactionType = data.transaction_type_object;
+
+                vm.specialRulesReady = true;
+                vm.readyStatus.entity = true;
+
+                var keys = Object.keys(data.values);
+
+                keys.forEach(function (key) {
+                    vm.entity[key] = data.values[key];
+                });
+
+                data.complex_transaction.attributes.forEach(function (item) {
+                    if (item.attribute_type_object.value_type === 10) {
+                        vm.entity[item.attribute_type_object.name] = item.value_string;
+                    }
+                    if (item.attribute_type_object.value_type === 20) {
+                        vm.entity[item.attribute_type_object.name] = item.value_float;
+                    }
+                    if (item.attribute_type_object.value_type === 30) {
+                        vm.entity[item.attribute_type_object.name] = item.classifier;
+                    }
+                    if (item.attribute_type_object.value_type === 40) {
+                        vm.entity[item.attribute_type_object.name] = item.value_date;
+                    }
+                });
+
+
+                postBookComplexTransactionActions(data);
+
+
+                vm.processing = false;
+
+                $scope.$apply();
+
+            }).catch(function (reason) {
+
+                console.log("Something went wrong with recalculation");
+
+                vm.processing = false;
+                vm.readyStatus.layout = true;
+
+                $scope.$apply();
+
+            })
+
+        }
+
+        vm.recalculate = function (parametersObj) {
+
+            var inputs = parametersObj.inputs;
+
+            bookComplexTransaction(inputs);
+
+        };
+
         vm.getFormLayout = function () {
 
             return new Promise(function (resolve, reject) {
-
 
                 vm.readyStatus.layout = false;
 
@@ -326,8 +493,6 @@
                 console.log('contextParameters', contextParameters);
 
                 transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(function (data) {
-
-                    var inputsWithCalculations = data.transaction_type_object.inputs;
 
                     vm.transactionType = data.transaction_type_object;
 
@@ -347,61 +512,9 @@
 
                         vm.missingLayoutError = false;
 
-                        if (Array.isArray(data.book_transaction_layout.data)) {
-                            vm.tabs = data.book_transaction_layout.data;
-                        } else {
-                            vm.tabs = data.book_transaction_layout.data.tabs;
-                            vm.fixedArea = data.book_transaction_layout.data.fixedArea;
-                        }
 
+                        postBookComplexTransactionActions(data);
 
-                        dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
-
-                        vm.userInputs = [];
-                        vm.tabs.forEach(function (tab) {
-                            tab.layout.fields.forEach(function (field) {
-                                if (field.attribute_class === 'userInput') {
-                                    vm.userInputs.push(field.attribute);
-                                }
-                            });
-                        });
-
-                        if (vm.fixedArea && vm.fixedArea.isActive) {
-                            vm.fixedArea.layout.fields.forEach(function (field) {
-                                if (field.attribute_class === 'userInput') {
-                                    vm.userInputs.push(field.attribute);
-                                }
-                            });
-                        }
-
-                        if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
-                            vm.tabs.forEach(function (tab, index) {
-                                tab.tabOrder = index;
-                            });
-                        }
-
-                        mapAttributesAndFixFieldsLayout();
-
-
-                        inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                            vm.userInputs.forEach(function (userInput) {
-                                if (userInput.name === inputWithCalc.name) {
-                                    if (inputWithCalc.can_recalculate === true) {
-                                        userInput.buttons = [
-                                            {
-                                                icon: 'iso',
-                                                tooltip: 'Recalculate',
-                                                caption: '',
-                                                classes: '',
-                                                action: {key: 'input-recalculation', callback: vm.recalculate}
-                                            }
-                                        ]
-                                    }
-                                }
-                            })
-
-                        });
 
                         vm.oldValues = {};
 
@@ -548,268 +661,6 @@
                     }
                 }
             });
-        };
-
-        vm.recalculate = function (item) {
-
-            vm.processing = true;
-
-            var values = {};
-
-            vm.userInputs.forEach(function (item) {
-                values[item.name] = vm.entity[item.name]
-            });
-
-            var book = {
-                transaction_type: vm.entity.transaction_type,
-                recalculate_inputs: [item.name],
-                process_mode: 'recalculate',
-                values: values
-            };
-
-            transactionTypeService.bookComplexTransaction(book.transaction_type, book).then(function (data) {
-
-                console.log('data', data);
-
-                // vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
-                vm.transactionTypeId = data.transaction_type;
-                vm.editLayoutEntityInstanceId = data.transaction_type;
-
-                vm.entity = data.complex_transaction;
-
-                var inputsWithCalculations = data.transaction_type_object.inputs;
-
-                vm.transactionType = data.transaction_type_object;
-
-                vm.specialRulesReady = true;
-                vm.readyStatus.entity = true;
-
-                var keys = Object.keys(data.values);
-
-                keys.forEach(function (key) {
-                    vm.entity[key] = data.values[key];
-                });
-
-                data.complex_transaction.attributes.forEach(function (item) {
-                    if (item.attribute_type_object.value_type === 10) {
-                        vm.entity[item.attribute_type_object.name] = item.value_string;
-                    }
-                    if (item.attribute_type_object.value_type === 20) {
-                        vm.entity[item.attribute_type_object.name] = item.value_float;
-                    }
-                    if (item.attribute_type_object.value_type === 30) {
-                        vm.entity[item.attribute_type_object.name] = item.classifier;
-                    }
-                    if (item.attribute_type_object.value_type === 40) {
-                        vm.entity[item.attribute_type_object.name] = item.value_date;
-                    }
-                });
-
-
-                if (Array.isArray(data.book_transaction_layout.data)) {
-                    vm.tabs = data.book_transaction_layout.data;
-                } else {
-                    vm.tabs = data.book_transaction_layout.data.tabs;
-                    vm.fixedArea = data.book_transaction_layout.data.fixedArea;
-                }
-
-                dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
-
-                vm.userInputs = [];
-                vm.tabs.forEach(function (tab) {
-                    tab.layout.fields.forEach(function (field) {
-                        if (field.attribute_class === 'userInput') {
-                            vm.userInputs.push(field.attribute);
-                        }
-                    });
-                });
-
-                if (vm.fixedArea && vm.fixedArea.isActive) {
-                    vm.fixedArea.layout.fields.forEach(function (field) {
-                        if (field.attribute_class === 'userInput') {
-                            vm.userInputs.push(field.attribute);
-                        }
-                    });
-                }
-
-                if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
-                    vm.tabs.forEach(function (tab, index) {
-                        tab.tabOrder = index;
-                    });
-                }
-
-                mapAttributesAndFixFieldsLayout();
-
-                inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                    vm.userInputs.forEach(function (userInput) {
-                        if (userInput.name === inputWithCalc.name) {
-                            if (inputWithCalc.can_recalculate === true) {
-                                userInput.buttons = [
-                                    {
-                                        icon: 'iso',
-                                        tooltip: 'Recalculate',
-                                        caption: '',
-                                        classes: '',
-                                        action: {key: 'input-recalculation', callback: vm.recalculate}
-                                    }
-                                ]
-                            }
-                        }
-                    })
-
-                });
-
-                console.log('vm.entity', vm.entity);
-
-
-                vm.processing = false;
-
-                $scope.$apply();
-
-            }).catch(function (reason) {
-
-                console.log("Something went wrong with recalculation");
-
-                vm.processing = false;
-                vm.readyStatus.layout = true;
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.recalculateInputs = function (inputs) {
-
-            vm.processing = true;
-            vm.readyStatus.layout = false;
-
-            var values = {};
-
-            vm.userInputs.forEach(function (item) {
-                values[item.name] = vm.entity[item.name]
-            });
-
-            var book = {
-                transaction_type: vm.entity.transaction_type,
-                recalculate_inputs: inputs,
-                process_mode: 'recalculate',
-                values: values
-            };
-
-            transactionTypeService.bookComplexTransaction(book.transaction_type, book).then(function (data) {
-
-                console.log('data', data);
-
-                // vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
-                vm.transactionTypeId = data.transaction_type;
-                vm.editLayoutEntityInstanceId = data.transaction_type;
-
-                vm.entity = data.complex_transaction;
-
-                var inputsWithCalculations = data.transaction_type_object.inputs;
-
-                vm.transactionType = data.transaction_type_object;
-
-                vm.specialRulesReady = true;
-                vm.readyStatus.entity = true;
-
-                var keys = Object.keys(data.values);
-
-                keys.forEach(function (key) {
-                    vm.entity[key] = data.values[key];
-                });
-
-                data.complex_transaction.attributes.forEach(function (item) {
-                    if (item.attribute_type_object.value_type === 10) {
-                        vm.entity[item.attribute_type_object.name] = item.value_string;
-                    }
-                    if (item.attribute_type_object.value_type === 20) {
-                        vm.entity[item.attribute_type_object.name] = item.value_float;
-                    }
-                    if (item.attribute_type_object.value_type === 30) {
-                        vm.entity[item.attribute_type_object.name] = item.classifier;
-                    }
-                    if (item.attribute_type_object.value_type === 40) {
-                        vm.entity[item.attribute_type_object.name] = item.value_date;
-                    }
-                });
-
-
-                if (Array.isArray(data.book_transaction_layout.data)) {
-                    vm.tabs = data.book_transaction_layout.data;
-                } else {
-                    vm.tabs = data.book_transaction_layout.data.tabs;
-                    vm.fixedArea = data.book_transaction_layout.data.fixedArea;
-                }
-
-                dataConstructorLayout = JSON.parse(JSON.stringify(data.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
-
-                vm.userInputs = [];
-                vm.tabs.forEach(function (tab) {
-                    tab.layout.fields.forEach(function (field) {
-                        if (field.attribute_class === 'userInput') {
-                            vm.userInputs.push(field.attribute);
-                        }
-                    });
-                });
-
-                if (vm.fixedArea && vm.fixedArea.isActive) {
-                    vm.fixedArea.layout.fields.forEach(function (field) {
-                        if (field.attribute_class === 'userInput') {
-                            vm.userInputs.push(field.attribute);
-                        }
-                    });
-                }
-
-                if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
-                    vm.tabs.forEach(function (tab, index) {
-                        tab.tabOrder = index;
-                    });
-                }
-
-                mapAttributesAndFixFieldsLayout();
-
-                inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                    vm.userInputs.forEach(function (userInput) {
-                        if (userInput.name === inputWithCalc.name) {
-                            if (inputWithCalc.can_recalculate === true) {
-                                userInput.buttons = [
-                                    {
-                                        icon: 'iso',
-                                        tooltip: 'Recalculate',
-                                        caption: '',
-                                        classes: '',
-                                        action: {key: 'input-recalculation', callback: vm.recalculate}
-                                    }
-                                ]
-                            }
-                        }
-                    })
-
-                });
-
-                console.log('vm.entity', vm.entity);
-
-
-                vm.readyStatus.layout = true;
-                vm.processing = false;
-
-                $scope.$apply();
-
-            }).catch(function (reason) {
-
-                console.log("Something went wrong with recalculation");
-
-                vm.processing = false;
-                vm.readyStatus.layout = true;
-
-                $scope.$apply();
-
-            })
-
         };
 
         vm.getAttributeTypes = function () {
@@ -1438,7 +1289,7 @@
                 }
             });
 
-            if (resultInput && resultInput.settings) {
+            /*if (resultInput && resultInput.settings) {
 
                 if (resultInput.settings.linked_inputs_names) {
 
@@ -1446,7 +1297,7 @@
 
                 }
 
-            }
+            }*/
 
 
             console.log('changedInput', changedInput);

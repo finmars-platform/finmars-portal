@@ -13,7 +13,29 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (strategyNumber, options) {
+
+        if (!options) {
+            options = {};
+        }
+
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'strategies/' + strategyNumber + '/strategy/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getListLight = function (strategyNumber, options) {
+
+        if (!options) {
+            options = {};
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'strategies/' + strategyNumber + '/strategy-light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -118,6 +140,7 @@
     module.exports = {
 
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

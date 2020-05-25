@@ -5,12 +5,12 @@
 
         <!-- <div data-ng-bind="error" class="red-text p-l-8"></div> -->
 
-        <div class="custom-input-tooltip">
+        <div data-ng-if="tooltipText" class="custom-input-tooltip">
             <ng-md-icon icon="info"
                         size="16"
                         class="tooltip-sign"
                         style="fill: #777777"></ng-md-icon>
-            <md-tooltip class="tooltip_2" md-direction="top">Text field</md-tooltip>
+            <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
         </div>
     </div>
 
@@ -34,9 +34,17 @@
                     class="{{button.classes}} custom-input-custom-btn"
                     data-ng-click="callFnForCustomBtn(button.action)">
                 {{button.caption}}
-                <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
-                </md-tooltip>
+
+                <ng-md-icon data-ng-if="button.iconObj.type === 'angular-material'"
+                            size="22"
+                            icon="{{button.iconObj.icon}}"></ng-md-icon>
+
+                <i data-ng-if="button.iconObj.type === 'fontawesome'"
+                   class="{{button.iconObj.icon}}"></i>
+
+                <md-tooltip data-ng-if="button.tooltip"
+                            class="tooltip_1"
+                            md-direction="top">{{button.tooltip}}</md-tooltip>
             </button>
         </div>
 

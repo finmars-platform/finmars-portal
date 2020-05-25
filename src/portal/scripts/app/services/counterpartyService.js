@@ -9,6 +9,10 @@
         return counterpartyRepository.getList(options);
     };
 
+    var getListLight = function (options) {
+        return counterpartyRepository.getListLight(options);
+    };
+
     var getByKey = function (id) {
         return counterpartyRepository.getByKey(id);
     };
@@ -35,6 +39,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,
