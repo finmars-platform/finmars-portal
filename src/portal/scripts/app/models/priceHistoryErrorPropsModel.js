@@ -39,6 +39,11 @@
                 "value_type": 20
             },
             {
+                "key": "error_text",
+                "name": "Error Text",
+                "value_type": 10
+            },
+            {
                 "key": "accrual_error_text",
                 "name": "Accrual Error Text",
                 "value_type": 10
