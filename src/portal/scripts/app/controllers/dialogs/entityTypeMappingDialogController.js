@@ -5,14 +5,11 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
     var entityTypeMappingResolveService = require('../../services/entityTypeMappingResolveService');
     var entityResolverService = require('../../services/entityResolverService');
     var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
-    module.exports = function ($scope, $mdDialog, mapItem) {
-
-        logService.controller('EntityTypeMappingDialogController', 'initialized');
+    module.exports = function entityTypeMappingDialogController($scope, $mdDialog, mapItem) {
 
         var vm = this;
 
@@ -25,6 +22,7 @@
         var entitiesWithoutCount = ['periodicity',
             'accrual-calculation-model',
             'daily-pricing-model',
+            'pricing-condition',
             'payment-size-detail'];
 
         var page = 1;

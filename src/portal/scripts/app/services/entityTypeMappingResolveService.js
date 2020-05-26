@@ -23,6 +23,7 @@
     var strategy3MappingService = require('./import/mappings/strategy3MappingService');
 
     var dailyPricingModelMappingService = require('./import/mappings/dailyPricingModelMappingService');
+    var pricingConditionMappingService = require('./import/mappings/pricingConditionMappingService');
     var paymentSizeDetailMappingService = require('./import/mappings/paymentSizeDetailMappingService');
     var priceDownloadSchemeMappingService = require('./import/mappings/priceDownloadSchemeMappingService');
     var pricingPolicyMappingService = require('./import/mappings/pricingPolicyMappingService');
@@ -34,58 +35,42 @@
         switch (entityType) {
             case 'currency':
                 return currencyMappingService.getList(options);
-                break;
             case 'instrument-type':
                 return instrumentTypeMappingService.getList(options);
-                break;
             case 'accrual-calculation-model':
                 return accrualCalculationModelService.getList(options);
-                break;
             case 'periodicity':
                 return instrumentPeriodicityService.getList(options);
-                break;
             case 'classifier':
                 return instrumentAttributeTypeService.getList(options);
-                break;
             case 'account':
                 return accountMappingService.getList(options);
-                break;
             case 'account-type':
                 return accountTypeMappingService.getList(options);
-                break;
             case 'instrument':
                 return instrumentMappingService.getList(options);
-                break;
             case 'counterparty':
                 return counterpartyMappingService.getList(options);
-                break;
             case 'responsible':
                 return responsibleMappingService.getList(options);
-                break;
             case 'portfolio':
                 return portfolioMappingService.getList(options);
-                break;
             case 'strategy-1':
                 return strategy1MappingService.getList(options);
-                break;
             case 'strategy-2':
                 return strategy2MappingService.getList(options);
-                break;
             case 'strategy-3':
                 return strategy3MappingService.getList(options);
-                break;
             case 'daily-pricing-model':
                 return dailyPricingModelMappingService.getList(options);
-                break;
             case 'payment-size-detail':
                 return paymentSizeDetailMappingService.getList(options);
-                break;
+            case 'pricing-condition':
+                return pricingConditionMappingService.getList(options);
             case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.getList(options);
-                break;
             case 'pricing-policy':
                 return pricingPolicyMappingService.getList(options);
-                break;
         }
 
     };
@@ -94,58 +79,40 @@
         switch (entityType) {
             case 'currency':
                 return currencyMappingService.getByKey(id);
-                break;
             case 'instrument-type':
                 return instrumentTypeMappingService.getByKey(id);
-                break;
             case 'accrual-calculation-model':
                 return accrualCalculationModelService.getByKey(id);
-                break;
             case 'periodicity':
                 return instrumentPeriodicityService.getByKey(id);
-                break;
             case 'classifier':
                 return instrumentAttributeTypeService.getByKey(id);
-                break;
             case 'account':
                 return accountMappingService.getByKey(id);
-                break;
             case 'account-type':
                 return accountTypeMappingService.getByKey(id);
-                break;
             case 'instrument':
                 return instrumentMappingService.getByKey(id);
-                break;
             case 'counterparty':
                 return counterpartyMappingService.getByKey(id);
-                break;
             case 'responsible':
                 return responsibleMappingService.getByKey(id);
-                break;
             case 'portfolio':
                 return portfolioMappingService.getByKey(id);
-                break;
             case 'strategy-1':
                 return strategy1MappingService.getByKey(id);
-                break;
             case 'strategy-2':
                 return strategy2MappingService.getByKey(id);
-                break;
             case 'strategy-3':
                 return strategy3MappingService.getByKey(id);
-                break;
             case 'daily-pricing-model':
                 return dailyPricingModelMappingService.getByKey(id);
-                break;
             case 'payment-size-detail':
                 return paymentSizeDetailMappingService.getByKey(id);
-                break;
             case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.getByKey(id);
-                break;
             case 'pricing-policy':
                 return pricingPolicyMappingService.getByKey(id);
-                break;
         }
 
     };
@@ -154,58 +121,40 @@
         switch (entityType) {
             case 'currency':
                 return currencyMappingService.create(map);
-                break;
             case 'instrument-type':
                 return instrumentTypeMappingService.create(map);
-                break;
             case 'accrual-calculation-model':
                 return accrualCalculationModelService.create(map);
-                break;
             case 'periodicity':
                 return instrumentPeriodicityService.create(map);
-                break;
             case 'classifier':
                 return instrumentAttributeTypeService.create(map);
-                break;
             case 'account':
                 return accountMappingService.create(map);
-                break;
             case 'account-type':
                 return accountTypeMappingService.create(map);
-                break;
             case 'instrument':
                 return instrumentMappingService.create(map);
-                break;
             case 'counterparty':
                 return counterpartyMappingService.create(map);
-                break;
             case 'responsible':
                 return responsibleMappingService.create(map);
-                break;
             case 'portfolio':
                 return portfolioMappingService.create(map);
-                break;
             case 'strategy-1':
                 return strategy1MappingService.create(map);
-                break;
             case 'strategy-2':
                 return strategy2MappingService.create(map);
-                break;
             case 'strategy-3':
                 return strategy3MappingService.create(map);
-                break;
             case 'daily-pricing-model':
                 return dailyPricingModelMappingService.create(map);
-                break;
             case 'payment-size-detail':
                 return paymentSizeDetailMappingService.create(map);
-                break;
             case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.create(map);
-                break;
             case 'pricing-policy':
                 return pricingPolicyMappingService.create(map);
-                break;
         }
 
     };
@@ -214,58 +163,40 @@
         switch (entityType) {
             case 'currency':
                 return currencyMappingService.update(id, map);
-                break;
             case 'instrument-type':
                 return instrumentTypeMappingService.update(id, map);
-                break;
             case 'accrual-calculation-model':
                 return accrualCalculationModelService.update(id, map);
-                break;
             case 'periodicity':
                 return instrumentPeriodicityService.update(id, map);
-                break;
             case 'classifier':
                 return instrumentAttributeTypeService.update(id, map);
-                break;
             case 'account':
                 return accountMappingService.update(id, map);
-                break;
             case 'account-type':
                 return accountTypeMappingService.update(id, map);
-                break;
             case 'instrument':
                 return instrumentMappingService.update(id, map);
-                break;
             case 'counterparty':
                 return counterpartyMappingService.update(id, map);
-                break;
             case 'responsible':
                 return responsibleMappingService.update(id, map);
-                break;
             case 'portfolio':
                 return portfolioMappingService.update(id, map);
-                break;
             case 'strategy-1':
                 return strategy1MappingService.update(id, map);
-                break;
             case 'strategy-2':
                 return strategy2MappingService.update(id, map);
-                break;
             case 'strategy-3':
                 return strategy3MappingService.update(id, map);
-                break;
             case 'daily-pricing-model':
                 return dailyPricingModelMappingService.update(id, map);
-                break;
             case 'payment-size-detail':
                 return paymentSizeDetailMappingService.update(id, map);
-                break;
             case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.update(id, map);
-                break;
             case 'pricing-policy':
                 return pricingPolicyMappingService.update(id, map);
-                break;
         }
 
     };
@@ -274,58 +205,40 @@
         switch (entityType) {
             case 'currency':
                 return currencyMappingService.deleteByKey(id);
-                break;
             case 'instrument-type':
                 return instrumentTypeMappingService.deleteByKey(id);
-                break;
             case 'accrual-calculation-model':
                 return accrualCalculationModelService.deleteByKey(id);
-                break;
             case 'periodicity':
                 return instrumentPeriodicityService.deleteByKey(id);
-                break;
             case 'classifier':
                 return instrumentAttributeTypeService.deleteByKey(id);
-                break;
             case 'account':
                 return accountMappingService.deleteByKey(id);
-                break;
             case 'account-type':
                 return accountTypeMappingService.deleteByKey(id);
-                break;
             case 'instrument':
                 return instrumentMappingService.deleteByKey(id);
-                break;
             case 'counterparty':
                 return counterpartyMappingService.deleteByKey(id);
-                break;
             case 'responsible':
                 return responsibleMappingService.deleteByKey(id);
-                break;
             case 'portfolio':
                 return portfolioMappingService.deleteByKey(id);
-                break;
             case 'strategy-1':
                 return strategy1MappingService.deleteByKey(id);
-                break;
             case 'strategy-2':
                 return strategy2MappingService.deleteByKey(id);
-                break;
             case 'strategy-3':
                 return strategy3MappingService.deleteByKey(id);
-                break;
             case 'daily-pricing-model':
                 return dailyPricingModelMappingService.deleteByKey(id);
-                break;
             case 'payment-size-detail':
                 return paymentSizeDetailMappingService.deleteByKey(id);
-                break;
             case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.deleteByKey(id);
-                break;
             case 'pricing-policy':
                 return pricingPolicyMappingService.deleteByKey(id);
-                break;
         }
 
     };
