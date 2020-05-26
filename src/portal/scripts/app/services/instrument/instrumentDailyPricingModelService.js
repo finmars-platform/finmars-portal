@@ -13,25 +13,10 @@
         return instrumentDailyPricingModelRepository.getByKey(id);
     };
 
-    var create = function(account) {
-        return instrumentDailyPricingModelRepository.create(account);
-    };
-
-    var update = function(id, account) {
-        return instrumentDailyPricingModelRepository.update(id, account);
-    };
-
-    var deleteByKey = function (id) {
-        return instrumentDailyPricingModelRepository.deleteByKey(id);
-    };
-
 
     module.exports = {
         getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey
+        getByKey: getByKey
     }
 
 
