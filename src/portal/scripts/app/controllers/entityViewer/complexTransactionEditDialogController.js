@@ -1120,8 +1120,6 @@
 
         vm.rebook = function ($event) {
 
-            vm.processing = true;
-
             vm.updateEntityBeforeSave();
 
             /*vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
@@ -1169,6 +1167,8 @@
 
                 result.store = true;
                 result.calculate = true;
+
+                vm.processing = true;
 
                 new Promise(function (resolve, reject) {
 
@@ -1249,15 +1249,19 @@
                         $mdDialog.hide({res: 'agree', data: data});
                     }
 
-                });
+                }).catch(function (reason) {
+
+                    vm.processing = false;
+
+                    $scope.$apply();
+
+                })
 
             }
 
         };
 
         vm.rebookAsPending = function ($event) {
-
-            vm.processing = true;
 
             vm.updateEntityBeforeSave();
 
@@ -1284,6 +1288,8 @@
                             });
                         }
                     });
+
+                    vm.processing = true;
 
                     result.store = true;
                     result.calculate = true;
@@ -1330,7 +1336,13 @@
                             $mdDialog.hide({res: 'agree'});
                         }
 
-                    });
+                    }).catch(function (reason) {
+
+                        vm.processing = false;
+
+                        $scope.$apply();
+
+                    })
 
                 } else {
 
