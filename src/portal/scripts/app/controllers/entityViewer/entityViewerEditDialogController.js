@@ -1874,7 +1874,13 @@
         $scope.splitPanelInit = function (entityType, entityId) {
             vm.entityType = entityType;
             vm.entityId = entityId;
-        }
+        };
+
+        vm.entityChange = function () {
+
+            console.log("entityChange", vm);
+
+        };
 
     }
 
