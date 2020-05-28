@@ -213,11 +213,9 @@
             if (parent.___is_open) {
 
                 if (obj[column.key]) {
-
                     result = getEntityAttributeValue(obj, column);
 
                 } else {
-
                     result = getDynamicAttributeValue(obj, column);
 
                 }
