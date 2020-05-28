@@ -17,7 +17,8 @@
 }
 
 .custom-input-label {
-  font-size: 14px;
+  font-weight: bold;
+  font-size: 13px;
   //color: rgba(0,0,0,0.54);
   color: #000;
   white-space: nowrap;
@@ -157,7 +158,6 @@
 
 .custom-input-container.custom-input-error {
   .custom-input-label {
-    font-weight: bold;
     color: #fa393e;
   }
 
@@ -174,6 +174,7 @@
   .custom-input {
     padding-left: 20px;
     border-color: #fa393e;
+    color:  #fa393e;
   }
 
   .custom-input-indicator-btn {
@@ -183,5 +184,50 @@
   .custom-input:focus {
     border-color: #fa393e;
     outline: none;
+  }
+}
+
+.custom-input-container.custom-input-preset1 {
+  .custom-input-label {
+    color: #0404f3;
+  }
+
+  .custom-input {
+    border-color: #0404f3;
+    color: #0404f3;
+  }
+
+  .custom-input-indicator-btn {
+    border-color: #0404f3;
+  }
+}
+
+.custom-input-container.custom-input-preset2 {
+  .custom-input-label {
+    color: #000;
+  }
+
+  .custom-input {
+    border-color: #000;
+    color: #000;
+  }
+
+  .custom-input-indicator-btn {
+    border-color: #000;
+  }
+}
+
+.custom-input-container.custom-input-is-valid {
+  .custom-input-label {
+    color: #015f01;
+  }
+
+  .custom-input {
+    border-color: #015f01;
+    color: #015f01;
+  }
+
+  .custom-input-indicator-btn {
+    border-color: #015f01;
   }
 }

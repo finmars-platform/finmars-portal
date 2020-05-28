@@ -27,7 +27,26 @@
                     }
                 }
 
+                scope.getInputContainerClasses = function () {
+                    var classes = '';
+
+                    if (scope.error) {
+                        classes = 'custom-input-error';
+
+                    } else if (scope.valueIsValid) {
+                        classes = 'custom-input-is-valid';
+                    }
+
+                    return classes;
+                };
+
                 scope.onInputChange = function () {
+
+                    if (scope.model) {
+                        scope.valueIsValid = true;
+                    } else {
+                        scope.valueIsValid = false;
+                    }
 
                     if (scope.onChangeCallback) {
                         setTimeout(function () {
@@ -72,6 +91,12 @@
 
                     initEventListeners();
 
+                    if (scope.model) {
+                        scope.valueIsValid = true;
+                    } else {
+                        scope.valueIsValid = false;
+                    }
+
                     if (scope.customStyles) {
                         applyCustomStyles();
                     }
@@ -88,14 +113,20 @@
                         locals: {
                             data: {
                                 title: 'Text',
-                                text: scope.model.value
+                                text: scope.model
                             }
                         }
 
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            scope.model.value = res.text;
+                            scope.model = res.text;
+
+                            if (scope.onChangeCallback) {
+                                setTimeout(function () {
+                                    scope.onChangeCallback();
+                                }, 0);
+                            }
                         }
 
                     });

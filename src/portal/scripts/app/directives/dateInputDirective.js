@@ -19,7 +19,7 @@
             link: function (scope, elem, attr) {
 
                 scope.error = '';
-                scope.placeholderText = 'dd-mm-yyyy';
+                scope.placeholderText = 'yyyy-mm-dd';
                 scope.dateValue = ''; // prevents from calling on change method when date changed to the same date
                 scope.tooltipText = 'Tooltip text';
 
@@ -44,6 +44,19 @@
                     }
                 }
 
+                scope.getInputContainerClasses = function () {
+                    var classes = '';
+
+                    if (scope.error) {
+                        classes = 'custom-input-error';
+
+                    } else if (scope.valueIsValid) {
+                        classes = 'custom-input-is-valid';
+                    }
+
+                    return classes;
+                };
+
                 var onDateBlur = function () {
 
                     scope.error = '';
@@ -54,12 +67,15 @@
 
                             if (moment(scope.dateValue, 'YYYY-MM-DD', true).isValid()) {
 
+                                scope.valueIsValid = true;
+
                                 if (scope.model !== scope.dateValue) {
                                     scope.model = JSON.parse(JSON.stringify(scope.dateValue));
                                 }
 
                             } else {
 
+                                scope.valueIsValid = false
                                 scope.error = 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.';
                                 scope.model = null;
 
@@ -76,6 +92,9 @@
                         }
 
                     } else if (scope.dateValue !== scope.model) {
+
+                        scope.valueIsValid = false;
+
                         scope.model = JSON.parse(JSON.stringify(scope.dateValue));
 
                         if (scope.onChangeCallback) {
@@ -192,12 +211,18 @@
 
                     //if (scope.model && scope.model.value) {
                     if (scope.model) {
+
                         if (scope.model !== scope.dateValue) {
+
+                            scope.valueIsValid = true;
                             scope.dateValue = JSON.parse(JSON.stringify(scope.model));
+
                         }
 
                     } else if (scope.dateValue && !scope.error) {
+
                         scope.dateValue = '';
+
                     }
 
                 })

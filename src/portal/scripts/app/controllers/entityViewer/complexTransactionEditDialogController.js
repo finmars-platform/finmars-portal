@@ -477,7 +477,7 @@
 
         };
 
-        var postRebookComplexTransactionActions = function (cTransactionData) {
+        var postRebookComplexTransactionActions = function (cTransactionData, recalculationInfo) {
 
             var keys = Object.keys(cTransactionData.values);
 
@@ -546,6 +546,7 @@
                 inputsWithCalculations.forEach(function (inputWithCalc) {
 
                     vm.userInputs.forEach(function (userInput) {
+
                         if (userInput.name === inputWithCalc.name) {
 
                             if (!userInput.buttons) {
@@ -558,7 +559,11 @@
                                     tooltip: 'Recalculate this field',
                                     caption: '',
                                     classes: '',
-                                    action: {key: 'input-recalculation', callback: vm.recalculate}
+                                    action: {
+                                        key: 'input-recalculation',
+                                        callback: vm.recalculate,
+                                        parameters: {recalculationData: 'input'}
+                                    }
                                 })
                             }
 
@@ -573,9 +578,19 @@
                                     action: {
                                         key: 'linked-inputs-recalculation',
                                         callback: vm.recalculate,
-                                        parameters: {inputs: linkedInputsList}
+                                        parameters: {inputs: linkedInputsList, recalculationData: 'linked_inputs'}
                                     }
                                 })
+                            }
+
+                            if (recalculationInfo && recalculationInfo.recalculatedInputs.indexOf(userInput.name) > -1) { // mark userInputs that were recalculated
+
+                                if (!userInput.frontOptions) {
+                                    userInput.frontOptions = {};
+                                }
+
+                                userInput.frontOptions.recalculated = recalculationInfo.recalculationData;
+
                             }
 
                         }
@@ -587,7 +602,7 @@
 
         };
 
-        var rebookComplexTransaction = function (inputsToRecalculate) {
+        var rebookComplexTransaction = function (inputsToRecalculate, recalculationData) {
 
             vm.processing = true;
 
@@ -612,7 +627,14 @@
                 vm.editLayoutEntityInstanceId = cTransactionData.transaction_type;
                 vm.entity = cTransactionData.complex_transaction;
 
-                postRebookComplexTransactionActions(cTransactionData);
+
+                var recalculationInfo = {
+                    recalculatedInputs: inputsToRecalculate,
+                    recalculationData: recalculationData
+                }
+
+                postRebookComplexTransactionActions(cTransactionData, recalculationInfo);
+
 
                 vm.readyStatus.entity = true;
 
@@ -635,9 +657,10 @@
 
         vm.recalculate = function (paramsObj) {
 
-            var input = paramsObj.inputs;
+            var inputs = paramsObj.inputs;
+            var recalculationData = paramsObj.recalculationData;
 
-            rebookComplexTransaction(input);
+            rebookComplexTransaction(inputs, recalculationData);
 
         };
 
@@ -1157,6 +1180,7 @@
 
                     if (userInput !== null) {
                         var keys = Object.keys(vm.entity);
+
                         keys.forEach(function (key) {
                             if (key === userInput.name) {
                                 result.values[userInput.name] = vm.entity[userInput.name];
@@ -1175,10 +1199,6 @@
                     return complexTransactionService.initRebookComplexTransaction(result.id).then(function (data) {
 
                         var originValues = JSON.parse(JSON.stringify(result.values));
-
-                        // entity.transactions = data.transactions;
-
-                        console.log('result', result);
 
                         result.values = data.values;
                         result.complex_transaction = data.complex_transaction; // ?
@@ -1201,11 +1221,9 @@
                         result.process_mode = 'rebook';
 
                         if (dcLayoutHasBeenFixed) {
-
                             vm.transactionType.book_transaction_layout = dataConstructorLayout;
 
                             transactionTypeService.update(vm.transactionType.id, vm.transactionType);
-
                         }
 
                         complexTransactionService.rebookComplexTransaction(result.id, result).then(function (data) {
@@ -1239,6 +1257,7 @@
 
                         });
                     });
+
                 }).then(function (data) {
 
                     if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
@@ -1429,7 +1448,7 @@
             vm.entityId = entityId;
         };
 
-        vm.entityChange = function () {
+        /*vm.entityChange = function () {
 
             console.log("entityChange", vm);
 
@@ -1449,14 +1468,15 @@
 
             var resultInput;
 
-            vm.transactionType.inputs.forEach(function (item) {
+            if (changedInput) {
+                vm.transactionType.inputs.forEach(function (item) {
+                    if(item.name === changedInput.name) {
+                        resultInput = item;
+                    }
+                });
+            }
 
-                if(item.name === changedInput.name) {
-                    resultInput = item;
-                }
-            });
-
-            /*if (resultInput && resultInput.settings) {
+            if (resultInput && resultInput.settings) {
 
                 if (resultInput.settings.linked_inputs_names) {
 
@@ -1464,12 +1484,12 @@
 
                 }
 
-            }*/
+            }
 
             console.log('changedInput', changedInput);
             console.log('resultInput', resultInput);
 
-        };
+        };*/
 
     }
 
