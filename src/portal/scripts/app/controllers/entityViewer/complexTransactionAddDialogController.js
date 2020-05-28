@@ -314,7 +314,7 @@
 
         };
 
-        var postBookComplexTransactionActions = function (ttypeData) {
+        var postBookComplexTransactionActions = function (ttypeData, recalculationInfo) {
 
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
@@ -374,7 +374,11 @@
                                     tooltip: 'Recalculate this field',
                                     caption: '',
                                     classes: '',
-                                    action: {key: 'input-recalculation', callback: vm.recalculate}
+                                    action: {
+                                        key: 'input-recalculation',
+                                        callback: vm.recalculate,
+                                        parameters: {recalculationData: 'input'}
+                                    }
                                 })
                             }
 
@@ -389,9 +393,19 @@
                                     action: {
                                         key: 'linked-inputs-recalculation',
                                         callback: vm.recalculate,
-                                        parameters: {inputs: linkedInputsList}
+                                        parameters: {inputs: linkedInputsList, recalculationData: 'linked_inputs'}
                                     }
                                 })
+                            }
+
+                            if (recalculationInfo && recalculationInfo.recalculatedInputs.indexOf(userInput.name) > -1) { // mark userInputs that were recalculated
+
+                                if (!userInput.frontOptions) {
+                                    userInput.frontOptions = {};
+                                }
+
+                                userInput.frontOptions.recalculated = recalculationInfo.recalculationData;
+
                             }
 
                         }
@@ -403,7 +417,7 @@
 
         };
 
-        var bookComplexTransaction = function (inputsToRecalculate) {
+        var bookComplexTransaction = function (inputsToRecalculate, recalculationData) {
 
             vm.processing = true;
 
@@ -454,7 +468,12 @@
                 });
 
 
-                postBookComplexTransactionActions(data);
+                var recalculationInfo = {
+                    recalculatedInputs: inputsToRecalculate,
+                    recalculationData: recalculationData
+                }
+
+                postBookComplexTransactionActions(data, recalculationInfo);
 
 
                 vm.processing = false;
@@ -474,11 +493,12 @@
 
         }
 
-        vm.recalculate = function (parametersObj) {
+        vm.recalculate = function (paramsObj) {
 
-            var inputs = parametersObj.inputs;
+            var inputs = paramsObj.inputs;
+            var recalculationData = paramsObj.recalculationData;
 
-            bookComplexTransaction(inputs);
+            bookComplexTransaction(inputs, recalculationData);
 
         };
 
@@ -1263,7 +1283,7 @@
 
         };
 
-        vm.entityChange = function () {
+        /*vm.entityChange = function () {
 
             console.log("entityChange", vm);
             console.log("vm.oldValues", vm.oldValues);
@@ -1282,28 +1302,29 @@
 
             var resultInput;
 
-            vm.transactionType.inputs.forEach(function (item) {
+            if (changedInput) {
 
-                if (item.name === changedInput.name) {
-                    resultInput = item;
-                }
-            });
+                vm.transactionType.inputs.forEach(function (item) {
+                    if (item.name === changedInput.name) {
+                        resultInput = item;
+                    }
+                });
 
-            /*if (resultInput && resultInput.settings) {
+            }
 
+
+            if (resultInput && resultInput.settings) {
                 if (resultInput.settings.linked_inputs_names) {
 
                     vm.recalculateInputs(resultInput.settings.linked_inputs_names.split(','))
 
                 }
-
-            }*/
-
+            }
 
             console.log('changedInput', changedInput);
             console.log('resultInput', resultInput);
 
-        };
+        };*/
 
 
         vm.init();

@@ -81,10 +81,24 @@
 
                 }
 
+                scope.getInputContainerClasses = function () {
+                    var classes = '';
+
+                    if (scope.error) {
+                        classes = 'custom-input-error';
+
+                    } else if (scope.valueIsValid) {
+                        classes = 'custom-input-is-valid';
+                    }
+
+                    return classes;
+                };
+
                 scope.selectOption = function (item) {
 
                     //scope.item.value = item.id;
                     scope.item = item.id;
+                    scope.valueIsValid = true;
 
                     if (item.short_name) {
 
@@ -208,6 +222,8 @@
                                 scope.itemName = res.data.item.short_name;
                                 scope.inputText = res.data.item.short_name;
 
+                                scope.valueIsValid = true;
+
                                 setTimeout(function () {
 
                                     scope.callback();
@@ -311,6 +327,10 @@
                 var init = function () {
 
                     initEventListeners();
+
+                    if (scope.item) {
+                        scope.valueIsValid = true;
+                    }
 
                     scope.iconData = entityIndicatorIcons[scope.entityType];
 
