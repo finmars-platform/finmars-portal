@@ -38,7 +38,9 @@
                       number-format="item.options.number_format"
                       custom-buttons="item.buttons"
                       custom-styles="customStyles"
-                      small-options="{onlyPositive: item.options.onlyPositive, tooltipText: item.options.tooltipValue}"
+                      seted-from-outside="item.frontOptions.recalculated"
+                      small-options="{onlyPositive: item.options.onlyPositive,
+                                      tooltipText: item.options.tooltipValue}"
                       on-change-callback="itemChange()"></number-input>
 
     </div>
