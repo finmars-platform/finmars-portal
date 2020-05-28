@@ -22,7 +22,7 @@
         }
 
         setTimeout(function () {
-            vm.dialogElemToResize = document.querySelector('.inputTextDialogElemToResize');
+            vm.dialogElemToResize = document.querySelector('.textEditorDialogElemToResize');
         }, 100);
 
     }

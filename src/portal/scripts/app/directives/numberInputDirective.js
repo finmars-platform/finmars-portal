@@ -14,7 +14,8 @@
                 numberFormat: '<',
                 customButtons: '=',
                 customStyles: '<',
-                smallOptions: '=',
+                setedFromOutside: '=',
+                smallOptions: '<',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/number-input-view.html',
@@ -24,6 +25,12 @@
                 scope.error = '';
                 scope.tooltipText = 'Tooltip text';
 
+                // TIPS
+                // scope.smallOptions probable properties
+                    // onlyPositive: whether field should accept only positive number
+                    // tooltipText: custom tolltip text
+                    // notNull: turn on error mode if field is not filled
+
                 if (scope.smallOptions) {
                     scope.onlyPositive = scope.smallOptions.onlyPositive;
 
@@ -31,13 +38,40 @@
                         scope.tooltipText = scope.smallOptions.tooltipText;
                     }
                 }
-
+                console.log("new inputs smallOptions", scope.smallOptions);
                 var inputContainer = elem[0].querySelector('.numberInputContainer');
                 var inputElem = elem[0].querySelector('.numberInputElem');
 
+                scope.getInputContainerClasses = function () {
+                    var classes = '';
+
+                    if (scope.error) {
+                        classes = 'custom-input-error';
+
+                    } else if (scope.setedFromOutside) {
+
+                        if (scope.setedFromOutside === 'input') {
+                            classes = 'custom-input-preset1';
+
+                        } else if (scope.setedFromOutside === 'linked_inputs') {
+                            classes = 'custom-input-preset2';
+                        }
+
+                    } else if (scope.valueIsValid) {
+                        classes = 'custom-input-is-valid';
+                    }
+
+                    return classes;
+                };
+
                 scope.onValueChange = function () {
 
+                    if (scope.setedFromOutside) {
+                        scope.setedFromOutside = false;
+                    }
+
                     scope.error = '';
+                    scope.valueIsValid = false;
                     var changedValue = scope.numberToShow;
 
                     if (changedValue === '') {
@@ -45,7 +79,7 @@
                         scope.model = null;
 
                     } else if (!isNaN(changedValue) &&
-                        changedValue !== null) {
+                               changedValue !== null) {
 
                         if (Number.isInteger(changedValue)) {
                             changedValue = parseInt(changedValue);
@@ -67,7 +101,9 @@
                                 scope.model = null;
 
                             } else {
+
                                 scope.model = JSON.parse(JSON.stringify(changedValue));
+
                             }
 
                         } else {
@@ -81,9 +117,13 @@
 
                     } else {
 
-                        scope.error = 'invalid character used';
+                        scope.error = 'Invalid character used';
                         scope.model = null;
 
+                    }
+
+                    if ((scope.model || scope.model === 0) && !scope.error) {
+                        scope.valueIsValid = true;
                     }
 
                     if (scope.onChangeCallback) {
@@ -234,7 +274,13 @@
 
                 scope.$watch('model', function () {
 
-                    if (scope.model) {
+                    if (scope.model || scope.model === 0) {
+
+                        if (!isNaN(scope.model)) {
+                            scope.valueIsValid = true;
+                        } else {
+                            scope.error = 'Invalid character used';
+                        }
 
                         scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
 

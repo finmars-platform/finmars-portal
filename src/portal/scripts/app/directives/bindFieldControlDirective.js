@@ -24,7 +24,7 @@
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {classifier: false};
-
+                console.log("new inputs item", scope.item);
                 var attrs = scope.$parent.vm.attrs || [];
                 var userInputs = scope.$parent.vm.userInputs || [];
                 var choices = metaService.getValueTypes() || [];
@@ -123,6 +123,7 @@
                             } else {
                                 result = scope.item.user_code
                             }
+
                         } else {
                             var l, e, u;
 
@@ -132,11 +133,13 @@
                                     result = scope.layoutAttrs[l].key;
                                 }
                             }
+
                             for (e = 0; e < entityAttrs.length; e = e + 1) {
                                 if (scope.item.name === entityAttrs[e].name) {
                                     result = entityAttrs[e].key;
                                 }
                             }
+
                             for (u = 0; u < userInputs.length; u = u + 1) {
                                 if (scope.item.name === userInputs[u].name) {
                                     result = userInputs[u].name;
@@ -511,7 +514,7 @@
                             scope.item.buttons.forEach(function (btnObj) {
 
                                 if (btnObj.action.key === 'input-recalculation') {
-                                    btnObj.action.parameters = {inputs: [scope.item.name]};
+                                    btnObj.action.parameters.inputs = [scope.item.name];
                                 }
 
                             })
@@ -524,6 +527,10 @@
                             }
 
                         }
+
+                        /*if (scope.item.frontOptions) {
+                            scope.setedFromOutside = scope.item.frontOptions.recalculated;
+                        }*/
 
                     }
 
@@ -564,6 +571,7 @@
                 };
 
                 scope.itemChange = function() {
+                    console.log("new inputs itemChange", scope.entity[scope.getModelKey()]);
                     if (scope.entityChange) {
                         scope.entityChange();
                     }

@@ -262,12 +262,14 @@
 
         value = formatNegative(value, column);
 
-        if (column.report_settings.number_prefix) {
-            value = column.report_settings.number_prefix + value;
-        }
+        if (column.report_settings) {
+            if (column.report_settings.number_prefix) {
+                value = column.report_settings.number_prefix + value;
+            }
 
-        if (column.report_settings.number_suffix) {
-            value = value + column.report_settings.number_suffix;
+            if (column.report_settings.number_suffix) {
+                value = value + column.report_settings.number_suffix;
+            }
         }
 
         return value;
