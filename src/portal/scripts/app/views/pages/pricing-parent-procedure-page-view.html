@@ -25,7 +25,7 @@
 
             </div>
             <div layout="column">
-                <div data-ng-repeat="item in vm.procedures" layout="column">
+                <div data-ng-repeat="item in vm.procedures track by $index" layout="column">
                     <div layout="row">
                         <div class="p-8 width-20">
                             {{item.pricing_procedure_object.name}}
@@ -45,6 +45,14 @@
                                 <span data-ng-if="item.opened">Show Less</span>
 
                             </md-button>
+
+                            <md-button data-ng-if="item.procedures.length"
+                                       class="md-raised pricing-procedure-show-more-btn"
+                                       data-ng-click="vm.refreshItem($index, item)">
+
+                                Refresh
+
+                            </md-button>
                         </div>
                     </div>
                     <div data-ng-if="item.opened" class="pricing-procedure-more-info-box">
@@ -53,7 +61,8 @@
 
                             <div layout="row">
                                 <div class="p-8 width-20"><b>Provider</b></div>
-                                <div class="p-8 width-60"><b>Action</b></div>
+                                <div class="p-8 width-40"><b>Action</b></div>
+                                <div class="p-8 width-20"><b>Info</b></div>
                                 <div class="p-8 width-20"><b>Status</b></div>
                             </div>
 
@@ -63,10 +72,22 @@
                                     <span data-ng-if="procedure.provider_verbose">{{procedure.provider_verbose}}</span>
                                     <span data-ng-if="!procedure.provider_verbose">-</span>
                                 </div>
-                                <div class="p-8 width-60">
+                                <div class="p-8 width-40">
                                     <span data-ng-if="procedure.action_verbose">{{procedure.action_verbose}}</span>
                                     <span data-ng-if="!procedure.action_verbose">-</span>
                                 </div>
+
+                                <div class="p-8 width-20">
+
+                                    <div data-ng-if="procedure.status == 'D'">
+                                        {{procedure.successful_prices_count}} successful, {{procedure.error_prices_count}} errors
+                                    </div>
+
+                                    <div data-ng-if="procedure.status != 'D'">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
                                 <div class="p-8 width-20">
 
                                     <span data-ng-if="procedure.status == 'I'">Init</span>

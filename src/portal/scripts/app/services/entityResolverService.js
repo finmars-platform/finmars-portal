@@ -35,6 +35,7 @@
     var strategySubgroupService = require('./strategySubgroupService');
 
     var instrumentDailyPricingModelService = require('./instrument/instrumentDailyPricingModelService');
+    var instrumentPricingConditionService = require('./instrument/instrumentPricingConditionService');
     var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService');
     var instrumentClassService = require('./instrument/instrumentClassService');
     var priceDownloadSchemeService = require('./import/priceDownloadSchemeService');
@@ -75,6 +76,8 @@
                 return accrualCalculationModelService.getList(options);
             case 'payment-size-detail':
                 return instrumentPaymentSizeDetailService.getList(options);
+            case 'pricing-condition':
+                return instrumentPricingConditionService.getList(options);
             case 'event-class':
                 return metaEventClassService.getList(options);
             case 'notification-class':

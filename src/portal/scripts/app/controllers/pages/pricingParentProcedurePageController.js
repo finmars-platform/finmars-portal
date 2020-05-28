@@ -43,6 +43,33 @@
             })
         };
 
+        vm.refreshItem = function($index, item){
+
+            pricingParentProcedureService.getByKey(item.id).then(function (data) {
+
+                data.opened = item.opened;
+
+                data.processed_procedures = data.procedures.filter(function (procedure) {
+                    return procedure.status !== 'P'
+                }).length;
+
+                if (data.processed_procedures) {
+                    data.progress_percent = Math.floor(data.processed_procedures / data.procedures.length * 100)
+                } else {
+                    data.progress_percent = 0;
+                }
+
+
+                vm.procedures.splice($index, 1, data);
+
+                console.log('data', data);
+
+                $scope.$apply();
+
+            });
+
+        };
+
         vm.init = function () {
 
             vm.getList();

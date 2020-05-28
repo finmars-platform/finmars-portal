@@ -12,7 +12,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/daily-pricing-model/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/pricing-condition/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -24,7 +24,7 @@
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'instruments/daily-pricing-model/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/pricing-condition/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
