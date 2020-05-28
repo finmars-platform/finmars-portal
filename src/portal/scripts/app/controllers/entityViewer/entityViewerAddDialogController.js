@@ -113,7 +113,7 @@
 
         };
 
-        vm.getCurrencies = function(){
+        vm.getCurrencies = function () {
 
             entityResolverService.getList('currency').then(function (data) {
 
@@ -359,7 +359,7 @@
 
         };
 
-        vm.getCurrentMasterUser = function() {
+        vm.getCurrentMasterUser = function () {
 
             return usersService.getCurrentMasterUser().then(function (data) {
 
@@ -407,7 +407,6 @@
             // console.log('vm.currentMember.groups', vm.currentMember.groups);
 
 
-
             vm.groups.forEach(function (group) {
 
                 if (group.permission_table && group.permission_table.data) {
@@ -425,7 +424,7 @@
                         if (table.creator_manage) {
                             group.objectPermissions.manage = true;
 
-                            vm.canManagePermissions  = true;
+                            vm.canManagePermissions = true;
                         }
 
                         if (table.creator_change) {
@@ -442,7 +441,7 @@
                         if (table.other_manage) {
                             group.objectPermissions.manage = true;
 
-                            vm.canManagePermissions  = true;
+                            vm.canManagePermissions = true;
                         }
 
                         if (table.other_change) {
@@ -597,6 +596,39 @@
                 }
 
             })
+
+        };
+
+        vm.setInheritedPricing = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                if (vm.entityType === 'instrument') {
+
+                    console.log('vm.entity', vm.entity);
+
+                    entityResolverService.getByKey('instrument-type', vm.entity.instrument_type).then(function (data) {
+
+                        console.log("get instrument type ", data);
+
+                        vm.entity.pricing_policies = data.pricing_policies.map(function (policy) {
+
+                            var item = Object.assign({}, policy);
+
+                            delete item.id;
+                            delete item.overwrite_default_parameters;
+
+                            return item;
+
+                        });
+
+                        $scope.$apply();
+
+                    })
+
+                }
+
+            });
 
         };
 
@@ -888,16 +920,15 @@
         vm.save = function ($event) {
 
 
-
             vm.updateEntityBeforeSave();
 
             var errors = entityEditorHelper.validateEntityFields(vm.entity,
-                                                                 vm.entityType,
-                                                                 vm.tabs,
-                                                                 keysOfFixedFieldsAttrs,
-                                                                 vm.entityAttrs,
-                                                                 vm.attributeTypes,
-                                                                 []);
+                vm.entityType,
+                vm.tabs,
+                keysOfFixedFieldsAttrs,
+                vm.entityAttrs,
+                vm.attributeTypes,
+                []);
 
             if (errors.length) {
 
@@ -1051,6 +1082,8 @@
                 if (vm.isInheritRights && vm.entity.instrument_type) {
                     vm.setInheritedPermissions();
                 }
+
+                vm.setInheritedPricing();
             }
 
 
@@ -1060,15 +1093,9 @@
 
             vm.attributeTypesByValueTypes = {
 
-                10: [
-
-                ],
-                20: [
-
-                ],
-                40: [
-
-                ]
+                10: [],
+                20: [],
+                40: []
 
             };
 
@@ -1219,7 +1246,7 @@
 
         };
 
-        vm.openPricingMultipleParametersDialog = function($event, item) {
+        vm.openPricingMultipleParametersDialog = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'PricingMultipleParametersDialogController as vm',
