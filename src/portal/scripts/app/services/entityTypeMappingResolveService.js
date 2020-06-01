@@ -107,6 +107,8 @@
                 return strategy3MappingService.getByKey(id);
             case 'daily-pricing-model':
                 return dailyPricingModelMappingService.getByKey(id);
+            case 'pricing-condition':
+                return pricingConditionMappingService.getByKey(id);
             case 'payment-size-detail':
                 return paymentSizeDetailMappingService.getByKey(id);
             case 'price-download-scheme':
@@ -149,6 +151,8 @@
                 return strategy3MappingService.create(map);
             case 'daily-pricing-model':
                 return dailyPricingModelMappingService.create(map);
+            case 'pricing-condition':
+                return pricingConditionMappingService.create(map);
             case 'payment-size-detail':
                 return paymentSizeDetailMappingService.create(map);
             case 'price-download-scheme':
@@ -191,6 +195,8 @@
                 return strategy3MappingService.update(id, map);
             case 'daily-pricing-model':
                 return dailyPricingModelMappingService.update(id, map);
+            case 'pricing-condition':
+                return pricingConditionMappingService.update(id, map);
             case 'payment-size-detail':
                 return paymentSizeDetailMappingService.update(id, map);
             case 'price-download-scheme':
@@ -233,6 +239,8 @@
                 return strategy3MappingService.deleteByKey(id);
             case 'daily-pricing-model':
                 return dailyPricingModelMappingService.deleteByKey(id);
+            case 'pricing-condition':
+                return pricingConditionMappingService.deleteByKey(id);
             case 'payment-size-detail':
                 return paymentSizeDetailMappingService.deleteByKey(id);
             case 'price-download-scheme':

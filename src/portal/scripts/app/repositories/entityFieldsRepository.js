@@ -8,6 +8,18 @@
     var xhrService = require('../../../../core/services/xhrService');
     var baseUrl = baseUrlService.resolve();
 
+    var getPricingConditionChoices = function () {
+        return xhrService.fetch(baseUrl + 'instruments/pricing-condition/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var getDailyPricingModelChoices = function () {
         return xhrService.fetch(baseUrl + 'instruments/daily-pricing-model/',
             {
@@ -78,7 +90,8 @@
     module.exports = {
         getDailyPricingModelChoices: getDailyPricingModelChoices,
         getPaymentSizeDetailChoices: getPaymentSizeDetailChoices,
-        getTransactionClassList: getTransactionClassList
+        getTransactionClassList: getTransactionClassList,
+        getPricingConditionChoices: getPricingConditionChoices
     }
 
 }());
