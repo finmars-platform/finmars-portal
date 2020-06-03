@@ -106,7 +106,7 @@
 
                 if(data.status === 'success') {
 
-                    vm.getConfigs();
+                    vm.getBloombergCredentialList();
 
                 }
 
