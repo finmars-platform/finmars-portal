@@ -22,6 +22,17 @@
             </md-input-container>
         </div>
 
+        <div layout="row" >
+            <md-input-container flex="100">
+                <label>Filter items by statuses</label>
+                <md-select data-ng-model="vm.entityFilters" multiple>
+                    <md-option value="disabled">Show Disabled</md-option>
+                    <md-option value="deleted">Show Deleted</md-option>
+                    <md-option value="inactive" data-ng-if="vm.entityType === 'instrument'">Show Inactive</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+
         <div layout="row" data-ng-if="vm.entityType === 'complex-transaction'">
             <md-input-container flex="100">
                 <label>Filter transactions by statuses</label>

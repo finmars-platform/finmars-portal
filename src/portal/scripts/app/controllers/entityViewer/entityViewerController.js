@@ -13,6 +13,7 @@
         var usersService = require('../../services/usersService');
 
         var complexTransactionService = require('../../services/transaction/complexTransactionService');
+        var instrumentService = require('../../services/instrumentService');
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -186,6 +187,52 @@
                             }
 
                             vm.entityViewerDataService.setObject(transactionObj);
+
+                        });
+
+                    };
+
+                    var manageInstrumentProps = function(actionType){
+
+                        var selectedRows = flatList.filter(function (row) {
+                            return row.___is_activated;
+                        });
+
+                        selectedRows.forEach(function (row) {
+
+                            var obj = vm.entityViewerDataService.getObject(row.___id, row.___parentId);
+
+                            switch (actionType) {
+
+                                case 'deactivate':
+
+                                    obj.is_active = false;
+
+                                    instrumentService.patch(obj.id,
+                                        {
+                                            is_active: obj.is_active
+                                        }
+                                    );
+
+                                    break;
+
+                                case 'activate':
+                                    if (obj.is_active) {
+
+                                        obj.is_active = true;
+
+                                        instrumentService.patch(obj.id,
+                                            {
+                                                is_active: obj.is_active
+                                            }
+                                        );
+
+                                    }
+
+                                    break;
+                            }
+
+                            vm.entityViewerDataService.setObject(obj);
 
                         });
 
@@ -598,6 +645,13 @@
 
                             case 'activate_transaction':
                                 manageTransactionsLockedAndCanceledProps('activate');
+                                break;
+
+                            case 'activate_instrument':
+                                manageInstrumentProps('activate');
+                                break;
+                            case 'deactivate_instrument':
+                                manageInstrumentProps('deactivate');
                                 break;
                         }
 
