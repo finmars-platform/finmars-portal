@@ -26,6 +26,12 @@ app.use('/healthcheck', function (req, res) {
 
 });
 
+
+// WARNING ONLY FOR DEV PURPOSE
+// var pdfProxyOptions = url.parse('http://0.0.0.0:80');
+//
+// app.use('/services/pdf', proxy(pdfProxyOptions));
+
 // var proxyOptions = url.parse('https://dev.finmars.com');
 
 
