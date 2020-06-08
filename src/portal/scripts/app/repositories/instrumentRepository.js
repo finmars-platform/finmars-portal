@@ -85,6 +85,20 @@
             })
     };
 
+    var patch = function (id, data) {
+        return xhrService.fetch(baseUrl + 'instruments/instrument/' + id + '/',
+            {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
     var updateBulk = function (instruments) {
         return xhrService.fetch(baseUrl + 'instruments/instrument/bulk-update/',
             {
@@ -142,6 +156,7 @@
         getByKey: getByKey,
         create: create,
         update: update,
+        patch: patch,
         deleteByKey: deleteByKey,
 
         updateBulk: updateBulk,
