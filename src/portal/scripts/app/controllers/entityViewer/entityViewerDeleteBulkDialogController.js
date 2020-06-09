@@ -5,13 +5,9 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     var entityResolverService = require('../../services/entityResolverService');
 
-    module.exports = function ($scope, $mdDialog, evDataService, evEventService) {
-
-        logService.controller('EntityViewerDeleteBulkDialogController', 'initialized');
+    module.exports = function EntityViewerDeleteBulkDialogController($scope, $mdDialog, evDataService, evEventService) {
 
         var vm = this;
 
@@ -72,33 +68,6 @@
                 })
 
             });
-
-
-            setTimeout(function () {
-
-                vm.processing = false;
-
-                $mdDialog.show({
-                    controller: 'InfoDialogController as vm',
-                    templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        info: {
-                            title: 'Warning',
-                            description: "Deletion in progress. Please, wait"
-                        }
-                    }
-                });
-
-                $scope.$apply()
-
-            }, 60 * 1000)
 
         };
 
