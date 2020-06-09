@@ -4,6 +4,16 @@
         <h3>Groups Permission Manager</h3>
     </div>
 
+    <div style="margin-bottom: 16px; margin-left: 8px;">
+
+        <div style="margin-right: 8px; background: lightblue; display: inline-block; width: 16px; height: 16px">
+
+        </div>
+
+        You are a member of this group
+
+    </div>
+
     <div layout="row" layout-align="space-between center" style="margin-bottom: 8px; padding: 0 16px">
         <div layout="row" layout-align="begin center">
             Group Name
@@ -27,7 +37,7 @@
     <div layout="column" class="ev-permission-editor-item">
 
         <div layout="row" layout-align="space-between"
-             class="m-b-8"
+             class="m-b-8 {{group.current_member_in_group ? 'member-in-group' : ''}}"
              data-ng-repeat="group in vm.groups"
              style="height: 48px;">
 

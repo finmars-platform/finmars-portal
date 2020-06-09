@@ -9,8 +9,9 @@
     var entityResolverService = require('../../services/entityResolverService');
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
     var evEvents = require('../../services/entityViewerEvents');
+    var usersService = require('../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
+    module.exports = function entityViewerPermissionEditorController($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
         var vm = this;
 
@@ -34,6 +35,15 @@
 
                 });
 
+                vm.groups = vm.groups.map(function (group) {
+
+                    if (group.members.indexOf(vm.member.id) !== -1) {
+                        group.current_member_in_group = true;
+                    }
+
+                    return group;
+
+                });
 
                 vm.readyStatus.content = true;
 
@@ -403,9 +413,53 @@
 
         vm.toggleManage = function ($event, group) {
 
-            group.isManageChecked = !group.isManageChecked;
-            group.isManageIndeterminate = false;
-            vm.isSaved = false;
+            if (group.members.indexOf(vm.member.id) !== -1) {
+
+                if (group.isManageChecked) {
+
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: "Are you sure you want to proceed with limiting the Manage access rights? In this case you will lose ability to assign access right for this object."
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true
+                    }).then(function (res) {
+                        console.log('res', res);
+                        if (res.status === 'agree') {
+
+                            group.isManageChecked = !group.isManageChecked;
+                            group.isManageIndeterminate = false;
+                            vm.isSaved = false;
+
+
+                        }
+                    })
+
+
+                } else {
+                    group.isManageChecked = !group.isManageChecked;
+                    group.isManageIndeterminate = false;
+                    vm.isSaved = false;
+                }
+
+
+            } else {
+
+                group.isManageChecked = !group.isManageChecked;
+                group.isManageIndeterminate = false;
+                vm.isSaved = false;
+
+            }
 
         };
 
@@ -534,11 +588,24 @@
 
         });
 
+        vm.getMember = function () {
+
+            usersService.getMyCurrentMember().then(function (data) {
+
+                vm.member = data;
+
+                vm.getGroups();
+
+            })
+
+        };
+
         vm.init = function () {
 
             vm.entityType = parentEntityViewerDataService.getEntityType();
 
-            vm.getGroups()
+            vm.getMember();
+
         };
 
         vm.init();
