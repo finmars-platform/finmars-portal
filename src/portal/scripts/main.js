@@ -588,7 +588,7 @@ app.directive('useFromAboveButton', ['$mdDialog', require('./app/controls/use-fr
 
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
 app.directive('groupTableBody', [require('./app/directives/groupTable/gTableBodyComponent')]);
-app.directive('groupSidebarFilter', ['$mdDialog', require('./app/directives/groupTable/gSidebarFilterComponent')]);
+app.directive('groupSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupDashboardFilter', ['$mdDialog', require('./app/directives/groupTable/gDashboardFilterComponent')]);
 app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);

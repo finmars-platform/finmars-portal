@@ -21,7 +21,7 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var uiService = require('../../services/uiService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
             scope: {
@@ -864,6 +864,8 @@
 
                 scope.openLayoutList = function ($event) {
 
+                    console.log('folder button');
+
                     $mdDialog.show({
                         controller: 'UiLayoutListDialogController as vm',
                         templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
@@ -881,8 +883,15 @@
 
                         if (res.status === 'agree') {
 
-                            scope.layoutName = res.data.layoutName;
-                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                            if (scope.isRootEntityViewer) {
+                                middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                $state.transitionTo($state.current, {layoutName: res.data.layoutName});
+                            } else {
+                                middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+
+                                scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
+                                scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                            }
 
                         }
 
