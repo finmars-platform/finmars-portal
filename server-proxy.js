@@ -17,7 +17,6 @@ var proxyOptions = url.parse('https://dev.finmars.com');
 proxyOptions.cookieRewrite = true;
 proxyOptions.headers = {Referer: 'https://dev.finmars.com'};
 
-app.use('/', proxy(proxyOptions));
 
 app.listen(8080, function () {
     console.info('Express server with proxy start at 8080 port');

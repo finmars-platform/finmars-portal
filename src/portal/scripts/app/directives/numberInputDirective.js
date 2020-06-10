@@ -211,6 +211,76 @@
 
                 };
 
+                var initScopeWatchers = function () {
+                    scope.$watch('model', function () {
+
+                        if (scope.model || scope.model === 0) {
+
+                            scope.error = '';
+
+                            if (isNaN(scope.model)) {
+                                scope.error = 'Invalid character used';
+                            }
+
+                            scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
+
+                            if (!inputContainer.classList.contains('custom-input-focused')) {
+                                applyNumberFormatToInput();
+                            }
+
+                        } else if (!scope.numberToShow && scope.numberToShow !== 0 && inputLoaded) {
+
+                            if (scope.smallOptions && scope.smallOptions.notNull) {
+                                scope.error = 'Field should not be null';
+                            }
+
+                        }
+
+                        inputLoaded = true;
+
+                    });
+
+                    if (scope.eventSignal) { // this if prevents watcher below from running without need
+
+                        scope.$watch('eventSignal', function () {
+
+                            if (scope.eventSignal && scope.eventSignal.key) {
+
+                                switch (scope.eventSignal.key) {
+                                    case 'mark_not_valid_fields':
+
+                                        if (scope.smallOptions && !scope.numberToShow && scope.numberToShow !== 0) {
+
+                                            if (scope.smallOptions.notNull) {
+                                                scope.error = 'Field should not be null';
+
+                                            } else if (scope.onlyPositive) {
+                                                scope.error = 'field should have positive number';
+
+                                            }
+
+                                        }
+
+                                        break;
+
+                                    case 'set_style_preset1':
+                                        stylePreset = 1;
+                                        break;
+
+                                    case 'set_style_preset2':
+                                        stylePreset = 2;
+                                        break;
+                                }
+
+                                scope.eventSignal = {};
+
+                            }
+
+                        });
+
+                    }
+                };
+
                 var initEventListeners = function () {
                     elem[0].addEventListener('mouseover', function () {
                         inputContainer.classList.add('custom-input-hovered');
@@ -245,6 +315,8 @@
                 };
 
                 var init = function () {
+
+                    initScopeWatchers();
 
                     initEventListeners();
 
@@ -292,75 +364,11 @@
 
                 };
 
-                scope.$watch('model', function () {
 
-                    if (scope.model || scope.model === 0) {
-
-                        scope.error = '';
-
-                        if (isNaN(scope.model)) {
-                            scope.error = 'Invalid character used';
-                        }
-
-                        scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
-
-                        if (!inputContainer.classList.contains('custom-input-focused')) {
-                            applyNumberFormatToInput();
-                        }
-
-                    } else if (!scope.numberToShow && scope.numberToShow !== 0 && inputLoaded) {
-
-                        if (scope.smallOptions && scope.smallOptions.notNull) {
-                            scope.error = 'Field should not be null';
-                        }
-
-                    }
-
-                    inputLoaded = true;
-
-                })
 
                 init();
 
-                if (scope.eventSignal) { // this if prevents watcher below from running without need
 
-                    scope.$watch('eventSignal', function () {
-
-                        if (scope.eventSignal && scope.eventSignal.key) {
-
-                            switch (scope.eventSignal.key) {
-                                case 'mark_not_valid_fields':
-
-                                    if (scope.smallOptions && !scope.numberToShow && scope.numberToShow !== 0) {
-
-                                        if (scope.smallOptions.notNull) {
-                                            scope.error = 'Field should not be null';
-
-                                        } else if (scope.onlyPositive) {
-                                            scope.error = 'field should have positive number';
-
-                                        }
-
-                                    }
-
-                                    break;
-
-                                case 'set_style_preset1':
-                                    stylePreset = 1;
-                                    break;
-
-                                case 'set_style_preset2':
-                                    stylePreset = 2;
-                                    break;
-                            }
-
-                            scope.eventSignal = {};
-
-                        }
-
-                    });
-
-                }
 
             }
         }

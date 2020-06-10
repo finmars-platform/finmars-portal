@@ -717,6 +717,19 @@
                     ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
             }
 
+            if (entityType === 'instrument') {
+
+                innerHTMLString = innerHTMLString +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="deactivate_instrument"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Deactivate</div>' +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="activate_instrument"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate</div>';
+            }
+
             innerHTMLString = innerHTMLString + '</div>';
 
         }

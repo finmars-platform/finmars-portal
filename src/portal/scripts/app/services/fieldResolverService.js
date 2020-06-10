@@ -98,6 +98,11 @@
             }
 
             switch (fieldKey) {
+                case 'pricing_condition':
+                    entityFieldsRepository.getPricingConditionChoices({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'pricing_condition', data: data});
+                    });
+                    break;
                 case 'daily_pricing_model':
                     entityFieldsRepository.getDailyPricingModelChoices({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'daily_pricing_model', data: data});

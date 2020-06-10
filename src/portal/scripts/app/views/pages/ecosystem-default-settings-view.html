@@ -321,7 +321,7 @@
             </md-input-container>
 
             <md-input-container class="md-block" style="width: 200px;">
-                <label>Instrument Class</label>
+                <label>Payment Size Detail</label>
                 <md-select md-on-close="vm.searchTermPaymentSizeDetail = ''"
                            data-ng-model="vm.default.payment_size_detail"
                            md-on-open="vm.getRelation('instrument-class', 'payment_size_detail', 'payment_size_detail_fields')"
@@ -336,6 +336,29 @@
                     <div class="select-options-holder">
                         <md-option
                                 data-ng-repeat="field in vm.payment_size_detail_fields | orderBy:'-'+field.name | filter:{name: vm.searchTermPaymentSizeDetail} as results track by field.id "
+                                ng-value="field.id">
+                            {{field.name}}
+                        </md-option>
+                    </div>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container class="md-block" style="width: 200px;">
+                <label>Pricing Condition</label>
+                <md-select md-on-close="vm.searchTermPricingCondition = ''"
+                           data-ng-model="vm.default.pricing_condition"
+                           md-on-open="vm.getRelation('pricing-condition', 'pricing_condition', 'pricing_condition_fields')"
+                           md-container-class="common-select-container">
+                    <md-select-header>
+                        <input data-ng-model="vm.searchTermPricingCondition"
+                               type="search"
+                               placeholder="Search for a ..."
+                               class="md-text md-select-search-pattern select-input-filter"
+                               ng-keydown="$event.stopPropagation()">
+                    </md-select-header>
+                    <div class="select-options-holder">
+                        <md-option
+                                data-ng-repeat="field in vm.pricing_condition_fields | orderBy:'-'+field.name | filter:{name: vm.searchTermPricingCondition} as results track by field.id "
                                 ng-value="field.id">
                             {{field.name}}
                         </md-option>

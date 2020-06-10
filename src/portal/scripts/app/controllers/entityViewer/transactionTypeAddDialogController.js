@@ -338,7 +338,7 @@
 
             vm.entity.inputs.forEach(function (input) {
 
-                if (input.settings && input.settings.linked_inputs_names) {
+                if (input.settings && Array.isArray(input.settings.linked_inputs_names)) {
                     input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
                 }
 
@@ -731,8 +731,6 @@
 
         vm.save = function ($event) {
 
-
-
             return new Promise(function (resolve, reject) {
 
                 vm.updateEntityBeforeSave();
@@ -782,13 +780,27 @@
 
                         }
 
-                        createDefaultEditLayout(data).then(function () {
+                        console.log("Creating: book_transaction_layout", vm.entity.book_transaction_layout);
+
+                        if (vm.entity.book_transaction_layout) {
+
                             vm.processing = false;
 
                             $scope.$apply();
 
+
                             resolve();
-                        });
+
+                        } else {
+
+                            createDefaultEditLayout(data).then(function () {
+                                vm.processing = false;
+
+                                $scope.$apply();
+
+                                resolve();
+                            });
+                        }
 
                     }).catch(function (data) {
 
@@ -1200,8 +1212,8 @@
                                 response: {status: 'agree'}
                             },
                             {
-                               name: "CANCEL",
-                               response: {status: 'disagree'}
+                                name: "CANCEL",
+                                response: {status: 'disagree'}
                             }
                         ]
                     }

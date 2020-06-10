@@ -46,6 +46,7 @@
         };
 
         vm.links = [
+
             {
                 name: 'Account Types',
                 link: 'app.data.account-type'
