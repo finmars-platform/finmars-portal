@@ -97,7 +97,7 @@
 
                     if (obj[column.key + '_object'].name) {
 
-                        return obj[column.key + '_object'].name;
+                        return obj[column.key + '_object'].short_name;
 
                     } else if (column.key === 'price_download_scheme') {
 

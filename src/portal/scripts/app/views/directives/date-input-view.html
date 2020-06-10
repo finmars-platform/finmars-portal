@@ -27,10 +27,11 @@
                placeholder="{{placeholderText}}"
                class="custom-input date-input pick-me-up numberInputElem">
 
-        <div data-ng-if="customButtons && customButtons.length"
-             class="custom-input-custom-btns-holder">
-            <div data-ng-repeat="button in customButtons">
-                <button class="{{button.classes}} custom-input-custom-btn"
+        <div class="custom-input-custom-btns-holder">
+            <div data-ng-if="customButtons && customButtons.length">
+
+                <button data-ng-repeat="button in customButtons"
+                        class="{{button.classes}} custom-input-custom-btn"
                         data-ng-click="callFnForCustomBtn(button.action)">
                     {{button.caption}}
                     <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
@@ -39,6 +40,7 @@
                             class="tooltip_1"
                             md-direction="top">{{button.tooltip}}
                 </md-tooltip>
+
             </div>
         </div>
 

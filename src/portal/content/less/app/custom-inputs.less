@@ -37,16 +37,14 @@
   box-sizing: border-box;
 
   &:focus {
-    //border-color: rgba(26, 26, 236, 0.6);
-    border-color: #000;
+    //border-color: #000;
     outline: none;
   }
 
 }
 
 .custom-input:focus + .custom-input-indicator-btn {
-  //border-color: rgba(26, 26, 236, 0.6);
-  border-color: #000000;
+  //border-color: #000000;
   outline: none;
 }
 
@@ -54,18 +52,19 @@
   display: flex;
   flex-direction: row;
   position: absolute;
-  height: 27px;
+  height: 23px;
+  background-color: #fff;
   opacity: 0;
-  top: 0;
+  top: 2px;
   right: 30px;
   box-sizing: border-box;
 
   .custom-input-custom-btn {
-    height: 23px;
+    height: 100%;
     background: transparent;
     border: none;
     padding: 0 2px;
-    margin: 2px 0;
+    //margin: 2px 0;
 
     &:hover {
       opacity: 0.5;
@@ -137,15 +136,6 @@
   }
 }
 
-.custom-input-container.custom-input-focused {
-
-  .custom-input-indicator-btn {
-    border-color: #000;
-    outline: none;
-  }
-
-}
-
 .number-input-calculator-btn {
   position: absolute;
   top: 0;
@@ -154,37 +144,6 @@
   -webkit-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   transform: rotate(-90deg);
-}
-
-.custom-input-container.custom-input-error {
-  .custom-input-label {
-    color: #fa393e;
-  }
-
-  .custom-input-error-tooltip {
-    position: absolute;
-    top: 4px;
-    left: 3px;
-
-    ng-md-icon {
-      fill: #fa393e;
-    }
-  }
-
-  .custom-input {
-    padding-left: 20px;
-    border-color: #fa393e;
-    color:  #fa393e;
-  }
-
-  .custom-input-indicator-btn {
-    border-color: #fa393e;
-  }
-
-  .custom-input:focus {
-    border-color: #fa393e;
-    outline: none;
-  }
 }
 
 .custom-input-container.custom-input-preset1 {
@@ -218,10 +177,6 @@
 }
 
 .custom-input-container.custom-input-is-valid {
-  .custom-input-label {
-    color: #015f01;
-  }
-
   .custom-input {
     border-color: #015f01;
     color: #015f01;
@@ -229,5 +184,51 @@
 
   .custom-input-indicator-btn {
     border-color: #015f01;
+    color: #015f01;
+    fill: #015f01;
   }
 }
+
+// should always be at the bottom
+.custom-input-container.custom-input-focused {
+  .custom-input-main-container {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+  }
+
+  .custom-input-indicator-btn {
+    //border-color: #000;
+    outline: none;
+  }
+}
+
+.custom-input-container.custom-input-error {
+  .custom-input-label {
+    color: #fa393e;
+  }
+
+  .custom-input-error-tooltip {
+    position: absolute;
+    top: 4px;
+    left: 3px;
+
+    ng-md-icon {
+      fill: #fa393e;
+    }
+  }
+
+  .custom-input {
+    padding-left: 20px;
+    border-color: #fa393e;
+    color:  #fa393e;
+  }
+
+  .custom-input-indicator-btn {
+    border-color: #fa393e;
+  }
+
+  .custom-input:focus {
+    //border-color: #fa393e;
+    outline: none;
+  }
+}
+// < should always be at the bottom >

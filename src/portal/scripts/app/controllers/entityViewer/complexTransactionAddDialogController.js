@@ -9,15 +9,19 @@
 
     var layoutService = require('../../services/layoutService');
     var metaService = require('../../services/metaService');
+    var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
 
     var gridHelperService = require('../../services/gridHelperService');
     var attributeTypeService = require('../../services/attributeTypeService');
+
+    var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
+    var transactionHelper = require('../../helpers/transaction.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -50,6 +54,9 @@
 
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
+
+        var tabsWithErrors = {};
+        var errorFieldsList = [];
 
         vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
@@ -314,21 +321,22 @@
 
         };
 
-        var postBookComplexTransactionActions = function (ttypeData, recalculationInfo) {
-
+        var postBookComplexTransactionActions = function (transactionData, recalculationInfo) {
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
             vm.fixedArea = {};
             // < ng-repeat with bindFieldControlDirective may not update without this >
 
-            if (Array.isArray(ttypeData.book_transaction_layout.data)) {
-                vm.tabs = ttypeData.book_transaction_layout.data;
+            if (Array.isArray(transactionData.book_transaction_layout.data)) {
+                vm.tabs = transactionData.book_transaction_layout.data;
+
             } else {
-                vm.tabs = ttypeData.book_transaction_layout.data.tabs;
-                vm.fixedArea = ttypeData.book_transaction_layout.data.fixedArea;
+                vm.tabs = transactionData.book_transaction_layout.data.tabs;
+                vm.fixedArea = transactionData.book_transaction_layout.data.fixedArea;
+
             }
 
-            dataConstructorLayout = JSON.parse(JSON.stringify(ttypeData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
+            dataConstructorLayout = JSON.parse(JSON.stringify(transactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
             vm.userInputs = [];
             vm.tabs.forEach(function (tab) {
@@ -353,10 +361,19 @@
                 });
             }
 
-            mapAttributesAndFixFieldsLayout();
+            vm.userInputs.forEach(function (userInput) {
 
+                if (!userInput.frontOptions) {
+                    userInput.frontOptions = {};
+                }
 
-            var inputsWithCalculations = ttypeData.transaction_type_object.inputs;
+                if (transactionHelper.isUserInputUsedInTTypeExpr(userInput, vm.transactionType.actions)) {
+                    userInput.frontOptions.usedInExpr = true;
+                }
+
+            });
+
+            var inputsWithCalculations = transactionData.transaction_type_object.inputs;
 
             if (inputsWithCalculations) {
                 inputsWithCalculations.forEach(function (inputWithCalc) {
@@ -377,7 +394,7 @@
                                     action: {
                                         key: 'input-recalculation',
                                         callback: vm.recalculate,
-                                        parameters: {recalculationData: 'input'}
+                                        parameters: {inputs: [inputWithCalc.name], recalculationData: 'input'}
                                     }
                                 })
                             }
@@ -399,13 +416,7 @@
                             }
 
                             if (recalculationInfo && recalculationInfo.recalculatedInputs.indexOf(userInput.name) > -1) { // mark userInputs that were recalculated
-
-                                if (!userInput.frontOptions) {
-                                    userInput.frontOptions = {};
-                                }
-
                                 userInput.frontOptions.recalculated = recalculationInfo.recalculationData;
-
                             }
 
                         }
@@ -414,6 +425,8 @@
                 });
             }
 
+
+            mapAttributesAndFixFieldsLayout();
 
         };
 
@@ -480,6 +493,10 @@
 
                 $scope.$apply();
 
+                if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
+                    vm.evEditorEventService.dispatchEvent(evEditorEvents.RECALCULATE_FIELDS);
+                }
+
             }).catch(function (reason) {
 
                 console.log("Something went wrong with recalculation");
@@ -536,11 +553,11 @@
                         postBookComplexTransactionActions(data);
 
 
-                        vm.oldValues = {};
+                        /*vm.oldValues = {};
 
                         vm.userInputs.forEach(function (item) {
                             vm.oldValues[item.name] = vm.entity[item.name]
-                        });
+                        });*/
 
 
                     } else {
@@ -821,18 +838,6 @@
 
             vm.updateEntityBeforeSave();
 
-            /*vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
-
-            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);*/
-
-            /*var errors = entityEditorHelper.validateEntityFields(vm.entity,
-                                                                 vm.entityType,
-                                                                 vm.tabs,
-                                                                 [],
-                                                                 vm.entityAttrs,
-                                                                 vm.attrs,
-                                                                 vm.userInputs);*/
-
             var errors = entityEditorHelper.validateComplexTransactionFields(vm.entity,
                 vm.transactionType.actions,
                 vm.tabs,
@@ -841,6 +846,36 @@
                 vm.userInputs);
 
             if (errors.length) {
+
+                tabsWithErrors = {};
+
+                errors.forEach(function (errorObj) {
+
+                    if (errorObj.locationData &&
+                        errorObj.locationData.type === 'tab') {
+
+                        var tabName = errorObj.locationData.name.toLowerCase();
+
+                        var selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
+
+                        var tabNameElem = document.querySelector(selectorString);
+                        tabNameElem.classList.add('error-tab');
+
+                        if (!tabsWithErrors.hasOwnProperty(tabName)) {
+                            tabsWithErrors[tabName] = [errorObj.key];
+
+                        } else if (tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+                            tabsWithErrors[tabName].push(errorObj.key);
+
+                        }
+
+                        errorFieldsList.push(errorObj.key);
+
+                    }
+
+                });
+
+                vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 
                 $mdDialog.show({
                     controller: 'EvAddEditValidationDialogController as vm',
@@ -1206,6 +1241,8 @@
                 vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
             }, 100);
 
+            vm.evEditorEventService = new EntityViewerEditorEventService();
+
             console.log('entity', entity);
 
             if (Object.keys(entity).length) { // if copy
@@ -1325,6 +1362,22 @@
             console.log('resultInput', resultInput);
 
         };*/
+
+        vm.onFieldChange = function (fieldKey) {
+
+            if (fieldKey) {
+                var attributes = {
+                    entityAttrs: vm.entityAttrs,
+                    attrsTypes: vm.attributeTypes,
+                    userInputs: vm.userInputs
+                }
+
+                entityEditorHelper.checkTabsForErrorFields(fieldKey, errorFieldsList, tabsWithErrors,
+                    attributes,
+                    vm.entity, vm.entityType, vm.tabs);
+            }
+
+        };
 
 
         vm.init();

@@ -5,21 +5,24 @@
             <div class="ev-data-field">
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
+                                    entity-change="vm.entityChange(fieldKey)"
+                                    small-options="{notNull: true}"
+                                    ev-editor-event-service="vm.evEditorEventService"
                                     item="vm.maturityDateAttr"></bind-field-control>
             </div>
 
             <div class="ev-data-field">
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
+                                    entity-change="vm.entityChange(fieldKey)"
+                                    ev-editor-event-service="vm.evEditorEventService"
                                     item="vm.maturityPriceAttr"></bind-field-control>
             </div>
 
             <div data-ng-if="vm.entity.id">
-
                 <md-button class="md-raised md-primary" data-ng-if="vm.entity.id"
                            data-ng-click="vm.generateEventInstrument($event)">Generate Events
                 </md-button>
-
             </div>
         </div>
 
