@@ -25,27 +25,32 @@
         <input type="text"
                data-ng-model="numberToShow"
                data-ng-change="onValueChange()"
+               data-ng-model-options="{debounce: 200}"
                placeholder="{{placeholderText}}"
                class="custom-input number-input numberInputElem">
 
-        <div data-ng-if="customButtons && customButtons.length"
-             class="custom-input-custom-btns-holder">
-            <button data-ng-repeat="button in customButtons"
-                    class="{{button.classes}} custom-input-custom-btn"
-                    data-ng-click="callFnForCustomBtn(button.action)">
-                {{button.caption}}
+        <div class="custom-input-custom-btns-holder">
+            <div data-ng-if="customButtons && customButtons.length" class="height-100">
 
-                <ng-md-icon data-ng-if="button.iconObj.type === 'angular-material'"
-                            size="22"
-                            icon="{{button.iconObj.icon}}"></ng-md-icon>
+                <button data-ng-repeat="button in customButtons"
+                        class="{{button.classes}} custom-input-custom-btn"
+                        data-ng-click="callFnForCustomBtn(button.action)">
+                    {{button.caption}}
 
-                <i data-ng-if="button.iconObj.type === 'fontawesome'"
-                   class="{{button.iconObj.icon}}"></i>
+                    <ng-md-icon data-ng-if="button.iconObj.type === 'angular-material'"
+                                size="22"
+                                icon="{{button.iconObj.icon}}"></ng-md-icon>
 
-                <md-tooltip data-ng-if="button.tooltip"
-                            class="tooltip_1"
-                            md-direction="top">{{button.tooltip}}</md-tooltip>
-            </button>
+                    <i data-ng-if="button.iconObj.type === 'fontawesome'"
+                       class="{{button.iconObj.icon}}"></i>
+
+                    <md-tooltip data-ng-if="button.tooltip"
+                                class="tooltip_1"
+                                md-direction="top">{{button.tooltip}}</md-tooltip>
+                </button>
+
+            </div>
+
         </div>
 
         <button class="custom-input-indicator-btn position-relative" data-ng-click="openCalculatorDialog($event)">

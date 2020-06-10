@@ -12,6 +12,7 @@
                 customButtons: '=',
                 customStyles: '<',
                 elemsStyles: '<',
+                eventSignal: '=',
                 smallOptions: '=',
                 onChangeCallback: '&?'
             },
@@ -22,9 +23,17 @@
                 scope.placeholderText = 'yyyy-mm-dd';
                 scope.dateValue = ''; // prevents from calling on change method when date changed to the same date
                 scope.tooltipText = 'Tooltip text';
+                var stylePreset;
+
+                // TIPS
+                // scope.smallOptions probable properties
+                    // tooltipText: custom tolltip text
+                    // notNull: turn on error mode if field is not filled
 
                 var inputContainer = elem[0].querySelector('.numberInputContainer');
                 var inputElem = elem[0].querySelector('.numberInputElem');
+
+                var inputLoaded = false; // prevents not null inputs highlight from start
 
                 var doNotShowDatepicker = true; // used to prevent datepicker show on click
                 var position = 'right';
@@ -50,6 +59,9 @@
                     if (scope.error) {
                         classes = 'custom-input-error';
 
+                    } else if (stylePreset) {
+                        classes = 'custom-input-preset' + stylePreset;
+
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
                     }
@@ -60,6 +72,7 @@
                 var onDateBlur = function () {
 
                     scope.error = '';
+                    stylePreset = '';
 
                     if (scope.dateValue) {
 
@@ -68,10 +81,7 @@
                             if (moment(scope.dateValue, 'YYYY-MM-DD', true).isValid()) {
 
                                 scope.valueIsValid = true;
-
-                                if (scope.model !== scope.dateValue) {
-                                    scope.model = JSON.parse(JSON.stringify(scope.dateValue));
-                                }
+                                scope.model = JSON.parse(JSON.stringify(scope.dateValue));
 
                             } else {
 
@@ -82,11 +92,9 @@
                             }
 
                             if (scope.onChangeCallback) {
-
                                 setTimeout(function () {
                                     scope.onChangeCallback();
                                 }, 0);
-
                             }
 
                         }
@@ -94,8 +102,11 @@
                     } else if (scope.dateValue !== scope.model) {
 
                         scope.valueIsValid = false;
+                        scope.model = null;
 
-                        scope.model = JSON.parse(JSON.stringify(scope.dateValue));
+                        if (scope.smallOptions && scope.smallOptions.notNull) {
+                            scope.error = 'Field should not be null';
+                        }
 
                         if (scope.onChangeCallback) {
                             setTimeout(function () {
@@ -129,7 +140,9 @@
                         var elemClass = '.' + className;
                         var elemToApplyStyles = elem[0].querySelector(elemClass);
 
-                        elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles) {
+                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        }
 
                     });
 
@@ -151,10 +164,14 @@
                     });
 
                     inputElem.addEventListener('blur', function () {
-
                         inputContainer.classList.remove('custom-input-focused');
-                        onDateBlur();
-                        scope.$apply();
+
+                        setTimeout(function () { // without timeout changes will be discarded on fast blur
+
+                            onDateBlur();
+                            scope.$apply();
+
+                        }, 250);
 
                     });
 
@@ -214,20 +231,75 @@
 
                         if (scope.model !== scope.dateValue) {
 
-                            scope.valueIsValid = true;
+                            scope.error = '';
                             scope.dateValue = JSON.parse(JSON.stringify(scope.model));
+
+                            if (!moment(scope.dateValue, 'YYYY-MM-DD', true).isValid()) {
+
+                                scope.valueIsValid = false
+                                scope.error = 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.';
+                                scope.model = null;
+
+                            }
 
                         }
 
-                    } else if (scope.dateValue && !scope.error) {
+                    } else {
 
-                        scope.dateValue = '';
+                        if (scope.dateValue) {
+
+                            if (!scope.error) {
+                                scope.dateValue = '';
+                            }
+
+                        } else if (scope.smallOptions && scope.smallOptions.notNull && inputLoaded) {
+                            scope.error = 'Field should not be null';
+                        }
 
                     }
+
+                    inputLoaded = true;
 
                 })
 
                 init();
+
+                if (scope.eventSignal) { // this if prevents watcher below from running without need
+
+                    scope.$watch('eventSignal', function () {
+
+                        if (scope.eventSignal && scope.eventSignal.key) {
+
+                            switch (scope.eventSignal.key) {
+                                case 'mark_not_valid_fields':
+
+                                    if (scope.smallOptions && scope.smallOptions.notNull) {
+
+                                        if (!scope.model && !scope.dateValue) {
+                                            scope.error = 'Field should not be null';
+                                        }
+
+                                    }
+
+                                    break;
+
+                                case 'set_style_preset1':
+                                    stylePreset = 1;
+                                    break;
+
+                                case 'set_style_preset2':
+                                    stylePreset = 2;
+                                    break;
+                            }
+
+                            scope.eventSignal = {};
+
+                        }
+
+                    });
+
+                }
+
 
             }
         }

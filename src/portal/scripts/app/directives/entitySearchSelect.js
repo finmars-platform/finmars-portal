@@ -16,8 +16,10 @@
                 item: '=',
                 itemName: '<',
                 entityType: '<',
+                customButtons: '=',
                 customStyles: '<',
                 isDisabled: '<',
+                eventSignal: '=',
                 smallOptions: '=',
                 callback: '&'
             },
@@ -27,16 +29,24 @@
                 scope.error = '';
                 scope.inputValue = '';
                 scope.placeholderText = 'Relation';
+                scope.tooltipText = 'Tooltip text';
 
-                if (scope.itemName) {
+                if (scope.itemName) { // itemName and inputText needed for resetting selected option name
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
                 }
+
+                // TIPS
+                // scope.smallOptions probable properties
+                    // tooltipText: custom tolltip text
+                    // notNull: turn on error mode if field is not filled
 
                 if (scope.smallOptions) {
                     if (scope.smallOptions.tooltipText) {
                         scope.tooltipText = scope.smallOptions.tooltipText;
                     }
                 }
+
+                var stylePreset;
 
                 var inputContainer = elem[0].querySelector('.smartSearchInputContainer');
                 var inputElem = elem[0].querySelector('.smartSearchInputElem');
@@ -87,6 +97,9 @@
                     if (scope.error) {
                         classes = 'custom-input-error';
 
+                    } else if (stylePreset) {
+                        classes = 'custom-input-preset' + stylePreset;
+
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
                     }
@@ -94,14 +107,25 @@
                     return classes;
                 };
 
+                scope.callFnForCustomBtn = function (actionData) {
+
+                    if (actionData.parameters) {
+                        actionData.callback(actionData.parameters);
+                    } else {
+                        actionData.callback();
+                    }
+
+                };
+
                 scope.selectOption = function (item) {
+
+                    scope.setedFromOutside = false;
 
                     //scope.item.value = item.id;
                     scope.item = item.id;
                     scope.valueIsValid = true;
 
                     if (item.short_name) {
-
                         scope.itemName = item.short_name;
                         scope.inputText = item.short_name;
 
@@ -110,7 +134,7 @@
                         scope.inputText = item.name;
                     }
 
-                    closeDropdownMenu(true);
+                    closeDropdownMenu();
 
                     setTimeout(function () {
 
@@ -209,12 +233,14 @@
                             locals: {
                                 data: {
                                     entityType: scope.entityType,
-                                    selectedItem: scope.item.value
+                                    selectedItem: scope.item
                                 }
                             }
                         }).then(function (res) {
 
                             if (res.status === 'agree') {
+
+                                scope.setedFromOutside = false;
 
                                 //scope.item.value = res.data.item.id;
                                 scope.item = res.data.item.id;
@@ -295,7 +321,9 @@
                         var elemClass = '.' + className;
                         var elemToApplyStyles = elem[0].querySelector(elemClass);
 
-                        elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles) {
+                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        }
 
                     });
 
@@ -319,7 +347,57 @@
                     inputElem.addEventListener('blur', function (event) {
 
                         inputContainer.classList.remove('custom-input-focused');
-                        scope.$apply();
+
+                        if (scope.itemName) {
+                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                            scope.$apply();
+                        }
+
+                    });
+                };
+
+                var initScopeWatchers = function () {
+
+                    if (scope.eventSignal) {
+
+                        scope.$watch('eventSignal', function () {
+
+                            if (scope.eventSignal && scope.eventSignal.key) {
+
+                                switch (scope.eventSignal.key) {
+                                    case 'mark_not_valid_fields':
+                                        if (scope.smallOptions && scope.smallOptions.notNull && !scope.item) {
+                                            scope.error = 'Field should not be null';
+                                        }
+
+                                        break;
+
+                                    case 'set_style_preset1':
+                                        stylePreset = 1;
+                                        break;
+
+                                    case 'set_style_preset2':
+                                        stylePreset = 2;
+                                        break;
+                                }
+
+                                scope.eventSignal = {}; // reset signal
+
+                            }
+
+                        });
+
+                    }
+
+                    scope.$watch('itemName', function () {
+
+                        if (scope.itemName) {
+                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+
+                        } else {
+                            scope.inputText = '';
+
+                        }
 
                     });
                 }
@@ -327,10 +405,6 @@
                 var init = function () {
 
                     initEventListeners();
-
-                    if (scope.item) {
-                        scope.valueIsValid = true;
-                    }
 
                     scope.iconData = entityIndicatorIcons[scope.entityType];
 
@@ -348,6 +422,8 @@
                     if (scope.customStyles) {
                         applyCustomStyles();
                     }
+
+                    initScopeWatchers();
 
                 }
 

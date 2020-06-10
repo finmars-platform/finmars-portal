@@ -565,13 +565,11 @@
                             if (actionItemKey === 'notes') {
 
                                 if (actionItem[actionItemKey]) {
-
                                     var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
 
                                     if (fieldWithInvalidExpr) {
                                         result.push(fieldWithInvalidExpr);
                                     }
-
                                 }
 
                             } else {

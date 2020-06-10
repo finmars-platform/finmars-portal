@@ -14,7 +14,8 @@
                 numberFormat: '<',
                 customButtons: '=',
                 customStyles: '<',
-                setedFromOutside: '=',
+                //setedFromOutside: '=',
+                eventSignal: '=',
                 smallOptions: '<',
                 onChangeCallback: '&?'
             },
@@ -24,6 +25,9 @@
                 scope.placeholderText = "0";
                 scope.error = '';
                 scope.tooltipText = 'Tooltip text';
+
+                var inputLoaded = false;  // prevents not null inputs highlight from start
+                var stylePreset;
 
                 // TIPS
                 // scope.smallOptions probable properties
@@ -38,7 +42,7 @@
                         scope.tooltipText = scope.smallOptions.tooltipText;
                     }
                 }
-                console.log("new inputs smallOptions", scope.smallOptions);
+
                 var inputContainer = elem[0].querySelector('.numberInputContainer');
                 var inputElem = elem[0].querySelector('.numberInputElem');
 
@@ -48,14 +52,8 @@
                     if (scope.error) {
                         classes = 'custom-input-error';
 
-                    } else if (scope.setedFromOutside) {
-
-                        if (scope.setedFromOutside === 'input') {
-                            classes = 'custom-input-preset1';
-
-                        } else if (scope.setedFromOutside === 'linked_inputs') {
-                            classes = 'custom-input-preset2';
-                        }
+                    } else if (stylePreset) {
+                        classes = 'custom-input-preset' + stylePreset;
 
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
@@ -66,17 +64,25 @@
 
                 scope.onValueChange = function () {
 
-                    if (scope.setedFromOutside) {
-                        scope.setedFromOutside = false;
-                    }
+                    scope.setedFromOutside = false;
 
                     scope.error = '';
+                    stylePreset = '';
                     scope.valueIsValid = false;
+
                     var changedValue = scope.numberToShow;
 
                     if (changedValue === '') {
 
                         scope.model = null;
+
+                        if (scope.smallOptions && scope.smallOptions.notNull) {
+                            scope.error = 'Field should not be null';
+                        }
+
+                        if (scope.smallOptions && scope.smallOptions.onlyPositive) {
+                            scope.error = 'Field should have positive number';
+                        }
 
                     } else if (!isNaN(changedValue) &&
                                changedValue !== null) {
@@ -97,7 +103,7 @@
 
                             if (scope.onlyPositive) {
 
-                                scope.error = 'field should have positive number';
+                                scope.error = 'Field should have positive number';
                                 scope.model = null;
 
                             } else {
@@ -197,7 +203,9 @@
                         var elemClass = '.' + className;
                         var elemToApplyStyles = elem[0].querySelector(elemClass);
 
-                        elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles) {
+                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        }
 
                     });
 
@@ -215,7 +223,7 @@
                     inputElem.addEventListener('focus', function () {
                         inputContainer.classList.add('custom-input-focused');
 
-                        if (!scope.error) {
+                        if (!scope.error && (scope.model || scope.model === 0)) {
                             scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
                             scope.$apply();
                         }
@@ -224,10 +232,15 @@
                     inputElem.addEventListener('blur', function () {
                         inputContainer.classList.remove('custom-input-focused');
 
-                        if (!scope.error) {
-                            applyNumberFormatToInput();
-                            scope.$apply();
-                        }
+                        setTimeout(function () { // without timeout changes will be discarded on fast blur
+
+                            if (!scope.error && (scope.model || scope.model === 0)) {
+                                applyNumberFormatToInput();
+                                scope.$apply();
+                            }
+
+                        }, 250);
+
                     });
                 };
 
@@ -270,15 +283,22 @@
                         applyCustomStyles();
                     }
 
+                    /*if (scope.smallOptions && scope.smallOptions.notNull &&
+                        !scope.numberToShow && scope.numberToShow !== 0) {
+
+                        scope.error = 'Field should not be null';
+
+                    }*/
+
                 };
 
                 scope.$watch('model', function () {
 
                     if (scope.model || scope.model === 0) {
 
-                        if (!isNaN(scope.model)) {
-                            scope.valueIsValid = true;
-                        } else {
+                        scope.error = '';
+
+                        if (isNaN(scope.model)) {
                             scope.error = 'Invalid character used';
                         }
 
@@ -288,11 +308,59 @@
                             applyNumberFormatToInput();
                         }
 
+                    } else if (!scope.numberToShow && scope.numberToShow !== 0 && inputLoaded) {
+
+                        if (scope.smallOptions && scope.smallOptions.notNull) {
+                            scope.error = 'Field should not be null';
+                        }
+
                     }
+
+                    inputLoaded = true;
 
                 })
 
                 init();
+
+                if (scope.eventSignal) { // this if prevents watcher below from running without need
+
+                    scope.$watch('eventSignal', function () {
+
+                        if (scope.eventSignal && scope.eventSignal.key) {
+
+                            switch (scope.eventSignal.key) {
+                                case 'mark_not_valid_fields':
+
+                                    if (scope.smallOptions && !scope.numberToShow && scope.numberToShow !== 0) {
+
+                                        if (scope.smallOptions.notNull) {
+                                            scope.error = 'Field should not be null';
+
+                                        } else if (scope.onlyPositive) {
+                                            scope.error = 'field should have positive number';
+
+                                        }
+
+                                    }
+
+                                    break;
+
+                                case 'set_style_preset1':
+                                    stylePreset = 1;
+                                    break;
+
+                                case 'set_style_preset2':
+                                    stylePreset = 2;
+                                    break;
+                            }
+
+                            scope.eventSignal = {};
+
+                        }
+
+                    });
+
+                }
 
             }
         }

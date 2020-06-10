@@ -41,7 +41,11 @@
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
-                                                item="vm.fixedFieldsAttributes[0]"></bind-field-control>
+                                                event-signal="vm.evEditorEvent"
+                                                ev-editor-event-service="vm.evEditorEventService"
+                                                item="vm.fixedFieldsAttributes[0]"
+                                                entity-change="vm.onFieldChange(fieldKey)"
+                                                on-field-blur="vm.onNameInputBlur()"></bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
@@ -50,7 +54,10 @@
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
-                                                item="vm.fixedFieldsAttributes[1]"></bind-field-control>
+                                                event-signal="vm.evEditorEvent"
+                                                ev-editor-event-service="vm.evEditorEventService"
+                                                item="vm.fixedFieldsAttributes[1]"
+                                                entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
@@ -59,7 +66,9 @@
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
-                                                item="vm.fixedFieldsAttributes[2]"></bind-field-control>
+                                                ev-editor-event-service="vm.evEditorEventService"
+                                                item="vm.fixedFieldsAttributes[2]"
+                                                entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                         </div>
                     </div>
 
@@ -71,7 +80,9 @@
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
-                                                item="vm.fixedFieldsAttributes[3]"></bind-field-control>
+                                                ev-editor-event-service="vm.evEditorEventService"
+                                                item="vm.fixedFieldsAttributes[3]"
+                                                entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
@@ -80,7 +91,9 @@
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
-                                                item="vm.fixedFieldsAttributes[4]"></bind-field-control>
+                                                ev-editor-event-service="vm.evEditorEventService"
+                                                item="vm.fixedFieldsAttributes[4]"
+                                                entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
@@ -120,6 +133,7 @@
                              flex="{{vm.bindFlex(vm.fixedArea, field)}}">
                             <bind-field-control entity-type="vm.entityType"
                                                 entity="vm.entity"
+                                                event-signal="vm.evEditorEvent"
                                                 item="vm.fixedAreaAttributesLayout[field.row][field.column]"></bind-field-control>
                         </div>
                     </div>
@@ -128,9 +142,13 @@
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
                     <md-tab data-ng-repeat="tab in vm.tabs track by tab.name">
+
                         <md-tab-label>
-                            <span>{{tab.name}}</span>
+                            <div class="tab-name-elem" data-tab-name="{{tab.name | lowercase}}">
+                                <span class="grey-tab">{{tab.name}}</span>
+                            </div>
                         </md-tab-label>
+
                         <md-tab-body>
                             <md-content class="md-padding p-t-26"
                                         ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
@@ -144,7 +162,9 @@
                                          flex="{{vm.bindFlex(tab, field)}}">
                                         <bind-field-control entity-type="vm.entityType"
                                                             entity="vm.entity"
-                                                            item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"></bind-field-control>
+                                                            ev-editor-event-service="vm.evEditorEventService"
+                                                            item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
+                                                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                                     </div>
                                 </div>
                             </md-content>
@@ -153,8 +173,11 @@
 
                     <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)">
                         <md-tab-lable>
-                            <span class="grey-tab">{{tab.label}}</span>
+                            <div class="tab-name-elem" data-tab-name="{{tab.label | lowercase}}">
+                                <span class="grey-tab">{{tab.label}}</span>
+                            </div>
                         </md-tab-lable>
+
                         <md-tab-body>
                             <md-content class="md-padding p-t-26"
                                         ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
@@ -372,12 +395,12 @@
                        data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.save()"
                        class="md-raised m-r-24">
-                Save
+                Save and Exit
             </md-button>
             <md-button class="md-raised m-r-24" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history'"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.save()">
-                Save
+                Save and Exit
             </md-button>
         </div>
 
