@@ -25,6 +25,10 @@
         return instrumentRepository.update(id, instrument);
     };
 
+    var patch = function (id, data) {
+        return instrumentRepository.patch(id, data);
+    };
+
     var deleteByKey = function (id) {
         return instrumentRepository.deleteByKey(id);
     };
@@ -43,6 +47,7 @@
         getByKey: getByKey,
         create: create,
         update: update,
+        patch: patch,
         deleteByKey: deleteByKey,
 
         updateBulk: updateBulk,

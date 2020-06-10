@@ -192,6 +192,83 @@
 
                 };
 
+                var initScopeWatchers = function () {
+
+                    scope.$watch('model', function () {
+
+                        //if (scope.model && scope.model.value) {
+                        if (scope.model) {
+
+                            if (scope.model !== scope.dateValue) {
+
+                                scope.error = '';
+                                scope.dateValue = JSON.parse(JSON.stringify(scope.model));
+
+                                if (!moment(scope.dateValue, 'YYYY-MM-DD', true).isValid()) {
+
+                                    scope.valueIsValid = false
+                                    scope.error = 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.';
+                                    scope.model = null;
+
+                                }
+
+                            }
+
+                        } else {
+
+                            if (scope.dateValue) {
+
+                                if (!scope.error) {
+                                    scope.dateValue = '';
+                                }
+
+                            } else if (scope.smallOptions && scope.smallOptions.notNull && inputLoaded) {
+                                scope.error = 'Field should not be null';
+                            }
+
+                        }
+
+                        inputLoaded = true;
+
+                    })
+
+                    if (scope.eventSignal) { // this if prevents watcher below from running without need
+
+                        scope.$watch('eventSignal', function () {
+
+                            if (scope.eventSignal && scope.eventSignal.key) {
+
+                                switch (scope.eventSignal.key) {
+                                    case 'mark_not_valid_fields':
+
+                                        if (scope.smallOptions && scope.smallOptions.notNull) {
+
+                                            if (!scope.model && !scope.dateValue) {
+                                                scope.error = 'Field should not be null';
+                                            }
+
+                                        }
+
+                                        break;
+
+                                    case 'set_style_preset1':
+                                        stylePreset = 1;
+                                        break;
+
+                                    case 'set_style_preset2':
+                                        stylePreset = 2;
+                                        break;
+                                }
+
+                                scope.eventSignal = {};
+
+                            }
+
+                        });
+
+                    }
+                }
+
                 var init = function () {
 
                     if (scope.dateValue) {
@@ -216,6 +293,8 @@
 
                     }
 
+                    initScopeWatchers();
+
                     initEventListeners();
 
                     if (scope.customStyles) {
@@ -224,81 +303,11 @@
 
                 };
 
-                scope.$watch('model', function () {
 
-                    //if (scope.model && scope.model.value) {
-                    if (scope.model) {
-
-                        if (scope.model !== scope.dateValue) {
-
-                            scope.error = '';
-                            scope.dateValue = JSON.parse(JSON.stringify(scope.model));
-
-                            if (!moment(scope.dateValue, 'YYYY-MM-DD', true).isValid()) {
-
-                                scope.valueIsValid = false
-                                scope.error = 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.';
-                                scope.model = null;
-
-                            }
-
-                        }
-
-                    } else {
-
-                        if (scope.dateValue) {
-
-                            if (!scope.error) {
-                                scope.dateValue = '';
-                            }
-
-                        } else if (scope.smallOptions && scope.smallOptions.notNull && inputLoaded) {
-                            scope.error = 'Field should not be null';
-                        }
-
-                    }
-
-                    inputLoaded = true;
-
-                })
 
                 init();
 
-                if (scope.eventSignal) { // this if prevents watcher below from running without need
 
-                    scope.$watch('eventSignal', function () {
-
-                        if (scope.eventSignal && scope.eventSignal.key) {
-
-                            switch (scope.eventSignal.key) {
-                                case 'mark_not_valid_fields':
-
-                                    if (scope.smallOptions && scope.smallOptions.notNull) {
-
-                                        if (!scope.model && !scope.dateValue) {
-                                            scope.error = 'Field should not be null';
-                                        }
-
-                                    }
-
-                                    break;
-
-                                case 'set_style_preset1':
-                                    stylePreset = 1;
-                                    break;
-
-                                case 'set_style_preset2':
-                                    stylePreset = 2;
-                                    break;
-                            }
-
-                            scope.eventSignal = {};
-
-                        }
-
-                    });
-
-                }
 
 
             }

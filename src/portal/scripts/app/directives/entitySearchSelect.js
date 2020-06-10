@@ -120,7 +120,7 @@
                 scope.selectOption = function (item) {
 
                     scope.setedFromOutside = false;
-
+                    scope.error = '';
                     //scope.item.value = item.id;
                     scope.item = item.id;
                     scope.valueIsValid = true;
@@ -248,6 +248,7 @@
                                 scope.itemName = res.data.item.short_name;
                                 scope.inputText = res.data.item.short_name;
 
+                                scope.error = '';
                                 scope.valueIsValid = true;
 
                                 setTimeout(function () {
@@ -374,10 +375,20 @@
 
                                     case 'set_style_preset1':
                                         stylePreset = 1;
+
+                                        if (scope.item) {
+                                            scope.error = '';
+                                        }
+
                                         break;
 
                                     case 'set_style_preset2':
                                         stylePreset = 2;
+
+                                        if (scope.item) {
+                                            scope.error = '';
+                                        }
+
                                         break;
                                 }
 
@@ -400,6 +411,7 @@
                         }
 
                     });
+
                 }
 
                 var init = function () {

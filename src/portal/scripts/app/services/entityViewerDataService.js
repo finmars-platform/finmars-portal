@@ -1066,13 +1066,18 @@
                 if (!entityViewerOptions) {
 
                     entityViewerOptions = {
-                        complex_transaction_filters: ['ignored', 'locked', 'partially_visible']
+                        complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
+                        entity_filters: ['disabled', 'deleted', 'inactive']
                     }
 
                 } else if (!entityViewerOptions.complex_transaction_filters) {
 
                     entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
 
+
+                } else if (!entityViewerOptions.entity_filters){
+
+                    entityViewerOptions.entity_filters = ['disabled', 'deleted', 'inactive'];
                 }
 
                 setEntityViewerOptions(entityViewerOptions);

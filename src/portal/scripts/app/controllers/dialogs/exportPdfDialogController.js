@@ -154,17 +154,30 @@
 
             uiService.getDefaultListLayout(vm.entityType).then(function (res) {
 
+                var contentSettings = vm.settings.data;
+
                 if (res.results.length) {
 
-                    vm.settings.data.layoutName = res.results[0].name;
+                    contentSettings.layoutName = res.results[0].name;
 
                 } else {
 
-                    vm.settings.data.layoutName = 'Default'
+                    contentSettings.layoutName = 'Default'
 
                 }
 
-                exportPdfService.generatePdf(vm.settings).then(function (blob) {
+                var data = {
+                    entityType: vm.entityType,
+                    settings: {
+                        zoom: parseInt(vm.zoomPercent, 10) / 100,
+                        layout: vm.settings.layout,
+                        margin: vm.settings.margin
+                    },
+                    contentSettings: contentSettings,
+                    content: evDataService.getFlatList()
+                };
+
+                exportPdfService.generatePdf(data).then(function (blob) {
 
                     downloadFileHelper.downloadFile(blob, "application/pdf", "report.pdf");
 

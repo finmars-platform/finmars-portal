@@ -26,30 +26,36 @@
                     <div layout="row"
                          class="entity-editor-row">
                         <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                              flex="50">
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
                                                 ev-editor-event-service="vm.evEditorEventService"
                                                 item="vm.fixedFieldsAttributes[0]"
+                                                entity-change="vm.entityChange()"
                                                 on-field-blur="vm.onNameInputBlur()"></bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                              flex="35">
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
                                                 ev-editor-event-service="vm.evEditorEventService"
+                                                entity-change="vm.entityChange()"
                                                 item="vm.fixedFieldsAttributes[1]"></bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                              flex="15">
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
                                                 ev-editor-event-service="vm.evEditorEventService"
+                                                entity-change="vm.entityChange()"
                                                 item="vm.fixedFieldsAttributes[2]"></bind-field-control>
                         </div>
                     </div>
@@ -57,20 +63,24 @@
                     <div layout="row"
                          class="entity-editor-row">
                         <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                              flex="50">
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
                                                 ev-editor-event-service="vm.evEditorEventService"
+                                                entity-change="vm.entityChange()"
                                                 item="vm.fixedFieldsAttributes[3]"></bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                              flex="35">
                             <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]"
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
                                                 ev-editor-event-service="vm.evEditorEventService"
+                                                entity-change="vm.entityChange()"
                                                 item="vm.fixedFieldsAttributes[4]"></bind-field-control>
                         </div>
 

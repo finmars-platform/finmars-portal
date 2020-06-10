@@ -69,6 +69,8 @@
 
                 vm.readyStatus.content = true;
 
+                $scope.$apply();
+
             })
 
         };

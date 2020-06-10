@@ -34,6 +34,7 @@
 
             var entityViewerOptions = {};
             entityViewerOptions.complex_transaction_filters = vm.complexTransactionFilters;
+            entityViewerOptions.entity_filters = vm.entityFilters;
 
             entityViewerDataService.setEntityViewerOptions(entityViewerOptions);
 
@@ -45,6 +46,7 @@
             var entityViewerOptions = entityViewerDataService.getEntityViewerOptions();
 
             vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters;
+            vm.entityFilters = entityViewerOptions.entity_filters;
 
             vm.itemsToLoad = pagePagination.page_size;
 

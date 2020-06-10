@@ -91,42 +91,6 @@
 
                 };
 
-                var initEventListeners = function () {
-                    elem[0].addEventListener('mouseover', function () {
-                        inputContainer.classList.add('custom-input-hovered');
-                    });
-
-                    elem[0].addEventListener('mouseleave', function () {
-                        inputContainer.classList.remove('custom-input-hovered');
-                    });
-
-                    inputElem.addEventListener('focus', function () {
-                        inputContainer.classList.add('custom-input-focused');
-                    });
-
-                    inputElem.addEventListener('blur', function () {
-                        inputContainer.classList.remove('custom-input-focused');
-
-                        if (scope.onBlurCallback) {
-
-                            setTimeout(function () { // without timeout changes will be discarded on fast blur
-                                scope.onBlurCallback();
-                            }, 250);
-
-                        }
-
-                    });
-                }
-
-                var init = function () {
-
-                    initEventListeners();
-
-                    if (scope.customStyles) {
-                        applyCustomStyles();
-                    }
-                };
-
                 scope.openTextInDialog = function ($event) {
 
                     $mdDialog.show({
@@ -158,42 +122,94 @@
 
                 };
 
-                init();
+                var initScopeWatchers = function () {
 
-                if (scope.eventSignal) { // this if prevents watcher below from running without need
+                    scope.$watch('model', function () {
 
-                    scope.$watch('eventSignal', function () {
-
-                        if (scope.eventSignal && scope.eventSignal.key) {
-
-                            switch (scope.eventSignal.key) {
-                                case 'mark_not_valid_fields':
-
-                                    if (scope.smallOptions && scope.smallOptions.notNull &&
-                                        !scope.model) {
-
-                                        scope.error = 'Field should not be null';
-
-                                    }
-
-                                    break;
-
-                                case 'set_style_preset1':
-                                    stylePreset = 1;
-                                    break;
-
-                                case 'set_style_preset2':
-                                    stylePreset = 2;
-                                    break;
-                            }
-
-                            scope.eventSignal = {};
-
+                        if (scope.error && scope.model) {
+                            scope.error = '';
                         }
 
                     });
 
+                    if (scope.eventSignal) { // this if prevents watcher below from running without need
+
+                        scope.$watch('eventSignal', function () {
+
+                            if (scope.eventSignal && scope.eventSignal.key) {
+
+                                switch (scope.eventSignal.key) {
+                                    case 'mark_not_valid_fields':
+
+                                        if (scope.smallOptions && scope.smallOptions.notNull &&
+                                            !scope.model) {
+
+                                            scope.error = 'Field should not be null';
+
+                                        }
+
+                                        break;
+
+                                    case 'set_style_preset1':
+                                        stylePreset = 1;
+                                        break;
+
+                                    case 'set_style_preset2':
+                                        stylePreset = 2;
+                                        break;
+                                }
+
+                                scope.eventSignal = {};
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+                var initEventListeners = function () {
+                    elem[0].addEventListener('mouseover', function () {
+                        inputContainer.classList.add('custom-input-hovered');
+                    });
+
+                    elem[0].addEventListener('mouseleave', function () {
+                        inputContainer.classList.remove('custom-input-hovered');
+                    });
+
+                    inputElem.addEventListener('focus', function () {
+                        inputContainer.classList.add('custom-input-focused');
+                    });
+
+                    inputElem.addEventListener('blur', function () {
+                        inputContainer.classList.remove('custom-input-focused');
+
+                        if (scope.onBlurCallback) {
+
+                            setTimeout(function () { // without timeout changes will be discarded on fast blur
+                                scope.onBlurCallback();
+                            }, 250);
+
+                        }
+
+                    });
                 }
+
+                var init = function () {
+
+                    initScopeWatchers();
+
+                    initEventListeners();
+
+                    if (scope.customStyles) {
+                        applyCustomStyles();
+                    }
+                };
+
+                init();
+
+
 
             }
         }

@@ -107,6 +107,12 @@
 
         };
 
+        vm.getServerTime = function() {
+
+            return new Date().toISOString().split('T')[1].split('.')[0]
+
+        };
+
         vm.init = function () {
             vm.getPricingProcedures();
         };
