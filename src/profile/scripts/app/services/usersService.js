@@ -209,6 +209,34 @@
         })
     };
 
+    var copyMasterUser = function(data) {
+
+        return window.fetch(baseUrl + 'users/master-user-copy/', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(function (data) {
+
+            if (data.status !== 200 && data.status !== 201) {
+                throw data
+            }
+
+            return data.json();
+
+        }).catch(function (reason) {
+
+            console.log('createMasterUser reject?', reason);
+
+            throw reason
+        })
+
+    };
+
     module.exports = {
 
         getByKey: getByKey,
@@ -227,7 +255,10 @@
         updateInviteFromMasterUserByKey: updateInviteFromMasterUserByKey,
 
         leaveMasterUser: leaveMasterUser,
-        deleteMasterUser: deleteMasterUser
+        deleteMasterUser: deleteMasterUser,
+
+
+        copyMasterUser: copyMasterUser
     }
 
 }());
