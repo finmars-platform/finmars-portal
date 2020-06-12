@@ -2,11 +2,14 @@
 
     <div data-ng-if="type === 'id'">
         <div data-ng-if="isSpecialSearchRelation()">
-            <entity-search-select item="entity[getModelKey()]"
+            <entity-search-select item="entity[fieldKey]"
                                   label="getName()"
                                   item-name="inputText"
                                   callback="changeHandler()"
+                                  custom-buttons="item.buttons"
                                   custom-styles="customStyles"
+                                  event-signal="ciEventObj.event"
+                                  small-options="{notNull: options.notNull}"
                                   entity-type="getModelKeyEntity()"></entity-search-select>
         </div>
 
@@ -17,7 +20,7 @@
                     <label data-ng-bind="getName()"></label>
 
                     <md-select md-on-close="searchTerm = ''"
-                               data-ng-model="entity[getModelKey()]"
+                               data-ng-model="entity[fieldKey]"
                                data-ng-change="changeHandler()"
                                md-on-open="getData()"
                                md-selected-text="bindFormFields()"
@@ -53,12 +56,12 @@
             </div>
 
             <div data-ng-if="!checkComplexEntityType()">
-                <div data-ng-if="getModelKey() !== 'price_download_scheme'">
+                <div data-ng-if="fieldKey !== 'price_download_scheme'">
                     <div data-ng-if="!checkForCrudSelects()">
                         <md-input-container class="md-block no-error-spacer">
                             <label data-ng-bind="getName()"></label>
                             <md-select md-on-close="searchTerm = ''"
-                                       data-ng-model="entity[getModelKey()]"
+                                       data-ng-model="entity[fieldKey]"
                                        data-ng-change="changeHandler()"
                                        md-on-open="getData()"
                                        md-selected-text="bindFormFields()"
@@ -84,18 +87,18 @@
 
                     <div data-ng-if="checkForCrudSelects()">
                         <crud-select data-label="getName()"
-                                     data-item="entity[getModelKey()]"
+                                     data-item="entity[fieldKey]"
                                      data-entity-type="crudEntityType"
                                      data-options="fields"
                                      data-ng-click="getData()"></crud-select>
                     </div>
                 </div>
 
-                <div data-ng-if="getModelKey() == 'price_download_scheme'">
+                <div data-ng-if="fieldKey == 'price_download_scheme'">
                     <md-input-container class="md-block no-error-spacer">
                         <label data-ng-bind="getName()"></label>
                         <md-select md-on-close="searchTerm = ''"
-                                   data-ng-model="entity[getModelKey()]"
+                                   data-ng-model="entity[fieldKey]"
                                    data-ng-change="changeHandler()"
                                    md-on-open="getData()"
                                    md-container-class="common-select-container"
@@ -128,7 +131,7 @@
                 <label data-ng-bind="getName()"></label>
                 <md-select md-on-close="searchTerm = ''"
                            md-on-open="getData()"
-                           data-ng-model="entity[getModelKey()]"
+                           data-ng-model="entity[fieldKey]"
                            data-ng-change="changeHandler()"
                            multiple="true"
                            md-selected-text="bindMCField()"
@@ -161,13 +164,13 @@
         </div>
 
         <div data-ng-if="!checkComplexEntityType()">
-            <div data-ng-if="getModelKey() !== 'content_types'">
+            <div data-ng-if="fieldKey !== 'content_types'">
                 <div data-ng-if="resolveMultiple()">
                     <md-input-container class="md-block no-error-spacer">
                         <label data-ng-bind="getName()"></label>
                         <md-select md-on-close="searchTerm = ''"
                                    md-on-open="getData()"
-                                   data-ng-model="entity[getModelKey()]"
+                                   data-ng-model="entity[fieldKey]"
                                    data-ng-change="changeHandler()"
                                    md-selected-text="bindMCField()"
                                    multiple="true"
@@ -193,7 +196,7 @@
                         <label data-ng-bind="getName()"></label>
                         <md-select md-on-close="searchTerm = ''"
                                    md-on-open="getData()"
-                                   data-ng-model="entity[getModelKey()]"
+                                   data-ng-model="entity[fieldKey]"
                                    data-ng-change="changeHandler()"
                                    md-selected-text="bindFormFields()"
                                    md-container-class="common-select-container"
@@ -218,12 +221,12 @@
 
             </div>
 
-            <div data-ng-if="getModelKey() === 'content_types'">
+            <div data-ng-if="fieldKey === 'content_types'">
                 <md-input-container class="md-block no-error-spacer">
                     <label data-ng-bind="getName()"></label>
                     <md-select md-on-close="searchTerm = ''"
                                md-on-open="getData()"
-                               data-ng-model="entity[getModelKey()]"
+                               data-ng-model="entity[fieldKey]"
                                data-ng-change="changeHandler()"
                                md-selected-text="bindMCField()"
                                multiple="true"

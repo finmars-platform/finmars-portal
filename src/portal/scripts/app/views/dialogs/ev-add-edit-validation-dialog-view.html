@@ -34,8 +34,8 @@
 
                             <tr data-ng-repeat="item in vm.errors track by $index">
                                 <td>
-                                    <span data-ng-if="!item.location">Field is not inside the form.</span>
-                                    <span data-ng-if="item.location" data-ng-bind="item.location"></span>
+                                    <span data-ng-if="!item.locationData">Field is not inside the form.</span>
+                                    <span data-ng-if="item.locationData" data-ng-bind="item.locationData.validatorText"></span>
                                 </td>
 
                                 <td>

@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
+
     var fieldResolverService = require('../services/fieldResolverService');
     var bindFieldsHelper = require('../helpers/bindFieldsHelper');
     var metaService = require('../services/metaService');
@@ -20,6 +22,7 @@
                 content_type: '=',
                 options: '=',
                 entityType: '=',
+                evEditorEventService: '=',
                 itemChange: '&'
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
@@ -28,6 +31,9 @@
                 scope.readyStatus = {content: false, tags: false};
                 scope.type = 'id';
                 scope.fields = [];
+                scope.ciEventObj = {
+                    event: {}
+                };
 
                 var fieldsDataIsLoaded = false;
                 // console.log('scope.item.name', scope.item);
@@ -40,9 +46,7 @@
                 // console.log('scope.type', scope.type);
 
                 scope.isSpecialSearchRelation = function () {
-
                     return ['instrument', 'portfolio', 'account', 'responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(scope.getModelKeyEntity()) !== -1;
-
                 };
 
                 scope.getModelKeyEntity = function () {
@@ -51,7 +55,7 @@
 
                     if (scope.entityType === 'complex-transaction') {
 
-                        modelKeyEntity = metaContentTypesService.findEntityByContentType(scope.item.content_type)
+                        modelKeyEntity = metaContentTypesService.findEntityByContentType(scope.item.content_type);
 
                         // console.log('modelKeyEntity', modelKeyEntity);
 
@@ -79,9 +83,11 @@
                     if (scope.$parent.entityType !== 'instrument-type') { // refactor this
                         return true
                     }
+
                     if (scope.item.key == 'tags') {
                         return true;
                     }
+
                     return false;
                 };
 
@@ -147,7 +153,6 @@
                 };
 
                 scope.getName = function () {
-
                     if (scope.item.hasOwnProperty('verbose_name')) {
                         return scope.item.verbose_name
                     }
@@ -155,6 +160,7 @@
                     if (scope.item.options && scope.item.options.fieldName) {
                         return scope.item.options.fieldName;
                     }
+
                     return scope.item.name
                 };
 
@@ -162,7 +168,7 @@
 
                     var result = '';
 
-                    var id = scope.entity[scope.getModelKey()];
+                    var id = scope.entity[scope.fieldKey];
                     if (id) {
                         var i;
                         var attr;
@@ -217,8 +223,8 @@
                 };
 
                 scope.bindMCField = function (model) {
-                    if (scope.entity[scope.getModelKey()] && scope.entity[scope.getModelKey()].length > 0) {
-                        return '[' + scope.entity[scope.getModelKey()].length + '] selected';
+                    if (scope.entity[scope.fieldKey] && scope.entity[scope.fieldKey].length > 0) {
+                        return '[' + scope.entity[scope.fieldKey].length + '] selected';
                     } else {
                         return scope.getName();
                     }
@@ -252,7 +258,8 @@
                     return result;
                 };
 
-                scope.getModelKey = scope.$parent.getModelKey;
+                //scope.getModelKey = scope.$parent.getModelKey;
+                scope.fieldKey = scope.$parent.fieldKey;
 
                 if (scope.item.value_entity) {
                     scope.crudEntityType = scope.item.value_entity;
@@ -262,7 +269,7 @@
 
                 scope.checkForCrudSelects = function () {
 
-                    if (['group', 'subgroup'].indexOf(scope.getModelKey()) !== -1) {
+                    if (['group', 'subgroup'].indexOf(scope.fieldKey) !== -1) {
                         return true;
                     }
 
@@ -315,7 +322,7 @@
 
                     fieldsDataIsLoaded = false;
 
-                    if (scope.fields.length === 1) { // only for smart search
+                    //if (scope.fields.length === 1) { // only for smart search
 
                         scope.fields = [];
 
@@ -337,22 +344,48 @@
 
                         }
 
-                    }
+                    //}
 
                     scope.inputText = scope.getInputTextForEntitySearch()
 
                 });
 
                 scope.changeHandler = function () {
-                    /*scope.entity[scope.getModelKey()] = scope.fieldValue.value;
-                    console.log("new inputs changeHandler called", JSON.parse(JSON.stringify(scope.entity[scope.getModelKey()])));*/
                     if (scope.itemChange) {
                         scope.itemChange()
                     }
                 };
 
+                /*scope.$watch('eventSignal', function () {
+                    if (scope.eventSignal) {
+                        scope.ciEventObj.event = scope.eventSignal;
+                    }
+                });*/
+                var initListeners = function () {
+                    scope.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
+                        scope.ciEventObj.event = {key: 'mark_not_valid_fields'};
+                    });
+
+                    scope.evEditorEventService.addEventListener(evEditorEvents.RECALCULATE_FIELDS, function () {
+
+                        if (scope.item && scope.item.frontOptions) {
+                            if (scope.item.frontOptions.recalculated === 'input') {
+                                scope.ciEventObj.event = {key: 'set_style_preset1'};
+
+                            } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
+                                scope.ciEventObj.event = {key: 'set_style_preset2'};
+
+                            }
+                        }
+
+                    });
+                };
 
                 scope.init = function () {
+
+                    if (scope.evEditorEventService) {
+                        initListeners();
+                    }
 
                     var item_object;
 
@@ -376,14 +409,27 @@
                         if (scope.item.backgroundColor) {
 
                             scope.customStyles = {
-                                'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';'
+                                'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';',
+                                'custom-input-custom-btns-holder': 'background-color: ' + scope.item.backgroundColor + ';'
+                            }
+
+                        }
+
+                        if (scope.item.frontOptions) {
+
+                            if (scope.item.frontOptions.recalculated === 'input') {
+                                scope.ciEventObj.event = {key: 'set_style_preset1'};
+
+                            } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
+                                scope.ciEventObj.event = {key: 'set_style_preset2'};
+
                             }
 
                         }
 
                     }
 
-                    scope.fieldValue = {value: scope.entity[scope.getModelKey()]};
+                    scope.fieldValue = {value: scope.entity[scope.fieldKey]};
                     scope.inputText = scope.getInputTextForEntitySearch()
 
                 };

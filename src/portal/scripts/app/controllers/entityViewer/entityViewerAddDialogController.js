@@ -12,9 +12,12 @@
 
     var layoutService = require('../../services/layoutService');
     var metaService = require('../../services/metaService');
+    var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents')
 
     var gridHelperService = require('../../services/gridHelperService');
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
+
+    var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
@@ -46,6 +49,7 @@
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
+        vm.evEditorEvent = null;
 
         if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
             vm.hasEnabledStatus = false;
@@ -80,6 +84,9 @@
         vm.currencies = []; // need for instrument pricing tab;
 
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+
+        var tabsWithErrors = {};
+        var errorFieldsList = [];
 
         var getEntityAttrs = function () {
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
@@ -636,6 +643,17 @@
             return vm.entityType.split('-').join(' ').capitalizeFirstLetter();
         };
 
+        vm.onNameInputBlur = function () {
+
+            if (vm.entity.name && !vm.entity.short_name) {
+                var entityName = vm.entity.name;
+                vm.entity.short_name = entityName;
+
+                $scope.$apply();
+            }
+
+        };
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
@@ -720,9 +738,7 @@
                 vm.getAttributeTypes().then(function (value) {
 
                     entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
-
                     //vm.generateAttributesFromLayoutFields();
-
                     vm.getEntityPricingSchemes();
 
                     mapAttributesAndFixFieldsLayout();
@@ -813,7 +829,6 @@
         vm.updateEntityBeforeSave = function () {
 
             console.log('updateEntityBeforeSave vm.entity', vm.entity);
-
 
             if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 
@@ -919,7 +934,6 @@
 
         vm.save = function ($event) {
 
-
             vm.updateEntityBeforeSave();
 
             var errors = entityEditorHelper.validateEntityFields(vm.entity,
@@ -931,6 +945,39 @@
                 []);
 
             if (errors.length) {
+
+                tabsWithErrors = {};
+
+                errors.forEach(function (errorObj) {
+
+                    if (errorObj.locationData &&
+                        errorObj.locationData.type === 'tab') {
+
+                        var tabName = errorObj.locationData.name.toLowerCase();
+
+                        var selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
+
+                        var tabNameElem = document.querySelector(selectorString);
+
+                        tabNameElem.classList.add('error-tab');
+
+                        if (!tabsWithErrors.hasOwnProperty(tabName)) {
+                            tabsWithErrors[tabName] = [errorObj.key];
+
+                        } else if (tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+                            tabsWithErrors[tabName].push(errorObj.key);
+
+                        }
+
+                        errorFieldsList.push(errorObj.key);
+
+
+                    }
+
+                });
+
+                vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
+                //vm.evEditorEvent = {key: 'mark_not_valid_fields'};
 
                 $mdDialog.show({
                     controller: 'EvAddEditValidationDialogController as vm',
@@ -1064,9 +1111,7 @@
 
         };
 
-        vm.entityChange = function () {
-
-            console.log("entityChange");
+        vm.entityChange = function (fieldKey) {
 
             if (vm.lastAccountType !== vm.entity.type) {
                 vm.lastAccountType = vm.entity.type;
@@ -1086,6 +1131,87 @@
                 vm.setInheritedPricing();
             }
 
+            if (fieldKey) {
+
+                var attributes = {
+                    entityAttrs: vm.entityAttrs,
+                    attrsTypes: vm.attributeTypes
+                }
+
+                entityEditorHelper.checkTabsForErrorFields(fieldKey, errorFieldsList, tabsWithErrors,
+                                                           attributes,
+                                                           vm.entity, vm.entityType, vm.tabs);
+
+                /*var fieldIndex = errorFieldsList.indexOf(fieldKey);
+
+                if (fieldIndex > -1) {
+
+                    var entityAttrs = [];
+                    var attrsTypes = [];
+
+                    var i;
+                    if (fieldType === 'entity-attribute') {
+                        for (i = 0; i < vm.entityAttrs.length; i++) {
+
+                            if (vm.entityAttrs[i].key === fieldKey) {
+
+                                entityAttrs.push(vm.entityAttrs[i]);
+                                break;
+
+                            }
+
+                        }
+
+                    } else if (fieldType === 'dynamic-attribute') {
+
+                        for (i = 0; i < vm.attributeTypes.length; i++) {
+                            if (vm.attributeTypes[i].user_code === fieldKey) {
+
+                                attrsTypes.push(vm.attributeTypes[i]);
+                                break;
+
+                            }
+                        }
+
+                    }
+
+                    var errors = entityEditorHelper.validateEntityFields(vm.entity,
+                        vm.entityType,
+                        vm.tabs,
+                        [], entityAttrs, attrsTypes, []);
+
+                    if (!errors.length) {
+                        errorFieldsList.splice(fieldIndex, 1);
+
+                        var tabKeys = Object.keys(tabsWithErrors);
+
+                        for (i = 0; i < tabKeys.length; i++) {
+                            var tKey = tabKeys[i];
+                            var tabFields = tabsWithErrors[tKey];
+
+                            var tabFieldIndex = tabFields.indexOf(fieldKey);
+                            if (tabFields.indexOf(fieldKey) > -1) {
+
+                                tabsWithErrors[tKey].splice(tabFieldIndex, 1);
+
+                                if (!tabsWithErrors[tKey].length) {
+
+                                    var selectorString = ".tab-name-elem[data-tab-name='" + tKey + "']";
+                                    var tabNameElem = document.querySelector(selectorString);
+
+                                    tabNameElem.classList.remove('error-tab');
+
+                                }
+
+                                break;
+
+                            }
+
+                        }
+                    }
+                }*/
+
+            }
 
         };
 
@@ -1277,10 +1403,11 @@
         };
 
         vm.init = function () {
-
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
             }, 100);
+
+            vm.evEditorEventService = new EntityViewerEditorEventService();
 
             getEntityAttrs();
             vm.getFormLayout();
