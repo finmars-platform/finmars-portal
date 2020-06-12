@@ -139,14 +139,32 @@
                 targetEvent: $event
             }).then(function (value) {
 
-                usersService.deleteMasterUser(item.id).then(function () {
-
                     vm.getMasterUsersList();
-
-                })
 
             })
 
+
+        };
+
+        vm.copyMasterUser = function($event, item) {
+
+            $mdDialog.show({
+                controller: 'CopyMasterUserDialogController as vm',
+                templateUrl: 'views/dialogs/copy-master-user-dialog-view.html',
+                parent: angular.element(document.body),
+                locals: {
+                    data: {
+                        referenceMasterUser: item
+                    }
+                },
+                targetEvent: $event
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.getMasterUsersList();
+                }
+
+            })
 
         };
 
