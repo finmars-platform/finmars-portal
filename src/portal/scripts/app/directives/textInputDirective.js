@@ -10,16 +10,24 @@
                 label: '@',
                 model: '=',
                 customStyles: '<',
+                eventSignal: '=',
                 smallOptions: '=',
-                onChangeCallback: '&?'
+                onChangeCallback: '&?',
+                onBlurCallback: '&?'
             },
             templateUrl: 'views/directives/text-input-view.html',
             link: function (scope, elem, attr) {
 
                 var inputContainer = elem[0].querySelector('.textInputContainer');
                 var inputElem = elem[0].querySelector('.textInputElem');
+                var stylePreset;
 
                 scope.tooltipText = 'Tooltip text';
+
+                // TIPS
+                // scope.smallOptions probable properties
+                    // tooltipText: custom tolltip text
+                    // notNull: turn on error mode if field is not filled
 
                 if (scope.smallOptions) {
                     if (scope.smallOptions.tooltipText) {
@@ -33,6 +41,9 @@
                     if (scope.error) {
                         classes = 'custom-input-error';
 
+                    } else if (stylePreset) {
+                        classes = 'custom-input-preset' + stylePreset;
+
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
                     }
@@ -42,10 +53,19 @@
 
                 scope.onInputChange = function () {
 
+                    scope.error = '';
+                    stylePreset = '';
+                    scope.valueIsValid = false;
+
                     if (scope.model) {
                         scope.valueIsValid = true;
+
                     } else {
-                        scope.valueIsValid = false;
+
+                        if (scope.smallOptions && scope.smallOptions.notNull) {
+                            scope.error = 'Field should not be null';
+                        }
+
                     }
 
                     if (scope.onChangeCallback) {
@@ -63,43 +83,12 @@
                         var elemClass = '.' + className;
                         var elemToApplyStyles = elem[0].querySelector(elemClass);
 
-                        elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles) {
+                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        }
 
                     });
 
-                };
-
-                var initEventListeners = function () {
-                    elem[0].addEventListener('mouseover', function () {
-                        inputContainer.classList.add('custom-input-hovered');
-                    });
-
-                    elem[0].addEventListener('mouseleave', function () {
-                        inputContainer.classList.remove('custom-input-hovered');
-                    });
-
-                    inputElem.addEventListener('focus', function () {
-                        inputContainer.classList.add('custom-input-focused');
-                    });
-
-                    inputElem.addEventListener('blur', function () {
-                        inputContainer.classList.remove('custom-input-focused');
-                    });
-                }
-
-                var init = function () {
-
-                    initEventListeners();
-
-                    if (scope.model) {
-                        scope.valueIsValid = true;
-                    } else {
-                        scope.valueIsValid = false;
-                    }
-
-                    if (scope.customStyles) {
-                        applyCustomStyles();
-                    }
                 };
 
                 scope.openTextInDialog = function ($event) {
@@ -133,7 +122,94 @@
 
                 };
 
+                var initScopeWatchers = function () {
+
+                    scope.$watch('model', function () {
+
+                        if (scope.error && scope.model) {
+                            scope.error = '';
+                        }
+
+                    });
+
+                    if (scope.eventSignal) { // this if prevents watcher below from running without need
+
+                        scope.$watch('eventSignal', function () {
+
+                            if (scope.eventSignal && scope.eventSignal.key) {
+
+                                switch (scope.eventSignal.key) {
+                                    case 'mark_not_valid_fields':
+
+                                        if (scope.smallOptions && scope.smallOptions.notNull &&
+                                            !scope.model) {
+
+                                            scope.error = 'Field should not be null';
+
+                                        }
+
+                                        break;
+
+                                    case 'set_style_preset1':
+                                        stylePreset = 1;
+                                        break;
+
+                                    case 'set_style_preset2':
+                                        stylePreset = 2;
+                                        break;
+                                }
+
+                                scope.eventSignal = {};
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+                var initEventListeners = function () {
+                    elem[0].addEventListener('mouseover', function () {
+                        inputContainer.classList.add('custom-input-hovered');
+                    });
+
+                    elem[0].addEventListener('mouseleave', function () {
+                        inputContainer.classList.remove('custom-input-hovered');
+                    });
+
+                    inputElem.addEventListener('focus', function () {
+                        inputContainer.classList.add('custom-input-focused');
+                    });
+
+                    inputElem.addEventListener('blur', function () {
+                        inputContainer.classList.remove('custom-input-focused');
+
+                        if (scope.onBlurCallback) {
+
+                            setTimeout(function () { // without timeout changes will be discarded on fast blur
+                                scope.onBlurCallback();
+                            }, 250);
+
+                        }
+
+                    });
+                }
+
+                var init = function () {
+
+                    initScopeWatchers();
+
+                    initEventListeners();
+
+                    if (scope.customStyles) {
+                        applyCustomStyles();
+                    }
+                };
+
                 init();
+
+
 
             }
         }

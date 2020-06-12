@@ -2,6 +2,7 @@
 
     var metaService = require('../services/metaService');
     var evHelperService = require('../services/entityViewerHelperService');
+    var transactionHelper = require('../helpers/transaction.helper');
 
     'use strict';
 
@@ -133,14 +134,14 @@
             attrKey &&
             fixedFieldsAttrs.indexOf(attrKey) > -1) {
 
-            return 'Top of dialog window.';
+            return {validatorText: 'Top of dialog window.'};
 
         } else {
 
             if (entityType === 'instrument' &&
                 attrKey === 'maturity_date') { // special case
 
-                return 'tab: EVENTS';
+                return {type: 'tab', name: 'Events', validatorText: 'tab: EVENTS'};
 
             } else {
 
@@ -158,13 +159,15 @@
                             if (socket.attribute.hasOwnProperty('key')) {
 
                                 if (socket.attribute.key === attrKey) {
-                                    return 'tab: ' + tab.name.toUpperCase();
+                                    var locationMessage = 'tab: ' + tab.name.toUpperCase();
+                                    return {type: 'tab', name: tab.name, validatorText: locationMessage};
                                 }
 
                             } else if (socket.attribute.hasOwnProperty('user_code')) {
 
                                 if (socket.attribute.user_code === attrKey) {
-                                    return 'tab: ' + tab.name.toUpperCase();
+                                    var locationMessage = 'tab: ' + tab.name.toUpperCase();
+                                    return {type: 'tab', name: tab.name, validatorText: locationMessage};
                                 }
 
                             }
@@ -277,7 +280,8 @@
             if (value !== 0 && !value) {
 
                 errorsList.push({
-                    location: getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType),
+                    key: key,
+                    locationData: getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType),
                     fieldName: attrData.options.fieldName || attrData.verbose_name || attrData.name,
                     message: 'Field should not be empty.'
                 })
@@ -430,7 +434,8 @@
             if (value === null || value === undefined) {
 
                 errorsList.push({
-                    location: getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType),
+                    key: key,
+                    locationData: getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType),
                     fieldName: attrData.options.fieldName || attrData.verbose_name || attrData.name,
                     message: 'Field should have positive number'
                 })
@@ -469,13 +474,14 @@
                 if (errorObj) {
 
                     if (entityAttrs[i].options && entityAttrs[i].options.fieldName) {
-
                         errorObj.fieldName = entityAttrs[i].options.fieldName;
 
                     } else if (entityAttrs[i].verbose_name) {
                         errorObj.fieldName = entityAttrs[i].verbose_name;
+
                     } else {
                         errorObj.fieldName = entityAttrs[i].name;
+
                     }
 
                     return errorObj;
@@ -497,8 +503,11 @@
 
             var dateFieldError = validateDateField(fieldValue, attr);
             if (dateFieldError) {
-                dateFieldError.location = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
+
+                dateFieldError.key = key;
+                dateFieldError.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
                 errorsList.push(dateFieldError);
+
             }
 
         } else {
@@ -527,7 +536,8 @@
 
                 if (reqFieldError) {
 
-                    reqFieldError.location = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
+                    reqFieldError.key = key;
+                    reqFieldError.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
                     errors.push(reqFieldError);
 
                 }
@@ -546,6 +556,11 @@
 
                 var key = dAttrData.attribute_type_object.user_code;
                 var fieldValue = evHelperService.getDynamicAttrValue(dAttrData);
+
+                if (!fieldValue && item[key]) {
+                    fieldValue = item[key];
+                }
+
                 var attrType;
 
                 for (var i = 0; i < attrsTypes.length; i++) {
@@ -572,9 +587,32 @@
 
         validateEvField(userInput.name, fieldValue, userInput, tabs, [], 'complex-transaction', errorsList);
 
-        if (!userInput.options || !userInput.options.notNull) { // fields of user inputs that are used inside of actions should be filled
+        if ((!userInput.options || !userInput.options.notNull)) { // fields of user inputs that are used inside of actions should be filled
 
-            var i, a;
+            if (userInput.frontOptions && userInput.frontOptions.usedInExpr) {
+
+                if ((typeof fieldValue === 'number' && isNaN(fieldValue)) ||
+                    fieldValue === undefined ||
+                    fieldValue === null ||
+                    fieldValue === '') {
+
+                    var errorObj = {
+                        key: userInput.name,
+                        locationData: getLocationOfAttribute(userInput.name, tabs, []),
+                        fieldName: userInput.verbose_name || userInput.name,
+                        message: 'Field should not be empty.'
+                    };
+
+                    if (userInput.options && userInput.options.fieldName) {
+                        errorObj.fieldName = userInput.options.fieldName;
+                    }
+
+                    errorsList.push(errorObj);
+
+                }
+
+            }
+            /*var i, a;
             for (i = 0; i < transactionsTypeActions.length; i++) {
 
                 var action = transactionsTypeActions[i];
@@ -613,7 +651,7 @@
                                             console.log('fieldValue', fieldValue);
 
                                             var errorObj = {
-                                                location: getLocationOfAttribute(userInput.name, tabs, []),
+                                                locationData: getLocationOfAttribute(userInput.name, tabs, []),
                                                 fieldName: userInput.verbose_name || userInput.name,
                                                 message: 'Field should not be empty.'
                                             };
@@ -638,7 +676,7 @@
 
                 }
 
-            }
+            }*/
 
         }
 
@@ -648,8 +686,6 @@
     var validateComplexTransactionFields = function (item, transactionsTypeActions, tabs, entityAttrs, attrsTypes, userInputs) {
 
         var errors = validateEntityFields(item, 'complex-transaction', tabs, [], entityAttrs, attrsTypes);
-
-        console.log('validateComplexTransactionFields.errors', errors);
 
         if (userInputs && userInputs.length) {
 
@@ -665,6 +701,126 @@
         }
 
         return errors;
+    };
+
+    var checkTabsForErrorFields = function (fieldKey, errorFieldsList, tabsWithErrors, attributes, entity, entityType, tabs) {
+
+        if (errorFieldsList.length) {
+            var fieldIndex = errorFieldsList.indexOf(fieldKey);
+
+            if (fieldIndex > -1) {
+
+                var eAttrsToCheck = [];
+                var attrTypesToCheck = [];
+                var uInputsToCheck = [];
+
+                var entityAttrs = attributes.entityAttrs;
+                var attrsTypes = attributes.attrsTypes;
+                var userInputs = attributes.userInputs;
+
+                var attrNotFound = true;
+                var i,a,b;
+
+                for (i = 0; i < entityAttrs.length; i++) {
+                    if (entityAttrs[i].key === fieldKey) {
+
+                        eAttrsToCheck.push(entityAttrs[i]);
+                        attrNotFound = false;
+                        break;
+
+                    }
+                }
+
+                if (attrNotFound && attrsTypes) {
+                    for (a = 0; a < attrsTypes.length; a++) {
+                        if (attrsTypes[a].user_code === fieldKey) {
+
+                            attrTypesToCheck.push(attrsTypes[a]);
+                            break;
+
+                        }
+                    }
+                }
+
+                if (attrNotFound && userInputs) {
+                    for (b = 0; b < userInputs.length; b++) {
+                        if (userInputs[b].user_code === fieldKey) {
+
+                            uInputsToCheck.push(attrsTypes[b]);
+                            break;
+
+                        }
+                    }
+                }
+
+                var errors = validateEntityFields(entity,
+                    entityType,
+                    tabs,
+                    [], eAttrsToCheck, attrTypesToCheck, uInputsToCheck);
+
+                if (!errors.length) {
+                    errorFieldsList.splice(fieldIndex, 1);
+
+                    var tabKeys = Object.keys(tabsWithErrors);
+
+                    var t;
+                    for (t = 0; t < tabKeys.length; t++) {
+
+                        var tKey = tabKeys[t];
+                        var tabFields = tabsWithErrors[tKey];
+
+                        var tabFieldIndex = tabFields.indexOf(fieldKey);
+                        if (tabFields.indexOf(fieldKey) > -1) {
+
+                            tabsWithErrors[tKey].splice(tabFieldIndex, 1);
+
+                            if (!tabsWithErrors[tKey].length) {
+
+                                delete tabsWithErrors[tKey];
+
+                                var selectorString = ".tab-name-elem[data-tab-name='" + tKey + "']";
+                                var tabNameElem = document.querySelector(selectorString);
+
+                                tabNameElem.classList.remove('error-tab');
+
+                            }
+
+                            break;
+
+                        }
+
+                    }
+                }
+
+            } else {
+
+                var fieldLocation = getLocationOfAttribute(fieldKey, tabs, [], entityType);
+
+                if (fieldLocation) {
+
+                    var tabName = fieldLocation.name.toLowerCase();
+                    var tabKeys = Object.keys(tabsWithErrors);
+
+                    var t;
+                    for (t = 0; t < tabKeys.length; t++) {
+                        var tKey = tabKeys[t];
+
+                        if (tabName === tKey) {
+
+                            errorFieldsList.push(fieldKey);
+                            tabsWithErrors[tKey].push(fieldKey);
+
+                            break;
+
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+
     };
 
     var createFieldsTree = function (tabs) {
@@ -1011,10 +1167,13 @@
         clearUnusedAttributeValues: clearUnusedAttributeValues,
         appendAttribute: appendAttribute,
         updateValue: updateValue,
+
         checkForNotNullRestriction: checkForNotNullRestriction,
         checkForNegNumsRestriction: checkForNegNumsRestriction,
         validateEntityFields: validateEntityFields,
         validateComplexTransactionFields: validateComplexTransactionFields,
+
+        checkTabsForErrorFields: checkTabsForErrorFields,
 
         generateAttributesFromLayoutFields: generateAttributesFromLayoutFields,
         fixCustomTabs: fixCustomTabs

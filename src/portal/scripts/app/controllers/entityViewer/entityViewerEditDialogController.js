@@ -12,9 +12,12 @@
 
     var layoutService = require('../../services/layoutService');
     var metaService = require('../../services/metaService');
+    var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents')
 
     var gridHelperService = require('../../services/gridHelperService');
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
+
+    var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
@@ -51,6 +54,7 @@
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
+        vm.evEditorEvent = null;
 
         if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
             vm.hasEnabledStatus = false;
@@ -87,6 +91,9 @@
 
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
+        var tabsWithErrors = {};
+        var errorFieldsList = [];
+
         vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
 
@@ -101,7 +108,7 @@
 
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
             vm.fixedFieldsAttributes = [];
-            console.log("front validator vm.entityAttrs", vm.entityAttrs);
+
             var i, a;
             for (i = 0; i < keysOfFixedFieldsAttrs.length; i++) {
 
@@ -951,13 +958,7 @@
 
         vm.save = function ($event) {
 
-
-
             vm.updateEntityBeforeSave();
-
-            /*vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
-
-            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, [], vm.layoutAttrs);*/
 
             var errors = entityEditorHelper.validateEntityFields(vm.entity,
                                                                  vm.entityType,
@@ -967,62 +968,38 @@
                                                                  vm.attributeTypes,
                                                                  []);
 
-            /*if (vm.entity.$_isValid) {
+            if (errors.length) {
 
-                if (hasProhibitNegNums.length === 0) {
+                tabsWithErrors = {};
 
-                    var result = entityEditorHelper.removeNullFields(vm.entity);
+                errors.forEach(function (errorObj) {
 
-                    if (dcLayoutHasBeenFixed) {
-                        uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+                    if (errorObj.locationData &&
+                        errorObj.locationData.type === 'tab') {
+
+                        var tabName = errorObj.locationData.name.toLowerCase();
+
+                        var selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
+
+                        var tabNameElem = document.querySelector(selectorString);
+                        tabNameElem.classList.add('error-tab');
+
+                        if (!tabsWithErrors.hasOwnProperty(tabName)) {
+                            tabsWithErrors[tabName] = [errorObj.key];
+
+                        } else if (tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+                            tabsWithErrors[tabName].push(errorObj.key);
+
+                        }
+
+                        errorFieldsList.push(errorObj.key);
+
                     }
 
-                    entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+                });
 
-                        if (data.status === 400) {
-                            vm.handleErrors(data);
-                        } else {
-                            $mdDialog.hide({res: 'agree', data: data});
-                        }
+                vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 
-                    }).catch(function (data) {
-                        vm.handleErrors(data);
-                    });
-
-                } else {
-
-                    var warningDescription = '<p>Next fields should have positive number value to proceed:';
-
-                    hasProhibitNegNums.forEach(function (field) {
-                        warningDescription = warningDescription + '<br>' + field;
-                    });
-
-                    warningDescription = warningDescription + '</p>';
-
-                    $mdDialog.show({
-                        controller: "WarningDialogController as vm",
-                        templateUrl: "views/warning-dialog-view.html",
-                        multiple: true,
-                        clickOutsideToClose: false,
-                        locals: {
-                            warning: {
-                                title: "Warning",
-                                description: warningDescription,
-                                actionsButtons: [
-                                    {
-                                        name: "CLOSE",
-                                        response: {status: 'disagree'}
-                                    }
-                                ]
-                            }
-                        }
-
-                    });
-
-                }
-
-            }*/
-            if (errors.length) {
 
                 $mdDialog.show({
                     controller: 'EvAddEditValidationDialogController as vm',
@@ -1854,10 +1831,36 @@
 
         };
 
+        vm.onFieldChange = function (fieldKey) {
+            if (fieldKey) {
+                var attributes = {
+                    entityAttrs: vm.entityAttrs,
+                    attrsTypes: vm.attributeTypes
+                }
+
+                entityEditorHelper.checkTabsForErrorFields(fieldKey, errorFieldsList, tabsWithErrors,
+                    attributes,
+                    vm.entity, vm.entityType, vm.tabs);
+            }
+        }
+
+        vm.onNameInputBlur = function () {
+
+            if (vm.entity.name && !vm.entity.short_name) {
+                var entityName = vm.entity.name;
+                vm.entity.short_name = entityName;
+
+                $scope.$apply();
+            }
+
+        };
+
         vm.init = function () {
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
             }, 100);
+
+            vm.evEditorEventService = new EntityViewerEditorEventService();
 
             getEntityAttrs();
             vm.getCurrencies();

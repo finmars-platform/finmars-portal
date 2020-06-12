@@ -19,6 +19,9 @@
         vm.entityType = 'instrument';
         vm.entityAttrs = $scope.$parent.vm.entityAttrs;
 
+        vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
+        vm.entityChange = $scope.$parent.vm.entityChange;
+
         var activeItemOriginal = null;
 
         vm.readyStatus = {notificationClasses: false, eventClasses: false, eventSchedulesReady: false};

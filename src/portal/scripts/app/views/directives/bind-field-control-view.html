@@ -34,23 +34,24 @@
 
         </md-input-container>-->
         <number-input label="{{getName()}}"
-                      model="entity[getModelKey()]"
+                      model="entity[fieldKey]"
                       number-format="item.options.number_format"
                       custom-buttons="item.buttons"
                       custom-styles="customStyles"
-                      seted-from-outside="item.frontOptions.recalculated"
+                      event-signal="ciEventObj.event"
                       small-options="{onlyPositive: item.options.onlyPositive,
-                                      tooltipText: item.options.tooltipValue}"
+                                      tooltipText: item.options.tooltipValue,
+                                      notNull: options.notNull}"
                       on-change-callback="itemChange()"></number-input>
 
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'String'">
-        <!--<div data-ng-if="getModelKey() === 'notes' ">
+        <!--<div data-ng-if="fieldKey === 'notes' ">
             <md-input-container class="md-block no-error-spacer textarea-bind-field">
                 <label data-ng-bind="getName()"></label>
                 <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}"
-                          data-ng-model="entity[getModelKey()]"
+                          data-ng-model="entity[fieldKey]"
                           data-ng-change="itemChange()"
                           cols="30"
                           rows="{{item.options.rowCount}}"
@@ -58,13 +59,13 @@
             </md-input-container>
         </div>
 
-        <div data-ng-if="getModelKey() !== 'notes' ">
+        <div data-ng-if="fieldKey !== 'notes' ">
             <md-input-container
                     class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}} {{checkValid() ? 'mdc-error' : ''}}
-                    {{entity[getModelKey()] != '' ? 'md-input-has-value' : ''}}">
+                    {{entity[fieldKey] != '' ? 'md-input-has-value' : ''}}">
                 <label data-ng-bind="getName()"></label>
                 <input type="text"
-                       data-ng-model="entity[getModelKey()]"
+                       data-ng-model="entity[fieldKey]"
                        data-ng-change="itemChange()"
                        style="{{styleForInputsWithButtons()}}">
 
@@ -92,22 +93,24 @@
         </div>-->
 
         <text-input label="{{getName()}}"
-                    model="entity[getModelKey()]"
+                    model="entity[fieldKey]"
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
-                    small-options="{tooltipText: item.options.tooltipValue}"
-                    on-change-callback="itemChange()"></text-input>
+                    event-signal="ciEventObj.event"
+                    small-options="{tooltipText: item.options.tooltipValue, notNull: options.notNull}"
+                    on-change-callback="itemChange()"
+                    on-blur-callback="inputBlur()"></text-input>
     </div>
 
     <!--<div data-ng-if="fieldType['display_name'] === 'Float'">
         <md-input-container class="md-block bfNumberInputContainer">
             <label data-ng-bind="getName()"></label>
-            &lt;!&ndash;<input data-ng-model="entity[getModelKey()]"
+            &lt;!&ndash;<input data-ng-model="entity[fieldKey]"
                    data-ng-change="itemChange()"
                    data-float-numbers
                    data-ng-if="!item.options.onlyPositive"
                    style="{{styleForInputsWithButtons()}}">
-            <input data-ng-model="entity[getModelKey()]"
+            <input data-ng-model="entity[fieldKey]"
                    data-ng-change="itemChange()"
                    data-float-numbers
                    data-only-positive="true"
@@ -150,11 +153,12 @@
             <ev-field-resolver data-item="item"
                                data-entity="entity"
                                data-options="options"
+                               ev-editor-event-service="evEditorEventService"
                                data-item-change="itemChange()"
                                data-entity-type="entityType"></ev-field-resolver>
         </div>
 
-        <div data-ng-if="item.buttons.length" class="bind-field-number-btn">
+        <!--<div data-ng-if="item.buttons.length" class="bind-field-number-btn">
             <md-button data-ng-repeat="button in item.buttons"
                        class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
                        data-ng-click="button.action(item)">
@@ -163,13 +167,14 @@
                 <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
                 </md-tooltip>
             </md-button>
-        </div>
+        </div>-->
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
         <div>
             <ev-field-resolver data-item="item"
                                data-entity="entity"
+                               ev-editor-event-service="evEditorEventService"
                                data-options="options"></ev-field-resolver>
         </div>
     </div>
@@ -178,7 +183,7 @@
 
         <!--<md-input-container class="field-date-pick-holder no-error-spacer md-block">
             <label data-ng-bind="getName()"></label>
-            <zh-date-picker data-date-value="entity[getModelKey()]"
+            <zh-date-picker data-date-value="entity[fieldKey]"
                             ng-class="{'disabled-btn': isDisabled}"
                             data-callback-method="onDateChange()"
                             style="{{inputBackgroundColor()}}"></zh-date-picker>
@@ -212,16 +217,17 @@
 
         </md-input-container>-->
         <date-input label="{{getName()}}"
-                    model="entity[getModelKey()]"
+                    model="entity[fieldKey]"
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
-                    small-options="{tooltipText: item.options.tooltipValue}"
+                    event-signal="ciEventObj.event"
+                    small-options="{tooltipText: item.options.tooltipValue, notNull: options.notNull}"
                     on-change-callback="onDateChange()"></date-input>
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
         <md-checkbox class="checkbox-bind-field"
-                     data-ng-model="entity[getModelKey()]"
+                     data-ng-model="entity[fieldKey]"
                      data-ng-change="itemChange()"
                      aria-label="checkbox">
             <label data-ng-bind="getName()"></label>
@@ -233,10 +239,10 @@
             <md-input-container class="md-block">
                 <label data-ng-bind="getName()"></label>
 
-                <md-select data-ng-model="entity[getModelKey()]"
+                <md-select data-ng-model="entity[fieldKey]"
                            data-classifier-modal-resolver
                            data-classifier-attr="item"
-                           data-classifier-value="entity[getModelKey()]"
+                           data-classifier-value="entity[fieldKey]"
                            data-ng-change="changeClassifier()"
                            md-container-class="h-classifier-select"
                            data-entity-type="entityType"
@@ -248,6 +254,7 @@
                 </md-select>
             </md-input-container>
         </div>
+
         <div data-ng-if="!readyStatus.classifier">
             <div layout="row" layout-sm="column" layout-align="space-around">
                 <progress-circular diameter="20"></progress-circular>
