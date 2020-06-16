@@ -1,12 +1,12 @@
 <div>
 
-    <div data-ng-repeat="row in grid">
+    <div data-ng-repeat="row in grid.rows">
 
         <div layout="row">
 
-            <div data-ng-repeat="column in row.columns">
+            <div data-ng-repeat="item in row.items">
 
-                <md-button ui-sref="{{column.link}}" class="md-raised md-primary">{{column.name}}</md-button>
+                <md-button data-ng-click="handleAction($event, item)" class="md-raised md-primary">{{item.name}}</md-button>
 
             </div>
 
