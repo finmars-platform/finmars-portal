@@ -176,6 +176,8 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
+
+                            stylePreset = '';
                             scope.model = res.numberValue;
 
                             scope.numberToShow = res.numberValue;

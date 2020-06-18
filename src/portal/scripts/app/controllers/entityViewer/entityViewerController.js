@@ -372,7 +372,8 @@
                                             //clickOutsideToClose: false,
                                             locals: {
                                                 entityType: entitytype,
-                                                entityId: activeObject.id
+                                                entityId: activeObject.id,
+                                                data: {}
                                             }
                                         }).then(function (res) {
 
@@ -427,7 +428,7 @@
 
                                                 }
 
-                                            } else if (res.status === 'disagree' && res.data.updateRowIcon) {
+                                            } else if (res && res.status === 'disagree' && res.data.updateRowIcon) {
 
                                                 var tIsLocked = res.data.updateRowIcon.is_locked;
                                                 var tIsCanceled = res.data.updateRowIcon.is_canceled;
@@ -543,7 +544,7 @@
                                             locals: {
                                                 entityType: entitytype,
                                                 entityId: activeObject.id,
-                                                contextData: {}
+                                                data: {}
                                             }
                                         }).then(function (res) {
 
@@ -614,7 +615,7 @@
                                     locals: {
                                         entityType: 'instrument',
                                         entityId: activeObject.instrument,
-                                        contextData: {}
+                                        data: {}
                                     }
                                 }).then(function (res) {
 
@@ -622,7 +623,6 @@
                                     vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                     if (res && res.res === 'agree') {
-
                                         vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                                     }

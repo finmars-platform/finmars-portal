@@ -102,6 +102,7 @@
 
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
+
                     }
 
                     return classes;
@@ -119,30 +120,33 @@
 
                 scope.selectOption = function (item) {
 
-                    scope.setedFromOutside = false;
-                    scope.error = '';
-                    //scope.item.value = item.id;
-                    scope.item = item.id;
-                    scope.valueIsValid = true;
+                    if (item.id !== scope.item) {
 
-                    if (item.short_name) {
-                        scope.itemName = item.short_name;
-                        scope.inputText = item.short_name;
+                        stylePreset = '';
+                        scope.error = '';
+                        //scope.item.value = item.id;
+                        scope.item = item.id;
+                        scope.valueIsValid = true;
 
-                    } else {
-                        scope.itemName = item.name;
-                        scope.inputText = item.name;
+                        if (item.short_name) {
+                            scope.itemName = item.short_name;
+                            scope.inputText = item.short_name;
+
+                        } else {
+                            scope.itemName = item.name;
+                            scope.inputText = item.name;
+                        }
+
+                        closeDropdownMenu();
+
+                        setTimeout(function () {
+
+                            scope.callback();
+                            scope.$apply();
+
+                        }, 0);
+
                     }
-
-                    closeDropdownMenu();
-
-                    setTimeout(function () {
-
-                        scope.callback();
-                        scope.$apply();
-
-                    }, 0);
-
 
                 };
 
@@ -240,8 +244,7 @@
 
                             if (res.status === 'agree') {
 
-                                scope.setedFromOutside = false;
-
+                                stylePreset = '';
                                 //scope.item.value = res.data.item.id;
                                 scope.item = res.data.item.id;
 

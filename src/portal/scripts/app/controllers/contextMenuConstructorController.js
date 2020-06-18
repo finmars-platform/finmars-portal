@@ -10,6 +10,8 @@
 
     var transactionTypeService = require('../services/transactionTypeService');
 
+    var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
     module.exports = function ($scope, $stateParams, $state, $mdDialog) {
 
         var vm = this;
@@ -322,7 +324,7 @@
 
                     vm.layout = data;
 
-                    $mdDialog.show({
+                    /*$mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
                         parent: angular.element(document.body),
@@ -334,7 +336,8 @@
                                 description: "Context Menu Layout is Saved"
                             }
                         }
-                    });
+                    });*/
+                    toastNotificationService.success('Context Menu Layout is Saved');
 
                     $scope.$apply();
 

@@ -15,6 +15,7 @@
     var attributeTypeService = require('../../services/attributeTypeService');
 
     var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
+    var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var portfolioService = require('../../services/portfolioService');
@@ -26,7 +27,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $state, entityType, entity) {
+    module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $state, entityType, entity, data) {
 
         var vm = this;
         vm.readyStatus = {content: false, entity: true, permissions: true, transactionTypes: false, layout: false};
@@ -57,6 +58,8 @@
 
         var tabsWithErrors = {};
         var errorFieldsList = [];
+        var notCopiedTransaction = true;
+        var inputsWithCalculations;
 
         vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
@@ -371,9 +374,13 @@
                     userInput.frontOptions.usedInExpr = true;
                 }
 
+                if (notCopiedTransaction && (vm.entity[userInput.name] || vm.entity[userInput.name] === 0)) {
+                    userInput.frontOptions.autocalculated = true;
+                }
+
             });
 
-            var inputsWithCalculations = transactionData.transaction_type_object.inputs;
+            inputsWithCalculations = transactionData.transaction_type_object.inputs;
 
             if (inputsWithCalculations) {
                 inputsWithCalculations.forEach(function (inputWithCalc) {
@@ -486,6 +493,7 @@
                     recalculationData: recalculationData
                 }
 
+
                 postBookComplexTransactionActions(data, recalculationInfo);
 
 
@@ -558,7 +566,6 @@
                         vm.userInputs.forEach(function (item) {
                             vm.oldValues[item.name] = vm.entity[item.name]
                         });*/
-
 
                     } else {
                         vm.missingLayoutError = true;
@@ -642,24 +649,6 @@
 
                 if (res.status === "agree") {
 
-                    // vm.readyStatus.content = false;
-
-                    /*vm.init();
-
-                    vm.layoutAttrs = layoutService.getLayoutAttrs();
-                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];*/
-
-                    /*vm.getFormLayout().then(function (value) {
-
-                        Object.keys(copy).forEach(function (key) {
-                            vm.entity[key] = copy[key];
-                        });
-
-                        delete vm.entity.id;
-
-                        $scope.$apply();
-                    });
-                    vm.init();*/
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
                     vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
                     vm.getAttributeTypes();
@@ -680,12 +669,6 @@
         };
 
         vm.manageAttrs = function (ev) {
-            /*var entityAddress = {entityType: vm.entityType};
-            if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
-                entityAddress = {entityType: vm.entityType, from: vm.entityType};
-            }
-            $state.go('app.attributesManager', entityAddress);
-            $mdDialog.hide();*/
 
             $mdDialog.show({
                 controller: 'AttributesManagerDialogController as vm',
@@ -715,16 +698,8 @@
         vm.range = gridHelperService.range;
 
         vm.bindFlex = function (tab, field) {
-            /*var totalColspans = 0;
-            var i;
-            for (i = 0; i < tab.layout.fields.length; i = i + 1) {
-                if (tab.layout.fields[i].row === row) {
-                    totalColspans = totalColspans + tab.layout.fields[i].colspan;
-                }
-            }*/
             var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
-
         };
 
         vm.checkFieldRender = function (tab, row, field) {
@@ -1223,6 +1198,7 @@
 
         vm.transactionTypeChange = function () {
 
+            notCopiedTransaction = true;
             vm.entity.transaction_type = vm.transactionTypeId;
 
             vm.dataConstructorData = {
@@ -1242,15 +1218,17 @@
             }, 100);
 
             vm.evEditorEventService = new EntityViewerEditorEventService();
+            vm.evEditorDataService = new EntityViewerEditorDataService();
 
             console.log('entity', entity);
+            console.log('data', data);
 
-            if (Object.keys(entity).length) { // if copy
+            if (Object.keys(data).length) {
 
                 if (entity.hasOwnProperty('contextData')) {
 
-                    vm.contextData = Object.assign({}, entity.contextData);
-                    delete entity.contextData;
+                    vm.contextData = Object.assign({}, data.contextData);
+                    //delete entity.contextData;
 
                     vm.transactionTypeId = entity.transaction_type;
 
@@ -1264,7 +1242,7 @@
                     })
 
 
-                } else if (entity.hasOwnProperty('transaction_type')) {
+                } /*else if (entity.hasOwnProperty('transaction_type')) {
 
                     vm.transactionTypeId = entity.transaction_type;
 
@@ -1277,15 +1255,13 @@
                         $scope.$apply();
                     })
 
-                } else {
+                }*/ else { // if copy
 
                     console.log("Apply from make copy", entity);
-
+                    notCopiedTransaction = false;
                     vm.entity = entity;
 
                     var copy = JSON.parse(JSON.stringify(entity));
-
-                    console.log('copy', copy);
 
                     vm.transactionTypeId = vm.entity.transaction_type;
 
@@ -1366,9 +1342,45 @@
         vm.onFieldChange = function (fieldKey) {
 
             if (fieldKey) {
+
+                if (inputsWithCalculations) {
+
+                    var i,a;
+                    for (i = 0; i < vm.userInputs.length; i++) {
+
+                        if (vm.userInputs[i].key === fieldKey) {
+
+                            var uInputName = vm.userInputs[i].name;
+
+                            for (a = 0; a < inputsWithCalculations.length; a++) {
+                                var inputWithCalc = inputsWithCalculations[a];
+
+                                if (inputWithCalc.name === uInputName &&
+                                    inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
+
+                                    var changedUserInputData = JSON.parse(JSON.stringify(vm.userInputs[i]));
+
+                                    changedUserInputData.frontOptions.linked_inputs_names = JSON.parse(JSON.stringify(inputWithCalc.settings.linked_inputs_names.split(',')));
+
+                                    vm.evEditorDataService.setChangedUserInputData(changedUserInputData);
+                                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELD_CHANGED);
+
+                                    break;
+
+                                }
+                            }
+
+                            break;
+
+                        }
+
+                    }
+                }
+
+
                 var attributes = {
                     entityAttrs: vm.entityAttrs,
-                    attrsTypes: vm.attributeTypes,
+                    attrsTypes: vm.attrs,
                     userInputs: vm.userInputs
                 }
 

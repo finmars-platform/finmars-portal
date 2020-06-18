@@ -88,7 +88,7 @@
                                     '$state': $state,
                                     'entityType': entityType,
                                     'entityId': scope.activeObject.id,
-                                    'contextData': {}
+                                    'data': {}
                                 });
 
                                 container.html(tpl);

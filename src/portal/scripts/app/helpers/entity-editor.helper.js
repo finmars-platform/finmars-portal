@@ -128,6 +128,31 @@
         return entityAttr;
     };
 
+    var findAttributeByKey = function (fieldKey, entityAttrs, attrsTypes, userInputs) {
+
+        var i,a,b;
+        for (i = 0; i < entityAttrs.length; i++) {
+            if (entityAttrs[i].key === fieldKey) {
+                return entityAttrs[i];
+            }
+        }
+
+        for (a = 0; a < attrsTypes.length; a++) {
+            if (attrsTypes[a].user_code === fieldKey) {
+                return attrsTypes[a];
+            }
+        }
+
+
+        for (b = 0; b < userInputs.length; b++) {
+            if (userInputs[b].key === fieldKey) {
+                return userInputs[b];
+            }
+        }
+
+        return null;
+    }
+
     var getLocationOfAttribute = function (attrKey, tabs, fixedFieldsAttrs, entityType) {
 
         if (fixedFieldsAttrs.length &&
@@ -156,7 +181,14 @@
 
                         if (socket.type === 'field') {
 
-                            if (socket.attribute.hasOwnProperty('key')) {
+                            if (socket.attribute_class === 'userInput') {
+
+                                if (socket.attribute.name === attrKey) {
+                                    var locationMessage = 'tab: ' + tab.name.toUpperCase();
+                                    return {type: 'tab', name: tab.name, validatorText: locationMessage};
+                                }
+
+                            } else if (socket.attribute.hasOwnProperty('key')) {
 
                                 if (socket.attribute.key === attrKey) {
                                     var locationMessage = 'tab: ' + tab.name.toUpperCase();
@@ -1167,6 +1199,8 @@
         clearUnusedAttributeValues: clearUnusedAttributeValues,
         appendAttribute: appendAttribute,
         updateValue: updateValue,
+
+        findAttributeByKey: findAttributeByKey,
 
         checkForNotNullRestriction: checkForNotNullRestriction,
         checkForNegNumsRestriction: checkForNegNumsRestriction,

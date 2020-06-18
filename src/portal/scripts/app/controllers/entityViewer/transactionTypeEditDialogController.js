@@ -1987,11 +1987,9 @@
 
 
             result = vm.entity.inputs.filter(function (input) {
-
                 if (input.content_type === content_type) {
                     return true;
                 }
-
 
                 return false;
             });

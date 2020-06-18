@@ -17,6 +17,7 @@
     var gridHelperService = require('../../services/gridHelperService');
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
+    var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
@@ -35,15 +36,17 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $state, entityType, entityId, contextData) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $state, entityType, entityId, data) {
 
         var vm = this;
 
         vm.processing = false;
 
-        console.log('contextData', contextData);
+        vm.contextData = {};
 
-        vm.contextData = contextData;
+        if (data.contextData) {
+            vm.contextData = data.contextData;
+        }
 
         vm.entityType = entityType;
         vm.entityId = entityId;
@@ -522,7 +525,8 @@
                 targetEvent: $event,
                 locals: {
                     entityType: vm.entityType,
-                    entity: entity
+                    entity: entity,
+                    data: {}
                 }
             }).then(function (res) {
 
@@ -836,12 +840,10 @@
                 result.is_enabled = vm.entity.is_enabled;
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
-
                     console.log('enable/disable toggle success');
                     getEntityStatus();
 
                     $scope.$apply();
-
                 });
             })
 
@@ -1029,20 +1031,21 @@
 
                     if (data.status === 400) {
                         vm.handleErrors(data);
+
                     } else {
 
                         var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
-
                         toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully saved');
 
                         $mdDialog.hide({res: 'agree', data: data});
+
                     }
 
                 }).catch(function(data) {
 
                     vm.processing = false;
-
                     vm.handleErrors(data);
+
                 });
 
             }
@@ -1121,9 +1124,6 @@
         };
 
         vm.recalculatePermissions = function ($event) {
-
-            console.log("Recalculate");
-
 
             vm.updateItem().then(function (value) {
 
@@ -1860,6 +1860,7 @@
                 vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
             }, 100);
 
+            vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
             getEntityAttrs();

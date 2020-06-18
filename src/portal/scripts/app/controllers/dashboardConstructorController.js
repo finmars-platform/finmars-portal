@@ -15,6 +15,8 @@
 
     var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents');
 
+    var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
     module.exports = function ($scope, $stateParams, $state, $mdDialog) {
 
         var vm = this;
@@ -1067,7 +1069,7 @@
 
                 uiService.updateDashboardLayout(layout.id, layout).then(function (data) {
 
-                    $mdDialog.show({
+                    /*$mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
                         parent: angular.element(document.body),
@@ -1079,7 +1081,8 @@
                                 description: "Dashboard Layout is Saved"
                             }
                         }
-                    });
+                    });*/
+                    toastNotificationService.success('Dashboard layout ' + layout.name + ' was successfully saved');
 
                 })
 
@@ -1098,7 +1101,7 @@
                         vm.dashboardConstructorDataService.setData(vm.layout);
                         vm.dashboardConstructorDataService.setComponents(vm.layout.data.components_types);
 
-                        $mdDialog.show({
+                        /*$mdDialog.show({
                             controller: 'InfoDialogController as vm',
                             templateUrl: 'views/info-dialog-view.html',
                             parent: angular.element(document.body),
@@ -1110,7 +1113,8 @@
                                     description: "Dashboard Layout is Saved"
                                 }
                             }
-                        });
+                        });*/
+                        toastNotificationService.success('Dashboard layout ' + layout.name + ' was successfully saved');
 
                         vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 

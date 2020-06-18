@@ -444,7 +444,8 @@
                 multiple: true,
                 locals: {
                     entityType: 'complex-transaction',
-                    entityId: item.id
+                    entityId: item.id,
+                    data: {}
                 }
             })
 

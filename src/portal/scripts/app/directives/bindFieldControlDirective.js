@@ -20,6 +20,7 @@
                 item: '=',
                 entity: '=',
                 entityType: '=',
+                evEditorDataService: '=',
                 evEditorEventService: '=',
                 entityChange: '&?',
                 onFieldBlur: '&?' // for now implemented only for textInputDirective
@@ -225,7 +226,9 @@
                 }
 
                 scope.findNodeItem = function () {
+
                     scope.readyStatus.classifier = false;
+
                     return new Promise(function (resolve) {
                         getNode().then(function (data) {
                             scope.readyStatus.classifier = true;
@@ -234,22 +237,23 @@
                             resolve(undefined)
                         });
                     })
+
                 };
 
                 scope.changeClassifier = function () {
 
                     if (classifierTree) {
-                        console.log('classifier id', scope.entity[scope.fieldKey]);
+
                         scope.classifierId = scope.entity[scope.fieldKey];
 
                         scope.findNodeItem().then(function () {
                             classifierTree.classifiers.forEach(findNodeInChildren);
                             scope.$apply();
-                        });
 
-                        if (scope.entityChange) {
-                            scope.entityChange({fieldKey: scope.fieldKey});
-                        }
+                            if (scope.entityChange) {
+                                scope.entityChange({fieldKey: scope.fieldKey});
+                            }
+                        });
 
                     }
 
@@ -475,23 +479,42 @@
 
                     scope.evEditorEventService.addEventListener(evEditorEvents.RECALCULATE_FIELDS, function () {
 
-                        if (scope.item && scope.item.frontOptions) {
-                            if (scope.item.frontOptions.recalculated === 'input') {
+                        if (scope.item && scope.item.frontOptions &&
+                            (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
+
+                            /*if (scope.item.frontOptions.recalculated === 'input') {
                                 scope.ciEventObj.event = {key: 'set_style_preset1'};
 
                             } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
                                 scope.ciEventObj.event = {key: 'set_style_preset2'};
 
+                            }*/
+                            if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
+                                scope.ciEventObj.event = {key: 'set_style_preset1'};
                             }
+
                         }
+                    });
+
+                    scope.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
+
+                        var changedUserInputData = scope.evEditorDataService.getChangedUserInputData();
+
+                        if (changedUserInputData && changedUserInputData.frontOptions &&
+                            changedUserInputData.frontOptions.linked_inputs_names) {
+
+                            if (changedUserInputData.frontOptions.linked_inputs_names.indexOf(scope.fieldKey) > -1) {
+                                scope.ciEventObj.event = {key: 'set_style_preset2'};
+                            }
+
+                        }
+
                     });
                 };
                 /*scope.$watch('eventSignal', function () {
-                    //console.log("new inputs bindField eventSignal", scope.eventSignal);
                     if (scope.eventSignal) {
                         scope.ciEventObj.event = scope.eventSignal;
                     }
-
                 });*/
 
                 scope.init = function () {
@@ -596,18 +619,6 @@
 
                         }
 
-
-
-                        /*if (scope.item.buttons) {
-                            scope.item.buttons.forEach(function (btnObj) {
-
-                                if (btnObj.action.key === 'input-recalculation') {
-                                    btnObj.action.parameters.inputs = [scope.item.name];
-                                }
-
-                            })
-                        }*/
-
                         if (scope.item.backgroundColor) {
 
                             scope.customStyles = {
@@ -619,12 +630,15 @@
 
                         if (scope.item.frontOptions) {
 
-                            if (scope.item.frontOptions.recalculated === 'input') {
+                            /*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
                                 scope.ciEventObj.event = {key: 'set_style_preset1'};
 
                             } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
                                 scope.ciEventObj.event = {key: 'set_style_preset2'};
 
+                            }*/
+                            if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
+                                scope.ciEventObj.event = {key: 'set_style_preset1'};
                             }
 
                         }

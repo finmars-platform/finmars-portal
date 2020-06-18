@@ -19,6 +19,7 @@
         vm.entityType = 'instrument';
         vm.entityAttrs = $scope.$parent.vm.entityAttrs;
 
+        vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
         vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
         vm.entityChange = $scope.$parent.vm.entityChange;
 

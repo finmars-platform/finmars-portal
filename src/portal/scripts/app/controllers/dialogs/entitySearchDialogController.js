@@ -53,6 +53,11 @@
                 'name': '',
                 'short_name': ''
             },
+            'currency': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
             'strategy-1': {
                 'user_code': '',
                 'name': '',
@@ -144,6 +149,20 @@
                 }
             ],
             'counterparty': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'currency': [
                 {
                     key: 'user_code',
                     name: 'User code'
@@ -296,7 +315,7 @@
                 locals: {
                     entityType: vm.entityType,
                     entityId: itemId,
-                    contextData: {}
+                    data: {}
                 }
             }).then(function (data) {
 
@@ -390,7 +409,6 @@
                         vm.items = vm.items.concat(data.results);
                     }
 
-
                     setTimeout(function () {
 
                         vm.processing = false;
@@ -398,7 +416,8 @@
                         $scope.$apply()
                         resolve({status: 'loaded'});
 
-                    }, 2000)
+                    }, 2000);
+
                 });
             })
         };

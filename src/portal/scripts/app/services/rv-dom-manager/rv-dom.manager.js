@@ -1061,15 +1061,52 @@
 
     };
 
+    var getAllTTypes = function () {
+
+        return new Promise(function (resolve, reject) {
+
+            var ttypes = [];
+            var options = {
+                pageSize: 1000,
+                page: 1
+            };
+
+            var getTTypePage = function () {
+
+                transactionTypeService.getListLight(options).then(function (data) {
+
+                    ttypes = ttypes.concat(data.results);
+
+                    if (data.next) {
+
+                        options.page += 1;
+                        getTTypePage();
+
+                    } else {
+
+                        resolve(ttypes);
+
+                    }
+
+                }).catch(function (error) {
+                    reject(error);
+                });
+            }
+
+            getTTypePage();
+
+        });
+
+    }
 
     var initContextMenuEventDelegation = function (elem, evDataService, evEventService) {
 
         var contextMenu = {};
         var ttypes = null;
 
-        transactionTypeService.getListLight({
-            pageSize: 1000
-        }).then(function (data) {
+
+
+        /*transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
 
             uiService.getContextMenuLayoutList().then(function (contextMenuData) {
 
@@ -1172,6 +1209,161 @@
                     clearDropdowns();
                 });
 
+                /!*window.addEventListener('click', function (event) {
+
+                    if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
+
+                        var objectId = event.target.dataset.objectId;
+                        var parentGroupHashId = event.target.dataset.parentGroupHashId;
+                        var dropdownAction = event.target.dataset.evDropdownAction;
+
+                        var dropdownActionData = {};
+
+                        console.log('event.target.dataset', event.target.dataset);
+
+                        if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
+                            dropdownActionData.id = event.target.dataset.evDropdownActionDataId
+                        }
+
+                        if (objectId && dropdownAction && parentGroupHashId) {
+
+                            var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                            if (!obj) {
+                                obj = {}
+                            }
+
+                            obj.event = event;
+
+                            console.log('dropdownActionData', dropdownActionData);
+
+                            evDataService.setActiveObject(obj);
+                            evDataService.setActiveObjectAction(dropdownAction);
+                            evDataService.setActiveObjectActionData(dropdownActionData);
+
+                            evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                            clearDropdowns();
+
+                        } else {
+
+                            if (!event.target.classList.contains('ev-dropdown-option')) {
+                                clearDropdowns();
+                            }
+
+                        }
+
+                    }
+
+
+                });*!/
+
+            });
+
+        });*/
+
+        getAllTTypes().then(function (data) {
+
+            uiService.getContextMenuLayoutList().then(function (contextMenuData) {
+
+                //var contextMenu = {};
+
+                if (contextMenuData.results.length) {
+
+                    var contextMenuLayout = contextMenuData.results[0];
+                    contextMenu = contextMenuLayout.data.menu
+
+                } else {
+                    contextMenu = {
+                        root: {
+                            items: [
+                                {
+                                    name: 'Edit Instrument',
+                                    action: 'edit_instrument'
+                                },
+                                {
+                                    name: 'Edit Account',
+                                    action: 'edit_account'
+                                },
+                                {
+                                    name: 'Edit Portfolio',
+                                    action: 'edit_portfolio'
+                                },
+                                {
+                                    name: 'Edit Price',
+                                    action: 'edit_price'
+                                },
+                                {
+                                    name: 'Edit FX Rate',
+                                    action: 'edit_fx_rate'
+                                },
+                                {
+                                    name: 'Edit Pricing FX Rate',
+                                    action: 'edit_pricing_currency'
+                                },
+                                {
+                                    name: 'Edit Accrued FX Rate',
+                                    action: 'edit_accrued_currency'
+                                },
+                                {
+                                    name: 'Edit Currency',
+                                    action: 'edit_currency'
+                                },
+                                {
+                                    name: 'Open Book Manager',
+                                    action: 'book_transaction'
+                                }
+                            ]
+                        }
+                    };
+                }
+
+                ttypes = data;
+
+                elem.addEventListener('contextmenu', function (ev) {
+
+                    var objectId;
+                    var parentGroupHashId;
+
+                    if (event.target.offsetParent.classList.contains('ev-viewport')) {
+
+                        objectId = event.target.dataset.objectId;
+                        parentGroupHashId = event.target.dataset.parentGroupHashId;
+
+                    } else {
+
+                        if (event.target.offsetParent.classList.contains('g-row')) {
+
+                            objectId = event.target.offsetParent.dataset.objectId;
+                            parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
+
+                        }
+
+                    }
+
+                    console.log('initContextMenuEventDelegation.event', event);
+
+                    console.log('initContextMenuEventDelegation.objectId', objectId);
+
+                    if (objectId) {
+
+                        ev.preventDefault();
+                        ev.stopPropagation();
+
+                        var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+
+                        createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+
+                        return false;
+
+                    }
+
+                }, false);
+
+                window.addEventListener('contextmenu', function () {
+                    clearDropdowns();
+                });
+
                 /*window.addEventListener('click', function (event) {
 
                     if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
@@ -1222,8 +1414,7 @@
                 });*/
 
             });
-
-        });
+        })
 
     };
 

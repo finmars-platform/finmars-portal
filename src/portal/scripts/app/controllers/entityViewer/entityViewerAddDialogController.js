@@ -17,6 +17,7 @@
     var gridHelperService = require('../../services/gridHelperService');
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
+    var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
@@ -1407,6 +1408,7 @@
                 vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
             }, 100);
 
+            vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
             getEntityAttrs();

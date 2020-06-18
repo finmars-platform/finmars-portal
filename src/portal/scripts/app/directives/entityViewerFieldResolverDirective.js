@@ -22,6 +22,7 @@
                 content_type: '=',
                 options: '=',
                 entityType: '=',
+                evEditorDataService: '=',
                 evEditorEventService: '=',
                 itemChange: '&'
             },
@@ -46,7 +47,10 @@
                 // console.log('scope.type', scope.type);
 
                 scope.isSpecialSearchRelation = function () {
-                    return ['instrument', 'portfolio', 'account', 'responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(scope.getModelKeyEntity()) !== -1;
+                    return [
+                        'instrument', 'portfolio', 'account', 'responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3',
+                        'currency'
+                    ].indexOf(scope.getModelKeyEntity()) !== -1;
                 };
 
                 scope.getModelKeyEntity = function () {
@@ -368,14 +372,35 @@
 
                     scope.evEditorEventService.addEventListener(evEditorEvents.RECALCULATE_FIELDS, function () {
 
-                        if (scope.item && scope.item.frontOptions) {
-                            if (scope.item.frontOptions.recalculated === 'input') {
+                        if (scope.item && scope.item.frontOptions &&
+                            (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
+
+                            /*if (scope.item.frontOptions.recalculated === 'input') {
                                 scope.ciEventObj.event = {key: 'set_style_preset1'};
 
                             } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
                                 scope.ciEventObj.event = {key: 'set_style_preset2'};
 
+                            }*/
+                            if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
+                                scope.ciEventObj.event = {key: 'set_style_preset1'};
                             }
+
+                        }
+
+                    });
+
+                    scope.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
+
+                        var changedUserInputData = scope.evEditorDataService.getChangedUserInputData();
+
+                        if (changedUserInputData && changedUserInputData.frontOptions &&
+                            changedUserInputData.frontOptions.linked_inputs_names) {
+
+                            if (changedUserInputData.frontOptions.linked_inputs_names.indexOf(scope.fieldKey) > -1) {
+                                scope.ciEventObj.event = {key: 'set_style_preset2'};
+                            }
+
                         }
 
                     });
@@ -417,12 +442,15 @@
 
                         if (scope.item.frontOptions) {
 
-                            if (scope.item.frontOptions.recalculated === 'input') {
+                            /*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
                                 scope.ciEventObj.event = {key: 'set_style_preset1'};
 
                             } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
                                 scope.ciEventObj.event = {key: 'set_style_preset2'};
 
+                            }*/
+                            if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
+                                scope.ciEventObj.event = {key: 'set_style_preset1'};
                             }
 
                         }
