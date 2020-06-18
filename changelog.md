@@ -1,5 +1,8 @@
 # Changelog
 
+## 12.06.2020
+- Copy Database
+
 ## 21.01.2020
 - Layout Sharing
 

@@ -50,31 +50,6 @@
 
         $('body').addClass('drag-dialog'); // hide backdrop
 
-        vm.getUserFields = function () {
-
-            return new Promise(function (resolve) {
-
-                if (vm.entityType === 'complex-transaction') {
-                    uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
-                        resolve(data);
-                    })
-                } else {
-
-                    if (vm.entityType === 'instrument') {
-                        uiService.getInstrumentFieldList().then(function (data) {
-                            resolve(data);
-                        })
-
-                    } else {
-                        resolve({results: []})
-                    }
-
-                }
-
-            })
-
-        };
-
         vm.getAttributes = function () {
 
             var viewContext = vm.entityViewerDataService.getViewContext();
@@ -102,6 +77,7 @@
                 vm.entityAttrs = vm.attributeDataService.getEntityAttributesByEntityType(vm.entityType);
 
                 var transactionUserFields = vm.attributeDataService.getTransactionUserFields();
+                var instrumentUserFields = vm.attributeDataService.getInstrumentUserFields();
 
                 vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
 
@@ -110,24 +86,46 @@
                     }
                     item.entity = vm.entityType;
 
-                    for (var i = 0; i < transactionUserFields.length; i++) {
-                        var transField = transactionUserFields[i];
 
-                        if (item.key === transField.key) {
-                            item.name = transField.name;
-                            break;
+
+                    if (vm.entityType === 'instrument') {
+
+                        for (var i = 0; i < instrumentUserFields.length; i++) {
+                            var instrumentField = instrumentUserFields[i];
+
+                            if (item.key === instrumentField.key) {
+                                item.name = instrumentField.name;
+                                break;
+                            }
                         }
-                    }
 
-                    if (item.key.indexOf("user_text_") !== -1) {
-                        vm.userTextFields.push(item);
-                        return false;
-                    } else if (item.key.indexOf("user_number_") !== -1) {
-                        vm.userNumberFields.push(item);
-                        return false;
-                    } else if (item.key.indexOf("user_date_") !== -1) {
-                        vm.userDateFields.push(item);
-                        return false;
+                        if (item.key.indexOf("user_text_") !== -1) {
+                            vm.userTextFields.push(item);
+                            return false;
+                        }
+
+                    } else {
+
+                        for (var i = 0; i < transactionUserFields.length; i++) {
+                            var transField = transactionUserFields[i];
+
+                            if (item.key === transField.key) {
+                                item.name = transField.name;
+                                break;
+                            }
+                        }
+
+                        if (item.key.indexOf("user_text_") !== -1) {
+                            vm.userTextFields.push(item);
+                            return false;
+                        } else if (item.key.indexOf("user_number_") !== -1) {
+                            vm.userNumberFields.push(item);
+                            return false;
+                        } else if (item.key.indexOf("user_date_") !== -1) {
+                            vm.userDateFields.push(item);
+                            return false;
+                        }
+
                     }
 
                     return true;

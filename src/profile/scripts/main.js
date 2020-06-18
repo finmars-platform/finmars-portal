@@ -18,6 +18,7 @@
     app.controller('ProfileSettingsController', ['$scope', require('./app/controllers/profileSettingsController')]);
     app.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', require('./app/controllers/profileDatabasesController')]);
     app.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createMasterUserDialogController')]);
+    app.controller('CopyMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/copyMasterUserDialogController')]);
 
     app.controller('SecuritySettingsController', ['$scope', '$mdDialog', require('./app/controllers/securitySettingsController')]);
     app.controller('TwoFactorSetupDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoFactorSetupDialogController')]);

@@ -29,59 +29,111 @@
                     <input type="text" data-ng-model="vm.item.settings.columns">
                 </md-input-container>
 
-
-            </div>
-
-            <div data-ng-repeat="button in vm.item.settings.buttons track by $index">
-
-                <md-input-container style="width: 200px;">
-                    <label for="">Name</label>
-                    <input type="text" data-ng-model="button.name">
-                </md-input-container>
-
-                <md-input-container style="width: 200px;">
-                    <label for="">Link To</label>
-                    <md-select data-ng-model="button.link">
-                        <md-option
-                                data-ng-repeat="item in vm.links | orderBy:'-name' track by $index "
-                                ng-value="item.link">{{item.name}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>
-
-                <md-button ng-click="vm.deleteButton($event, button, $index)" class="md-raised md-warn">
-                    Delete
+                <md-button class="md-raised" data-ng-click="vm.applyGrid()"
+                           data-ng-class="{'disabled-btn': !vm.item.settings.rows && !vm.item.settings.columns}">Apply
                 </md-button>
 
+
             </div>
 
-            <div>
-                <h5>Add new Button</h5>
+            <div class="constructor-button-set-grid">
 
-                <div>
+                <div data-ng-repeat="row in vm.item.settings.grid.rows" class="overflow-hidden">
 
-                    <md-input-container style="width: 200px;">
-                        <label for="">Name</label>
-                        <input type="text" data-ng-model="vm.newButton.name">
-                    </md-input-container>
+                    <div data-ng-repeat="item in row.items" class="constructor-button-set-grid-elem">
 
-                    <md-input-container style="width: 200px;">
-                        <label for="">Link To</label>
-                        <md-select data-ng-model="vm.newButton.link">
-                            <md-option
-                                    data-ng-repeat="item in vm.links | orderBy:'-name' track by $index "
-                                    ng-value="item.link">{{item.name}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
+                        <div>
 
+                            <md-input-container style="width: 200px;">
+                                <label for="">Name</label>
+                                <input type="text" data-ng-model="item.name">
+                            </md-input-container>
 
-                    <md-button ng-click="vm.addNewButton()" class="md-raised md-primary">
-                        Add
-                    </md-button>
+                        </div>
+
+                        <div class="m-t-16">
+                            <md-input-container style="width: 200px;">
+                                <label for="">Action</label>
+                                <md-select data-ng-model="item.action" data-ng-change="item.target = null">
+                                    <md-option
+                                            data-ng-repeat="action in vm.actions | orderBy:'-name' track by $index "
+                                            ng-value="action.value">{{action.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+
+                        </div>
+
+                        <div class="m-t-16">
+
+                            <md-input-container style="width: 200px;">
+                                <label for="">Target</label>
+                                <md-select data-ng-model="item.target" data-ng-class="{'disabled-btn': !item.action}">
+                                    <md-option
+                                            data-ng-repeat="target in vm.targets[item.action] | orderBy:'-name' track by $index "
+                                            ng-value="target.value">{{target.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+
+                        </div>
+
+                    </div>
 
                 </div>
+
             </div>
+
+            <!--<div data-ng-repeat="button in vm.item.settings.buttons track by $index">-->
+
+            <!--<md-input-container style="width: 200px;">-->
+            <!--<label for="">Name</label>-->
+            <!--<input type="text" data-ng-model="button.name">-->
+            <!--</md-input-container>-->
+
+            <!--<md-input-container style="width: 200px;">-->
+            <!--<label for="">Link To</label>-->
+            <!--<md-select data-ng-model="button.link">-->
+            <!--<md-option-->
+            <!--data-ng-repeat="item in vm.links | orderBy:'-name' track by $index "-->
+            <!--ng-value="item.link">{{item.name}}-->
+            <!--</md-option>-->
+            <!--</md-select>-->
+            <!--</md-input-container>-->
+
+            <!--<md-button ng-click="vm.deleteButton($event, button, $index)" class="md-raised md-warn">-->
+            <!--Delete-->
+            <!--</md-button>-->
+
+            <!--</div>-->
+
+            <!--<div>-->
+            <!--<h5>Add new Button</h5>-->
+
+            <!--<div>-->
+
+            <!--<md-input-container style="width: 200px;">-->
+            <!--<label for="">Name</label>-->
+            <!--<input type="text" data-ng-model="vm.newButton.name">-->
+            <!--</md-input-container>-->
+
+            <!--<md-input-container style="width: 200px;">-->
+            <!--<label for="">Link To</label>-->
+            <!--<md-select data-ng-model="vm.newButton.link">-->
+            <!--<md-option-->
+            <!--data-ng-repeat="item in vm.links | orderBy:'-name' track by $index "-->
+            <!--ng-value="item.link">{{item.name}}-->
+            <!--</md-option>-->
+            <!--</md-select>-->
+            <!--</md-input-container>-->
+
+
+            <!--<md-button ng-click="vm.addNewButton()" class="md-raised md-primary">-->
+            <!--Add-->
+            <!--</md-button>-->
+
+            <!--</div>-->
+            <!--</div>-->
 
         </div>
     </md-dialog-content>
