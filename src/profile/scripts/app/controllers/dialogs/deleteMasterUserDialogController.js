@@ -5,9 +5,16 @@
 
     'use strict';
 
+    var usersService = require('../../services/usersService');
+
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
+
+        vm.processing = false;
 
         vm.masterUser = data.masterUser;
 
@@ -36,7 +43,24 @@
 
                 if (res.status === 'agree') {
 
-                    $mdDialog.hide({status: 'agree'});
+                    vm.processing = true;
+
+                    usersService.deleteMasterUser(vm.masterUser.id).then(function () {
+
+                        vm.processing = false;
+
+                        $scope.$apply();
+
+                        toastNotificationService.success("Ecosystem " + vm.masterUser.name + ' was deleted');
+
+                        $mdDialog.hide({status: 'agree'});
+
+                    }).catch(function (error) {
+
+                        vm.processing = false;
+                        $scope.$apply();
+
+                    })
                 }
 
             })
