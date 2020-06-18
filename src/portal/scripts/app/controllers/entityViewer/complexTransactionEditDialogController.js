@@ -16,6 +16,7 @@
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
+    var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
@@ -70,6 +71,7 @@
 
         var tabsWithErrors = {};
         var errorFieldsList = [];
+        var inputsWithCalculations;
 
         /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
@@ -472,7 +474,8 @@
                 targetEvent: $event,
                 locals: {
                     entityType: vm.entityType,
-                    entity: entity
+                    entity: entity,
+                    data: {}
                 }
             });
 
@@ -552,7 +555,7 @@
 
             });
 
-            var inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
+            inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
 
             if (inputsWithCalculations) {
                 inputsWithCalculations.forEach(function (inputWithCalc) {
@@ -744,7 +747,7 @@
                 locals: {
                     entityType: 'transaction',
                     entityId: item.id,
-                    contextData: {}
+                    data: {}
                 }
             })
         };
@@ -1473,6 +1476,7 @@
                 vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
             }, 100);
 
+            vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
             vm.getItem();
@@ -1534,6 +1538,42 @@
         vm.onFieldChange = function (fieldKey) {
 
             if (fieldKey) {
+
+                if (inputsWithCalculations) {
+
+                    var i,a;
+                    for (i = 0; i < vm.userInputs.length; i++) {
+
+                        if (vm.userInputs[i].key === fieldKey) {
+
+                            var uInputName = vm.userInputs[i].name;
+
+                            for (a = 0; a < inputsWithCalculations.length; a++) {
+                                var inputWithCalc = inputsWithCalculations[a];
+
+                                if (inputWithCalc.name === uInputName &&
+                                    inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
+
+                                    var changedUserInputData = JSON.parse(JSON.stringify(vm.userInputs[i]));
+
+                                    changedUserInputData.frontOptions.linked_inputs_names = JSON.parse(JSON.stringify(inputWithCalc.settings.linked_inputs_names.split(',')));
+
+                                    vm.evEditorDataService.setChangedUserInputData(changedUserInputData);
+                                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELD_CHANGED);
+
+                                    break;
+
+                                }
+                            }
+
+                            break;
+
+                        }
+
+                    }
+                }
+
+
                 var attributes = {
                     entityAttrs: vm.entityAttrs,
                     attrsTypes: vm.attrs,

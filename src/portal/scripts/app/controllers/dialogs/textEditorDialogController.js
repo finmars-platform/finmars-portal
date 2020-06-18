@@ -23,6 +23,7 @@
 
         setTimeout(function () {
             vm.dialogElemToResize = document.querySelector('.textEditorDialogElemToResize');
+            $scope.$apply();
         }, 100);
 
     }

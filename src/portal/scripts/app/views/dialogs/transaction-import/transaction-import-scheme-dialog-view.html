@@ -30,7 +30,7 @@
                                     <input type="text" data-ng-model="vm.scheme.rule_expr">
                                 </md-input-container>
                                 <expression-editor-button data-item="vm.scheme.rule_expr"
-                                                          data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+                                                          data-data="vm.exprEditorBtnData"></expression-editor-button>
 
                                 <md-button class="md-raised md-primary" data-ng-click="vm.openSelectorManager($event)"
                                            style="min-height: 30px; height: 30px; line-height: 1;">
@@ -71,6 +71,7 @@
                                                     <!--<label for="">Name</label>-->
                                                     <input type="text"
                                                            data-ng-model="item.name"
+                                                           ng-blur="vm.setProviderFieldExpression(item)"
                                                            aria-label="provider field name">
                                                 </md-input-container>
                                             </div>
@@ -84,6 +85,7 @@
                                             <div>
                                                 <md-button class="md-raised"
                                                            ng-click="vm.openCalculatedFieldExpressionBuilder(item, $event)"
+                                                           ng-class="vm.checkForUserExpr(item)"
                                                            style="min-width: 40px;">f(x)
                                                 </md-button>
                                             </div>
@@ -333,7 +335,7 @@
                                                                 </div>
 
                                                                 <expression-editor-button data-item="item.line_reference_id"
-                                                                                          data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+                                                                                          data-data="vm.exprEditorBtnData"></expression-editor-button>
                                                             </div>
 
                                                         </div>
@@ -349,7 +351,7 @@
                                                                 </div>
 
                                                                 <expression-editor-button data-item="item.reference_date"
-                                                                                          data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+                                                                                          data-data="vm.exprEditorBtnData"></expression-editor-button>
                                                             </div>
 
                                                         </div>

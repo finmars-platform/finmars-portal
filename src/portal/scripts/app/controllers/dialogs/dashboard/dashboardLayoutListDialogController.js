@@ -225,8 +225,6 @@
 
                 vm.importConfig = {data: sharedFile.data, mode: 'overwrite'};
 
-                console.log("New configuration file", data);
-
                 new Promise(function (resolve, reject) {
 
                     vm.importConfiguration(resolve)
@@ -276,8 +274,6 @@
                 var sharedFile = data;
 
                 vm.importConfig = {data: sharedFile.shared_configuration_file_object.data, mode: 'overwrite'};
-
-                console.log("New configuration file", data);
 
                 new Promise(function (resolve, reject) {
 

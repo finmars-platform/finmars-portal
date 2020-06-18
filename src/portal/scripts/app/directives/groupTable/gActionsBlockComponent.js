@@ -357,7 +357,8 @@
                                 targetEvent: ev,
                                 locals: {
                                     entityType: scope.entityType,
-                                    entity: {}
+                                    entity: {},
+                                    data: {}
                                 }
                             }).then(function (res) {
 
@@ -377,7 +378,8 @@
                                 targetEvent: ev,
                                 locals: {
                                     entityType: scope.entityType,
-                                    entity: {}
+                                    entity: {},
+                                    data: {}
                                 }
                             }).then(function (res) {
 

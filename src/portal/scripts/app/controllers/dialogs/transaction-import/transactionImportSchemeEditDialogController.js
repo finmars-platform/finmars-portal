@@ -319,7 +319,6 @@
                 column: nextFieldNumber
             })
 
-
         };
 
         vm.addMapField = function () {
@@ -602,6 +601,8 @@
 
             vm.getItem();
             vm.getTransactionTypes();
+
+            vm.exprEditorBtnData = {groups: [vm.inputsGroup], functions: [vm.inputsFunctions]};
 
         };
 

@@ -561,9 +561,13 @@
                             return true;
                         }
 
-                        if (scope.item.attribute['value_type'] === 'field'
-                            && metaService.getRestrictedEntitiesWithTypeField().indexOf(scope.item.attribute.key) === -1) {
-                            scope.specialOptionTemplate = 'views/attribute-options/field.html';
+                        if (scope.item.attribute['value_type'] === 20 || scope.item.attribute['value_type'] === 'float') {
+                            scope.specialOptionTemplate = 'views/attribute-options/number.html';
+                            return true;
+                        }
+
+                        if (scope.item.attribute['value_type'] === 30) {
+                            scope.specialOptionTemplate = 'views/attribute-options/classifier.html';
                             return true;
                         }
 
@@ -572,8 +576,9 @@
                             return true;
                         }
 
-                        if (scope.item.attribute['value_type'] === 20 || scope.item.attribute['value_type'] === 'float') {
-                            scope.specialOptionTemplate = 'views/attribute-options/number.html';
+                        if (scope.item.attribute['value_type'] === 'field'
+                            && metaService.getRestrictedEntitiesWithTypeField().indexOf(scope.item.attribute.key) === -1) {
+                            scope.specialOptionTemplate = 'views/attribute-options/field.html';
                             return true;
                         }
 

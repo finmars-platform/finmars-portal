@@ -43,6 +43,7 @@
                                                 entity="vm.entity"
                                                 event-signal="vm.evEditorEvent"
                                                 ev-editor-event-service="vm.evEditorEventService"
+                                                ev-editor-data-service="vm.evEditorDataService"
                                                 item="vm.fixedFieldsAttributes[0]"
                                                 entity-change="vm.onFieldChange(fieldKey)"
                                                 on-field-blur="vm.onNameInputBlur()"></bind-field-control>
@@ -56,6 +57,7 @@
                                                 entity="vm.entity"
                                                 event-signal="vm.evEditorEvent"
                                                 ev-editor-event-service="vm.evEditorEventService"
+                                                ev-editor-data-service="vm.evEditorDataService"
                                                 item="vm.fixedFieldsAttributes[1]"
                                                 entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                         </div>
@@ -67,6 +69,7 @@
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
                                                 ev-editor-event-service="vm.evEditorEventService"
+                                                ev-editor-data-service="vm.evEditorDataService"
                                                 item="vm.fixedFieldsAttributes[2]"
                                                 entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                         </div>
@@ -81,6 +84,7 @@
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
                                                 ev-editor-event-service="vm.evEditorEventService"
+                                                ev-editor-data-service="vm.evEditorDataService"
                                                 item="vm.fixedFieldsAttributes[3]"
                                                 entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                         </div>
@@ -92,6 +96,7 @@
                                                 entity-type="vm.entityType"
                                                 entity="vm.entity"
                                                 ev-editor-event-service="vm.evEditorEventService"
+                                                ev-editor-data-service="vm.evEditorDataService"
                                                 item="vm.fixedFieldsAttributes[4]"
                                                 entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                         </div>
@@ -133,8 +138,10 @@
                              flex="{{vm.bindFlex(vm.fixedArea, field)}}">
                             <bind-field-control entity-type="vm.entityType"
                                                 entity="vm.entity"
-                                                event-signal="vm.evEditorEvent"
-                                                item="vm.fixedAreaAttributesLayout[field.row][field.column]"></bind-field-control>
+                                                ev-editor-event-service="vm.evEditorEventService"
+                                                ev-editor-data-service="vm.evEditorDataService"
+                                                item="vm.fixedAreaAttributesLayout[field.row][field.column]"
+                                                entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
                         </div>
                     </div>
                 </div>-->
@@ -162,6 +169,7 @@
                                          flex="{{vm.bindFlex(tab, field)}}">
                                         <bind-field-control entity-type="vm.entityType"
                                                             entity="vm.entity"
+                                                            ev-editor-data-service="vm.evEditorDataService"
                                                             ev-editor-event-service="vm.evEditorEventService"
                                                             item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
                                                             entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>

@@ -437,8 +437,6 @@
 
                 vm.importConfig = {data: sharedFile.data, mode: 'overwrite'};
 
-                console.log("New configuration file", data);
-
                 new Promise(function (resolve, reject) {
 
                     vm.importConfiguration(resolve)

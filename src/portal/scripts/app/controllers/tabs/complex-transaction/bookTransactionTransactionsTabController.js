@@ -20,7 +20,7 @@
                 locals: {
                     entityType: 'transaction',
                     entityId: entityId,
-                    contextData: {}
+                    data: {}
                 },
                 preserveScope: true,
                 autoWrap: true,

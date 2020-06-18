@@ -10,6 +10,9 @@
         var evEvents = require('../../services/entityViewerEvents');
         var objectComparison = require('../../helpers/objectsComparisonHelper');
 
+        var priceHistoryService = require('../../services/priceHistoryService');
+        var currencyHistoryService = require('../../services/currencyHistoryService');
+
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var AttributeDataService = require('../../services/attributeDataService');
@@ -58,6 +61,27 @@
             if ($scope.$parent.vm.entityViewerDataService) {
                 fillInModeEnabled = true;
             }
+
+            // Functions for context menu
+
+            var updateTableAfterEntityChanges = function (res) {
+
+                vm.entityViewerDataService.setActiveObjectAction(null);
+                vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                if (res && res.res === 'agree') {
+
+                    vm.entityViewerDataService.resetData();
+                    vm.entityViewerDataService.resetRequestParameters();
+
+                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                }
+
+            };
 
             var getContextData = function (reportOptions, activeObject) {
 
@@ -339,6 +363,7 @@
 
             };
 
+            // < Functions for context menu >
 
             vm.updateGrandTotalComponent = function(){
 
@@ -614,7 +639,9 @@
                             var locals = {
                                 entityType: 'instrument',
                                 entityId: activeObject['instrument.id'],
-                                contextData: contextData
+                                data: {
+                                    contextData: contextData
+                                }
                             };
 
                             editEntity(activeObject, locals);
@@ -651,7 +678,9 @@
                             var locals = {
                                 entityType: 'account',
                                 entityId: activeObject['account.id'],
-                                contextData: contextData
+                                data: {
+                                    contextData: contextData
+                                }
                             };
 
                             editEntity(activeObject, locals);
@@ -689,7 +718,9 @@
                             var locals = {
                                 entityType: 'portfolio',
                                 entityId: activeObject['portfolio.id'],
-                                contextData: contextData
+                                data: {
+                                    contextData: contextData
+                                }
                             };
 
                             editEntity(activeObject, locals);
@@ -727,7 +758,9 @@
                             var locals = {
                                 entityType: 'currency',
                                 entityId: activeObject['currency.id'],
-                                contextData: contextData
+                                data: {
+                                    contextData: contextData
+                                }
                             };
 
                             editEntity(activeObject, locals);
@@ -765,7 +798,9 @@
                             var locals = {
                                 entityType: 'currency',
                                 entityId: activeObject['instrument.pricing_currency.id'],
-                                contextData: contextData
+                                data: {
+                                    contextData: contextData
+                                }
                             };
 
                             editEntity(activeObject, locals);
@@ -803,7 +838,9 @@
                             var locals = {
                                 entityType: 'currency',
                                 entityId: activeObject['instrument.accrued_currency.id'],
-                                contextData: contextData
+                                data: {
+                                    contextData: contextData
+                                }
                             };
 
                             editEntity(activeObject, locals);
@@ -854,7 +891,9 @@
                                     var locals = {
                                         entityType: 'price-history',
                                         entityId: item.id,
-                                        contextData: contextData
+                                        data: {
+                                            contextData: contextData
+                                        }
                                     };
 
                                     editEntity(activeObject, locals);
@@ -933,7 +972,8 @@
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
                                             date: reportOptions.report_date
-                                        }
+                                        },
+                                        data: {}
                                     };
 
                                     offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
@@ -989,7 +1029,9 @@
                                     var locals = {
                                         entityType: 'currency-history',
                                         entityId: item.id,
-                                        contextData: contextData
+                                        data: {
+                                            contextData: contextData
+                                        }
                                     };
 
                                     editEntity(activeObject, locals);
@@ -1063,7 +1105,8 @@
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
                                             date: reportOptions.report_date
-                                        }
+                                        },
+                                        data: {}
                                     };
 
                                     offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
@@ -1121,7 +1164,9 @@
                                     var locals = {
                                         entityType: 'currency-history',
                                         entityId: item.id,
-                                        contextData: contextData
+                                        data: {
+                                            contextData: contextData
+                                        }
                                     };
 
                                     editEntity(activeObject, locals);
@@ -1206,7 +1251,8 @@
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
                                             date: reportOptions.report_date
-                                        }
+                                        },
+                                        data: {}
                                     };
 
                                     offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
@@ -1262,7 +1308,9 @@
                                     var locals = {
                                         entityType: 'currency-history',
                                         entityId: item.id,
-                                        contextData: contextData
+                                        data: {
+                                            contextData: contextData
+                                        }
                                     };
 
                                     editEntity(activeObject, locals);
@@ -1347,7 +1395,8 @@
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
                                             date: reportOptions.report_date
-                                        }
+                                        },
+                                        data: {}
                                     };
 
                                     offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
@@ -1520,11 +1569,10 @@
                                     content_type: "strategies.strategy3"
                                 };
                             }*/
-                            var contextData = getContextData(reportOptions, activeObject);
 
-                            var entity = {
+                            /*var entity = {
                                 contextData: contextData
-                            };
+                            };*/
 
                             /*$mdDialog.show({
                                 controller: 'ComplexTransactionAddDialogController as vm',
@@ -1555,8 +1603,16 @@
 
                             var locals = {
                                 entityType: 'complex-transaction',
-                                entity: entity
+                                entity: {},
+                                data: {}
                             };
+
+                            if (vm.entityType === 'transaction-report') {
+
+                                locals.entity.transaction_type = activeObject['complex_transaction.transaction_type.id'];
+                                locals.data.contextData = contextData;
+
+                            }
 
                             createEntity(activeObject, locals);
 
@@ -1564,20 +1620,17 @@
 
                         if (action === 'book_transaction_specific') {
 
-                            var contextData = getContextData(reportOptions, activeObject);
-
-                            var entity = {
-                                contextData: contextData
+                            var locals = {
+                                entityType: 'complex-transaction',
+                                entity: {},
+                                data: {
+                                    contextData: contextData
+                                }
                             };
 
                             if (actionData && actionData.id) {
-                                entity.transaction_type = actionData.id
+                                locals.entity.transaction_type = actionData.id
                             }
-
-                            var locals = {
-                                entityType: 'complex-transaction',
-                                entity: entity
-                            };
 
                             createEntity(activeObject, locals);
 
@@ -1615,7 +1668,8 @@
 
                             var locals = {
                                 entityType: 'complex-transaction',
-                                entityId: activeObject['complex_transaction.id']
+                                entityId: activeObject['complex_transaction.id'],
+                                data: {}
                             };
 
                             editEntity(activeObject, locals);

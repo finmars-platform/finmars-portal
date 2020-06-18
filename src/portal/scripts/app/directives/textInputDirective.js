@@ -109,6 +109,7 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
+                            stylePreset = '';
                             scope.model = res.text;
 
                             if (scope.onChangeCallback) {
