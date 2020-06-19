@@ -35,7 +35,7 @@
 
             $mdDialog.show({
                 controller: 'ReferenceTableEditDialogController as vm',
-                templateUrl: 'views/dialogs/reference-table-edit-dialog-view.html',
+                templateUrl: 'views/dialogs/reference-table/reference-table-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
@@ -60,7 +60,7 @@
 
             $mdDialog.show({
                 controller: 'ReferenceTableRenameDialogController as vm',
-                templateUrl: 'views/dialogs/reference-table-rename-dialog-view.html',
+                templateUrl: 'views/dialogs/reference-table/reference-table-rename-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
@@ -156,7 +156,7 @@
 
             $mdDialog.show({
                 controller: 'ReferenceTableExportDialogController as vm',
-                templateUrl: 'views/dialogs/reference-table-export-dialog-view.html',
+                templateUrl: 'views/dialogs/reference-table/reference-table-export-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
@@ -179,7 +179,7 @@
 
             $mdDialog.show({
                 controller: 'ReferenceTableImportDialogController as vm',
-                templateUrl: 'views/dialogs/reference-table-import-dialog-view.html',
+                templateUrl: 'views/dialogs/reference-table/reference-table-import-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
