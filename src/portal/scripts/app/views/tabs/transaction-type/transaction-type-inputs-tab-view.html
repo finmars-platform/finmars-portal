@@ -11,6 +11,10 @@
                                                                                  data-ng-show="vm.sort === 'verbose_name'"
                                                                                  data-ng-class="{reverse: vm.direction}"></span>
                 </th>
+                <th data-ng-click="vm.setSort('tooltip')">Tooltip<span class="sortorder"
+                                                                                 data-ng-show="vm.sort === 'tooltip'"
+                                                                                 data-ng-class="{reverse: vm.direction}"></span>
+                </th>
                 <th data-ng-click="vm.setSort('value_type_name')">Value type<span class="sortorder"
                                                                                   data-ng-show="vm.sort === 'value_type_name'"
                                                                                   data-ng-class="{reverse: vm.direction}"></span>
@@ -42,6 +46,12 @@
                         <input type="text" data-ng-model="vm.query.verbose_name">
                     </md-input-container>
                 </th>
+                <th>
+                    <md-input-container class="no-error-spacer">
+                        <ng-md-icon icon="search"></ng-md-icon>
+                        <input type="text" data-ng-model="vm.query.tooltip">
+                    </md-input-container>
+                </th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -60,6 +70,11 @@
                 <td class="edit-state-td">
                     <md-input-container class="no-error-spacer">
                         <input type="text" ng-model="item.verbose_name">
+                    </md-input-container>
+                </td>
+                <td class="edit-state-td">
+                    <md-input-container class="no-error-spacer">
+                        <input type="text" ng-model="item.tooltip">
                     </md-input-container>
                 </td>
                 <td class="edit-state-td">

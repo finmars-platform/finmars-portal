@@ -32,7 +32,7 @@
         vm.addCustomField = function (ev) {
             $mdDialog.show({
                 controller: 'CustomFieldAddDialogController as vm',
-                templateUrl: 'views/dialogs/custom-field-add-dialog-view.html',
+                templateUrl: 'views/dialogs/custom-field/custom-field-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 locals: {
@@ -51,7 +51,7 @@
         vm.editCustomField = function (item, ev) {
             $mdDialog.show({
                 controller: 'CustomFieldEditDialogController as vm',
-                templateUrl: 'views/dialogs/custom-field-edit-dialog-view.html',
+                templateUrl: 'views/dialogs/custom-field/custom-field-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 locals: {
