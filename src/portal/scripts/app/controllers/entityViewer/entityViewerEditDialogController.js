@@ -22,6 +22,8 @@
 
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
+    var tooltipsService = require('../../services/tooltipsService');
 
     var uiService = require('../../services/uiService');
 
@@ -96,6 +98,7 @@
 
         var tabsWithErrors = {};
         var errorFieldsList = [];
+        var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
         vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
@@ -1862,6 +1865,18 @@
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
+
+            var tooltipsOptions = {
+                pageSize: 1000,
+                filters: {
+                    'content_type': contentType
+                }
+            }
+
+            tooltipsService.getTooltipsList(tooltipsOptions).then(function (data) {
+                var tooltipsList = data.results;
+                vm.evEditorDataService.setTooltipsData(tooltipsList);
+            });
 
             getEntityAttrs();
             vm.getCurrencies();

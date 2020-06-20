@@ -2,9 +2,9 @@
 
     var metaService = require('../services/metaService');
     var evHelperService = require('../services/entityViewerHelperService');
-    var transactionHelper = require('../helpers/transaction.helper');
 
     'use strict';
+
 
     var removeNullFields = function (item) {
 
@@ -855,6 +855,7 @@
 
     };
 
+
     var createFieldsTree = function (tabs) {
 
         var tabsCopy = JSON.parse(JSON.stringify(tabs));
@@ -910,10 +911,9 @@
 
     };
 
-
     var getMatchForLayoutFields = function (tab, tabIndex, attributes, tabResult, fieldsToEmptyList, forComplexTransaction) {
 
-        var i, l, e, u;
+        var i, l, e, u, a;
 
         tab.layout.fields.forEach(function (field, fieldIndex) {
 
@@ -1192,6 +1192,10 @@
         return dcLayoutHasBeenFixed;
 
     };
+
+    var getTooltipsForEntity = function (entityType, evDataService) {
+
+    }
 
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,

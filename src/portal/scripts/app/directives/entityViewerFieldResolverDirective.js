@@ -360,21 +360,53 @@
                     }
                 };
 
-                /*scope.$watch('eventSignal', function () {
-                    if (scope.eventSignal) {
-                        scope.ciEventObj.event = scope.eventSignal;
+                var setItemSpecificSettings = function () {
+
+                    if (scope.item.backgroundColor) {
+
+                        scope.customStyles = {
+                            'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';',
+                            'custom-input-custom-btns-holder': 'background-color: ' + scope.item.backgroundColor + ';'
+                        }
+
                     }
-                });*/
+
+                    if (scope.item.frontOptions) {
+
+                        /*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
+                            scope.ciEventObj.event = {key: 'set_style_preset1'};
+
+                        } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
+                            scope.ciEventObj.event = {key: 'set_style_preset2'};
+
+                        }*/
+                        if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
+                            scope.ciEventObj.event = {key: 'set_style_preset1'};
+                        }
+
+                    }
+
+                    if (scope.item.options) {
+
+                        if (scope.item.options.tooltipValue) {
+                            scope.tooltipText = scope.item.options.tooltipValue;
+                        }
+
+                    }
+
+                }
+
                 var initListeners = function () {
                     scope.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
                         scope.ciEventObj.event = {key: 'mark_not_valid_fields'};
                     });
 
-                    scope.evEditorEventService.addEventListener(evEditorEvents.RECALCULATE_FIELDS, function () {
+                    scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATED, function () {
 
                         if (scope.item && scope.item.frontOptions &&
                             (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
+                            setItemSpecificSettings();
                             /*if (scope.item.frontOptions.recalculated === 'input') {
                                 scope.ciEventObj.event = {key: 'set_style_preset1'};
 
@@ -429,32 +461,21 @@
                         }
                     }
 
+                    var tooltipsList = scope.evEditorDataService.getTooltipsData();
+
+                    for (var i = 0; i < tooltipsList.length; i++) {
+
+                        if (tooltipsList[i].key === scope.fieldKey) {
+
+                            scope.tooltipText = tooltipsList[i].text;
+                            break;
+
+                        }
+
+                    }
+
                     if (scope.item) {
-
-                        if (scope.item.backgroundColor) {
-
-                            scope.customStyles = {
-                                'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';',
-                                'custom-input-custom-btns-holder': 'background-color: ' + scope.item.backgroundColor + ';'
-                            }
-
-                        }
-
-                        if (scope.item.frontOptions) {
-
-                            /*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
-                                scope.ciEventObj.event = {key: 'set_style_preset1'};
-
-                            } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
-                                scope.ciEventObj.event = {key: 'set_style_preset2'};
-
-                            }*/
-                            if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
-                                scope.ciEventObj.event = {key: 'set_style_preset1'};
-                            }
-
-                        }
-
+                        setItemSpecificSettings();
                     }
 
                     scope.fieldValue = {value: scope.entity[scope.fieldKey]};

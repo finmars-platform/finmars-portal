@@ -40,7 +40,7 @@
                       custom-styles="customStyles"
                       event-signal="ciEventObj.event"
                       small-options="{onlyPositive: item.options.onlyPositive,
-                                      tooltipText: item.options.tooltipValue,
+                                      tooltipText: tooltipText,
                                       notNull: options.notNull}"
                       on-change-callback="itemChange()"></number-input>
 
@@ -97,7 +97,7 @@
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
                     event-signal="ciEventObj.event"
-                    small-options="{tooltipText: item.options.tooltipValue, notNull: options.notNull}"
+                    small-options="{tooltipText: tooltipText, notNull: options.notNull}"
                     on-change-callback="itemChange()"
                     on-blur-callback="inputBlur()"></text-input>
     </div>
@@ -223,7 +223,7 @@
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
                     event-signal="ciEventObj.event"
-                    small-options="{tooltipText: item.options.tooltipValue, notNull: options.notNull}"
+                    small-options="{tooltipText: tooltipText, notNull: options.notNull}"
                     on-change-callback="onDateChange()"></date-input>
     </div>
 
