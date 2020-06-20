@@ -62,7 +62,7 @@
         vm.setupConfig = function ($event) {
             $mdDialog.show({
                 controller: 'CustomFieldsConfigDialogController as vm',
-                templateUrl: 'views/dialogs/custom-fields-config-dialog-view.html',
+                templateUrl: 'views/dialogs/custom-field/custom-fields-config-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
