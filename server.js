@@ -41,5 +41,5 @@ app.use('/healthcheck', function (req, res) {
 // app.use('/', proxy(proxyOptions));
 
 app.listen(8080, function () {
-    console.info('Express server start at 8080 port');
+    console.info('Server started at 8080 port');
 });
