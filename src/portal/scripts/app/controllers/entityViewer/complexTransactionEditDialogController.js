@@ -19,6 +19,9 @@
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
 
+    var metaContentTypesService = require('../../services/metaContentTypesService');
+    var tooltipsService = require('../../services/tooltipsService');
+
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var transactionHelper = require('../../helpers/transaction.helper');
     var transactionTypeService = require('../../services/transactionTypeService');
@@ -72,6 +75,7 @@
         var tabsWithErrors = {};
         var errorFieldsList = [];
         var inputsWithCalculations;
+        var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
 
         /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
@@ -619,7 +623,7 @@
             vm.processing = true;
 
             var values = {};
-            //console.log('vm.userInputs', vm.userInputs);
+
             vm.userInputs.forEach(function (item) {
                 values[item.name] = vm.entity[item.name]
             });
@@ -639,7 +643,6 @@
                 vm.editLayoutEntityInstanceId = cTransactionData.transaction_type;
                 vm.entity = cTransactionData.complex_transaction;
 
-
                 var recalculationInfo = {
                     recalculatedInputs: inputsToRecalculate,
                     recalculationData: recalculationData
@@ -655,7 +658,7 @@
                 $scope.$apply();
 
                 if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-                    vm.evEditorEventService.dispatchEvent(evEditorEvents.RECALCULATE_FIELDS);
+                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
                 }
 
             }).catch(function (reason) {
@@ -1478,6 +1481,18 @@
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
+
+            var tooltipsOptions = {
+                pageSize: 1000,
+                filters: {
+                    'content_type': contentType
+                }
+            }
+
+            tooltipsService.getTooltipsList(tooltipsOptions).then(function (data) {
+                var tooltipsList = data.results;
+                vm.evEditorDataService.setTooltipsData(tooltipsList);
+            });
 
             vm.getItem();
             vm.getAttributeTypes();

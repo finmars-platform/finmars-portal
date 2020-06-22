@@ -472,16 +472,134 @@
 
                 };
 
+                var setItemSpecificSettings = function () {
+
+                    scope.fieldType = null;
+                    /*scope.attribute = scope.item;
+
+                    if (scope.attribute && scope.attribute.can_recalculate) {
+                        scope.isRecalculate = true;
+                    }
+
+                    var i;
+                    for (i = 0; i < choices.length; i = i + 1) {
+                        if (choices[i].value === scope.attribute['value_type']) {
+                            scope.fieldType = choices[i];
+                        }
+                    }*/
+                    if (scope.item.can_recalculate) {
+                        scope.isRecalculate = true;
+                    }
+
+                    var i;
+                    for (i = 0; i < choices.length; i = i + 1) {
+                        if (choices[i].value === scope.item['value_type']) {
+                            scope.fieldType = choices[i];
+                        }
+                    }
+
+                    if (scope.item['value_type'] === 100) {
+                        scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
+                    }
+
+                    if (scope.item.options) {
+
+                        // prepare data for number field
+                        if (scope.fieldType && scope.fieldType.value === 20) {
+
+                            if (scope.item.options.number_format) {
+                                scope.numberFormat = scope.item.options.number_format;
+                            }
+
+                            if (scope.fieldType.value === 20) {
+                                scope.onlyPositive = scope.item.options.onlyPositive;
+                            }
+
+                        }
+                        // < prepare data for number field >
+
+                        // prepare data for date field
+                        if (scope.fieldType.value === 40) {
+
+                            if (!scope.item.buttons) {
+                                scope.item.buttons = [];
+                            }
+
+                            if (scope.item.options.dateToday) {
+                                scope.item.buttons.push({
+                                    icon: '',
+                                    tooltip: "Set today's date",
+                                    caption: 'T',
+                                    classes: 'date-input-specific-btns',
+                                    action: {callback: scope.setDateToday}
+                                });
+                            }
+
+                            if (scope.item.options.dateTodayPlus) {
+                                scope.item.buttons.push({
+                                    icon: '',
+                                    tooltip: "Increase by one day",
+                                    caption: 'T+1',
+                                    classes: 'date-input-specific-btns',
+                                    action: {callback: scope.setDatePlus}
+                                });
+                            }
+
+                            if (scope.item.options.dateTodayMinus) {
+                                scope.item.buttons.push({
+                                    icon: '',
+                                    tooltip: "Decrease by one day",
+                                    caption: 'T-1',
+                                    classes: 'date-input-specific-btns',
+                                    action: {callback: scope.setDateMinus}
+                                });
+                            }
+
+                        }
+                        // < prepare data for date field >
+
+                        if (scope.item.options.tooltipValue) {
+                            scope.tooltipText = scope.item.options.tooltipValue;
+                        }
+                    }
+
+                    if (scope.item.backgroundColor) {
+
+                        scope.customStyles = {
+                            'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';',
+                            'custom-input-custom-btns-holder': 'background-color: ' + scope.item.backgroundColor + ';'
+                        }
+
+                    }
+
+                    if (scope.item.frontOptions) {
+
+                        /*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
+                            scope.ciEventObj.event = {key: 'set_style_preset1'};
+
+                        } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
+                            scope.ciEventObj.event = {key: 'set_style_preset2'};
+
+                        }*/
+                        if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
+                            scope.ciEventObj.event = {key: 'set_style_preset1'};
+                        }
+
+                    }
+
+                }
+
                 var initListeners = function () {
                     scope.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
                         scope.ciEventObj.event = {key: 'mark_not_valid_fields'};
                     });
 
-                    scope.evEditorEventService.addEventListener(evEditorEvents.RECALCULATE_FIELDS, function () {
+                    scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATED, function () {
 
                         if (scope.item && scope.item.frontOptions &&
                             (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
+                            setItemSpecificSettings();
                             /*if (scope.item.frontOptions.recalculated === 'input') {
                                 scope.ciEventObj.event = {key: 'set_style_preset1'};
 
@@ -542,106 +660,22 @@
                         }
                     }
 
+                    var tooltipsList = scope.evEditorDataService.getTooltipsData();
+
+                    for (var i = 0; i < tooltipsList.length; i++) {
+
+                        if (tooltipsList[i].key === scope.fieldKey) {
+
+                            scope.tooltipText = tooltipsList[i].text;
+                            break;
+
+                        }
+
+                    }
+
                     if (scope.item) {
-                        scope.fieldType = null;
-                        scope.attribute = scope.item;
 
-                        if (scope.attribute && scope.attribute.can_recalculate) {
-                            scope.isRecalculate = true;
-                        }
-
-                        var i;
-                        for (i = 0; i < choices.length; i = i + 1) {
-                            if (choices[i].value === scope.attribute['value_type']) {
-                                scope.fieldType = choices[i];
-                            }
-                        }
-
-                        if (scope.attribute['value_type'] === 100) {
-                            scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
-                        }
-
-                        if (scope.item.options) {
-
-                            // prepare data for number field
-                            if (scope.fieldType && scope.fieldType.value === 20) {
-
-                                if (scope.item.options.number_format) {
-                                    scope.numberFormat = scope.item.options.number_format;
-                                }
-
-                                if (scope.fieldType.value === 20) {
-                                    scope.onlyPositive = scope.item.options.onlyPositive;
-                                }
-
-                            }
-                            // < prepare data for number field >
-
-                            // prepare data for date field
-                            if (scope.fieldType.value === 40) {
-
-                                if (!scope.item.buttons) {
-                                    scope.item.buttons = [];
-                                }
-
-                                if (scope.item.options.dateToday) {
-                                    scope.item.buttons.push({
-                                        icon: '',
-                                        tooltip: "Set today's date",
-                                        caption: 'T',
-                                        classes: 'date-input-specific-btns',
-                                        action: {callback: scope.setDateToday}
-                                    });
-                                }
-
-                                if (scope.item.options.dateTodayPlus) {
-                                    scope.item.buttons.push({
-                                        icon: '',
-                                        tooltip: "Increase by one day",
-                                        caption: 'T+1',
-                                        classes: 'date-input-specific-btns',
-                                        action: {callback: scope.setDatePlus}
-                                    });
-                                }
-
-                                if (scope.item.options.dateTodayMinus) {
-                                    scope.item.buttons.push({
-                                        icon: '',
-                                        tooltip: "Decrease by one day",
-                                        caption: 'T-1',
-                                        classes: 'date-input-specific-btns',
-                                        action: {callback: scope.setDateMinus}
-                                    });
-                                }
-
-                            }
-                            // < prepare data for date field >
-
-                        }
-
-                        if (scope.item.backgroundColor) {
-
-                            scope.customStyles = {
-                                'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';',
-                                'custom-input-custom-btns-holder': 'background-color: ' + scope.item.backgroundColor + ';'
-                            }
-
-                        }
-
-                        if (scope.item.frontOptions) {
-
-                            /*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
-                                scope.ciEventObj.event = {key: 'set_style_preset1'};
-
-                            } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
-                                scope.ciEventObj.event = {key: 'set_style_preset2'};
-
-                            }*/
-                            if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
-                                scope.ciEventObj.event = {key: 'set_style_preset1'};
-                            }
-
-                        }
+                        setItemSpecificSettings();
 
                     }
 
