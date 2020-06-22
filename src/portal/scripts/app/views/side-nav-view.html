@@ -775,11 +775,50 @@
                                 </div>
                             </li>
 
-                            <li data-ng-if="vm.accessTable.configuration_aliases">
-                                <md-button class="sidemenu-btn"
+                            <li >
+                                <!--<md-button class="sidemenu-btn"
                                            ui-sref="app.settings.template-fields">
                                     <span class="side-nav-title">Aliases</span>
-                                </md-button>
+                                </md-button>-->
+                                <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="dataTypes">
+                                    <md-button class="sidemenu-btn dataTypes-sidenav-menu-btn">
+                                        <span class="side-nav-title">Specifications</span>
+                                        <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                                    </md-button>
+
+                                    <ul class="sidenav-dropdown-menu dataTypes-dropdown-menu-element ng-hide">
+
+                                        <li data-ng-if="vm.accessTable.configuration_aliases">
+                                            <md-button ui-sref-active="active"
+                                                       class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.settings.template-fields">
+                                                <span class="side-nav-title">Aliases</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li>
+                                            <md-button ui-sref-active="active"
+                                                       class="sidenav-dropdown-menu-btn">
+                                                <span class="side-nav-title">Tooltips</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li>
+                                            <md-button ui-sref-active="active"
+                                                       class="sidenav-dropdown-menu-btn">
+                                                <span class="side-nav-title">Palettes</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                    </ul>
+
+                                </div>
                             </li>
 
                             <li>

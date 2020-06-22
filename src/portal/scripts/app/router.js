@@ -626,6 +626,11 @@
                 templateUrl: 'views/pages/template-fields-view.html',
                 controller: 'TemplateFieldsController as vm'
             })
+            .state('app.settings.color-palettes', {
+                url: '/palettes',
+                templateUrl: 'views/pages/color-palettes-settings-view.html',
+                controller: 'ColorPalettesSettingsController as vm'
+            })
             .state('app.settings.import-configuration', {
                 url: '/import-configuration',
                 templateUrl: 'views/pages/import-configurations-view.html',
