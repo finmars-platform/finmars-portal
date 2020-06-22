@@ -20,6 +20,8 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
+    var tooltipsService = require('../../services/tooltipsService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var transactionHelper = require('../../helpers/transaction.helper');
@@ -60,6 +62,8 @@
         var errorFieldsList = [];
         var notCopiedTransaction = true;
         var inputsWithCalculations;
+        var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
+        //var tooltipsList = [];
 
         vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
@@ -502,7 +506,7 @@
                 $scope.$apply();
 
                 if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-                    vm.evEditorEventService.dispatchEvent(evEditorEvents.RECALCULATE_FIELDS);
+                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
                 }
 
             }).catch(function (reason) {
@@ -1222,6 +1226,18 @@
 
             console.log('entity', entity);
             console.log('data', data);
+
+            var tooltipsOptions = {
+                pageSize: 1000,
+                filters: {
+                    'content_type': contentType
+                }
+            }
+
+            tooltipsService.getTooltipsList(tooltipsOptions).then(function (data) {
+                var tooltipsList = data.results;
+                vm.evEditorDataService.setTooltipsData(tooltipsList);
+            });
 
             if (Object.keys(data).length) {
 

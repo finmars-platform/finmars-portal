@@ -23,6 +23,7 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
+    var tooltipsService = require('../../services/tooltipsService');
 
     var uiService = require('../../services/uiService');
 
@@ -88,6 +89,7 @@
 
         var tabsWithErrors = {};
         var errorFieldsList = [];
+        var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
         var getEntityAttrs = function () {
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
@@ -407,7 +409,6 @@
 
         vm.setPermissionsDefaults = function () {
 
-            var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType);
             var table;
             var isCreator;
 
@@ -472,7 +473,6 @@
 
         vm.checkInheritRight = function () {
 
-            var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType);
             var table;
 
             vm.groups.forEach(function (group) {
@@ -1410,6 +1410,18 @@
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
+
+            var tooltipsOptions = {
+                pageSize: 1000,
+                filters: {
+                    'content_type': contentType
+                }
+            }
+
+            tooltipsService.getTooltipsList(tooltipsOptions).then(function (data) {
+                var tooltipsList = data.results;
+                vm.evEditorDataService.setTooltipsData(tooltipsList);
+            });
 
             getEntityAttrs();
             vm.getFormLayout();
