@@ -32,7 +32,6 @@
 
     gulp.task('after-build-env-set',  function () {
 
-        console.log('PROJECT_ENV: ' + PROJECT_ENV);
         console.log('API_HOST: ' + API_HOST);
 
         return gulp.src(['dist/portal/scripts/main.min.js'])
