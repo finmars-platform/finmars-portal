@@ -7,8 +7,6 @@
 
     module.exports = function ($scope, $mdDialog) {
 
-        console.log('here?');
-
         var vm = this;
 
         var defaultTransactionTypeTextFields = [

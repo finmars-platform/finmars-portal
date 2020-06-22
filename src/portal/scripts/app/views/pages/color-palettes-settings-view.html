@@ -1,0 +1,36 @@
+<div class="color-palette-settings">
+
+    <div layout="row">
+        <div>Palette</div>
+        <md-select data-ng-model="vm.selectedPalette">
+            <md-option data-ng-repeat="palette in vm.palettesList"
+                       data-ng-bind="palette.name"
+                       ng-value="palette.id"></md-option>
+        </md-select>
+
+        <md-button class="">
+            <i class="fas fa-pen"></i>
+        </md-button>
+
+        <md-button class="">
+            <i class="fas fa-clone"></i>
+        </md-button>
+
+        <md-button class="">
+            <i class="fas fa-trash"></i>
+        </md-button>
+    </div>
+
+
+    <div data-ng-repeat="palette in vm.palettesList">
+
+        <div data-ng-repeat="color in palette.colors" class="palette-color-container">
+
+            <text-input model="color"></text-input>
+            <div class=""></div>
+
+        </div>
+
+    </div>
+
+</div>
