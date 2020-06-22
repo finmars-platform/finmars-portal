@@ -1,0 +1,51 @@
+<div>
+
+    <div data-ng-if="vm.readyStatus.content">
+
+        <h2>Tooltips</h2>
+
+        <div layout="row">
+
+            <md-tabs md-dynamic-height class="width-100">
+
+                <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
+
+                    <div class="p-24">
+
+                        <div data-ng-repeat="item in tab.items">
+
+                            <md-input-container>
+                                <label>{{item.name}}</label>
+                                <input type="text" data-ng-model="item.text" data-ng-change="item.changed = true">
+                            </md-input-container>
+
+                        </div>
+
+
+                    </div>
+
+                </md-tab>
+
+            </md-tabs>
+
+
+        </div>
+
+        <div layout="row" class="m-t-16">
+
+            <md-button class="md-raised md-primary" data-ng-click="vm.saveTooltips()">Apply</md-button>
+
+            <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
+                <progress-circular diameter="30"></progress-circular>
+            </div>
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.content">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+            <progress-circular  diameter="100"></progress-circular>
+        </div>
+    </div>
+
+</div>

@@ -626,6 +626,11 @@
                 templateUrl: 'views/pages/template-fields-view.html',
                 controller: 'TemplateFieldsController as vm'
             })
+            .state('app.settings.tooltips', {
+                url: '/tooltips',
+                templateUrl: 'views/pages/entity-tooltip-page-view.html',
+                controller: 'EntityTooltipPageController as vm'
+            })
             .state('app.settings.color-palettes', {
                 url: '/palettes',
                 templateUrl: 'views/pages/color-palettes-settings-view.html',
