@@ -13,9 +13,19 @@
             return data.changedUserInputData;
         }
 
+        function setTooltipsData (tooltips) {
+            data.tooltipsObj = tooltips;
+        }
+
+        function getTooltipsData () {
+            return data.tooltipsObj;
+        }
+
         return {
             setChangedUserInputData: setChangedUserInputData,
-            getChangedUserInputData: getChangedUserInputData
+            getChangedUserInputData: getChangedUserInputData,
+            setTooltipsData: setTooltipsData,
+            getTooltipsData: getTooltipsData
         }
     }
 
