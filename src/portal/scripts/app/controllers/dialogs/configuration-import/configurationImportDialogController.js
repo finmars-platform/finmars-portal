@@ -331,6 +331,8 @@
                     return 'Instrument User Text Field Names';
                 case 'ui.transactionuserfieldmodel':
                     return 'Transaction User Field Names';
+                case 'ui.entitytooltip':
+                    return 'System Tooltips';
                 case 'pricing.currencypricingscheme':
                     return 'Currency Pricing Scheme';
                 case 'pricing.instrumentpricingscheme':

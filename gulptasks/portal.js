@@ -37,9 +37,7 @@
     var PROJECT_ENV = process.env.PROJECT_ENV || 'development';
     var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8000';
 
-    console.log('PROJECT_ENV: ' + PROJECT_ENV);
-    console.log('API_HOST: ' + API_HOST);
-    console.log("credentials", credentials[PROJECT_ENV]);
+
 
     var appName = 'portal';
 
@@ -120,7 +118,10 @@
     }
 
     gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
-    // gulp.task(appName + '-js-min', function () {
+
+        console.log('PROJECT_ENV: ' + PROJECT_ENV);
+        console.log("credentials", credentials[PROJECT_ENV]);
+
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
         var d = new Date();
@@ -142,7 +143,7 @@
             .pipe(source('bundled.js'))
             .pipe(buffer())
             .pipe(preprocess())
-            .pipe(replace(/__API_HOST__/g, API_HOST))
+            // .pipe(gulpif(PROJECT_ENV !== 'production', replace(/__API_HOST__/g, API_HOST)))
             .pipe(replace(/__BUILD_DATE__/g, build_date))
             .pipe(replace(/__PROJECT_ENV__/g, PROJECT_ENV))
             .pipe(replace(/__LOGIN__/g, credentials[PROJECT_ENV].login))
