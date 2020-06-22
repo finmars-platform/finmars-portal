@@ -118,6 +118,7 @@
         return uiRepository.updateInstrumentField(id, data);
     };
 
+    // Dashboard Layout
 
     var getDashboardLayoutList = function (options) {
         return uiRepository.getDashboardLayoutList(options);
@@ -148,6 +149,8 @@
         return uiRepository.deleteDashboardLayoutByKey(id);
     };
 
+    // Template Layout
+
     var getTemplateLayoutList = function (options) {
         return uiRepository.getTemplateLayoutList(options);
     };
@@ -173,6 +176,8 @@
         return uiRepository.deleteTemplateLayoutByKey(id);
     };
 
+    // Context Menu
+
     var getContextMenuLayoutList = function (options) {
         return uiRepository.getContextMenuLayoutList(options);
     };
@@ -192,6 +197,21 @@
 
     var deleteContextMenuLayoutByKey = function (id) {
         return uiRepository.deleteContextMenuLayoutByKey(id);
+    };
+
+    // Entity Tooltip
+
+    var getEntityTooltipList = function (options) {
+        return uiRepository.getEntityTooltipList(options);
+    };
+
+    var createEntityTooltip = function (data) {
+        return uiRepository.createEntityTooltip(data);
+    };
+
+    var updateEntityTooltip = function (id, data) {
+
+        return uiRepository.updateEntityTooltip(id, data);
     };
 
     module.exports = {
@@ -250,7 +270,14 @@
         getContextMenuLayoutByKey: getContextMenuLayoutByKey,
         createContextMenuLayout: createContextMenuLayout,
         updateContextMenuLayout: updateContextMenuLayout,
-        deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey
+        deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey,
+
+
+        getEntityTooltipList: getEntityTooltipList,
+        createEntityTooltip: createEntityTooltip,
+        updateEntityTooltip: updateEntityTooltip
+
+
     }
 
 }());

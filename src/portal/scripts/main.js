@@ -563,6 +563,7 @@ app.controller('EntitiesCustomAttributesController', ['$scope', '$mdDialog', req
 app.controller('PriceDownloadSchemeController', ['$scope', require('./app/controllers/pages/priceDownloadSchemeController')]);
 app.controller('AutomatedUploadsHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/automatedUploadsHistoryController')]);
 app.controller('TemplateFieldsController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateFieldsController')]);
+app.controller('EntityTooltipPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/entityTooltipPageController')]);
 app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', require('./app/controllers/pages/colorPalettesSettingsController')]);
 app.controller('ImportConfigurationsController', ['$scope', '$mdDialog', require('./app/controllers/pages/importConfigurationsController')]);
 app.controller('ExportConfigurationsController', ['$scope', '$mdDialog', require('./app/controllers/pages/exportConfigurationsController')]);
