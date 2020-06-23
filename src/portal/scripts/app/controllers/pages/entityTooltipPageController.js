@@ -21,7 +21,7 @@
             },
             {
                 name: "Portfolio",
-                content_type: 'portfoios.portfolio',
+                content_type: 'portfolios.portfolio',
                 items: []
             },
             {
@@ -31,7 +31,7 @@
             },
             {
                 name: "Responsible",
-                content_type: 'counterparties.responible',
+                content_type: 'counterparties.responsible',
                 items: []
             },
             {
@@ -69,11 +69,11 @@
                 content_type: 'instruments.instrumenttype',
                 items: []
             },
-            {
-                name: "Transaction Type",
-                content_type: 'transactions.transactiontype',
-                items: []
-            },
+            // {
+            //     name: "Transaction Type",
+            //     content_type: 'transactions.transactiontype',
+            //     items: []
+            // },
             {
                 name: "Price",
                 content_type: 'instruments.pricehistory',
@@ -81,7 +81,7 @@
             },
             {
                 name: "FX Rate",
-                content_type: 'currency.currencyhistory',
+                content_type: 'currencies.currencyhistory',
                 items: []
             }
         ];
@@ -96,7 +96,7 @@
                 },
                 {
                     name: "Portfolio",
-                    content_type: 'portfoios.portfolio',
+                    content_type: 'portfolios.portfolio',
                     items: []
                 },
                 {
@@ -106,7 +106,7 @@
                 },
                 {
                     name: "Responsible",
-                    content_type: 'counterparties.responible',
+                    content_type: 'counterparties.responsible',
                     items: []
                 },
                 {
@@ -144,11 +144,11 @@
                     content_type: 'instruments.instrumenttype',
                     items: []
                 },
-                {
-                    name: "Transaction Type",
-                    content_type: 'transactions.transactiontype',
-                    items: []
-                },
+                // {
+                //     name: "Transaction Type",
+                //     content_type: 'transactions.transactiontype',
+                //     items: []
+                // },
                 {
                     name: "Price",
                     content_type: 'instruments.pricehistory',
@@ -156,7 +156,7 @@
                 },
                 {
                     name: "FX Rate",
-                    content_type: 'currency.currencyhistory',
+                    content_type: 'currencies.currencyhistory',
                     items: []
                 }
             ];
