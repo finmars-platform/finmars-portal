@@ -32,7 +32,10 @@
                 controller: 'SimpleEntityImportDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
                 targetEvent: $event,
-                multiple: true
+                multiple: true,
+                locals: {
+                    data: {}
+                }
             })
 
         };
