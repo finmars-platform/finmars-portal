@@ -6,6 +6,7 @@
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
     var transactionTypeService = require('../../services/transactionTypeService');
+    var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
     var pricingProcedureService = require('../../services/pricing/pricingProcedureService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
@@ -64,40 +65,75 @@
 
                     if (item.action === 'book_transaction') {
 
-                        transactionTypeService.getListLight({
-                            filters: {
-                                user_code: item.target
-                            }
-                        }).then(function (data) {
+                        var contextData = {};
 
-                            if (data.results.length) {
+                        if (item.target) {
 
-                                var transactionType = data.results[0];
+                            transactionTypeService.getListLight({
+                                filters: {
+                                    user_code: item.target
+                                }
+                            }).then(function (data) {
 
-                                var contextData = {};
+                                if (data.results.length) {
 
-                                $mdDialog.show({
-                                    controller: 'ComplexTransactionAddDialogController as vm',
-                                    templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                                    parent: angular.element(document.body),
-                                    targetEvent: $event,
-                                    locals: {
-                                        entityType: 'complex-transaction',
-                                        entity: {
-                                            contextData: contextData,
-                                            transaction_type: transactionType.id
+                                    var transactionType = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'ComplexTransactionAddDialogController as vm',
+                                        templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: $event,
+                                        locals: {
+                                            entityType: 'complex-transaction',
+                                            entity: {},
+                                            data: {
+                                                contextData: contextData,
+                                                transaction_type: transactionType.id
+                                            }
                                         }
-                                    }
-                                }).then(function (res) {
+                                    }).then(function (res) {
 
 
-                                })
+                                    })
 
-                            } else {
-                                toastNotificationService.error('Transaction Type is not found');
-                            }
+                                } else {
 
-                        })
+                                    toastNotificationService.error('Transaction Type is not found');
+
+                                    $mdDialog.show({
+                                        controller: 'ComplexTransactionAddDialogController as vm',
+                                        templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: $event,
+                                        locals: {
+                                            entityType: 'complex-transaction',
+                                            entity: {},
+                                            data: { }
+
+                                        }
+                                    })
+
+                                }
+
+                            })
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'ComplexTransactionAddDialogController as vm',
+                                templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: $event,
+                                locals: {
+                                    entityType: 'complex-transaction',
+                                    entity: {},
+                                    data: { }
+
+                                }
+                            })
+
+                        }
 
                     }
 
@@ -127,7 +163,7 @@
                             }
                         }).then(function (data) {
 
-                            if(data.results.length) {
+                            if (data.results.length) {
 
                                 var procedure = data.results[0];
 
@@ -159,6 +195,67 @@
 
 
                         })
+
+                    }
+
+                    if (item.action === 'import_data_from_file') {
+
+                        if (item.target) {
+
+
+
+                            csvImportSchemeService.getListLight({
+                                filters: {
+                                    scheme_name: item.target
+                                }
+                            }).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var scheme = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'SimpleEntityImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {
+                                                scheme: scheme
+                                            }
+                                        }
+                                    })
+
+
+                                } else {
+
+                                    toastNotificationService.error('Simple Import Scheme is not found');
+
+                                    $mdDialog.show({
+                                        controller: 'SimpleEntityImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {}
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'SimpleEntityImportDialogController as vm',
+                                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
+                                targetEvent: $event,
+                                multiple: true,
+                                locals: {
+                                    data: {}
+                                }
+                            })
+
+                        }
+
 
                     }
 

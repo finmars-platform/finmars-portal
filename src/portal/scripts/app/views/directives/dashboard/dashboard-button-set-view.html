@@ -6,7 +6,16 @@
 
             <div data-ng-repeat="item in row.items">
 
-                <md-button data-ng-click="handleAction($event, item)" class="md-raised md-primary">{{item.name}}</md-button>
+                <div data-ng-if="item.action">
+
+                    <md-button data-ng-click="handleAction($event, item)" class="md-raised md-primary">{{item.name}}
+                    </md-button>
+
+                </div>
+
+                <div data-ng-if="!item.action">
+                    &nbsp;
+                </div>
 
             </div>
 

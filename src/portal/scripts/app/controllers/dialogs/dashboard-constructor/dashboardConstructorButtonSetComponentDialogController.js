@@ -6,6 +6,7 @@
     'use strict';
 
     var transactionTypeService = require('../../../services/transactionTypeService');
+    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
     var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
 
     module.exports = function dashboardConstructorButtonSetComponentDialogController($scope, $mdDialog, item, dataService, eventService) {
@@ -234,7 +235,7 @@
 
         vm.getTransactionTypes = function(){
 
-            transactionTypeService.getListLight().then(function (data) {
+            transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
 
                 vm.targets['book_transaction'] = data.results.map(function (item) {
 
@@ -266,10 +267,29 @@
 
         };
 
+        vm.getSimpleImportSchemes = function(){
+
+            csvImportSchemeService.getListLight().then(function (data) {
+
+                vm.targets['import_data_from_file'] = data.results.map(function (item) {
+
+                    return {
+                        value: item.scheme_name,
+                        name: item.scheme_name
+                    }
+
+                })
+
+
+            })
+
+        };
+
         vm.init = function () {
 
             vm.getTransactionTypes();
             vm.getPricingProcedures();
+            vm.getSimpleImportSchemes();
 
             console.log('dataService', dataService);
 

@@ -108,6 +108,58 @@
             vm.getSchemeList();
         };
 
+        vm.getFileUrl = function(id) {
+
+            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+
+        };
+
+        vm.createScheme = function ($event) {
+
+            $mdDialog.show({
+                controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
+                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-create-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {}
+                }
+            }).then(function () {
+
+                vm.getSchemeList();
+
+            })
+
+        };
+
+        vm.editScheme = function ($event) {
+
+            $mdDialog.show({
+                controller: 'SimpleEntityImportSchemeEditDialogController as vm',
+                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-edit-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    schemeId: vm.config.scheme
+                }
+            }).then(function (res) {
+
+                if(res && res.status === 'agree') {
+
+                    vm.getSchemeList();
+
+                }
+
+            })
+
+        };
+
         vm.validate = function (resolve, $event) {
 
             vm.readyStatus.processing = true;
@@ -315,62 +367,6 @@
 
 
             })
-        };
-
-        vm.createScheme = function ($event) {
-
-            $mdDialog.show({
-                controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
-                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-create-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    data: {}
-                }
-            }).then(function () {
-
-                vm.getSchemeList();
-
-            })
-
-        };
-
-        vm.editScheme = function ($event) {
-
-            $mdDialog.show({
-                controller: 'SimpleEntityImportSchemeEditDialogController as vm',
-                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-edit-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    schemeId: vm.config.scheme
-                }
-            }).then(function (res) {
-
-                if(res && res.status === 'agree') {
-
-                    vm.getSchemeList();
-
-                }
-
-            })
-
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.getFileUrl = function(id) {
-
-            return baseUrl + 'file-reports/file-report/' + id + '/view/';
-
         };
 
         vm.startImport = function ($event) {
