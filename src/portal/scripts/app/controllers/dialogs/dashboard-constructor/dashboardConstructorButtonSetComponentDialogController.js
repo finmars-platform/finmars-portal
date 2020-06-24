@@ -11,6 +11,8 @@
     var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
 
+    var uiService = require('../../../services/uiService');
+
     module.exports = function dashboardConstructorButtonSetComponentDialogController($scope, $mdDialog, item, dataService, eventService) {
 
         var vm = this;
@@ -198,6 +200,7 @@
             ], // +
             'open_report': [],
             'open_data_viewer': [],
+            'open_dashboard': [],
             'run_valuation_procedure': [], // +
             'import_data_from_file': [],
             'import_transactions_from_file': [],
@@ -323,6 +326,24 @@
 
         };
 
+        vm.getDashboardLayouts = function(){
+
+            uiService.getDashboardLayoutList().then(function (data) {
+
+                vm.targets['open_dashboard'] = data.results.map(function (item) {
+
+                    return {
+                        value: item.user_code,
+                        name: item.name
+                    }
+
+                })
+
+
+            })
+
+        };
+
         vm.init = function () {
 
             vm.getTransactionTypes();
@@ -330,6 +351,7 @@
             vm.getSimpleImportSchemes();
             vm.getTransactionImportSchemes();
             vm.getComplexImportSchemes();
+            vm.getDashboardLayouts();
 
             console.log('dataService', dataService);
 

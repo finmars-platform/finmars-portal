@@ -84,9 +84,11 @@
         vm.openDashboardLayout = function () {
 
             vm.readyStatus.data = false;
-            var activeLayoutName = $stateParams.layoutName;
+            var activeLayoutUserCode = $stateParams.layoutUserCode;
 
-            if (activeLayoutName) {
+            console.log('activeLayoutUserCode', activeLayoutUserCode);
+
+            if (activeLayoutUserCode) {
 
                 uiService.getDashboardLayoutList().then(function (data) {
 
@@ -94,7 +96,7 @@
                         var layouts = data.results;
 
                         for (var i = 0; i < layouts.length; i++) {
-                            if (layouts[i].name === activeLayoutName) {
+                            if (layouts[i].user_code === activeLayoutUserCode) {
                                 vm.layout = layouts[i];
                                 break;
                             }

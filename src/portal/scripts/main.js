@@ -176,7 +176,7 @@ app.controller('DashboardController', ['$scope', '$stateParams', '$mdDialog', re
 
 app.directive('dashboardGridAligner', [require('./app/directives/dashboard/dashboardGridAlignerDirective')]);
 
-app.directive('dashboardButtonSet', ['$mdDialog', require('./app/directives/dashboard/dashboardButtonSetDirective')]);
+app.directive('dashboardButtonSet', ['$mdDialog', '$state', require('./app/directives/dashboard/dashboardButtonSetDirective')]);
 app.directive('dashboardControl', [require('./app/directives/dashboard/dashboardControlDirective')]);
 app.directive('dashboardEntityViewer', [require('./app/directives/dashboard/dashboardEntityViewerDirective')]);
 app.directive('dashboardEntityViewerSplitPanel', [require('./app/directives/dashboard/dashboardEntityViewerSplitPanelDirective')]);

@@ -13,7 +13,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function dashboardButtonSetDirective($mdDialog) {
+    module.exports = function dashboardButtonSetDirective($mdDialog, $state) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-button-set-view.html',
@@ -111,7 +111,7 @@
                                         locals: {
                                             entityType: 'complex-transaction',
                                             entity: {},
-                                            data: { }
+                                            data: {}
 
                                         }
                                     })
@@ -130,7 +130,7 @@
                                 locals: {
                                     entityType: 'complex-transaction',
                                     entity: {},
-                                    data: { }
+                                    data: {}
 
                                 }
                             })
@@ -373,6 +373,22 @@
                                     data: {}
                                 }
                             })
+
+                        }
+
+                    }
+
+                    if (item.action === 'open_dashboard') {
+
+                        if (item.target) {
+
+                            $state.go('app.dashboard', {
+                                layoutUserCode: item.target
+                            }, { reload: 'app' })
+
+                        } else {
+
+                            toastNotificationService.error('Dashboard Layout is not set');
 
                         }
 
