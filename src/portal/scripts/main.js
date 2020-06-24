@@ -293,7 +293,7 @@ app.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$md
 
 // Complex Import
 
-app.controller('ComplexImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/complex-import/complexImportDialogController')]);
+app.controller('ComplexImportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/complex-import/complexImportDialogController')]);
 app.controller('ComplexImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/complex-import/complexImportSchemeEditDialogController')]);
 app.controller('ComplexImportSchemeCreateDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/complex-import/complexImportSchemeCreateDialogController')]);
 app.controller('ComplexImportSchemeErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/complex-import/complexImportSchemeErrorsDialogController')]);

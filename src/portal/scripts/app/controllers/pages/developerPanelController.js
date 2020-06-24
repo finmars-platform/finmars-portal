@@ -18,7 +18,10 @@
                 controller: 'ComplexImportDialogController as vm',
                 templateUrl: 'views/dialogs/complex-import/complex-import-dialog-view.html',
                 targetEvent: $event,
-                multiple: true
+                multiple: true,
+                locals: {
+                    data: {}
+                }
             })
 
         };

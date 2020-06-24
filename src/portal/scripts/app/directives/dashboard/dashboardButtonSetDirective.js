@@ -8,6 +8,7 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
     var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
+    var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
     var pricingProcedureService = require('../../services/pricing/pricingProcedureService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
@@ -314,6 +315,67 @@
                             })
 
                         }
+                    }
+
+                    if (item.action === 'complex_import_from_file') {
+
+                        if (item.target) {
+
+                            complexImportSchemeService.getList({
+                                filters: {
+                                    scheme_name: item.target
+                                }
+                            }).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var scheme = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'ComplexImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/complex-import/complex-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {
+                                                scheme: scheme
+                                            }
+                                        }
+                                    })
+
+
+                                } else {
+
+                                    toastNotificationService.error('Complex Import Scheme is not found');
+
+                                    $mdDialog.show({
+                                        controller: 'ComplexImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/complex-import/complex-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {}
+                                        }
+                                    })
+
+                                }
+                            })
+
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'ComplexImportDialogController as vm',
+                                templateUrl: 'views/dialogs/complex-import/complex-import-dialog-view.html',
+                                targetEvent: $event,
+                                multiple: true,
+                                locals: {
+                                    data: {}
+                                }
+                            })
+
+                        }
+
                     }
 
                 };

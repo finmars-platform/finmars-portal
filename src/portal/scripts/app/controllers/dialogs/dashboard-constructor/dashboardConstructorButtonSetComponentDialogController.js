@@ -7,6 +7,7 @@
 
     var transactionTypeService = require('../../../services/transactionTypeService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
+    var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
     var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
 
@@ -304,12 +305,31 @@
 
         };
 
+        vm.getComplexImportSchemes = function(){
+
+            complexImportSchemeService.getList().then(function (data) {
+
+                vm.targets['complex_import_from_file'] = data.results.map(function (item) {
+
+                    return {
+                        value: item.scheme_name,
+                        name: item.scheme_name
+                    }
+
+                })
+
+
+            })
+
+        };
+
         vm.init = function () {
 
             vm.getTransactionTypes();
             vm.getPricingProcedures();
             vm.getSimpleImportSchemes();
             vm.getTransactionImportSchemes();
+            vm.getComplexImportSchemes();
 
             console.log('dataService', dataService);
 
