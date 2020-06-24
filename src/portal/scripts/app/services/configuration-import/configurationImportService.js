@@ -14,7 +14,7 @@
     var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
     var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
-    var transactionSchemeService = require('../../services/import/transactionSchemeService');
+    var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
     var pricingScheduleService = require('../pricing/pricingScheduleService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
@@ -716,7 +716,7 @@
                                     }
                                 };
 
-                                transactionSchemeService.getList(options).then(function (data) {
+                                transactionImportSchemeService.getList(options).then(function (data) {
 
                                     var result;
 
@@ -734,7 +734,7 @@
 
                                             item.id = result.id;
 
-                                            transactionSchemeService.update(item.id, item).then(function (value1) {
+                                            transactionImportSchemeService.update(item.id, item).then(function (value1) {
                                                 resolveLocal()
                                             }).catch(function (reason) {
 
@@ -753,7 +753,7 @@
 
                                         } else {
 
-                                            transactionSchemeService.create(item).then(function () {
+                                            transactionImportSchemeService.create(item).then(function () {
                                                 resolveLocal()
                                             }).catch(function (reason) {
 
@@ -774,7 +774,7 @@
 
                                     } else {
 
-                                        transactionSchemeService.create(item).then(function () {
+                                        transactionImportSchemeService.create(item).then(function () {
                                             resolveLocal()
                                         }).catch(function (reason) {
 
@@ -2399,7 +2399,7 @@
                         case 'integrations.complextransactionimportscheme':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                transactionSchemeService.getList({
+                                transactionImportSchemeService.getList({
                                     filters: {
                                         scheme_name: item.scheme_name
                                     }
@@ -2438,7 +2438,7 @@
                                         } else {
 
 
-                                            transactionSchemeService.create(item).then(function (data) {
+                                            transactionImportSchemeService.create(item).then(function (data) {
 
                                                 resolveLocal();
                                             }).catch(function (reason) {
@@ -2461,7 +2461,7 @@
 
                                     } else {
 
-                                        transactionSchemeService.create(item).then(function (value1) {
+                                        transactionImportSchemeService.create(item).then(function (value1) {
 
                                             resolveLocal();
 

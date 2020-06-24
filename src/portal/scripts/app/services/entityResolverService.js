@@ -41,7 +41,7 @@
     var priceDownloadSchemeService = require('./import/priceDownloadSchemeService');
     var csvImportSchemeService = require('./import/csvImportSchemeService');
     var complexImportSchemeService = require('./import/complexImportSchemeService');
-    var complexTransactionImportSchemeService = require('./import/transactionSchemeService');
+    var complexTransactionImportSchemeService = require('./import/transactionImportSchemeService');
 
     var costMethodService = require('./instrument/instrumentCostMethodService');
 

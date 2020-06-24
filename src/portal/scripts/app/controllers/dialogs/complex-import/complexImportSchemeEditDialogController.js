@@ -13,7 +13,7 @@
 
     var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
-    var transactionSchemeService = require('../../../services/import/transactionSchemeService');
+    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
@@ -89,7 +89,7 @@
 
         vm.getTransactionImportSchemesList = function () {
 
-            transactionSchemeService.getListLight().then(function (data) {
+            transactionImportSchemeService.getListLight().then(function (data) {
 
                 vm.transactionImportSchemes = data.results;
                 vm.readyStatus.transactionImportSchemes = true;
