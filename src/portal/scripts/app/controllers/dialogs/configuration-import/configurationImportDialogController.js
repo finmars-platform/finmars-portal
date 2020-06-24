@@ -333,6 +333,8 @@
                     return 'Transaction User Field Names';
                 case 'ui.entitytooltip':
                     return 'System Tooltips';
+                case 'ui.colorpalette':
+                    return 'Color Palettes';
                 case 'pricing.currencypricingscheme':
                     return 'Currency Pricing Scheme';
                 case 'pricing.instrumentpricingscheme':

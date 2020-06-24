@@ -685,6 +685,8 @@
                     return "Bookmarks";
                 case 'ui.entitytooltip':
                     return 'System Tooltips';
+                case 'ui.colorpalette':
+                    return 'Color Palettes';
                 case 'reference_tables.referencetable':
                     return "Reference Tables";
                 case 'csv_import.csvimportscheme':
