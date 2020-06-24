@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var transactionSchemeService = require('../../../services/import/transactionSchemeService');
+    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var reconciliationProcessFileService = require('../../../services/reconciliation/reconciliationProcessFileService');
 
     module.exports = function reconProcessBankFileDialogController($scope, $mdDialog, data) {
@@ -69,7 +69,7 @@
 
         vm.getSchemesList = function () {
 
-            transactionSchemeService.getListLight().then(function (data) {
+            transactionImportSchemeService.getListLight().then(function (data) {
                 vm.schemes = data.results;
                 vm.readyStatus.schemes = true;
                 $scope.$apply();

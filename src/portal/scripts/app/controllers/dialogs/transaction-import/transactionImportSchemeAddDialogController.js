@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var transactionSchemeService = require('../../../services/import/transactionSchemeService');
+    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
@@ -439,7 +439,7 @@
 
                 vm.processing = true;
 
-                transactionSchemeService.create(vm.scheme).then(function (data) {
+                transactionImportSchemeService.create(vm.scheme).then(function (data) {
 
                     toastNotificationService.success("Transaction Import Scheme " + vm.scheme.scheme_name + ' was successfully created');
 

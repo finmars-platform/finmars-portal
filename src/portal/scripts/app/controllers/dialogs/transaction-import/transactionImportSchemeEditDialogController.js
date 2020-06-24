@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var transactionSchemeService = require('../../../services/import/transactionSchemeService');
+    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
@@ -153,7 +153,7 @@
 
         vm.getItem = function () {
 
-            transactionSchemeService.getByKey(schemeId).then(function (data) {
+            transactionImportSchemeService.getByKey(schemeId).then(function (data) {
                 vm.scheme = data;
 
                 if (vm.scheme.inputs.length) {
@@ -510,7 +510,7 @@
 
                 vm.processing = true;
 
-                transactionSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+                transactionImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
 
                     toastNotificationService.success("Transaction Import Scheme " + vm.scheme.scheme_name + ' was successfully saved');
 

@@ -12,8 +12,8 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function () {
-        return xhrService.fetch(baseUrl + 'import/complex-transaction-import-scheme/',
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/complex-transaction-import-scheme/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -24,8 +24,8 @@
             })
     };
 
-    var getListLight = function () {
-        return xhrService.fetch(baseUrl + 'import/complex-transaction-import-scheme-light/',
+    var getListLight = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/complex-transaction-import-scheme-light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -37,7 +37,7 @@
     };
     
     
-    var create = function (scheme) {
+    var create = function (data) {
         return xhrService.fetch(baseUrl + 'import/complex-transaction-import-scheme/',
             {
                 method: 'POST',
@@ -47,7 +47,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
+                body: JSON.stringify(data)
             })
     };
 
@@ -64,7 +64,7 @@
             })
     };
 
-    var update = function (id, scheme) {
+    var update = function (id, data) {
         return xhrService.fetch(baseUrl + 'import/complex-transaction-import-scheme/' + id + '/',
             {
                 method: 'PATCH',
@@ -74,7 +74,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
+                body: JSON.stringify(data)
             })
     };
 
@@ -88,7 +88,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            })
+            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                resolve({status: 'deleted'});
+            });
+        })
     };
 
     module.exports = {
