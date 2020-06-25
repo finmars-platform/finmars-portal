@@ -9,6 +9,9 @@
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
     var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
     var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
+
+    var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
+
     var pricingProcedureService = require('../../services/pricing/pricingProcedureService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
@@ -390,6 +393,81 @@
                         } else {
 
                             toastNotificationService.error('Dashboard Layout is not set');
+
+                        }
+
+                    }
+
+                    if (item.action === 'download_instrument') {
+
+                        if (item.target) {
+
+                            instrumentDownloadSchemeService.getList({
+                                filters: {
+                                    scheme_name: item.target
+                                }
+                            }).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var scheme = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'InstrumentDownloadDialogController as vm',
+                                        templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {
+                                                scheme: scheme
+                                            }
+                                        }
+                                    })
+
+
+                                } else {
+
+                                    toastNotificationService.error('Instrument Download Scheme is not found');
+
+                                    $mdDialog.show({
+                                        controller: 'InstrumentDownloadDialogController as vm',
+                                        templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {}
+                                        }
+                                    })
+
+                                }
+                            })
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'InstrumentDownloadDialogController as vm',
+                                templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                                targetEvent: $event,
+                                multiple: true,
+                                locals: {
+                                    data: {}
+                                }
+                            })
+
+                        }
+
+
+                    }
+
+                    if (item.action === 'go_to') {
+
+                        if (item.target) {
+
+                            location.hash = '#!' + item.target;
+
+                        } else {
+
+                            toastNotificationService.error('Link is not set');
 
                         }
 

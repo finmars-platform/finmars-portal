@@ -10,12 +10,23 @@
     var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
     var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
+    var instrumentDownloadSchemeService = require('../../../services/import/instrumentDownloadSchemeService');
 
     var uiService = require('../../../services/uiService');
 
     module.exports = function dashboardConstructorButtonSetComponentDialogController($scope, $mdDialog, item, dataService, eventService) {
 
         var vm = this;
+
+        vm.readyStatus = {
+            transactionTypes: false,
+            pricingProcedures: false,
+            simpleImportSchemes: false,
+            transactionImportSchemes: false,
+            complexImportSchemes: false,
+            dashboardLayouts: false,
+            instrumentDownloadSchemes: false
+        };
 
         if (item) {
             vm.item = item;
@@ -129,7 +140,7 @@
         ];
 
         vm.targets = {
-            'book_transaction': [], // +
+            'book_transaction': [],
             'create_new_record': [
                 {
                     value: "portfolio",
@@ -197,16 +208,134 @@
                     name: "Pricing Policy"
                 }
 
-            ], // +
+            ],
             'open_report': [],
             'open_data_viewer': [],
             'open_dashboard': [],
-            'run_valuation_procedure': [], // +
+            'run_valuation_procedure': [],
             'import_data_from_file': [],
             'import_transactions_from_file': [],
             'complex_import_from_file': [],
             'download_instrument': [],
-            'go_to': []
+            'go_to': [
+                {
+                    value: '/',
+                    name: 'Homepage'
+                },
+                {
+                    value: '/dashboard',
+                    name: 'Dashboard'
+                },
+                {
+                    value: '/reports/balance',
+                    name: 'Balance Report'
+                },
+                {
+                    value: '/reports/profit-and-lost',
+                    name: 'P&L Report'
+                },
+                {
+                    value: '/reports/transaction',
+                    name: 'Transaction Report'
+                },
+                {
+                    value: '/reports/check-for-events',
+                    name: 'Events'
+                },
+                {
+                    value: '/data/portfolios',
+                    name: 'Portfolios'
+                },
+                {
+                    value: '/data/accounts',
+                    name: 'Accounts'
+                },
+                {
+                    value: '/data/instruments',
+                    name: 'Instruments'
+                },
+                {
+                    value: '/data/counterparties',
+                    name: 'Counterparties'
+                },
+                {
+                    value: '/data/responsibles',
+                    name: 'Responsibles'
+                },
+                {
+                    value: '/data/currency',
+                    name: 'Currencies'
+                },
+                {
+                    value: '/data/strategy/1',
+                    name: 'Strategy 1'
+                },
+                {
+                    value: '/data/strategy/2',
+                    name: 'Strategy 2'
+                },
+                {
+                    value: '/data/strategy/3',
+                    name: 'Strategy 3'
+                },
+                {
+                    value: '/data/complex-transactions',
+                    name: 'Transactions'
+                },
+                {
+                    value: '/data/transactions',
+                    name: 'Base Transactions'
+                },
+                {
+                    value: '/data/pricing',
+                    name: 'Prices'
+                },
+                {
+                    value: '/data/pricing-errors',
+                    name: 'Prices Errors'
+                },
+                {
+                    value: '/data/currencies',
+                    name: 'FX Rates'
+                },
+                {
+                    value: '/data/currencies-errors',
+                    name: 'FX Rates Errors'
+                },
+                {
+                    value: '/run-pricing-procedures',
+                    name: 'Run Pricing'
+                },
+                {
+                    value: '/import/simple-entity-import',
+                    name: 'Import Data (From File)'
+                },
+                {
+                    value: '/import/transaction-import',
+                    name: 'Import Transactions (From File)'
+                },
+                {
+                    value: '/import/complex-import',
+                    name: 'Import Data and Transactions (From File)'
+                },
+                {
+                    value: '/import/instrument-import',
+                    name: 'Import Instrument (From Provider)'
+                },
+                {
+                    value: '/import/prices-import',
+                    name: 'Import Prices/FX (From Provider)'
+                },
+                {
+                    value: '/import/mapping-tables-import',
+                    name: 'Mapping Tables'
+                },
+                {
+                    value: '/forum',
+                    name: 'Forum'
+                }
+
+            ]
         };
 
         vm.agree = function () {
@@ -240,6 +369,8 @@
 
         vm.getTransactionTypes = function(){
 
+            vm.readyStatus.transactionTypes = false;
+
             transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
 
                 vm.targets['book_transaction'] = data.results.map(function (item) {
@@ -249,13 +380,19 @@
                         name: item.name
                     }
 
-                })
+                });
+
+                vm.readyStatus.transactionTypes = true;
+
+                $scope.$apply();
 
             })
 
         };
 
         vm.getPricingProcedures = function(){
+
+            vm.readyStatus.pricingProcedures = false;
 
             pricingProcedureService.getList().then(function (data) {
 
@@ -266,13 +403,19 @@
                         name: item.name
                     }
 
-                })
+                });
+
+                vm.readyStatus.pricingProcedures = true;
+
+                $scope.$apply();
 
             })
 
         };
 
         vm.getSimpleImportSchemes = function(){
+
+            vm.readyStatus.simpleImportSchemes = false;
 
             csvImportSchemeService.getListLight().then(function (data) {
 
@@ -283,7 +426,11 @@
                         name: item.scheme_name
                     }
 
-                })
+                });
+
+                vm.readyStatus.simpleImportSchemes = true;
+
+                $scope.$apply();
 
 
             })
@@ -291,6 +438,8 @@
         };
 
         vm.getTransactionImportSchemes = function(){
+
+            vm.readyStatus.transactionImportSchemes = false;
 
             transactionImportSchemeService.getListLight().then(function (data) {
 
@@ -301,7 +450,11 @@
                         name: item.scheme_name
                     }
 
-                })
+                });
+
+                vm.readyStatus.transactionImportSchemes = true;
+
+                $scope.$apply();
 
 
             })
@@ -309,6 +462,8 @@
         };
 
         vm.getComplexImportSchemes = function(){
+
+            vm.readyStatus.complexImportSchemes = false;
 
             complexImportSchemeService.getList().then(function (data) {
 
@@ -319,7 +474,11 @@
                         name: item.scheme_name
                     }
 
-                })
+                });
+
+                vm.readyStatus.complexImportSchemes = true;
+
+                $scope.$apply();
 
 
             })
@@ -327,6 +486,8 @@
         };
 
         vm.getDashboardLayouts = function(){
+
+            vm.readyStatus.dashboardLayouts = false;
 
             uiService.getDashboardLayoutList().then(function (data) {
 
@@ -337,10 +498,53 @@
                         name: item.name
                     }
 
-                })
+                });
+
+                vm.readyStatus.dashboardLayouts = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getInstrumentDownloadSchemes = function(){
+
+            vm.readyStatus.instrumentDownloadSchemes = false;
+
+            instrumentDownloadSchemeService.getList().then(function (data) {
+
+                vm.targets['download_instrument'] = data.results.map(function (item) {
+
+                    return {
+                        value: item.scheme_name,
+                        name: item.scheme_name
+                    }
+
+                });
+
+                vm.readyStatus.instrumentDownloadSchemes = true;
+
+                $scope.$apply();
 
 
             })
+
+        };
+
+        vm.checkReadyStatus = function(){
+
+          var result = true;
+
+          Object.keys(vm.readyStatus).forEach(function (key) {
+
+              if (!vm.readyStatus[key]) {
+                  result = false;
+              }
+
+          });
+
+          return result
 
         };
 
@@ -352,6 +556,7 @@
             vm.getTransactionImportSchemes();
             vm.getComplexImportSchemes();
             vm.getDashboardLayouts();
+            vm.getInstrumentDownloadSchemes();
 
             console.log('dataService', dataService);
 

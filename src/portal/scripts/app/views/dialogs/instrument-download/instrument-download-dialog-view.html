@@ -8,9 +8,9 @@
         </div>
     </md-toolbar>
     <md-dialog-content style="background: #E5E5E5;">
-        <div data-ng-if="vm.readyStatus.mapping" layout="column">
+        <div data-ng-if="vm.readyStatus.schemes" layout="column">
             <div layout="row">
-                <md-card style="width: 100%">
+                <md-card style="width: 100%; min-height: 450px;">
                     <md-card-content class="p-t-26">
                         <div layout="row">
                             <div layout="column">
@@ -90,8 +90,7 @@
                                     Download
                                 </md-button>
                                 <div data-ng-if="vm.readyStatus.processing">
-                                    <md-progress-circular md-mode="indeterminate"
-                                                          md-diameter="48"></md-progress-circular>
+                                    <progress-circular diameter="50"></progress-circular>
                                 </div>
                             </div>
                         </div>
@@ -798,9 +797,9 @@
                 </div>
             </div>
         </div>
-        <div data-ng-if="!vm.readyStatus.mapping">
+        <div data-ng-if="!vm.readyStatus.schemes">
             <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                <progress-circular diameter="100"></progress-circular>
             </div>
         </div>
     </md-dialog-content>

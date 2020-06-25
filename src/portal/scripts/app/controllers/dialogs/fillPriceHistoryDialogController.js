@@ -11,7 +11,7 @@
     var dataProvidersService = require('../../services/import/dataProvidersService');
     var scheduleService = require('../../services/import/scheduleService');
     var attributeTypeService = require('../../services/attributeTypeService');
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
+    var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
     var instrumentService = require('../../services/instrumentService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
