@@ -28,7 +28,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $state, entityType, entityId) {
+    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $state, entityType, entityId, data) {
 
         var vm = this;
 

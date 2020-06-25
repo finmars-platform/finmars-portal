@@ -88,10 +88,11 @@
                                         targetEvent: $event,
                                         locals: {
                                             entityType: 'complex-transaction',
-                                            entity: {},
-                                            data: {
-                                                contextData: contextData,
+                                            entity: {
                                                 transaction_type: transactionType.id
+                                            },
+                                            data: {
+                                                contextData: contextData
                                             }
                                         }
                                     }).then(function (res) {
