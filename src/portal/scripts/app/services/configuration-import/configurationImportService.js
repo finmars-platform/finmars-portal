@@ -13,7 +13,7 @@
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
     var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
     var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
+    var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
     var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
     var pricingScheduleService = require('../pricing/pricingScheduleService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
@@ -610,7 +610,7 @@
                                     }
                                 };
 
-                                instrumentSchemeService.getList(options).then(function (data) {
+                                instrumentDownloadSchemeService.getList(options).then(function (data) {
 
                                     var result;
 
@@ -642,16 +642,16 @@
                                             });
 
 
-                                            resolveLocal(instrumentSchemeService.update(item.id, item))
+                                            resolveLocal(instrumentDownloadSchemeService.update(item.id, item))
 
                                         } else {
 
-                                            resolveLocal(instrumentSchemeService.create(item));
+                                            resolveLocal(instrumentDownloadSchemeService.create(item));
                                         }
 
                                     } else {
 
-                                        resolveLocal(instrumentSchemeService.create(item));
+                                        resolveLocal(instrumentDownloadSchemeService.create(item));
                                     }
 
                                 })
@@ -2286,7 +2286,7 @@
                         case 'integrations.instrumentdownloadscheme':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                instrumentSchemeService.getList({
+                                instrumentDownloadSchemeService.getList({
                                     filters: {
                                         scheme_name: item.scheme_name
                                     }
@@ -2324,13 +2324,13 @@
 
                                         } else {
 
-                                            resolveLocal(instrumentSchemeService.create(item));
+                                            resolveLocal(instrumentDownloadSchemeService.create(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(instrumentSchemeService.create(item));
+                                        resolveLocal(instrumentDownloadSchemeService.create(item));
 
                                     }
 

@@ -280,7 +280,7 @@ app.controller('DefaultPricingConfigDialogController', ['$scope', '$mdDialog', r
 
 // Instrument Download
 
-app.controller('InstrumentDownloadDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrument-download/instrumentDownloadDialogController')]);
+app.controller('InstrumentDownloadDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrument-download/instrumentDownloadDialogController')]);
 app.controller('InstrumentDownloadSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrument-download/instrumentDownloadSchemeAddDialogController')]);
 app.controller('InstrumentDownloadSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/instrument-download/instrumentDownloadSchemeEditDialogController')]);
 

@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
+    var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
     var instrumentEventService = require('../../services/instrumentEventService');
 
     module.exports = function ($scope, $mdDialog) {
@@ -45,7 +45,10 @@
             $mdDialog.show({
                 controller: 'InstrumentDownloadDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
-                targetEvent: $event
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                }
             })
 
         };
@@ -116,7 +119,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);
-                    instrumentSchemeService.create(res.data).then(function () {
+                    instrumentDownloadSchemeService.create(res.data).then(function () {
                         vm.getList();
                     })
                 }

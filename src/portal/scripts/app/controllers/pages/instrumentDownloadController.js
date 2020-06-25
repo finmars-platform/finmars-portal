@@ -5,9 +5,7 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
+    var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
     var instrumentService = require('../../services/instrumentService');
     var currencyService = require('../../services/currencyService');
 
@@ -20,16 +18,12 @@
     var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('InstrumentDownloadController', 'initialized');
-
-        console.log('mdDialog is ', $mdDialog);
+    module.exports = function instrumentDownloadController($scope, $mdDialog) {
 
         var vm = this;
 
         vm.readyStatus = {
-            mapping: false,
+            schemes: false,
             processing: false,
             dailyModel: false,
             priceDownloadScheme: false,
@@ -40,8 +34,7 @@
 
         vm.config = {
             instrument_code: "",
-            mode: 1,
-
+            mode: 1
         };
 
         vm.loadIsAvailable = function () {
@@ -59,41 +52,6 @@
         vm.dynAttributes = {};
 
         vm.providerId = 1; //TODO HARD REFACTOR CODE BLOOMBERG PROVIDER
-
-        instrumentSchemeService.getList(vm.providerId).then(function (data) {
-            vm.instrumentSchemes = data.results;
-            vm.readyStatus.mapping = true;
-            $scope.$apply();
-        });
-
-        instrumentDailyPricingModelService.getList().then(function (data) {
-            vm.dailyModels = data;
-            vm.readyStatus.dailyModel = true;
-            $scope.$apply();
-        });
-
-        importPriceDownloadSchemeService.getList().then(function (data) {
-            vm.priceDownloadSchemes = data.results;
-            vm.readyStatus.priceDownloadScheme = true;
-            $scope.$apply();
-        });
-
-        instrumentPaymentSizeDetailService.getList().then(function (data) {
-            vm.paymentSizeDefaults = data;
-            $scope.$apply();
-        });
-
-        instrumentTypeService.getList().then(function (data) {
-            vm.instrumentTypes = data.results;
-            vm.readyStatus.instrumentType = true;
-            $scope.$apply();
-        });
-
-        currencyService.getList().then(function (data) {
-            vm.currencies = data.results;
-            vm.readyStatus.currency = true;
-            $scope.$apply();
-        });
 
         vm.appendString = function (string) {
             var code = vm.config.instrument_code.split(' ')[0];
@@ -263,16 +221,12 @@
             }).then(function (res) {
                 if (res && res.status === 'agree') {
                     console.log('res', res.data);
-                    instrumentSchemeService.update(vm.config.instrument_download_scheme, res.data).then(function () {
+                    instrumentDownloadSchemeService.update(vm.config.instrument_download_scheme, res.data).then(function () {
                         //vm.getList();
                         $scope.$apply();
                     })
                 }
             });
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function ($event) {
@@ -314,6 +268,47 @@
             })
 
         };
+
+        vm.init = function () {
+
+            instrumentDownloadSchemeService.getList(vm.providerId).then(function (data) {
+                vm.instrumentSchemes = data.results;
+                vm.readyStatus.schemes = true;
+                $scope.$apply();
+            });
+
+            instrumentDailyPricingModelService.getList().then(function (data) {
+                vm.dailyModels = data;
+                vm.readyStatus.dailyModel = true;
+                $scope.$apply();
+            });
+
+            importPriceDownloadSchemeService.getList().then(function (data) {
+                vm.priceDownloadSchemes = data.results;
+                vm.readyStatus.priceDownloadScheme = true;
+                $scope.$apply();
+            });
+
+            instrumentPaymentSizeDetailService.getList().then(function (data) {
+                vm.paymentSizeDefaults = data;
+                $scope.$apply();
+            });
+
+            instrumentTypeService.getList().then(function (data) {
+                vm.instrumentTypes = data.results;
+                vm.readyStatus.instrumentType = true;
+                $scope.$apply();
+            });
+
+            currencyService.getList().then(function (data) {
+                vm.currencies = data.results;
+                vm.readyStatus.currency = true;
+                $scope.$apply();
+            });
+
+        };
+
+        vm.init()
 
     };
 

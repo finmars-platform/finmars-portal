@@ -5,26 +5,26 @@
 
     'use strict';
 
-    var instrumentSchemeRepository = require('../../repositories/import/instrumentSchemeRepository');
+    var instrumentDownloadSchemeRepository = require('../../repositories/import/instrumentDownloadSchemeRepository');
 
     var getList = function (providerId) {
-        return instrumentSchemeRepository.getList(providerId);
+        return instrumentDownloadSchemeRepository.getList(providerId);
     };
 
     var create = function (scheme) {
-        return instrumentSchemeRepository.create(scheme);
+        return instrumentDownloadSchemeRepository.create(scheme);
     };
 
     var getByKey = function(id) {
-        return instrumentSchemeRepository.getByKey(id);
+        return instrumentDownloadSchemeRepository.getByKey(id);
     };
 
     var update = function(id, scheme) {
-        return instrumentSchemeRepository.update(id, scheme);
+        return instrumentDownloadSchemeRepository.update(id, scheme);
     };
 
     var deleteByKey = function(id) {
-        return instrumentSchemeRepository.deleteByKey(id)
+        return instrumentDownloadSchemeRepository.deleteByKey(id)
     };
 
     module.exports = {

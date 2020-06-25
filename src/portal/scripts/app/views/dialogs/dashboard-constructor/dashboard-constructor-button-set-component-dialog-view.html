@@ -36,7 +36,7 @@
 
             </div>
 
-            <div class="constructor-button-set-grid">
+            <div data-ng-show="vm.checkReadyStatus()" class="constructor-button-set-grid">
 
                 <div data-ng-repeat="row in vm.item.settings.grid.rows" class="overflow-hidden">
 
@@ -84,56 +84,11 @@
 
             </div>
 
-            <!--<div data-ng-repeat="button in vm.item.settings.buttons track by $index">-->
-
-            <!--<md-input-container style="width: 200px;">-->
-            <!--<label for="">Name</label>-->
-            <!--<input type="text" data-ng-model="button.name">-->
-            <!--</md-input-container>-->
-
-            <!--<md-input-container style="width: 200px;">-->
-            <!--<label for="">Link To</label>-->
-            <!--<md-select data-ng-model="button.link">-->
-            <!--<md-option-->
-            <!--data-ng-repeat="item in vm.links | orderBy:'-name' track by $index "-->
-            <!--ng-value="item.link">{{item.name}}-->
-            <!--</md-option>-->
-            <!--</md-select>-->
-            <!--</md-input-container>-->
-
-            <!--<md-button ng-click="vm.deleteButton($event, button, $index)" class="md-raised md-warn">-->
-            <!--Delete-->
-            <!--</md-button>-->
-
-            <!--</div>-->
-
-            <!--<div>-->
-            <!--<h5>Add new Button</h5>-->
-
-            <!--<div>-->
-
-            <!--<md-input-container style="width: 200px;">-->
-            <!--<label for="">Name</label>-->
-            <!--<input type="text" data-ng-model="vm.newButton.name">-->
-            <!--</md-input-container>-->
-
-            <!--<md-input-container style="width: 200px;">-->
-            <!--<label for="">Link To</label>-->
-            <!--<md-select data-ng-model="vm.newButton.link">-->
-            <!--<md-option-->
-            <!--data-ng-repeat="item in vm.links | orderBy:'-name' track by $index "-->
-            <!--ng-value="item.link">{{item.name}}-->
-            <!--</md-option>-->
-            <!--</md-select>-->
-            <!--</md-input-container>-->
-
-
-            <!--<md-button ng-click="vm.addNewButton()" class="md-raised md-primary">-->
-            <!--Add-->
-            <!--</md-button>-->
-
-            <!--</div>-->
-            <!--</div>-->
+            <div data-ng-show="!vm.checkReadyStatus()">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                    <progress-circular diameter="100"></progress-circular>
+                </div>
+            </div>
 
         </div>
     </md-dialog-content>

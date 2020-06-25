@@ -5,7 +5,7 @@
 
     var logService = require('../../../../../../core/services/logService');
 
-    var instrumentSchemeService = require('../../../services/import/instrumentSchemeService');
+    var instrumentDownloadSchemeService = require('../../../services/import/instrumentDownloadSchemeService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -18,7 +18,7 @@
 
         vm.getList = function () {
             vm.readyStatus.instrumentSchemes = false;
-            instrumentSchemeService.getList().then(function (data) {
+            instrumentDownloadSchemeService.getList().then(function (data) {
                 vm.instrumentSchemes = data.results;
                 vm.readyStatus.instrumentSchemes = true;
                 $scope.$apply();
@@ -53,7 +53,7 @@
             }).then(function (res) {
                 if (res && res.status === 'agree') {
                     console.log('res', res.data);
-                    instrumentSchemeService.update(item.id, res.data).then(function () {
+                    instrumentDownloadSchemeService.update(item.id, res.data).then(function () {
                         vm.getList();
                         $scope.$apply();
                     })
@@ -80,7 +80,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);
-                    instrumentSchemeService.deleteByKey(item.id);
+                    instrumentDownloadSchemeService.deleteByKey(item.id);
                     setTimeout(function () {
                         vm.getList();
                     }, 100)
