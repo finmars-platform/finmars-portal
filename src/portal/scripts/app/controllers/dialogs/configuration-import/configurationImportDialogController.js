@@ -648,7 +648,8 @@
                     "integrations.periodicitymapping",
                     "integrations.dailypricingmodelmapping",
                     "integrations.paymentsizedetailmapping",
-                    "integrations.accrualcalculationmodelmapping"
+                    "integrations.accrualcalculationmodelmapping",
+                    "integrations.pricingconditionmapping"
                 ],
                 groupKey: "systemElements"
             },
