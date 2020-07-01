@@ -43,30 +43,30 @@
 
                 <table class="members-groups-table" data-ng-if="vm.invites.length">
                     <thead class="members-groups-thead">
-                        <tr>
-                            <th> Username</th>
-                            <th> Invited by</th>
-                            <th> Assigned groups</th>
-                            <th> Status</th>
-                            <th></th>
-                        </tr>
+                    <tr>
+                        <th> Username</th>
+                        <th> Invited by</th>
+                        <th> Assigned groups</th>
+                        <th> Status</th>
+                        <th></th>
+                    </tr>
                     </thead>
 
                     <tbody class="members-groups-tbody">
 
-                        <tr data-ng-repeat="item in vm.invites">
+                    <tr data-ng-repeat="item in vm.invites">
 
-                            <td>{{item.user_object.username}}</td>
-                            <td>{{item.from_member_object.username}}</td>
-                            <td>{{item.assigned_groups_pretty}}</td>
-                            <td>{{vm.getInviteStatus(item)}}</td>
-                            <td class="members-groups-delete">
-                                <md-button class="members-groups-delete-btn"
-                                           data-ng-click="vm.deleteInvite($event, item)">
-                                    <ng-md-icon icon="close" style="fill:#000000;" size="20"></ng-md-icon>
-                                </md-button>
-                            </td>
-                        </tr>
+                        <td>{{item.user_object.username}}</td>
+                        <td>{{item.from_member_object.username}}</td>
+                        <td>{{item.assigned_groups_pretty}}</td>
+                        <td>{{vm.getInviteStatus(item)}}</td>
+                        <td class="members-groups-delete">
+                            <md-button class="members-groups-delete-btn"
+                                       data-ng-click="vm.deleteInvite($event, item)">
+                                <ng-md-icon icon="close" style="fill:#000000;" size="20"></ng-md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
 
                     </tbody>
                 </table>
@@ -129,6 +129,52 @@
                     <progress-circular diameter="100"></progress-circular>
                 </div>
             </div>
+        </md-tab>
+        <md-tab label="Ecosystem">
+
+            <div data-ng-if="vm.readyStatus.masterUser" class="p-t-24">
+
+                <div>
+
+                    <md-input-container class="md-block" style="width: 200px;">
+                        <label>Status</label>
+                        <md-select
+                                data-ng-model="vm.masterUser.status">
+                            <div class="select-options-holder">
+                                <md-option ng-value="1">
+                                    Online
+                                </md-option>
+                                <md-option ng-value="3">
+                                    Backup
+                                </md-option>
+                            </div>
+                        </md-select>
+                    </md-input-container>
+
+                    <div layout="row">
+
+                        <md-button ng-click="vm.saveMasterUser($event)"
+                                   class="md-raised">
+                            Save
+                        </md-button>
+
+                        <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
+                            <progress-circular diameter="30"></progress-circular>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div data-ng-if="!vm.readyStatus.masterUser">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                    <progress-circular diameter="100"></progress-circular>
+                </div>
+            </div>
+
         </md-tab>
     </md-tabs>
 </div>

@@ -900,6 +900,12 @@
 
                 };
 
+                var flagMissingColumns = function(){
+
+
+
+                };
+
                 scope.addColumn = function ($event) {
 
                     var allAttrsList = getAttributes();
@@ -978,6 +984,7 @@
 
                         scope.columns = scope.evDataService.getColumns();
                         getColsAvailableForAdditions();
+                        flagMissingColumns();
                         //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
 
                     });

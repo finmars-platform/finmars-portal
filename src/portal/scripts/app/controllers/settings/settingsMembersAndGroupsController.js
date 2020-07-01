@@ -4,6 +4,7 @@
 
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
+    var usersService = require('../../services/usersService');
 
     module.exports = function settingsMembersAndGroupsController($scope, $mdDialog) {
 
@@ -12,7 +13,9 @@
         vm.members = [];
         vm.groups = [];
 
-        vm.readyStatus = {content: false};
+        vm.readyStatus = {content: false, masterUser: false};
+
+        vm.processing = false;
 
         vm.getData = function () {
 
@@ -55,7 +58,7 @@
 
                         vm.invites = data.results;
 
-                        vm.invites  = vm.invites.map(function (item) {
+                        vm.invites = vm.invites.map(function (item) {
 
                             item.assigned_groups_pretty = item.groups_object.map(function (group) {
                                 return group.name
@@ -72,6 +75,43 @@
                     })
                 });
             });
+        };
+
+        vm.getMasterUser = function () {
+
+            vm.readyStatus.masterUser = false;
+
+            usersService.getCurrentMasterUser().then(function (data) {
+
+                console.log('getMasterUser data', data);
+
+                vm.masterUser = data;
+
+                vm.readyStatus.masterUser = true;
+
+                $scope.$apply();
+
+            })
+
+
+        };
+
+        vm.saveMasterUser = function ($event) {
+
+            vm.processing = true;
+
+            usersService.updateMaster(vm.masterUser.id, vm.masterUser).then(function (data) {
+
+                console.log('saveMasterUser data', data);
+
+                vm.processing = false;
+
+                $scope.$apply();
+
+                vm.getMasterUser();
+
+            })
+
         };
 
         vm.deleteGroup = function ($event, group) {
@@ -221,17 +261,17 @@
 
         };
 
-        vm.getInviteStatus = function(item){
+        vm.getInviteStatus = function (item) {
 
-            if (item.status === 0){
+            if (item.status === 0) {
                 return "Sent"
             }
 
-            if (item.status === 1){
+            if (item.status === 1) {
                 return "Accepted"
             }
 
-            if (item.status === 2){
+            if (item.status === 2) {
                 return "Declined"
             }
 
@@ -239,7 +279,7 @@
 
         };
 
-        vm.deleteInvite = function($event, item) {
+        vm.deleteInvite = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -276,6 +316,7 @@
         vm.init = function () {
 
             vm.getData();
+            vm.getMasterUser();
 
         };
 
