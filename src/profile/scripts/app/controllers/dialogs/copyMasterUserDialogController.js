@@ -34,9 +34,11 @@
                 vm.processing = false;
                 $scope.$apply();
 
-                toastNotificationService.success("Database " + vm.name + ' was successfully created');
+                toastNotificationService.info("Copy of Database  " + vm.name + ' is currently processing');
 
-                $mdDialog.hide({status: 'agree'});
+                $mdDialog.hide({status: 'agree', data: {
+                    task: data
+                }});
 
             }).catch(function (reason) {
 

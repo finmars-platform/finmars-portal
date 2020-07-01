@@ -13,6 +13,8 @@
 
         vm.readyStatus = {masterUsers: false, invites: false};
 
+        vm.copyMasterUserTask;
+
         vm.getMasterUsersList = function () {
 
             vm.readyStatus.masterUsers = false;
@@ -139,14 +141,14 @@
                 targetEvent: $event
             }).then(function (value) {
 
-                    vm.getMasterUsersList();
+                vm.getMasterUsersList();
 
             })
 
 
         };
 
-        vm.copyMasterUser = function($event, item) {
+        vm.copyMasterUser = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'CopyMasterUserDialogController as vm',
@@ -161,7 +163,51 @@
             }).then(function (res) {
 
                 if (res.status === 'agree') {
+
+
+                    if (res.data && res.data.task) {
+
+                        vm.copyMasterUserTask = res.data.task;
+
+                        vm.initTaskStatusPolling();
+
+                    }
+
+                }
+
+            })
+
+        };
+
+        vm.initTaskStatusPolling = function () {
+
+            vm.getTaskInfo()
+
+
+        };
+
+        vm.getTaskInfo = function () {
+
+            usersService.copyMasterUser(vm.copyMasterUserTask).then(function (data) {
+
+                vm.copyMasterUserTask = data;
+
+                console.log('vm.copyMasterUserTask', vm.copyMasterUserTask);
+
+                $scope.$apply();
+
+                if (vm.copyMasterUserTask.task_status === 'SUCCESS') {
+
                     vm.getMasterUsersList();
+
+                } else {
+
+                    setTimeout(function () {
+
+                        vm.getTaskInfo();
+
+                    }, 1000)
+
                 }
 
             })

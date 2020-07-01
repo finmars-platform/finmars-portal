@@ -203,7 +203,7 @@
     };
 
     var getMasterByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'users/master-user/' + id, {
+        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -214,10 +214,11 @@
     };
 
     var updateMaster = function (id, user) {
-        return xhrService.fetch(baseUrl + 'users/master-user/' + id, {
+        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
@@ -226,10 +227,11 @@
     };
 
     var patchMaster = function (id, user) {
-        return xhrService.fetch(baseUrl + 'users/master-user/' + id, {
+        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
@@ -238,10 +240,11 @@
     };
 
     var deleteMasterByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'users/master-user/' + id, {
+        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
