@@ -4,13 +4,18 @@
 (function () {
 
     var uiService = require('../../services/uiService');
+    var attributeTypeService = require('../../services/attributeTypeService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
+
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function entityTooltipPage($scope, $mdDialog) {
 
         var vm = this;
 
         vm.readyStatus = {
-            content: false
+            content: false,
+            attributeTypes: false
         };
 
         vm.tabs = [
@@ -85,6 +90,10 @@
                 items: []
             }
         ];
+
+        vm.attributeTypes = {
+
+        };
 
         vm.getData = function () {
 
@@ -189,6 +198,49 @@
 
         };
 
+        vm.getAttributeTypes = function(){
+
+            var promises = [];
+
+            vm.tabs.forEach(function (tab) {
+
+                var entity = metaContentTypesService.findEntityByContentType(tab.content_type);
+
+                promises.push(new Promise(function (resolve, reject) {
+
+                    console.log("Requesting " + tab.content_type + ' attribute types');
+
+                    try {
+
+                        attributeTypeService.getList(entity).then(function (data) {
+
+                            vm.attributeTypes[tab.content_type] = data.results;
+
+                            resolve();
+
+                        })
+
+                    } catch(error) {
+
+                        console.log('error', error);
+
+                        resolve()
+                    }
+
+                }))
+            });
+
+            Promise.all(promises).then(function (value) {
+
+                vm.readyStatus.attributeTypes = true;
+
+                $scope.$apply();
+
+            })
+
+
+        };
+
         vm.saveTooltips = function () {
 
             var promises = [];
@@ -211,7 +263,33 @@
 
                     }
 
-                })
+                });
+
+
+                if (vm.attributeTypes[tab.content_type]) {
+
+                    vm.attributeTypes[tab.content_type].forEach(function (attributeType) {
+
+                        if (attributeType.changed) {
+
+                            var entity = metaContentTypesService.findEntityByContentType(tab.content_type);
+
+                            promises.push(new Promise(function (resolve, reject) {
+
+                                attributeTypeService.update(entity, attributeType.id, attributeType).then(function (value) {
+
+                                    resolve();
+
+                                })
+
+                            }))
+
+                        }
+
+                    })
+
+                }
+
 
             });
 
@@ -219,32 +297,12 @@
 
                 vm.getData();
 
-                $mdDialog.show({
-                    controller: 'SuccessDialogController as vm',
-                    templateUrl: 'views/dialogs/success-dialog-view.html',
-                    locals: {
-                        success: {
-                            title: 'Success',
-                            description: 'Changes have been saved'
-                        }
-                    },
-                    autoWrap: true,
-                    skipHide: true
-                });
+                toastNotificationService.success('Success. Changes have been saved');
+
 
             }).catch(function (error) {
 
-                $mdDialog({
-                    controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
-                    clickOutsideToClose: false,
-                    locals: {
-                        warning: {
-                            title: 'Error',
-                            description: 'Error occured while trying to save tooltips'
-                        }
-                    }
-                });
+                toastNotificationService.error('Error. Error occurred while trying to save tooltips');
 
             });
 
@@ -253,6 +311,7 @@
         vm.init = function () {
 
             vm.getData();
+            vm.getAttributeTypes();
 
         };
 

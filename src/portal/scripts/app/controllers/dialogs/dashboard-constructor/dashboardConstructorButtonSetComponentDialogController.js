@@ -28,6 +28,8 @@
             instrumentDownloadSchemes: false
         };
 
+        console.log('item', item);
+
         if (item) {
             vm.item = item;
         } else {
@@ -35,56 +37,46 @@
                 type: 'button_set',
                 id: null, // should be generated before create
                 name: '',
-                settings: {
-                    buttons: []
-                }
+                settings: {}
             }
         }
 
         vm.componentsTypes = [];
 
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.addNewButton = function () {
+        vm.initGrid = function () {
 
-            vm.item.settings.buttons.push(vm.newButton);
-            vm.newButton = {}
+            if (!vm.item.settings.grid) {
 
-        };
+                vm.item.settings.rows = 6;
+                vm.item.settings.columns = 6;
 
-        vm.deleteButton = function ($event, button, $index) {
-
-            vm.item.settings.buttons = vm.item.settings.buttons.filter(function (item, index) {
-
-                return $index !== index;
-
-            });
-
-        };
-
-        vm.applyGrid = function(){
-
-            vm.item.settings.grid = {
-                rows: []
-            };
-
-            for (var i = 0; i < vm.item.settings.rows; i = i + 1) {
-
-                var row = {
-                    items: []
+                vm.item.settings.grid = {
+                    rows: []
                 };
 
-                for (var x = 0; x < vm.item.settings.columns; x = x + 1) {
+                for (var i = 0; i < 6; i = i + 1) {
 
-                    var button = {};
+                    var row = {
+                        items: [],
+                        index: i
+                    };
 
-                    row.items.push(button)
+                    for (var x = 0; x < 6; x = x + 1) {
+
+                        var button = {};
+
+                        row.items.push(button)
+
+                    }
+
+                    vm.item.settings.grid.rows.push(row)
 
                 }
-
-                vm.item.settings.grid.rows.push(row)
 
             }
 
@@ -367,7 +359,7 @@
             $mdDialog.hide({status: 'agree'});
         };
 
-        vm.getTransactionTypes = function(){
+        vm.getTransactionTypes = function () {
 
             vm.readyStatus.transactionTypes = false;
 
@@ -390,7 +382,7 @@
 
         };
 
-        vm.getPricingProcedures = function(){
+        vm.getPricingProcedures = function () {
 
             vm.readyStatus.pricingProcedures = false;
 
@@ -413,7 +405,7 @@
 
         };
 
-        vm.getSimpleImportSchemes = function(){
+        vm.getSimpleImportSchemes = function () {
 
             vm.readyStatus.simpleImportSchemes = false;
 
@@ -437,7 +429,7 @@
 
         };
 
-        vm.getTransactionImportSchemes = function(){
+        vm.getTransactionImportSchemes = function () {
 
             vm.readyStatus.transactionImportSchemes = false;
 
@@ -461,7 +453,7 @@
 
         };
 
-        vm.getComplexImportSchemes = function(){
+        vm.getComplexImportSchemes = function () {
 
             vm.readyStatus.complexImportSchemes = false;
 
@@ -485,7 +477,7 @@
 
         };
 
-        vm.getDashboardLayouts = function(){
+        vm.getDashboardLayouts = function () {
 
             vm.readyStatus.dashboardLayouts = false;
 
@@ -508,7 +500,7 @@
 
         };
 
-        vm.getInstrumentDownloadSchemes = function(){
+        vm.getInstrumentDownloadSchemes = function () {
 
             vm.readyStatus.instrumentDownloadSchemes = false;
 
@@ -532,19 +524,19 @@
 
         };
 
-        vm.checkReadyStatus = function(){
+        vm.checkReadyStatus = function () {
 
-          var result = true;
+            var result = true;
 
-          Object.keys(vm.readyStatus).forEach(function (key) {
+            Object.keys(vm.readyStatus).forEach(function (key) {
 
-              if (!vm.readyStatus[key]) {
-                  result = false;
-              }
+                if (!vm.readyStatus[key]) {
+                    result = false;
+                }
 
-          });
+            });
 
-          return result
+            return result
 
         };
 
@@ -560,7 +552,11 @@
 
             console.log('dataService', dataService);
 
-            vm.componentsTypes = dataService.getComponents()
+            vm.componentsTypes = dataService.getComponents();
+
+            vm.initGrid();
+
+            console.log("vm.item.settings", vm.item);
 
         };
 

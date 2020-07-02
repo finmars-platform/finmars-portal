@@ -55,6 +55,8 @@
                     scope.grid = scope.componentData.settings.grid;
 
                     console.log('scope.grid', scope.grid);
+                    console.log('scope.grid', scope.columns);
+                    console.log('scope.grid', scope.rows);
 
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);

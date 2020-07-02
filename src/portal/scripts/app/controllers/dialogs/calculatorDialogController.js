@@ -84,7 +84,7 @@
 
                             vm.clearAll();
                             vm.smallFontForCurrentNumber = true;
-                            vm.numberToShow = "Error occured";
+                            vm.numberToShow = "Error occurred";
                             vm.calculatorIsBroken = true;
 
                         } else { // If result is infinity, set off by dividing by zero
