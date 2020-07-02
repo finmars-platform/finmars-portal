@@ -81,6 +81,10 @@
 
     var getValue = function (obj, column) {
 
+        if (column.status === 'missing') {
+            return "Deleted"
+        }
+
         if (obj[column.key]) {
 
             if (typeof obj[column.key] === 'string') {
@@ -295,7 +299,7 @@
             }
 
             cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell' + textAlign + '"' + gCellTitle + '>' +
+                '<div class="g-cell' + textAlign + ' cell-status-' + column.status + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
                 cellValue +
                 '</div>' +

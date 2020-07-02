@@ -85,7 +85,7 @@
             <div class="g-groups-holder">
 
                 <md-card data-ng-repeat="item in groups track by item.key"
-                         class="group-item card"
+                         class="group-item card group-status-{{item.status}}"
                          data-group-key="{{item.key}}"
                          data-group-type-id="{{item.___group_type_id}}">
 
@@ -129,6 +129,7 @@
 
                         <span data-ng-if="!item.layout_name">{{item.name}}</span>
                         <span data-ng-if="item.layout_name">{{item.layout_name}}</span>
+                        <span data-ng-if="item.status == 'missing'">(Deleted)</span>
 
                     </div>
                     <div class="settings-btn">

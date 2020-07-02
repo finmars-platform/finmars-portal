@@ -30,7 +30,7 @@
                 <!--<div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">-->
                 <div class="g-columns-holder">
                     <!--<div data-ng-init="initDragula()" class="g-columns-holder">-->
-                    <md-card class="g-cell g-column"
+                    <md-card class="g-cell g-column column-status-{{column.status}}"
                              data-ng-repeat="column in columns track by column.key"
                              on-finish-render
                              data-ng-style="column.style"
@@ -89,11 +89,15 @@
                                 <!-- IMPORTANT .column-name-span class needed for converting table into file -->
                                 <div ng-if="!column.layout_name" class="caption">
                                     <span ng-bind="column.name" class="column-name-span"></span>
+                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                                 </div>
 
                                 <div ng-if="column.layout_name" class="caption">
                                     <span ng-bind="column.layout_name" class="column-name-span"></span>
+                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                                 </div>
+
+
                             </div>
 
                             <div data-ng-if="viewContext === 'dashboard' && hasFoldingBtn($index)"

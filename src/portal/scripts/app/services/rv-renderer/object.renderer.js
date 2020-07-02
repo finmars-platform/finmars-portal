@@ -245,6 +245,15 @@
 
             }
 
+            if (column.status === 'missing') {
+                return result = {
+                    html_result: 'Deleted',
+                    numeric_result: null,
+                    raw_text_result: 'Deleted'
+                };
+            }
+
+
         }
 
         return result;
@@ -429,7 +438,7 @@
             }
 
             cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
+                '<div class="g-cell ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
                 resultValue +
                 '</div>' +
