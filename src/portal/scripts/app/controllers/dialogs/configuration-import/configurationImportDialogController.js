@@ -818,7 +818,7 @@
 
                         if (configurationData.errors.length) {
 
-                            $mdDialog.hide({status: 'errors_occured', data: {}});
+                            $mdDialog.hide({status: 'errors_occurred', data: {}});
 
                             // $mdDialog.show({
                             //     controller: 'ConfigurationImportErrorsDialogController as vm',

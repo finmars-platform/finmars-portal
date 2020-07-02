@@ -1,10 +1,10 @@
 <div>
 
-    <div data-ng-repeat="row in grid.rows">
+    <div data-ng-repeat="row in grid.rows" data-ng-show="row.index < rows">
 
         <div layout="row">
 
-            <div data-ng-repeat="item in row.items">
+            <div data-ng-repeat="item in row.items track by $index" data-ng-show="$index < columns" >
 
                 <div data-ng-if="item.action">
 
