@@ -26,6 +26,8 @@
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
@@ -1390,18 +1392,7 @@
 
                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
-                            $mdDialog.show({
-                                controller: 'SuccessDialogController as vm',
-                                templateUrl: 'views/dialogs/success-dialog-view.html',
-                                targetEvent: $event,
-                                multiple: true,
-                                locals: {
-                                    success: {
-                                        title: "Success",
-                                        description: 'Page was saved.'
-                                    }
-                                }
-                            })
+                            toastNotificationService.success("Success. Page was saved.");
 
                         });
 
