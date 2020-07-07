@@ -1132,6 +1132,7 @@
 
             delete layout.id;
             layout.name = layout.name + ' (Copy)';
+            layout.user_code = layout.user_code + ' (Copy)';
 
             uiService.createDashboardLayout(layout).then(function (data) {
 

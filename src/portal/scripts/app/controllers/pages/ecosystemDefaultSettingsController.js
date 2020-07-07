@@ -8,6 +8,8 @@
     var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
     var fieldResolverService = require('../../services/fieldResolverService');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
     module.exports = function ecosystemDefaultSettingsController($scope, $mdDialog) {
 
         var vm = this;
@@ -83,18 +85,7 @@
 
                 vm.readyStatus.processing = false;
 
-                $mdDialog.show({
-                    controller: 'SuccessDialogController as vm',
-                    templateUrl: 'views/dialogs/success-dialog-view.html',
-                    locals: {
-                        success: {
-                            title: 'Success',
-                            description: 'Changes have been saved'
-                        }
-                    },
-                    autoWrap: true,
-                    skipHide: true
-                });
+                toastNotificationService.success('Success! Changes have been saved');
 
             }).catch(function (error) {
 
@@ -105,7 +96,7 @@
                     locals: {
                         warning: {
                             title: 'Error',
-                            description: 'Error occured while trying to save fields'
+                            description: 'Error occurred while trying to save fields'
                         }
                     }
                 });

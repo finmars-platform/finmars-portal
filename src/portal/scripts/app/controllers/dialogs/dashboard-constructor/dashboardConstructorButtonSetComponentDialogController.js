@@ -6,11 +6,30 @@
     'use strict';
 
     var transactionTypeService = require('../../../services/transactionTypeService');
+    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
+    var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
     var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
+    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
+    var instrumentDownloadSchemeService = require('../../../services/import/instrumentDownloadSchemeService');
+
+    var uiService = require('../../../services/uiService');
+    var metaContentTypesService = require('../../../services/metaContentTypesService');
 
     module.exports = function dashboardConstructorButtonSetComponentDialogController($scope, $mdDialog, item, dataService, eventService) {
 
         var vm = this;
+
+        vm.readyStatus = {
+            transactionTypes: false,
+            pricingProcedures: false,
+            simpleImportSchemes: false,
+            transactionImportSchemes: false,
+            complexImportSchemes: false,
+            dashboardLayouts: false,
+            instrumentDownloadSchemes: false
+        };
+
+        console.log('item', item);
 
         if (item) {
             vm.item = item;
@@ -19,56 +38,46 @@
                 type: 'button_set',
                 id: null, // should be generated before create
                 name: '',
-                settings: {
-                    buttons: []
-                }
+                settings: {}
             }
         }
 
         vm.componentsTypes = [];
 
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.addNewButton = function () {
+        vm.initGrid = function () {
 
-            vm.item.settings.buttons.push(vm.newButton);
-            vm.newButton = {}
+            if (!vm.item.settings.grid) {
 
-        };
+                vm.item.settings.rows = 6;
+                vm.item.settings.columns = 6;
 
-        vm.deleteButton = function ($event, button, $index) {
-
-            vm.item.settings.buttons = vm.item.settings.buttons.filter(function (item, index) {
-
-                return $index !== index;
-
-            });
-
-        };
-
-        vm.applyGrid = function(){
-
-            vm.item.settings.grid = {
-                rows: []
-            };
-
-            for (var i = 0; i < vm.item.settings.rows; i = i + 1) {
-
-                var row = {
-                    items: []
+                vm.item.settings.grid = {
+                    rows: []
                 };
 
-                for (var x = 0; x < vm.item.settings.columns; x = x + 1) {
+                for (var i = 0; i < 6; i = i + 1) {
 
-                    var button = {};
+                    var row = {
+                        items: [],
+                        index: i
+                    };
 
-                    row.items.push(button)
+                    for (var x = 0; x < 6; x = x + 1) {
+
+                        var button = {};
+
+                        row.items.push(button)
+
+                    }
+
+                    vm.item.settings.grid.rows.push(row)
 
                 }
-
-                vm.item.settings.grid.rows.push(row)
 
             }
 
@@ -124,7 +133,7 @@
         ];
 
         vm.targets = {
-            'book_transaction': [], // +
+            'book_transaction': [],
             'create_new_record': [
                 {
                     value: "portfolio",
@@ -192,18 +201,217 @@
                     name: "Pricing Policy"
                 }
 
-            ], // +
-            'open_report': [],
+            ],
+            'open_report': [
+                {
+                    value: 'reports.balancereport',
+                    name: 'Balance Report'
+                },
+                {
+                    value: 'reports.plreport',
+                    name: 'P&L Report'
+                },
+                {
+                    value: 'reports.transactionreport',
+                    name: 'Transaction Report'
+                }
+            ],
             'open_data_viewer': [],
-            'run_valuation_procedure': [], // +
+            'open_dashboard': [],
+            'run_valuation_procedure': [],
             'import_data_from_file': [],
             'import_transactions_from_file': [],
             'complex_import_from_file': [],
             'download_instrument': [],
-            'go_to': []
+            'go_to': [
+                {
+                    value: '/',
+                    name: 'Homepage'
+                },
+                {
+                    value: '/dashboard',
+                    name: 'Dashboard'
+                },
+                {
+                    value: '/reports/balance',
+                    name: 'Balance Report'
+                },
+                {
+                    value: '/reports/profit-and-lost',
+                    name: 'P&L Report'
+                },
+                {
+                    value: '/reports/transaction',
+                    name: 'Transaction Report'
+                },
+                {
+                    value: '/reports/check-for-events',
+                    name: 'Events'
+                },
+                {
+                    value: '/data/portfolios',
+                    name: 'Portfolios'
+                },
+                {
+                    value: '/data/accounts',
+                    name: 'Accounts'
+                },
+                {
+                    value: '/data/instruments',
+                    name: 'Instruments'
+                },
+                {
+                    value: '/data/counterparties',
+                    name: 'Counterparties'
+                },
+                {
+                    value: '/data/responsibles',
+                    name: 'Responsibles'
+                },
+                {
+                    value: '/data/currency',
+                    name: 'Currencies'
+                },
+                {
+                    value: '/data/strategy/1',
+                    name: 'Strategy 1'
+                },
+                {
+                    value: '/data/strategy/2',
+                    name: 'Strategy 2'
+                },
+                {
+                    value: '/data/strategy/3',
+                    name: 'Strategy 3'
+                },
+                {
+                    value: '/data/complex-transactions',
+                    name: 'Transactions'
+                },
+                {
+                    value: '/data/transactions',
+                    name: 'Base Transactions'
+                },
+                {
+                    value: '/data/pricing',
+                    name: 'Prices'
+                },
+                {
+                    value: '/data/pricing-errors',
+                    name: 'Prices Errors'
+                },
+                {
+                    value: '/data/currencies',
+                    name: 'FX Rates'
+                },
+                {
+                    value: '/data/currencies-errors',
+                    name: 'FX Rates Errors'
+                },
+                {
+                    value: '/run-pricing-procedures',
+                    name: 'Run Pricing'
+                },
+                {
+                    value: '/import/simple-entity-import',
+                    name: 'Import Data (From File)'
+                },
+                {
+                    value: '/import/transaction-import',
+                    name: 'Import Transactions (From File)'
+                },
+                {
+                    value: '/import/complex-import',
+                    name: 'Import Data and Transactions (From File)'
+                },
+                {
+                    value: '/import/instrument-import',
+                    name: 'Import Instrument (From Provider)'
+                },
+                {
+                    value: '/import/prices-import',
+                    name: 'Import Prices/FX (From Provider)'
+                },
+                {
+                    value: '/import/mapping-tables-import',
+                    name: 'Mapping Tables'
+                },
+                {
+                    value: '/forum',
+                    name: 'Forum'
+                }
+
+            ]
+        };
+
+        vm.targetSpecifics = {
+            'open_report': {},
+            'open_data_viewer': {}
+        };
+
+        vm.getTargetSpecifics = function ($event, item) {
+
+            return new Promise(function (resolve, reject) {
+
+                if (vm.targetSpecifics[item.action].hasOwnProperty(item.target)) {
+                    resolve(vm.targetSpecifics[item.action][item.target])
+                } else {
+
+                    var entityType;
+
+                    if (item.action === 'open_report') {
+
+                        entityType = metaContentTypesService.findEntityByContentType(item.target);
+
+                        uiService.getListLayout(entityType).then(function (data) {
+
+                            vm.targetSpecifics[item.action][item.target] = data.results.map(function (item) {
+
+                                return {
+                                    value: item.user_code,
+                                    name: item.name
+                                }
+
+                            });
+
+                            resolve(vm.targetSpecifics[item.action][item.target])
+
+                        })
+
+
+                    }
+
+                    if (item.action === 'open_data_viewer') {
+
+                        entityType = metaContentTypesService.findEntityByContentType(item.target);
+
+                        uiService.getListLayout(entityType).then(function (data) {
+
+                            vm.targetSpecifics[item.action][item.target] = data.results.map(function (item) {
+
+                                return {
+                                    value: item.user_code,
+                                    name: item.name
+                                }
+
+                            });
+
+                            resolve(vm.targetSpecifics[item.action][item.target])
+
+                        })
+
+                    }
+
+
+                }
+
+            })
+
         };
 
         vm.agree = function () {
+
+            console.log('vm.item', vm.item);
 
             if (vm.item.id) {
 
@@ -232,9 +440,11 @@
             $mdDialog.hide({status: 'agree'});
         };
 
-        vm.getTransactionTypes = function(){
+        vm.getTransactionTypes = function () {
 
-            transactionTypeService.getListLight().then(function (data) {
+            vm.readyStatus.transactionTypes = false;
+
+            transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
 
                 vm.targets['book_transaction'] = data.results.map(function (item) {
 
@@ -243,13 +453,19 @@
                         name: item.name
                     }
 
-                })
+                });
+
+                vm.readyStatus.transactionTypes = true;
+
+                $scope.$apply();
 
             })
 
         };
 
-        vm.getPricingProcedures = function(){
+        vm.getPricingProcedures = function () {
+
+            vm.readyStatus.pricingProcedures = false;
 
             pricingProcedureService.getList().then(function (data) {
 
@@ -260,9 +476,175 @@
                         name: item.name
                     }
 
-                })
+                });
+
+                vm.readyStatus.pricingProcedures = true;
+
+                $scope.$apply();
 
             })
+
+        };
+
+        vm.getSimpleImportSchemes = function () {
+
+            vm.readyStatus.simpleImportSchemes = false;
+
+            csvImportSchemeService.getListLight().then(function (data) {
+
+                vm.targets['import_data_from_file'] = data.results.map(function (item) {
+
+                    return {
+                        value: item.scheme_name,
+                        name: item.scheme_name
+                    }
+
+                });
+
+                vm.readyStatus.simpleImportSchemes = true;
+
+                $scope.$apply();
+
+
+            })
+
+        };
+
+        vm.getTransactionImportSchemes = function () {
+
+            vm.readyStatus.transactionImportSchemes = false;
+
+            transactionImportSchemeService.getListLight().then(function (data) {
+
+                vm.targets['import_transactions_from_file'] = data.results.map(function (item) {
+
+                    return {
+                        value: item.scheme_name,
+                        name: item.scheme_name
+                    }
+
+                });
+
+                vm.readyStatus.transactionImportSchemes = true;
+
+                $scope.$apply();
+
+
+            })
+
+        };
+
+        vm.getComplexImportSchemes = function () {
+
+            vm.readyStatus.complexImportSchemes = false;
+
+            complexImportSchemeService.getList().then(function (data) {
+
+                vm.targets['complex_import_from_file'] = data.results.map(function (item) {
+
+                    return {
+                        value: item.scheme_name,
+                        name: item.scheme_name
+                    }
+
+                });
+
+                vm.readyStatus.complexImportSchemes = true;
+
+                $scope.$apply();
+
+
+            })
+
+        };
+
+        vm.getDashboardLayouts = function () {
+
+            vm.readyStatus.dashboardLayouts = false;
+
+            uiService.getDashboardLayoutList().then(function (data) {
+
+                vm.targets['open_dashboard'] = data.results.map(function (item) {
+
+                    return {
+                        value: item.user_code,
+                        name: item.name
+                    }
+
+                });
+
+                vm.readyStatus.dashboardLayouts = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getInstrumentDownloadSchemes = function () {
+
+            vm.readyStatus.instrumentDownloadSchemes = false;
+
+            instrumentDownloadSchemeService.getList().then(function (data) {
+
+                vm.targets['download_instrument'] = data.results.map(function (item) {
+
+                    return {
+                        value: item.scheme_name,
+                        name: item.scheme_name
+                    }
+
+                });
+
+                vm.readyStatus.instrumentDownloadSchemes = true;
+
+                $scope.$apply();
+
+
+            })
+
+        };
+
+        vm.getContentTypes = function() {
+
+            var contentTypes = metaContentTypesService.getListForUi();
+
+            var excludes = [];
+
+            vm.targets['open_report'].forEach(function (item) {
+                excludes.push(item.value)
+            });
+
+            vm.targets['open_data_viewer'] = contentTypes.map(function (item) {
+
+                return   {
+                    value: item.key,
+                    name: item.name
+                }
+
+            }).filter(function (item) {
+
+                return excludes.indexOf(item.value) === -1
+
+            });
+
+            console.log('vm.targets', vm.targets);
+
+        };
+
+        vm.checkReadyStatus = function () {
+
+            var result = true;
+
+            Object.keys(vm.readyStatus).forEach(function (key) {
+
+                if (!vm.readyStatus[key]) {
+                    result = false;
+                }
+
+            });
+
+            return result
 
         };
 
@@ -270,10 +652,20 @@
 
             vm.getTransactionTypes();
             vm.getPricingProcedures();
+            vm.getSimpleImportSchemes();
+            vm.getTransactionImportSchemes();
+            vm.getComplexImportSchemes();
+            vm.getDashboardLayouts();
+            vm.getInstrumentDownloadSchemes();
+            vm.getContentTypes();
 
             console.log('dataService', dataService);
 
-            vm.componentsTypes = dataService.getComponents()
+            vm.componentsTypes = dataService.getComponents();
+
+            vm.initGrid();
+
+            console.log("vm.item.settings", vm.item);
 
         };
 

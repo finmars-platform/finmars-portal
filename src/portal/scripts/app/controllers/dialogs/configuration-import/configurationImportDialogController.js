@@ -333,6 +333,8 @@
                     return 'Transaction User Field Names';
                 case 'ui.entitytooltip':
                     return 'System Tooltips';
+                case 'ui.colorpalette':
+                    return 'Color Palettes';
                 case 'pricing.currencypricingscheme':
                     return 'Currency Pricing Scheme';
                 case 'pricing.instrumentpricingscheme':
@@ -646,7 +648,8 @@
                     "integrations.periodicitymapping",
                     "integrations.dailypricingmodelmapping",
                     "integrations.paymentsizedetailmapping",
-                    "integrations.accrualcalculationmodelmapping"
+                    "integrations.accrualcalculationmodelmapping",
+                    "integrations.pricingconditionmapping"
                 ],
                 groupKey: "systemElements"
             },
@@ -815,7 +818,7 @@
 
                         if (configurationData.errors.length) {
 
-                            $mdDialog.hide({status: 'errors_occured', data: {}});
+                            $mdDialog.hide({status: 'errors_occurred', data: {}});
 
                             // $mdDialog.show({
                             //     controller: 'ConfigurationImportErrorsDialogController as vm',

@@ -6,11 +6,17 @@
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
     var transactionTypeService = require('../../services/transactionTypeService');
+    var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
+    var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
+    var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
+
+    var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
+
     var pricingProcedureService = require('../../services/pricing/pricingProcedureService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function dashboardButtonSetDirective($mdDialog) {
+    module.exports = function dashboardButtonSetDirective($mdDialog, $state) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-button-set-view.html',
@@ -49,6 +55,8 @@
                     scope.grid = scope.componentData.settings.grid;
 
                     console.log('scope.grid', scope.grid);
+                    console.log('scope.grid', scope.columns);
+                    console.log('scope.grid', scope.rows);
 
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
@@ -64,40 +72,76 @@
 
                     if (item.action === 'book_transaction') {
 
-                        transactionTypeService.getListLight({
-                            filters: {
-                                user_code: item.target
-                            }
-                        }).then(function (data) {
+                        var contextData = {};
 
-                            if (data.results.length) {
+                        if (item.target) {
 
-                                var transactionType = data.results[0];
+                            transactionTypeService.getListLight({
+                                filters: {
+                                    user_code: item.target
+                                }
+                            }).then(function (data) {
 
-                                var contextData = {};
+                                if (data.results.length) {
 
-                                $mdDialog.show({
-                                    controller: 'ComplexTransactionAddDialogController as vm',
-                                    templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                                    parent: angular.element(document.body),
-                                    targetEvent: $event,
-                                    locals: {
-                                        entityType: 'complex-transaction',
-                                        entity: {
-                                            contextData: contextData,
-                                            transaction_type: transactionType.id
+                                    var transactionType = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'ComplexTransactionAddDialogController as vm',
+                                        templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: $event,
+                                        locals: {
+                                            entityType: 'complex-transaction',
+                                            entity: {
+                                                transaction_type: transactionType.id
+                                            },
+                                            data: {
+                                                contextData: contextData
+                                            }
                                         }
-                                    }
-                                }).then(function (res) {
+                                    }).then(function (res) {
 
 
-                                })
+                                    })
 
-                            } else {
-                                toastNotificationService.error('Transaction Type is not found');
-                            }
+                                } else {
 
-                        })
+                                    toastNotificationService.error('Transaction Type is not found');
+
+                                    $mdDialog.show({
+                                        controller: 'ComplexTransactionAddDialogController as vm',
+                                        templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: $event,
+                                        locals: {
+                                            entityType: 'complex-transaction',
+                                            entity: {},
+                                            data: {}
+
+                                        }
+                                    })
+
+                                }
+
+                            })
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'ComplexTransactionAddDialogController as vm',
+                                templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: $event,
+                                locals: {
+                                    entityType: 'complex-transaction',
+                                    entity: {},
+                                    data: {}
+
+                                }
+                            })
+
+                        }
 
                     }
 
@@ -127,7 +171,7 @@
                             }
                         }).then(function (data) {
 
-                            if(data.results.length) {
+                            if (data.results.length) {
 
                                 var procedure = data.results[0];
 
@@ -162,6 +206,346 @@
 
                     }
 
+                    if (item.action === 'import_data_from_file') {
+
+                        if (item.target) {
+
+                            csvImportSchemeService.getListLight({
+                                filters: {
+                                    scheme_name: item.target
+                                }
+                            }).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var scheme = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'SimpleEntityImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {
+                                                scheme: scheme
+                                            }
+                                        }
+                                    })
+
+
+                                } else {
+
+                                    toastNotificationService.error('Simple Import Scheme is not found');
+
+                                    $mdDialog.show({
+                                        controller: 'SimpleEntityImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {}
+                                        }
+                                    })
+                                }
+                            })
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'SimpleEntityImportDialogController as vm',
+                                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
+                                targetEvent: $event,
+                                multiple: true,
+                                locals: {
+                                    data: {}
+                                }
+                            })
+
+                        }
+
+
+                    }
+
+                    if (item.action === 'import_transactions_from_file') {
+
+                        if (item.target) {
+
+                            transactionImportSchemeService.getListLight({
+                                filters: {
+                                    scheme_name: item.target
+                                }
+                            }).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var scheme = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'TransactionImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/transaction-import/transaction-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        locals: {
+                                            data: {
+                                                scheme: scheme
+                                            }
+                                        }
+                                    })
+
+
+                                } else {
+
+                                    toastNotificationService.error('Transaction Import Scheme is not found');
+
+                                    $mdDialog.show({
+                                        controller: 'TransactionImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/transaction-import/transaction-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        locals: {
+                                            data: {}
+                                        }
+                                    })
+
+                                }
+                            })
+
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'TransactionImportDialogController as vm',
+                                templateUrl: 'views/dialogs/transaction-import/transaction-import-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    data: {}
+                                }
+                            })
+
+                        }
+                    }
+
+                    if (item.action === 'complex_import_from_file') {
+
+                        if (item.target) {
+
+                            complexImportSchemeService.getList({
+                                filters: {
+                                    scheme_name: item.target
+                                }
+                            }).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var scheme = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'ComplexImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/complex-import/complex-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {
+                                                scheme: scheme
+                                            }
+                                        }
+                                    })
+
+
+                                } else {
+
+                                    toastNotificationService.error('Complex Import Scheme is not found');
+
+                                    $mdDialog.show({
+                                        controller: 'ComplexImportDialogController as vm',
+                                        templateUrl: 'views/dialogs/complex-import/complex-import-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {}
+                                        }
+                                    })
+
+                                }
+                            })
+
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'ComplexImportDialogController as vm',
+                                templateUrl: 'views/dialogs/complex-import/complex-import-dialog-view.html',
+                                targetEvent: $event,
+                                multiple: true,
+                                locals: {
+                                    data: {}
+                                }
+                            })
+
+                        }
+
+                    }
+
+                    if (item.action === 'open_dashboard') {
+
+                        if (item.target) {
+
+                            $state.go('app.dashboard', {
+                                layoutUserCode: item.target
+                            }, {reload: 'app'})
+
+                        } else {
+
+                            toastNotificationService.error('Dashboard Layout is not set');
+
+                        }
+
+                    }
+
+                    if (item.action === 'download_instrument') {
+
+                        if (item.target) {
+
+                            instrumentDownloadSchemeService.getList({
+                                filters: {
+                                    scheme_name: item.target
+                                }
+                            }).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var scheme = data.results[0];
+
+                                    $mdDialog.show({
+                                        controller: 'InstrumentDownloadDialogController as vm',
+                                        templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {
+                                                scheme: scheme
+                                            }
+                                        }
+                                    })
+
+
+                                } else {
+
+                                    toastNotificationService.error('Instrument Download Scheme is not found');
+
+                                    $mdDialog.show({
+                                        controller: 'InstrumentDownloadDialogController as vm',
+                                        templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                                        targetEvent: $event,
+                                        multiple: true,
+                                        locals: {
+                                            data: {}
+                                        }
+                                    })
+
+                                }
+                            })
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'InstrumentDownloadDialogController as vm',
+                                templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                                targetEvent: $event,
+                                multiple: true,
+                                locals: {
+                                    data: {}
+                                }
+                            })
+
+                        }
+
+
+                    }
+
+                    if (item.action === 'go_to') {
+
+                        if (item.target) {
+
+                            location.hash = '#!' + item.target;
+
+                        } else {
+
+                            toastNotificationService.error('Link is not set');
+
+                        }
+
+                    }
+
+                    if (item.action === 'open_report') {
+
+                        var reportViewerRouteMap = {
+                            'reports.balancereport': 'app.reports.balance-report',
+                            'reports.plreport': 'app.reports.pl-report',
+                            'reports.transactionreport': 'app.reports.transaction-report'
+                        };
+
+
+                        if (item.target) {
+
+                            if (item.target_specific) {
+
+                                $state.go(reportViewerRouteMap[item.target], {
+                                    layoutUserCode: item.target_specific
+                                }, {reload: 'app'})
+
+                            } else {
+                                toastNotificationService.error('Report Viewer Layout is not set');
+                            }
+
+
+                        } else {
+
+                            toastNotificationService.error('Entity is not set');
+
+                        }
+
+                    }
+
+                    if (item.action === 'open_data_viewer') {
+
+                        var entityViewerRouteMap = {
+                            'portfolios.portfolio': 'app.data.portfolio',
+                            'accounts.account': 'app.data.account',
+                            'accounts.accounttype': 'app.data.account-type',
+                            'counterparties.counterparty': 'app.data.counterparty',
+                            'counterparties.responsible': 'app.data.responsible',
+                            'instruments.instrument': 'app.data.instrument',
+                            'instruments.instrumenttype': 'app.data.instrument-type',
+                            'transactions.complextransaction': 'app.data.complex-transaction',
+                            'transactions.transaction': 'app.data.transaction',
+                            'transactions.transactiontype': 'app.data.transaction-type',
+                            'currencies.currencyhistory': 'app.data.currency-history',
+                            'instruments.pricehistory': 'app.data.price-history',
+                            'currencies.currency': 'app.data.currency',
+                            'strategies.strategy1': 'app.data.strategy',
+                            'strategies.strategy2': 'app.data.strategy',
+                            'strategies.strategy3': 'app.data.strategy',
+                        };
+
+                        if (item.target) {
+
+                            if (item.target_specific) {
+
+                                $state.go(entityViewerRouteMap[item.target], {
+                                    layoutUserCode: item.target_specific
+                                }, {reload: 'app'})
+
+                            } else {
+                                toastNotificationService.error('Entity Viewer Layout is not set');
+                            }
+
+
+                        } else {
+
+                            toastNotificationService.error('Entity is not set');
+
+                        }
+
+                    }
                 };
 
 

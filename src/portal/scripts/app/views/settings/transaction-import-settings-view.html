@@ -2,18 +2,18 @@
 
     <h2 class="m-b-35">Transaction Import</h2>
 
-    <div data-ng-if="vm.readyStatus.instrumentSchemes">
+    <div data-ng-if="vm.readyStatus.schemes">
         <div layout="row" layout-align="end center">
             <md-button class="md-raised md-primary" data-ng-click="vm.addScheme($event)">
                 Create scheme
             </md-button>
         </div>
-        <div layout="column" data-ng-if="vm.instrumentSchemes.length">
+        <div layout="column" data-ng-if="vm.schemes.length">
             <div layout="row">
                 <h4 style="padding-left: 20px">Scheme name</h4>
             </div>
             <div layout="column">
-                <md-card data-ng-repeat="item in vm.instrumentSchemes" flex="100">
+                <md-card data-ng-repeat="item in vm.schemes" flex="100">
                     <md-card-content>
                         <div layout="row" layout-align="space-between center">
                             <div>
@@ -32,13 +32,13 @@
                 </md-card>
             </div>
         </div>
-        <div layout="row" data-ng-if="!vm.instrumentSchemes.length" layout-align="center center">
+        <div layout="row" data-ng-if="!vm.schemes.length" layout-align="center center">
             <h3>Import schemes do not exist</h3>
         </div>
     </div>
-    <div data-ng-if="!vm.readyStatus.instrumentSchemes">
+    <div data-ng-if="!vm.readyStatus.schemes">
         <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-            <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            <progress-circular diameter="100"></progress-circular>
         </div>
     </div>
 </div>

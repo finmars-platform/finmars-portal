@@ -524,9 +524,112 @@
 
                 };
 
+                var flagMissingGroups = function () {
+
+                    console.log("flagMissingColumns.columns", scope.columns);
+
+                    var attributeTypes;
+                    var attributes;
+
+                    if (scope.isReport) {
+
+                        switch (scope.entityType) {
+
+                            case 'balance-report':
+                                attributes = scope.attributeDataService.getBalanceReportAttributes();
+                                break;
+
+                            case 'pl-report':
+                                attributes = scope.attributeDataService.getPlReportAttributes();
+                                break;
+
+                            case 'transaction-report':
+                                attributes = scope.attributeDataService.getTransactionReportAttributes();
+                                break;
+
+                        }
+
+                        console.log("flagMissingColumns.attributes", attributes);
+
+                        scope.groups = scope.groups.map(function (group) {
+
+                            group.status = 'ok';
+
+                            if (group.key.indexOf('attributes.') !== -1) {
+
+                                isMissing = true;
+
+                                attributes.forEach(function (attribute) {
+
+                                    if(group.key === attribute.key) {
+                                        isMissing = false;
+                                    }
+
+
+                                });
+
+                                if (isMissing) {
+                                    group.status = 'missing'
+                                }
+
+                            }
+
+                            return group
+
+                        });
+
+                        scope.evDataService.setGroups(scope.groups)
+
+
+                    } else {
+
+                        attributeTypes = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
+
+                        console.log("flagMissingColumns.attributeTypes", attributeTypes);
+
+                        var user_code;
+                        var isMissing;
+
+                        scope.groups = scope.groups.map(function (group) {
+
+                            group.status = 'ok';
+
+                            if (group.key.indexOf('attributes.') !== -1) {
+
+                                isMissing = true;
+
+                                user_code = group.key.split('attributes.')[1];
+
+                                attributeTypes.forEach(function (attributeType) {
+
+                                    if (attributeType.user_code === user_code) {
+                                        isMissing = false;
+                                    }
+
+                                });
+
+                                if (isMissing) {
+                                    group.status = 'missing'
+                                }
+
+                            }
+
+                            return group
+
+
+                        });
+
+                        scope.evDataService.setGroups(scope.groups)
+
+
+                    }
+
+                }
+
                 var init = function () {
 
                     scope.updateGroupTypeIds();
+                    flagMissingGroups();
 
                     getAttributes();
 
@@ -550,6 +653,7 @@
                         scope.updateGroupTypeIds();
 
                         scope.groups = scope.evDataService.getGroups();
+                        flagMissingGroups();
 
                         setDefaultGroupType(scope.evDataService);
 

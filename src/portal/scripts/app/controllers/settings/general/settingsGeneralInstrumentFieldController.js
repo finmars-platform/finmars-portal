@@ -108,7 +108,7 @@
                     locals: {
                         warning: {
                             title: 'Error',
-                            description: 'Error occured while trying to save fields'
+                            description: 'Error occurred while trying to save fields'
                         }
                     }
                 });

@@ -3,29 +3,28 @@
  */
 (function () {
 
-    var logService = require('../../../../../../core/services/logService');
+    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
 
-    var transactionSchemeService = require('../../../services/import/transactionSchemeService');
-
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('SettingsGeneralTransactionImportController', 'initialized');
+    module.exports = function settingsGeneralTransactionImportController($scope, $mdDialog) {
 
         var vm = this;
 
-        vm.readyStatus = {instrumentSchemes: false};
-        vm.instrumentSchemes = [];
+        vm.readyStatus = {schemes: false};
+        vm.schemes = [];
 
         vm.getList = function () {
-            vm.readyStatus.instrumentSchemes = false;
-            transactionSchemeService.getList().then(function (data) {
-                vm.instrumentSchemes = data.results;
-                vm.readyStatus.instrumentSchemes = true;
-                $scope.$apply();
-            });
-        };
 
-        vm.getList();
+            vm.readyStatus.schemes = false;
+
+            transactionImportSchemeService.getListLight().then(function (data) {
+
+                vm.schemes = data.results;
+                vm.readyStatus.schemes = true;
+                $scope.$apply();
+
+            });
+
+        };
 
         vm.addScheme = function ($event) {
             $mdDialog.show({
@@ -38,6 +37,7 @@
                     }
                 }
             }).then(function (res) {
+
                 if (res.status === 'agree') {
                     console.log('res', res.data);
                     vm.getList();
@@ -46,7 +46,6 @@
         };
 
         vm.editScheme = function ($event, item) {
-            console.log('what?');
 
             $mdDialog.show({
                 controller: 'TransactionImportSchemeEditDialogController as vm',
@@ -56,18 +55,19 @@
                     schemeId: item.id
                 }
             }).then(function (res) {
+
                 if (res && res.status === 'agree') {
-                    console.log('res', res.data);
-                    transactionSchemeService.update(item.id, res.data).then(function () {
-                        vm.getList();
-                        $scope.$apply();
-                    })
+
+                    vm.getList();
+
                 }
+
             });
 
         };
 
         vm.deleteScheme = function ($event, item) {
+
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/warning-dialog-view.html',
@@ -75,7 +75,7 @@
                 locals: {
                     warning: {
                         title: 'Warning!',
-                        description: 'Are you sure to delete ' + item['scheme_name']
+                        description: 'Are you sure to delete ' + item.scheme_name
                     }
                 },
                 preserveScope: true,
@@ -83,16 +83,28 @@
                 skipHide: true,
                 multiple: true
             }).then(function (res) {
+
                 if (res.status === 'agree') {
-                    console.log('res', res.data);
-                    transactionSchemeService.deleteByKey(item.id);
-                    setTimeout(function () {
+
+                    transactionImportSchemeService.deleteByKey(item.id).then(function () {
+
                         vm.getList();
-                    }, 100)
+
+                    })
+
                 }
+
             });
 
         };
+
+        vm.init = function () {
+
+            vm.getList();
+
+        };
+
+        vm.init();
 
     }
 

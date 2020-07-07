@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
+    var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
     var instrumentEventService = require('../../services/instrumentEventService');
 
     module.exports = function ($scope, $mdDialog) {
@@ -18,7 +18,10 @@
                 controller: 'ComplexImportDialogController as vm',
                 templateUrl: 'views/dialogs/complex-import/complex-import-dialog-view.html',
                 targetEvent: $event,
-                multiple: true
+                multiple: true,
+                locals: {
+                    data: {}
+                }
             })
 
         };
@@ -29,7 +32,10 @@
                 controller: 'SimpleEntityImportDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
                 targetEvent: $event,
-                multiple: true
+                multiple: true,
+                locals: {
+                    data: {}
+                }
             })
 
         };
@@ -39,7 +45,10 @@
             $mdDialog.show({
                 controller: 'InstrumentDownloadDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
-                targetEvent: $event
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                }
             })
 
         };
@@ -49,7 +58,10 @@
             $mdDialog.show({
                 controller: 'TransactionImportDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-dialog-view.html',
-                targetEvent: $event
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                }
             })
 
         };
@@ -107,7 +119,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);
-                    instrumentSchemeService.create(res.data).then(function () {
+                    instrumentDownloadSchemeService.create(res.data).then(function () {
                         vm.getList();
                     })
                 }

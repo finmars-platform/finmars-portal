@@ -24,6 +24,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.columns = scope.evDataService.getColumns();
+
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
                 scope.groups = scope.evDataService.getGroups();
@@ -669,10 +670,10 @@
                     /** remove group */
                     var i;
                     for (i = 0; i < groups.length; i++) {
-                       if (groups[i].___group_type_id === columnTableId) {
-                           groups.splice(i, 1);
-                           break;
-                       }
+                        if (groups[i].___group_type_id === columnTableId) {
+                            groups.splice(i, 1);
+                            break;
+                        }
                     }
 
                     scope.evDataService.setGroups(groups);
@@ -900,6 +901,110 @@
 
                 };
 
+                var flagMissingColumns = function () {
+
+
+                    console.log("flagMissingColumns.columns", scope.columns);
+
+                    var attributeTypes;
+                    var attributes;
+
+                    if (scope.isReport) {
+
+                        switch (scope.entityType) {
+
+                            case 'balance-report':
+                                attributes = scope.attributeDataService.getBalanceReportAttributes();
+                                break;
+
+                            case 'pl-report':
+                                attributes = scope.attributeDataService.getPlReportAttributes();
+                                break;
+
+                            case 'transaction-report':
+                                attributes = scope.attributeDataService.getTransactionReportAttributes();
+                                break;
+
+                        }
+
+                        console.log("flagMissingColumns.attributes", attributes);
+
+                        scope.columns = scope.columns.map(function (column) {
+
+                            column.status = 'ok';
+
+                            if (column.key.indexOf('attributes.') !== -1) {
+
+                                isMissing = true;
+
+                                attributes.forEach(function (attribute) {
+
+                                    if(column.key === attribute.key) {
+                                        isMissing = false;
+                                    }
+
+
+                                });
+
+                                if (isMissing) {
+                                    column.status = 'missing'
+                                }
+
+                            }
+
+                            return column
+
+                        });
+
+                        scope.evDataService.setColumns(scope.columns)
+
+
+                    } else {
+
+                        attributeTypes = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
+
+                        console.log("flagMissingColumns.attributeTypes", attributeTypes);
+
+                        var user_code;
+                        var isMissing;
+
+                        scope.columns = scope.columns.map(function (column) {
+
+                            column.status = 'ok';
+
+                            if (column.key.indexOf('attributes.') !== -1) {
+
+                                isMissing = true;
+
+                                user_code = column.key.split('attributes.')[1];
+
+                                attributeTypes.forEach(function (attributeType) {
+
+                                    if (attributeType.user_code === user_code) {
+                                        isMissing = false;
+                                    }
+
+                                });
+
+                                if (isMissing) {
+                                    column.status = 'missing'
+                                }
+
+                            }
+
+                            return column
+
+
+                        });
+
+                        scope.evDataService.setColumns(scope.columns)
+
+
+                    }
+
+
+                };
+
                 scope.addColumn = function ($event) {
 
                     var allAttrsList = getAttributes();
@@ -960,6 +1065,9 @@
 
                 var init = function () {
 
+                    scope.columns = scope.evDataService.getColumns();
+                    flagMissingColumns();
+
                     evDataHelper.updateColumnsIds(scope.evDataService);
                     evDataHelper.setColumnsDefaultWidth(scope.evDataService);
                     if (scope.viewContext === 'dashboard') {
@@ -978,6 +1086,7 @@
 
                         scope.columns = scope.evDataService.getColumns();
                         getColsAvailableForAdditions();
+                        flagMissingColumns();
                         //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
 
                     });

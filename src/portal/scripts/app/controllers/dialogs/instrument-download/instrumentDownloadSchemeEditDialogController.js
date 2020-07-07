@@ -9,7 +9,7 @@
 
     var metaService = require('../../../services/metaService');
     var dataProvidersService = require('../../../services/import/dataProvidersService');
-    var instrumentSchemeService = require('../../../services/import/instrumentSchemeService');
+    var instrumentDownloadSchemeService = require('../../../services/import/instrumentDownloadSchemeService');
     var scheduleService = require('../../../services/import/scheduleService');
     var attributeTypeService = require('../../../services/attributeTypeService');
 
@@ -45,7 +45,7 @@
 
         };
 
-        instrumentSchemeService.getByKey(schemeId).then(function (data) {
+        instrumentDownloadSchemeService.getByKey(schemeId).then(function (data) {
             vm.scheme = data;
             vm.getAttrs();
             $scope.$apply();
@@ -680,7 +680,7 @@
                 item.field = item.name;
             });
 
-            instrumentSchemeService.update(vm.scheme.id, vm.schemeUpdated).then(function (data) {
+            instrumentDownloadSchemeService.update(vm.scheme.id, vm.schemeUpdated).then(function (data) {
 
                 $mdDialog.hide({res: 'agree'});
 
