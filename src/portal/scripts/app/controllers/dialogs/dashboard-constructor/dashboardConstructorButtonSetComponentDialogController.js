@@ -13,6 +13,7 @@
     var instrumentDownloadSchemeService = require('../../../services/import/instrumentDownloadSchemeService');
 
     var uiService = require('../../../services/uiService');
+    var metaContentTypesService = require('../../../services/metaContentTypesService');
 
     module.exports = function dashboardConstructorButtonSetComponentDialogController($scope, $mdDialog, item, dataService, eventService) {
 
@@ -201,7 +202,20 @@
                 }
 
             ],
-            'open_report': [],
+            'open_report': [
+                {
+                    value: 'reports.balancereport',
+                    name: 'Balance Report'
+                },
+                {
+                    value: 'reports.plreport',
+                    name: 'P&L Report'
+                },
+                {
+                    value: 'reports.transactionreport',
+                    name: 'Transaction Report'
+                }
+            ],
             'open_data_viewer': [],
             'open_dashboard': [],
             'run_valuation_procedure': [],
@@ -330,7 +344,74 @@
             ]
         };
 
+        vm.targetSpecifics = {
+            'open_report': {},
+            'open_data_viewer': {}
+        };
+
+        vm.getTargetSpecifics = function ($event, item) {
+
+            return new Promise(function (resolve, reject) {
+
+                if (vm.targetSpecifics[item.action].hasOwnProperty(item.target)) {
+                    resolve(vm.targetSpecifics[item.action][item.target])
+                } else {
+
+                    var entityType;
+
+                    if (item.action === 'open_report') {
+
+                        entityType = metaContentTypesService.findEntityByContentType(item.target);
+
+                        uiService.getListLayout(entityType).then(function (data) {
+
+                            vm.targetSpecifics[item.action][item.target] = data.results.map(function (item) {
+
+                                return {
+                                    value: item.user_code,
+                                    name: item.name
+                                }
+
+                            });
+
+                            resolve(vm.targetSpecifics[item.action][item.target])
+
+                        })
+
+
+                    }
+
+                    if (item.action === 'open_data_viewer') {
+
+                        entityType = metaContentTypesService.findEntityByContentType(item.target);
+
+                        uiService.getListLayout(entityType).then(function (data) {
+
+                            vm.targetSpecifics[item.action][item.target] = data.results.map(function (item) {
+
+                                return {
+                                    value: item.user_code,
+                                    name: item.name
+                                }
+
+                            });
+
+                            resolve(vm.targetSpecifics[item.action][item.target])
+
+                        })
+
+                    }
+
+
+                }
+
+            })
+
+        };
+
         vm.agree = function () {
+
+            console.log('vm.item', vm.item);
 
             if (vm.item.id) {
 
@@ -524,6 +605,33 @@
 
         };
 
+        vm.getContentTypes = function() {
+
+            var contentTypes = metaContentTypesService.getListForUi();
+
+            var excludes = [];
+
+            vm.targets['open_report'].forEach(function (item) {
+                excludes.push(item.value)
+            });
+
+            vm.targets['open_data_viewer'] = contentTypes.map(function (item) {
+
+                return   {
+                    value: item.key,
+                    name: item.name
+                }
+
+            }).filter(function (item) {
+
+                return excludes.indexOf(item.value) === -1
+
+            });
+
+            console.log('vm.targets', vm.targets);
+
+        };
+
         vm.checkReadyStatus = function () {
 
             var result = true;
@@ -549,6 +657,7 @@
             vm.getComplexImportSchemes();
             vm.getDashboardLayouts();
             vm.getInstrumentDownloadSchemes();
+            vm.getContentTypes();
 
             console.log('dataService', dataService);
 
