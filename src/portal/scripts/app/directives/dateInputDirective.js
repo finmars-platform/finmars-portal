@@ -22,7 +22,7 @@
                 scope.error = '';
                 scope.placeholderText = 'yyyy-mm-dd';
                 scope.dateValue = ''; // prevents from calling on change method when date changed to the same date
-                scope.tooltipText = 'Tooltip text';
+
                 var stylePreset;
 
                 // TIPS

@@ -24,6 +24,7 @@
     var metaPermissionsService = require('../../services/metaPermissionsService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var tooltipsService = require('../../services/tooltipsService');
+    var colorPalettesService = require('../../services/colorPalettesService');
 
     var uiService = require('../../services/uiService');
 
@@ -843,7 +844,6 @@
                 result.is_enabled = vm.entity.is_enabled;
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
-                    console.log('enable/disable toggle success');
                     getEntityStatus();
 
                     $scope.$apply();
@@ -1089,9 +1089,6 @@
 
             uiService.getInstrumentFieldList().then(function (data) {
 
-                console.log('data', data);
-                console.log('vm.tabs', vm.tabs);
-
                 data.results.forEach(function (userField) {
 
                     vm.tabs.forEach(function (tab) {
@@ -1154,8 +1151,6 @@
                         }
                     });
 
-                    console.log("Recalculate done");
-
                 })
             })
 
@@ -1166,8 +1161,6 @@
             vm.updateItem().then(function (value) {
 
                 entityResolverService.getList('account', {pageSize: 1000}).then(function (data) {
-
-                    console.log('data', data);
 
                     var accountsWithPermissions = data.results.map(function (item) {
 
@@ -1218,8 +1211,6 @@
             vm.updateItem().then(function (value) {
 
                 entityResolverService.getList('account', {pageSize: 1000}).then(function (data) {
-
-                    console.log('data', data);
 
                     var accountsWithPermissions = data.results.map(function (item) {
 
@@ -1275,8 +1266,6 @@
 
                 entityResolverService.getList('instrument', {pageSize: 1000}).then(function (data) {
 
-                    console.log('data', data);
-
                     var instrumentsWithPermissions = data.results.map(function (item) {
 
                         return {
@@ -1326,8 +1315,6 @@
             vm.updateItem().then(function (value) {
 
                 entityResolverService.getList('instrument', {pageSize: 1000}).then(function (data) {
-
-                    console.log('data', data);
 
                     var has_view = group.objectPermissions.view;
                     var has_change = group.objectPermissions.change;
@@ -1656,8 +1643,6 @@
 
         vm.pricingSchemeChange = function ($event, item) {
 
-            console.log('pricingSchemeChange.item', item);
-
             item.pricing_scheme_object = null;
             item.default_value = null;
             item.attribute_key = null;
@@ -1878,6 +1863,11 @@
                 vm.evEditorDataService.setTooltipsData(tooltipsList);
             });
 
+            colorPalettesService.getList({pageSize: 1000}).then(function (data) {
+                var palettesList = data.results;
+                vm.evEditorDataService.setColorPalettesList(palettesList);
+            });
+
             getEntityAttrs();
             vm.getCurrencies();
 
@@ -1895,11 +1885,11 @@
             vm.entityId = entityId;
         };
 
-        vm.entityChange = function () {
+        /*vm.entityChange = function () {
 
             console.log("entityChange", vm);
 
-        };
+        };*/
 
     }
 

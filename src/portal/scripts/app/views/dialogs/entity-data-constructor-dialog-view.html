@@ -158,7 +158,8 @@
                                                     <layout-constructor-field tab="tab"
                                                                               row="row"
                                                                               column="column"
-                                                                              tab-fields-tree="vm.fieldsTree[tab.tabOrder]"></layout-constructor-field>
+                                                                              tab-fields-tree="vm.fieldsTree[tab.tabOrder]"
+                                                                              palettes-list="vm.palettesList"></layout-constructor-field>
                                                 </div>
 
                                                 <md-button class="md-button ec-manage-row-btn"
@@ -218,27 +219,27 @@
 
     <md-dialog-actions layout="row" layout-align="space-between center">
 
-            <div>
-                <md-button data-ng-if="vm.attributesAvailable(vm.entityType)"
-                           class="md-raised md-primary manage-attrs-btn"
-                           data-ng-click="vm.manageAttrs($event)">
-                    Manage attributes
-                </md-button>
-                <md-button class="md-raised manage-attrs-btn"
-                           data-ng-click="vm.openFormPreview($event)">
-                    Preview Form
-                </md-button>
-            </div>
+        <div>
+            <md-button data-ng-if="vm.attributesAvailable(vm.entityType)"
+                       class="md-raised md-primary manage-attrs-btn"
+                       data-ng-click="vm.manageAttrs($event)">
+                Manage attributes
+            </md-button>
+            <md-button class="md-raised manage-attrs-btn"
+                       data-ng-click="vm.openFormPreview($event)">
+                Preview Form
+            </md-button>
+        </div>
 
-            <div style="padding-right: 10px">
+        <div style="padding-right: 10px">
 
-                <md-button ng-click="vm.cancel()" class="md-raised">
-                    Cancel
-                </md-button>
-                <md-button ng-click="vm.saveLayout()" class="md-raised">
-                    Save & Return
-                </md-button>
-            </div>
+            <md-button ng-click="vm.cancel()" class="md-raised">
+                Cancel
+            </md-button>
+            <md-button ng-click="vm.saveLayout()" class="md-raised">
+                Save & Return
+            </md-button>
+        </div>
 
     </md-dialog-actions>
 </md-dialog>

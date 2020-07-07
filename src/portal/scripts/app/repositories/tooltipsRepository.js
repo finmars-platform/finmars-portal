@@ -10,7 +10,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getTooltipsList = function (options) {
+    var getList = function (options) {
 
         if (!options) {
             options = {
@@ -29,7 +29,7 @@
             })
     }
 
-    var updateTooltipsList = function (tooltipsList) {
+    var updateList = function (tooltipsList) {
         return xhrService.fetch(baseUrl + 'ui/entity-tooltip',
             {
                 method: 'PUT',
@@ -44,8 +44,8 @@
     };
 
     module.exports = {
-        getTooltipsList: getTooltipsList,
-        updateTooltipsList: updateTooltipsList
+        getList: getList,
+        updateList: updateList
     }
 
 }());

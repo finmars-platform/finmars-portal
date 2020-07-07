@@ -140,6 +140,12 @@ app.factory('d3Service', ['$window', function ($window) {
     }
 }]);
 
+app.factory('Pickr', ['$window', function ($window) {
+    if ($window.Pickr) {
+        return $window.Pickr;
+    }
+}]);
+
 app.service('$customDialog', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/customDialogService')]);
 
 
@@ -308,6 +314,17 @@ app.controller('TransactionImportDialogController', ['$scope', '$mdDialog', requ
 app.controller('TransactionImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportErrorsDialogController')]);
 app.controller('TransactionImportSchemeScenarioFieldsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeScenarioFieldsDialogController')]);
 app.controller('TransactionImportSchemeSelectorValuesDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeSelectorValuesDialogController')]);
+
+// Color palettes
+
+app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', require('./app/controllers/color-picker/colorPalettesSettingsController')]);
+app.controller('ColorPalettesSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/color-picker/colorPalettesSettingsDialogController')]);
+app.controller('TwoInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoInputsDialogController')]);
+app.controller('RenameColorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameColorDialogController')]);
+app.controller('ColorPickerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/color-picker/colorPickerDialogController')]);
+app.controller('SelectColorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/color-picker/selectColorDialogController')]);
+
+app.directive('colorPicker', ['$mdDialog', require('./app/directives/colorPickerDirective')]);
 
 // Events
 
@@ -563,7 +580,6 @@ app.controller('EntitiesCustomAttributesController', ['$scope', '$mdDialog', req
 app.controller('PriceDownloadSchemeController', ['$scope', require('./app/controllers/pages/priceDownloadSchemeController')]);
 app.controller('AutomatedUploadsHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/automatedUploadsHistoryController')]);
 app.controller('TemplateFieldsController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateFieldsController')]);
-app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', require('./app/controllers/pages/colorPalettesSettingsController')]);
 app.controller('ImportConfigurationsController', ['$scope', '$mdDialog', require('./app/controllers/pages/importConfigurationsController')]);
 app.controller('ExportConfigurationsController', ['$scope', '$mdDialog', require('./app/controllers/pages/exportConfigurationsController')]);
 

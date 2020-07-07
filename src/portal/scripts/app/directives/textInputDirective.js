@@ -8,6 +8,7 @@
             restrict: 'E',
             scope: {
                 label: '@',
+                placeholderText: '@',
                 model: '=',
                 customStyles: '<',
                 eventSignal: '=',
@@ -22,16 +23,32 @@
                 var inputElem = elem[0].querySelector('.textInputElem');
                 var stylePreset;
 
-                scope.tooltipText = 'Tooltip text';
+                scope.isReadonly = false;
+                scope.isDisabled = false;
 
                 // TIPS
                 // scope.smallOptions probable properties
                     // tooltipText: custom tolltip text
                     // notNull: turn on error mode if field is not filled
+                    // noIndicatorBtn: whether to show button at the right part of input
+                    // readonly: making input readonly
+                    // disabled: disabling input
 
                 if (scope.smallOptions) {
                     if (scope.smallOptions.tooltipText) {
                         scope.tooltipText = scope.smallOptions.tooltipText;
+                    }
+
+                    if (scope.smallOptions.noIndicatorBtn) {
+                        scope.noIndicatorBtn = true;
+                    }
+
+                    if (scope.smallOptions.readonly) {
+                        scope.isReadonly = scope.smallOptions.readonly;
+                    }
+
+                    if (scope.smallOptions.disabled) {
+                        scope.isDisabled = scope.smallOptions.disabled;
                     }
                 }
 
@@ -46,6 +63,14 @@
 
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
+                    }
+
+                    if (scope.isDisabled) {
+                        classes += ' custom-input-is-disabled'
+                    }
+
+                    if (scope.noIndicatorBtn) {
+                        classes += ' no-indicator-btn'
                     }
 
                     return classes;
@@ -78,6 +103,13 @@
 
                 var applyCustomStyles = function () {
 
+                    // scope.customStyles should have next structure
+                    /*
+                        {
+                          'class-of-element-to-which-styles-added': 'string with styles content',
+                          'another-class-of-another-element': 'string with styles content'
+                        }
+                    */
                     Object.keys(scope.customStyles).forEach(function (className) {
 
                         var elemClass = '.' + className;
@@ -151,6 +183,10 @@
 
                                         break;
 
+                                    case 'error':
+                                        scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
+                                        break;
+
                                     case 'set_style_preset1':
                                         stylePreset = 1;
                                         break;
@@ -187,7 +223,6 @@
                         inputContainer.classList.remove('custom-input-focused');
 
                         if (scope.onBlurCallback) {
-
                             setTimeout(function () { // without timeout changes will be discarded on fast blur
                                 scope.onBlurCallback();
                             }, 250);
@@ -195,6 +230,7 @@
                         }
 
                     });
+
                 }
 
                 var init = function () {

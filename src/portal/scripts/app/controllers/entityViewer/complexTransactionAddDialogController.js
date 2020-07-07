@@ -22,6 +22,7 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var tooltipsService = require('../../services/tooltipsService');
+    var colorPalettesService = require('../../services/colorPalettesService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var transactionHelper = require('../../helpers/transaction.helper');
@@ -1237,6 +1238,11 @@
             tooltipsService.getTooltipsList(tooltipsOptions).then(function (data) {
                 var tooltipsList = data.results;
                 vm.evEditorDataService.setTooltipsData(tooltipsList);
+            });
+
+            colorPalettesService.getList({pageSize: 1000}).then(function (data) {
+                var palettesList = data.results;
+                vm.evEditorDataService.setColorPalettesList(palettesList);
             });
 
             if (Object.keys(data).length) {

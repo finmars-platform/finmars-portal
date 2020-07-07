@@ -5,7 +5,6 @@
 
     'use strict';
 
-
     var attributeTypeService = require('../../services/attributeTypeService');
 
     var uiService = require('../../services/uiService');
@@ -18,6 +17,7 @@
     var layoutService = require('../../services/layoutService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
+    var colorPalettesService = require('../../services/colorPalettesService');
 
     var scrollHelper = new ScrollHelper();
 
@@ -1558,7 +1558,19 @@
 
             vm.getLayout().then(function () {
 
-                vm.getItems().then(function () {
+                var palettesPromise = new Promise(function (res, rej) {
+
+                    colorPalettesService.getList({pageSize: 1000}).then(function (paletteData) {
+                        vm.palettesList = paletteData.results;
+                        res();
+
+                    }).catch(function (error) {
+                        rej(error);
+                    });
+
+                })
+
+                Promise.all([vm.getItems(), palettesPromise]).then(function () {
 
                     vm.createFieldsTree();
 

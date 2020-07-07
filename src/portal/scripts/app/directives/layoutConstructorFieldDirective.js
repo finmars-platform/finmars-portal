@@ -15,7 +15,8 @@
                 tab: '=',
                 row: '<',
                 column: '<',
-                tabFieldsTree: '='
+                tabFieldsTree: '=',
+                palettesList: '<'
             },
             templateUrl: 'views/directives/layout-constructor-field-view.html',
             link: function (scope, elem, attr) {
@@ -33,7 +34,9 @@
                 scope.colsInTotal = scope.tab.layout.columns;
 
                 scope.fieldUsesBackgroundColor = false;
-                scope.fieldBackgroundColor = '#000000';
+                scope.backgroundColor = {
+                    color: {}
+                };
 
                 scope.specialOptionTemplate = '';
 
@@ -75,11 +78,15 @@
                     scope.item = JSON.parse(JSON.stringify(scope.tabFieldsTree[scope.row][scope.column]));
 
                     if (scope.item.backgroundColor) {
+
                         scope.fieldUsesBackgroundColor = true;
-                        scope.fieldBackgroundColor = scope.item.backgroundColor;
+                        //scope.fieldBackgroundColor = scope.item.backgroundColor;
+                        scope.backgroundColor.color = scope.item.backgroundColor;
+
                     } else {
                         scope.fieldUsesBackgroundColor = false;
-                        scope.fieldBackgroundColor = '#000000';
+                        //scope.fieldBackgroundColor = '#000000';
+                        scope.backgroundColor.color = {};
                     }
 
                     if (scope.item.attribute && scope.item.attribute.value_type !== "decoration") {
@@ -234,11 +241,15 @@
                     scope.item.editMode = false;
 
                     if (scope.item.backgroundColor) {
+
                         scope.fieldUsesBackgroundColor = true;
-                        scope.fieldBackgroundColor = scope.item.backgroundColor;
+                        //scope.fieldBackgroundColor = scope.item.backgroundColor;
+                        scope.backgroundColor.color = scope.item.backgroundColor;
+
                     } else {
                         scope.fieldUsesBackgroundColor = false;
-                        scope.fieldBackgroundColor = '#000000';
+                        //scope.fieldBackgroundColor = '#000000';
+                        scope.backgroundColor.color = {};
                     }
 
                     scope.$parent.vm.updateDrakeContainers();
@@ -293,7 +304,7 @@
                             }
 
                             if (scope.fieldUsesBackgroundColor) {
-                                scope.tab.layout.fields[i].backgroundColor = scope.fieldBackgroundColor;
+                                scope.tab.layout.fields[i].backgroundColor = scope.backgroundColor.color;
                             } else {
                                 scope.tab.layout.fields[i].backgroundColor = null;
                             }
@@ -421,7 +432,8 @@
                     }
 
                     scope.fieldUsesBackgroundColor = false;
-                    scope.fieldBackgroundColor = '#000000';
+                    //scope.fieldBackgroundColor = '#000000';
+                    scope.backgroundColor.color = {};
 
                     scope.$parent.vm.createFieldsTree();
                     scope.$parent.vm.syncItems();
@@ -608,16 +620,15 @@
                     scope.fieldUsesBackgroundColor = !scope.fieldUsesBackgroundColor;
                 };
 
-                scope.setFieldBackgroundColor = function (color) {
+                /*scope.setFieldBackgroundColor = function (color) {
                     scope.fieldBackgroundColor = color;
-                };
+                };*/
 
                 scope.hasEditablesToggle = function () {
                     if ((scope.entityType == 'transaction-type' || scope.entityType == 'complex-transaction') &&
                         scope.item.attribute && scope.item.attribute.value_type !== "decoration") {
 
                         return true;
-
                     }
 
                     return false;

@@ -13,7 +13,16 @@
 }
 
 .custom-input-main-container {
-  border-radius: 6px 6px;
+  padding: 1px 0 1px 1px;
+  border: 2px solid #7d7d7d;
+  border-radius: 6px;
+}
+
+.custom-input-content {
+  position: relative;
+  height: 23px;
+  width: 100%;
+  border-radius: 6px;
 }
 
 .custom-input-label {
@@ -27,11 +36,12 @@
 
 .custom-input {
   flex: 0 1 100%;
-  height: 27px;
-  width: 100%;
+  min-width: 0;
+  height: 23px;
   padding-left: 8px;
-  border: 2px solid #7d7d7d;
-  border-right: none;
+  //border: 2px solid #7d7d7d;
+  //border-right: none;
+  border: none;
   border-radius: 6px 0 0 6px;
   background: transparent;
   box-sizing: border-box;
@@ -40,7 +50,6 @@
     //border-color: #000;
     outline: none;
   }
-
 }
 
 .custom-input:focus + .custom-input-indicator-btn {
@@ -52,11 +61,13 @@
   display: flex;
   flex-direction: row;
   position: absolute;
-  height: 23px;
+  height: 100%;
+  //height: 23px;
   background-color: #fff;
   opacity: 0;
-  top: 2px;
+  top: 0;
   right: 30px;
+  margin-right: 6px;
   box-sizing: border-box;
 
   .custom-input-custom-btn {
@@ -74,9 +85,10 @@
 
 .custom-input-indicator-btn {
   flex: 0 0 30px;
-  height: 27px;
-  border: 2px solid #7d7d7d;
-  border-left: none;
+  height: 23px;
+  //border: 2px solid #7d7d7d;
+  //border-left: none;
+  border: none;
   background-color: transparent;
   border-radius: 0 6px 6px 0;
   padding: 2px 2px;
@@ -152,12 +164,12 @@
   }*/
 
   .custom-input {
-    border-color: #0404f3;
+    //border-color: #0404f3;
     color: #0404f3;
   }
 
   .custom-input-indicator-btn {
-    border-color: #0404f3;
+    //border-color: #0404f3;
     color: #0404f3;
     fill: #0404f3;
   }
@@ -169,12 +181,12 @@
   }
 
   .custom-input {
-    border-color: #000;
+    //border-color: #000;
     color: #000;
   }
 
   .custom-input-indicator-btn {
-    border-color: #000;
+    //border-color: #000;
     color: #000;
     fill: #000;
   }
@@ -182,18 +194,25 @@
 
 .custom-input-container.custom-input-is-valid {
   .custom-input {
-    border-color: #015f01;
+    //border-color: #015f01;
     color: #015f01;
   }
 
   .custom-input-indicator-btn {
-    border-color: #015f01;
+    //border-color: #015f01;
     color: #015f01;
     fill: #015f01;
   }
 }
 
 // should always be at the bottom
+.custom-input-container.no-indicator-btn {
+  .custom-input {
+    //border-right: 2px solid #7d7d7d;
+    border-radius: 6px;
+  }
+}
+
 .custom-input-container.custom-input-focused {
   .custom-input-main-container {
     box-shadow: 0 0 2px rgba(0, 0, 0, 1);
@@ -222,17 +241,22 @@
 
   .custom-input {
     padding-left: 20px;
-    border-color: #fa393e;
+    //border-color: #fa393e;
     color:  #fa393e;
   }
 
   .custom-input-indicator-btn {
-    border-color: #fa393e;
+    //border-color: #fa393e;
   }
 
   .custom-input:focus {
     //border-color: #fa393e;
     outline: none;
   }
+}
+
+.custom-input-container.custom-input-is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 // < should always be at the bottom >

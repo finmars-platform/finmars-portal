@@ -3,11 +3,11 @@
     var tooltipRepository = require('../repositories/tooltipsRepository');
 
     var getTooltipsList = function (options) {
-        return tooltipRepository.getTooltipsList(options);
+        return tooltipRepository.getList(options);
     }
 
     var updateTooltipsList = function (tooltipsList) {
-        return tooltipRepository.updateTooltipsList(tooltipsList);
+        return tooltipRepository.update(tooltipsList);
     }
 
     module.exports = {

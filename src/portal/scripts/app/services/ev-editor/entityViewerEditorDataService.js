@@ -21,11 +21,26 @@
             return data.tooltipsObj;
         }
 
+        function setColorPalettesList (palettesList) {
+            data.colorPalettes = palettesList;
+        }
+
+        function getColorPalettesList () {
+            if (data.colorPalettes) {
+                return data.colorPalettes;
+            } else {
+                return [];
+            }
+        }
+
         return {
             setChangedUserInputData: setChangedUserInputData,
             getChangedUserInputData: getChangedUserInputData,
+
             setTooltipsData: setTooltipsData,
-            getTooltipsData: getTooltipsData
+            getTooltipsData: getTooltipsData,
+            setColorPalettesList: setColorPalettesList,
+            getColorPalettesList: getColorPalettesList
         }
     }
 

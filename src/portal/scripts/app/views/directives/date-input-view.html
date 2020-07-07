@@ -14,38 +14,44 @@
         </div>
     </div>
 
-    <div class="custom-input-main-container flex-row position-relative">
-        <div data-ng-if="error" class="custom-input-error-tooltip">
-            <ng-md-icon icon="info"
-                        size="18"
-                        class="tooltip-sign"></ng-md-icon>
-            <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
-        </div>
+    <div class="custom-input-main-container">
+        <div class="custom-input-content">
+            <div data-ng-if="error" class="custom-input-error-tooltip">
+                <ng-md-icon icon="info"
+                            size="18"
+                            class="tooltip-sign"></ng-md-icon>
+                <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
+            </div>
 
-        <input type="text"
-               data-ng-model="dateValue"
-               placeholder="{{placeholderText}}"
-               class="custom-input date-input pick-me-up numberInputElem">
+            <div class="flex-row">
+                <input type="text"
+                       data-ng-model="dateValue"
+                       placeholder="{{placeholderText}}"
+                       class="custom-input date-input pick-me-up numberInputElem">
 
-        <div class="custom-input-custom-btns-holder">
-            <div data-ng-if="customButtons && customButtons.length">
-
-                <button data-ng-repeat="button in customButtons"
-                        class="{{button.classes}} custom-input-custom-btn"
-                        data-ng-click="callFnForCustomBtn(button.action)">
-                    {{button.caption}}
-                    <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
+                <button data-ng-if="!noIndicatorBtn"
+                        class="custom-input-indicator-btn position-relative"
+                        data-ng-click="focusDateInput()">
+                    <i class="fas fa-calendar-alt"></i>
                 </button>
-                <md-tooltip data-ng-if="button.tooltip"
-                            class="tooltip_1"
-                            md-direction="top">{{button.tooltip}}
-                </md-tooltip>
+            </div>
 
+            <div class="custom-input-custom-btns-holder">
+                <div data-ng-if="customButtons && customButtons.length">
+
+                    <button data-ng-repeat="button in customButtons"
+                            class="{{button.classes}} custom-input-custom-btn"
+                            data-ng-click="callFnForCustomBtn(button.action)">
+                        {{button.caption}}
+                        <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
+                    </button>
+                    <md-tooltip data-ng-if="button.tooltip"
+                                class="tooltip_1"
+                                md-direction="top">{{button.tooltip}}
+                    </md-tooltip>
+
+                </div>
             </div>
         </div>
-
-        <button class="custom-input-indicator-btn position-relative" data-ng-click="focusDateInput()">
-            <i class="fas fa-calendar-alt"></i>
-        </button>
     </div>
 </div>
