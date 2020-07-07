@@ -98,7 +98,7 @@
                 templateUrl: 'views/data/data-portfolio-view.html',
                 controller: 'DataPortfolioController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.tag', {
@@ -106,7 +106,7 @@
                 templateUrl: 'views/data/data-tag-view.html',
                 controller: 'DataTagController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.account', {
@@ -114,7 +114,7 @@
                 templateUrl: 'views/data/data-account-view.html',
                 controller: 'DataAccountController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.account-type', {
@@ -122,7 +122,7 @@
                 templateUrl: 'views/data/data-account-type-view.html',
                 controller: 'DataAccountTypeController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.counterparty-group', {
@@ -130,7 +130,7 @@
                 templateUrl: 'views/data/data-counterparty-group-view.html',
                 controller: 'DataCounterpartyGroupController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.counterparty', {
@@ -138,7 +138,7 @@
                 templateUrl: 'views/data/data-counterparty-view.html',
                 controller: 'DataCounterpartyController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.responsible-group', {
@@ -146,7 +146,7 @@
                 templateUrl: 'views/data/data-responsible-group-view.html',
                 controller: 'DataResponsibleGroupController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.responsible', {
@@ -154,7 +154,7 @@
                 templateUrl: 'views/data/data-responsible-view.html',
                 controller: 'DataResponsibleController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.instrument', {
@@ -162,7 +162,7 @@
                 templateUrl: 'views/data/data-instrument-view.html',
                 controller: 'DataInstrumentController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.instrument-type', {
@@ -170,7 +170,7 @@
                 templateUrl: 'views/data/data-instrument-type-view.html',
                 controller: 'DataInstrumentTypeController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.pricing-policy', {
@@ -178,7 +178,7 @@
                 templateUrl: 'views/data/data-pricing-policy-view.html',
                 controller: 'DataPricingPolicyController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.complex-transaction', {
@@ -186,7 +186,7 @@
                 templateUrl: 'views/data/data-complex-transaction-view.html',
                 controller: 'DataComplexTransactionController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.transaction', {
@@ -194,7 +194,7 @@
                 templateUrl: 'views/data/data-transaction-view.html',
                 controller: 'DataTransactionController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.transaction-type', {
@@ -202,7 +202,7 @@
                 templateUrl: 'views/data/data-transaction-type-view.html',
                 controller: 'DataTransactionTypeController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.transaction-type-group', {
@@ -210,7 +210,7 @@
                 templateUrl: 'views/data/data-transaction-type-group-view.html',
                 controller: 'DataTransactionTypeGroupController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.currency-history', {
@@ -218,7 +218,7 @@
                 templateUrl: 'views/data/data-currency-history-view.html',
                 controller: 'DataCurrencyHistoryController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.price-history', {
@@ -226,7 +226,7 @@
                 templateUrl: 'views/data/data-price-history-view.html',
                 controller: 'DataPriceHistoryController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             //.state('app.data.pricing', {
@@ -239,7 +239,7 @@
                 templateUrl: 'views/data/data-currency-view.html',
                 controller: 'DataCurrencyController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.strategy-group', {
@@ -257,7 +257,7 @@
                 templateUrl: 'views/data/data-strategy-view.html',
                 controller: 'DataStrategyController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
 
@@ -266,7 +266,7 @@
                 templateUrl: 'views/data/data-currency-history-error-view.html',
                 controller: 'DataCurrencyHistoryErrorController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.data.price-history-error', {
@@ -274,7 +274,7 @@
                 templateUrl: 'views/data/data-price-history-error-view.html',
                 controller: 'DataPriceHistoryErrorController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
 
@@ -288,7 +288,7 @@
                 templateUrl: 'views/reports/reports-balance-view.html',
                 controller: 'BalanceReportController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.reports.customFieldManager', {
@@ -304,7 +304,7 @@
                 templateUrl: 'views/reports/reports-profit-and-lost-view.html',
                 controller: 'ProfitAndLostReportController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.reports.transaction-report', {
@@ -312,7 +312,7 @@
                 templateUrl: 'views/reports/reports-transaction-view.html',
                 controller: 'TransactionReportController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.reports.cash-flow-projection-report', {
@@ -320,7 +320,7 @@
                 templateUrl: 'views/reports/reports-cash-flow-projection-view.html',
                 controller: 'CashFlowProjectionReportController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.reports.performance-report', {
@@ -328,7 +328,7 @@
                 templateUrl: 'views/reports/reports-performance-view.html',
                 controller: 'PerformanceReportController as vm',
                 params: {
-                    layoutName: null
+                    layoutUserCode: null
                 }
             })
             .state('app.reports.check-for-events', {

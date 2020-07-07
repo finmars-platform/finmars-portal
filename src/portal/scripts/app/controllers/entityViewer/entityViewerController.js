@@ -733,6 +733,7 @@
                 return window.location.href.indexOf('?layout=') !== -1
             };
 
+            // deprecated
             vm.getLayoutByName = function (name) {
 
                 console.log('vm.getLayoutByName.name', name);
@@ -744,6 +745,68 @@
                     filters: {
                         content_type: contentType,
                         name: name
+                    }
+                }).then(function (activeLayoutData) {
+
+                    var activeLayout = null;
+
+                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+
+                        for (var i = 0; i < activeLayoutData.results.length; i++) {
+                            var item = activeLayoutData.results[i];
+
+                            if (item.name === name) {
+                                activeLayout = item;
+                                break;
+                            }
+                        }
+
+                    }
+
+                    if (activeLayout) {
+
+                        vm.setLayout(activeLayout);
+
+                    } else {
+
+                        $mdDialog.show({
+                            controller: 'InfoDialogController as vm',
+                            templateUrl: 'views/info-dialog-view.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true,
+                            locals: {
+                                info: {
+                                    title: 'Warning',
+                                    description: "Layout " + name + " is not found. Switching back to Default Layout."
+                                }
+                            }
+                        }).then(function (value) {
+
+                            vm.getDefaultLayout();
+
+                        })
+
+                    }
+
+                });
+
+            };
+
+            vm.getLayoutByUserCode = function (userCode) {
+
+                console.log('vm.getLayoutByUserCode.userCode', userCode);
+
+                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
+
+                uiService.getListLayoutDefault({
+                    pageSize: 1000,
+                    filters: {
+                        content_type: contentType,
+                        user_code: userCode
                     }
                 }).then(function (activeLayoutData) {
 
@@ -835,12 +898,12 @@
 
                 setEventListeners();
 
+                var layoutUserCode;
+
                 if (vm.isLayoutFromUrl()) {
 
                     var queryParams = window.location.href.split('?')[1];
                     var params = queryParams.split('&');
-
-                    var layoutName;
 
                     params.forEach(function (param) {
 
@@ -849,22 +912,22 @@
                         var value = pieces[1];
 
                         if (key === 'layout') {
-                            layoutName = value;
+                            layoutUserCode = value;
 
-                            if (layoutName.indexOf('%20') !== -1) {
-                                layoutName = layoutName.replace(/%20/g, " ")
+                            if (layoutUserCode.indexOf('%20') !== -1) {
+                                layoutUserCode = layoutUserCode.replace(/%20/g, " ")
                             }
                         }
 
                     });
 
-                    vm.getLayoutByName(layoutName);
+                    vm.getLayoutByUserCode(layoutUserCode);
 
-                } else if ($stateParams.layoutName) {
+                } else if ($stateParams.layoutUserCode) {
 
-                    var layoutName = $stateParams.layoutName;
+                    layoutUserCode = $stateParams.layoutUserCode;
 
-                    vm.getLayoutByName(layoutName);
+                    vm.getLayoutByUserCode(layoutUserCode);
 
                 } else {
                     vm.getDefaultLayout();

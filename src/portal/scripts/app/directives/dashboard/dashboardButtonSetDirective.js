@@ -390,7 +390,7 @@
 
                             $state.go('app.dashboard', {
                                 layoutUserCode: item.target
-                            }, { reload: 'app' })
+                            }, {reload: 'app'})
 
                         } else {
 
@@ -475,6 +475,77 @@
 
                     }
 
+                    if (item.action === 'open_report') {
+
+                        var reportViewerRouteMap = {
+                            'reports.balancereport': 'app.reports.balance-report',
+                            'reports.plreport': 'app.reports.pl-report',
+                            'reports.transactionreport': 'app.reports.transaction-report'
+                        };
+
+
+                        if (item.target) {
+
+                            if (item.target_specific) {
+
+                                $state.go(reportViewerRouteMap[item.target], {
+                                    layoutUserCode: item.target_specific
+                                }, {reload: 'app'})
+
+                            } else {
+                                toastNotificationService.error('Report Viewer Layout is not set');
+                            }
+
+
+                        } else {
+
+                            toastNotificationService.error('Entity is not set');
+
+                        }
+
+                    }
+
+                    if (item.action === 'open_data_viewer') {
+
+                        var entityViewerRouteMap = {
+                            'portfolios.portfolio': 'app.data.portfolio',
+                            'accounts.account': 'app.data.account',
+                            'accounts.accounttype': 'app.data.account-type',
+                            'counterparties.counterparty': 'app.data.counterparty',
+                            'counterparties.responsible': 'app.data.responsible',
+                            'instruments.instrument': 'app.data.instrument',
+                            'instruments.instrumenttype': 'app.data.instrument-type',
+                            'transactions.complextransaction': 'app.data.complex-transaction',
+                            'transactions.transaction': 'app.data.transaction',
+                            'transactions.transactiontype': 'app.data.transaction-type',
+                            'currencies.currencyhistory': 'app.data.currency-history',
+                            'instruments.pricehistory': 'app.data.price-history',
+                            'currencies.currency': 'app.data.currency',
+                            'strategies.strategy1': 'app.data.strategy',
+                            'strategies.strategy2': 'app.data.strategy',
+                            'strategies.strategy3': 'app.data.strategy',
+                        };
+
+                        if (item.target) {
+
+                            if (item.target_specific) {
+
+                                $state.go(entityViewerRouteMap[item.target], {
+                                    layoutUserCode: item.target_specific
+                                }, {reload: 'app'})
+
+                            } else {
+                                toastNotificationService.error('Entity Viewer Layout is not set');
+                            }
+
+
+                        } else {
+
+                            toastNotificationService.error('Entity is not set');
+
+                        }
+
+                    }
                 };
 
 

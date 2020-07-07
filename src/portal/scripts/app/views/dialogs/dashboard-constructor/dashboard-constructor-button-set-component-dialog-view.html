@@ -1,7 +1,7 @@
 <md-dialog aria-label="" ng-cloak class="draggable-dialog width-80" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>New Button Set Component</h2>
+            <h2>Button Set Component</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -73,6 +73,24 @@
                             </md-input-container>
 
                         </div>
+
+                        <div class="m-t-16" data-ng-if="item.action === 'open_data_viewer' || item.action === 'open_report'">
+
+                            <md-input-container style="width: 200px;">
+                                <label for="">Target Specific</label>
+                                <md-select
+                                        md-on-open="vm.getTargetSpecifics($event, item)"
+                                        data-ng-model="item.target_specific"
+                                           data-ng-class="{'disabled-btn': !item.target}">
+                                    <md-option
+                                            data-ng-repeat="target in vm.targetSpecifics[item.action][item.target] | orderBy:'-name' track by $index "
+                                            ng-value="target.value">{{target.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+
+                        </div>
+
 
                     </div>
 
