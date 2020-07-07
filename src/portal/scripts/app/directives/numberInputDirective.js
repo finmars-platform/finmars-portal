@@ -24,7 +24,6 @@
 
                 scope.placeholderText = "0";
                 scope.error = '';
-                scope.tooltipText = 'Tooltip text';
 
                 var inputLoaded = false;  // prevents not null inputs highlight from start
                 var stylePreset;

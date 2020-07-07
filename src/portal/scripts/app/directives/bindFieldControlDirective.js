@@ -34,6 +34,8 @@
                 var choices = metaService.getValueTypes() || [];
                 var entityAttrs = metaService.getEntityAttrs(scope.entityType) || [];
 
+                var palettesList = [];
+
                 /*var numberInputElem = null;
                 var numberInputContainerElem = null;*/
 
@@ -85,8 +87,8 @@
 
                     if (attrObj.key) {
                         scope.entity[scope.fieldKey] = scope.entity[attrObj.key];
-                        console.log(scope.entity[scope.fieldKey]);
                     }
+
                     if (attrObj.id) {
                         var resAttr = null;
                         attrs.forEach(function (item) {
@@ -297,8 +299,8 @@
 
                     // ----------------------- Background Color -----------------
 
-                    if (scope.item.backgroundColor) {
-                        styleValue = styleValue + 'background-color: ' + scope.item.backgroundColor + ';';
+                    if (scope.options.backgroundColor) {
+                        styleValue = styleValue + 'background-color: ' + scope.options.backgroundColor + ';';
                     }
 
 
@@ -308,8 +310,8 @@
                 scope.inputBackgroundColor = function () {
                     var backgroundColor = '';
 
-                    if (scope.item.backgroundColor) {
-                        backgroundColor = 'background-color: ' + scope.item.backgroundColor + ';';
+                    if (scope.options.backgroundColor) {
+                        backgroundColor = 'background-color: ' + scope.options.backgroundColor + ';';
                     }
 
                     return backgroundColor;
@@ -472,7 +474,71 @@
 
                 };
 
+                var getFieldBackgroundColor = function () {
+
+                    if (scope.item.backgroundColor) {
+
+                        if (typeof scope.item.backgroundColor === 'string') { // allows old layouts keep its background color
+                            scope.options.backgroundColor = scope.item.backgroundColor;
+
+                        } else if (typeof scope.item.backgroundColor === 'object') {
+
+                            var paletteData = scope.item.backgroundColor;
+                            var paletteNotFound = true;
+
+                            var i,a;
+                            loop1: for (i = 0; i < palettesList.length; i++) {
+
+                                if (palettesList[i].user_code === paletteData.paletteUserCode) {
+
+                                    paletteNotFound = false;
+
+                                    for (a = 0; a < palettesList[i].colors.length; a++) {
+
+                                        if (palettesList[i].colors[a].order === paletteData.colorOrder) {
+
+                                            scope.options.backgroundColor = palettesList[i].colors[a].value;
+                                            break loop1;
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                            if (paletteNotFound) { // if palette was not found, use default palette
+
+                                loop1: for (i = 0; i < palettesList.length; i++) {
+
+                                    if (palettesList[i].user_code === 'Default Palette') {
+
+                                        for (a = 0; a < palettesList[i].colors.length; a++) {
+
+                                            if (palettesList[i].colors[a].order === paletteData.colorOrder) {
+
+                                                scope.options.backgroundColor = palettesList[i].colors[a].value;
+                                                break loop1;
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                    }
+
+                };
+
                 var setItemSpecificSettings = function () {
+
+                    palettesList = scope.evEditorDataService.getColorPalettesList();
 
                     scope.fieldType = null;
                     /*scope.attribute = scope.item;
@@ -560,14 +626,19 @@
 
                         if (scope.item.options.tooltipValue) {
                             scope.tooltipText = scope.item.options.tooltipValue;
+                        } else {
+                            scope.tooltipText = scope.getName();
                         }
+
                     }
 
-                    if (scope.item.backgroundColor) {
+                    getFieldBackgroundColor();
+
+                    if (scope.options.backgroundColor) {
 
                         scope.customStyles = {
-                            'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';',
-                            'custom-input-custom-btns-holder': 'background-color: ' + scope.item.backgroundColor + ';'
+                            'custom-input-main-container': 'background-color: ' + scope.options.backgroundColor + ';',
+                            'custom-input-custom-btns-holder': 'background-color: ' + scope.options.backgroundColor + ';'
                         }
 
                     }
@@ -674,9 +745,7 @@
                     }
 
                     if (scope.item) {
-
                         setItemSpecificSettings();
-
                     }
 
                     if (scope.fieldType) {

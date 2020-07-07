@@ -10,6 +10,8 @@
     var concat = require('gulp-concat');
     var minifyCSS = require('gulp-minify-css');
     var rename = require('gulp-rename');
+    var del = require('del');
+    var strip = require('gulp-strip-comments');
 
     var appName = 'core';
 
@@ -55,7 +57,6 @@
 
         return gulp.src(pathToJS)
             .pipe(gulp.dest('libs/js'));
-
 
     });
 
@@ -273,7 +274,12 @@
             .pipe(gulp.dest('dist/' + appName + '/content/webfonts/'));
     });
 
-    gulp.task(appName + '-plugins-js-min', function () {
+    function deleteTempFolder () {
+        return del(['src/temp']);
+    }
+
+
+    function minPluginsJs() {
 
         var pathToJS = [
             'node_modules/fancy-logger/dist/js/fancy-logger.js',
@@ -284,16 +290,36 @@
             'node_modules/qrious/dist/qrious.js'
         ];
 
+        /*return gulp.src(pathToJS)
+            .pipe(concat('plugins.js'))
+            .pipe(uglify())
+            .pipe(rename('plugins.min.js'))
+            .pipe(gulp.dest('dist/' + appName + '/scripts/'));*/
+
         return gulp.src(pathToJS)
             .pipe(concat('plugins.js'))
             .pipe(uglify())
             .pipe(rename('plugins.min.js'))
+            .pipe(gulp.dest('src/temp/' + appName + '/'));
+
+    }
+
+    function mergePluginsMinJs() {
+
+        var pathToMinJs = [
+            'src/temp/' + appName + '/plugins.min.js',
+            'node_modules/@simonwep/pickr/dist/pickr.min.js'
+        ];
+
+        return gulp.src(pathToMinJs)
+            .pipe(strip({trim: true}))
+            .pipe(concat('plugins.min.js'))
             .pipe(gulp.dest('dist/' + appName + '/scripts/'));
+    }
 
-    });
+    gulp.task(appName + '-plugins-js-min', gulp.series(minPluginsJs, mergePluginsMinJs, deleteTempFolder));
 
-    gulp.task(appName + '-plugins-css-min', function () {
-
+    function minPluginsCss() {
         var pathToCSS = [
             'node_modules/jstree/dist/themes/default/style.css',
             'node_modules/toastr/build/toastr.css',
@@ -304,25 +330,57 @@
             .pipe(concat('plugins.css'))
             .pipe(minifyCSS())
             .pipe(rename('plugins.min.css'))
-            .pipe(gulp.dest('dist/' + appName + '/content/css'));
+            .pipe(gulp.dest('src/temp/' + appName + '/'));
+    }
 
-    });
+    function mergePluginsMinCss() {
+        var pathToMinCSS = [
+            'src/temp/' + appName + '/plugins.min.css',
+            'node_modules/@simonwep/pickr/dist/themes/classic.min.css'
+        ];
 
+        return gulp.src(pathToMinCSS)
+            .pipe(concat('plugins.min.css'))
+            .pipe(strip.text({trim: true, ignore: /url\([\w\s:\/=\-\+;,]*\)/g}))
+            .pipe(gulp.dest('dist/' + appName + '/content/css/'));
+    }
 
-    gulp.task(appName + '-min-All', gulp.parallel(
-        appName + '-angular-js-min',
-        appName + '-angular-css-min',
-        appName + '-core-js-min',
-        appName + '-plugins-js-min',
-        appName + '-min-Angular-UI-JS',
-        appName + '-moment-js-min',
-        appName + '-fetch-js-min',
-        appName + '-jquery-js-min',
-        appName + '-plugins-css-min',
-        appName + '-dragula-js-min',
-        appName + '-dragula-css-min',
-        appName + '-fontawesome-css-min',
-        appName + '-fontawesome-fonts-move'
-    ))
+    gulp.task(appName + '-plugins-css-min', gulp.series(minPluginsCss, mergePluginsMinCss, deleteTempFolder));
+
+    gulp.task(appName + '-min-All',
+        /*gulp.series(
+            gulp.parallel(
+                appName + '-angular-js-min',
+                appName + '-angular-css-min',
+                appName + '-core-js-min',
+                appName + '-plugins-js-min',
+                appName + '-min-Angular-UI-JS',
+                appName + '-moment-js-min',
+                appName + '-fetch-js-min',
+                appName + '-jquery-js-min',
+                appName + '-plugins-css-min',
+                appName + '-dragula-js-min',
+                appName + '-dragula-css-min',
+                appName + '-fontawesome-css-min',
+                appName + '-fontawesome-fonts-move'
+            ),
+            deleteTempFolder
+        )*/
+        gulp.parallel(
+            appName + '-angular-js-min',
+            appName + '-angular-css-min',
+            appName + '-core-js-min',
+            appName + '-plugins-js-min',
+            appName + '-min-Angular-UI-JS',
+            appName + '-moment-js-min',
+            appName + '-fetch-js-min',
+            appName + '-jquery-js-min',
+            appName + '-plugins-css-min',
+            appName + '-dragula-js-min',
+            appName + '-dragula-css-min',
+            appName + '-fontawesome-css-min',
+            appName + '-fontawesome-fonts-move'
+        )
+    );
 
 }());

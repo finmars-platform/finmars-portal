@@ -149,8 +149,8 @@
                 scope.inputBackgroundColor = function () {
                     var backgroundColor = '';
 
-                    if (scope.item.backgroundColor) {
-                        backgroundColor = 'background-color: ' + scope.item.backgroundColor + ';';
+                    if (scope.options.backgroundColor) {
+                        backgroundColor = 'background-color: ' + scope.options.backgroundColor + ';';
                     }
 
                     return backgroundColor;
@@ -174,6 +174,7 @@
 
                     var id = scope.entity[scope.fieldKey];
                     if (id) {
+
                         var i;
                         var attr;
 
@@ -188,7 +189,9 @@
                         }
 
                         if (scope.item.options && scope.item.options.fieldsForm) {
+
                             var resultCaption = '';
+
                             scope.item.options.fieldsForm.forEach(function (item, index) {
                                 if (index + 1 === scope.item.options.fieldsForm.length) {
                                     resultCaption = resultCaption + attr[item];
@@ -197,7 +200,8 @@
                                 }
                             });
 
-                            result = resultCaption
+                            result = resultCaption;
+
                         }
 
 
@@ -209,7 +213,7 @@
                 };
 
                 scope.bindListFields = function (field) {
-                    //console.log('scope.item.options', scope.item.options);
+
                     if (scope.item.options && scope.item.options.fieldsList) {
                         var resultCaption = '';
                         scope.item.options.fieldsList.forEach(function (item, index) {
@@ -281,15 +285,21 @@
                 };
 
                 scope.getData = function () {
-
                     console.log('getData.key', scope.item.key);
-                    console.log('getData.scope', scope);
-
                     if (!fieldsDataIsLoaded) {
+                        var options = {};
+
+                        if (scope.options.entityType) {
+                            options.entityType = scope.options.entityType;
+                        }
+
+                        if (scope.options.key) {
+                            options.key = scope.options.key;
+                        }
 
                         if (scope.entityType === 'complex-transaction') {
 
-                            fieldResolverService.getFieldsByContentType(scope.item.content_type, scope.options).then(function (res) {
+                            fieldResolverService.getFieldsByContentType(scope.item.content_type, options).then(function (res) {
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
@@ -303,7 +313,7 @@
 
                         } else {
 
-                            fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
+                            fieldResolverService.getFields(scope.item.key, options).then(function (res) {
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
@@ -318,7 +328,6 @@
                         }
 
                     }
-
 
                 };
 
@@ -362,17 +371,16 @@
 
                 var setItemSpecificSettings = function () {
 
-                    if (scope.item.backgroundColor) {
+                    if (scope.options.backgroundColor) {
 
                         scope.customStyles = {
-                            'custom-input-main-container': 'background-color: ' + scope.item.backgroundColor + ';',
-                            'custom-input-custom-btns-holder': 'background-color: ' + scope.item.backgroundColor + ';'
+                            'custom-input-main-container': 'background-color: ' + scope.options.backgroundColor + ';',
+                            'custom-input-custom-btns-holder': 'background-color: ' + scope.options.backgroundColor + ';'
                         }
 
                     }
 
                     if (scope.item.frontOptions) {
-
                         /*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
                             scope.ciEventObj.event = {key: 'set_style_preset1'};
 
@@ -385,6 +393,8 @@
                         }
 
                     }
+
+                    scope.tooltipText = scope.getName();
 
                     if (scope.item.options) {
 

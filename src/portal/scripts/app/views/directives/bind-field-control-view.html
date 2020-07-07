@@ -33,6 +33,7 @@
             </div>
 
         </md-input-container>-->
+
         <number-input label="{{getName()}}"
                       model="entity[fieldKey]"
                       number-format="item.options.number_format"
@@ -43,10 +44,10 @@
                                       tooltipText: tooltipText,
                                       notNull: options.notNull}"
                       on-change-callback="itemChange()"></number-input>
-
     </div>
 
     <div data-ng-if="fieldType['display_name'] === 'String'">
+
         <!--<div data-ng-if="fieldKey === 'notes' ">
             <md-input-container class="md-block no-error-spacer textarea-bind-field">
                 <label data-ng-bind="getName()"></label>
@@ -93,6 +94,7 @@
         </div>-->
 
         <text-input label="{{getName()}}"
+                    placeholder-text="text"
                     model="entity[fieldKey]"
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"

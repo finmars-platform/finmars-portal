@@ -53,7 +53,7 @@
             //usersService.logout();
         };*/
 
-        if ('__PROJECT_ENV__' === 'development') {
+        if ('__PROJECT_ENV__' === 'development' || '__PROJECT_ENV__' === 'local') {
 
             usersService.ping().then(function (data) {
                 setTimeout(function () {

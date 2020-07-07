@@ -628,7 +628,7 @@
             })
             .state('app.settings.color-palettes', {
                 url: '/palettes',
-                templateUrl: 'views/pages/color-palettes-settings-view.html',
+                templateUrl: 'views/color-picker/color-palettes-settings-view.html',
                 controller: 'ColorPalettesSettingsController as vm'
             })
             .state('app.settings.import-configuration', {

@@ -24,6 +24,7 @@
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
     var tooltipsService = require('../../services/tooltipsService');
+    var colorPalettesService = require('../../services/colorPalettesService');
 
     var uiService = require('../../services/uiService');
 
@@ -1421,6 +1422,11 @@
             tooltipsService.getTooltipsList(tooltipsOptions).then(function (data) {
                 var tooltipsList = data.results;
                 vm.evEditorDataService.setTooltipsData(tooltipsList);
+            });
+
+            colorPalettesService.getList({pageSize: 1000}).then(function (data) {
+                var palettesList = data.results;
+                vm.evEditorDataService.setColorPalettesList(palettesList);
             });
 
             getEntityAttrs();
