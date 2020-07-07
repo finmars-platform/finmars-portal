@@ -768,6 +768,52 @@
         })
     };
 
+
+    var getEntityTooltipList = function (options) {
+
+        console.log('options', options);
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/entity-tooltip/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createEntityTooltip = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/entity-tooltip/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateEntityTooltip = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/entity-tooltip/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -829,7 +875,11 @@
         getContextMenuLayoutByKey: getContextMenuLayoutByKey,
         createContextMenuLayout: createContextMenuLayout,
         updateContextMenuLayout: updateContextMenuLayout,
-        deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey
+        deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey,
+
+        getEntityTooltipList: getEntityTooltipList,
+        createEntityTooltip: createEntityTooltip,
+        updateEntityTooltip: updateEntityTooltip
 
 
 

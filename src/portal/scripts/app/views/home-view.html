@@ -9,7 +9,7 @@
 
                 <div data-ng-repeat="dashboard in vm.dashboardsList">
                     <md-button class="md-raised md-button"
-                               ui-sref="app.dashboard({layoutName: dashboard.name})"
+                               ui-sref="app.dashboard({layoutUserCode: dashboard.user_code})"
                                ng-bind="dashboard.name"></md-button>
                 </div>
 

@@ -1,12 +1,21 @@
 <div>
 
-    <div data-ng-repeat="row in grid.rows">
+    <div data-ng-repeat="row in grid.rows" data-ng-show="row.index < rows">
 
         <div layout="row">
 
-            <div data-ng-repeat="item in row.items">
+            <div data-ng-repeat="item in row.items track by $index" data-ng-show="$index < columns" >
 
-                <md-button data-ng-click="handleAction($event, item)" class="md-raised md-primary">{{item.name}}</md-button>
+                <div data-ng-if="item.action">
+
+                    <md-button data-ng-click="handleAction($event, item)" class="md-raised md-primary">{{item.name}}
+                    </md-button>
+
+                </div>
+
+                <div data-ng-if="!item.action">
+                    &nbsp;
+                </div>
 
             </div>
 

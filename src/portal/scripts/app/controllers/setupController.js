@@ -58,7 +58,7 @@
 
                     $state.go('app.home');
 
-                }, 1000) // because its cool
+                }, 1000)
 
             } else {
 

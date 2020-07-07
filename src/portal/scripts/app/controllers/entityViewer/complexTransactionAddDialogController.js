@@ -1247,7 +1247,7 @@
 
             if (Object.keys(data).length) {
 
-                if (entity.hasOwnProperty('contextData')) {
+                if (data.hasOwnProperty('contextData')) {
 
                     vm.contextData = Object.assign({}, data.contextData);
                     //delete entity.contextData;

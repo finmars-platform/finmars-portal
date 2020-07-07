@@ -285,6 +285,9 @@
             case 'integrations.dailypricingmodelmapping':
                 result = 'Daily Pricing Model Mapping';
                 break;
+            case 'integrations.pricingconditionmapping':
+                result = 'Pricing Condition Mapping';
+                break;
             case 'integrations.paymentsizedetailmapping':
                 result = 'Payment Size Detail Mapping';
                 break;

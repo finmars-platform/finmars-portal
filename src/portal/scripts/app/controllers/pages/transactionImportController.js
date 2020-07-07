@@ -5,16 +5,15 @@
 
     'use strict';
 
-    var transactionSchemeService = require('../../services/import/transactionSchemeService');
+    var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
     var importTransactionService = require('../../services/import/importTransactionService');
-
 
     var baseUrlService = require('../../services/baseUrlService');
     var usersService = require('../../services/usersService');
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function transactionImportController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -270,7 +269,7 @@
                 }
 
             }).catch(function (error) {
-                console.log("error occured", error);
+                console.log("error occurred", error);
             });
 
 
@@ -518,10 +517,6 @@
 
         };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
         vm.getMember = function () {
 
             usersService.getMyCurrentMember().then(function (data) {
@@ -560,7 +555,7 @@
 
         vm.getSchemeList = function(){
 
-            transactionSchemeService.getListLight().then(function (data) {
+            transactionImportSchemeService.getListLight().then(function (data) {
 
                 vm.transactionSchemes = data.results;
                 vm.readyStatus.schemes = true;

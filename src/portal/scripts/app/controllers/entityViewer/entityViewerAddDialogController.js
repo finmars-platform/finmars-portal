@@ -35,7 +35,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $state, entityType, entity) {
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $state, entityType, entity, data) {
 
         console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
 

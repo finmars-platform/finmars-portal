@@ -99,6 +99,14 @@
             raw_text_result: ''
         };
 
+        if (column.status === 'missing') {
+            return result = {
+                html_result: 'Deleted',
+                numeric_result: null,
+                raw_text_result: 'Deleted'
+            };
+        }
+
         //var isFirst = rvHelper.isFirst(evDataService, obj);
 
         if (columnNumber < obj.___level - 1) {
@@ -420,7 +428,7 @@
             }
 
             cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
+                '<div class="g-cell ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
                 resultValue +
                 '</div>' +

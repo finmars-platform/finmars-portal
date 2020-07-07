@@ -192,7 +192,9 @@
 
             processesService.deleteByKey(item.id).then(function (data) {
 
-                $scope.$apply();
+                // $scope.$apply();
+
+                vm.getData();
 
                 // if (!vm.autoRefresh) {
                 //
