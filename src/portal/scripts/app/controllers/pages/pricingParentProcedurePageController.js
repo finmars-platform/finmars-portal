@@ -70,6 +70,38 @@
 
         };
 
+        vm.showErrorDetails = function($event, procedure){
+
+            var description;
+
+            description = "<div>";
+
+            description = "<p> Status Code: " + procedure.error_code + "</p>";
+            description = "<p> Description: <br/><br/> " + procedure.error_message + "</p>";
+
+            description = description + '</div>';
+
+            $mdDialog.show({
+                controller: 'InfoDialogController as vm',
+                templateUrl: 'views/info-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    info: {
+                        title: 'Procedure Error Details',
+                        description: description
+                    }
+                }
+            });
+
+
+        };
+
         vm.init = function () {
 
             vm.getList();
