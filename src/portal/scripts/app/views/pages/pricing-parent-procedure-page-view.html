@@ -93,7 +93,9 @@
                                     <span data-ng-if="procedure.status == 'I'">Init</span>
                                     <span data-ng-if="procedure.status == 'D'">Done</span>
                                     <span data-ng-if="procedure.status == 'P'">Processing</span>
-                                    <span data-ng-if="procedure.status == 'E'">Error</span>
+                                    <span data-ng-if="procedure.status == 'E'" class="color-danger">Error</span>
+
+                                    <md-button data-ng-if="procedure.status == 'E'" data-ng-click="vm.showErrorDetails($event, procedure)">Show details</md-button>
 
                                 </div>
 
