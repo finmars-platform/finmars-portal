@@ -43,7 +43,7 @@
             })
         };
 
-        vm.refreshItem = function($index, item){
+        vm.refreshItem = function ($index, item) {
 
             pricingParentProcedureService.getByKey(item.id).then(function (data) {
 
@@ -70,14 +70,14 @@
 
         };
 
-        vm.showErrorDetails = function($event, procedure){
+        vm.showErrorDetails = function ($event, procedure) {
 
             var description;
 
             description = "<div>";
 
-            description = "<p> Status Code: " + procedure.error_code + "</p>";
-            description = "<p> Description: <br/><br/> " + procedure.error_message + "</p>";
+            description = description + "<p> <b>Status Code:</b> " + procedure.error_code + "</p>";
+            description = description + "<p> <b>Description:</b> <br/><br/> " + procedure.error_message + "</p>";
 
             description = description + '</div>';
 
