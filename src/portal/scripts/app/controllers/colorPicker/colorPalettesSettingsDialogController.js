@@ -13,6 +13,8 @@
         vm.readyStatus = false;
         vm.palettesList = [];
 
+        var palettesListChanged = false;
+
         var openDefaultPalette = function () {
 
             for (var i = 0; i < vm.palettesList.length; i++) {
@@ -112,11 +114,10 @@
 
                         vm.openedPalette.name = res.data.text;
                         vm.openedPalette.user_code = res.data.text2;
-                        var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
-                        colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate);
+
+                        vm.onColorChange();
 
                     }
-
 
                 }
 
@@ -150,8 +151,7 @@
                         },
                         secondInput: {
                             value: paletteCopyUserCode,
-                        },
-                        palettesList: vm.palettesList
+                        }
                     }
                 }
 
@@ -162,10 +162,13 @@
                     paletteCopy.name = res.data.text;
                     paletteCopy.user_code = res.data.text2;
 
-                    /*colorPalettesService.create(paletteCopy).then(function () {
+                    colorPalettesService.create(paletteCopy).then(function () {
+
                         vm.readyStatus = false;
                         getPalettesList(paletteCopy.user_code);
-                    });*/
+                        palettesListChanged = true;
+
+                    });
 
                 }
 
@@ -180,6 +183,7 @@
             colorPalettesService.deleteById(vm.openedPalette.id).then(function () {
 
                 toastNotificationService.success('Palette ' + selPaletteName + 'was deleted');
+                palettesListChanged = true;
 
                 vm.readyStatus = false;
                 getPalettesList();
@@ -224,15 +228,17 @@
 
         //vm.openColorPicker = function (paletteId, colorOrder) {
         vm.openColorPicker = function (color, $event) {
+
             /*var selectorValue = ".colorPaletteColorPicker[data-color-palette='" + paletteId + "'][data-color-order='" + colorOrder + "']";
             var colorInput = document.querySelector(selectorValue);
 
             colorInput.click();*/
+
             var colorValue = color.value;
 
             $mdDialog.show({
                 controller: 'ColorPickerDialogController as vm',
-                templateUrl: 'views/color-picker/color-picker-dialog-view.html',
+                templateUrl: 'views/colorPicker/color-picker-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 multiple: true,
@@ -257,14 +263,34 @@
         };
 
         vm.onColorChange = function () {
+
             var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
-            colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate);
+            colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate).then(function () {
+                palettesListChanged = true;
+            });
+
         };
 
+        vm.close = function () {
+            var resObj = {
+                status: 'disagree'
+            };
+
+            if (palettesListChanged) {
+                resObj.data = {
+                    palettesList: vm.palettesList
+                }
+            }
+
+            $mdDialog.hide(resObj);
+        }
+
+        vm.agree = function () {
+            $mdDialog.hide({status: 'agree', data: {palettesList: vm.palettesList}});
+        }
+
         var init = function () {
-
             getPalettesList();
-
         }
 
         init();

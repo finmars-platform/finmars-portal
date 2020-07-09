@@ -5,8 +5,8 @@
 
     'use strict';
 
-    var entityResolverService = require('../services/entityResolverService');
-    var metaContentTypeService = require('../services/metaContentTypesService');
+    var entityResolverService = require('../../services/entityResolverService');
+    var metaContentTypeService = require('../../services/metaContentTypesService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -23,13 +23,13 @@
                 smallOptions: '=',
                 callback: '&'
             },
-            templateUrl: 'views/directives/entity-search-select-view.html',
+            templateUrl: 'views/directives/customInputs/entity-search-select-view.html',
             link: function (scope, elem, attrs) {
 
                 scope.error = '';
                 scope.inputValue = '';
                 scope.placeholderText = 'Relation';
-                scope.tooltipText = 'Tooltip text';
+                //scope.tooltipText = 'Tooltip text';
 
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));

@@ -1193,10 +1193,6 @@
 
     };
 
-    var getTooltipsForEntity = function (entityType, evDataService) {
-
-    }
-
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
         removeNullFields: removeNullFields,

@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var renderHelper = require('../helpers/render.helper');
+    var renderHelper = require('../../helpers/render.helper');
 
     module.exports = function ($mdDialog) {
 
@@ -19,7 +19,7 @@
                 smallOptions: '<',
                 onChangeCallback: '&?'
             },
-            templateUrl: 'views/directives/number-input-view.html',
+            templateUrl: 'views/directives/customInputs/number-input-view.html',
             link: function (scope, elem, attr) {
 
                 scope.placeholderText = "0";

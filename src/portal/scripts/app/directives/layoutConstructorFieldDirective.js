@@ -16,7 +16,7 @@
                 row: '<',
                 column: '<',
                 tabFieldsTree: '=',
-                palettesList: '<'
+                palettesList: '='
             },
             templateUrl: 'views/directives/layout-constructor-field-view.html',
             link: function (scope, elem, attr) {
@@ -50,6 +50,10 @@
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
+                scope.palettesObj = {
+                    palettesList: scope.palettesList
+                }
+
                 var entityAttrsKeys = [];
                 scope.entityAttrs.forEach(function (entityAttr) {
                     entityAttrsKeys.push(entityAttr.key);
@@ -60,18 +64,6 @@
                 });
 
                 var tabs = scope.$parent.vm.tabs;
-
-                scope.$watch('tabFieldsTree', function () {
-
-                    if (scope.tabFieldsTree) {
-                        findItem();
-
-                        setTimeout(function () { // set min height to prevent row disappearance on card drag
-                            setCardContainerMinHeight();
-                        }, 100);
-                    }
-
-                });
 
                 function findItem() {
 
@@ -656,6 +648,27 @@
                     });
 
                 };
+
+                scope.onPalettesChange = function () {
+                    scope.palettesList = scope.palettesObj.palettesList;
+                    scope.$parent.vm.palettesList = scope.palettesList;
+                }
+
+                scope.$watch('tabFieldsTree', function () {
+
+                    if (scope.tabFieldsTree) {
+                        findItem();
+
+                        setTimeout(function () { // set min height to prevent row disappearance on card drag
+                            setCardContainerMinHeight();
+                        }, 100);
+                    }
+
+                });
+
+                scope.$watch('palettesList', function () {
+                    scope.palettesObj.palettesList = scope.palettesList;
+                });
 
             }
         }

@@ -394,14 +394,14 @@
 
                     }
 
-                    scope.tooltipText = scope.getName();
+                    if (scope.item.options && scope.item.options.tooltipValue) {
+                        scope.tooltipText = scope.item.options.tooltipValue;
 
-                    if (scope.item.options) {
+                    } else if (scope.item.tooltip) {
+                        scope.tooltipText = scope.item.tooltip;
 
-                        if (scope.item.options.tooltipValue) {
-                            scope.tooltipText = scope.item.options.tooltipValue;
-                        }
-
+                    } else {
+                        scope.tooltipText = scope.getName();
                     }
 
                 }

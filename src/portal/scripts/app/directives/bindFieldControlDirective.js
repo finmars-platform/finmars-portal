@@ -626,6 +626,10 @@
 
                         if (scope.item.options.tooltipValue) {
                             scope.tooltipText = scope.item.options.tooltipValue;
+
+                        } else if (scope.item.tooltip) {
+                            scope.tooltipText = scope.item.tooltip;
+
                         } else {
                             scope.tooltipText = scope.getName();
                         }
@@ -638,7 +642,8 @@
 
                         scope.customStyles = {
                             'custom-input-main-container': 'background-color: ' + scope.options.backgroundColor + ';',
-                            'custom-input-custom-btns-holder': 'background-color: ' + scope.options.backgroundColor + ';'
+                            'custom-input-custom-btns-holder': 'background-color: ' + scope.options.backgroundColor + ';',
+                            'customInputFullText': 'background-color: ' + scope.options.backgroundColor + ';'
                         }
 
                     }

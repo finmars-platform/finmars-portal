@@ -61,7 +61,7 @@
 
             $mdDialog.show({
                 controller: 'ColorPalettesSettingsDialogController as vm',
-                templateUrl: 'views/color-picker/color-palettes-settings-dialog-view.html',
+                templateUrl: 'views/colorPicker/color-palettes-settings-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 multiple: true
