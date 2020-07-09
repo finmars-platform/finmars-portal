@@ -53,19 +53,6 @@
             //usersService.logout();
         };*/
 
-        if ('__PROJECT_ENV__' === 'development' || '__PROJECT_ENV__' === 'local') {
-
-            usersService.ping().then(function (data) {
-                setTimeout(function () {
-                    usersService.login('__LOGIN__', '__PASS__').then(function () {
-                        console.log('after login', cookiesService.getCookie('csrftoken'));
-                        // $scope.$apply();
-                    });
-                }, 1000);
-            });
-
-        }
-
         vm.getMasterUsersList = function () {
 
             vm.readyStatus.masters = false;
@@ -698,6 +685,24 @@
 
             vm.currentGlobalState = vm.getCurrentGlobalState();
 
+            if ('__PROJECT_ENV__' === 'development' || '__PROJECT_ENV__' === 'local') {
+
+                if (!cookiesService.getCookie('csrftoken')) {
+
+                    usersService.login('__LOGIN__', '__PASS__').then(function () {
+                        console.log('after login', cookiesService.getCookie('csrftoken'));
+                        // $scope.$apply();
+
+                        window.location.reload();
+
+
+                    });
+
+                }
+
+            }
+
+
             vm.initTransitionListener();
 
             vm.getMasterUsersList().then(function () {
@@ -718,6 +723,7 @@
             }
 
             vm.importOnDragListeners();
+
 
         };
 

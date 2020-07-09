@@ -378,8 +378,6 @@
                 templateUrl: 'views/pages/run-pricing-procedure-page-view.html',
                 controller: 'RunPricingProcedurePageController as vm'
             })
-
-
             .state('app.import', {
                 url: '/import',
                 abstract: true,
