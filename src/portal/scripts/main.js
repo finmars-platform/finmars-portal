@@ -317,12 +317,12 @@ app.controller('TransactionImportSchemeSelectorValuesDialogController', ['$scope
 
 // Color palettes
 
-app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', require('./app/controllers/color-picker/colorPalettesSettingsController')]);
-app.controller('ColorPalettesSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/color-picker/colorPalettesSettingsDialogController')]);
+app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', require('./app/controllers/colorPicker/colorPalettesSettingsController')]);
+app.controller('ColorPalettesSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/colorPicker/colorPalettesSettingsDialogController')]);
 app.controller('TwoInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoInputsDialogController')]);
 app.controller('RenameColorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameColorDialogController')]);
-app.controller('ColorPickerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/color-picker/colorPickerDialogController')]);
-app.controller('SelectColorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/color-picker/selectColorDialogController')]);
+app.controller('ColorPickerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/colorPicker/colorPickerDialogController')]);
+app.controller('SelectColorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/colorPicker/selectColorDialogController')]);
 
 app.directive('colorPicker', ['$mdDialog', require('./app/directives/colorPickerDirective')]);
 
@@ -665,7 +665,7 @@ app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives
 app.directive('commonSelect', [require('./app/directives/commonSelectDirective')]);
 app.directive('ttypeActionsInputSelect', [require('./app/directives/ttypeActionsInputsSelectDirective')]);
 app.directive('ttypeActionsRelationsSelect', [require('./app/directives/ttypeActionsRelationsSelectDirective')]);
-app.directive('entitySearchSelect', ['$mdDialog', require('./app/directives/entitySearchSelect')]);
+app.directive('entitySearchSelect', ['$mdDialog', require('./app/directives/customInputs/entitySearchSelect')]);
 app.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
 app.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
 app.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
@@ -685,9 +685,10 @@ app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/number
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 
-app.directive('textInput', ['$mdDialog', require('./app/directives/textInputDirective.js')]);
-app.directive('numberInput', ['$mdDialog', require('./app/directives/numberInputDirective.js')]);
-app.directive('dateInput', [require('./app/directives/dateInputDirective.js')]);
+app.directive('textInput', ['$mdDialog', require('./app/directives/customInputs/textInputDirective.js')]);
+app.directive('numberInput', ['$mdDialog', require('./app/directives/customInputs/numberInputDirective.js')]);
+app.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
+app.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
 

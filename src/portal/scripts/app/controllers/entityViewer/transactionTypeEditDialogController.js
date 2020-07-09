@@ -314,6 +314,8 @@
 
                     });
 
+                    vm.expressionEditorData = {groups: [vm.inputsGroup], functions: [vm.inputsFunctions]};
+
                     if (vm.entity.inputs) {
                         vm.entity.inputs.forEach(function (input) {
 

@@ -16,7 +16,7 @@
                 smallOptions: '=',
                 onChangeCallback: '&?'
             },
-            templateUrl: 'views/directives/date-input-view.html',
+            templateUrl: 'views/directives/customInputs/date-input-view.html',
             link: function (scope, elem, attr) {
 
                 scope.error = '';

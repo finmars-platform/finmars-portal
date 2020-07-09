@@ -558,6 +558,14 @@
                     userInput.frontOptions.usedInExpr = true;
                 }
 
+                for (var i = 0; i < vm.transactionType.inputs.length; i++) {
+
+                    if (vm.transactionType.inputs[i].name === userInput.name) {
+                        userInput.tooltip = vm.transactionType.inputs[i].tooltip;
+                    }
+
+                }
+
             });
 
             inputsWithCalculations = cTransactionData.transaction_type_object.inputs;

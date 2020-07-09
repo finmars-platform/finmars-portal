@@ -154,7 +154,9 @@
                         </md-checkbox>
                     </md-input-container>
 
-                    <color-picker palettes-list="palettesList" model="backgroundColor.color"></color-picker>
+                    <color-picker palettes-list="palettesObj.palettesList"
+                                  model="backgroundColor.color"
+                                  on-palettes-change-callback="onPalettesChange()"></color-picker>
                     <!--<input type="color"
                            ng-model="fieldBackgroundColor"
                            class="ec-color-input"

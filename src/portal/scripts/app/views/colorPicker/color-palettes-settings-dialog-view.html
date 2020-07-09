@@ -5,7 +5,7 @@
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
 
-            <h2>Pick color</h2>
+            <h2>Edit palettes</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -13,7 +13,7 @@
     <md-dialog-content class="p-16 height-100">
 
         <div data-ng-if="vm.readyStatus">
-            <div data-ng-include="'views/color-picker/color-palettes-settings-view.html'"></div>
+            <div data-ng-include="'views/colorPicker/color-palettes-settings-view.html'"></div>
         </div>
 
         <div data-ng-if="!vm.readyStatus">

@@ -16,15 +16,17 @@
                 onChangeCallback: '&?',
                 onBlurCallback: '&?'
             },
-            templateUrl: 'views/directives/text-input-view.html',
+            templateUrl: 'views/directives/customInputs/text-input-view.html',
             link: function (scope, elem, attr) {
 
                 var inputContainer = elem[0].querySelector('.textInputContainer');
                 var inputElem = elem[0].querySelector('.textInputElem');
+                var fullTextElem = elem[0].querySelector('.customInputFullText');
                 var stylePreset;
 
                 scope.isReadonly = false;
                 scope.isDisabled = false;
+                scope.fullTextEnabled = false;
 
                 // TIPS
                 // scope.smallOptions probable properties
@@ -178,7 +180,6 @@
                                             !scope.model) {
 
                                             scope.error = 'Field should not be null';
-
                                         }
 
                                         break;
@@ -216,19 +217,37 @@
                     });
 
                     inputElem.addEventListener('focus', function () {
-                        inputContainer.classList.add('custom-input-focused');
+
+                        //inputContainer.classList.add('custom-input-focused');
+                        fullTextElem.classList.add('custom-input-full-text-shown');
+                        fullTextElem.focus();
+
                     });
 
-                    inputElem.addEventListener('blur', function () {
+                    /*inputElem.addEventListener('blur', function () {
+
                         inputContainer.classList.remove('custom-input-focused');
 
                         if (scope.onBlurCallback) {
+
                             setTimeout(function () { // without timeout changes will be discarded on fast blur
                                 scope.onBlurCallback();
                             }, 250);
 
                         }
 
+                    });*/
+
+                    fullTextElem.addEventListener('blur', function () {
+                        fullTextElem.classList.remove('custom-input-full-text-shown');
+
+                        if (scope.onBlurCallback) {
+
+                            setTimeout(function () { // without timeout changes will be discarded on fast blur
+                                scope.onBlurCallback();
+                            }, 250);
+
+                        }
                     });
 
                 }

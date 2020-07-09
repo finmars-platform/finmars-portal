@@ -9,7 +9,7 @@
             scope: {
                 palettesList: '=',
                 model: '=',
-                onChangeCallback: '='
+                onPalettesChangeCallback: '&?'
             },
             templateUrl: 'views/directives/color-picker-view.html',
             link: function (scope, elem, attr) {
@@ -87,7 +87,7 @@
 
                     $mdDialog.show({
                         controller: 'SelectColorDialogController as vm',
-                        templateUrl: 'views/color-picker/select-color-dialog-view.html',
+                        templateUrl: 'views/colorPicker/select-color-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         multiple: true,
@@ -118,11 +118,19 @@
                         }
 
                         if (res.data && res.data.palettesList) {
+
                             scope.palettesList = res.data.palettesList;
 
                             if (Object.keys(scope.selectedColor).length) {
                                 findSelectedColor();
                             }
+
+                            if (scope.onChangeCallback) {
+                                setTimeout(function () {
+                                    scope.onChangeCallback();
+                                }, 100);
+                            }
+
                         }
 
                     });

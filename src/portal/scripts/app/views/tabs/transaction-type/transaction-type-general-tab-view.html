@@ -54,17 +54,8 @@
                 </md-checkbox>
             </md-input-container>
         </div>
-        <div layout="row" style="margin-bottom: 15px">
-            <!--<md-input-container style="min-width: 200px">
-                <label for="instrument-types-ms">Instrument types</label>
-                <md-select data-ng-model="vm.entity.instrument_types"
-                           id="instrument-types-ms"
-                           multiple
-                           md-selected-text="vm.bindSelectedText(vm.entity.instrument_types, 'Instrument Type')"
-                           data-ng-change="vm.notValidForAll('instruments')">
-                    <md-option ng-value="item.id" ng-repeat="item in vm.instrumentTypes">{{item.name}}</md-option>
-                </md-select>
-            </md-input-container>-->
+        <div layout="row">
+
             <two-fields-multiselect data-ng-model="vm.entity.instrument_types"
                                     title="Instrument types"
                                     items="vm.instrumentTypes"
@@ -92,23 +83,32 @@
                                     class="ttype-general-multiselectors"></two-fields-multiselect>
         </div>
 
-        <div layout="row">
-            <md-input-container>
+        <div layout="row"
+             class="m-b-8">
+            <!--<md-input-container>
                 <label for="" class="uncut-text-on-focus-label">Complex Transaction Date</label>
                 <input type="text" data-ng-model="vm.entity.date_expr" value-title>
             </md-input-container>
 
-            <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.date_expr"></expression-editor-button>
-
+            <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.date_expr"></expression-editor-button>-->
+            <expression-input label="Complex Transaction Date"
+                              model="vm.entity.date_expr"
+                              data-data="vm.expressionEditorData"
+                              style="margin-left: 12px;"></expression-input>
         </div>
 
-        <div layout="row">
-            <md-input-container>
+        <div layout="row"
+             class="m-b-16">
+            <!--<md-input-container>
                 <label for="">Display Expression</label>
                 <input type="text" data-ng-model="vm.entity.display_expr" value-title>
             </md-input-container>
 
-            <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.display_expr"></expression-editor-button>
+            <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.display_expr"></expression-editor-button>-->
+            <expression-input label="Display Expression"
+                              model="vm.entity.display_expr"
+                              data-data="vm.expressionEditorData"
+                              style="margin-left: 12px;"></expression-input>
         </div>
 
         <!--<div layout="row">
