@@ -43,7 +43,7 @@
             })
         };
 
-        vm.refreshItem = function($index, item){
+        vm.refreshItem = function ($index, item) {
 
             pricingParentProcedureService.getByKey(item.id).then(function (data) {
 
@@ -67,6 +67,38 @@
                 $scope.$apply();
 
             });
+
+        };
+
+        vm.showErrorDetails = function ($event, procedure) {
+
+            var description;
+
+            description = "<div>";
+
+            description = description + "<p> <b>Status Code:</b> " + procedure.error_code + "</p>";
+            description = description + "<p> <b>Description:</b> <br/><br/> " + procedure.error_message + "</p>";
+
+            description = description + '</div>';
+
+            $mdDialog.show({
+                controller: 'InfoDialogController as vm',
+                templateUrl: 'views/info-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    info: {
+                        title: 'Procedure Error Details',
+                        description: description
+                    }
+                }
+            });
+
 
         };
 

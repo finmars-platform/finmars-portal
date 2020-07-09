@@ -80,7 +80,8 @@
                                 <div class="p-8 width-20">
 
                                     <div data-ng-if="procedure.status == 'D'">
-                                        {{procedure.successful_prices_count}} successful, {{procedure.error_prices_count}} errors
+                                        {{procedure.successful_prices_count}} successful,
+                                        {{procedure.error_prices_count}} errors
                                     </div>
 
                                     <div data-ng-if="procedure.status != 'D'">
@@ -93,7 +94,12 @@
                                     <span data-ng-if="procedure.status == 'I'">Init</span>
                                     <span data-ng-if="procedure.status == 'D'">Done</span>
                                     <span data-ng-if="procedure.status == 'P'">Processing</span>
-                                    <span data-ng-if="procedure.status == 'E'">Error</span>
+                                    <span data-ng-if="procedure.status == 'E'" class="color-danger">Error</span>
+
+                                    <md-button style="width: 100px;" class="md-raised pricing-procedure-show-more-btn"
+                                               data-ng-if="procedure.status == 'E'"
+                                               data-ng-click="vm.showErrorDetails($event, procedure)">Show details
+                                    </md-button>
 
                                 </div>
 
