@@ -219,6 +219,47 @@
 
         };
 
+
+        vm.removeTenor = function($event, item) {
+
+            vm.item.type_settings.data.tenors.splice(item.index - 1, 1);
+
+            vm.refreshTenorIndexes();
+
+        };
+
+        vm.addTenor = function(){
+
+            if (!vm.item.type_settings.data) {
+                vm.item.type_settings.data = {
+                    tenors: []
+                }
+            }
+
+            if (!vm.item.type_settings.data.tenors) {
+                vm.item.type_settings.data.tenors = []
+            }
+
+            vm.item.type_settings.data.tenors.push({
+                tenor_type: 'overnight',
+                price_ticker: null
+            });
+
+            vm.refreshTenorIndexes();
+
+        };
+
+        vm.refreshTenorIndexes = function(){
+            vm.item.type_settings.data.tenors = vm.item.type_settings.data.tenors.map(function (item, index) {
+
+                item.index = index + 1;
+
+                return item
+
+            })
+        };
+
+
         vm.init = function () {
 
             vm.getItem();
