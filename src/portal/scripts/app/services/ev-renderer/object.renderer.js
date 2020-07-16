@@ -63,12 +63,12 @@
             result = starIcon
         }
 
-        if (obj.is_canceled) {
-            result = cancelIcon;
-        }
-
         if (obj.is_locked) {
             result = lock2Icon;
+        }
+
+        if (obj.is_canceled) {
+            result = cancelIcon;
         }
 
         if (obj.___is_activated) {

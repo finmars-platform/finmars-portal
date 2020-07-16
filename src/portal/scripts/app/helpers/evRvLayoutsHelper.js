@@ -60,7 +60,7 @@
             var layoutObj = {
                 id: layout.id,
                 name: layout.name,
-                content_type: layout.content_type,
+                //content_type: layout.content_type,
                 content: []
             };
 

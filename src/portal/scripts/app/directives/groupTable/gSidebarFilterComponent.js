@@ -21,6 +21,8 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var uiService = require('../../services/uiService');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
@@ -884,8 +886,17 @@
                         if (res.status === 'agree') {
 
                             if (scope.isRootEntityViewer) {
-                                middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
-                                $state.transitionTo($state.current, {layoutName: res.data.layoutName});
+
+                                if (res.data.layoutUserCode) {
+
+                                    middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                    $state.transitionTo($state.current, {layoutUserCode: res.data.layoutUserCode});
+
+                                } else {
+                                    var errorText = 'Layout "' + res.data.layoutName + '" has no user code.';
+                                    toastNotificationService.error(errorText);
+                                }
+
                             } else {
                                 middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
 

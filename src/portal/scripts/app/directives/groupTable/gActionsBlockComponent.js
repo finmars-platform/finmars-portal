@@ -540,15 +540,25 @@
                                         additions.isOpen = true;
                                         additions.type = type;
 
-                                        if (res.selectedItem.id) {
+                                        if (res.selected.id) {
 
                                             if (!additions.layoutData) {
                                                 additions.layoutData = {};
                                             }
 
-                                            additions.layoutData.layoutId = res.selectedItem.id;
-                                            additions.layoutData.name = res.selectedItem.name;
-                                            additions.layoutData.content_type = res.selectedItem.content_type;
+                                            additions.layoutData.layoutId = res.selected.id;
+                                            additions.layoutData.name = res.selected.name;
+
+                                            for (var i = 0; i < layouts.length; i++) {
+
+                                                if (layouts[i].id === res.selected.id) {
+                                                    additions.layoutData.content_type = layouts[i].content_type;
+                                                    break;
+                                                }
+
+                                            }
+
+                                            additions.layoutData.content_type = res.selected.content_type;
 
                                         } else {
                                             delete additions.layoutData;
@@ -1052,8 +1062,18 @@
                         if (res.status === 'agree') {
 
                             if (scope.isRootEntityViewer) {
-                                middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
-                                $state.transitionTo($state.current, {layoutName: res.data.layoutName});
+                                console.log("switch layout res", res);
+
+                                if (res.data.layoutUserCode) {
+
+                                    middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                    $state.transitionTo($state.current, {layoutUserCode: res.data.layoutUserCode});
+
+                                } else {
+                                    var errorText = 'Layout "' + res.data.layoutName + '" has no user code.';
+                                    toastNotificationService.error(errorText);
+                                }
+
                             } else {
                                 middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
 

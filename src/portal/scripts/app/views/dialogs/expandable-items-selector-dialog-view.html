@@ -37,7 +37,7 @@
             </div>
 
             <md-card data-ng-repeat="item in vm.items | filter: {name: searchTerm} as results track by item.id"
-                     class="expandable-item"
+                     class="select-layout-item-card expandable-item"
                      ng-class="{'selected': item.isSelected}"
                      data-ng-click="vm.selectItem(item)"
                      data-ng-dblclick="vm.selectItemAndSave(item)">
@@ -45,10 +45,16 @@
                 <div class="cb1-main-container"
                      ng-class="{'cb1-block-collapsed': vm.collapsingItems[item.id]}">
 
-                    <div>
+                    <div class="position-relative">
+
+                        <md-checkbox data-ng-if="vm.isMultiselector"
+                                     data-ng-checked="item.isSelected"
+                                     class="select-layout-multiselector-checkbox m-b-0"
+                                     aria-label="selected item checkbox"></md-checkbox>
 
                         <div layout="row" class="expandable-items-item-row"
                              data-ng-class="{'empty-space-for-button': !item.content.length}" >
+
                             <md-button data-ng-if="item.content.length"
                                        class="md-button small-folding-btn1 expandable-items-subitems-toggle"
                                        ng-click="vm.toggleSubitemsCollapse(item.id, $event)"
@@ -56,7 +62,9 @@
                                 <span ng-if="vm.collapsingItems[item.id]">+</span>
                                 <span ng-if="!vm.collapsingItems[item.id]">-</span>
                             </md-button>
+
                             <span data-ng-bind="item.name"></span>
+
                         </div>
 
                         <div data-ng-if="item.content.length" class="cb1-resizing-wrap">
