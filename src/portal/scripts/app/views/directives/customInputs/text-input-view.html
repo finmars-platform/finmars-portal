@@ -27,14 +27,22 @@
                 </div>
 
                 <div class="flex-row">
-                    <input type="text"
+                    <textarea data-ng-model="model"
+                              data-ng-change="onInputChange()"
+                              data-ng-model-options="{debounce: 500}"
+                              placeholder="{{placeholderText}}"
+                              class="custom-input text-input textInputElem"
+                              ng-readonly="isReadonly"
+                              ng-disabled="isDisabled"></textarea>
+
+                    <!--<input type="text"
                            data-ng-model="model"
                            data-ng-change="onInputChange()"
                            data-ng-model-options="{debounce: 500}"
                            placeholder="{{placeholderText}}"
                            class="custom-input text-input textInputElem"
                            ng-readonly="isReadonly"
-                           ng-disabled="isDisabled">
+                           ng-disabled="isDisabled">-->
 
                     <button data-ng-if="!noIndicatorBtn"
                             class="custom-input-indicator-btn"
@@ -70,15 +78,16 @@
             </div>
         </div>
 
-        <textarea data-ng-model="model"
-                  class="custom-input-full-text customInputFullText">
+        <div class="custom-input-full-text-container customInputFullText">
+            <textarea data-ng-model="model" class="custom-input-full-text"></textarea>
+
             <button data-ng-if="!noIndicatorBtn"
                     class="custom-input-indicator-btn2"
                     data-ng-click="openTextInDialog($event)"
                     data-ng-disabled="isReadonly">
                 <i class="fas fa-edit"></i>
             </button>
-        </textarea>
+        </div>
 
     </div>
 </div>

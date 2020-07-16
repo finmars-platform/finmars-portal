@@ -58,8 +58,8 @@
                     }).then(function (res) {
 
                         if (res.status === "agree" && scope.model !== res.selectedItem.id) {
-                            console.log("layout selector vm.linkingToFilters", scope.model, res);
-                            scope.model = res.selectedItem.id;
+
+                            scope.model = res.selected.id;
                             setInputText();
 
                             if (scope.onChangeCallback) {

@@ -104,7 +104,14 @@
                         <div class="ev-data-field"
                              data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                              flex="15">
-                            <md-input-container class="md-block">
+                            <dropdown-select label="Status"
+                                             model="vm.entityStatus"
+                                             placeholder-text="System List"
+                                             menu-options="vm.statusSelectorOptions"
+                                             small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                                             on-change-callback="vm.entityStatusChanged()"
+                                             class="ev-editor-field"></dropdown-select>
+                            <!--<md-input-container class="md-block">
                                 <label>Status</label>
                                 <md-select data-ng-model="vm.entityStatus"
                                            data-ng-change="vm.entityStatusChanged()">
@@ -116,7 +123,8 @@
                                     <md-option value="disabled">Disabled</md-option>
                                     <md-option value="deleted">Deleted</md-option>
                                 </md-select>
-                            </md-input-container>
+                            </md-input-container>-->
+
                         </div>
                     </div>
 

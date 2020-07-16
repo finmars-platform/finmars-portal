@@ -7,7 +7,7 @@
 
     var uiService = require('../../services/uiService');
 
-    var middlewareService = require('../../services/middlewareService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function ($scope, $mdDialog, $state) {
 
@@ -438,7 +438,14 @@
         vm.openLayout = function (layout) {
 
             var stateToGo = getLayoutDataByContentType(layout.content_type, 'state');
-            $state.transitionTo(stateToGo, {layoutName: layout.name});
+            //$state.transitionTo(stateToGo, {layoutName: layout.name});
+            if (layout.user_code) {
+                $state.transitionTo(stateToGo, {layoutUserCode: layout.user_code});
+
+            } else {
+                var errorText = 'Layout "' + layout.name + '" has no user code.';
+                toastNotificationService.error(errorText);
+            }
 
         };
 
