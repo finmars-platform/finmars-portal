@@ -499,15 +499,19 @@
                             var compsKeys = Object.keys(componentsOutputs);
 
                             if (compsKeys.length > 0) {
+
                                 compsKeys.forEach(function (compKey) {
                                     componentsOutputs[compKey].changedLast = false;
                                 });
+
                                 vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
+
                             }
 
                             var compOutputData = {
                                 changedLast: true,
-                                data: activeObject
+                                data: activeObject,
+                                recalculatedComponents: []
                             };
 
                             vm.dashboardDataService.setComponentOutput(vm.componentData.id, compOutputData);
@@ -515,9 +519,7 @@
                             vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentData.id);
 
                             if (vm.componentData.settings.auto_refresh) {
-
                                 vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
-
                             }
 
 
@@ -586,10 +588,12 @@
                         currencies.forEach(function (item) {
 
                             if(item.id === activeObject[currencyKey]) {
+
                                 currencyObj.id = item.id;
                                 currencyObj.name = item.name;
                                 currencyObj.short_name = item.short_name;
                                 currencyObj.user_code = item.user_code;
+
                             }
 
                         });
@@ -634,8 +638,6 @@
                                 }
                             });*/
 
-
-
                             var locals = {
                                 entityType: 'instrument',
                                 entityId: activeObject['instrument.id'],
@@ -645,6 +647,7 @@
                             };
 
                             editEntity(activeObject, locals);
+
                         }
 
                         if (action === 'edit_account') {
@@ -1864,7 +1867,7 @@
                 }
 
                 if (vm.componentData.settings.linked_components.hasOwnProperty('report_settings')) {
-                    console.log("report settings report settings", vm.componentData.settings.linked_components.report_settings);
+
                     Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
 
                         var componentId = vm.componentData.settings.linked_components.report_settings[property];
@@ -1906,11 +1909,17 @@
                         var lastActiveCompChanged = false;
 
                         for (var i = 0; i < vm.componentData.settings.linked_components.active_object.length; i++) {
+
                             var componentId = JSON.parse(JSON.stringify(vm.componentData.settings.linked_components.active_object[i]));
 
                             var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                            if (componentOutput && componentOutput.changedLast) {
+                            if (componentOutput && !componentOutput.recalculatedComponents) {
+                                componentOutput.recalculatedComponents = [];
+                            }
+
+                            if (componentOutput && componentOutput.changedLast &&
+                                componentOutput.recalculatedComponents.indexOf(vm.componentData.id) < 0) {
 
                                 var compOutputData = componentOutput.data;
 
@@ -1922,7 +1931,8 @@
                                 } else {
 
                                     if (compOutputData && typeof compOutputData === 'object' &&
-                                        vm.linkedActiveObjects[lastActiveComponentId] && typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
+                                        vm.linkedActiveObjects[lastActiveComponentId] &&
+                                        typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
 
                                         if (!objectComparison.comparePropertiesOfObjects(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
                                             lastActiveCompChanged = true;
@@ -1938,6 +1948,10 @@
                                     vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
                                 } else {
                                     vm.linkedActiveObjects[lastActiveComponentId] = null;
+                                }
+
+                                if (lastActiveCompChanged) {
+                                    componentOutput.recalculatedComponents.push(vm.componentData.id);
                                 }
 
                                 break;
@@ -2076,7 +2090,7 @@
                     console.log('$scope.$parent.vm.tabNumber', $scope.$parent.vm.tabNumber);
 
                     if (activeTab.tab_number === $scope.$parent.vm.tabNumber) {
-                        vm.applyDashboardChanges()
+                        vm.applyDashboardChanges();
                     }
 
                 });

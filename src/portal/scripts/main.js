@@ -685,10 +685,15 @@ app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/number
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 
+// Inputs
+
 app.directive('textInput', ['$mdDialog', require('./app/directives/customInputs/textInputDirective.js')]);
 app.directive('numberInput', ['$mdDialog', require('./app/directives/customInputs/numberInputDirective.js')]);
 app.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
 app.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
+app.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
+
+// Inputs End
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
 

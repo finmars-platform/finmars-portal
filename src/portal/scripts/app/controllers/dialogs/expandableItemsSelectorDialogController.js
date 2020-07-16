@@ -13,7 +13,9 @@
 
         vm.items = data.items;
 
-        var selectedItem = null;
+        vm.isMultiselector = data.multiselector;
+
+        //var selectedData = null;
 
         vm.dialogTitle = 'Select item';
         if (data.dialogTitle) {
@@ -25,7 +27,7 @@
 
                 if (vm.items[i].id === data.selectedItem) {
                     vm.items[i].isSelected = true;
-                    selectedItem = vm.items[i];
+                    //selectedData = vm.items[i];
                     break;
                 }
 
@@ -73,12 +75,25 @@
         };
 
         vm.selectItem = function (item) {
-            vm.items.forEach(function (probSelectedItem) {
-                probSelectedItem.isSelected = false;
-            });
 
-            item.isSelected = true;
-            selectedItem = item;
+            if (vm.isMultiselector) {
+
+                if (item.isSelected) {
+                    item.isSelected = false;
+                } else {
+                    item.isSelected = true;
+                }
+
+
+            } else {
+
+                for (var i = 0; i < vm.items.length; i++) {
+                    vm.items[i].isSelected = false;
+                }
+
+                item.isSelected = true;
+
+            }
         };
 
         vm.selectItemAndSave = function (item) {
@@ -87,7 +102,27 @@
         };
 
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree', selectedItem: selectedItem});
+
+            var selectedData = [];
+
+            vm.items.forEach(function (item) {
+
+                if (item.isSelected) {
+
+                    if (vm.isMultiselector) {
+                        selectedData.push(item);
+                    } else {
+                        selectedData = vm.items[i];
+                    }
+
+                }
+
+                delete item.isSelected;
+                delete item.content;
+
+            });
+
+            $mdDialog.hide({status: 'agree', selected: selectedData});
         };
 
         vm.cancel = function () {
@@ -102,11 +137,19 @@
 
 
             if (vm.items) {
+
                 vm.items.forEach(function (item) {
-                    if (item.content.length) {
+
+                    if (!item.content) {
+                        item.content = [];
+
+                    } else if (item.content.length) {
                         vm.collapsingItems[item.id] = false;
+
                     }
+
                 });
+
             }
 
             setTimeout(function () {

@@ -203,7 +203,9 @@
             var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
             if (!Object.keys(statusesObject).length) {
+
                 vm.processing = false;
+
             } else {
 
                 vm.processing = true;
@@ -239,6 +241,7 @@
 
             if (!Object.keys(statusesObject).length) {
                 vm.processing = false;
+
             } else {
 
                 vm.processing = true;
