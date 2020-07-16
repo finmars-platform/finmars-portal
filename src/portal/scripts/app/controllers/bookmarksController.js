@@ -6,9 +6,8 @@
     'use strict';
 
     var logService = require('../../../../core/services/logService');
+    var toastNotificationService = require('../../../../core/services/toastNotificationService');
     var uiService = require('../services/uiService');
-    var metaContentTypesService = require('../services/metaContentTypesService');
-    var middlewareService = require('../services/middlewareService');
 
     var bookmarkService = require('../services/bookmarkService');
 
@@ -49,9 +48,18 @@
 
                     var openActiveLayout = function () {
 
-                        $state.transitionTo(stateToGo, {layoutName: layout.name});
+                        /*$state.transitionTo(stateToGo, {layoutName: layout.name});
 
-                        vm.entityUpdating = false;
+                        vm.entityUpdating = false;*/
+                        if (layout.user_code) {
+
+                            $state.transitionTo(stateToGo, {layoutUserCode: layout.user_code});
+                            vm.entityUpdating = false;
+
+                        } else {
+                            var errorText = 'Layout "' + layout.name + '" has no user code.';
+                            toastNotificationService.error(errorText);
+                        }
 
                     };
 

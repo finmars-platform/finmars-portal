@@ -1,4 +1,4 @@
-<div class="custom-input-container smart-search-input-container smartSearchInputContainer"
+<div class="custom-input-container dropdown-input-container dropdownSelectInputContainer"
      data-ng-class="getInputContainerClasses()">
     <div class="custom-input-top-row">
         <div data-ng-bind="label" class="custom-input-label"></div>
@@ -30,9 +30,10 @@
                            data-ng-model-options="{debounce: 1000}"
                            data-ng-change="onInputTextChange()"
                            data-ng-disabled="isDisabled"
-                           class="custom-input smart-search-input smartSearchInputElem">
+                           class="custom-input dropdown-select-input dropdownSelectInputElem">
 
-                    <button class="custom-input-indicator-btn position-relative" data-ng-click="openSmartSearch($event)">
+                    <button class="custom-input-indicator-btn position-relative"
+                            data-ng-click="openSelectorDialog($event)">
                         <i data-ng-if="!iconData" class="fas fa-link"></i>
                         <i data-ng-if="iconData && iconData.type === 'class'"
                            class="{{iconData.icon}}"></i>
@@ -64,12 +65,12 @@
         </div>
     </div>
 
-    <div data-ng-if="selectorOptions" class="custom-input-sel-menu-container selectMenuContainer">
+    <div data-ng-if="dropdownMenuHidden" class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
 
         <div class="custom-input-sel-menu-block">
-            <div data-ng-repeat="option in selectorOptions"
+            <div data-ng-repeat="option in menuOptions | filter: inputText"
                  data-ng-mousedown="selectOption(option)"
-                 data-ng-bind="option.short_name"
+                 data-ng-bind="option.name"
                  class="custom-input-sel-option"></div>
         </div>
 

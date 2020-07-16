@@ -14,8 +14,6 @@
             templateUrl: 'views/directives/dialog-selector-input-with-tooltip-view.html',
             link: function (scope, elem, attr) {
 
-                console.log("layout selector scope", scope.model, scope.items);
-
                 /*var setInputText = function () {
 
                     if (scope.model && scope.items) {

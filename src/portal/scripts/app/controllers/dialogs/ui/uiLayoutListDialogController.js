@@ -104,7 +104,7 @@
                     layoutData.name = res.data.name;
                     layout.name = res.data.name;
                     layoutData.user_code = res.data.user_code;
-                    layot.user_code = res.data.user_code;
+                    layout.user_code = res.data.user_code;
 
                     uiService.updateListLayout(layoutData.id, layoutData).then(function () {
 
@@ -313,7 +313,16 @@
 
             if (selectedLayout) {
 
-                $mdDialog.hide({status: 'agree', data: {layoutName: selectedLayout.name, layoutId: selectedLayout.id}});
+                $mdDialog.hide(
+                    {
+                        status: 'agree',
+                        data: {
+                            layoutName: selectedLayout.name,
+                            layoutId: selectedLayout.id,
+                            layoutUserCode: selectedLayout.user_code
+                        }
+                    }
+                );
 
             } else {
                 $mdDialog.hide({status: 'disagree'});

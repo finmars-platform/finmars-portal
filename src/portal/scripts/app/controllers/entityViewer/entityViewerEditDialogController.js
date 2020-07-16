@@ -416,11 +416,12 @@
                                     group.objectPermissions.manage = true;
 
                                     vm.canManagePermissions = true;
-
                                 }
+
                                 if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
                                     group.objectPermissions.change = true;
                                 }
+
                                 if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
                                     group.objectPermissions.view = true;
                                 }
@@ -1074,7 +1075,6 @@
                     vm.readyStatus.layout = false;
 
                     vm.getItem();
-
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
                     getEntityAttrs();
@@ -1867,6 +1867,38 @@
                 var palettesList = data.results;
                 vm.evEditorDataService.setColorPalettesList(palettesList);
             });
+
+            if (vm.entityType === 'instrument') {
+
+                vm.statusSelectorOptions = [
+                    {
+                        id: 'active',
+                        name: 'Active'
+                    },
+                    {
+                        id: 'inactive',
+                        name: 'Inactive'
+                    }
+                ];
+
+            } else {
+
+                vm.statusSelectorOptions = [
+                    {
+                        id: 'enabled',
+                        name: 'Enabled'
+                    },
+                    {
+                        id: 'disabled',
+                        name: 'Disabled'
+                    },
+                    {
+                        id: 'deleted',
+                        name: 'Deleted'
+                    }
+                ];
+
+            }
 
             getEntityAttrs();
             vm.getCurrencies();

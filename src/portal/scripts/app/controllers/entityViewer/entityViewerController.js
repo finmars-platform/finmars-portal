@@ -926,7 +926,6 @@
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
-
                     vm.getLayoutByUserCode(layoutUserCode);
 
                 } else {

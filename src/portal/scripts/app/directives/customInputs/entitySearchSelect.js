@@ -66,11 +66,11 @@
                     },
                     'currency': {
                         type: 'class',
-                        icon: 'fas fa-money-bill'
+                        icon: 'far fa-money-bill-alt'
                     },
                     'instrument': {
                         type: 'class',
-                        icon: 'far fa-money-bill-alt'
+                        icon: 'fas fa-money-bill-alt'
                     },
                     'portfolio': {
                         type: 'class',
@@ -334,6 +334,7 @@
                 };
 
                 var initEventListeners = function () {
+
                     elem[0].addEventListener('mouseover', function () {
                         inputContainer.classList.add('custom-input-hovered');
                     });
@@ -358,6 +359,7 @@
                         }
 
                     });
+
                 };
 
                 var initScopeWatchers = function () {

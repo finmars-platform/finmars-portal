@@ -137,17 +137,29 @@
 
                             scope.dashboardDataService.updateComponent(componentData);
 
-                            if (scope.fillInModeData) { // Reloading corresponding component inside tabs from it's filled in copy
+                            /*if (scope.fillInModeData) { // Reloading corresponding component inside tabs from it's filled in copy
                                 scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                            }
+                            }*/
 
                             if (res.action === 'save') {
                                 saveComponentSettings();
                             }
 
-                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            if (scope.fillInModeData) {
+
+                                scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                            } else {
+
+                                scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                            }
+
+                            scope.disableFillInMode();
 
                         }
 

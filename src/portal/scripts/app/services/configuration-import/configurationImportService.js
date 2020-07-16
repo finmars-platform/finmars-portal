@@ -2962,8 +2962,6 @@
 
                                         createEntityItems(layoutEntities, settings, cacheContainer, errors).then(function (data) {
 
-                                            console.log("Layout import success", data);
-
                                             createEntityItems(dashboardLayoutEntities, settings, cacheContainer, errors).then(function (data) {
 
                                                 createEntityItems(bookmarks, settings, cacheContainer, errors).then(function (data) {

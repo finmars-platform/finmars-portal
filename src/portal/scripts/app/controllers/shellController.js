@@ -36,7 +36,8 @@
         var pageStateName = $state.current.name;
         var pageStateParams = {
             strategyNumber: $stateParams.strategyNumber,
-            layoutName: $stateParams.layoutName,
+            layoutUserCode: $stateParams.layoutUserCode
+            //layoutName: $stateParams.layoutName
         };
 
         /*vm.logout = function () {
@@ -227,7 +228,8 @@
 
                 pageStateName = transition.to().name;
                 pageStateParams.strategyNumber = transition.params().strategyNumber;
-                pageStateParams.layoutName = transition.params().layoutName;
+                //pageStateParams.layoutName = transition.params().layoutName;
+                pageStateParams.layoutUserCode = transition.params().layoutUserCode;
 
                 if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport(pageStateName)) {
                     showLayoutName = true;
@@ -286,15 +288,17 @@
         vm.getActiveLayoutName = function (newLayoutName) {
 
             if (typeof newLayoutName === "string") {
-
                 vm.activeLayoutName = newLayoutName;
 
             } else {
 
                 var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams.strategyNumber);
-                var layoutNameFromParams = pageStateParams.layoutName;
+                //var layoutNameFromParams = pageStateParams.layoutName;
+                var layoutUserCode =  pageStateParams.layoutUserCode;
+                var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
                 var setLayoutName = function (layoutData) {
+
                     if (layoutData && layoutData.length) {
                         newLayoutName = layoutData[0].name;
                     } else {
@@ -302,13 +306,40 @@
                     }
 
                     vm.activeLayoutName = newLayoutName;
-
                     $scope.$apply();
+
                 };
 
-                if (layoutNameFromParams) { // state params value updates earlier than window.location.href
+                /*if (layoutNameFromParams) { // state params value updates earlier than window.location.href
 
                     vm.activeLayoutName = layoutNameFromParams;
+
+                }*/ if (layoutUserCode) {
+
+                        uiService.getListLayoutDefault({
+                            pageSize: 1000,
+                            filters: {
+                                content_type: contentType,
+                                user_code: layoutUserCode
+                            }
+
+                        }).then(function (data) {
+
+                            if (data.hasOwnProperty('results') && data.results[0]) {
+
+                                //var layoutName = data.results[0];
+                                setLayoutName(data.results);
+
+                            } else {
+
+                                uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+                                    var defaultLayoutRes = defaultLayoutData.results;
+                                    setLayoutName(defaultLayoutRes);
+                                });
+
+                            }
+
+                        })
 
                 } else if (vm.isLayoutFromUrl()) {
 
@@ -333,8 +364,6 @@
                         }
 
                     });
-
-                    var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
                     uiService.getListLayoutDefault({
                         pageSize: 1000,
