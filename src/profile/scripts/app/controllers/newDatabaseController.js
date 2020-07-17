@@ -93,7 +93,7 @@
 
                         setTimeout(function () {
 
-                            $state.go('app.home', {}, {reload: true});
+                            $state.go('app.home', {}, {reload: 'app'});
 
                         }, 1000) // because its cool
 
@@ -151,7 +151,7 @@
 
             }).then(function (data) {
 
-                $state.go('app.home', {}, {reload: true});
+                $state.go('app.home', {}, {reload: 'app'});
 
             })
 

@@ -129,7 +129,7 @@
 
                 usersService.setMasterUser(master.id).then(function (value) {
 
-                    $state.go('app.home');
+                    $state.go('app.home', null, {reload: 'app'});
 
                     if (vm.broadcastManager) {
                         vm.broadcastManager.postMessage({event: crossTabEvents.MASTER_USER_CHANGED});
