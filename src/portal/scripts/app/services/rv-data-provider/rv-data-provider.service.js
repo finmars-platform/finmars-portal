@@ -278,7 +278,7 @@
 
                 }
 
-                obj.results = obj.results.map(function (item) {
+                obj.results = obj.results.map(function (item, index) {
 
                     item.___group_name = item.___group_name ? item.___group_name : '-';
                     item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
@@ -287,6 +287,7 @@
 
                     item.___parentId = obj.___id;
                     item.___type = 'object';
+                    item.___index = index;
                     item.___id = evRvCommonHelper.getId(item);
                     item.___level = obj.___level + 1;
 
@@ -401,7 +402,7 @@
 
                     parents.push(obj);
 
-                    obj.results = obj.results.map(function (item) {
+                    obj.results = obj.results.map(function (item, index) {
 
                         item.___parentId = obj.___id;
                         item.___group_name = item.___group_name ? item.___group_name : '-';
@@ -411,6 +412,7 @@
 
 
                         item.___level = obj.___level + 1;
+                        item.___index = index;
 
                         if (groups.length >= parents.length) {
                             item.___type = 'group';
