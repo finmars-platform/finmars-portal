@@ -97,7 +97,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
     // }
 
-    enableAccessHandler($transitions);
+    enableAccessHandler($transitions); // TODO Run after successful auth
 
     $transitions.onSuccess({}, function (trans) {
 
@@ -267,6 +267,7 @@ app.controller('ClassifierImportDialogController', ['$scope', '$mdDialog', 'data
 app.controller('ClassifierExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierExportDialogController')]);
 app.controller('LayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/layoutExportDialogController')]);
 app.controller('FileReportsController', ['$scope', '$mdDialog', require('./app/controllers/pages/fileReportsController')]);
+app.controller('LoginDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/loginDialogController')]);
 
 
 // System Dialogs
