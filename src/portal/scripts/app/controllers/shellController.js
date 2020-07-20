@@ -24,6 +24,8 @@
 
         var vm = this;
 
+        vm.isAuthenticated = false;
+
         vm.readyStatus = {masters: false};
 
         vm.currentGlobalState = 'portal';
@@ -106,7 +108,12 @@
                     usersService.logout().then(function (data) {
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
-                        window.location.pathname = '/';
+                        if (window.location.pathname !== '/') {
+                            window.location.pathname = '/';
+                        } else {
+                            window.location.reload()
+                        }
+
 
                         cookiesService.deleteCookie();
                     });
@@ -548,7 +555,12 @@
                     usersService.logout().then(function (data) {
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
-                        window.location.pathname = '/';
+
+                        if (window.location.pathname !== '/') {
+                            window.location.pathname = '/';
+                        } else {
+                            window.location.reload()
+                        }
 
                         cookiesService.deleteCookie();
 
@@ -708,43 +720,9 @@
 
         };
 
-        vm.init = function () {
+        vm.initShell = function(){
 
             vm.currentGlobalState = vm.getCurrentGlobalState();
-
-            if ('__PROJECT_ENV__' === 'development' || '__PROJECT_ENV__' === 'local') {
-
-                usersService.ping().then(function (data) {
-                    setTimeout(function () {
-
-                        if (!cookiesService.getCookie('csrftoken')) {
-
-                            usersService.login('__LOGIN__', '__PASS__').then(function () {
-                                console.log('after login', cookiesService.getCookie('csrftoken'));
-                                // $scope.$apply();
-                            });
-
-                        }
-
-                    }, 1000);
-                });
-
-
-                /*if (!cookiesService.getCookie('csrftoken')) {
-
-                    usersService.login('__LOGIN__', '__PASS__').then(function () {
-                        console.log('after login', cookiesService.getCookie('csrftoken'));
-                        // $scope.$apply();
-
-                        window.location.reload();
-
-
-                    });
-
-                }*/
-
-            }
-
 
             vm.initTransitionListener();
 
@@ -766,6 +744,77 @@
             }
 
             vm.importOnDragListeners();
+
+        };
+
+        vm.initLoginDialog = function(){
+
+            $mdDialog.show({
+                controller: 'LoginDialogController as vm',
+                templateUrl: 'views/dialogs/login-dialog-view.html',
+                targetEvent: new Event("click"),
+                locals: {
+                    data: null
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if(res.status === 'agree') {
+
+                    vm.isAuthenticated = true;
+
+                    vm.initShell();
+                }
+
+            })
+
+
+        };
+
+        vm.init = function () {
+
+
+
+            // DEPRECATED
+            // if ('__PROJECT_ENV__' === 'development' || '__PROJECT_ENV__' === 'local') {
+            //
+            //     if (!cookiesService.getCookie('csrftoken')) {
+            //
+            //         usersService.login('__LOGIN__', '__PASS__').then(function () {
+            //             console.log('after login', cookiesService.getCookie('csrftoken'));
+            //             // $scope.$apply();
+            //
+            //             window.location.reload();
+            //
+            //
+            //         });
+            //
+            //     }
+            //
+            // }
+
+            usersService.ping().then(function (data) {
+
+                // console.log('ping data', data);
+
+                if (!data.is_authenticated) {
+
+                    vm.isAuthenticated = false;
+
+                    vm.initLoginDialog();
+
+                } else {
+
+                    vm.isAuthenticated = true;
+
+                    vm.initShell();
+                }
+
+            });
+
 
 
         };

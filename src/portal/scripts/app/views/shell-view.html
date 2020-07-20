@@ -1,4 +1,4 @@
-<div class="shell-view-container min-height position-relative">
+<div class="shell-view-container min-height position-relative" data-ng-if="vm.isAuthenticated">
     <div data-ng-if="vm.currentGlobalState == 'profile'" class="min-height">
 
         <md-toolbar class="header">
@@ -237,3 +237,14 @@
     <div class="dialog-containers-wrap"></div> <!-- Needed to solve problem with selects and mdDialog nesting -->
 </div>
 
+<div data-ng-if="!vm.isAuthenticated" style="padding-top: 120px;">
+
+    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+        <progress-linear></progress-linear>
+    </div>
+
+    <div class="m-t-16 text-center">
+        Loading Database
+    </div>
+
+</div>
