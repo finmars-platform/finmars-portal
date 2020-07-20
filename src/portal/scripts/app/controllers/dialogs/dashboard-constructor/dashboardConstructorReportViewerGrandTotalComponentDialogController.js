@@ -8,6 +8,7 @@
     var uiService = require('../../../services/uiService');
     var dashboardHelper = require('../../../helpers/dashboard.helper');
     var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
+    var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
@@ -191,7 +192,7 @@
 
             vm.componentsTypes = dataService.getComponents();
 
-            vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+            /*vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
                 return componentType.type === 'control';
             });
 
@@ -220,8 +221,9 @@
                             name: comp.name
                         });
                 }
-            });
+            });*/
 
+            dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.id);
 
             console.log('vm', vm);
 

@@ -1277,7 +1277,7 @@
                         $scope.$apply();
                     })
 
-                }*/ else { // if copy
+                }*/ else if (data.isCopy) { // if copy
 
                     console.log("Apply from make copy", entity);
                     notCopiedTransaction = false;

@@ -22,6 +22,7 @@
                 var inputContainer = elem[0].querySelector('.textInputContainer');
                 var inputElem = elem[0].querySelector('.textInputElem');
                 var fullTextElem = elem[0].querySelector('.customInputFullText');
+                var fullTextTextarea = fullTextElem.querySelector('textarea');
                 var stylePreset;
 
                 scope.isReadonly = false;
@@ -220,7 +221,7 @@
 
                         //inputContainer.classList.add('custom-input-focused');
                         fullTextElem.classList.add('custom-input-full-text-shown');
-                        fullTextElem.focus();
+                        fullTextTextarea.focus();
 
                     });
 
@@ -238,7 +239,8 @@
 
                     });*/
 
-                    fullTextElem.addEventListener('blur', function () {
+                    fullTextTextarea.addEventListener('blur', function () {
+                        console.log("custom input fullTextElem blur", fullTextElem);
                         fullTextElem.classList.remove('custom-input-full-text-shown');
 
                         if (scope.onBlurCallback) {

@@ -51,7 +51,7 @@
 
         };
 
-        if (getDataMethod) {
+        /*if (getDataMethod) {
 
             getDataMethod().then(function (resData) {
 
@@ -76,7 +76,15 @@
 
             vm.readyStatus = true;
 
+        }*/
+
+        vm.items = data.items;
+
+        if (vm.items && selectedItems) {
+            separateUnselectedItems(vm.items, selectedItems);
         }
+
+        vm.readyStatus = true;
 
         vm.cancel = function () {
             $mdDialog.hide({res: 'disagree'});

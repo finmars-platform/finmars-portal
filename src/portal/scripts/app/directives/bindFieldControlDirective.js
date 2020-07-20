@@ -643,7 +643,7 @@
                         scope.customStyles = {
                             'custom-input-main-container': 'background-color: ' + scope.options.backgroundColor + ';',
                             'custom-input-custom-btns-holder': 'background-color: ' + scope.options.backgroundColor + ';',
-                            'customInputFullText': 'background-color: ' + scope.options.backgroundColor + ';'
+                            'custom-input-full-text': 'background-color: ' + scope.options.backgroundColor + ';'
                         }
 
                     }

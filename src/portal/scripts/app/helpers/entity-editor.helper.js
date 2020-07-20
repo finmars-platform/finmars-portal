@@ -324,23 +324,68 @@
 
     };
 
+    var validateFieldWithString = function (value, fieldAttr) {
+
+        if (fieldAttr.options && fieldAttr.options.onlyPositive === true) {
+            if (value === null || value === undefined) {
+
+                return {
+                    fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
+                    message: 'Field should not be empty.'
+                };
+
+            }
+        }
+
+        return null;
+
+    };
+
+    var validateNumberField = function (value, fieldAttr) {
+
+        if (fieldAttr.options && fieldAttr.options.onlyPositive === true) {
+
+            if (value === null || value === undefined) {
+
+                return {
+                    fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
+                    message: 'Field should contain positive number.'
+                }
+                /*errorsList.push({
+                    key: key,
+                    locationData: getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType),
+                    fieldName: attrData.options.fieldName || attrData.verbose_name || attrData.name,
+                    message: 'Field should have positive number'
+                })*/
+
+            }
+
+        }
+
+    };
+
     var validateDateField = function (value, fieldAttr) {
 
         if (!value) {
 
             value = null;
 
+            return {
+                fieldName: fieldAttr.verbose_name || fieldAttr.name,
+                message: 'Field should contain date in YYYY-MM-DD format.'
+            };
+
         } else if (!moment(value, 'YYYY-MM-DD', true).isValid()) {
 
             var errorObj = {
                 fieldName: fieldAttr.verbose_name || fieldAttr.name,
-                message: 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.'
+                message: 'Date has wrong format. Use this formats instead: YYYY-MM-DD.'
             };
 
             if (fieldAttr.options && fieldAttr.options.fieldName) {
                 return {
                     fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
-                    message: 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.'
+                    message: 'Date has wrong format. Use this formats instead: YYYY-MM-DD.'
                 }
             }
 
@@ -477,6 +522,29 @@
         //return false;
     };
 
+    var getErrorMessageByValueType = function (value, valueType) {
+
+        var errosMessageObj = {
+            10: 'Field should not be empty.',
+            30: 'Field should not be empty.',
+            20: 'Field should contain positive number.',
+            40: 'Field should contain date in YYYY-MM-DD format.'
+        }
+
+        if (value && valueType === 40) {
+
+            if (!moment(value, 'YYYY-MM-DD', true).isValid()) {
+                return 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.'
+            }
+
+        } else {
+
+            return errosMessageObj[valueType];
+
+        }
+
+    }
+
     var validateRequiredEntityFields = function (key, value, requiredAttrs, entityAttrs) {
 
         for (var i = 0; i < entityAttrs.length; i++) {
@@ -485,11 +553,28 @@
 
                 var errorObj = null;
 
-                if (!value && value !== 0) {
+                /*if (!value && value !== 0) {
 
-                    errorObj = {
+                    /!*errorObj = {
                         message: 'Field should not be empty'
-                    };
+                    };*!/
+                    errorObj = {};
+
+                    switch (entityAttrs[i].value_type) {
+                        case 10:
+                        case 30:
+                            errorObj.message = 'Field should not be empty.';
+                            break;
+
+                        case 20:
+                            errorObj.message = 'Field should contain positive number.';
+                            break;
+
+                        case 40:
+                            errorObj.message = 'Field should contain date in YYYY-MM-DD format.';
+                            break;
+                    }
+
 
                 } else if (entityAttrs[i].value_type === 40) {
 
@@ -500,6 +585,13 @@
                         };
 
                     }
+
+                }*/
+                if ((!value && value !== 0) ||
+                    entityAttrs[i].value_type === 40) {
+
+                    errorObj = {};
+                    errorObj.message = getErrorMessageByValueType(value, entityAttrs[i].value_type);
 
                 }
 
@@ -528,24 +620,53 @@
 
     };
 
+    var getAttributeValueType = function (attribute) {
+
+        if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 10) ||
+            attribute.value_type === 10) {
+
+            return 10;
+
+        } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
+                    attribute.value_type === 20) {
+
+            return 20;
+
+        } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
+                    attribute.value_type === 40) {
+
+            return 40;
+
+        }
+
+    }
+
     var validateEvField = function (key, fieldValue, attr, tabs, fixedFieldsAttrs, entityType, errorsList) {
 
-        if ((attr.attribute_type_object && attr.attribute_type_object.value_type === 40) ||
-            attr.value_type === 40) {
+        var valueType = getAttributeValueType(attr);
+        var errorObj = null;
 
-            var dateFieldError = validateDateField(fieldValue, attr);
-            if (dateFieldError) {
+        if (valueType === 10 || valueType === 30) {
 
-                dateFieldError.key = key;
-                dateFieldError.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
-                errorsList.push(dateFieldError);
+            errorObj = validateFieldWithString(fieldValue, attr);
 
-            }
+        } else if (valueType === 20) {
 
-        } else {
+            errorObj = validateNumberField(fieldValue, attr);
 
-            checkForNotNullRestriction(key, fieldValue, attr, tabs, fixedFieldsAttrs, entityType, errorsList);
-            checkForNegNumsRestriction(key, fieldValue, attr, tabs, fixedFieldsAttrs, entityType, errorsList);
+        } else if (valueType === 40) {
+
+            errorObj = validateDateField(fieldValue, attr);
+            /*checkForNotNullRestriction(key, fieldValue, attr, tabs, fixedFieldsAttrs, entityType, errorsList);
+            checkForNegNumsRestriction(key, fieldValue, attr, tabs, fixedFieldsAttrs, entityType, errorsList);*/
+
+        }
+
+        if (errorObj) {
+
+            errorObj.key = key;
+            errorObj.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
+            errorsList.push(errorObj);
 
         }
 
@@ -599,6 +720,7 @@
 
                     if (attrsTypes[i].user_code === key) {
                         attrType = attrsTypes[i];
+                        break;
                     }
 
                 }
@@ -619,7 +741,12 @@
 
         validateEvField(userInput.name, fieldValue, userInput, tabs, [], 'complex-transaction', errorsList);
 
-        if ((!userInput.options || !userInput.options.notNull)) { // fields of user inputs that are used inside of actions should be filled
+        var uInputIsNotParsed = true;
+        if (errorsList.length && errorsList[errorsList.length - 1].key === userInput.name) {
+            uInputIsNotParsed = false;
+        }
+
+        if ((!userInput.options || !userInput.options.notNull) && uInputIsNotParsed) { // fields of user inputs that are used inside of actions should be filled
 
             if (userInput.frontOptions && userInput.frontOptions.usedInExpr) {
 
@@ -631,9 +758,11 @@
                     var errorObj = {
                         key: userInput.name,
                         locationData: getLocationOfAttribute(userInput.name, tabs, []),
-                        fieldName: userInput.verbose_name || userInput.name,
-                        message: 'Field should not be empty.'
+                        fieldName: userInput.verbose_name || userInput.name
                     };
+
+                    var uInputValueType = getAttributeValueType(userInput);
+                    errorObj.message = getErrorMessageByValueType(fieldValue, uInputValueType);
 
                     if (userInput.options && userInput.options.fieldName) {
                         errorObj.fieldName = userInput.options.fieldName;
@@ -1004,10 +1133,10 @@
                     if (field.attribute_class === 'userInput') {
 
                         for (u = 0; u < userInputs.length; u = u + 1) {
-                            //console.log('userInputs[u]', userInputs[u]);
+
                             if (field.name === userInputs[u].name) {
                                 userInputs[u].options = field.options;
-                                // return userInputs[u];
+
                                 fieldResult = userInputs[u];
 
                                 attrFound = true;
