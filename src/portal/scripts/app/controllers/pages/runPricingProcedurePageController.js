@@ -5,6 +5,8 @@
 
     var pricingProcedureService = require('../../services/pricing/pricingProcedureService');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -41,23 +43,8 @@
 
             pricingProcedureService.runProcedure(item.id, item).then(function (data) {
 
-                $mdDialog.show({
-                    controller: 'InfoDialogController as vm',
-                    templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        info: {
-                            title: 'Success',
-                            description: "Procedure is being processed"
-                        }
-                    }
-                });
+                toastNotificationService.success('Success. Procedure is being processed');
+
 
             })
 
