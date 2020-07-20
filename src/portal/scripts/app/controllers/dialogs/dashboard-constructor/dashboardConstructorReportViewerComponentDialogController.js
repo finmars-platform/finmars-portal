@@ -8,6 +8,10 @@
     var uiService = require('../../../services/uiService');
     var dashboardHelper = require('../../../helpers/dashboard.helper');
     var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
+    var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
+
+    var portfolioService = require('../../../services/portfolioService');
+    var strategyService = require('../../../services/strategyService');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService, data) {
 
@@ -67,9 +71,7 @@
         vm.deleteFilterLink = function (item, $index) {
 
             vm.item.settings.linked_components.filter_links = vm.item.settings.linked_components.filter_links.filter(function (item, index) {
-
                 return $index !== index;
-
             });
 
         };
@@ -243,7 +245,7 @@
 
         };
 
-        /*vm.showLinkingToFilters = function () {
+        /* vm.showLinkingToFilters = function () {
 
             for (var i = 0; i < vm.layouts.length; i++) {
 
@@ -258,7 +260,7 @@
 
             }
 
-        };*/
+        }; */
 
         vm.smallRvColumnsChanged = function () {
 
@@ -325,10 +327,6 @@
 
         };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
         var updateComponentsBeforeSaving = function () {
 
             if (!vm.item.settings.linked_components.filter_links) {
@@ -381,6 +379,18 @@
 
         };
 
+        /*vm.getPortfolios = function () {
+            return portfolioService.getList({page: 1, pageSize: 1000});
+        };
+
+        vm.getStrategies = function (strategyNumber) {
+            return strategyService.getList(strategyNumber, {page: 1, pageSize: 1000});
+        };*/
+
+        vm.cancel = function () {
+            $mdDialog.hide({status: 'disagree'});
+        };
+
         vm.agree = function () {
 
             updateComponentsBeforeSaving();
@@ -400,7 +410,7 @@
 
             vm.componentsTypes = dataService.getComponents();
 
-            vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+            /*vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
                 return componentType.type === 'control';
             });
 
@@ -420,16 +430,46 @@
                        componentType.settings.content_type === 'instruments.pricingpolicy'
             });
 
+            vm.portfoliosComponentTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' &&
+                    componentType.settings.value_type === 100 &&
+                    componentType.settings.content_type === 'portfolios.portfolio'
+            });
+
+            vm.strategies1ComponentTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' &&
+                    componentType.settings.value_type === 100 &&
+                    componentType.settings.content_type === 'strategies.strategy1'
+            });
+
+            vm.strategies2ComponentTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' &&
+                    componentType.settings.value_type === 100 &&
+                    componentType.settings.content_type === 'strategies.strategy2'
+            });
+
+            vm.strategies3ComponentTypes = vm.componentsTypes.filter(function (componentType) {
+                return componentType.type === 'control' &&
+                    componentType.settings.value_type === 100 &&
+                    componentType.settings.content_type === 'strategies.strategy3'
+            });
+
             vm.componentsTypes.forEach(function (comp) {
+
                 if (componentsForLinking.indexOf(comp.type) !== -1 &&
                     comp.id !== vm.item.id) {
+
                     vm.componentsForMultiselector.push(
                         {
                             id: comp.id,
                             name: comp.name
                         });
+
                 }
-            });
+
+            });*/
+
+            dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.id);
 
             console.log('vm', vm);
 

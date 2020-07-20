@@ -55,7 +55,7 @@
                             <ng-md-icon data-ng-if="button.iconObj.type === 'angular-material'"
                                         size="22"
                                         icon="{{button.iconObj.icon}}"></ng-md-icon>
-
+a
                             <i data-ng-if="button.iconObj.type === 'fontawesome'"
                                class="{{button.iconObj.icon}}"></i>
 
@@ -70,15 +70,17 @@
             </div>
         </div>
 
-        <textarea data-ng-model="model"
-                  class="custom-input-full-text customInputFullText">
-            <button data-ng-if="!noIndicatorBtn"
-                    class="custom-input-indicator-btn2"
-                    data-ng-click="openTextInDialog($event)"
-                    data-ng-disabled="isReadonly">
-                <i class="fas fa-edit"></i>
-            </button>
-        </textarea>
+        <div class="custom-input-full-text-container customInputFullText">
+            <textarea data-ng-model="model"
+                      class="custom-input-full-text customInputFullText">
+                <button data-ng-if="!noIndicatorBtn"
+                        class="custom-input-indicator-btn2"
+                        data-ng-click="openTextInDialog($event)"
+                        data-ng-disabled="isReadonly">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </textarea>
+        </div>
 
     </div>
 </div>

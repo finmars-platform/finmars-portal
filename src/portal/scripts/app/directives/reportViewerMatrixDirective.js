@@ -42,6 +42,8 @@
                 var rvMatrixLeftCol;
                 var rvMatrixRightCol;
 
+                var clearUseFromAboveFilterId;
+
                 var getElemsForScripts = function () {
                     matrixHolder = elem[0].querySelector('.rvMatrixHolder');
 
@@ -455,14 +457,9 @@
 
                     });
 
-                    scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
+                    clearUseFromAboveFilterId = scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
                         scope.alignGrid();
                     });
-
-                    scope.evEventService.addEventListener(evEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS, function () {
-                        scope.alignGrid();
-                    });
-
 
                     window.addEventListener('resize', scope.alignGrid);
 
@@ -472,6 +469,8 @@
 
                 scope.$on('$destroy', function () {
                     window.removeEventListener('resize', scope.alignGrid);
+
+                    scope.evEventService.removeEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, clearUseFromAboveFilterId);
                 });
 
             }

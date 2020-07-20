@@ -29,7 +29,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $state, entityType, entityId, data) {
+    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data) {
 
         var vm = this;
 
@@ -444,7 +444,9 @@
                 };
             }
 
-            $mdDialog.hide({status: 'disagree', data: {updateRowIcon: updateRowIcon}});
+            //$mdDialog.hide({status: 'disagree', data: {updateRowIcon: updateRowIcon}});
+            $bigDrawer.hide({status: 'disagree', data: {updateRowIcon: updateRowIcon}});
+
         };
 
         vm.manageAttrs = function (ev) {
@@ -480,11 +482,14 @@
                 locals: {
                     entityType: vm.entityType,
                     entity: entity,
-                    data: {}
+                    data: {
+                        isCopy: true
+                    }
                 }
             });
 
-            $mdDialog.hide();
+            //$mdDialog.hide({status: 'disagree'});
+            $bigDrawer.hide({status: 'disagree'});
 
         };
 
@@ -858,14 +863,14 @@
                         instanceId: vm.transactionTypeId
                     };
 
-                    vm.manageAttrs = function () {
+                    /*vm.manageAttrs = function () {
                         $state.go('app.attributesManager', {
                             entityType: vm.entityType,
                             from: vm.entityType,
                             instanceId: vm.transactionTypeId
                         });
                         $mdDialog.hide();
-                    };
+                    };*/
 
                     vm.readyStatus.entity = true;
                     vm.readyStatus.layout = true;
@@ -1105,7 +1110,8 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
+                    //$mdDialog.hide({res: 'agree', data: {action: 'delete'}});
+                    $bigDrawer.hide({res: 'agree', data: {action: 'delete'}});
                 }
 
             })
@@ -1223,7 +1229,7 @@
                     }
                 })
 
-            } else {
+            } /*else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -1318,7 +1324,8 @@
                         vm.handleComplexTransactionErrors($event, data);
 
                     } else {
-                        $mdDialog.hide({res: 'agree', data: data});
+                        //$mdDialog.hide({res: 'agree', data: data});
+                        $bigDrawer.hide({res: 'agree', data: data});
                     }
 
                 }).catch(function (reason) {
@@ -1329,7 +1336,7 @@
 
                 })
 
-            }
+            }*/
 
         };
 
@@ -1405,7 +1412,8 @@
                             vm.handleComplexTransactionErrors($event, data);
 
                         } else {
-                            $mdDialog.hide({res: 'agree'});
+                            //$mdDialog.hide({res: 'agree'});
+                            $bigDrawer.hide({res: 'agree'});
                         }
 
                     }).catch(function (reason) {
@@ -1483,10 +1491,9 @@
         };
 
         vm.init = function () {
-
-            setTimeout(function () {
+            /*setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
-            }, 100);
+            }, 100);*/
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
