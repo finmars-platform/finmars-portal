@@ -62,55 +62,6 @@
 
                         </div>
 
-                        <div>
-
-                            <div class="m-t-16 m-b-16">
-
-                                <md-input-container class="dashboard-constructor-field1">
-                                    <label for="">Date</label>
-                                    <md-select
-                                            data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
-                                        <md-option
-                                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                                ng-value="componentType.id">{{componentType.name}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
-
-                            </div>
-
-                        </div>
-
-                        <div class="m-t-16 m-b-16">
-
-                            <md-input-container class="dashboard-constructor-field1">
-                                <label for="">Currency</label>
-                                <md-select
-                                        data-ng-model="vm.item.settings.linked_components.report_settings.report_currency">
-                                    <md-option
-                                            data-ng-repeat="componentType in vm.currencyControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                            ng-value="componentType.id">{{componentType.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
-
-                        </div>
-
-                        <div class="m-t-16 m-b-16">
-
-                            <md-input-container class="dashboard-constructor-field1">
-                                <label for="">Pricing Policy</label>
-                                <md-select
-                                        data-ng-model="vm.item.settings.linked_components.report_settings.pricing_policy">
-                                    <md-option
-                                            data-ng-repeat="componentType in vm.pricingPolicyControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                            ng-value="componentType.id">{{componentType.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
-
-                        </div>
-
                         <div class="m-t-16 m-b-16">
 
                             <div layout="row">
@@ -177,14 +128,12 @@
                             </div>
                         </div>
 
-                        <md-input-container style="height: 58px">
+                    </md-content>
+                </md-tab>
 
-                            <md-checkbox data-ng-model="vm.item.settings.auto_refresh" aria-label="member permission">Trigger
-                                Refresh on Value Change
-                            </md-checkbox>
-
-                        </md-input-container>
-
+                <md-tab label="CALCULATION">
+                    <md-content class="p-16"
+                                data-ng-include="'views/dialogs/dashboard-constructor/dashboard-component-settings-calculation-tab-view.html'">
                     </md-content>
                 </md-tab>
 

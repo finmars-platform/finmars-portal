@@ -11,8 +11,6 @@
     var metaContentTypesService = require('../services/metaContentTypesService');
     var notificationsService = require('../services/notificationsService');
 
-    var reportCopyHelper = require('../helpers/reportCopyHelper');
-
     var metaService = require('../services/metaService');
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
@@ -716,7 +714,23 @@
 
             if ('__PROJECT_ENV__' === 'development' || '__PROJECT_ENV__' === 'local') {
 
-                if (!cookiesService.getCookie('csrftoken')) {
+                usersService.ping().then(function (data) {
+                    setTimeout(function () {
+
+                        if (!cookiesService.getCookie('csrftoken')) {
+
+                            usersService.login('__LOGIN__', '__PASS__').then(function () {
+                                console.log('after login', cookiesService.getCookie('csrftoken'));
+                                // $scope.$apply();
+                            });
+
+                        }
+
+                    }, 1000);
+                });
+
+
+                /*if (!cookiesService.getCookie('csrftoken')) {
 
                     usersService.login('__LOGIN__', '__PASS__').then(function () {
                         console.log('after login', cookiesService.getCookie('csrftoken'));
@@ -727,7 +741,7 @@
 
                     });
 
-                }
+                }*/
 
             }
 

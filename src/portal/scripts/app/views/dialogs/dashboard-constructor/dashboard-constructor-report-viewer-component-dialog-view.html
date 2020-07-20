@@ -66,116 +66,6 @@
                                                    data-on-change-callback="vm.onRvLayoutChange()"
                                                    class="dashboard-constructor-selector-directive"></expandable-items-selector>
 
-                        <div data-ng-if="vm.item.settings.entity_type == 'balance-report'">
-
-                            <div class="m-t-16 m-b-16">
-
-                                <md-input-container class="dashboard-constructor-field1">
-                                    <label for="">Date</label>
-                                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
-                                        <md-option
-                                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                                ng-value="componentType.id">{{componentType.name}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
-
-                            </div>
-
-                        </div>
-
-                        <div data-ng-if="vm.item.settings.entity_type == 'pl-report'">
-
-                            <div class="m-t-16 m-b-16">
-
-                                <md-input-container class="dashboard-constructor-field1">
-                                    <label for="">Date From</label>
-                                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
-                                        <md-option
-                                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                                ng-value="componentType.id">{{componentType.name}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
-
-                            </div>
-
-                            <div class="m-t-16 m-b-16">
-
-                                <md-input-container class="dashboard-constructor-field1">
-                                    <label for="">Date To</label>
-                                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pl_first_date">
-                                        <md-option
-                                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                                ng-value="componentType.id">{{componentType.name}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
-
-                            </div>
-
-                        </div>
-
-                        <div data-ng-if="vm.item.settings.entity_type == 'transaction-report'">
-
-                            <div class="m-t-16 m-b-16">
-
-                                <md-input-container class="dashboard-constructor-field1">
-                                    <label for="">Date From</label>
-                                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.begin_date">
-                                        <md-option
-                                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                                ng-value="componentType.id">{{componentType.name}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
-
-                            </div>
-
-                            <div class="m-t-16 m-b-16">
-
-                                <md-input-container class="dashboard-constructor-field1">
-                                    <label for="">Date To</label>
-                                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.end_date">
-                                        <md-option
-                                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                                ng-value="componentType.id">{{componentType.name}}
-                                        </md-option>
-                                    </md-select>
-                                </md-input-container>
-
-                            </div>
-
-                        </div>
-
-                        <div class="m-t-16 m-b-16">
-
-                            <md-input-container class="dashboard-constructor-field1">
-                                <label for="">Currency</label>
-                                <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_currency">
-                                    <md-option
-                                            data-ng-repeat="componentType in vm.currencyControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                            ng-value="componentType.id">{{componentType.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
-
-                        </div>
-
-                        <div class="m-t-16 m-b-16">
-
-                            <md-input-container class="dashboard-constructor-field1">
-                                <label for="">Pricing Policy</label>
-                                <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pricing_policy">
-                                    <md-option
-                                            data-ng-repeat="componentType in vm.pricingPolicyControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                            ng-value="componentType.id">{{componentType.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
-
-                        </div>
-
                         <h4>Linked Filters (As when row is selected)</h4>
 
                         <div>
@@ -404,7 +294,9 @@
             <md-tab label="LINKING">
                 <md-content class="p-16">
                     <div data-ng-if="vm.linkingToFilters && vm.linkingToFilters.length">
+
                         <h4 class="m-t-0 m-b-16">Link to Selection filters of layout</h4>
+
                         <div class="dashboard-constructor-linked-filters-container">
                             <ui>
                                 <li data-ng-repeat="lFilter in vm.linkingToFilters">
@@ -412,6 +304,7 @@
                                 </li>
                             </ui>
                         </div>
+
                         <!--<div class="dashboard-constructor-linked-filters-ui">
                             <div data-ng-repeat="lFilter in vm.linkingToFilters"
                                 data-ng-bind="lFilter.name"
@@ -431,16 +324,15 @@
                         </div>
                     </div>
 
-                    <md-input-container style="height: 58px">
-
-                        <md-checkbox data-ng-model="vm.item.settings.auto_refresh" aria-label="member permission">Trigger
-                            Refresh on Value Change
-                        </md-checkbox>
-
-                    </md-input-container>
-
                 </md-content>
             </md-tab>
+
+            <md-tab label="CALCULATION">
+                <md-content class="p-16"
+                            data-ng-include="'views/dialogs/dashboard-constructor/dashboard-component-settings-calculation-tab-view.html'">
+                </md-content>
+            </md-tab>
+
         </md-tabs>
     </md-dialog-content>
 

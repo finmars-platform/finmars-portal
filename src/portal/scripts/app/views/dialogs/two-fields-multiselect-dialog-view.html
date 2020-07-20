@@ -6,21 +6,26 @@
             <h2>{{ vm.title }}</h2>
         </div>
     </md-toolbar>
-    <md-dialog-content>
-        <div data-ng-if="vm.readyStatus" style="padding:20px">
 
+    <md-dialog-content>
+
+        <div data-ng-if="vm.readyStatus" style="padding:20px">
             <two-fields-options data-all-options="vm.items"
                                 data-selected-options="vm.selectedItems"
                                 data-name-property="{{vm.nameProperty}}"></two-fields-options>
         </div>
+
         <div data-ng-if="!vm.readyStatus">
             <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
                 <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
             </div>
         </div>
+
     </md-dialog-content>
+
     <md-dialog-actions layout="row">
         <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
         <md-button class="md-raised" ng-class="{'disabled-btn': !vm.readyStatus}" data-ng-click="vm.agree()">Save</md-button>
     </md-dialog-actions>
+
 </md-dialog>
