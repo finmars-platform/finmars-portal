@@ -4,6 +4,7 @@
 
     var uiService = require('../../../services/uiService');
     var dashboardHelper = require('../../../helpers/dashboard.helper');
+    var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
@@ -280,23 +281,7 @@
 
             vm.componentsTypes = dataService.getComponents();
 
-            vm.componentsTypes.forEach(function (comp) {
-
-                if (componentsForLinking.indexOf(comp.type) !== -1 &&
-                    comp.id !== vm.item.id) {
-
-                    var compObj = {
-                        id: comp.id,
-                        name: comp.name
-                    };
-
-                    vm.componentsForMultiselector.push(compObj);
-
-                }
-
-            });
-
-            vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
+            /*vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
                 return componentType.type === 'control';
             });
 
@@ -315,6 +300,24 @@
                     componentType.settings.value_type === 100 &&
                     componentType.settings.content_type === 'instruments.pricingpolicy'
             });
+
+            vm.componentsTypes.forEach(function (comp) {
+
+                if (componentsForLinking.indexOf(comp.type) !== -1 &&
+                    comp.id !== vm.item.id) {
+
+                    var compObj = {
+                        id: comp.id,
+                        name: comp.name
+                    };
+
+                    vm.componentsForMultiselector.push(compObj);
+
+                }
+
+            });*/
+
+            dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.id);
 
             if (vm.item.id) {
                 vm.getLayouts();

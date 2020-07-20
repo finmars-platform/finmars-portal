@@ -25,6 +25,20 @@
                 var entityType = scope.evDataService.getEntityType();
                 var isReport = metaService.isReport(entityType);
 
+                var doesColumnHasGrouping = function (colKey) {
+
+                    var groups = scope.evDataService.getGroups();
+
+                    for (var i = 0; i < groups.length; i++) {
+                        if (groups[i].key === colKey) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+
+                }
+
                 var dragAndDrop = {
 
                     init: function () {
@@ -272,43 +286,6 @@
                                 // If column's cards order changed
                                 } else if (target === columnsHolder) {
 
-                                    /*var columnElems = source.querySelectorAll('.g-cell.g-column');
-
-                                    var columnsAfterDragging = [];
-
-                                    for (var i = 0; i < columnElems.length; i = i + 1) {
-
-                                        for (var x = 0; x < columns.length; x = x + 1) {
-
-                                            if (columnElems[i].dataset.columnKey === columns[x].key) {
-                                                columnsAfterDragging.push(columns[x]);
-                                                break;
-                                            }
-
-                                        }
-
-                                    }
-
-                                    var isChanged = false;
-
-                                    for (var i = 0; i < columnsAfterDragging.length; i++) {
-                                        var column = columnsAfterDragging[i];
-
-                                        if (column.key !== columns[i].key) {
-                                            isChanged = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if (isChanged) {
-
-                                        areaItemsChanged = true;
-                                        scope.evDataService.setColumns(columnsAfterDragging);
-
-                                        scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                                    }*/
                                     changeOrder("columns");
 
                                 // < If column's cards order changed >
@@ -316,23 +293,6 @@
                                 // If column needs to be deleted
                                 } else if (target === deleteArea) {
 
-                                    /*var identifier = elem.dataset.columnKey;
-                                    for (var c = 0; 0 < columns.length; c++) {
-
-                                        if (columns[c].key === identifier) {
-                                            columns.splice(c, 1);
-                                            break;
-                                        }
-
-                                    }
-
-                                    drake.remove();
-
-                                    areaItemsChanged = true;
-                                    scope.evDataService.setColumns(columns);
-
-                                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
                                     deleteItem("column");
 
                                     // < If column needs to be deleted >
@@ -520,21 +480,29 @@
                             this.dragula = dragula(items, {
                                 moves: function (elem, source, handle, sibling) { // prevents from moving columns that have groupings
 
-                                    if (source === colsHolder) {
+                                    var colKey = elem.dataset.columnKey;
 
-                                        var groups = scope.evDataService.getGroups();
-                                        var colKey = elem.dataset.columnKey;
-
-                                        for (var i = 0; i < groups.length; i++) {
-                                            if (groups[i].key === colKey) {
-                                                return false;
-                                            }
-                                        }
-
+                                    if (source === colsHolder && doesColumnHasGrouping(colKey)) {
+                                        return false;
                                     }
 
                                     return true;
                                 },
+
+                                accepts: function (elem, target, source, sibling) {
+
+                                    if (sibling) {
+                                        var colKey = sibling.dataset.columnKey;
+
+                                        if (doesColumnHasGrouping(colKey)) {
+                                            return false;
+                                        }
+                                    }
+
+                                    return true;
+
+                                },
+
                                 revertOnSpill: true
                             });
 

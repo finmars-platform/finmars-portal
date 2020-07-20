@@ -229,6 +229,7 @@
                        ng-click="vm.rebookAsPending()">
                 Rebook as pending
             </md-button>
+
             <md-button class="md-raised m-r-24"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.rebook()">

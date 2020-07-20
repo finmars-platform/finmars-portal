@@ -54,20 +54,52 @@
 
                 scope.getData = function () {
 
-                    entityResolverService.getList(scope.entityType).then(function (data) {
+                    var options = {
+                        pageSize: 1000,
+                        page: 1
+                    }
 
-                        scope.fields = data.results;
+                    var fields = [];
 
-                        scope.$apply(function () {
+                    var getEntitiesMethod = function (resolve, reject) {
 
-                            setTimeout(function () {
-                                $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                    ev.stopPropagation();
+                        entityResolverService.getList(scope.entityType, options).then(function (data) {
+
+                            //scope.fields = data.results;
+                            fields = fields.concat(data.results);
+
+                            if (data.next) {
+
+                                options.page += 1;
+                                getEntitiesMethod(resolve, reject);
+
+                            } else {
+
+                                scope.fields = fields;
+
+                                scope.$apply(function () {
+
+                                    setTimeout(function () {
+                                        $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                            ev.stopPropagation();
+                                        });
+                                    }, 100);
+
                                 });
-                            }, 100);
+
+                                resolve();
+                            }
+
+                        }).catch(function (error) {
+                            reject(error);
                         });
 
-                    });
+                    }
+
+                    return new Promise (function (resolve, reject) {
+                        getEntitiesMethod(resolve, reject);
+                    })
+
                 };
 
                 scope.getDataForMultiselect = function () {
@@ -84,10 +116,13 @@
                     var compsKeys = Object.keys(componentsOutputs);
 
                     if (compsKeys.length > 0) {
+
                         compsKeys.forEach(function (compKey) {
                             componentsOutputs[compKey].changedLast = false;
                         });
+
                         scope.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
+
                     }
 
                     var changedData = {
@@ -102,9 +137,10 @@
                     scope.dashboardDataService.setComponentOutput(scope.item.data.id, changedData);
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
 
-                    if (scope.componentData.settings.auto_refresh) {
+                    /*if (scope.componentData.settings.auto_refresh) {
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
-                    }
+                    }*/
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
 
                 };
 

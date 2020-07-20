@@ -54,7 +54,7 @@
             var savedAddtions;
 
             var componentsForLinking = dashboardHelper.getComponentsForLinking();
-            var gotActiveObjectFromLinkedComp = false;
+            var gotActiveObjectFromLinkedDashboardComp = false;
 
             var fillInModeEnabled = false;
 
@@ -487,11 +487,11 @@
                     vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
                         console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', vm.componentData.type);
-                        console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', gotActiveObjectFromLinkedComp);
+                        console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', gotActiveObjectFromLinkedDashboardComp);
 
                         var activeObject = vm.entityViewerDataService.getActiveObject();
 
-                        if (!gotActiveObjectFromLinkedComp) {
+                        if (!gotActiveObjectFromLinkedDashboardComp) {
 
                             //var activeObject = vm.entityViewerDataService.getActiveObject();
 
@@ -510,25 +510,24 @@
 
                             var compOutputData = {
                                 changedLast: true,
-                                data: activeObject,
-                                recalculatedComponents: []
+                                deleteOnChange: true,
+                                data: activeObject
                             };
 
                             vm.dashboardDataService.setComponentOutput(vm.componentData.id, compOutputData);
 
                             vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentData.id);
 
-                            if (vm.componentData.settings.auto_refresh) {
+                            /*if (vm.componentData.settings.auto_refresh) {
                                 vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
-                            }
-
+                            }*/
+                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE);
 
                         } else {
-                            gotActiveObjectFromLinkedComp = false;
+                            gotActiveObjectFromLinkedDashboardComp = false; // reset variable indicator
                         }
 
                         if (vm.componentData.type === 'report_viewer_grand_total') {
-
                             vm.updateGrandTotalComponent();
                         }
 
@@ -611,33 +610,6 @@
 
                         if (action === 'edit_instrument') {
 
-                            /*$mdDialog.show({
-                                controller: 'EntityViewerEditDialogController as vm',
-                                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: activeObject.event,
-                                locals: {
-                                    entityType: 'instrument',
-                                    entityId: activeObject['instrument.id']
-                                }
-                            }).then(function (res) {
-
-                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                if (res && res.res === 'agree') {
-
-                                    vm.entityViewerDataService.resetData();
-                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                }
-                            });*/
-
                             var locals = {
                                 entityType: 'instrument',
                                 entityId: activeObject['instrument.id'],
@@ -652,32 +624,6 @@
 
                         if (action === 'edit_account') {
 
-                            /*$mdDialog.show({
-                                controller: 'EntityViewerEditDialogController as vm',
-                                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: activeObject.event,
-                                locals: {
-                                    entityType: 'account',
-                                    entityId: activeObject['account.id']
-                                }
-                            }).then(function (res) {
-
-                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                if (res && res.res === 'agree') {
-
-                                    vm.entityViewerDataService.resetData();
-                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                }
-                            });*/
                             var locals = {
                                 entityType: 'account',
                                 entityId: activeObject['account.id'],
@@ -692,32 +638,6 @@
 
                         if (action === 'edit_portfolio') {
 
-                            /*$mdDialog.show({
-                                controller: 'EntityViewerEditDialogController as vm',
-                                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: activeObject.event,
-                                locals: {
-                                    entityType: 'portfolio',
-                                    entityId: activeObject['portfolio.id']
-                                }
-                            }).then(function (res) {
-
-                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                if (res && res.res === 'agree') {
-
-                                    vm.entityViewerDataService.resetData();
-                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                }
-                            });*/
                             var locals = {
                                 entityType: 'portfolio',
                                 entityId: activeObject['portfolio.id'],
@@ -732,32 +652,6 @@
 
                         if (action === 'edit_currency') {
 
-                            /*$mdDialog.show({
-                                controller: 'EntityViewerEditDialogController as vm',
-                                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: activeObject.event,
-                                locals: {
-                                    entityType: 'currency',
-                                    entityId: activeObject['currency.id']
-                                }
-                            }).then(function (res) {
-
-                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                if (res && res.res === 'agree') {
-
-                                    vm.entityViewerDataService.resetData();
-                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                }
-                            });*/
                             var locals = {
                                 entityType: 'currency',
                                 entityId: activeObject['currency.id'],
@@ -772,32 +666,6 @@
 
                         if (action === 'edit_pricing_currency') {
 
-                            /*$mdDialog.show({
-                                controller: 'EntityViewerEditDialogController as vm',
-                                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: activeObject.event,
-                                locals: {
-                                    entityType: 'currency',
-                                    entityId: activeObject['pricing_currency.id']
-                                }
-                            }).then(function (res) {
-
-                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                if (res && res.res === 'agree') {
-
-                                    vm.entityViewerDataService.resetData();
-                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                }
-                            });*/
                             var locals = {
                                 entityType: 'currency',
                                 entityId: activeObject['instrument.pricing_currency.id'],
@@ -812,32 +680,6 @@
 
                         if (action === 'edit_accrued_currency') {
 
-                            /*$mdDialog.show({
-                                controller: 'EntityViewerEditDialogController as vm',
-                                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: activeObject.event,
-                                locals: {
-                                    entityType: 'currency',
-                                    entityId: activeObject['accrued_currency.id']
-                                }
-                            }).then(function (res) {
-
-                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                if (res && res.res === 'agree') {
-
-                                    vm.entityViewerDataService.resetData();
-                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                }
-                            });*/
                             var locals = {
                                 entityType: 'currency',
                                 entityId: activeObject['instrument.accrued_currency.id'],
@@ -865,32 +707,6 @@
 
                                     var item = data.results[0];
 
-                                    /*$mdDialog.show({
-                                        controller: 'EntityViewerEditDialogController as vm',
-                                        templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: activeObject.event,
-                                        locals: {
-                                            entityType: 'price-history',
-                                            entityId: item.id
-                                        }
-                                    }).then(function (res) {
-
-                                        vm.entityViewerDataService.setActiveObjectAction(null);
-                                        vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                        if (res && res.res === 'agree') {
-
-                                            vm.entityViewerDataService.resetData();
-                                            vm.entityViewerDataService.resetRequestParameters();
-
-                                            var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                            vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                            vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                        }
-                                    });*/
                                     var locals = {
                                         entityType: 'price-history',
                                         entityId: item.id,
@@ -903,64 +719,6 @@
 
                                 } else {
 
-                                    /*$mdDialog.show({
-                                        controller: 'WarningDialogController as vm',
-                                        templateUrl: 'views/warning-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: activeObject.event,
-                                        preserveScope: true,
-                                        autoWrap: true,
-                                        multiple: true,
-                                        skipHide: true,
-                                        locals: {
-                                            warning: {
-                                                title: 'Warning',
-                                                description: 'No corresponding record in Price History. Do you want to add the record?'
-                                            }
-                                        }
-                                    }).then(function (res) {
-                                        if (res.status === 'agree') {
-
-                                            $mdDialog.show({
-                                                controller: 'EntityViewerAddDialogController as vm',
-                                                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                                                parent: angular.element(document.body),
-                                                targetEvent: activeObject.event,
-                                                locals: {
-                                                    entityType: 'price-history',
-                                                    entity: {
-                                                        instrument: activeObject['instrument.id'],
-                                                        instrument_object: {
-                                                            id: activeObject['instrument.id'],
-                                                            name: activeObject['instrument.name'],
-                                                            user_code: activeObject['instrument.user_code'],
-                                                            short_name: activeObject['instrument.short_name']
-                                                        },
-                                                        pricing_policy: reportOptions.pricing_policy,
-                                                        pricing_policy_object: reportOptions.pricing_policy_object,
-                                                        date: reportOptions.report_date
-                                                    }
-                                                }
-                                            }).then(function (res) {
-
-                                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                                if (res && res.res === 'agree') {
-
-                                                    vm.entityViewerDataService.resetData();
-                                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                                }
-                                            });
-
-                                        }
-                                    });*/
                                     var warningDescription = 'No corresponding record in Price History. Do you want to add the record?';
                                     var createEntityLocals = {
                                         entityType: 'price-history',
@@ -1003,32 +761,6 @@
 
                                     var item = data.results[0];
 
-                                    /*$mdDialog.show({
-                                        controller: 'EntityViewerEditDialogController as vm',
-                                        templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: activeObject.event,
-                                        locals: {
-                                            entityType: 'currency-history',
-                                            entityId: item.id
-                                        }
-                                    }).then(function (res) {
-
-                                        vm.entityViewerDataService.setActiveObjectAction(null);
-                                        vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                        if (res && res.res === 'agree') {
-
-                                            vm.entityViewerDataService.resetData();
-                                            vm.entityViewerDataService.resetRequestParameters();
-
-                                            var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                            vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                            vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                        }
-                                    });*/
                                     var locals = {
                                         entityType: 'currency-history',
                                         entityId: item.id,
@@ -1040,62 +772,6 @@
                                     editEntity(activeObject, locals);
 
                                 } else {
-
-                                    /*$mdDialog.show({
-                                        controller: 'WarningDialogController as vm',
-                                        templateUrl: 'views/warning-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: activeObject.event,
-                                        preserveScope: true,
-                                        autoWrap: true,
-                                        multiple: true,
-                                        skipHide: true,
-                                        locals: {
-                                            warning: {
-                                                title: 'Warning',
-                                                description: 'No corresponding record in FX Rates History. Do you want to add the record?'
-                                            }
-                                        }
-                                    }).then(function (res) {
-                                        if (res.status === 'agree') {
-
-                                            $mdDialog.show({
-                                                controller: 'EntityViewerAddDialogController as vm',
-                                                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                                                parent: angular.element(document.body),
-                                                targetEvent: activeObject.event,
-                                                locals: {
-                                                    entityType: 'currency-history',
-                                                    entity: {
-                                                        currency: activeObject['currency.id'],
-                                                        currency_object: {
-                                                            id: activeObject['currency.id']
-                                                        },
-                                                        pricing_policy: reportOptions.pricing_policy,
-                                                        pricing_policy_object: reportOptions.pricing_policy_object,
-                                                        date: reportOptions.report_date
-                                                    }
-                                                }
-                                            }).then(function (res) {
-
-                                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                                if (res && res.res === 'agree') {
-
-                                                    vm.entityViewerDataService.resetData();
-                                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                                }
-                                            });
-
-                                        }
-                                    });*/
 
                                     var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
                                     var createEntityLocals = {
@@ -1138,32 +814,6 @@
 
                                     var item = data.results[0];
 
-                                    /*$mdDialog.show({
-                                        controller: 'EntityViewerEditDialogController as vm',
-                                        templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: activeObject.event,
-                                        locals: {
-                                            entityType: 'currency-history',
-                                            entityId: item.id
-                                        }
-                                    }).then(function (res) {
-
-                                        vm.entityViewerDataService.setActiveObjectAction(null);
-                                        vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                        if (res && res.res === 'agree') {
-
-                                            vm.entityViewerDataService.resetData();
-                                            vm.entityViewerDataService.resetRequestParameters();
-
-                                            var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                            vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                            vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                        }
-                                    });*/
                                     var locals = {
                                         entityType: 'currency-history',
                                         entityId: item.id,
@@ -1175,73 +825,6 @@
                                     editEntity(activeObject, locals);
 
                                 } else {
-
-                                    /*$mdDialog.show({
-                                        controller: 'WarningDialogController as vm',
-                                        templateUrl: 'views/warning-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: activeObject.event,
-                                        preserveScope: true,
-                                        autoWrap: true,
-                                        multiple: true,
-                                        skipHide: true,
-                                        locals: {
-                                            warning: {
-                                                title: 'Warning',
-                                                description: 'No corresponding record in FX Rates History. Do you want to add the record?'
-                                            }
-                                        }
-                                    }).then(function (res) {
-                                        if (res.status === 'agree') {
-
-                                            var currency_object = {};
-
-                                            currencies.forEach(function (item) {
-
-                                                if(item.id === activeObject['instrument.pricing_currency']) {
-                                                    currency_object.id = item.id;
-                                                    currency_object.name = item.name;
-                                                    currency_object.short_name = item.short_name;
-                                                    currency_object.user_code = item.user_code;
-                                                }
-
-                                            });
-
-                                            $mdDialog.show({
-                                                controller: 'EntityViewerAddDialogController as vm',
-                                                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                                                parent: angular.element(document.body),
-                                                targetEvent: activeObject.event,
-                                                locals: {
-                                                    entityType: 'currency-history',
-                                                    entity: {
-                                                        currency: activeObject['instrument.pricing_currency'],
-                                                        currency_object: currency_object,
-                                                        pricing_policy: reportOptions.pricing_policy,
-                                                        pricing_policy_object: reportOptions.pricing_policy_object,
-                                                        date: reportOptions.report_date
-                                                    }
-                                                }
-                                            }).then(function (res) {
-
-                                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                                if (res && res.res === 'agree') {
-
-                                                    vm.entityViewerDataService.resetData();
-                                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                                }
-                                            });
-
-                                        }
-                                    });*/
 
                                     var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
@@ -1282,32 +865,6 @@
 
                                     var item = data.results[0];
 
-                                    /*$mdDialog.show({
-                                        controller: 'EntityViewerEditDialogController as vm',
-                                        templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: activeObject.event,
-                                        locals: {
-                                            entityType: 'currency-history',
-                                            entityId: item.id
-                                        }
-                                    }).then(function (res) {
-
-                                        vm.entityViewerDataService.setActiveObjectAction(null);
-                                        vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                        if (res && res.res === 'agree') {
-
-                                            vm.entityViewerDataService.resetData();
-                                            vm.entityViewerDataService.resetRequestParameters();
-
-                                            var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                            vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                            vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                        }
-                                    });*/
                                     var locals = {
                                         entityType: 'currency-history',
                                         entityId: item.id,
@@ -1319,73 +876,6 @@
                                     editEntity(activeObject, locals);
 
                                 } else {
-
-                                    /*$mdDialog.show({
-                                        controller: 'WarningDialogController as vm',
-                                        templateUrl: 'views/warning-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: activeObject.event,
-                                        preserveScope: true,
-                                        autoWrap: true,
-                                        multiple: true,
-                                        skipHide: true,
-                                        locals: {
-                                            warning: {
-                                                title: 'Warning',
-                                                description: 'No corresponding record in FX Rates History. Do you want to add the record?'
-                                            }
-                                        }
-                                    }).then(function (res) {
-                                        if (res.status === 'agree') {
-
-                                            var currency_object = {};
-
-                                            currencies.forEach(function (item) {
-
-                                                if(item.id === activeObject['instrument.accrued_currency']) {
-                                                    currency_object.id = item.id;
-                                                    currency_object.name = item.name;
-                                                    currency_object.short_name = item.short_name;
-                                                    currency_object.user_code = item.user_code;
-                                                }
-
-                                            });
-
-                                            $mdDialog.show({
-                                                controller: 'EntityViewerAddDialogController as vm',
-                                                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                                                parent: angular.element(document.body),
-                                                targetEvent: activeObject.event,
-                                                locals: {
-                                                    entityType: 'currency-history',
-                                                    entity: {
-                                                        currency: activeObject['instrument.accrued_currency'],
-                                                        currency_object: currency_object,
-                                                        pricing_policy: reportOptions.pricing_policy,
-                                                        pricing_policy_object: reportOptions.pricing_policy_object,
-                                                        date: reportOptions.report_date
-                                                    }
-                                                }
-                                            }).then(function (res) {
-
-                                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                                if (res && res.res === 'agree') {
-
-                                                    vm.entityViewerDataService.resetData();
-                                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                                }
-                                            });
-
-                                        }
-                                    });*/
 
                                     var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
@@ -1412,197 +902,6 @@
                         }
 
                         if (action === 'book_transaction') {
-
-                            /*var report_date = null;
-                            var report_start_date = null;
-
-                            if (vm.entityType === 'balance-report') {
-                                report_date = reportOptions.report_date;
-                            }
-
-                            if (vm.entityType === 'pl-report') {
-                                report_date = reportOptions.report_date;
-                                report_start_date = reportOptions.pl_first_date;
-                            }
-
-                            if (vm.entityType === 'transaction-report') {
-                                report_date = reportOptions.end_date;
-                                report_start_date = reportOptions.begin_date;
-                            }
-
-                            var contextData = {
-                                effective_date: reportOptions.report_date,
-                                position: null,
-                                pricing_currency: null,
-                                accrued_currency: null,
-                                instrument: null,
-                                portfolio: null,
-                                account: null,
-                                strategy1: null,
-                                strategy2: null,
-                                strategy3: null,
-
-
-                                currency: null,
-                                report_date: report_date,
-                                report_start_date: report_start_date,
-                                pricing_policy: null,
-                                allocation_balance: null,
-                                allocation_pl: null
-
-                            };
-
-                            if (activeObject.item_type === 2) { // currency
-
-                                contextData.currency = activeObject['currency.id'];
-                                contextData.currency_object = {
-                                    id: activeObject['currency_object.id'],
-                                    name: activeObject['currency_object.name'],
-                                    user_code: activeObject['currency_object.user_code'],
-                                    content_type: "currencies.currency"
-                                };
-
-                            }
-
-                            if (activeObject['position_size']) {
-                                contextData.position = activeObject['position_size'];
-                            }
-
-                            if (reportOptions['pricing_policy']) {
-                                contextData.pricing_policy = reportOptions.pricing_policy;
-                                contextData.pricing_policy_object = Object.assign({}, reportOptions.pricing_policy_object)
-                            }
-
-                            if (activeObject['pricing_currency.id']) {
-                                contextData.pricing_currency = activeObject['pricing_currency.id'];
-                                contextData.pricing_currency_object = {
-                                    id: activeObject['pricing_currency.id'],
-                                    name: activeObject['pricing_currency.name'],
-                                    user_code: activeObject['pricing_currency.user_code'],
-                                    content_type: "currencies.currency"
-                                };
-                            }
-
-                            if (activeObject['instrument.accrued_currency.id']) {
-                                contextData.accured_currency = activeObject['instrument.accrued_currency.id'];
-                                contextData.accured_currency_object = {
-                                    id: activeObject['instrument.accrued_currency.id'],
-                                    name: activeObject['instrument.accrued_currency.name'],
-                                    user_code: activeObject['instrument.accrued_currency.user_code'],
-                                    content_type: "currencies.currency"
-                                };
-                            }
-
-                            if (activeObject['instrument.id']) {
-                                contextData.instrument = activeObject['instrument.id'];
-                                contextData.instrument_object = {
-                                    id: activeObject['instrument.id'],
-                                    name: activeObject['instrument.name'],
-                                    user_code: activeObject['instrument.user_code'],
-                                    content_type: "instruments.instrument"
-                                };
-                            }
-
-                            if (activeObject['allocation_balance.id']) {
-                                contextData.allocation_balance = activeObject['allocation_balance.id'];
-                                contextData.allocation_balance_object = {
-                                    id: activeObject['allocation_balance.id'],
-                                    name: activeObject['allocation_balance.name'],
-                                    user_code: activeObject['allocation_balance.user_code'],
-                                    content_type: "instruments.instrument"
-                                };
-                            }
-
-                            if (activeObject['allocation_pl.id']) {
-                                contextData.allocation_pl = activeObject['allocation_pl.id'];
-                                contextData.allocation_pl_object = {
-                                    id: activeObject['allocation_pl.id'],
-                                    name: activeObject['allocation_pl.name'],
-                                    user_code: activeObject['allocation_pl.user_code'],
-                                    content_type: "instruments.instrument"
-                                };
-                            }
-
-                            if (activeObject['portfolio.id']) {
-                                contextData.portfolio = activeObject['portfolio.id'];
-                                contextData.portfolio_object = {
-                                    id: activeObject['portfolio.id'],
-                                    name: activeObject['portfolio.name'],
-                                    user_code: activeObject['portfolio.user_code'],
-                                    content_type: "portfolios.portfolio"
-                                };
-                            }
-
-                            if (activeObject['account.id']) {
-                                contextData.account = activeObject['account.id'];
-                                contextData.account_object = {
-                                    id: activeObject['account.id'],
-                                    name: activeObject['account.name'],
-                                    user_code: activeObject['account.user_code'],
-                                    content_type: "accounts.account"
-                                };
-                            }
-
-                            if (activeObject['strategy1.id']) {
-                                contextData.strategy1 = activeObject['strategy1.id'];
-                                contextData.strategy1_object = {
-                                    id: activeObject['strategy1.id'],
-                                    name: activeObject['strategy1.name'],
-                                    user_code: activeObject['strategy1.user_code'],
-                                    content_type: "strategies.strategy1"
-                                };
-                            }
-
-                            if (activeObject['strategy2.id']) {
-                                contextData.strategy2 = activeObject['strategy2.id'];
-                                contextData.strategy2_object = {
-                                    id: activeObject['strategy2.id'],
-                                    name: activeObject['strategy2.name'],
-                                    user_code: activeObject['strategy2.user_code'],
-                                    content_type: "strategies.strategy2"
-                                };
-                            }
-
-                            if (activeObject['strategy3.id']) {
-                                contextData.strategy3 = activeObject['strategy3.id'];
-                                contextData.strategy3_object = {
-                                    id: activeObject['strategy3.id'],
-                                    name: activeObject['strategy3.name'],
-                                    user_code: activeObject['strategy3.user_code'],
-                                    content_type: "strategies.strategy3"
-                                };
-                            }*/
-
-                            /*var entity = {
-                                contextData: contextData
-                            };*/
-
-                            /*$mdDialog.show({
-                                controller: 'ComplexTransactionAddDialogController as vm',
-                                templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: activeObject.event,
-                                locals: {
-                                    entityType: 'complex-transaction',
-                                    entity: entity
-                                }
-                            }).then(function (res) {
-
-                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                if (res && res.res === 'agree') {
-
-                                    vm.entityViewerDataService.resetData();
-                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                }
-                            });*/
 
                             var locals = {
                                 entityType: 'complex-transaction',
@@ -1640,34 +939,6 @@
                         }
 
                         if (action === 'rebook_transaction') {
-
-                            /*$mdDialog.show({
-                                controller: 'ComplexTransactionEditDialogController as vm',
-                                templateUrl: 'views/entity-viewer/complex-transaction-edit-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: activeObject.event,
-                                //clickOutsideToClose: false,
-                                locals: {
-                                    entityType: 'complex-transaction',
-                                    entityId: activeObject['complex_transaction.id']
-                                }
-                            }).then(function (res) {
-
-                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                                if (res && res.res === 'agree') {
-
-                                    vm.entityViewerDataService.resetData();
-                                    vm.entityViewerDataService.resetRequestParameters();
-
-                                    var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                    vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                                }
-                            });*/
 
                             var locals = {
                                 entityType: 'complex-transaction',
@@ -1838,7 +1109,7 @@
 
             vm.handleDashboardActiveObject = function (componentId) {
 
-                gotActiveObjectFromLinkedComp = true;
+                gotActiveObjectFromLinkedDashboardComp = true;
                 var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
                 console.log('COMPONENT_VALUE_CHANGED_' + componentId, componentOutput);
@@ -1861,7 +1132,7 @@
                 if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                     vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
-                        vm.handleDashboardFilterLink(filter_link)
+                        vm.handleDashboardFilterLink(filter_link);
                     });
 
                 }
@@ -1902,7 +1173,82 @@
 
                 }
 
-                if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) {
+                if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
+
+                    if (Array.isArray(vm.componentData.settings.linked_components.active_object)) {
+
+                        var lastActiveCompChanged = false;
+
+                        for (var i = 0; i < vm.componentData.settings.linked_components.active_object.length; i++) {
+
+                            var componentId = JSON.parse(JSON.stringify(vm.componentData.settings.linked_components.active_object[i]));
+
+                            var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+
+                            /*if (componentOutput && !componentOutput.recalculatedComponents) {
+                                componentOutput.recalculatedComponents = [];
+                            }
+
+                            if (componentOutput && componentOutput.changedLast &&
+                                componentOutput.recalculatedComponents.indexOf(vm.componentData.id) < 0) {*/
+                            if (componentOutput && componentOutput.changedLast) {
+
+                                var compOutputData = componentOutput.data;
+
+                                if (lastActiveComponentId !== componentId) {
+
+                                    lastActiveComponentId = componentId;
+                                    lastActiveCompChanged = true;
+
+                                } else {
+
+                                    if (compOutputData && typeof compOutputData === 'object' &&
+                                        vm.linkedActiveObjects[lastActiveComponentId] &&
+                                        typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
+
+                                        if (!objectComparison.comparePropertiesOfObjects(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
+                                            lastActiveCompChanged = true;
+                                        }
+
+                                    } else if (vm.linkedActiveObjects[lastActiveComponentId] !== compOutputData) {
+                                        lastActiveCompChanged = true;
+                                    }
+
+                                }
+
+                                if (compOutputData !== undefined && compOutputData !== null) {
+                                    vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
+                                } else {
+                                    vm.linkedActiveObjects[lastActiveComponentId] = null;
+                                }
+
+                                /*if (lastActiveCompChanged) {
+                                    componentOutput.recalculatedComponents.push(vm.componentData.id);
+                                }*/
+
+                                break;
+
+                            }
+                        }
+
+                        if (lastActiveCompChanged) {
+                            vm.handleDashboardActiveObject(lastActiveComponentId);
+                        }
+
+                    } else {
+
+                        var componentId = vm.componentData.settings.linked_components.active_object;
+
+                        vm.handleDashboardActiveObject(componentId);
+                    }
+
+                }
+
+            };
+
+            var updateActiveObjectUsingDashboardData = function () {
+
+                if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
 
                     if (Array.isArray(vm.componentData.settings.linked_components.active_object)) {
 
@@ -1971,6 +1317,76 @@
                     }
 
                 }
+
+            }
+
+            var updateReportSettingsUsingDashboardData = function () {
+
+                if (vm.componentData.settings.linked_components.hasOwnProperty('report_settings')) {
+
+                    Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
+
+                        var componentId = vm.componentData.settings.linked_components.report_settings[property];
+
+                        var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+
+                        if (componentOutput && componentOutput.data) {
+                            console.log("dashboard report settings updateReportSettingsUsingDashboardData", componentOutput);
+                            var reportOptions = vm.entityViewerDataService.getReportOptions();
+
+                            // console.log('reportOptions', reportOptions);
+                            // console.log('componentOutput', componentOutput);
+                            //
+                            // console.log('reportOptions[property]', reportOptions[property]);
+                            // console.log('componentOutput.data.value', componentOutput.data.value);
+
+                            if (reportOptions[property] !== componentOutput.data.value) {
+
+                                if (property.indexOf(['portfolios', 'strategies1', 'strategies2', 'strategies3']) &&
+                                    !Array.isArray(componentOutput.data.value)) {
+
+                                    reportOptions[property] = [componentOutput.data.value];
+
+                                } else {
+                                    reportOptions[property] = componentOutput.data.value;
+                                }
+
+                                vm.entityViewerDataService.setReportOptions(reportOptions);
+                                console.log("dashboard report settings reportOptions", reportOptions);
+                                vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+                            }
+
+                        }
+
+                    })
+
+                }
+
+            }
+
+            var cleanComponentsOutputsToDelete = function (activeTabOnly) {
+
+                var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
+
+                Object.keys(componentsOutputs).forEach(function (compKey) {
+
+                    if (componentsOutputs[compKey] && typeof componentsOutputs[compKey] === 'object'
+                        && componentsOutputs[compKey].deleteOnChange) {
+
+                        if (activeTabOnly) {
+
+
+                        } else {
+                            vm.dashboardDataService.setComponentOutput(compKey, null);
+                        }
+
+                    }
+
+                });
 
             };
 
@@ -2060,7 +1476,6 @@
             }; */
 
 
-
             vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
 
                 // vm.oldEventExchanges()
@@ -2077,8 +1492,10 @@
                 };
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
-
-                    vm.applyDashboardChanges();
+                    //vm.applyDashboardChanges();
+                    updateReportSettingsUsingDashboardData();
+                    cleanComponentsOutputsToDelete();
+                    clearUseFromAboveFilters();
 
                 });
 
@@ -2090,17 +1507,47 @@
                     console.log('$scope.$parent.vm.tabNumber', $scope.$parent.vm.tabNumber);
 
                     if (activeTab.tab_number === $scope.$parent.vm.tabNumber) {
-                        vm.applyDashboardChanges();
+                        //vm.applyDashboardChanges();
+                        updateReportSettingsUsingDashboardData();
+                        cleanComponentsOutputsToDelete();
+                        clearUseFromAboveFilters();
                     }
 
                 });
 
+                vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
+
+                    // update report filters from dashboard component
+                    if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
+
+                        vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
+                            vm.handleDashboardFilterLink(filter_link);
+                        });
+
+                    }
+
+                    /*if (vm.componentData.settings.auto_refresh) {
+                        updateReportSettingsUsingDashboardData();
+                    }*/
+
+                    updateActiveObjectUsingDashboardData();
+
+                });
+
+                vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
+                    if (vm.componentData.settings.auto_refresh) {
+                        updateReportSettingsUsingDashboardData();
+                    }
+                });
+
                 vm.dashboardEventService.addEventListener(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS, function () {
+
                     var activeTab = vm.dashboardDataService.getActiveTab();
 
                     if (activeTab.tab_number === $scope.$parent.vm.tabNumber) {
                         clearUseFromAboveFilters();
                     }
+
                 });
 
                 vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {

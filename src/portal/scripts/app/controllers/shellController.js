@@ -11,8 +11,6 @@
     var metaContentTypesService = require('../services/metaContentTypesService');
     var notificationsService = require('../services/notificationsService');
 
-    var reportCopyHelper = require('../helpers/reportCopyHelper');
-
     var metaService = require('../services/metaService');
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
@@ -110,7 +108,12 @@
                     usersService.logout().then(function (data) {
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
-                        window.location.pathname = '/';
+                        if (window.location.pathname !== '/') {
+                            window.location.pathname = '/';
+                        } else {
+                            window.location.reload()
+                        }
+
 
                         cookiesService.deleteCookie();
                     });

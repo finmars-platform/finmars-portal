@@ -28,6 +28,8 @@
                     scope.nameProperty = 'name';
                 }
 
+                var items = [];
+
                 scope.$watch('model', function () {
                     setInputText();
                 });
@@ -45,8 +47,9 @@
 
                         if (scope.nothingSelectedText || typeof scope.nothingSelectedText === "string") {
                             scope.inputText = scope.nothingSelectedText;
+
                         } else {
-                            scope.inputText = "0 items selected"
+                            scope.inputText = "0 items selected";
                         }
 
                     } else {
@@ -126,53 +129,87 @@
 
                 //setInputText();
 
+                var getItems = function () {
+
+                    return new Promise(function (resolve, reject) {
+
+                        if (items && items.length) {
+                            resolve(items);
+
+                        } else {
+
+                            if (scope.items && scope.items.length) {
+
+                                items = JSON.parse(JSON.stringify(scope.items));
+                                resolve(items);
+
+                            } else if (scope.getDataMethod) {
+
+                                scope.getDataMethod().then(function (resData) {
+
+                                    items = JSON.parse(JSON.stringify(resData.results));
+                                    resolve(items);
+
+                                }).catch(function (error) {
+
+                                    items = [];
+                                    resolve(items);
+
+                                });
+
+                            }
+
+                        }
+
+                    })
+
+                }
+
                 $(elem).click(function (event) {
 
                     event.preventDefault();
                     event.stopPropagation();
 
-                    var items = [];
-                    if (scope.items) {
-                        items = JSON.parse(JSON.stringify(scope.items));
-                    }
+                    getItems().then(function (data) {
 
-                    $mdDialog.show({
-                        controller: "TwoFieldsMultiselectDialogController as vm",
-                        templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
-                        targetEvent: event,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                getDataMethod: scope.getDataMethod,
-                                items: items,
-                                model: scope.model,
-                                title: scope.title,
-                                nameProperty: scope.nameProperty
+                        items = data;
+
+                        $mdDialog.show({
+                            controller: "TwoFieldsMultiselectDialogController as vm",
+                            templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
+                            targetEvent: event,
+                            multiple: true,
+                            locals: {
+                                data: {
+                                    items: items,
+                                    model: scope.model,
+                                    title: scope.title,
+                                    nameProperty: scope.nameProperty
+                                }
                             }
-                        }
-                    }).then(function (res) {
+                        }).then(function (res) {
 
-                        if (res.status === "agree") {
+                            if (res.status === "agree") {
 
-                           scope.model = res.selectedItems;
+                                scope.model = res.selectedItems;
 
-                           if (scope.onChangeCallback) {
-                               scope.model = res.selectedItems;
+                                if (scope.onChangeCallback) {
+                                    scope.model = res.selectedItems;
 
-                               setTimeout(function () {
-                                   scope.onChangeCallback();
-                               }, 500);
+                                    setTimeout(function () {
+                                        scope.onChangeCallback();
+                                    }, 500);
 
-                           } else if (ngModel) {
-                               ngModel.$setViewValue(res.selectedItems);
-                           }
+                                } else if (ngModel) {
+                                    ngModel.$setViewValue(res.selectedItems);
+                                }
 
+                            }
 
-                           //setInputText();
-
-                       }
+                        });
 
                     });
+
                 });
             }
         }
