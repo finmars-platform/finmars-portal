@@ -779,26 +779,6 @@
 
         vm.init = function () {
 
-
-
-            // DEPRECATED
-            // if ('__PROJECT_ENV__' === 'development' || '__PROJECT_ENV__' === 'local') {
-            //
-            //     if (!cookiesService.getCookie('csrftoken')) {
-            //
-            //         usersService.login('__LOGIN__', '__PASS__').then(function () {
-            //             console.log('after login', cookiesService.getCookie('csrftoken'));
-            //             // $scope.$apply();
-            //
-            //             window.location.reload();
-            //
-            //
-            //         });
-            //
-            //     }
-            //
-            // }
-
             usersService.ping().then(function (data) {
 
                 // console.log('ping data', data);
