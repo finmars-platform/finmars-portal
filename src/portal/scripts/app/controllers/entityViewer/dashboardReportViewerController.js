@@ -1331,7 +1331,7 @@
                         var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
                         if (componentOutput && componentOutput.data) {
-                            console.log("dashboard report settings updateReportSettingsUsingDashboardData", componentOutput);
+
                             var reportOptions = vm.entityViewerDataService.getReportOptions();
 
                             // console.log('reportOptions', reportOptions);
@@ -1352,7 +1352,6 @@
                                 }
 
                                 vm.entityViewerDataService.setReportOptions(reportOptions);
-                                console.log("dashboard report settings reportOptions", reportOptions);
                                 vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
 
                                 vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
