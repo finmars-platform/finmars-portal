@@ -185,6 +185,7 @@
             .pipe(preprocess())
             //.pipe(replace(/__API_HOST__/g, API_HOST))
             .pipe(gulpif(PROJECT_ENV !== 'production', replace(/__API_HOST__/g, API_HOST)))
+            .pipe(gulpif(PROJECT_ENV !== 'development', replace(/__API_HOST__/g, API_HOST)))
             .pipe(replace(/__BUILD_DATE__/g, build_date))
             .pipe(replace(/__PROJECT_ENV__/g, PROJECT_ENV))
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
