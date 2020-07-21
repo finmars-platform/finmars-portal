@@ -164,55 +164,69 @@
 
         <div layout="row">
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Principal with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.principal_with_sign">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.principal_with_sign" ></expression-editor-button>
+                        data-item="item.transaction.principal_with_sign" ></expression-editor-button>-->
+                <expression-input label="Principal with sign: Number"
+                                  model="item.transaction.principal_with_sign"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Reference fx-rate: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.reference_fx_rate">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.reference_fx_rate"></expression-editor-button>
+                        data-item="item.transaction.reference_fx_rate"></expression-editor-button>-->
+                <expression-input label="Reference fx-rate: Number"
+                                  model="item.transaction.reference_fx_rate"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Position size with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.position_size_with_sign">
                 </md-input-container>
 
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.position_size_with_sign"></expression-editor-button>
-
+                        data-item="item.transaction.position_size_with_sign"></expression-editor-button>-->
+                <expression-input label="Position size with sign: Number"
+                                  model="item.transaction.position_size_with_sign"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
         </div>
 
         <div layout="row" layout-align="space-between">
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Carry with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.carry_with_sign">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.carry_with_sign"></expression-editor-button>
+                        data-item="item.transaction.carry_with_sign"></expression-editor-button>-->
+                <expression-input label="Carry with sign: Number"
+                                  model="item.transaction.carry_with_sign"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Trade price: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.trade_price">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.trade_price"></expression-editor-button>
+                        data-item="item.transaction.trade_price"></expression-editor-button>-->
+                <expression-input label="Trade price: Number"
+                                  model="item.transaction.trade_price"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
             <!--<div flex="33">-->
@@ -236,22 +250,28 @@
 
         <div layout="row" layout-align="space-between">
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Overheads with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.overheads_with_sign">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.overheads_with_sign"></expression-editor-button>
+                        data-item="item.transaction.overheads_with_sign"></expression-editor-button>-->
+                <expression-input label="Overheads with sign: Number"
+                                  model="item.transaction.overheads_with_sign"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Factor: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.factor">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.factor"></expression-editor-button>
+                        data-item="item.transaction.factor"></expression-editor-button>-->
+                <expression-input label="Factor: Number"
+                                  model="item.transaction.factor"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
             <!--<div flex="33">
@@ -263,25 +283,31 @@
 
         <div layout="row" layout-align="space-between">
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Cash consideration: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.cash_consideration">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.cash_consideration"></expression-editor-button>
+                        data-item="item.transaction.cash_consideration"></expression-editor-button>-->
+                <expression-input label="Cash consideration: Number"
+                                  model="item.transaction.cash_consideration"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
         </div>
 
         <div layout="row">
-            <div flex="100" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="100" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Notes: Text</label>
                     <input type="text" value-title data-ng-model="item.transaction.notes">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.notes"></expression-editor-button>
+                        data-item="item.transaction.notes"></expression-editor-button>-->
+                <expression-input label="Cash consideration: Number"
+                                  model="item.transaction.cash_consideration"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
         </div>
 
@@ -317,14 +343,17 @@
                 </div>
             </div>
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Accounting date: Date</label>
                     <input type="text" value-title style="color: grey"
                            data-ng-model="item.transaction.accounting_date">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.accounting_date"></expression-editor-button>
+                        data-item="item.transaction.accounting_date"></expression-editor-button>-->
+                <expression-input label="Accounting date: Date"
+                                  model="item.transaction.accounting_date"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
         </div>
@@ -369,14 +398,17 @@
                 </div>
             </div>
 
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Cash date: Date</label>
                     <input type="text" value-title style="color: grey;"
                            data-ng-model="item.transaction.cash_date">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.cash_date"></expression-editor-button>
+                        data-item="item.transaction.cash_date"></expression-editor-button>-->
+                <expression-input label="Cash date: Date"
+                                  model="item.transaction.cash_date"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
 
             <div flex="33" layout="row">

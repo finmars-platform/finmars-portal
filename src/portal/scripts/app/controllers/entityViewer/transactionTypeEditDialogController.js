@@ -76,6 +76,11 @@
 
         var inputsToDelete = [];
 
+        vm.expressionData = {
+            groups: [],
+            functions: [null]
+        };
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -298,18 +303,23 @@
 
                     vm.entity = data;
 
-                    vm.inputsGroup = {
+                    /*vm.inputsGroup = {
                         "name": "<b>Inputs</b>",
                         "key": 'input'
-                    };
+                    };*/
+                    vm.expressionData.groups[0] = {
+                        "name": "<b>Inputs</b>",
+                        "key": 'input'
+                    }
 
-                    vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+                    //vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+                    vm.expressionData.functions[0] = vm.entity.inputs.map(function (input) {
 
                         return {
-                            "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                            "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
-                            "groups": "input",
-                            "func": input.name
+                                "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                                "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
+                                "groups": "input",
+                                "func": input.name
                         }
 
                     });
@@ -1297,14 +1307,19 @@
 
         vm.updateInputFunctions = function () {
 
-            vm.inputsGroup = {
+            /*vm.inputsGroup = {
                 "name": "<b>Inputs</b>",
                 "key": 'input'
-            };
+            };*/
+            vm.expressionData.groups[0] = {
+                "name": "<b>Inputs</b>",
+                "key": 'input'
+            }
 
             if (vm.entity.inputs && vm.entity.inputs.length > 0) {
 
-                vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+                //vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+                vm.expressionData.functions[0] = vm.entity.inputs.map(function (input) {
 
                     return {
                         "name": "Input: " + input.verbose_name + " (" + input.name + ")",
@@ -1317,7 +1332,7 @@
 
             } else {
 
-                vm.inputsFunctions = null;
+                vm.expressionData.functions[0] = null;
 
             }
 

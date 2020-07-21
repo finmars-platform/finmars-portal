@@ -11,8 +11,6 @@
     var metaContentTypesService = require('../services/metaContentTypesService');
     var notificationsService = require('../services/notificationsService');
 
-    var reportCopyHelper = require('../helpers/reportCopyHelper');
-
     var metaService = require('../services/metaService');
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
@@ -25,6 +23,8 @@
     module.exports = function ($scope, $state, $stateParams, $rootScope, $mdDialog, $transitions) {
 
         var vm = this;
+
+        vm.isAuthenticated = false;
 
         vm.readyStatus = {masters: false};
 
@@ -108,7 +108,12 @@
                     usersService.logout().then(function (data) {
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
-                        window.location.pathname = '/';
+                        if (window.location.pathname !== '/') {
+                            window.location.pathname = '/';
+                        } else {
+                            window.location.reload()
+                        }
+
 
                         cookiesService.deleteCookie();
                     });
@@ -550,7 +555,12 @@
                     usersService.logout().then(function (data) {
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
-                        window.location.pathname = '/';
+
+                        if (window.location.pathname !== '/') {
+                            window.location.pathname = '/';
+                        } else {
+                            window.location.reload()
+                        }
 
                         cookiesService.deleteCookie();
 
@@ -624,7 +634,7 @@
 
         vm.importOnDragListeners = function () {
 
-            var shellViewContainer = document.querySelector('.shell-view-container');
+            var shellViewDnDDiv = document.querySelector('.shellViewDnDDiv');
 
             var dragBackdropElem = document.createElement("div");
             dragBackdropElem.classList.add("drag-file-backdrop");
@@ -633,7 +643,7 @@
             var dragBackdropTextHolder = dragBackdropElem.querySelector("div");
             dragBackdropTextHolder.appendChild(document.createElement("span")).textContent = "Drop File Here";
 
-            shellViewContainer.addEventListener('dragenter', function (ev) {
+            shellViewDnDDiv.addEventListener('dragenter', function (ev) {
 
                 ev.preventDefault();
 
@@ -641,8 +651,8 @@
                     if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
 
                         if (ev.dataTransfer.items[0].kind === 'file') {
-                            if (!shellViewContainer.contains(dragBackdropElem)) {
-                                shellViewContainer.appendChild(dragBackdropElem);
+                            if (!shellViewDnDDiv.contains(dragBackdropElem)) {
+                                shellViewDnDDiv.appendChild(dragBackdropElem);
                             }
                         }
 
@@ -654,7 +664,7 @@
             dragBackdropElem.addEventListener('dragleave', function (ev) {
                 ev.preventDefault();
                 if (ev.target === dragBackdropElem) {
-                    shellViewContainer.removeChild(dragBackdropElem);
+                    shellViewDnDDiv.removeChild(dragBackdropElem);
                 }
             });
 
@@ -702,7 +712,7 @@
 
                     }
 
-                    shellViewContainer.removeChild(dragBackdropElem);
+                    shellViewDnDDiv.removeChild(dragBackdropElem);
 
                 }
 
@@ -710,27 +720,9 @@
 
         };
 
-        vm.init = function () {
+        vm.initShell = function() {
 
             vm.currentGlobalState = vm.getCurrentGlobalState();
-
-            if ('__PROJECT_ENV__' === 'development' || '__PROJECT_ENV__' === 'local') {
-
-                if (!cookiesService.getCookie('csrftoken')) {
-
-                    usersService.login('__LOGIN__', '__PASS__').then(function () {
-                        console.log('after login', cookiesService.getCookie('csrftoken'));
-                        // $scope.$apply();
-
-                        window.location.reload();
-
-
-                    });
-
-                }
-
-            }
-
 
             vm.initTransitionListener();
 
@@ -752,6 +744,62 @@
             }
 
             vm.importOnDragListeners();
+
+        };
+
+        vm.initLoginDialog = function(){
+
+            $mdDialog.show({
+                controller: 'LoginDialogController as vm',
+                templateUrl: 'views/dialogs/login-dialog-view.html',
+                targetEvent: new Event("click"),
+                locals: {
+                    data: null
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if(res.status === 'agree') {
+
+                    vm.isAuthenticated = true;
+
+                    setTimeout(function () {
+                        vm.initShell();
+                    }, 100);
+
+                }
+
+            })
+
+
+        };
+
+        vm.init = function () {
+
+            usersService.ping().then(function (data) {
+
+                // console.log('ping data', data);
+
+                if (!data.is_authenticated) {
+
+                    vm.isAuthenticated = false;
+
+                    vm.initLoginDialog();
+
+                } else {
+
+                    vm.isAuthenticated = true;
+
+                    setTimeout(function () {
+                        vm.initShell();
+                    }, 100);
+                }
+
+            });
+
 
 
         };

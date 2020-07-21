@@ -97,7 +97,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
     // }
 
-    enableAccessHandler($transitions);
+    enableAccessHandler($transitions); // TODO Run after successful auth
 
     $transitions.onSuccess({}, function (trans) {
 
@@ -147,6 +147,7 @@ app.factory('Pickr', ['$window', function ($window) {
 }]);
 
 app.service('$customDialog', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/customDialogService')]);
+app.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/bigDrawerService')]);
 
 
 // Dashboard
@@ -267,6 +268,7 @@ app.controller('ClassifierImportDialogController', ['$scope', '$mdDialog', 'data
 app.controller('ClassifierExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierExportDialogController')]);
 app.controller('LayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/layoutExportDialogController')]);
 app.controller('FileReportsController', ['$scope', '$mdDialog', require('./app/controllers/pages/fileReportsController')]);
+app.controller('LoginDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/loginDialogController')]);
 
 
 // System Dialogs
@@ -349,7 +351,7 @@ app.controller('EntityTypeClassifierMappingDialogController', ['$scope', '$mdDia
 
 // Entity Viewer & Report Viewer
 
-app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$stateParams', '$transitions', '$customDialog', require('./app/controllers/entityViewer/entityViewerController')]);
+app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$stateParams', '$transitions', '$customDialog', '$bigDrawer', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
 app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
 app.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
@@ -376,7 +378,7 @@ app.controller('TransactionTypeValidationErrorsDialogController', ['$scope', '$m
 // Complex transaction form
 
 app.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
-app.controller('ComplexTransactionEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionEditDialogController')]);
+app.controller('ComplexTransactionEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionEditDialogController')]);
 app.controller('BookTransactionActionsTabController', ['$scope', require('./app/controllers/tabs/complex-transaction/bookTransactionActionsTabController')]);
 app.controller('BookTransactionTransactionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/complex-transaction/bookTransactionTransactionsTabController')]);
 app.controller('ComplexTransactionsTransactionEditDialogController', ['$scope', '$mdDialog', 'entityId', require('./app/controllers/entityViewer/complexTransactionsTransactionEditDialogController')]);
