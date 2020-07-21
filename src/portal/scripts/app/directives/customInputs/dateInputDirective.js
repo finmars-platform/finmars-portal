@@ -164,6 +164,7 @@
                     });
 
                     inputElem.addEventListener('blur', function () {
+
                         inputContainer.classList.remove('custom-input-focused');
 
                         setTimeout(function () { // without timeout changes will be discarded on fast blur
