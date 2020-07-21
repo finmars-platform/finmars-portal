@@ -34,6 +34,13 @@
 
         console.log('API_HOST: ' + API_HOST);
 
+        if (API_HOST.indexOf('https://') === -1) {
+
+            API_HOST  = "https://" + API_HOST;
+
+            console.log("UPDATED API_HOST ADD HTTPS: " + API_HOST)
+        }
+
         return gulp.src(['dist/portal/scripts/main.min.js'])
             .pipe(replace(/__API_HOST__/g, API_HOST))
             .pipe(gulp.dest('dist/portal/scripts/'))
