@@ -32,6 +32,6 @@ Finmars frontend
 
 `gulp`
 
-3) Run server
+3) Run server 
 
 `npm run server`
