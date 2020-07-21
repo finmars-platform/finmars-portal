@@ -634,7 +634,7 @@
 
         vm.importOnDragListeners = function () {
 
-            var shellViewContainer = document.querySelector('.shell-view-container');
+            var shellViewDnDDiv = document.querySelector('.shellViewDnDDiv');
 
             var dragBackdropElem = document.createElement("div");
             dragBackdropElem.classList.add("drag-file-backdrop");
@@ -643,7 +643,7 @@
             var dragBackdropTextHolder = dragBackdropElem.querySelector("div");
             dragBackdropTextHolder.appendChild(document.createElement("span")).textContent = "Drop File Here";
 
-            shellViewContainer.addEventListener('dragenter', function (ev) {
+            shellViewDnDDiv.addEventListener('dragenter', function (ev) {
 
                 ev.preventDefault();
 
@@ -651,8 +651,8 @@
                     if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
 
                         if (ev.dataTransfer.items[0].kind === 'file') {
-                            if (!shellViewContainer.contains(dragBackdropElem)) {
-                                shellViewContainer.appendChild(dragBackdropElem);
+                            if (!shellViewDnDDiv.contains(dragBackdropElem)) {
+                                shellViewDnDDiv.appendChild(dragBackdropElem);
                             }
                         }
 
@@ -664,7 +664,7 @@
             dragBackdropElem.addEventListener('dragleave', function (ev) {
                 ev.preventDefault();
                 if (ev.target === dragBackdropElem) {
-                    shellViewContainer.removeChild(dragBackdropElem);
+                    shellViewDnDDiv.removeChild(dragBackdropElem);
                 }
             });
 
@@ -712,7 +712,7 @@
 
                     }
 
-                    shellViewContainer.removeChild(dragBackdropElem);
+                    shellViewDnDDiv.removeChild(dragBackdropElem);
 
                 }
 
@@ -720,7 +720,7 @@
 
         };
 
-        vm.initShell = function(){
+        vm.initShell = function() {
 
             vm.currentGlobalState = vm.getCurrentGlobalState();
 
@@ -766,7 +766,10 @@
 
                     vm.isAuthenticated = true;
 
-                    vm.initShell();
+                    setTimeout(function () {
+                        vm.initShell();
+                    }, 100);
+
                 }
 
             })
@@ -810,7 +813,9 @@
 
                     vm.isAuthenticated = true;
 
-                    vm.initShell();
+                    setTimeout(function () {
+                        vm.initShell();
+                    }, 100);
                 }
 
             });
