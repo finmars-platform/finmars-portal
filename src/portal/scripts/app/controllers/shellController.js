@@ -24,7 +24,8 @@
 
         var vm = this;
 
-        vm.isAuthenticated = false;
+        vm.isAuthenticated = false; // check if logged in or not
+        vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
 
         vm.readyStatus = {masters: false};
 
@@ -59,11 +60,25 @@
             vm.readyStatus.masters = false;
 
             // return usersService.getMasterList().then(function (data) {
+
             return usersService.getMasterListLight().then(function (data) {
-                vm.masters = data.results;
-                vm.readyStatus.masters = true;
-                vm.updateCurrentMasterUser();
-                $scope.$apply();
+
+                if (data.hasOwnProperty('results')) {
+                    vm.masters = data.results;
+                    vm.readyStatus.masters = true;
+
+                    if (vm.masters.length) {
+                        vm.updateCurrentMasterUser();
+                    }
+
+                    $scope.$apply();
+                } else {
+
+                    vm.masters = [];
+                    vm.readyStatus.masters = true;
+                    $scope.$apply();
+
+                }
 
             });
 
@@ -80,11 +95,6 @@
             });
 
         };
-
-        usersService.getMe().then(function (data) {
-            vm.user = data;
-            $scope.$apply();
-        });
 
         vm.initCrossTabBroadcast = function () {
 
@@ -299,7 +309,7 @@
 
                 var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams.strategyNumber);
                 //var layoutNameFromParams = pageStateParams.layoutName;
-                var layoutUserCode =  pageStateParams.layoutUserCode;
+                var layoutUserCode = pageStateParams.layoutUserCode;
                 var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
                 var setLayoutName = function (layoutData) {
@@ -319,32 +329,33 @@
 
                     vm.activeLayoutName = layoutNameFromParams;
 
-                }*/ if (layoutUserCode) {
+                }*/
+                if (layoutUserCode) {
 
-                        uiService.getListLayoutDefault({
-                            pageSize: 1000,
-                            filters: {
-                                content_type: contentType,
-                                user_code: layoutUserCode
-                            }
+                    uiService.getListLayoutDefault({
+                        pageSize: 1000,
+                        filters: {
+                            content_type: contentType,
+                            user_code: layoutUserCode
+                        }
 
-                        }).then(function (data) {
+                    }).then(function (data) {
 
-                            if (data.hasOwnProperty('results') && data.results[0]) {
+                        if (data.hasOwnProperty('results') && data.results[0]) {
 
-                                //var layoutName = data.results[0];
-                                setLayoutName(data.results);
+                            //var layoutName = data.results[0];
+                            setLayoutName(data.results);
 
-                            } else {
+                        } else {
 
-                                uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
-                                    var defaultLayoutRes = defaultLayoutData.results;
-                                    setLayoutName(defaultLayoutRes);
-                                });
+                            uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+                                var defaultLayoutRes = defaultLayoutData.results;
+                                setLayoutName(defaultLayoutRes);
+                            });
 
-                            }
+                        }
 
-                        })
+                    })
 
                 } else if (vm.isLayoutFromUrl()) {
 
@@ -720,6 +731,18 @@
 
         };
 
+
+        vm.getUser = function() {
+
+            usersService.getMe().then(function (data) {
+
+                vm.user = data;
+
+                $scope.$apply();
+            });
+
+        };
+
         function enableAccessHandler($transitions) {
 
             usersService.getMyCurrentMember().then(function (data) {
@@ -765,19 +788,20 @@
 
         }
 
+        vm.initShell = function () {
 
-        vm.globalHandler = function(){
+            vm.currentGlobalState = vm.getCurrentGlobalState();
 
+            if (vm.currentGlobalState === 'profile') {
+                vm.isIdentified = true;
+                console.log("User status: Identified");
+            }
 
             document.title = metaService.getCurrentLocation($state);
-
-            // if ('__PROJECT_ENV__' === 'development') {
 
             window.addEventListener('error', function (e) {
                 toastr.error(e.error);
             });
-
-            // }
 
             enableAccessHandler($transitions); // TODO Run after successful auth
 
@@ -802,26 +826,33 @@
 
                 document.title = title;
 
-                setTimeout(function () {
-                    window.dispatchEvent(new Event('resize'));
-                }, 1000);
+                // setTimeout(function () {
+                //     window.dispatchEvent(new Event('resize'));
+                // }, 1000);
 
             });
 
-        };
-
-        vm.initShell = function() {
-
-            vm.currentGlobalState = vm.getCurrentGlobalState();
-
-            vm.globalHandler();
-
             vm.initTransitionListener();
+
+            vm.getUser();
 
             vm.getMasterUsersList().then(function () {
 
                 if (vm.masters.length) {
+
                     vm.getNotifications();
+
+                    vm.isIdentified = true;
+                    console.log("User status: Identified");
+
+                    $scope.$apply();
+
+                } else {
+
+                    if (vm.currentGlobalState !== 'profile') {
+                        $state.go('app.profile', {}, {reload: 'app'})
+                    }
+
                 }
 
             });
@@ -839,7 +870,7 @@
 
         };
 
-        vm.initLoginDialog = function(){
+        vm.initLoginDialog = function () {
 
             $mdDialog.show({
                 controller: 'LoginDialogController as vm',
@@ -854,9 +885,11 @@
                 skipHide: true
             }).then(function (res) {
 
-                if(res.status === 'agree') {
+                if (res.status === 'agree') {
 
                     vm.isAuthenticated = true;
+
+                    console.log("User status: Authenticated");
 
                     setTimeout(function () {
                         vm.initShell();
@@ -885,13 +918,16 @@
 
                     vm.isAuthenticated = true;
 
+                    console.log("User status: Authenticated");
+
+                    $scope.$apply();
+
                     setTimeout(function () {
                         vm.initShell();
                     }, 100);
                 }
 
             });
-
 
 
         };

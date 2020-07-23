@@ -117,7 +117,7 @@
 
         console.log('PROJECT_ENV: ' + PROJECT_ENV);
 
-        console.log('API_HOST: ' + API_HOST);
+        // console.log('API_HOST: ' + API_HOST);
 
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
