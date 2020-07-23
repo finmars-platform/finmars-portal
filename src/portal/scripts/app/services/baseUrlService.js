@@ -7,7 +7,7 @@
 
     var resolve = function () {
 
-        if ('__PROJECT_ENV__' === 'development') {
+        if ('__PROJECT_ENV__') {
 
             var host = '__API_HOST__';
 
