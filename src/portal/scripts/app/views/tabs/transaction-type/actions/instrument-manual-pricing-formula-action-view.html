@@ -63,29 +63,37 @@
         <div layout="row">
             <div flex="50">
                 <div layout="row">
-                    <div flex="50" layout="row" layout-align="start top">
-                        <md-input-container class="expression-input-container">
+                    <div flex="50" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                        <!--<md-input-container class="expression-input-container">
                             <label for="" class="uncut-text-on-focus-label" content-title>Expression: Text</label>
                             <input type="text" value-title
                                    data-ng-model="item.instrument_manual_pricing_formula.expr">
                         </md-input-container>
                         <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                                data-item="item.instrument_manual_pricing_formula.expr"></expression-editor-button>
+                                data-item="item.instrument_manual_pricing_formula.expr"></expression-editor-button>-->
+                        <expression-input label="Expression: Text"
+                                          model="item.instrument_manual_pricing_formula.expr"
+                                          data-data="vm.expressionData"></expression-input>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div flex="50">
-        <div flex="50" layout="row" layout-align="start top">
-            <md-input-container class="expression-input-container">
+
+        <div flex="50" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+            <!--<md-input-container class="expression-input-container">
                 <label for="" class="uncut-text-on-focus-label" content-title>Notes: Text</label>
                 <input type="text" value-title style="color: grey;"
                        data-ng-model="item.instrument_manual_pricing_formula.notes">
             </md-input-container>
             <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                    data-item="item.instrument_manual_pricing_formula.notes"></expression-editor-button>
+                    data-item="item.instrument_manual_pricing_formula.notes"></expression-editor-button>-->
+            <expression-input label="Notes: Text"
+                              model="item.instrument_manual_pricing_formula.notes"
+                              data-data="vm.expressionData"></expression-input>
         </div>
+
         <div flex="33" layout="row">
             <div flex="20">
                 <md-button
@@ -116,5 +124,6 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
