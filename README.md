@@ -1,4 +1,23 @@
-Finmars frontend
+# Portal
+
+### Installation
+
+1) Clone project
+
+`git clone git@gitlab.finmars.com:finmars/portal.git`
+
+1) Install all dependencies
+
+`npm install`
+
+2) Build project
+
+`gulp`
+
+3) Run local Web Server
+
+`npm run server-proxy`
+
 
 ### Repository structure:
 
@@ -10,9 +29,11 @@ Finmars frontend
 
 `./src` - folder with all source code
 
-`./libs` - backup folder with all libraries required for gulp compiler
+`./libs` - backup folder with all libraries.
 
-`./server.js` - server init file
+`./server.js` - server file
+
+`./server-proxy.js` - server file with proxy to dev server
 
 `./Gulpfile` - configuration file for Gulp compiler
 
@@ -20,20 +41,21 @@ Finmars frontend
 
 `./Dockerfile` - config file that converts project to a Docker image
 
-`./changelog.md` - file contains readable messages of changes in project. Put here a note of any major change before commit
+`./changelog.md` - file tha contains helpful messages of changes in project. Put here a note of any major change before commit
 
-### How to build
 
-1) Install all dependencies
+### FAQ:
 
-`npm install`
+- **How project is structured?**   
+We are using MVC approach. Here is brief explanation.  
+View - angular html template. Only stored in `./src/portal/scripts/app/views`  
+Controller - javascript code that directly attached to template. Angular depended. Stored in `./src/portal/scripts/app/controllers`  
+Model just a list of fields. Models do not have logic inside them. Location `./src/prtal/scripts/app/models`  
+Service - javascript code that has logic related to data/events. Used in controllers.  Location `./src/prtal/scripts/app/services`  
+Repository - javascript code contains XHR requests to REST API.  Location `./src/prtal/scripts/app/repositories`  
+Directive - angular specific files. Basically components.  Location `./src/prtal/scripts/app/directives`  
+Helper - some utility code that can be shared across multiple services.  Location `./src/prtal/scripts/app/helpers`
 
-2) Build sources
+- **What is Core and Portal folders?**  
+Our source code placed in `portal` folder. `core` contains libraries/external code
 
-`gulp`
-
-3) Run server
-
-`npm run server`
-
-..
