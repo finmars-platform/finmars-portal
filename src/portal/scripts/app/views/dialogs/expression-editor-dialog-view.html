@@ -9,6 +9,7 @@
         </div>
     </md-toolbar>
     <md-dialog-content>
+
         <div>
             <md-input-container class="md-block m-t-16 none-max-height">
                 <label>Expression</label>
@@ -16,8 +17,6 @@
                           data-ng-model="vm.item.expression"
                           data-ng-change="vm.error = false; vm.success = false; vm.showValidation = false;"></textarea>
             </md-input-container>
-
-
         </div>
 
         <div data-ng-if="vm.showValidation" class="p-16">

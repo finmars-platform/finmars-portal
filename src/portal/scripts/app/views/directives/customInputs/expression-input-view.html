@@ -27,14 +27,13 @@
                 </div>
 
                 <div class="flex-row">
-                    <input type="text"
-                           data-ng-model="model"
-                           data-ng-change="onInputChange()"
-                           data-ng-model-options="{debounce: 500}"
-                           placeholder="Expression"
-                           class="custom-input expression-input textInputElem"
-                           ng-readonly="isReadonly"
-                           ng-disabled="isDisabled">
+                    <textarea data-ng-model="model"
+                              data-ng-change="onInputChange()"
+                              data-ng-model-options="{debounce: 500}"
+                              placeholder="Expression"
+                              class="custom-input expression-input textInputElem"
+                              ng-readonly="isReadonly"
+                              ng-disabled="isDisabled"></textarea>
 
                     <button data-ng-if="!noIndicatorBtn"
                             class="custom-input-indicator-btn"

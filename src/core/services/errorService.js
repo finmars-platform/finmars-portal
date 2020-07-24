@@ -18,6 +18,7 @@
 
     'use strict';
 
+    // DEPRECATED
     var handleXhrErrors = function (response) {
 
         // console.log('handleXhrErrors.response', response);

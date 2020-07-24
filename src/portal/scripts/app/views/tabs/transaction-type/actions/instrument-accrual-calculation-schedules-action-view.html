@@ -61,50 +61,67 @@
             </div>
         </div>
         <div layout="row">
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Accrual start date: Date</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.accrual_start_date">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.instrument_accrual_calculation_schedules.accrual_start_date"></expression-editor-button>
+                        data-item="item.instrument_accrual_calculation_schedules.accrual_start_date"></expression-editor-button>-->
+                <expression-input label="Accrual start date: Date"
+                                  model="item.instrument_accrual_calculation_schedules.accrual_start_date"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>First payment date: Date</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.first_payment_date">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.instrument_accrual_calculation_schedules.first_payment_date"></expression-editor-button>
+                        data-item="item.instrument_accrual_calculation_schedules.first_payment_date"></expression-editor-button>-->
+                <expression-input label="First payment date: Date"
+                                  model="item.instrument_accrual_calculation_schedules.first_payment_date"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Accrual size: Number</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.accrual_size">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.instrument_accrual_calculation_schedules.accrual_size"></expression-editor-button>
+                        data-item="item.instrument_accrual_calculation_schedules.accrual_size"></expression-editor-button>-->
+                <expression-input label="Accrual size: Number"
+                                  model="item.instrument_accrual_calculation_schedules.accrual_size"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
         </div>
     </div>
     <div flex="50">
-        <div flex="50" layout="row" layout-align="start top">
-            <md-input-container class="expression-input-container">
+        <div flex="50" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+            <!--<md-input-container class="expression-input-container">
                 <label for="" class="uncut-text-on-focus-label" content-title>Notes: Text</label>
                 <input type="text" value-title style="color: grey;"
                        data-ng-model="item.instrument_accrual_calculation_schedules.notes">
             </md-input-container>
             <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                    data-item="item.instrument_accrual_calculation_schedules.notes"></expression-editor-button>
+                    data-item="item.instrument_accrual_calculation_schedules.notes"></expression-editor-button>-->
+            <expression-input label="Notes: Text"
+                              model="item.instrument_accrual_calculation_schedules.notes"
+                              data-data="vm.expressionData"></expression-input>
         </div>
         <div layout="row">
-            <div flex="33" layout="row" layout-align="start top">
-                <md-input-container class="expression-input-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Periodicity n: Number</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.periodicity_n">
                 </md-input-container>
                 <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.instrument_accrual_calculation_schedules.periodicity_n"></expression-editor-button>
+                        data-item="item.instrument_accrual_calculation_schedules.periodicity_n"></expression-editor-button>-->
+                <expression-input label="Periodicity n: Number"
+                                  model="item.instrument_accrual_calculation_schedules.periodicity_n"
+                                  data-data="vm.expressionData"></expression-input>
             </div>
             <div flex="33" layout="row">
                 <div flex="20">
