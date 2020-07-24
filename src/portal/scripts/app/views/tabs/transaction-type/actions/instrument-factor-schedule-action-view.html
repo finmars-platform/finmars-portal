@@ -63,28 +63,34 @@
         <div layout="row">
             <div flex="50">
                 <div layout="row">
-                    <div flex="50" layout="row" layout-align="start top">
-                        <md-input-container class="expression-input-container">
+                    <div flex="50" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+                        <!--<md-input-container class="expression-input-container">
                             <label for="" class="uncut-text-on-focus-label" content-title>Factor: Number</label>
                             <input type="text" value-title
                                    data-ng-model="item.instrument_factor_schedule.factor_value">
                         </md-input-container>
                         <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                                data-item="item.instrument_factor_schedule.factor_value"></expression-editor-button>
+                                data-item="item.instrument_factor_schedule.factor_value"></expression-editor-button>-->
+                        <expression-input label="Factor: Number"
+                                          model="item.instrument_factor_schedule.factor_value"
+                                          data-data="vm.expressionData"></expression-input>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div flex="50">
-        <div flex="50" layout="row" layout="row" layout-align="start top">
-            <md-input-container class="expression-input-container">
+        <div flex="50" layout="row" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+            <!--<md-input-container class="expression-input-container">
                 <label for="" class="uncut-text-on-focus-label" content-title>Effective date: Date</label>
                 <input type="text" value-title style="color: grey;"
                        data-ng-model="item.instrument_factor_schedule.effective_date">
             </md-input-container>
             <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                    data-item="item.instrument_factor_schedule.effective_date"></expression-editor-button>
+                    data-item="item.instrument_factor_schedule.effective_date"></expression-editor-button>-->
+            <expression-input label="Effective date: Date"
+                              model="item.instrument_factor_schedule.effective_date"
+                              data-data="vm.expressionData"></expression-input>
         </div>
     </div>
 </div>

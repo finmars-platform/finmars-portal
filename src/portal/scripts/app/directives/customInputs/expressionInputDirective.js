@@ -1,5 +1,7 @@
 (function () {
 
+    var helpExpressionsService = require('../../services/helpExpressionsService');
+
     'use strict';
 
     module.exports = function ($mdDialog) {
@@ -13,8 +15,8 @@
                 //customStyles: '<',
                 eventSignal: '=',
                 smallOptions: '=',
-                onChangeCallback: '&?'
-                //onBlurCallback: '&?'
+                onChangeCallback: '&?',
+                onBlurCallback: '&?'
             },
             templateUrl: 'views/directives/customInputs/expression-input-view.html',
             link: function (scope, elem, attr) {
@@ -38,6 +40,7 @@
                 // disabled: disabling input
 
                 if (scope.smallOptions) {
+
                     if (scope.smallOptions.tooltipText) {
                         scope.tooltipText = scope.smallOptions.tooltipText;
                     }
@@ -53,6 +56,7 @@
                     if (scope.smallOptions.disabled) {
                         scope.isDisabled = scope.smallOptions.disabled;
                     }
+
                 }
 
                 scope.getInputContainerClasses = function () {
@@ -69,7 +73,7 @@
                     }*/
 
                     if (scope.isDisabled) {
-                        classes += ' custom-input-is-disabled'
+                        classes += ' custom-input-is-disabled';
                     }
 
                     /*if (scope.noIndicatorBtn) {
@@ -152,6 +156,47 @@
 
                 };
 
+                var setErrorBasedOnStatus = function (errorStatus) {
+
+                    switch (errorStatus) {
+                        case 'error':
+                            scope.error = 'Invalid expression';
+                            break;
+
+                        case 'inputs-error':
+                            scope.error = 'Not all variables are identified expression';
+                            break;
+
+                        case 'bracket-error':
+                            scope.error = 'Mismatch in the opening and closing braces';
+                            break;
+                    }
+
+                }
+
+                var validateExpressionSyntax = function () {
+
+                    helpExpressionsService.validateExpression({expression: scope.model}, scope.data).then(function (data) {
+
+                        if (data.status) {
+                            setErrorBasedOnStatus(data.status);
+                            scope.$apply();
+                        }
+
+                    }).catch(function (res) {
+
+                        scope.error = 'Invalid expression';
+
+                        if (res.htmlExpressionData && res.htmlExpressionData.status) {
+                            setErrorBasedOnStatus(res.htmlExpressionData.status);
+                        }
+
+                        scope.$apply();
+
+                    });
+
+                };
+
                 var initScopeWatchers = function () {
 
                     scope.$watch('model', function () {
@@ -175,6 +220,7 @@
                                             !scope.model) {
 
                                             scope.error = 'Field should not be null';
+
                                         }
 
                                         break;
@@ -220,6 +266,7 @@
                     });
 
                     fullTextTextarea.addEventListener('blur', function () {
+
                         fullTextElem.classList.remove('custom-input-full-text-shown');
 
                         /*if (scope.onBlurCallback) {
@@ -229,6 +276,11 @@
                             }, 250);
 
                         }*/
+
+                        if (scope.model && !scope.error) {
+                            validateExpressionSyntax();
+                        }
+
                     });
 
                 }

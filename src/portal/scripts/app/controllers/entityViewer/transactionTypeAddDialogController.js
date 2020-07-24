@@ -69,8 +69,12 @@
         // < Creating various variables to use as search terms for filters of repeating md-select components >
 
         vm.formIsFilled = false;
-
         vm.canManagePermissions = false;
+
+        vm.expressionData = {
+            groups: [],
+            functions: [null]
+        };
 
         var ecosystemDefaultData = {};
         var inputsToDelete = [];
@@ -1117,14 +1121,19 @@
 
         vm.updateInputFunctions = function () {
 
-            vm.inputsGroup = {
+            /*vm.inputsGroup = {
                 "name": "<b>Inputs</b>",
                 "key": 'input'
-            };
+            };*/
+            vm.expressionData.groups[0] = {
+                "name": "<b>Inputs</b>",
+                "key": 'input'
+            }
 
             if (vm.entity.inputs && vm.entity.inputs.length > 0) {
 
-                vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+                //vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+                vm.expressionData.functions[0] = vm.entity.inputs.map(function (input) {
 
                     return {
                         "name": "Input: " + input.verbose_name + " (" + input.name + ")",
@@ -1137,7 +1146,8 @@
 
             } else {
 
-                vm.inputsFunctions = null;
+                //vm.inputsFunctions = null;
+                vm.expressionData.functions[0] = null;
 
             }
 
