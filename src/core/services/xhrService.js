@@ -6,95 +6,253 @@
 
     var errorService = require('./errorService');
 
-    var requestsPerMinuteLimit = 400; // 500 on backend
-    var requestsCount = 0;
-    var lastRequestTime = new Date().getTime();
-    var currentTime;
-    var minute = 60 * 1000;
+    // DEPRECATED SINCE 24.07.2020
+    // var requestsPerMinuteLimit = 400; // 500 on backend
+    // var requestsCount = 0;
+    // var lastRequestTime = new Date().getTime();
+    // var currentTime;
+    // var minute = 60 * 1000;
 
-    var makeRequest = function (url, params) {
-        return window
-            .fetch(url, params)
-            .then(errorService.handleXhrErrors)
-            .then(function (data) {
+    // var makeRequest = function (url, params) {
+    //
+    //     var requestId;
+    //
+    //     if ( window.developerConsoleService) {
+    //         requestId = window.developerConsoleService.pushRequest({
+    //             url: url,
+    //             params: params
+    //         })
+    //     }
+    //
+    //     return window
+    //         .fetch(url, params)
+    //         .then(function (data) {
+    //
+    //             if (window.developerConsoleService) {
+    //                 window.developerConsoleService.resolveRequest(requestId, data.clone())
+    //             }
+    //
+    //             return data
+    //         })
+    //         // DEPRECATED
+    //         // .then(errorService.handleXhrErrors)
+    //         .then(function (data) {
+    //
+    //             if (params.method === 'GET') {
+    //
+    //                 if (!window.cached_requests) {
+    //                     window.cached_requests = {}
+    //                 }
+    //
+    //                 window.cached_requests[url] = {
+    //                     time: new Date(),
+    //                     data: data,
+    //                     requested_count: 1
+    //                 };
+    //
+    //             }
+    //
+    //             return data
+    //         })
+    //         .catch(function (reason) {
+    //
+    //
+    //             if (window.developerConsoleService) {
+    //                 window.developerConsoleService.rejectRequest(requestId, reason)
+    //             }
+    //
+    //
+    //             errorService.notifyError(reason)
+    //
+    //             throw reason;
+    //
+    //         })
+    //
+    // };
+    //
+    // var fetch = function (url, params) {
+    //
+    //     return new Promise(function (resolve, reject) {
+    //
+    //         window.cached_requests = {}; // temp disable cache
+    //
+    //         if (params.method === 'GET' && window.cached_requests && window.cached_requests[url]) {
+    //
+    //             window.cached_requests[url].requested_count = window.cached_requests[url].requested_count + 1;
+    //
+    //             resolve(JSON.parse(JSON.stringify(window.cached_requests[url].data)))
+    //
+    //         } else {
+    //
+    //             if (params.method === 'POST' || params.method === 'PUT' || params.method === 'PATCH' || params.method === 'DELETE') {
+    //
+    //                 var count_cached_requests = 0;
+    //
+    //                 if (window.cached_requests) {
+    //                     count_cached_requests = Object.keys(window.cached_requests).length;
+    //                 }
+    //
+    //                 window.cached_requests = {};
+    //                 console.log('Clear Cached Requests. Total: ', count_cached_requests);
+    //
+    //             }
+    //
+    //             // console.log('requestsCount', requestsCount);
+    //
+    //             if (requestsCount > requestsPerMinuteLimit) {
+    //
+    //                 setTimeout(function () {
+    //
+    //                     makeRequest(url, params).then(function (data) {
+    //
+    //                         console.log("Timeout 60s");
+    //
+    //                         requestsCount = 0;
+    //
+    //                         resolve(data)
+    //
+    //                     })
+    //
+    //                 }, minute + 1000)
+    //
+    //             } else {
+    //
+    //                 requestsCount = requestsCount + 1;
+    //                 lastRequestTime = new Date().getTime();
+    //
+    //                 resolve(makeRequest(url, params))
+    //
+    //             }
+    //
+    //         }
+    //
+    //     })
+    // };
 
-                if (params.method === 'GET') {
-
-                    if (!window.cached_requests) {
-                        window.cached_requests = {}
-                    }
-
-                    window.cached_requests[url] = {
-                        time: new Date(),
-                        data: data,
-                        requested_count: 1
-                    };
-
-                }
-
-                return data
-            })
-            .catch(errorService.notifyError)
-
-    };
+    // var makeRequest = function (url, params) {
+    //
+    //     var requestId;
+    //
+    //     if ( window.developerConsoleService) {
+    //         requestId = window.developerConsoleService.pushRequest({
+    //             url: url,
+    //             params: params
+    //         })
+    //     }
+    //
+    //     return window
+    //         .fetch(url, params)
+    //         .then(function (data) {
+    //
+    //             if (window.developerConsoleService) {
+    //                 window.developerConsoleService.resolveRequest(requestId, data.clone())
+    //             }
+    //
+    //             return data
+    //         })
+    //         // DEPRECATED
+    //         // .then(errorService.handleXhrErrors)
+    //         .then(function (data) {
+    //
+    //             if (params.method === 'GET') {
+    //
+    //                 if (!window.cached_requests) {
+    //                     window.cached_requests = {}
+    //                 }
+    //
+    //                 window.cached_requests[url] = {
+    //                     time: new Date(),
+    //                     data: data,
+    //                     requested_count: 1
+    //                 };
+    //
+    //             }
+    //
+    //             return data
+    //         })
+    //         .catch(function (reason) {
+    //
+    //
+    //             if (window.developerConsoleService) {
+    //                 window.developerConsoleService.rejectRequest(requestId, reason)
+    //             }
+    //
+    //
+    //             errorService.notifyError(reason)
+    //
+    //             throw reason;
+    //
+    //         })
+    //
+    // };
 
     var fetch = function (url, params) {
 
-        return new Promise(function (resolve, reject) {
+        var requestId;
 
-            window.cached_requests = {}; // temp disable cache
+        if (window.developerConsoleService) {
+            requestId = window.developerConsoleService.pushRequest({
+                url: url,
+                params: params
+            })
+        }
 
-            if (params.method === 'GET' && window.cached_requests && window.cached_requests[url]) {
+        return window
+            .fetch(url, params)
+            .then(function (response) {
 
-                window.cached_requests[url].requested_count = window.cached_requests[url].requested_count + 1;
+                return new Promise(function (resolve, reject) {
 
-                resolve(JSON.parse(JSON.stringify(window.cached_requests[url].data)))
-
-            } else {
-
-                if (params.method === 'POST' || params.method === 'PUT' || params.method === 'PATCH' || params.method === 'DELETE') {
-
-                    var count_cached_requests = 0;
-
-                    if (window.cached_requests) {
-                        count_cached_requests = Object.keys(window.cached_requests).length;
+                    if (window.developerConsoleService) {
+                        window.developerConsoleService.resolveRequest(requestId, response.clone())
                     }
 
-                    window.cached_requests = {};
-                    console.log('Clear Cached Requests. Total: ', count_cached_requests);
+                    if (response.status >= 400 && response.status < 500) {
 
-                }
+                        response.json().then(function (data) {
 
-                // console.log('requestsCount', requestsCount);
+                            var error = {
+                                status: response.status,
+                                statusText: response.statusText,
+                                message: data
+                            };
 
-                if (requestsCount > requestsPerMinuteLimit) {
-
-                    setTimeout(function () {
-
-                        makeRequest(url, params).then(function (data) {
-
-                            console.log("Timeout 60s");
-
-                            requestsCount = 0;
-
-                            resolve(data)
+                            reject(error)
 
                         })
 
-                    }, minute + 1000)
+                    } else if (response.status >= 500 && response.status < 600) {
 
-                } else {
+                        var error = {
+                            status: response.status,
+                            statusText: response.statusText,
+                            message: response.statusText
+                        };
 
-                    requestsCount = requestsCount + 1;
-                    lastRequestTime = new Date().getTime();
+                        reject(error)
 
-                    resolve(makeRequest(url, params))
+                    } else {
 
+                        resolve(response.json());
+
+                    }
+
+                })
+            })
+            .catch(function (reason) {
+
+                if (window.developerConsoleService) {
+                    window.developerConsoleService.rejectRequest(requestId, reason)
                 }
 
-            }
+                errorService.notifyError(reason);
 
-        })
+                console.log('XHR Service catch error', reason);
+
+                throw reason;
+
+            })
+
     };
 
     module.exports = {

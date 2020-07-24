@@ -407,7 +407,6 @@
 
                     objectsService.getFilteredList(entityType, options).then(function (data) {
 
-
                         requestParameters.pagination.count = data.count;
                         requestParameters.processedPages.push(pageToRequest);
 
@@ -415,9 +414,43 @@
 
                         deserializeObjects(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
 
+                        resolveLocal();
+
+                        if (requestParameters.loadAll) {
+
+                            requestParameters.body.page = requestParameters.body.page + 1;
+                            requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                            requestParameters.requestedPages.push(requestParameters.body.page);
+
+                            entityViewerDataService.setRequestParameters(requestParameters);
+                            entityViewerDataService.setActiveRequestParametersId(requestParameters.id);
+
+                            entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                        }
+
+                    }).catch(function (data) {
+
+                        console.log('error request requestParameters', requestParameters);
+
+                        requestParameters.loadAll = false;
+
+                        requestParameters.body.page = requestParameters.body.page - 1;
+                        requestParameters.requestedPages.pop();
+                        requestParameters.pagination.page = requestParameters.pagination.page - 1;
+
+                        entityViewerDataService.setRequestParameters(requestParameters);
+
+                        var errorMessage = 'Something went wrong. Please try again later.';
+
+                        evDataHelper.deleteDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
+
+                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                         resolveLocal()
 
-                    });
+
+                    })
 
                 }));
 
@@ -518,9 +551,44 @@
 
                         entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
+                        resolveLocal();
+
+                        if (requestParameters.loadAll) {
+
+                            requestParameters.body.page = requestParameters.body.page + 1;
+                            requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                            requestParameters.requestedPages.push(requestParameters.body.page);
+
+                            entityViewerDataService.setRequestParameters(requestParameters);
+                            entityViewerDataService.setActiveRequestParametersId(requestParameters.id);
+
+                            entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                        }
+
+                    }).catch(function (data) {
+
+                        console.log('error request requestParameters', requestParameters);
+
+                        requestParameters.loadAll = false;
+
+                        requestParameters.body.page = requestParameters.body.page - 1;
+                        requestParameters.requestedPages.pop();
+                        requestParameters.pagination.page = requestParameters.pagination.page - 1;
+
+                        entityViewerDataService.setRequestParameters(requestParameters);
+
+                        var errorMessage = 'Something went wrong. Please try again later.';
+
+                        evDataHelper.deleteDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
+
+                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                         resolveLocal()
 
+
                     })
+
                 }))
             });
 

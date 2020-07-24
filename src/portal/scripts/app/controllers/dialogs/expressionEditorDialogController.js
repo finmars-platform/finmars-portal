@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var helpService = require('../../services/helpService');
+    var helpExpressionsService = require('../../services/helpExpressionsService');
     var expressionService = require('../../services/expression.service');
 
     module.exports = function ($scope, $mdDialog, item, data) {
@@ -144,7 +144,7 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
-        var isBracketsValid = function (expression, leftBracket, rightBracket) {
+        /*var isBracketsValid = function (expression, leftBracket, rightBracket) {
 
             var result = true;
             var container = [];
@@ -739,11 +739,51 @@
 
             })
 
-        };
+        };*/
 
-        var getFunctionItems = new Promise(function (resolve, reject) {
+        vm.validate = function () {
 
-                helpService.getFunctionsItems().then(function (data) {
+            helpExpressionsService.validateExpression(vm.item, vm.data).then(function (data) {
+
+                vm.status = 'success';
+
+                vm.htmlExpression = data.result;
+
+                if (data.status) {
+                    vm.status = data.status;
+                }
+
+                vm.showValidation = true;
+
+                $scope.$apply();
+
+            }).catch(function (res) {
+
+                console.log('reason', res);
+
+                vm.status = 'error';
+
+                if (res.htmlExpressionData) {
+
+                    vm.htmlExpression = res.htmlExpressionData.result;
+
+                    if (res.htmlExpressionData.status) {
+                        vm.status = res.htmlExpressionData.status;
+                    }
+
+                }
+
+                vm.showValidation = true;
+
+                $scope.$apply();
+
+            });
+
+        }
+
+        /*var getFunctionItems = new Promise(function (resolve, reject) {
+
+                helpExpressionsService.getFunctionsItems().then(function (data) {
 
                     vm.expressions = data;
 
@@ -779,11 +819,47 @@
 
                 });
 
-            });
+            });*/
 
-        var getFunctionsGroups = new Promise(function (resolve, reject) {
+        var getFunctionItems = function () {
 
-                helpService.getFunctionsGroups().then(function (data) {
+            vm.expressions = helpExpressionsService.getFunctionsItems();
+
+            vm.readyStatus.expressions = true;
+
+            /*if (vm.data && vm.data.functions) {
+
+                console.log('data.functions', vm.data.functions);
+
+                vm.data.functions.forEach(function (items) {
+
+                    if (items) {
+                        vm.expressions = vm.expressions.concat(items)
+                    }
+
+                })
+
+            }
+
+            vm.expressions = vm.expressions.map(function (item) {
+
+                item.search_index = item.name + ' ' + item.func;
+
+                return item;
+
+            });*/
+
+            vm.expressions = helpExpressionsService.filterExpressions(vm.expressions, vm.data);
+
+            console.log('expressions', vm.expressions);
+
+            vm.selectedHelpItem = vm.expressions[0];
+
+        }
+
+        /*var getFunctionsGroups = new Promise(function (resolve, reject) {
+
+                helpExpressionsService.getFunctionsGroups().then(function (data) {
 
                     vm.groups = data;
 
@@ -820,56 +896,98 @@
 
                 });
 
-            });
+            });*/
 
-        var init = function () {
-            var promises = [getFunctionItems, getFunctionsGroups];
+        var getFunctionsGroups = function () {
 
-            Promise.all(promises).then(function () {
+            vm.groups = helpExpressionsService.getFunctionsGroups();
 
-                $scope.$apply();
+            vm.readyStatus.groups = true;
 
-                var resizerElem = document.querySelector('.exprEditorColsResizer');
-                var leftColToResize = document.querySelector('.exprEditorExprsCol');
-                var rightColToResize = document.querySelector('.exprEditorDescriptionCol');
+            vm.selectedHelpGroup = vm.groups[0];
 
-                resizerElem.addEventListener('mousedown', function (event) {
+            if (vm.data && vm.data.groups) {
 
-                    event.preventDefault();
-                    event.stopPropagation();
+                vm.groups.shift();
 
-                    var mouseDownLeft = event.clientX;
-                    var cursorDistance;
-                    var newLeftColWidth;
-                    var newRightColWidth;
+                var result = [];
 
-                    var leftColWidth = leftColToResize.clientWidth;
-                    var rightColWidth = rightColToResize.clientWidth;
+                vm.data.groups.forEach(function (group) {
 
-                    var resizeColsOnMousemove = function (event) {
-
-                        var eventClientX = event.clientX;
-                        cursorDistance = eventClientX - mouseDownLeft;
-
-                        newLeftColWidth = leftColWidth + cursorDistance;
-                        newRightColWidth = rightColWidth - cursorDistance;
-
-                        if (newLeftColWidth > 150 && newRightColWidth > 150) {
-                            leftColToResize.style.width = newLeftColWidth + 'px';
-                            rightColToResize.style.width = newRightColWidth + 'px';
-                        }
-
-                    };
-
-                    window.addEventListener('mousemove', resizeColsOnMousemove);
-
-                    window.addEventListener('mouseup', function () {
-                        window.removeEventListener('mousemove', resizeColsOnMousemove);
-                    }, {once: true});
+                    if (group) {
+                        result = result.concat(group)
+                    }
 
                 });
 
-            });
+                result = result.concat(vm.groups);
+
+                result.unshift({
+                    "name": "All",
+                    "key": "all"
+                });
+
+                vm.groups = result;
+
+            }
+
+        }
+
+
+        var init = function () {
+            //var promises = [getFunctionItems, getFunctionsGroups];
+            getFunctionItems();
+            getFunctionsGroups();
+
+            //Promise.all(promises).then(function () {
+
+                //$scope.$apply();
+
+                setTimeout(function () {
+
+                    var resizerElem = document.querySelector('.exprEditorColsResizer');
+                    var leftColToResize = document.querySelector('.exprEditorExprsCol');
+                    var rightColToResize = document.querySelector('.exprEditorDescriptionCol');
+
+                    resizerElem.addEventListener('mousedown', function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        var mouseDownLeft = event.clientX;
+                        var cursorDistance;
+                        var newLeftColWidth;
+                        var newRightColWidth;
+
+                        var leftColWidth = leftColToResize.clientWidth;
+                        var rightColWidth = rightColToResize.clientWidth;
+
+                        var resizeColsOnMousemove = function (event) {
+
+                            var eventClientX = event.clientX;
+                            cursorDistance = eventClientX - mouseDownLeft;
+
+                            newLeftColWidth = leftColWidth + cursorDistance;
+                            newRightColWidth = rightColWidth - cursorDistance;
+
+                            if (newLeftColWidth > 150 && newRightColWidth > 150) {
+                                leftColToResize.style.width = newLeftColWidth + 'px';
+                                rightColToResize.style.width = newRightColWidth + 'px';
+                            }
+
+                        };
+
+                        window.addEventListener('mousemove', resizeColsOnMousemove);
+
+                        window.addEventListener('mouseup', function () {
+                            window.removeEventListener('mousemove', resizeColsOnMousemove);
+                        }, {once: true});
+
+                    });
+
+                }, 50);
+
+            //});
         };
 
         init();

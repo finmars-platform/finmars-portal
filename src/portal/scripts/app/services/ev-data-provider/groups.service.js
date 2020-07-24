@@ -7,6 +7,7 @@
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
     var baseUrl = baseUrlService.resolve();
+    var xhrService = require('../../../../../core/services/xhrService');
 
     // DEPRECATED
     var getList = function (entityType, options) {
@@ -38,7 +39,7 @@
 
         var entityUrl = entityUrlService.resolve(entityType);
 
-        return window.fetch(baseUrl + entityUrl + '-ev-group/filtered/',
+        return xhrService.fetch(baseUrl + entityUrl + '-ev-group/filtered/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -48,9 +49,7 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(options)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
 
 
     };
