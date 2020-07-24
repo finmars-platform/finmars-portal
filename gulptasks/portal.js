@@ -32,9 +32,7 @@
     var forumTasks = require('./forum.js');
     var profileTasks = require('./profile.js');
 
-    var credentials = require('../config/credentials');
-
-    var PROJECT_ENV = process.env.PROJECT_ENV || 'development';
+    var PROJECT_ENV = process.env.PROJECT_ENV || 'local';
     var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8000';
 
     var appName = 'portal';
@@ -118,7 +116,8 @@
     gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
 
         console.log('PROJECT_ENV: ' + PROJECT_ENV);
-        console.log("credentials", credentials[PROJECT_ENV]);
+
+        // console.log('API_HOST: ' + API_HOST);
 
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
@@ -141,12 +140,9 @@
             .pipe(source('bundled.js'))
             .pipe(buffer())
             .pipe(preprocess())
-            //.pipe(gulpif(PROJECT_ENV === 'local', replace(/__API_HOST__/g, API_HOST)))
-            .pipe(gulpif(PROJECT_ENV !== 'production', replace(/__API_HOST__/g, API_HOST)))
+            .pipe(gulpif(PROJECT_ENV === 'local', replace(/__API_HOST__/g, API_HOST)))
             .pipe(replace(/__BUILD_DATE__/g, build_date))
             .pipe(replace(/__PROJECT_ENV__/g, PROJECT_ENV))
-            .pipe(replace(/__LOGIN__/g, credentials[PROJECT_ENV].login))
-            .pipe(replace(/__PASS__/g, credentials[PROJECT_ENV].pass))
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
             .pipe(gulpif(PROJECT_ENV === 'production', stripDebug()))
             // .pipe(uglify()) // if you need to debug minified build locally
@@ -168,7 +164,6 @@
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
         console.log('PROJECT_ENV: ' + PROJECT_ENV);
-        console.log("credentials", credentials[PROJECT_ENV]);
 
         var d = new Date();
         var date = left_pad(d.getDate());
@@ -189,12 +184,9 @@
             .pipe(source('bundled.js'))
             .pipe(buffer())
             .pipe(preprocess())
-            //.pipe(replace(/__API_HOST__/g, API_HOST))
-            .pipe(gulpif(PROJECT_ENV !== 'production', replace(/__API_HOST__/g, API_HOST)))
+            .pipe(gulpif(PROJECT_ENV === 'local', replace(/__API_HOST__/g, API_HOST)))
             .pipe(replace(/__BUILD_DATE__/g, build_date))
             .pipe(replace(/__PROJECT_ENV__/g, PROJECT_ENV))
-            .pipe(replace(/__LOGIN__/g, credentials[PROJECT_ENV].login))
-            .pipe(replace(/__PASS__/g, credentials[PROJECT_ENV].pass))
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
             .pipe(rename({basename: 'main', suffix: '.min'}))
             .on('error', function (error) {
