@@ -141,7 +141,7 @@
                 targetEvent: $event
             }).then(function (value) {
 
-                vm.getMasterUsersList();
+                $state.go('app.profile', {}, {reload: 'app'})
 
             })
 

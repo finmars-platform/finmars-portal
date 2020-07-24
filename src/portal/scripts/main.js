@@ -34,97 +34,16 @@ app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
     };
 }]);
 
-var metaService = require('./app/services/metaService');
-var usersService = require('./app/services/usersService');
-
-function enableAccessHandler($transitions) {
-
-    usersService.getMyCurrentMember().then(function (data) {
-
-        var member = data;
-
-        $transitions.onStart({}, function (transition) {
-
-            if (member.is_admin) {
-                return true
-            }
-
-            console.log('transition.to().name', transition.to().name);
-
-            if (transition.to().name === 'app.settings.general.init-configuration') {
-                return false;
-            }
-
-            if (transition.to().name === 'app.settings.init-configuration') {
-                return false;
-            }
-
-            if (transition.to().name === 'app.settings.ecosystem-default-settings') {
-                return false;
-            }
-
-            if (transition.to().name === 'app.settings.data-providers') {
-                return false;
-            }
-
-            if (transition.to().name === 'app.settings.users-groups') {
-                return false;
-            }
-
-            if (transition.to().name === 'app.processes') {
-                return false;
-            }
-
-            return true;
-        })
-
-    })
-
-}
-
 app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transitions, $state) {
 
     console.log('Project environment: ' + '__PROJECT_ENV__');
     console.log('Project build date: ' + '__BUILD_DATE__');
 
-    document.title = metaService.getCurrentLocation($state);
+    var developerConsoleService = require('./app/services/developerConsoleService');
 
-    // if ('__PROJECT_ENV__' === 'development') {
+    window.developerConsoleService = developerConsoleService;
 
-    window.addEventListener('error', function (e) {
-        toastr.error(e.error);
-    });
-
-    // }
-
-    enableAccessHandler($transitions); // TODO Run after successful auth
-
-    $transitions.onSuccess({}, function (trans) {
-
-        var count_cached_requests = 0;
-
-        if (window.cached_requests) {
-            count_cached_requests = Object.keys(window.cached_requests).length;
-        }
-
-        window.cached_requests = {};
-        console.log('Clear Cached Requests. Total: ', count_cached_requests);
-
-        var location = metaService.getCurrentLocation($state);
-
-        var title = 'Finmars';
-
-        if (location !== '') {
-            title = title + ' - ' + location;
-        }
-
-        document.title = title;
-
-        setTimeout(function () {
-            window.dispatchEvent(new Event('resize'));
-        }, 1000);
-
-    });
+    developerConsoleService.init();
 
 }]);
 
