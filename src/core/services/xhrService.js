@@ -13,8 +13,26 @@
     var minute = 60 * 1000;
 
     var makeRequest = function (url, params) {
+
+        var requestId;
+
+        if ( window.developerConsoleService) {
+            requestId = window.developerConsoleService.pushRequest({
+                url: url,
+                params: params
+            })
+        }
+
         return window
             .fetch(url, params)
+            .then(function (data) {
+
+                if (window.developerConsoleService) {
+                    window.developerConsoleService.resolveRequest(requestId, data.clone())
+                }
+
+                return data
+            })
             .then(errorService.handleXhrErrors)
             .then(function (data) {
 
@@ -34,7 +52,17 @@
 
                 return data
             })
-            .catch(errorService.notifyError)
+            .catch(function (reason) {
+
+
+                if (window.developerConsoleService) {
+                    window.developerConsoleService.rejectRequest(requestId, reason)
+                }
+
+
+                errorService.notifyError(reason)
+
+            })
 
     };
 
