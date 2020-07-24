@@ -13,6 +13,8 @@
         // console.log('total_pages', total_pages);
         // console.log('page', page);
 
+        console.log('obj', obj);
+
         var classList = ['g-row'];
 
         var classes = classList.join(' ');
@@ -27,6 +29,10 @@
 
             result = result + '<button class="control-button load-more" data-type="control" data-ev-control-action="load-more" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" >Load more</button>';
             result = result + '<button class="control-button load-all" data-type="control" data-ev-control-action="load-all" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" > Load all</button>';
+
+            if (obj.___errorMessage ) {
+                result = result + '<div class="control-error-message">' + obj.___errorMessage + '</div>'
+            }
 
         } else {
 
