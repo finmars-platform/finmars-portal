@@ -74,12 +74,12 @@
         vm.hasEditPermission = false;
         vm.canManagePermissions = false;
 
-        var inputsToDelete = [];
-
         vm.expressionData = {
             groups: [],
             functions: [null]
         };
+
+        var inputsToDelete = [];
 
         vm.loadPermissions = function () {
 
@@ -528,10 +528,11 @@
         var checkFieldExprForDeletedInput = function (actionFieldValue, actionItemKey, actionNotes) {
 
             for (var a = 0; a < inputsToDelete.length; a++) {
+
                 var dInputName = inputsToDelete[a];
 
-                var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
                 var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])';
+                var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
 
                 var dInputRegExpObj = new RegExp(beginningOfExpr + '|' + middleOfExpr, 'g');
 
@@ -547,11 +548,12 @@
                     return actionFieldLocation;
 
                 }
+
             }
 
         };
 
-        var checkActionsForEmptyFields = function (actions) {
+        var validateActionsFields = function (actions) {
 
             var result = [];
 
@@ -749,7 +751,7 @@
 
                 var entityToSave = vm.updateEntityBeforeSave(vm.entity);
 
-                var actionsErrors = checkActionsForEmptyFields(entityToSave.actions);
+                var actionsErrors = validateActionsFields(entityToSave.actions);
                 var entityErrors = checkEntityForEmptyFields(entityToSave);
                 //var inputsErrors = checkInputsForEmptyFields(entityToSave.inputs);
 

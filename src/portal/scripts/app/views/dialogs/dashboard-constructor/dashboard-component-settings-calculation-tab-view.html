@@ -146,7 +146,7 @@
 
             <md-input-container class="dashboard-constructor-field1">
                 <label for="">Accounts</label>
-                <md-select data-ng-model="vm.item.settings.linked_components.report_settings.portfolios">
+                <md-select data-ng-model="vm.item.settings.linked_components.report_settings.accounts">
                     <md-option
                             data-ng-repeat="componentType in vm.accountsComponentTypes | orderBy:'-name' track by componentType.id "
                             ng-value="componentType.id">{{componentType.name}}
