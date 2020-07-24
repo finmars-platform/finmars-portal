@@ -153,14 +153,29 @@
 
                 var haveAccess = false;
 
-                if (vm.attribute.granted_permissions.indexOf("manage_" + "generic" + 'attributetype') !== -1) {
+                if (vm.attribute.granted_permissions && vm.attribute.granted_permissions.indexOf("manage_" + "generic" + 'attributetype') !== -1) {
+
                     haveAccess = true;
+
                 }
 
                 return haveAccess;
             } else {
                 return true;
             }
+        };
+
+        vm.onAttrNameChange = function () {
+
+            if (!vm.attribute.user_code && vm.attribute.name ) {
+
+                var attrName = vm.attribute.name;
+                attrName = attrName.replace(/[^0-9a-zA-Z_]/g, '_');
+
+                vm.attribute.user_code = attrName;
+
+            }
+
         };
 
         vm.editRestriction = true;

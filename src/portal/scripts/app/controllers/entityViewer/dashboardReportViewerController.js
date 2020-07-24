@@ -1219,7 +1219,7 @@
                                 if (compOutputData !== undefined && compOutputData !== null) {
                                     vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
                                 } else {
-                                    vm.linkedActiveObjects[lastActiveComponentId] = null;
+                                    delete vm.linkedActiveObjects[lastActiveComponentId];
                                 }
 
                                 /*if (lastActiveCompChanged) {
@@ -1260,12 +1260,14 @@
 
                             var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                            if (componentOutput && !componentOutput.recalculatedComponents) {
+                            /*if (componentOutput && !componentOutput.recalculatedComponents) {
                                 componentOutput.recalculatedComponents = [];
                             }
 
                             if (componentOutput && componentOutput.changedLast &&
-                                componentOutput.recalculatedComponents.indexOf(vm.componentData.id) < 0) {
+                                componentOutput.recalculatedComponents.indexOf(vm.componentData.id) < 0) {*/
+
+                            if (componentOutput && componentOutput.changedLast) {
 
                                 var compOutputData = componentOutput.data;
 
@@ -1293,12 +1295,12 @@
                                 if (compOutputData !== undefined && compOutputData !== null) {
                                     vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
                                 } else {
-                                    vm.linkedActiveObjects[lastActiveComponentId] = null;
+                                    delete vm.linkedActiveObjects[lastActiveComponentId];
                                 }
 
-                                if (lastActiveCompChanged) {
+                                /*if (lastActiveCompChanged) {
                                     componentOutput.recalculatedComponents.push(vm.componentData.id);
-                                }
+                                }*/
 
                                 break;
 
