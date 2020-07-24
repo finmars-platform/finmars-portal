@@ -39,6 +39,12 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
     console.log('Project environment: ' + '__PROJECT_ENV__');
     console.log('Project build date: ' + '__BUILD_DATE__');
 
+    var developerConsoleService = require('./app/services/developerConsoleService');
+
+    window.developerConsoleService = developerConsoleService;
+
+    developerConsoleService.init();
+
 }]);
 
 app.factory('pickmeup', ['$window', function ($window) {
