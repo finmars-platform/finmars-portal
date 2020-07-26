@@ -461,18 +461,13 @@
 
         if (isLoadAllButtonPressed) {
 
-            var totalPages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
+            requestParameters.loadAll = true;
 
-            console.log('total pages', totalPages);
-
-            requestParameters.requestedPages = [];
-
-            for (var i = 1; i <= totalPages; i = i + 1) {
-                requestParameters.requestedPages.push(i);
-            }
+            requestParameters.body.page = requestParameters.body.page + 1;
+            requestParameters.pagination.page = requestParameters.pagination.page + 1;
+            requestParameters.requestedPages.push(requestParameters.body.page);
 
             evDataService.setRequestParameters(requestParameters);
-            evDataService.setActiveRequestParametersId(requestParameters.id);
 
         }
 

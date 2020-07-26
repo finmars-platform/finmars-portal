@@ -517,6 +517,52 @@
 
     };
 
+    var deleteDefaultObjects = function (entityViewerDataService, entityViewerEventService, requestParameters, errorMessage) {
+
+        var obj;
+        var event = requestParameters.event;
+
+        if (!event.___id) {
+
+            var rootGroupData = entityViewerDataService.getRootGroupData();
+
+            obj = Object.assign({}, rootGroupData);
+
+        } else {
+            var groupData = entityViewerDataService.getData(event.___id);
+
+            if (groupData) {
+                obj = Object.assign({}, groupData);
+            } else {
+                obj = {
+                    results: []
+                }
+            }
+        }
+
+        obj.results = obj.results.filter(function (item) {
+            return item.___type !== 'control'
+        });
+
+        var controlObj = {
+            ___errorMessage: errorMessage,
+            ___parentId: obj.___id,
+            ___type: 'control',
+            ___level: obj.___level + 1
+        };
+
+        controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+        obj.results = obj.results.filter(function (item) {
+            return item.___type !== 'placeholder_object';
+        });
+
+        obj.results.push(controlObj);
+
+        entityViewerDataService.setData(obj);
+
+    };
+
     var setDefaultGroups = function (entityViewerDataService, entityViewerEventService, requestParameters, page) {
 
         var obj;
@@ -584,6 +630,53 @@
         entityViewerDataService.setData(obj);
 
     };
+
+    var deleteDefaultGroups = function (entityViewerDataService, entityViewerEventService, requestParameters, errorMessage) {
+
+        var obj;
+        var event = requestParameters.event;
+
+        if (!event.___id) {
+
+            var rootGroupData = entityViewerDataService.getRootGroupData();
+
+            obj = Object.assign({}, rootGroupData);
+
+        } else {
+            var groupData = entityViewerDataService.getData(event.___id);
+
+            if (groupData) {
+                obj = Object.assign({}, groupData);
+            } else {
+                obj = {
+                    results: []
+                }
+            }
+        }
+
+        obj.results = obj.results.filter(function (item) {
+            return item.___type !== 'control'
+        });
+
+        var controlObj = {
+            ___errorMessage: errorMessage,
+            ___parentId: obj.___id,
+            ___type: 'control',
+            ___level: obj.___level + 1
+        };
+
+        controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+        obj.results = obj.results.filter(function (item) {
+            return item.___type !== 'placeholder_group';
+        });
+
+        obj.results.push(controlObj);
+
+        entityViewerDataService.setData(obj);
+
+    };
+
 
     var calculatePageFromOffset = function (requestParameters, evDataService) {
 
@@ -723,6 +816,8 @@
 
         setDefaultGroups: setDefaultGroups,
         setDefaultObjects: setDefaultObjects,
+        deleteDefaultObjects: deleteDefaultObjects,
+        deleteDefaultGroups: deleteDefaultGroups,
 
         isGroupSelected: isGroupSelected,
         isSelected: isSelected,
