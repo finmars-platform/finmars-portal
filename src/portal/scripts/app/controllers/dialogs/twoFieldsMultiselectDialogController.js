@@ -36,9 +36,9 @@
             console.log('separateUnselectedItems.items', items);
             console.log('separateUnselectedItems.selectedItems', selectedItems);
 
-            selectedItems.map(function (selItem) {
+            selectedItems.forEach(function (selItem) {
 
-                items.map(function (item, itemIndex) {
+                items.forEach(function (item, itemIndex) {
 
                     if (item.id === selItem) {
 
@@ -78,7 +78,7 @@
 
         }*/
 
-        vm.items = data.items;
+        vm.items = JSON.parse(JSON.stringify(data.items));
 
         if (vm.items && selectedItems) {
             separateUnselectedItems(vm.items, selectedItems);
