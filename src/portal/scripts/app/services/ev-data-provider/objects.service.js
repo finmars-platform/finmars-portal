@@ -7,6 +7,7 @@
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
     var filterService = require('./filter.service');
+    var xhrService = require('../../../../../core/services/xhrService');
 
     var baseUrl = baseUrlService.resolve();
 
@@ -57,11 +58,11 @@
 
     var filter_settings = [
         {
-            "key":"attributes.Asse_Sub_Type",
-            "filter_type":"does_not_contains",
+            "key": "attributes.Asse_Sub_Type",
+            "filter_type": "does_not_contains",
             "exclude_empty_cells": false,
-            "value_type":10,
-            "value":[
+            "value_type": 10,
+            "value": [
                 'Bank notes'
             ]
         },
@@ -88,11 +89,13 @@
 
     var getFilteredList = function (entityType, options) {
 
+        console.log('getFilteredList.options', options);
+
         // options.filter_settings = filter_settings;
 
         var entityUrl = entityUrlService.resolve(entityType);
 
-        return window.fetch(baseUrl + entityUrl + '/filtered/',
+        return xhrService.fetch(baseUrl + entityUrl + '/filtered/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -102,9 +105,7 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(options)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
 
 
     };
