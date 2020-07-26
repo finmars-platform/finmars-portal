@@ -13,11 +13,11 @@
 
         var result = '';
 
-        if (obj.object_permissions) {
+        var hasChange = false;
+        var hasManage = false;
+        var partVisible = false;
 
-            var hasChange = false;
-            var hasManage = false;
-            var partVisible = false;
+        if (obj.object_permissions) {
 
             result = lockIcon; // lock
 
@@ -48,10 +48,10 @@
             } else if (hasChange) {
                 result = '';
 
-            } else if (partVisible) {
+            } /*else if (partVisible) {
                 result = partiallyVisibleIcon;
 
-            }
+            }*/
 
             if (obj.___is_activated && result !== '') { // Be aware of specific mutation
                 classList.push('selected-blue');
@@ -69,6 +69,10 @@
 
         if (obj.is_canceled) {
             result = cancelIcon;
+        }
+
+        if (partVisible) {
+            result = partiallyVisibleIcon;
         }
 
         if (obj.___is_activated) {
