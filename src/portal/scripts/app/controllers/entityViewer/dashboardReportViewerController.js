@@ -1127,7 +1127,7 @@
 
             };
 
-            vm.applyDashboardChanges = function () {
+            /*vm.applyDashboardChanges = function () {
 
                 if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
@@ -1185,12 +1185,12 @@
 
                             var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                            /*if (componentOutput && !componentOutput.recalculatedComponents) {
+                            /!*if (componentOutput && !componentOutput.recalculatedComponents) {
                                 componentOutput.recalculatedComponents = [];
                             }
 
                             if (componentOutput && componentOutput.changedLast &&
-                                componentOutput.recalculatedComponents.indexOf(vm.componentData.id) < 0) {*/
+                                componentOutput.recalculatedComponents.indexOf(vm.componentData.id) < 0) {*!/
                             if (componentOutput && componentOutput.changedLast) {
 
                                 var compOutputData = componentOutput.data;
@@ -1222,9 +1222,9 @@
                                     vm.linkedActiveObjects[lastActiveComponentId] = null;
                                 }
 
-                                /*if (lastActiveCompChanged) {
+                                /!*if (lastActiveCompChanged) {
                                     componentOutput.recalculatedComponents.push(vm.componentData.id);
-                                }*/
+                                }*!/
 
                                 break;
 
@@ -1244,7 +1244,7 @@
 
                 }
 
-            };
+            };*/
 
             var updateActiveObjectUsingDashboardData = function () {
 
@@ -1324,6 +1324,9 @@
 
                 if (vm.componentData.settings.linked_components.hasOwnProperty('report_settings')) {
 
+                    var reportOptionsChanged = false;
+                    var reportOptions = vm.entityViewerDataService.getReportOptions();
+
                     Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
 
                         var componentId = vm.componentData.settings.linked_components.report_settings[property];
@@ -1332,8 +1335,7 @@
 
                         if (componentOutput && componentOutput.data) {
 
-                            var reportOptions = vm.entityViewerDataService.getReportOptions();
-
+                            // var reportOptions = vm.entityViewerDataService.getReportOptions();
                             // console.log('reportOptions', reportOptions);
                             // console.log('componentOutput', componentOutput);
                             //
@@ -1342,7 +1344,7 @@
 
                             if (reportOptions[property] !== componentOutput.data.value) {
 
-                                if (property.indexOf(['portfolios', 'strategies1', 'strategies2', 'strategies3']) &&
+                                if (property.indexOf(['portfolios', 'strategies1', 'strategies2', 'strategies3']) > -1 &&
                                     !Array.isArray(componentOutput.data.value)) {
 
                                     reportOptions[property] = [componentOutput.data.value];
@@ -1351,17 +1353,27 @@
                                     reportOptions[property] = componentOutput.data.value;
                                 }
 
-                                vm.entityViewerDataService.setReportOptions(reportOptions);
+                                reportOptionsChanged = true;
+
+                                /*vm.entityViewerDataService.setReportOptions(reportOptions);
                                 vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
 
                                 vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-                                vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);*/
 
                             }
 
                         }
 
                     })
+
+                    if (reportOptionsChanged) {
+                        vm.entityViewerDataService.setReportOptions(reportOptions);
+                        vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
+
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+                    }
 
                 }
 
@@ -1668,7 +1680,8 @@
                         value_key: vm.componentData.settings.value_key,
                         subtotal_formula_id: vm.componentData.settings.subtotal_formula_id,
                         matrix_view: vm.componentData.settings.matrix_view,
-                        styles: vm.componentData.settings.styles
+                        styles: vm.componentData.settings.styles,
+                        auto_scaling: vm.componentData.settings.auto_scaling
                     };
                 }
 

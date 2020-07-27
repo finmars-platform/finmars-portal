@@ -22,11 +22,11 @@
 
         <div data-ng-if="vm.item.settings.entity_type == 'pl-report'">
 
-            <div class="m-t-16 m-b-16">
+            <div class="m-t-16" style="margin-bottom: 32px;">
 
                 <md-input-container class="dashboard-constructor-field1">
                     <label for="">Date From</label>
-                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
+                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pl_first_date">
                         <md-option
                                 data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
                                 ng-value="componentType.id">{{componentType.name}}
@@ -40,7 +40,7 @@
 
                 <md-input-container class="dashboard-constructor-field1">
                     <label for="">Date To</label>
-                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pl_first_date">
+                    <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
                         <md-option
                                 data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
                                 ng-value="componentType.id">{{componentType.name}}
@@ -54,7 +54,7 @@
 
         <div data-ng-if="vm.item.settings.entity_type == 'transaction-report'">
 
-            <div class="m-t-16 m-b-16">
+            <div class="m-t-16" style="margin-bottom: 32px;">
 
                 <md-input-container class="dashboard-constructor-field1">
                     <label for="">Date From</label>
@@ -227,7 +227,8 @@
 </div>
 
 <md-input-container style="height: 58px">
-    <md-checkbox data-ng-model="vm.item.settings.auto_refresh" aria-label="member permission">Trigger
+    <md-checkbox data-ng-model="vm.item.settings.auto_refresh"
+                 aria-label="component autorefresh on report settings change">Trigger
         Refresh on Value Change
     </md-checkbox>
 </md-input-container>
