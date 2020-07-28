@@ -22,7 +22,9 @@
 
         if (item) {
             vm.item = item;
+
         } else {
+
             vm.item = {
                 type: 'report_viewer_matrix',
                 id: null, // should be generated before create
@@ -39,11 +41,13 @@
                         }
                     },
                     auto_refresh: false,
+                    auto_scaling: false,
                     linked_components: {}
                 },
 
                 user_settings: {}
             }
+
         }
 
         vm.componentsTypes = [];
@@ -91,7 +95,6 @@
 
                     vm.item.settings.number_format = res.data.settings;
 
-                    console.log(res)
                 }
 
             });
@@ -247,9 +250,6 @@
             });*/
 
             dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.id);
-
-
-            console.log('vm', vm);
 
             if (vm.item.id) {
 

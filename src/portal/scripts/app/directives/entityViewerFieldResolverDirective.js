@@ -276,7 +276,6 @@
                 }
 
                 scope.checkForCrudSelects = function () {
-
                     if (['group', 'subgroup'].indexOf(scope.fieldKey) !== -1) {
                         return true;
                     }
@@ -309,6 +308,7 @@
                                 scope.getFieldsGrouped();
 
                                 scope.$apply();
+
                             });
 
                         } else {
