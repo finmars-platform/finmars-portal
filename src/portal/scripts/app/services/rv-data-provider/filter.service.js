@@ -177,14 +177,47 @@
 
     };
 
+    var doesStringContainsSubstrings = function (valueToFilter, filterByString) {
+
+        var filterSubstrings = filterByString.split(' ');
+
+        for (var i = 0; i < filterSubstrings.length; i++) {
+
+            var substring = filterSubstrings[i];
+
+            if (valueToFilter.indexOf(substring) < 0) {
+                return false;
+            }
+
+        }
+
+        return true;
+
+    };
+
     var filterValueFromTable = function (valueToFilter, filterBy, operationType) {
 
         switch (operationType) {
 
             case 'contains':
-                if (valueToFilter.indexOf(filterBy) !== -1) {
+
+                /*if (valueToFilter.indexOf(filterBy) !== -1) {
                     return true;
+                }*/
+
+                if (/^".*"$/.test(filterBy)) { // if string inside of double quotes
+
+                    var formattedFilterBy = filterBy.replace(/^"|"$/g, ''); // removing first and last double quotes
+
+                    if (valueToFilter.indexOf(formattedFilterBy) > -1) {
+                        return true;
+                    }
+
+                } else if (doesStringContainsSubstrings(valueToFilter, filterBy)) {
+                    return true;
+
                 }
+
                 break;
 
             case 'does_not_contains':

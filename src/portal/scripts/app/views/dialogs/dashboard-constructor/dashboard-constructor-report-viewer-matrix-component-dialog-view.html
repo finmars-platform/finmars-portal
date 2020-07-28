@@ -10,6 +10,7 @@
 
     <md-dialog-content>
         <md-tabs>
+
             <md-tab label="Main">
                 <md-content class="p-16">
 
@@ -164,25 +165,6 @@
                             </md-input-container>
                         </div>
 
-                        <div>
-
-                            <h4>Styles</h4>
-
-                            <div>
-
-                                <md-input-container style="width: 200px; height: 68px">
-                                    <label for="">Cell Text Align</label>
-                                    <md-select data-ng-model="vm.item.settings.styles.cell.text_align">
-                                        <md-option value="left">Left</md-option>
-                                        <md-option value="center">Center</md-option>
-                                        <md-option value="right">Right</md-option>
-                                    </md-select>
-                                </md-input-container>
-
-                            </div>
-
-                        </div>
-
                         <!--<md-input-container style="width: 200px;">-->
                         <!--<label for="">Reference Name (Abscissa)</label>-->
                         <!--<input type="text" data-ng-model="vm.item.settings.abscissa">-->
@@ -206,6 +188,38 @@
                         </md-input-container>-->
 
                     </div>
+
+                </md-content>
+            </md-tab>
+
+            <md-tab label="ADVANCE SETTINGS">
+                <md-content class="p-16">
+
+                    <div>
+
+                        <h4>Styles</h4>
+
+                        <div>
+
+                            <md-input-container style="width: 200px; height: 68px">
+                                <label for="">Cell Text Align</label>
+                                <md-select data-ng-model="vm.item.settings.styles.cell.text_align">
+                                    <md-option value="left">Left</md-option>
+                                    <md-option value="center">Center</md-option>
+                                    <md-option value="right">Right</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                        </div>
+
+                    </div>
+
+                    <md-input-container style="height: 58px">
+                        <md-checkbox data-ng-model="vm.item.settings.auto_scaling"
+                                     aria-label="matrix autoscaling">
+                            Scale matrix
+                        </md-checkbox>
+                    </md-input-container>
 
                 </md-content>
             </md-tab>
