@@ -706,6 +706,9 @@
 
                             if (res.status === 'agree') {
 
+                                console.log('res.data', res.data);
+
+                                scope.evDataService.setReconciliationFile(res.data.parsedFile);
                                 scope.evDataService.setReconciliationData(res.data.results);
                                 scope.evDataService.setReconciliationImportConfig(res.data.config);
 
