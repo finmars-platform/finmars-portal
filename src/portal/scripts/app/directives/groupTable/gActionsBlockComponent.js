@@ -503,7 +503,7 @@
                                 break;
                         }
 
-                        if (entityType) {
+                        if (entityType) { // in case of choosing entity viewer layout
 
                             getListLayoutByEntity(entityType).then(function (layoutsList) {
                                 var layouts = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(layoutsList);
@@ -1065,7 +1065,6 @@
                         if (res.status === 'agree') {
 
                             if (scope.isRootEntityViewer) {
-                                console.log("switch layout res", res);
 
                                 if (res.data.layoutUserCode) {
 
