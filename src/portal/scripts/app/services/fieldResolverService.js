@@ -408,15 +408,31 @@
 
     var getFieldsByContentType = function (contentType, options) {
         return new Promise(function (resolve, reject) {
+
             switch (contentType) {
                 case 'instruments.dailypricingmodel':
                     entityFieldsRepository.getDailyPricingModelChoices({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'instruments.dailypricingmodel', data: data});
                     });
                     break;
+                case 'instruments.pricingpolicy':
+                    pricingPolicyRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'instruments.pricingpolicy', data: data});
+                    });
+                    break;
                 case 'instruments.paymentsizedetail':
                     entityFieldsRepository.getPaymentSizeDetailChoices({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'instruments.paymentsizedetail', data: data});
+                    });
+                    break;
+                case 'instruments.accrualcalculationmodel':
+                    accrualCalculationModelRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'instruments.accrualcalculationmodel', data: data});
+                    });
+                    break;
+                case 'instruments.periodicity':
+                    instrumentPeriodicityRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'instruments.periodicity', data: data});
                     });
                     break;
                 case 'instruments.instrument':
@@ -464,6 +480,16 @@
                         resolve({type: 'id', key: 'accounts.accounttype', data: data.results});
                     });
                     break;
+                case 'transactions.eventclass':
+                    metaEventClassRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'transactions.eventclass', data: data.results});
+                    });
+                    break;
+                case 'transactions.notificationclass':
+                    metaNotificationClassRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'transactions.notificationclass', data: data.results});
+                    });
+                    break;
                 case 'strategies.strategy1':
                     strategyRepository.getList(1, {pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'strategies.strategy1', data: data.results});
@@ -480,6 +506,7 @@
                     });
                     break;
             }
+
         });
     };
 

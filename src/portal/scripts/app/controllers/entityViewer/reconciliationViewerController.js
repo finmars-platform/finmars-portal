@@ -63,33 +63,19 @@
 
                 console.log('selectedRows', selectedRows);
 
-                var reconciliationData = vm.entityViewerDataService.getReconciliationData();
 
-                var columns = [];
-
-                if (reconciliationData.length) {
-                    Object.keys(reconciliationData[0]).forEach(function (key) {
-
-                        columns.push(key)
-
-                    })
-                }
                 var fileText = [];
 
-                fileText.push(columns.join(','));
+                vm.parsedFile = vm.entityViewerDataService.getReconciliationFile();
 
-                selectedRows.forEach(function (row) {
+                console.log('vm.parsedFile', vm.parsedFile);
 
-                    var row_result = [];
+                fileText.push(vm.parsedFile[0]); // header;
 
-                    columns.forEach(function (key) {
-                        row_result.push(row[key])
-                    });
-
-                    row_result = row_result.join(',');
-
-                    fileText.push(row_result)
+                selectedRows.forEach(function (item) {
+                    fileText.push(vm.parsedFile[item.___file_index])
                 });
+
 
                 fileText = fileText.join('\n');
 
@@ -102,14 +88,9 @@
                 console.log("vm.reconciliationImportConfig", vm.reconciliationImportConfig);
 
 
-                vm.config = {
-                    scheme: vm.reconciliationImportConfig.scheme,
-                    delimiter: ',',
-                    mode: 1,
-                    missing_data_handler: 'throw_error',
-                    error_handling: 'break',
-                    file: file
-                };
+                vm.config = Object.assign({}, vm.reconciliationImportConfig);
+                vm.config.file = file;
+                delete vm.config.task_id;
 
                 vm.loadSelected(event);
 
@@ -217,9 +198,7 @@
 
                             description = description + '<div> You have successfully imported transactions file </div>';
 
-                            if (data.stats_file_report) {
-                                description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
-                            }
+                            description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
 
                             $mdDialog.show({
                                 controller: 'SuccessDialogController as vm',
@@ -471,11 +450,13 @@
 
                 var reconciliationData = parentEntityViewerDataService.getReconciliationData();
                 var reconciliationImportConfig = parentEntityViewerDataService.getReconciliationImportConfig();
+                var reconciliationFile = parentEntityViewerDataService.getReconciliationFile();
 
                 vm.reconciliationData = JSON.parse(JSON.stringify(reconciliationData));
                 vm.reconciliationImportConfig = JSON.parse(JSON.stringify(reconciliationImportConfig));
 
                 vm.entityViewerDataService.setReconciliationData(reconciliationData);
+                vm.entityViewerDataService.setReconciliationFile(reconciliationFile);
                 vm.entityViewerDataService.setReconciliationImportConfig(reconciliationImportConfig);
 
                 console.log("Get View Vertical panel?", reconciliationData);

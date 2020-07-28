@@ -72,11 +72,13 @@
                     var columnsCount = scope.columns.length + 2; // add left and right fixed columns
 
                     var minWidth = 100;
+
+                    if (scope.matrixSettings.auto_scaling) {
+                        minWidth = 2;
+                    }
                     //var minHeight = 20;
 
                     var matrixHolderMinHeight = elem[0].querySelector('.report-viewer-matrix').clientHeight;
-
-                    console.log('matrixHolderMinHeight', matrixHolderMinHeight);
 
                     cellWidth = Math.floor(elemWidth / columnsCount);
                     //var cellHeight = Math.floor(elemHeight / rowsCount);
@@ -117,8 +119,10 @@
                     var matrixVCAvailableHeight = matrixHolder.clientHeight - cellHeight;
                     // whether matrix has scrolls
                     if (matrixVCAvailableWidth < matrixVCContainerWidth) {
+
                         matrixHolder.classList.add('has-x-scroll');
                         matrixProbableHeight = matrixProbableHeight + 14; // add space for scroll
+
                     } else {
                         matrixHolder.classList.remove('has-x-scroll');
                     }

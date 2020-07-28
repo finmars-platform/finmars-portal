@@ -102,25 +102,64 @@
 
             vm.readyStatus.processing = true;
 
-            var formData = new FormData();
+            new Promise(function (resolve, reject) {
 
-            if (vm.config.task_id) {
-                formData.append('task_id', vm.config.task_id);
-            } else {
 
-                formData.append('file', vm.config.file);
-                formData.append('scheme', vm.config.scheme);
-                formData.append('error_handling', vm.config.error_handling);
-                formData.append('delimiter', vm.config.delimiter);
-                formData.append('missing_data_handler', vm.config.missing_data_handler);
+                var formData = new FormData();
 
-                vm.fileLocal = vm.config.local;
+                if (vm.config.task_id) {
+                    formData.append('task_id', vm.config.task_id);
 
-            }
+                    resolve(formData)
+                } else {
+
+                    formData.append('file', vm.config.file);
+                    formData.append('scheme', vm.config.scheme);
+                    formData.append('error_handling', vm.config.error_handling);
+                    formData.append('delimiter', vm.config.delimiter);
+                    formData.append('missing_data_handler', vm.config.missing_data_handler);
+
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        var text = reader.result;                 // the entire file
+
+                        vm.parsedFile = text.split('\n')
+
+                        console.log("File readed", vm.parsedFile);
+
+                        resolve(formData);
+
+                    };
+
+                    reader.readAsText(vm.config.file, 'UTF-8');
+
+                    vm.loaderData = {
+                        current: vm.config.processed_rows,
+                        total: vm.config.total_rows,
+                        text: 'Parse Progress:',
+                        status: vm.config.task_status
+                    };
+
+                    vm.fileLocal = vm.config.local;
+
+                }
+
+            }).then(function (formData) {
+
 
             reconciliationProcessFileService.process(formData).then(function (data) {
 
                 vm.config = data;
+
+                vm.loaderData = {
+                    current: vm.config.processed_rows,
+                    total: vm.config.total_rows,
+                    text: 'Parse Progress:',
+                    status: vm.config.task_status
+                };
+
+                $scope.$apply();
 
                 if (vm.config.task_status === 'SUCCESS') {
 
@@ -129,7 +168,8 @@
                     $mdDialog.hide({
                         status: 'agree', data: {
                             config: vm.config,
-                            results: data.results
+                            results: data.results,
+                            parsedFile: vm.parsedFile
                         }
                     });
 
@@ -143,6 +183,7 @@
 
             })
 
+            })
         };
 
         vm.cancel = function () {
