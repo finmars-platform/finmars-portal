@@ -254,6 +254,7 @@
                 };
 
                 scope.getEntityNameByState = function () {
+
                     switch ($state.current.name) {
                         case 'app.data.portfolio':
                             return "PORTFOLIO";
@@ -346,7 +347,6 @@
                             }
 
                         })
-
 
                     } else {
 
@@ -1469,9 +1469,13 @@
 
                                     scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 
+                                    toastNotificationService.success("New layout with name '" + listLayout.name + "' created");
+
                                     scope.isNewLayout = false;
                                     scope.$apply();
 
+                                }).catch(function (error) {
+                                    toastNotificationService.error("Error occurred");
                                 });
 
                             };
@@ -1492,8 +1496,12 @@
 
                                             saveAsLayout();
 
+                                        }).catch(function (error) {
+                                            toastNotificationService.error("Error occurred");
                                         });
 
+                                    }).catch(function (error) {
+                                        toastNotificationService.error("Error occurred");
                                     });
 
                                 } else {
