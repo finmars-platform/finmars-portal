@@ -285,10 +285,11 @@
 
                 <div class="dashboard-constructor-sidebar p-8">
                     <md-menu>
-                        <md-button class="md-raised md-primary"
+                        <md-button class="md-raised md-primary m-l-4"
                                    ng-click="$mdOpenMenu($event)">
                             Add New Component
                         </md-button>
+
                         <md-menu-content width="3">
                             <md-menu-item>
                                 <md-button ng-click="vm.createComponent('control', $event)" class="g-settings-option-btn">
@@ -350,34 +351,36 @@
                         </md-menu-content>
                     </md-menu>
 
-                    <p>
-                        <b>Drag fields from here</b>
+                    <p class="dashboard-constructor-comp-cards-top-text">
+                        Drag fields from here
                     </p>
 
-                    <div class="dashboard-constructor-draggable-card"
-                         data-ng-repeat="item in vm.availableComponentsTypes track by item.id" style="padding: 4px">
+                    <div class="dashboard-constructor-comp-cards-container">
+                        <div class="dashboard-constructor-draggable-card"
+                             data-ng-repeat="item in vm.availableComponentsTypes track by item.id" style="padding: 4px">
 
-                        <md-card class=" dashboard-field-card" class="p-l-16" data-index="{{$index}}"
-                                 data-component-id="{{item.id}}" layout="row">
+                            <md-card class=" dashboard-field-card" class="p-l-16" data-index="{{$index}}"
+                                     data-component-id="{{item.id}}" layout="row">
 
-                            <p class="name-holder"><b data-ng-bind="item.name"></b>: <span
-                                    data-ng-bind="vm.getVerboseType(item)"></span></p>
+                                <p class="name-holder"><b data-ng-bind="item.name"></b>: <span
+                                        data-ng-bind="vm.getVerboseType(item)"></span></p>
 
-                            <div class="dashboard-field-card-options">
-                                <md-button class=""
-                                           aria-label="delete attribute"
-                                           data-ng-click="vm.deleteComponentType($event, item)">
-                                    <ng-md-icon icon="delete"></ng-md-icon>
-                                </md-button>
-                                <md-button class=""
-                                           aria-label="edit attribute"
-                                           data-ng-click="vm.editComponentType($event, item)">
-                                    <ng-md-icon icon="mode_edit"></ng-md-icon>
-                                </md-button>
-                            </div>
+                                <div class="dashboard-field-card-options">
+                                    <md-button class=""
+                                               aria-label="delete attribute"
+                                               data-ng-click="vm.deleteComponentType($event, item)">
+                                        <ng-md-icon icon="delete"></ng-md-icon>
+                                    </md-button>
+                                    <md-button class=""
+                                               aria-label="edit attribute"
+                                               data-ng-click="vm.editComponentType($event, item)">
+                                        <ng-md-icon icon="mode_edit"></ng-md-icon>
+                                    </md-button>
+                                </div>
 
-                        </md-card>
+                            </md-card>
 
+                        </div>
                     </div>
 
                 </div>
