@@ -14,11 +14,18 @@
             controller: 'ShellController as vm'
         });
 
+        $stateProvider.state('app.healthcheck', {
+            url: '/healthcheck',
+            templateUrl: 'views/pages/healthcheck-view.html',
+            controller: 'HealthcheckController as vm'
+        });
+
         $stateProvider.state('app.attributesManager', {
             url: '/attributes/:entityType?from=?instanceId=',
             templateUrl: 'views/attributes-manager-view.html',
             controller: 'AttributesManagerController as vm'
         });
+
 
         $stateProvider.state('app.dashboard', {
             url: '/dashboard?layoutUserCode',

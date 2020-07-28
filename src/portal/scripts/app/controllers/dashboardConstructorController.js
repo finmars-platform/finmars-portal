@@ -1084,7 +1084,9 @@
                     });*/
                     toastNotificationService.success('Dashboard layout ' + layout.name + ' was successfully saved');
 
-                })
+                }).catch(function (error) {
+                    toastNotificationService.error('Error occurred while saving layout ' + layout.name);
+                });
 
             } else {
 
@@ -1118,8 +1120,12 @@
 
                         vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
-                    })
+                    }).catch(function (error) {
+                        toastNotificationService.error('Error occurred while saving layout ' + layout.name);
+                    });
 
+                }).catch(function (error) {
+                    toastNotificationService.error('Error occurred while saving layout ' + layout.name);
                 });
 
             }

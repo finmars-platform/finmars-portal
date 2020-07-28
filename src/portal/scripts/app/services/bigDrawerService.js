@@ -40,6 +40,7 @@
                 var viewportWidth = window.innerWidth;
                 var sidenavWidth = 330;
                 var drawerWidth = (viewportWidth - sidenavWidth) * 0.9;
+                var drawerHeight = window.innerHeight;
 
                 backdropElem = document.createElement('div');
                 backdropElem.classList.add('big-drawer-backdrop');
@@ -54,6 +55,7 @@
                 drawerContainer = document.createElement('div');
                 drawerContainer.classList.add('big-drawer-container');
                 drawerContainer.style.width = drawerWidth + 'px';
+                drawerContainer.style.height = drawerHeight + 'px';
                 drawerWrap.appendChild(drawerContainer);
 
                 $(drawerContainer).html(tpl);
@@ -66,6 +68,7 @@
 
                 $compile($(drawerElem).contents())(templateScope);
 
+                $(_this.rootElement).addClass('overflow-hidden');
                 //$(_this.rootElement).append($(elem).contents());
                 $(_this.rootElement).append($(backdropElem), $(drawerElem));
 
@@ -97,6 +100,8 @@
 
                 drawerElem.remove();
                 backdropElem.remove();
+
+                $(_this.rootElement).removeClass('overflow-hidden');
 
             }, 500);
 
