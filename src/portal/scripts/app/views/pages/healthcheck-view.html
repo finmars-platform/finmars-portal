@@ -1,0 +1,55 @@
+<div class="healthcheck-page p-24">
+
+    <div layout="row">
+        <h1>Healthcheck</h1>
+    </div>
+
+    <div data-ng-if="vm.readyStatus.data">
+
+        <div layout-align="center center">
+
+            <md-card data-ng-if="vm.dataBaseConnectionInfo" class="p-8">
+
+                <h3>Database Connection</h3>
+
+                <div>
+                    Connection time: {{vm.dataBaseConnectionInfo.observedValue}} {{vm.dataBaseConnectionInfo.observedUnit}}
+                </div>
+
+
+            </md-card>
+
+            <md-card data-ng-if="vm.updateInfo" class="p-8">
+
+                <h3>Uptime</h3>
+
+                <div>
+                    Hours: {{vm.updateInfo.hours}}
+                </div>
+
+
+            </md-card>
+
+            <md-card data-ng-if="vm.memoryInfo" class="p-8">
+
+                <h3>Memory</h3>
+
+                <div>
+                    Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}
+                </div>
+
+
+            </md-card>
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+
+</div>

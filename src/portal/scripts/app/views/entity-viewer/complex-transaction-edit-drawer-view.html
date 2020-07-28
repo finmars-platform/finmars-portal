@@ -4,6 +4,7 @@
     </div>
 
     <div class="big-drawer-main">
+
         <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
             <div class="m-8 f-s-18 p-8"
@@ -129,9 +130,10 @@
                 <progress-circular diameter="100"></progress-circular>
             </div>
         </div>
+
     </div>
 
-    <div class="big-drawer-actions flex-row flex-content-space-between">
+    <div class="big-drawer-footer big-drawer-actions flex-row flex-content-space-between">
         <div layout="row">
             <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary">
                 Edit Form

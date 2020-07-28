@@ -112,7 +112,7 @@
                     if (vm.isMultiselector) {
                         selectedData.push(item);
                     } else {
-                        selectedData = vm.items[i];
+                        selectedData = item;
                     }
 
                 }
@@ -130,6 +130,7 @@
         };
 
         var init = function () {
+
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.eItemsSelectorElemToResize');
                 $scope.$apply();
@@ -155,6 +156,7 @@
             setTimeout(function () {
                 setCollapsingContainersHeight();
             }, 100);
+
         };
 
         init();
