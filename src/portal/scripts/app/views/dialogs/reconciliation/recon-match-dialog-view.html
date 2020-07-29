@@ -341,6 +341,15 @@
             </div>
 
         </div>
+
+        <div data-ng-if="vm.processing" class="recon-processing-overlay">
+
+            <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+
+        </div>
+
     </md-dialog-content>
     <md-dialog-actions layout="row">
 
