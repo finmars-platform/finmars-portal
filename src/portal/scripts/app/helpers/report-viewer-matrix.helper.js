@@ -8,11 +8,24 @@
 
         itemList.forEach(function (item) {
 
+            /*var itemKey = item[key];
+
+            if (!item[key]) {
+                itemKey = '-';
+            }*/
             if (result.indexOf(item[key]) === -1) {
                 if (item[key]) {
                     result.push(item[key])
                 }
             }
+
+            /*if (result.indexOf(itemKey) === -1) {
+                /!*if (item[key]) {
+                    result.push(item[key])
+                }*!/
+                result.push(itemKey);
+
+            }*/
 
         });
 

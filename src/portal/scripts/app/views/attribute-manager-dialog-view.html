@@ -16,28 +16,28 @@
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
                     <md-tab>
                         <md-tab-label>General</md-tab-label>
+
                         <md-tab-body>
                             <div class="a-m-tab-content">
                                 <md-input-container class="md-block" flex-gt-sm>
                                     <label>Attribute name</label>
-                                    <input data-ng-model="vm.attribute.name">
+                                    <input data-ng-model="vm.attribute.name"
+                                           data-ng-change="vm.onAttrNameChange()"
+                                           data-ng-model-options="{debounce: 1000}">
                                 </md-input-container>
 
                                 <md-input-container class="md-block" flex-gt-sm>
                                     <label>Reference Name</label>
                                     <input data-ng-model="vm.attribute.user_code" data-ng-keyup="vm.validateUserCode()">
-
                                 </md-input-container>
+                                <div class="color-danger m-l-16" data-ng-if="vm.userCodeError">Only alphabet, numbers
+                                    and underscores allowed
+                                </div>
 
                                 <md-input-container class="md-block" flex-gt-sm>
                                     <label>Tooltip</label>
                                     <input data-ng-model="vm.attribute.tooltip">
-
                                 </md-input-container>
-
-                                <div class="color-danger m-l-16" data-ng-if="vm.userCodeError">Only alphabet, numbers
-                                    and underscores allowed
-                                </div>
 
                                 <md-input-container class="md-block" flex-gt-sm>
                                     <md-checkbox class="md-secondary"

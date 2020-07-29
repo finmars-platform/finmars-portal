@@ -160,6 +160,19 @@
 
         vm.loadPermissions();
 
+        vm.onAttrNameChange = function () {
+
+            if (!vm.attribute.user_code && vm.attribute.name ) {
+
+                var attrName = vm.attribute.name;
+                attrName = attrName.replace(/[^0-9a-zA-Z_]/, '_');
+
+                vm.attribute.user_code = attrName;
+
+            }
+
+        };
+
         // vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
         console.log("Value type is ", vm.valueTypes);
 
