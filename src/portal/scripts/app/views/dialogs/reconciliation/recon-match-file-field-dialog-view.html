@@ -134,7 +134,7 @@
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <div>
-            <md-button ng-click="vm.clear($event)">
+            <md-button ng-click="vm.clear($event)" ng-class="{'disabled-btn': !vm.linkedComplexTransactionField}">
                 Clear
             </md-button>
         </div>

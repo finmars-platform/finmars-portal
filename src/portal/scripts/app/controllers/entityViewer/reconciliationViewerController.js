@@ -22,6 +22,7 @@
         var baseUrl = baseUrlService.resolve();
 
 
+
         module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
             var vm = this;
@@ -266,6 +267,7 @@
                     vm.bookSelected();
                 });
 
+
                 vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
                     var activeObject = vm.entityViewerDataService.getActiveObject();
@@ -461,25 +463,48 @@
 
                 console.log("Get View Vertical panel?", reconciliationData);
 
-                var columns = [];
+                var config = vm.entityViewerDataService.getReconciliationImportConfig();
 
-                if (reconciliationData.length) {
+                var scheme = config.scheme_object;
 
-                    Object.keys(reconciliationData[0]).forEach(function (key) {
 
-                        var col = {};
-                        col.key = key;
-                        col.name = key;
-                        col.value_type = 10;
 
-                        columns.push(col)
+                if (scheme.recon_layout) {
 
-                    })
+                    var columns  = scheme.recon_layout.data.columns;
+                    var groups  = scheme.recon_layout.data.grouping;
+                    var filters  = scheme.recon_layout.data.filters;
+
+                    var attributes = JSON.parse(JSON.stringify(columns)); // prevent creation of reference to columns object
+                    vm.attributeDataService.setReconciliationAttributes(attributes);
+                    vm.entityViewerDataService.setColumns(columns);
+                    vm.entityViewerDataService.setGroups(groups);
+                    vm.entityViewerDataService.setFilters(filters);
+
+
+                } else {
+
+                    var columns = [];
+
+                    if (reconciliationData.length) {
+
+                        Object.keys(reconciliationData[0]).forEach(function (key) {
+
+                            var col = {};
+                            col.key = key;
+                            col.name = key;
+                            col.value_type = 10;
+
+                            columns.push(col)
+
+                        })
+                    }
+
+                    var attributes = JSON.parse(JSON.stringify(columns)); // prevent creation of reference to columns object
+                    vm.attributeDataService.setReconciliationAttributes(attributes);
+                    vm.entityViewerDataService.setColumns(columns);
+
                 }
-
-                var attributes = JSON.parse(JSON.stringify(columns)); // prevent creation of reference to columns object
-                vm.attributeDataService.setReconciliationAttributes(attributes);
-                vm.entityViewerDataService.setColumns(columns);
 
                 vm.setEventListeners();
 

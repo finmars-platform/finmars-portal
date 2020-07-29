@@ -28,6 +28,8 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+    var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
+
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
@@ -1697,6 +1699,36 @@
                     console.log('reconBookSelected');
 
                     scope.evEventService.dispatchEvent(evEvents.RECON_BOOK_SELECTED)
+
+                };
+
+                scope.saveReconLayout = function($event) {
+
+                    scope.savingReconLayout = true;
+
+                    var config = scope.evDataService.getReconciliationImportConfig();
+
+                    var scheme = config.scheme_object;
+
+                    scheme.recon_layout = {
+                        data: {
+                            grouping: scope.evDataService.getGroups(),
+                            columns: scope.evDataService.getColumns(),
+                            filters: scope.evDataService.getFilters()
+                        }
+                    };
+
+                    console.log('scheme', scheme);
+
+                    transactionImportSchemeService.update(scheme.id, scheme).then(function (data) {
+
+                        scope.savingReconLayout = false;
+                        scope.$apply();
+
+                        toastNotificationService.success('Layout was successfully saved');
+
+                    })
+
 
                 };
 
