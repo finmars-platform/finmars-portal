@@ -1195,6 +1195,14 @@
         function getReconciliationData() {
             return data.reconciliation
         }
+        
+        function setReconciliationFile(parsedFile){
+            data.reconciliationParsedFile = parsedFile
+        }
+        
+        function getReconciliationFile() {
+            return data.reconciliationParsedFile;
+        }
 
         function setReconciliationDataService(service) {
             data.reconciliationDataService = service
@@ -1465,6 +1473,9 @@
 
             setReconciliationImportConfig: setReconciliationImportConfig,
             getReconciliationImportConfig: getReconciliationImportConfig,
+
+            setReconciliationFile: setReconciliationFile,
+            getReconciliationFile: getReconciliationFile,
 
             setParentDataService: setParentDataService,
             getParentDataService: getParentDataService,

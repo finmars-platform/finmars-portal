@@ -393,6 +393,8 @@
 
         }
 
+        return false;
+
     };
 
     /*var checkForNegNumsRestriction = function (key, value, entityAttrs, attrsTypes, userInputs, layoutAttrs) {
@@ -587,8 +589,20 @@
                     }
 
                 }*/
-                if ((!value && value !== 0) ||
+
+                /*if ((!value && value !== 0) ||
                     entityAttrs[i].value_type === 40) {
+
+                    errorObj = {};
+                    errorObj.message = getErrorMessageByValueType(value, entityAttrs[i].value_type);
+
+                }*/
+
+                if (entityAttrs[i].value_type === 40) {
+
+                    errorObj = validateDateField(value, entityAttrs[i]);
+
+                } else if (!value && value !== 0) {
 
                     errorObj = {};
                     errorObj.message = getErrorMessageByValueType(value, entityAttrs[i].value_type);

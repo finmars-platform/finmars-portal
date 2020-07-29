@@ -118,7 +118,9 @@
                     if (compsKeys.length > 0) {
 
                         compsKeys.forEach(function (compKey) {
-                            componentsOutputs[compKey].changedLast = false;
+                            if (componentsOutputs[compKey]) {
+                                componentsOutputs[compKey].changedLast = false;
+                            }
                         });
 
                         scope.dashboardDataService.setAllComponentsOutputs(componentsOutputs);

@@ -242,12 +242,16 @@
                                 switch (scope.eventSignal.key) {
                                     case 'mark_not_valid_fields':
 
-                                        if (scope.smallOptions && scope.smallOptions.notNull) {
+                                        /*if (scope.smallOptions && scope.smallOptions.notNull) {
 
                                             if (!scope.model && !scope.dateValue) {
                                                 scope.error = 'Field should not be null';
                                             }
 
+                                        }*/
+
+                                        if (!scope.model && !scope.dateValue) {
+                                            scope.error = 'Field should not be null';
                                         }
 
                                         break;

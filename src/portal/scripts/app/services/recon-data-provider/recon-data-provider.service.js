@@ -155,7 +155,7 @@
             var event = requestParameters.event;
 
             var page = parseInt(options.page.toString(), 10) - 1;
-            var step = 40;
+            var step = 1000; // TODO fix pagination problem in future
             var i;
 
 
@@ -232,6 +232,7 @@
 
                     // item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
+                    item.___file_index = index + 1; // skip head row
                     item.___parentId = obj.___id;
                     item.___type = 'object';
                     item.___index = index;
@@ -270,7 +271,7 @@
 
             var page = new Number(options.page) - 1;
             // var pagination = entityViewerDataService.getPagination();
-            var step = 40;
+            var step = 1000; // TODO fix pagination problem in future
             var i;
 
             groupsService.getList(entityType, options, entityViewerDataService).then(function (data) {
