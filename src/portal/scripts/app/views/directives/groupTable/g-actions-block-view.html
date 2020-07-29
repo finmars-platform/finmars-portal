@@ -311,6 +311,16 @@
                 </div>
 
                 <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                    <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                            ng-class="{'disabled-btn':savingReconLayout }"
+                            ng-click="saveReconLayout($event)">
+
+                        <span data-ng-if="!savingReconLayout">Save Layout</span>
+                        <span data-ng-if="savingReconLayout">Saving</span>
+                    </button>
+                </div>
+
+                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
                     <md-button class="md-raised md-primary full-width" data-ng-click="matchReconciliationLines($event)">Match</md-button>
                 </div>
 
