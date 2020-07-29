@@ -892,16 +892,7 @@
                     var activeLayout = null;
 
                     if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
-
-                        for (var i = 0; i < activeLayoutData.results.length; i++) {
-                            var item = activeLayoutData.results[i];
-
-                            if (item.name === name) {
-                                activeLayout = item;
-                                break;
-                            }
-                        }
-
+                        activeLayout = activeLayoutData.results[0];
                     }
 
                     if (activeLayout) {
