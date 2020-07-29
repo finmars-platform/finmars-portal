@@ -155,7 +155,7 @@
             var event = requestParameters.event;
 
             var page = parseInt(options.page.toString(), 10) - 1;
-            var step = 1000; // TODO fix pagination problem in future
+            var step = 10000; // TODO fix pagination problem in future
             var i;
 
 
@@ -271,7 +271,7 @@
 
             var page = new Number(options.page) - 1;
             // var pagination = entityViewerDataService.getPagination();
-            var step = 1000; // TODO fix pagination problem in future
+            var step = 10000; // TODO fix pagination problem in future
             var i;
 
             groupsService.getList(entityType, options, entityViewerDataService).then(function (data) {

@@ -131,7 +131,7 @@
             item.recon_fields.forEach(function (field) {
 
                 if(field.id === id) {
-                    result = field
+                    result =  JSON.parse(JSON.stringify(field))
                 }
 
             })
