@@ -16,6 +16,8 @@
         var vm = this;
 
         vm.complexSaveAsLayoutDialog = false;
+        vm.userCodeIsTouched = false;
+        vm.userCodeError = false;
 
         var layoutsUserCodes = ["New Layout"];
 
@@ -88,6 +90,18 @@
 
             if (!layoutNameOccupied) {
                 $mdDialog.hide({status: 'agree', data: {name: vm.layoutName, user_code: vm.layoutUserCode}});
+            }
+
+        };
+
+        vm.validateUserCode = function () {
+
+            var expression = /^\w+$/;
+
+            if (expression.test(vm.layoutUserCode)) {
+                vm.userCodeError = false;
+            } else {
+                vm.userCodeError = true;
             }
 
         };
