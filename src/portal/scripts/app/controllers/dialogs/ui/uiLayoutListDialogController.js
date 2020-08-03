@@ -159,6 +159,7 @@
         };
 
         vm.selectLayout = function (layout, $event) {
+
             $event.stopPropagation();
 
             if (!selectedLayout || layout.id !== selectedLayout.id) {
@@ -178,6 +179,15 @@
                 selectedLayout = layout;
             }
 
+        };
+
+        vm.openLayout = function (layout, $event) {
+
+            $event.stopPropagation();
+
+            selectedLayout = layout;
+
+            vm.agree();
         };
 
         vm.setAsDefault = function ($event, item, index) {
