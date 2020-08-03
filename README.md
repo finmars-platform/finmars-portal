@@ -14,6 +14,10 @@
 
 `gulp`
 
+2.1) Build project for local development
+
+`PROJECT_ENV=local API_HOST=http://0.0.0.0:8080 gulp`
+
 3) Run local Web Server
 
 `npm run server-proxy`
