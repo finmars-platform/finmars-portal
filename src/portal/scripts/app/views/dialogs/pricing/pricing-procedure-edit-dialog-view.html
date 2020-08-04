@@ -135,7 +135,8 @@
 
                                 <div style="width: 240px">
 
-                                    <md-checkbox ng-model="vm.item.price_get_principal_prices">
+                                    <md-checkbox ng-model="vm.item.price_get_principal_prices"
+                                                 ng-change="vm.checkOverwriteValue('price_get_principal_prices')">
                                         Get Principal Prices
                                         <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
                                                     style="fill: #777777">
@@ -147,7 +148,8 @@
 
                                 <div style="width: 240px">
 
-                                    <md-checkbox ng-model="vm.item.price_get_accrued_prices">
+                                    <md-checkbox ng-model="vm.item.price_get_accrued_prices"
+                                                 ng-change="vm.checkOverwriteValue('price_get_accrued_prices')">
                                         Get Accruals
                                         <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
                                                     style="fill: #777777">
@@ -159,7 +161,8 @@
 
                                 <div style="width: 240px">
 
-                                    <md-checkbox ng-model="vm.item.price_get_fx_rates">
+                                    <md-checkbox ng-model="vm.item.price_get_fx_rates"
+                                                 ng-change="vm.checkOverwriteValue('price_get_fx_rates')">
                                         Get FX Rates
                                         <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
                                                     style="fill: #777777">
@@ -177,6 +180,7 @@
                                 <div style="width: 240px">
 
                                     <md-checkbox ng-model="vm.item.price_overwrite_principal_prices"
+                                                 data-ng-disabled="vm.item.price_get_principal_prices"
                                                  aria-label="override">
                                         Overwrite Principal Prices
                                         <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
@@ -190,6 +194,7 @@
                                 <div style="width: 240px">
 
                                     <md-checkbox ng-model="vm.item.price_overwrite_accrued_prices"
+                                                 data-ng-disabled="vm.item.price_get_accrued_prices"
                                                  aria-label="override">
                                         Overwrite Accruals
                                         <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
@@ -202,7 +207,9 @@
 
                                 <div style="width: 240px">
 
-                                    <md-checkbox ng-model="vm.item.price_overwrite_fx_rates" aria-label="override">
+                                    <md-checkbox ng-model="vm.item.price_overwrite_fx_rates"
+                                                 data-ng-disabled="vm.item.price_get_fx_rates"
+                                                 aria-label="override">
                                         Overwrite FX Rates
                                         <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
                                                     style="fill: #777777">
