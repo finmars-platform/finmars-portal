@@ -13,7 +13,7 @@
     var attributeTypeService = require('../../../services/attributeTypeService');
     var instrumentDownloadSchemeService = require('../../../services/import/instrumentDownloadSchemeService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, importSchemesMethodsService) {
 
         logService.controller('InstrumentDownloadSchemeAddDialogController', 'initialized');
 
@@ -295,16 +295,19 @@
             })
         };
 
-        vm.setProviderFieldExpression = function (item) {
+        /*vm.setProviderFieldExpression = function (item) {
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
                 vm.inputsFunctions = vm.getFunctions();
             }
 
-        };
+        };*/
+        vm.setProviderFieldExpression = function (item) {
+            importSchemesMethodsService.setProviderFieldExpression(vm, item);
+        }
 
-        vm.openProviderFieldExpressionBuilder = function (item, $event) {
+        /*vm.openProviderFieldExpressionBuilder = function (item, $event) {
 
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
@@ -331,9 +334,12 @@
 
             });
 
-        };
+        };*/
+        vm.openProviderFieldExpressionBuilder = function (item, $event) {
+            importSchemesMethodsService.openFxBtnExprBuilder(item, vm, $event);
+        }
 
-        vm.checkForUserExpr = function (item) {
+        /*vm.checkForUserExpr = function (item) {
             if (item.name_expr) {
                 if (item.name && item.name === item.name_expr) {
                     return false;
@@ -343,7 +349,10 @@
             }
 
             return false;
-        };
+        };*/
+        vm.checkForUserExpr = function (item) {
+            return importSchemesMethodsService.checkForUserExpr(item);
+        }
 
         vm.removeProviderField = function (item, $index) {
             console.log('$index', $index);
@@ -533,9 +542,7 @@
 
         };
 
-        vm.openMapping = function ($event, item) {
-
-            console.log('ITEEM', item);
+        /*vm.openMapping = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
@@ -549,14 +556,67 @@
                 locals: {
                     mapItem: item
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                }
             });
+        };*/
+        vm.openMapping = function ($event, item) {
+            var locals = {mapItem: item}
+            importSchemesMethodsService.openMappingDialog(locals, $event);
         };
 
-        vm.openExpressionDialog = function ($event, item) {
+        /*vm.checkForClassifierMapping = function (classifierId) {
+
+            var i;
+            for (i = 0; i < vm.mappedDynamic.length; i++) {
+
+                if (vm.mappedDynamic[i].id === classifierId) {
+
+                    if (vm.mappedDynamic[i].value_type === 30) {
+                        return true;
+                    }
+
+                }
+
+            }
+
+            return false;
+
+        };*/
+        vm.checkForClassifierMapping = function (classifierId) {
+            importSchemesMethodsService.checkForClassifierMapping(vm.mappedDynamic, classifierId);
+        };
+
+        /*vm.openClassifierMapping = function (classifierId, $event) {
+
+            $mdDialog.show({
+                controller: 'EntityTypeClassifierMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    options: {
+                        entityType: vm.entityType,
+                        id: classifierId
+                    }
+                }
+            })
+
+        };*/
+        vm.openClassifierMapping = function (classifierId, $event) {
+            var localsObj = {
+                options: {
+                    entityType: vm.entityType,
+                    id: classifierId
+                }
+            }
+
+            importSchemesMethodsService.openClassifierMapping(localsObj, $event);
+        }
+
+        /*vm.openExpressionDialog = function ($event, item) {
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
                 templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
@@ -576,7 +636,7 @@
                     $scope.$apply();
                 }
             });
-        };
+        };*/
 
         vm.resolveFieldType = function (field) {
 

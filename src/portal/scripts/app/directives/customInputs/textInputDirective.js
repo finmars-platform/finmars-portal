@@ -220,6 +220,7 @@
                     inputElem.addEventListener('focus', function () {
 
                         //inputContainer.classList.add('custom-input-focused');
+                        inputContainer.classList.add('custom-input-full-text-focused');
                         fullTextElem.classList.add('custom-input-full-text-shown');
                         fullTextTextarea.focus();
 
@@ -240,7 +241,8 @@
                     });*/
 
                     fullTextTextarea.addEventListener('blur', function () {
-                        console.log("custom input fullTextElem blur", fullTextElem);
+
+                        inputContainer.classList.remove('custom-input-full-text-focused');
                         fullTextElem.classList.remove('custom-input-full-text-shown');
 
                         if (scope.onBlurCallback) {
