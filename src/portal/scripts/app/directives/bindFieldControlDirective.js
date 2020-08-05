@@ -538,7 +538,9 @@
 
                 var setItemSpecificSettings = function () {
 
-                    palettesList = scope.evEditorDataService.getColorPalettesList();
+                    if (scope.evEditorDataService) {
+                        palettesList = scope.evEditorDataService.getColorPalettesList();
+                    }
 
                     scope.fieldType = null;
                     /*scope.attribute = scope.item;
@@ -694,7 +696,11 @@
 
                     scope.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
 
-                        var changedUserInputData = scope.evEditorDataService.getChangedUserInputData();
+                        var changedUserInputData;
+
+                        if (scope.evEditorDataService) {
+                            changedUserInputData = scope.evEditorDataService.getChangedUserInputData();
+                        }
 
                         if (changedUserInputData && changedUserInputData.frontOptions &&
                             changedUserInputData.frontOptions.linked_inputs_names) {
@@ -738,7 +744,11 @@
                         }
                     }
 
-                    var tooltipsList = scope.evEditorDataService.getTooltipsData();
+                    var tooltipsList = [];
+
+                    if (scope.evEditorDataService) {
+                        tooltipsList = scope.evEditorDataService.getTooltipsData();
+                    }
 
                     for (var i = 0; i < tooltipsList.length; i++) {
 

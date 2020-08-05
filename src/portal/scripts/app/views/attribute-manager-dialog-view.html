@@ -22,8 +22,7 @@
                                 <md-input-container class="md-block" flex-gt-sm>
                                     <label>Attribute name</label>
                                     <input data-ng-model="vm.attribute.name"
-                                           data-ng-change="vm.onAttrNameChange()"
-                                           data-ng-model-options="{debounce: 1000}">
+                                           data-ng-blur="vm.onAttrNameBlur()">
                                 </md-input-container>
 
                                 <md-input-container class="md-block" flex-gt-sm>
