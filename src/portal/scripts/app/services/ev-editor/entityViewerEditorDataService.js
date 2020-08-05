@@ -18,7 +18,11 @@
         }
 
         function getTooltipsData () {
-            return data.tooltipsObj;
+            if (Array.isArray(data.tooltipsObj)) {
+                return data.tooltipsObj
+            }
+
+            return  [];
         }
 
         function setColorPalettesList (palettesList) {
