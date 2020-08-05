@@ -1293,15 +1293,15 @@
 
                 if (res.status === 'agree') {
 
-                    var componentTypes = vm.dashboardConstructorDataService.getComponents();
+                    /*var componentTypes = vm.dashboardConstructorDataService.getComponents();
 
                     componentTypes = componentTypes.filter(function (componentType) {
-
-                        return componentType.id !== item.id
-
+                        return componentType.id !== item.id;
                     });
 
-                    vm.dashboardConstructorDataService.setComponents(componentTypes);
+                    vm.dashboardConstructorDataService.setComponents(componentTypes);*/
+
+                    vm.dashboardConstructorDataService.deleteComponentById(item.id);
 
                     vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
 
