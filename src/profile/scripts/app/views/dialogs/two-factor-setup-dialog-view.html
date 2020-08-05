@@ -36,6 +36,53 @@
 
                 </div>
 
+                <div class="m-t-16 text-center">
+
+                    <md-button class="md-primary md-raised"
+                               ng-click="vm.isShowAuthenticatorApps = true">Show authenticator Apps
+                    </md-button>
+
+                </div>
+
+                <div data-ng-show="vm.isShowAuthenticatorApps">
+                    <ul class="fa-ul flex-row flex-content-space-around">
+                        <li>
+                            <div class="text-center">Google Authenticator</div>
+
+                            <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en"
+                               class="text-link"
+                               target="_blank">
+                                <img alt='Get it on Google Play' src="portal/content/img/google-play.png" width="150"/>
+                            </a>
+
+                            <a href="https://apps.apple.com/ru/app/google-authenticator/id388497605"
+                               class="text-link"
+                               target="_blank">
+                                <img alt='Download on the app store' src="portal/content/img/app-store.png" width="150"/>
+                            </a>
+
+                        </li>
+
+                        <li>
+                            <div class="text-center">Microsoft Authenticator</div>
+
+                            <a href="https://play.google.com/store/apps/details?id=com.azure.authenticator&hl=ru"
+                               class="text-link"
+                               target="_blank">
+                                <img alt='Get it on Google Play' src="portal/content/img/google-play.png" width="150"/>
+                            </a>
+
+                            <a href="https://apps.apple.com/us/app/microsoft-authenticator/id983156458"
+                               class="text-link"
+                               target="_blank">
+                                <img alt='Download on the app store' src="portal/content/img/app-store.png" width="150"/>
+                            </a>
+
+                        </li>
+                    </ul>
+
+                </div>
+
             </div>
 
             <div data-ng-show="vm.currentStep == 3">

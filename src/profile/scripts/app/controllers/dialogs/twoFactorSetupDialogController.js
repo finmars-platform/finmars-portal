@@ -16,6 +16,7 @@
         vm.codeIsValid = false;
         vm.provisioning_uri = null;
         vm.securityCode = null;
+        vm.isShowAuthenticatorApps = false;
 
         vm.agree = function () {
             $mdDialog.hide({status: 'agree'});
