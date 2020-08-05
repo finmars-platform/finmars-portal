@@ -11,7 +11,7 @@
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, schemeId) {
+    module.exports = function transactionImportSchemeEditDialogController ($scope, $mdDialog, schemeId, importSchemesMethodsService) {
 
         var vm = this;
 
@@ -329,25 +329,51 @@
             })
         };
 
+        /*vm.setProviderFieldExpression = function (item) {
+
+            if (!item.name_expr || item.name_expr === '') {
+                item.name_expr = item.name;
+                vm.inputsFunctions = vm.getFunctions();
+            }
+
+        };*/
         vm.setProviderFieldExpression = function (item) {
+            importSchemesMethodsService.setProviderFieldExpression(vm, item);
+        }
 
-            if (!item.name_expr || item.name_expr === '') {
-                item.name_expr = item.name;
-                vm.inputsFunctions = vm.getFunctions();
-            }
+        /*vm.openProviderFieldExpressionBuilder = function (item, $event) {
 
-        };
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: {expression: item.name_expr},
+                    data: {
+                        groups: [vm.inputsGroup],
+                        functions: [vm.inputsFunctions]
+                    }
+                }
+            }).then(function (res) {
 
-        vm.setCalculatedFieldExpression = function (item) {
+                if (res.status === 'agree') {
 
-            if (!item.name_expr || item.name_expr === '') {
-                item.name_expr = item.name;
-                vm.inputsFunctions = vm.getFunctions();
-            }
+                    item.name_expr = res.data.item.expression;
+                    vm.inputsFunctions = vm.getFunctions();
 
-        };
+                }
 
+            });
+
+        };*/
         vm.openProviderFieldExpressionBuilder = function (item, $event) {
+            importSchemesMethodsService.openFxBtnExprBuilder(item, vm, $event);
+        }
+
+        /*vm.openCalculatedFieldExpressionBuilder = function (item, $event) {
 
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
@@ -374,38 +400,20 @@
 
             });
 
-        };
+        };*/
+        vm.openCalcFieldFxBtnExprBuilder = function (item, $event) {
+            importSchemesMethodsService.openCalcFieldFxBtnExprBuilder(item, vm, $event);
+        }
 
-        vm.openCalculatedFieldExpressionBuilder = function (item, $event) {
+        vm.onCalculatedFieldNameBlur = function (item) {
+            importSchemesMethodsService.onTTypeCalcFielNamedBlur(item);
+        }
 
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                targetEvent: $event,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    item: {expression: item.name_expr},
-                    data: {
-                        groups: [vm.inputsGroup],
-                        functions: [vm.inputsFunctions]
-                    }
-                }
-            }).then(function (res) {
+        vm.getCalcFieldFxBtnClasses = function (item) {
+            return importSchemesMethodsService.getCalcFieldFxBtnClasses(item);
+        }
 
-                if (res.status === 'agree') {
-
-                    item.name_expr = res.data.item.expression;
-                    vm.inputsFunctions = vm.getFunctions();
-
-                }
-
-            });
-
-        };
-
-        vm.checkForUserExpr = function (item) {
+        /*vm.checkForUserExpr = function (item) {
             if (item.name_expr) {
                 if (item.name && item.name === item.name_expr) {
                     return false;
@@ -415,7 +423,10 @@
             }
 
             return false;
-        };
+        };*/
+        vm.checkForUserExpr = function (item) {
+            return importSchemesMethodsService.checkForUserExpr(item);
+        }
 
         vm.removeProviderField = function (item, $index) {
             vm.providerFields.splice($index, 1);
@@ -561,7 +572,7 @@
 
         };
 
-        vm.openMapping = function ($event, item) {
+        /*vm.openMapping = function ($event, item) {
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
@@ -575,7 +586,7 @@
                     mapItem: item
                 }
             });
-        };
+        };*/
 
         vm.editTransactionType = function (ttypeId, $event) {
 
