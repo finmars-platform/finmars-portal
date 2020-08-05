@@ -30,7 +30,7 @@
                 </tr>
                 <tr>
                     <th data-ng-repeat="column in vm.columns[vm.entityType]">
-                        <dvi layout="row" data-ng-click="vm.sortBy(column.key)">
+                        <div layout="row" data-ng-click="vm.sortBy(column.key)">
                             <b class="entity-search-col-b">
                                 {{column.name}}
                                 <span class="sortorder"
@@ -38,7 +38,7 @@
                                       data-ng-class="{reverse: vm.sortDescending}"
                                 ></span>
                             </b>
-                        </dvi>
+                        </div>
                     </th>
                     <th class="entity-search-settings-header"></th>
                 </tr>
