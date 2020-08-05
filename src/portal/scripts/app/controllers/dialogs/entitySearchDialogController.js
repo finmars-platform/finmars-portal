@@ -385,7 +385,6 @@
         vm.getEntityItems = function (reloadTable) {
 
             vm.processing = true;
-            $scope.$apply();
 
             return new Promise(function (resolve, reject) {
 
