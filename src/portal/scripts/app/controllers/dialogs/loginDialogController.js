@@ -22,7 +22,39 @@
 
             usersService.login(vm.username, vm.password).then(function (data) {
 
-                $mdDialog.hide({status: 'agree'});
+                if (!data.two_factor_check) {
+
+                    $mdDialog.hide({status: 'agree'});
+
+                    return;
+
+                }
+
+                vm.processing = false;
+
+                $scope.$apply();
+
+                $mdDialog.show({
+                    controller: 'twoFactorLoginDialogController as vm',
+                    templateUrl: 'views/dialogs/two-factor-login-dialog-view.html',
+                    parent: angular.element(document.body),
+                    locals: {
+                        username: vm.username
+                    },
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    targetEvent: $event
+                }).then(function (res) {
+
+                    if (res.status === 'agree') {
+
+                        $mdDialog.hide({status: 'agree'});
+
+                    }
+
+                });
 
             }).catch(function(error){
 
