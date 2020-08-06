@@ -188,6 +188,7 @@ app.controller('ClassifierExportDialogController', ['$scope', '$mdDialog', 'data
 app.controller('LayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/layoutExportDialogController')]);
 app.controller('FileReportsController', ['$scope', '$mdDialog', require('./app/controllers/pages/fileReportsController')]);
 app.controller('LoginDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/loginDialogController')]);
+app.controller('twoFactorLoginDialogController', ['$scope', '$mdDialog', 'username', require('./app/controllers/dialogs/twoFactorLoginDialogController')]);
 app.controller('HealthcheckController', ['$scope', require('./app/controllers/pages/healthcheckController')]);
 
 
