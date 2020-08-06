@@ -21,7 +21,7 @@
 
         vm.readyStatus = {items: false};
         var layoutsList = []; // list of layouts without properties added for rendering
-        var selectedLayout = null;
+        vm.selectedLayout = null;
 
         var entityViewerDataService = options.entityViewerDataService;
         var entityViewerEventService = options.entityViewerEventService;
@@ -161,7 +161,7 @@
         vm.selectLayout = function (layout, $event) {
             $event.stopPropagation();
 
-            if (!selectedLayout || layout.id !== selectedLayout.id) {
+            if (!vm.selectedLayout || layout.id !== vm.selectedLayout.id) {
 
                 var selectedElem = $event.currentTarget;
                 var layoutsItemsList = document.querySelectorAll('.ll-layout-item');
@@ -175,7 +175,7 @@
                 });
 
                 selectedElem.classList.add('active');
-                selectedLayout = layout;
+                vm.selectedLayout = layout;
             }
 
         };
@@ -311,15 +311,15 @@
 
         vm.agree = function () {
 
-            if (selectedLayout) {
+            if (vm.selectedLayout) {
 
                 $mdDialog.hide(
                     {
                         status: 'agree',
                         data: {
-                            layoutName: selectedLayout.name,
-                            layoutId: selectedLayout.id,
-                            layoutUserCode: selectedLayout.user_code
+                            layoutName: vm.selectedLayout.name,
+                            layoutId: vm.selectedLayout.id,
+                            layoutUserCode: vm.selectedLayout.user_code
                         }
                     }
                 );
