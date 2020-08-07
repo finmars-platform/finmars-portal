@@ -298,7 +298,7 @@
 
         vm.checkOverwriteValue = function (getKey) {
 
-            if (vm.item[getKey]) {
+            if (!vm.item[getKey]) {
 
                 var overwriteKey = getAndOverwriteKeysPairs[getKey];
 
