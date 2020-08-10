@@ -1,8 +1,56 @@
-.custom-input-top-row {
+@import "variables";
+
+.text_tester {
+  border: 2px solid red;
+  white-space: nowrap; /* Запрещаем перенос строк */
+  overflow: hidden; /* Обрезаем все, что не помещается в область */
+  text-overflow: ellipsis;
+}
+.custom-input-textarea-sapan-pan {
+  color: #7d7d7d;
   position: relative;
   padding: 4px 18px 0 4px;
   height: 20px;
+  transform: translate(8px, 12px);
+  padding: 0 5px;
+  z-index: 9;
+  background: white;
+  display: inline-block;
+  font-size: 12px;
+  max-width: 80%;
+  white-space: nowrap; /* Запрещаем перенос строк */
+  overflow: hidden; /* Обрезаем все, что не помещается в область */
+  text-overflow: ellipsis;
+}
+.custom-input-top-row {
+  // Изменение 7
+  position: relative;
+  // padding: 4px 18px 0 4px;
+  // height: 20px;
   box-sizing: border-box;
+  // Добавил
+  // transform: translate(8px, 12px);
+  // background: #fafafa;
+  // z-index: 1;
+  // padding: 0 1px;
+  font-size: 12px;
+  // border: 1px solid red;
+  // display: inline-block;
+  .custom-input-label {
+    position: relative;
+    padding: 4px 18px 0 4px;
+    height: 20px;
+    transform: translate(8px, 12px);
+    padding: 0 5px;
+    z-index: 1;
+    background: white;
+    display: inline-block;
+    //
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    text-overflow: ellipsis;
+    max-width: 80%;
+  }
 }
 
 .custom-input-tooltip {
@@ -10,6 +58,21 @@
   position: absolute;
   right: 1px;
   top: 2px;
+  cursor: pointer;
+
+  // Изменение 4
+  right: 27px;
+  top: 47px;
+  transform: translate(0.4px, 0.4px);
+  z-index: 1;
+  .tooltip-sign {
+    svg {
+      // Поставил импортант , чтобы не трогать шаблон
+      transform: translate(15px, -15px);
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
 }
 
 .custom-input-main-container {
@@ -38,6 +101,12 @@
   color: #000;
   white-space: nowrap;
   text-overflow: ellipsis;
+  // Тут-2
+  font-size: 12px;
+  color: #747474;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 400;
 }
 
 .custom-input {
@@ -108,10 +177,14 @@
   border-radius: 0;
   padding: 2px 2px;
   fill: #7b7b7b;
-  z-index: 9;
 
+  z-index: 9;
+  // изменение 2
+  color: #7d7d7d;
+  transition: 0.2s ease-in-out;
   &:hover {
-    background-color: #cecece;
+    opacity: 0.5;
+    // background-color: #cecece;
   }
 }
 
@@ -136,7 +209,7 @@
   left: 0;
   background: #fff;
   padding: 5px 0;
-  box-shadow: 0 0 2px rgba(0,0,0,1);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 1);
   overflow: auto;
   z-index: 52;
   box-sizing: border-box;
@@ -147,7 +220,7 @@
     white-space: nowrap;
 
     &:hover {
-      background-color: rgba(158,158,158,0.18);
+      background-color: rgba(158, 158, 158, 0.18);
     }
   }
 }
@@ -188,17 +261,30 @@
   .custom-input-indicator-btn {
     z-index: 11;
   }
+  .custom-input-textarea-sapan-pan {
+    z-index: 11;
+  }
 }
 
 .custom-input-full-text-shown {
+  // Изменение 10 - Текстарея
   display: block;
+  padding-top: 50px;
   opacity: 1;
   z-index: 10;
+  // transform: translateY(-10px);
+  textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 28px;
+    z-index: 11;
+  }
 }
 
-
 .custom-input-container.custom-input-set-from-outside {
-  .custom-input-borders, .custom-input-full-text-container {
+  .custom-input-borders,
+  .custom-input-full-text-container {
     border-color: rgba(26, 26, 236, 0.6);
   }
 
@@ -208,7 +294,8 @@
   }
 }
 
-.custom-input-container.custom-input-hovered, .custom-input-container.custom-input-focused {
+.custom-input-container.custom-input-hovered,
+.custom-input-container.custom-input-focused {
   .custom-input-custom-btns-holder {
     opacity: 1;
   }
@@ -229,19 +316,30 @@
 }
 
 .custom-input-container.custom-input-preset1 {
-  /*.custom-input-label {
-    color: #0404f3;
-  }*/
-
+  // Изменение- 3
+  .custom-input-label {
+    // color: #0404f3;
+  }
+  .custom-input-borders .custom-input-content .flex-row input {
+    color: #f05a22;
+  }
   .custom-input {
-    //border-color: #0404f3;
-    color: #0404f3;
+    // border-color: #0404f3;
+    // color: #0404f3;
+    // Изменение- 3
+    color: @orange;
   }
 
   .custom-input-indicator-btn {
-    //border-color: #0404f3;
-    color: #0404f3;
-    fill: #0404f3;
+    // border-color: #0404f3;
+    // color: #0404f3;
+    // fill: #0404f3;
+    // Изменение 3
+    // border: 20px solid red;
+
+    // color: @orange;
+    // color: #f05a22;
+    // fill: @orange;
   }
 }
 
@@ -298,7 +396,21 @@
 
 .custom-input-container.custom-input-focused {
   .custom-input-main-container {
-    box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+    // изменение 1 - фокус
+    // box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+    //
+    .custom-input-borders {
+      border: 2px solid #7d7d7d;
+      .custom-input-content {
+        .flex-row {
+          input {
+            color: black;
+          }
+          button {
+          }
+        }
+      }
+    }
   }
 
   .custom-input-indicator-btn {
@@ -308,28 +420,49 @@
 }
 
 .custom-input-container.custom-input-error {
+  // Изменение 6
   .custom-input-label {
-    color: #fa393e;
+    color: @orange;
   }
+  &::after {
+    content: "Invalid value";
+    color: @orange;
+    bottom: 0;
+    transform: translate(35px, 16px);
+    position: relative;
 
+    font-size: 12px;
+  }
+  .custom-input-borders .custom-input-content .flex-row button {
+    color: @orange;
+  }
+  .custom-input-tooltip {
+    opacity: 0;
+  }
   .custom-input-error-tooltip {
     position: absolute;
+    cursor: pointer;
     top: 1px;
-    left: 3px;
-
+    // Изменение 5
+    // left: 3px;
+    right: 0;
+    transform: translate(-10px, 10px);
+    z-index: 2;
     ng-md-icon {
-      fill: #fa393e;
+      // fill: #fa393e;
+      fill: @orange;
     }
   }
 
-  .custom-input-borders, .custom-input-full-text-container {
+  .custom-input-borders,
+  .custom-input-full-text-container {
     border-color: #fa393e;
   }
 
   .custom-input {
     padding-left: 20px;
     //border-color: #fa393e;
-    color:  #fa393e;
+    color: #fa393e;
   }
 
   /*.custom-input-indicator-btn {
@@ -347,3 +480,64 @@
   pointer-events: none;
 }
 // < should always be at the bottom >
+
+.custom-input-container {
+  // border: 2px solid red;
+  // padding:100px;
+}
+
+.custom-input-main-container {
+  // border:2px solid red;
+}
+
+.custom-input-borders {
+  min-height: 40px;
+  // Изменени 11 текстарея
+  position: relative;
+  // border:1px solid black !important;
+  border: 1px solid #7d7d7d;
+  .custom-input-content {
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    // border:2px solid pink;
+    .flex-row {
+      // border:2px solid gold;
+      input {
+        order: 2;
+        color: #7d7d7d;
+        font-weight: 400;
+      }
+      // textarea {
+      //   order: 2;
+      //   color: #7d7d7d;
+      //   color: white;
+      //   font-weight: 400;
+      // }
+      button {
+        order: 1;
+      }
+    }
+  }
+}
+
+.custom-input-full-text-container {
+  color: white;
+}
+.md-panel-is-showing {
+}
+
+.md-panel.md-tooltip.error-tooltip {
+  // border-bottom: 1px solid @orange;
+  background-color: @orange;
+  // background-color: #fafafa !important;
+  // transform: translate(-160%, 300%);
+  // color: black;
+  // color: @orange;
+  // font-size: 12px !important;
+
+  // top: 0 !important;
+  // left: 0 !important;
+}
