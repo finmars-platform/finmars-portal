@@ -102,7 +102,7 @@
                     name: 'User text 3'
                 },
                 {
-                    key: 'instrument_type_object.name',
+                    key: 'instrument_type',
                     name: 'Instrument type'
                 }
             ],
@@ -415,7 +415,7 @@
                         $scope.$apply()
                         resolve({status: 'loaded'});
 
-                    }, 2000);
+                    }, 10);
 
                 });
             })
