@@ -5,9 +5,11 @@
 
         <div class="report-viewer-matrix-row rv-matrix-header" flex="noshrink">
 
-            <div class="report-viewer-matrix-column-header-cell report-viewer-empty-header-cell text-{{styles.cell.text_align}} rvMatrixCell">
-                <span data-ng-if="!top_left_title" title="-">-</span>
-                <span data-ng-if="top_left_title" title="{{top_left_title}}">{{top_left_title}}</span>
+            <div class="report-viewer-matrix-column-header-cell report-viewer-empty-header-cell text-{{styles.cell.text_align}} rvMatrixCell"
+                 title="{{getTopLeftTitle()}}">
+                <!--<span data-ng-if="!top_left_title" title="-">-</span>
+                <span data-ng-if="top_left_title" title="{{top_left_title}}">{{top_left_title}}</span>-->
+                <span data-ng-bind="getTopLeftTitle()">-</span>
 
                 <md-menu>
                     <md-button class="matrix-settings-button"
@@ -16,6 +18,7 @@
                     </md-button>
 
                     <md-menu-content width="3">
+
                         <md-menu-item>
                             <md-menu >
 
@@ -154,6 +157,57 @@
                                 </md-menu-content>
                             </md-menu>
                         </md-menu-item>
+
+                        <md-menu-item>
+                            <md-menu>
+                                <md-button aria-label="Open phone interactions menu"
+                                           class=""
+                                           ng-click="$mdOpenMenu($event)">
+                                    <span>Hide empty columns or/and rows</span>
+                                    <ng-md-icon icon="arrow_drop_up"
+                                                class="z-dropdown-icon"></ng-md-icon>
+                                </md-button>
+
+                                <md-menu-content width="3">
+                                    <md-menu-item>
+                                        <md-button ng-click="hideEmptyLines('columns')"
+                                                   class="g-settings-option-btn">
+                                            <ng-md-icon icon="done"
+                                                        data-ng-show="emptyLinesHidingType === 'columns'"></ng-md-icon>
+                                            <ng-md-icon icon="done"
+                                                        style="visibility:hidden;"
+                                                        data-ng-show="emptyLinesHidingType !== 'columns'"></ng-md-icon>
+                                            <span>Hide columns</span>
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button ng-click="hideEmptyLines('rows')"
+                                                   class="g-settings-option-btn">
+                                            <ng-md-icon icon="done"
+                                                        data-ng-show="emptyLinesHidingType === 'rows'"></ng-md-icon>
+                                            <ng-md-icon icon="done"
+                                                        style="visibility:hidden;"
+                                                        data-ng-show="emptyLinesHidingType !== 'rows'"></ng-md-icon>
+                                            <span>Hide rows</span>
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button ng-click="hideEmptyLines('columns_rows')"
+                                                   class="g-settings-option-btn">
+                                            <ng-md-icon icon="done"
+                                                        data-ng-show="emptyLinesHidingType === 'columns_rows'"></ng-md-icon>
+                                            <ng-md-icon icon="done"
+                                                        style="visibility:hidden;"
+                                                        data-ng-show="emptyLinesHidingType !== 'columns_rows'"></ng-md-icon>
+                                            <span>Hide columns and rows</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+
                     </md-menu-content>
                 </md-menu>
             </div>
@@ -162,10 +216,10 @@
                 <div class="rv-matrix-part-to-scroll rvmHeaderScrollableRow">
                     <div class="report-viewer-matrix-column-header-cell rvMatrixCell"
                          data-ng-class="{'active': activeItem == 'column_total:' + $index}"
-                         title="{{column}}"
+                         title="{{column.key}}"
                          data-ng-click="singleColumnTotalClick($event, $index)"
                          data-ng-repeat="column in columns track by $index">
-                        {{column}}
+                        {{column.key}}
                     </div>
 
                     <div data-ng-if="matrixView !== 'fixed-totals'"
