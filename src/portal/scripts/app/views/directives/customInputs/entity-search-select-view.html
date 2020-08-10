@@ -1,6 +1,11 @@
-<div class="custom-input-container smart-search-input-container smartSearchInputContainer"
-     data-ng-class="getInputContainerClasses()">
-    <div class="custom-input-top-row">
+<div
+  class="custom-input-container smart-search-input-container smartSearchInputContainer"
+  data-ng-class="getInputContainerClasses()"
+>
+  <div class="custom-input-top-row">
+    <span class="custom-input-textarea-sapan-pan">{{label}}</span>
+  </div>
+  <!-- <div class="custom-input-top-row">
         <div data-ng-bind="label" class="custom-input-label"></div>
 
         <div data-ng-if="tooltipText" class="custom-input-tooltip">
@@ -10,69 +15,88 @@
                         style="fill: #777777"></ng-md-icon>
             <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
         </div>
-    </div>
+    </div> -->
 
-    <div class="custom-input-main-container">
-        <div class="custom-input-borders">
-            <div class="custom-input-content">
-
-                <div data-ng-if="error" class="custom-input-error-tooltip">
-                    <ng-md-icon icon="info"
-                                size="18"
-                                class="tooltip-sign"></ng-md-icon>
-                    <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
-                </div>
-
-                <div class="flex-row">
-                    <input type="text"
-                           placeholder="{{placeholderText}}"
-                           data-ng-model="inputText"
-                           data-ng-model-options="{debounce: 1000}"
-                           data-ng-change="onInputTextChange()"
-                           data-ng-disabled="isDisabled"
-                           class="custom-input smart-search-input smartSearchInputElem">
-
-                    <button class="custom-input-indicator-btn position-relative" data-ng-click="openSmartSearch($event)">
-                        <i data-ng-if="!iconData" class="fas fa-link"></i>
-                        <i data-ng-if="iconData && iconData.type === 'class'"
-                           class="{{iconData.icon}}"></i>
-                    </button>
-                </div>
-
-                <div class="custom-input-custom-btns-holder">
-                    <div data-ng-if="customButtons && customButtons.length" class="height-100">
-                        <button data-ng-repeat="button in customButtons"
-                                class="{{button.classes}} custom-input-custom-btn"
-                                data-ng-click="callFnForCustomBtn(button.action)">
-                            {{button.caption}}
-
-                            <ng-md-icon data-ng-if="button.iconObj.type === 'angular-material'"
-                                        size="22"
-                                        icon="{{button.iconObj.icon}}"></ng-md-icon>
-
-                            <i data-ng-if="button.iconObj.type === 'fontawesome'"
-                               class="{{button.iconObj.icon}}"></i>
-
-                            <md-tooltip data-ng-if="button.tooltip"
-                                        class="tooltip_1"
-                                        md-direction="top">{{button.tooltip}}</md-tooltip>
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div data-ng-if="selectorOptions" class="custom-input-sel-menu-container selectMenuContainer">
-
-        <div class="custom-input-sel-menu-block">
-            <div data-ng-repeat="option in selectorOptions"
-                 data-ng-mousedown="selectOption(option)"
-                 data-ng-bind="option.short_name"
-                 class="custom-input-sel-option"></div>
+  <div class="custom-input-main-container">
+    <div class="custom-input-borders">
+      <div class="custom-input-content">
+        <div data-ng-if="error" class="custom-input-error-tooltip">
+          <ng-md-icon icon="info" size="18" class="tooltip-sign"></ng-md-icon>
+          <md-tooltip class="error-tooltip" md-direction="top"
+            >{{error}}</md-tooltip
+          >
         </div>
 
-    </div>
+        <div class="flex-row">
+          <input
+            type="text"
+            placeholder="{{placeholderText}}"
+            data-ng-model="inputText"
+            data-ng-model-options="{debounce: 1000}"
+            data-ng-change="onInputTextChange()"
+            data-ng-disabled="isDisabled"
+            class="custom-input smart-search-input smartSearchInputElem"
+          />
 
+          <button
+            class="custom-input-indicator-btn position-relative"
+            data-ng-click="openSmartSearch($event)"
+          >
+            <i data-ng-if="!iconData" class="fas fa-link"></i>
+            <i
+              data-ng-if="iconData && iconData.type === 'class'"
+              class="{{iconData.icon}}"
+            ></i>
+          </button>
+        </div>
+
+        <div class="custom-input-custom-btns-holder">
+          <div
+            data-ng-if="customButtons && customButtons.length"
+            class="height-100"
+          >
+            <button
+              data-ng-repeat="button in customButtons"
+              class="{{button.classes}} custom-input-custom-btn"
+              data-ng-click="callFnForCustomBtn(button.action)"
+            >
+              {{button.caption}}
+
+              <ng-md-icon
+                data-ng-if="button.iconObj.type === 'angular-material'"
+                size="22"
+                icon="{{button.iconObj.icon}}"
+              ></ng-md-icon>
+
+              <i
+                data-ng-if="button.iconObj.type === 'fontawesome'"
+                class="{{button.iconObj.icon}}"
+              ></i>
+
+              <md-tooltip
+                data-ng-if="button.tooltip"
+                class="tooltip_1"
+                md-direction="top"
+                >{{button.tooltip}}</md-tooltip
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    data-ng-if="selectorOptions"
+    class="custom-input-sel-menu-container selectMenuContainer"
+  >
+    <div class="custom-input-sel-menu-block">
+      <div
+        data-ng-repeat="option in selectorOptions"
+        data-ng-mousedown="selectOption(option)"
+        data-ng-bind="option.short_name"
+        class="custom-input-sel-option"
+      ></div>
+    </div>
+  </div>
 </div>
