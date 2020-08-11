@@ -21,6 +21,7 @@
         var selectedRow = data.selectedItem;
 
         var page = 1;
+        vm.pageSize = 40;
 
         vm.search = {
             'instrument': {
