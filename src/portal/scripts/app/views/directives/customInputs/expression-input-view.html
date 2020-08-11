@@ -5,18 +5,23 @@
   <!-- <div class="custom-input-top-row">
         <div data-ng-bind="label" class="custom-input-label"></div>
 
-        <div data-ng-if="tooltipText" class="custom-input-tooltip">
-            <ng-md-icon icon="info"
-                        size="16"
-                        class="tooltip-sign"
-                        style="fill: #777777"></ng-md-icon>
-            <md-tooltip class="tooltip_2"
-                        md-direction="top"
-                        data-ng-bind="tooltipText"></md-tooltip>
-        </div>
+    
     </div> -->
   <div class="custom-input-top-row">
     <span class="custom-input-textarea-sapan-pan">{{label}}</span>
+    <div data-ng-if="tooltipText" class="custom-input-tooltip">
+      <ng-md-icon
+        icon="info"
+        size="16"
+        class="tooltip-sign"
+        style="fill: #777777;"
+      ></ng-md-icon>
+      <md-tooltip
+        class="tooltip_2"
+        md-direction="top"
+        data-ng-bind="tooltipText"
+      ></md-tooltip>
+    </div>
   </div>
 
   <div class="custom-input-main-container">

@@ -11,7 +11,8 @@
   position: relative;
   padding: 4px 18px 0 4px;
   height: 20px;
-  transform: translate(8px, 12px);
+  // transform: translate(8px, 12px);
+  transform: translate(8px, -10px);
   padding: 0 5px;
   z-index: 9;
   background: white;
@@ -33,6 +34,7 @@
   // background: #fafafa;
   // z-index: 1;
   // padding: 0 1px;
+  height: 0;
   font-size: 12px;
   // border: 1px solid red;
   // display: inline-block;
@@ -40,7 +42,8 @@
     position: relative;
     padding: 4px 18px 0 4px;
     height: 20px;
-    transform: translate(8px, 12px);
+    // transform: translate(8px, 12px);
+    transform: translate(8px, -10px);
     padding: 0 5px;
     z-index: 1;
     background: white;
@@ -63,8 +66,10 @@
   // Изменение 4
   right: 27px;
   top: 47px;
+  top: 27px;
   transform: translate(0.4px, 0.4px);
-  z-index: 1;
+
+  z-index: 11;
   .tooltip-sign {
     svg {
       // Поставил импортант , чтобы не трогать шаблон
@@ -235,8 +240,10 @@
   left: 0;
   background-color: #fff;
   border: 2px solid #7d7d7d;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+  // box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+
   border-radius: 6px;
+  border-radius: 1px;
   padding-top: 23px;
   box-sizing: border-box;
   z-index: 1;
@@ -246,7 +253,8 @@
   width: 100%;
   height: 100%;
   background-color: #fff;
-  border-radius: 6px;
+  // border-radius: 6px;
+
   border: none;
   resize: none;
   box-sizing: border-box;
@@ -272,6 +280,7 @@
   padding-top: 50px;
   opacity: 1;
   z-index: 10;
+  border-radius: 6px;
   // transform: translateY(-10px);
   textarea {
     position: absolute;
@@ -279,6 +288,7 @@
     left: 0;
     padding: 28px;
     z-index: 11;
+    border-radius: 4px;
   }
 }
 
@@ -322,6 +332,7 @@
   }
   .custom-input-borders .custom-input-content .flex-row input {
     color: #f05a22;
+    font-weight: bold;
   }
   .custom-input {
     // border-color: #0404f3;
@@ -421,7 +432,8 @@
 
 .custom-input-container.custom-input-error {
   // Изменение 6
-  .custom-input-label {
+  .custom-input-label,
+  .custom-input-textarea-sapan-pan {
     color: @orange;
   }
   &::after {
@@ -482,6 +494,7 @@
 // < should always be at the bottom >
 
 .custom-input-container {
+  margin-bottom: 15px;
   // border: 2px solid red;
   // padding:100px;
 }
