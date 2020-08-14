@@ -78,9 +78,25 @@
                             locals: {
                                 warning: {
                                     title: 'Warning',
-                                    description: 'There is already layout with such user code. Layouts should have unique user codes.'
+                                    description: 'Layout with such user code already exists. Do you want to overwrite?',
+                                    actionsButtons: [
+                                        {
+                                            name: "Cancel",
+                                            response: {}
+                                        },
+                                        {
+                                            name: "Overwrite",
+                                            response: {status: 'overwrite'}
+                                        }
+                                    ]
                                 }
                             }
+                        }).then(function (res) {
+
+                            if (res.status === 'overwrite') {
+                                $mdDialog.hide({status: 'overwrite', data: {name: vm.layoutName, user_code: vm.layoutUserCode}});
+                            }
+
                         });
 
                         break;
