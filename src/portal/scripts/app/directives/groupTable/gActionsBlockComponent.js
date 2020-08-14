@@ -1440,7 +1440,11 @@
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         locals: {
-                            options: {}
+                            options: {
+                                complexSaveAsLayoutDialog: {
+                                    entityType: scope.entityType
+                                }
+                            }
                         },
                         clickOutsideToClose: false
                     }).then(function (res) {
@@ -1455,26 +1459,7 @@
                                 uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
 
                                     listLayout.id = data.id;
-
-                                    if (scope.isRootEntityViewer) {
-
-                                        middlewareService.setNewEntityViewerLayoutName(listLayout.name);
-
-                                    } else  {
-                                        scope.evDataService.setSplitPanelDefaultLayout(listLayout.id);
-                                        scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-                                        middlewareService.setNewSplitPanelLayoutName(listLayout.name); // Give signal to update active split panel layout name in the toolbar
-                                    }
-
-                                    scope.evDataService.setListLayout(listLayout);
-                                    scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-
-                                    scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
-
-                                    toastNotificationService.success("New layout with name '" + listLayout.name + "' created");
-
-                                    scope.isNewLayout = false;
-                                    scope.$apply();
+                                    scope.applyLayout(listLayout);
 
                                 }).catch(function (error) {
                                     toastNotificationService.error("Error occurred");
@@ -1524,8 +1509,79 @@
                             }
                         }
 
+                        if (res.status === 'overwrite') {
+
+                            var userCode = res.data.user_code;
+
+                            listLayout.name = res.data.name;
+                            listLayout.user_code = userCode;
+
+                            scope.getLayoutByUserCode(userCode)
+                                .then(function(changeableLayoutData) {
+
+                                    var changeableLayout = changeableLayoutData.results[0];
+                                    scope.overwriteLayout(changeableLayout, listLayout);
+
+                                })
+                                .then(function () {
+
+                                    listLayout.is_default = true;
+                                    scope.applyLayout(listLayout);
+
+                                });
+                        }
+
                     });
 
+                };
+
+                scope.getLayoutByUserCode = function (userCode) {
+
+                    var contentType = metaContentTypesService.findContentTypeByEntity(scope.entityType, 'ui');
+
+                    return uiService.getListLayoutDefault({
+                        pageSize: 1000,
+                        filters: {
+                            content_type: contentType,
+                            user_code: userCode
+                        }
+                    });
+
+                };
+
+                scope.overwriteLayout = function (changeableLayout, listLayout) {
+
+                    var id = changeableLayout.id;
+
+                    listLayout.id = id;
+                    changeableLayout.data = listLayout.data;
+                    changeableLayout.name = listLayout.name;
+
+                    return uiService.updateListLayout(id, changeableLayout);
+
+                };
+
+                scope.applyLayout = function (layout) {
+
+                    if (scope.isRootEntityViewer) {
+
+                        middlewareService.setNewEntityViewerLayoutName(layout.name);
+
+                    } else  {
+                        scope.evDataService.setSplitPanelDefaultLayout(layout.id);
+                        scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+                        middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active split panel layout name in the toolbar
+                    }
+
+                    scope.evDataService.setListLayout(layout);
+                    scope.evDataService.setActiveLayoutConfiguration({layoutConfig: layout});
+
+                    scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
+
+                    toastNotificationService.success("New layout with name '" + layout.name + "' created");
+
+                    scope.isNewLayout = false;
+                    scope.$apply();
 
                 };
 
