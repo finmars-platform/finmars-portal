@@ -21,8 +21,7 @@
         var selectedRow = data.selectedItem;
 
         var page = 1;
-        var pageSize = 40;
-        // var lastPageReached = false;
+        vm.pageSize = 40;
 
         vm.search = {
             'instrument': {
@@ -103,6 +102,7 @@
                 },
                 {
                     key: 'instrument_type_object.name',
+                    sortParameter: 'instrument_type',
                     name: 'Instrument type'
                 }
             ],
@@ -223,6 +223,11 @@
         vm.items = [];
         vm.selectedItem = {};
 
+        var scrollElem = null;
+        var scrollAtTheEnd = false;
+        var elemScrollHeight = null;
+        var scrollPositionToLoadItems = null;
+
         vm.agree = function () {
 
             if (itemsToDelete.length > 0) {
@@ -298,7 +303,7 @@
                 direction: sortOrder
             };
 
-            vm.getEntityItems('reloadTable');
+            vm.getEntityItems('reloadTable').then(refreshScrollHeight);
 
         };
 
@@ -335,11 +340,6 @@
 
         vm.loadOnScroll = function () {
 
-            var scrollAtTheEnd = false;
-            var scrollElem = document.querySelector('.entity-search-scroll-container');
-            var elemScrollHeight = scrollElem.scrollHeight;
-            var scrollPositionToLoadItems = scrollElem.clientHeight * 1.5; // start item loading when scroll almost at the end
-
             scrollElem.addEventListener('scroll', function () {
 
                 // Call function when scroll reaches specified position
@@ -349,20 +349,14 @@
                     if (vm.itemsCount && vm.itemsCount > vm.items.length) {
                         page = page + 1;
 
-                        vm.getEntityItems().then(function (data) {
-
-                            // refreshing of scroll height after loading new page of items
-                            elemScrollHeight = scrollElem.scrollHeight;
-                            scrollPositionToLoadItems = elemScrollHeight / 3;
-                            scrollAtTheEnd = false;
-
-                        });
+                        vm.getEntityItems().then(refreshScrollHeight);
 
                     }
 
                 }
 
             });
+
         };
 
         var getTableOptions = function () {
@@ -381,11 +375,18 @@
             return options;
         };
 
+        var refreshScrollHeight = function () {
+
+            // refreshing of scroll height after loading new page of items
+            elemScrollHeight = scrollElem.scrollHeight;
+            scrollPositionToLoadItems = scrollElem.clientHeight * 1.5; // start item loading when scroll almost at the end
+            scrollAtTheEnd = false;
+
+        };
 
         vm.getEntityItems = function (reloadTable) {
 
             vm.processing = true;
-            $scope.$apply();
 
             return new Promise(function (resolve, reject) {
 
@@ -393,7 +394,7 @@
                 if (reloadTable) {
                     page = 1;
                     vm.itemsCount = null;
-                    $('.entity-search-scroll-container').scrollTop(0);
+                    scrollElem.scrollTop = 0;
                 }
 
 
@@ -409,14 +410,10 @@
                         vm.items = vm.items.concat(data.results);
                     }
 
-                    setTimeout(function () {
+                    vm.processing = false;
 
-                        vm.processing = false;
-
-                        $scope.$apply()
-                        resolve({status: 'loaded'});
-
-                    }, 2000);
+                    $scope.$apply();
+                    resolve({status: 'loaded'});
 
                 });
             })
@@ -449,6 +446,10 @@
                 }
 
                 $scope.$apply();
+
+                scrollElem = document.querySelector('.entity-search-scroll-container');
+                refreshScrollHeight();
+
                 vm.loadOnScroll();
 
             });

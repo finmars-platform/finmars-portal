@@ -60,16 +60,20 @@
 
   .dashboard-constructor-sidebar {
     flex: 0 0 320px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
 
-    /*position: absolute;
-    right: 0;
-    top: 0;
-    box-sizing: border-box;
-    width: 320px;
-    height: 100%;*/
-    box-sizing: border-box;
+  .dashboard-constructor-comp-cards-top-text {
+    margin-bottom: 4px;
+    margin-top: 12px;
+    padding-left: 4px;
+    font-weight: bold;
+  }
+
+  .dashboard-constructor-comp-cards-container {
+    height: 480px;
     overflow: auto;
-    //z-index: 1;
   }
 
   .dashboard-constructor-draggable-card {

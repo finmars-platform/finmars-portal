@@ -13,7 +13,7 @@
     var scheduleService = require('../../../services/import/scheduleService');
     var attributeTypeService = require('../../../services/attributeTypeService');
 
-    module.exports = function ($scope, $mdDialog, schemeId) {
+    module.exports = function ($scope, $mdDialog, schemeId, importSchemesMethodsService) {
 
         logService.controller('InstrumentDownloadSchemeEditDialogController', 'initialized');
 
@@ -62,6 +62,7 @@
             'inputs'];
 
         vm.baseAttrs = metaService.getBaseAttrs();
+
         vm.entityAttrs = metaService.getEntityAttrs("instrument-scheme").map(function (item) {
             if (item.key == 'factor_schedule_method' || item.key == 'accrual_calculation_schedule_method') {
                 return null;
@@ -480,7 +481,6 @@
                 }
             }
 
-
             syncMapFields();
             syncMappedFieldsDefaults();
             syncMappedFieldsSecond();
@@ -490,25 +490,33 @@
 
             vm.inputsFunctions = vm.getFunctions();
             vm.readyStatus.scheme = true;
+
         };
 
         vm.resolveFieldType = function (field) {
 
             console.log('field', field);
 
+            field.complexExpressionEntity = false;
+
             if (field.value.hasOwnProperty('key')) {
+
                 field.key = field.value.key;
 
                 if (field.key == 'accrued_currency' || field.key == 'pricing_currency') {
                     field.complexExpressionEntity = 'currency';
                 }
+
             }
 
             if (field.value.hasOwnProperty('value_type') && field.value.hasOwnProperty('id')) {
+
                 field.attribute_type = field.value.id;
+
                 if (field.value.value_type == 30) {
                     field.complexExpressionEntity = 'classifier';
                 }
+
             }
 
         };
@@ -558,16 +566,19 @@
             vm.mappedDynamic.splice($index, 1);
         };
 
-        vm.setProviderFieldExpression = function (item) {
+        /*vm.setProviderFieldExpression = function (item) {
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
                 vm.inputsFunctions = vm.getFunctions();
             }
 
-        };
+        };*/
+        vm.setProviderFieldExpression = function (item) {
+            importSchemesMethodsService.setProviderFieldExpression(vm, item);
+        }
 
-        vm.openProviderFieldExpressionBuilder = function (item, $event) {
+        /*vm.openProviderFieldExpressionBuilder = function (item, $event) {
 
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
@@ -594,9 +605,12 @@
 
             });
 
-        };
+        };*/
+        vm.openProviderFieldExpressionBuilder = function (item, $event) {
+            importSchemesMethodsService.openFxBtnExprBuilder(item, vm, $event);
+        }
 
-        vm.checkForUserExpr = function (item) {
+        /*vm.checkForUserExpr = function (item) {
             if (item.name_expr) {
                 if (item.name && item.name === item.name_expr) {
                     return false;
@@ -606,13 +620,17 @@
             }
 
             return false;
-        };
+        };*/
+        vm.checkForUserExpr = function (item) {
+            return importSchemesMethodsService.checkForUserExpr(item);
+        }
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function ($event) {
+
             vm.schemeUpdated = {};
             vm.schemeUpdated['scheme_name'] = vm.schemeName;
             vm.schemeUpdated['provider'] = vm.schemeProvider;
@@ -702,7 +720,8 @@
             })
         };
 
-        vm.openMapping = function ($event, item) {
+        /*vm.openMapping = function ($event, item) {
+
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
@@ -715,14 +734,15 @@
                 locals: {
                     mapItem: item
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                }
-            });
+            })
+
+        };*/
+        vm.openMapping = function ($event, item) {
+            var locals = {mapItem: item}
+            importSchemesMethodsService.openMappingDialog(locals, $event);
         };
 
-        vm.checkForClassifierMapping = function (classifierId) {
+        /*vm.checkForClassifierMapping = function (classifierId) {
 
             var i;
             for (i = 0; i < vm.mappedDynamic.length; i++) {
@@ -739,9 +759,12 @@
 
             return false;
 
+        };*/
+        vm.checkForClassifierMapping = function (classifierId) {
+            importSchemesMethodsService.checkForClassifierMapping(vm.mappedDynamic, classifierId);
         };
 
-        vm.openClassifierMapping = function (classifierId, $event) {
+        /*vm.openClassifierMapping = function (classifierId, $event) {
 
             $mdDialog.show({
                 controller: 'EntityTypeClassifierMappingDialogController as vm',
@@ -760,7 +783,17 @@
                 }
             })
 
-        };
+        };*/
+        vm.openClassifierMapping = function (classifierId, $event) {
+            var localsObj = {
+                options: {
+                    entityType: vm.entityType,
+                    id: classifierId
+                }
+            }
+
+            importSchemesMethodsService.openClassifierMapping(localsObj, $event);
+        }
 
         vm.getSchedules = function () {
 
@@ -882,6 +915,7 @@
             }
 
         }
+
     };
 
 }());

@@ -18,8 +18,9 @@
 }
 
 .custom-input-borders {
+  overflow: hidden;
   border-radius: 6px;
-  padding: 1px 0 1px 1px;
+  //padding: 1px 0 1px 1px;
   border: 2px solid #7d7d7d;
 }
 
@@ -58,7 +59,9 @@
 }
 
 .custom-input.text-input {
-  resize: none;
+  overflow: hidden;
+  //resize: none;
+  text-overflow: ellipsis;
 }
 
 .custom-input:focus + .custom-input-indicator-btn {
@@ -101,9 +104,11 @@
   //border-left: none;
   border: none;
   background-color: transparent;
-  border-radius: 0 6px 6px 0;
+  //border-radius: 0 6px 6px 0;
+  border-radius: 0;
   padding: 2px 2px;
   fill: #7b7b7b;
+  z-index: 9;
 
   &:hover {
     background-color: #cecece;
@@ -155,10 +160,13 @@
   height: 140px;
   top: 0;
   left: 0;
+  background-color: #fff;
   border: 2px solid #7d7d7d;
   box-shadow: 0 0 2px rgba(0, 0, 0, 1);
   border-radius: 6px;
-  z-index: 9;
+  padding-top: 23px;
+  box-sizing: border-box;
+  z-index: 1;
 }
 
 .custom-input-full-text {
@@ -172,13 +180,20 @@
 
   &:focus {
     border: none;
+    outline: none;
+  }
+}
+
+.custom-input-full-text-focused {
+  .custom-input-indicator-btn {
+    z-index: 11;
   }
 }
 
 .custom-input-full-text-shown {
   display: block;
   opacity: 1;
-  z-index: 1;
+  z-index: 10;
 }
 
 
@@ -267,7 +282,9 @@
 }
 
 .custom-input.expression-input {
-  resize: none;
+  overflow: hidden;
+  //resize: none;
+  text-overflow: ellipsis;
   font-style: italic;
 }
 
@@ -315,9 +332,9 @@
     color:  #fa393e;
   }
 
-  .custom-input-indicator-btn {
-    //border-color: #fa393e;
-  }
+  /*.custom-input-indicator-btn {
+    border-color: #fa393e;
+  }*/
 
   .custom-input:focus {
     //border-color: #fa393e;

@@ -363,6 +363,15 @@
 
         };
 
+        vm.openLayout = function (layout, $event) {
+
+            $event.stopPropagation();
+
+            selectedLayout = layout;
+
+            vm.agree();
+        };
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };

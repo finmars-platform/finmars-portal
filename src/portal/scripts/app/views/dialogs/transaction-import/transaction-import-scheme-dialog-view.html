@@ -67,27 +67,33 @@
                                                            ng-model="item.column"
                                                            aria-label="provider field column number">
                                                 </md-input-container>
+
                                                 <md-input-container flex="70">
                                                     <!--<label for="">Name</label>-->
                                                     <input type="text"
                                                            data-ng-model="item.name"
-                                                           ng-blur="vm.setProviderFieldExpression(item)"
+                                                           ng-blur="vm.onCalculatedFieldNameBlur(item)"
                                                            aria-label="provider field name">
                                                 </md-input-container>
                                             </div>
+
                                             <div>
-                                                <md-button style="min-width: 40px;"
-                                                           ng-click="vm.removeCalculatedField(item, $index)"
+                                                <md-button ng-click="vm.removeCalculatedField(item, $index)"
                                                            class="md-raised"
-                                                           style="line-height: 1">x
+                                                           style="min-width: 40px;">x
                                                 </md-button>
                                             </div>
+
                                             <div>
                                                 <md-button class="md-raised"
-                                                           ng-click="vm.openCalculatedFieldExpressionBuilder(item, $event)"
-                                                           ng-class="vm.checkForUserExpr(item)"
+                                                           ng-click="vm.openCalcFieldFxBtnExprBuilder(item, $event)"
+                                                           data-ng-class="vm.getCalcFieldFxBtnClasses(item)"
                                                            style="min-width: 40px;">f(x)
                                                 </md-button>
+
+                                                <md-tooltip data-ng-show="item.frontOptions && item.frontOptions.noNameExpr"
+                                                            md-direction="top"
+                                                            class="error-tooltip">No expression defined for the calculated variable.</md-tooltip>
                                             </div>
                                         </div>
                                     </div>
