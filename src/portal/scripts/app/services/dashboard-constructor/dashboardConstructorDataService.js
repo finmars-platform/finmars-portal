@@ -56,6 +56,18 @@
 
         }
 
+        function deleteComponentById (componentId) {
+
+            for (var i = 0; i < layoutData.data.components.length; i++) {
+
+                if (layoutData.data.components[i].id === componentId) {
+                    layoutData.data.components.splice(i, 1);
+                }
+
+            }
+
+        }
+
         // non data store related methods, mostly helpers
 
         function ___generateId(str) {
@@ -71,6 +83,7 @@
             getComponents: getComponents,
             getComponentById: getComponentById,
             updateComponentById: updateComponentById,
+            deleteComponentById: deleteComponentById,
 
             // non data related method, mostly helpers
             ___generateId: ___generateId

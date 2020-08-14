@@ -16,6 +16,8 @@
         var vm = this;
 
         vm.complexSaveAsLayoutDialog = false;
+        vm.userCodeIsTouched = false;
+        vm.userCodeError = false;
 
         var layoutsUserCodes = ["New Layout"];
 
@@ -76,9 +78,25 @@
                             locals: {
                                 warning: {
                                     title: 'Warning',
-                                    description: 'There is already layout with such user code. Layouts should have unique user codes.'
+                                    description: 'Layout with such user code already exists. Do you want to overwrite?',
+                                    actionsButtons: [
+                                        {
+                                            name: "Cancel",
+                                            response: {}
+                                        },
+                                        {
+                                            name: "Overwrite",
+                                            response: {status: 'overwrite'}
+                                        }
+                                    ]
                                 }
                             }
+                        }).then(function (res) {
+
+                            if (res.status === 'overwrite') {
+                                $mdDialog.hide({status: 'overwrite', data: {name: vm.layoutName, user_code: vm.layoutUserCode}});
+                            }
+
                         });
 
                         break;
@@ -88,6 +106,18 @@
 
             if (!layoutNameOccupied) {
                 $mdDialog.hide({status: 'agree', data: {name: vm.layoutName, user_code: vm.layoutUserCode}});
+            }
+
+        };
+
+        vm.validateUserCode = function () {
+
+            var expression = /^\w+$/;
+
+            if (expression.test(vm.layoutUserCode)) {
+                vm.userCodeError = false;
+            } else {
+                vm.userCodeError = true;
             }
 
         };

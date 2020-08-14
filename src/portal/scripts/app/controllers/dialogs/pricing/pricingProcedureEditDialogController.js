@@ -14,6 +14,12 @@
     var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
     var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
 
+    var getAndOverwriteKeysPairs = {
+        'price_get_principal_prices': 'price_overwrite_principal_prices',
+        'price_get_accrued_prices': 'price_overwrite_accrued_prices',
+        'price_get_fx_rates': 'price_overwrite_fx_rates'
+    };
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
@@ -226,6 +232,8 @@
 
                 vm.item = data;
 
+                Object.keys(getAndOverwriteKeysPairs).forEach(vm.checkOverwriteValue);
+
                 if (vm.item.portfolio_filters) {
 
                     vm.item.portfolio_filters = vm.item.portfolio_filters.split(',');
@@ -285,6 +293,17 @@
                 $scope.$apply();
 
             })
+
+        };
+
+        vm.checkOverwriteValue = function (getKey) {
+
+            if (!vm.item[getKey]) {
+
+                var overwriteKey = getAndOverwriteKeysPairs[getKey];
+
+                vm.item[overwriteKey] = false;
+            }
 
         };
 
