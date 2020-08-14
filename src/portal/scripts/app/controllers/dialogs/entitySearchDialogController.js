@@ -101,7 +101,8 @@
                     name: 'User text 3'
                 },
                 {
-                    key: 'instrument_type',
+                    key: 'instrument_type_object.name',
+                    sortParameter: 'instrument_type',
                     name: 'Instrument type'
                 }
             ],
