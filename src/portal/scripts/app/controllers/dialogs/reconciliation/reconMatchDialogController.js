@@ -733,7 +733,7 @@
                         console.log('target', target);
                         console.log('elem', elem);
 
-                        vm.processing = true;
+                        //vm.processing = true;
 
                         var targetStatus = target.dataset.status;
                         var targetType = target.dataset.type;
@@ -760,7 +760,7 @@
                         console.log('elemParentIndex', elemParentIndex);
 
                         if (elemType === targetType) {
-
+                            // Dropped on the same die
                             var field;
                             var complexTransaction;
 
@@ -949,9 +949,10 @@
                                             vm.createBankField(bankFileLine, bankFileField).then(function (value) {
 
                                                 vm.processing = false;
-
                                                 $scope.$apply();
+
                                             })
+
                                         } else {
 
                                             vm.processing = true;
@@ -959,15 +960,17 @@
                                             vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
 
                                                 vm.processing = false;
-
                                                 $scope.$apply();
+
                                             })
                                         }
 
                                     } else {
-                                        vm.processing = false;
+
+                                        // vm.processing = false;
                                         drake.cancel(true);
                                         $(elem).show();
+
                                     }
 
 
@@ -980,8 +983,8 @@
                                         vm.createNewBankField(bankFileLine, bankFileField).then(function (value) {
 
                                             vm.processing = false;
-
                                             $scope.$apply();
+
                                         })
 
                                     } else {
@@ -995,8 +998,8 @@
                                             vm.createBankField(bankFileLine, bankFileField).then(function (value) {
 
                                                 vm.processing = false;
-
                                                 $scope.$apply();
+
                                             })
                                         } else {
 
@@ -1029,8 +1032,8 @@
                                 vm.updateComplexTransactionFieldStatus(complexTransactionLine, complexTransactionField).then(function (value) {
 
                                     vm.processing = false;
-
                                     $scope.$apply();
+
                                 })
 
                             }
@@ -1040,12 +1043,13 @@
                                 drake.cancel(true);
                                 $(elem).show();
 
-                                vm.processing = false;
+                                // vm.processing = false;
+
                             }
 
 
                         } else {
-
+                            // Dropped on the other side
                             console.log("Drop on other side");
 
                             if (nextSibling) {
@@ -1062,9 +1066,7 @@
                                     complexTransactionLine = reconMatchHelper.getComplexTransactionLineByFieldId(elemFieldId, vm.complexTransactionList);
                                     complexTransactionField = reconMatchHelper.getComplexTransactionField(elemFieldId, vm.complexTransactionList);
 
-                                }
-
-                                if (elemType === 'bank-file') {
+                                } else if (elemType === 'bank-file') {
 
                                     bankFileLine = reconMatchHelper.getBankLineByFieldId(elemFieldId, elemFieldType, vm.bankLinesList);
                                     bankFileField = reconMatchHelper.getBankFileField(elemFieldId, elemFieldType, vm.bankLinesList);
@@ -1123,9 +1125,10 @@
                                         vm.createBankField(bankFileLine, bankFileField).then(function (value) {
 
                                             vm.processing = false;
-
                                             $scope.$apply();
+
                                         })
+
                                     } else {
 
                                         vm.processing = true;
@@ -1133,9 +1136,10 @@
                                         vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
 
                                             vm.processing = false;
-
                                             $scope.$apply();
+
                                         })
+
                                     }
 
 
@@ -1155,8 +1159,8 @@
                                     vm.updateComplexTransactionFieldStatus(complexTransactionLine, complexTransactionField).then(function (value) {
 
                                         vm.processing = false;
-
                                         $scope.$apply();
+
                                     })
 
                                 } else {
@@ -1167,7 +1171,7 @@
 
                             } else {
 
-                                vm.processing = false;
+                                // vm.processing = false;
 
                                 drake.cancel(true);
                                 $(elem).show();

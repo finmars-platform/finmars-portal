@@ -688,6 +688,10 @@
 
                     if (additions.type === 'reconciliation') {
 
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                        interfaceLayout.verticalSplitPanel.width = 0;
+
+                        scope.evDataService.setVerticalSplitPanelStatus(false);
                         scope.evDataService.setVerticalAdditions({});
 
                         scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
@@ -717,6 +721,7 @@
                                 additions.isOpen = true;
                                 additions.type = 'reconciliation';
 
+                                scope.evDataService.setVerticalSplitPanelStatus(true);
                                 scope.evDataService.setVerticalAdditions(additions);
 
                                 scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
@@ -775,7 +780,7 @@
 
                             if (typeof data1 === 'object' && typeof data2 === 'object') {
 
-                                return objectComparisonHelper.comparePropertiesOfObjects(data1, data2);
+                                return objectComparisonHelper.areObjectsTheSame(data1, data2);
 
                             } else {
 
@@ -1694,12 +1699,8 @@
                     scope.evEventService.dispatchEvent(evEvents.RECON_TOGGLE_MATCH_EDITOR);
                 };
 
-                scope.reconBookSelected = function ($event) {
-
-                    console.log('reconBookSelected');
-
+                scope.reconBookSelected = function () {
                     scope.evEventService.dispatchEvent(evEvents.RECON_BOOK_SELECTED)
-
                 };
 
                 scope.saveReconLayout = function($event) {
@@ -1759,9 +1760,7 @@
                 };
 
                 scope.openDashboardComponentConstructor = function () {
-
                     scope.evEventService.dispatchEvent(evEvents.OPEN_DASHBOARD_COMPONENT_EDITOR);
-
                 };
 
                 scope.init = function () {
@@ -1812,7 +1811,6 @@
                         });
 
                         scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-
 
                         scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
 

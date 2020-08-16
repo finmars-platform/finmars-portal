@@ -12,7 +12,9 @@
             restrict: 'A',
             scope: {
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                rootWrapElem: '=',
+                contentWrapElem: '='
             },
             link: function (scope, elem, attrs) {
 
@@ -21,8 +23,6 @@
 
                 var lastMouseMoveEvent = null;
 
-                // var contentWrapElem = $('.g-content-wrap').first();
-                var contentWrapElem = $('.g-root-content-wrap').first();
                 var verticalSPElem = document.querySelector('.verticalSplitPanelWrapper');
 
                 function activateHeightSlider() {
@@ -43,8 +43,8 @@
 
                         // var wrapperElem = $('.g-wrapper');
                         // var sidebarElem = $('.g-filter-sidebar.main-sidebar').first();
-                        var splitPanelElem = $('.g-additions');
-                        var splitPanelWrapperElem = splitPanelElem.find('.g-content-wrap');
+                        var splitPanelElem = scope.rootWrapElem.querySelector('.g-additions');
+                        var splitPanelWrapperElem = splitPanelElem.querySelector('.g-content-wrap');
 
                         var headerHeight = interfaceLayout.headerToolbar.height;
 
@@ -59,12 +59,12 @@
 
                             interfaceLayout.splitPanel.height = splitPanelHeight;
 
-                            splitPanelElem.height(splitPanelHeight);
+                            splitPanelElem.style.height = splitPanelHeight + 'px';
                             if (splitPanelWrapperElem) {
-                                splitPanelWrapperElem.height(splitPanelHeight);
+                                splitPanelWrapperElem.style.height = splitPanelHeight + 'px';
                             }
 
-                            contentWrapElem.height(bodyHeight - headerHeight - splitPanelHeight);
+                            scope.contentWrapElem.style.height = (bodyHeight - headerHeight - splitPanelHeight) + 'px';
 
                             if (verticalSPElem) {
                                 verticalSPElem.style.height = (bodyHeight - headerHeight - splitPanelHeight) + 'px';
@@ -108,12 +108,12 @@
                         splitPanelHeight = Math.floor((bodyHeight - headerToolbarHeight) / 2);
                     }
 
-                    var splitPanelElem = $('.g-additions');
+                    var splitPanelElem = scope.rootWrapElem.querySelector('.g-additions');
 
                     interfaceLayout.splitPanel.height = splitPanelHeight;
 
-                    contentWrapElem.height(bodyHeight - headerToolbarHeight - splitPanelHeight);
-                    splitPanelElem.height(splitPanelHeight);
+                    scope.contentWrapElem.style.height = (bodyHeight - headerToolbarHeight - splitPanelHeight) + 'px';
+                    splitPanelElem.style.height = splitPanelHeight + 'px';
 
                     if (verticalSPElem) {
                         verticalSPElem.style.height = (bodyHeight - headerToolbarHeight - splitPanelHeight) + 'px';
@@ -123,11 +123,9 @@
 
                 }
 
-                function gHeightAlignerMethodToTriggerOnWindowResize() {
+                /*function onWindowResize() {
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
-                }
-
-                window.addEventListener('resize', gHeightAlignerMethodToTriggerOnWindowResize);
+                }*/
 
                 var additionsChangeCallbackIndex = scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
                     scope.additions = scope.evDataService.getAdditions();
@@ -159,6 +157,8 @@
 
                 scope.init = function () {
 
+                    //window.addEventListener('resize', onWindowResize);
+
                     setSplitHeights();
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
                     activateHeightSlider();
@@ -169,11 +169,12 @@
 
                 scope.$on('$destroy', function () {
 
-                    window.removeEventListener('resize', gHeightAlignerMethodToTriggerOnWindowResize);
+                    //window.removeEventListener('resize', onWindowResize);
                     scope.evEventService.removeEventListener(evEvents.ADDITIONS_CHANGE, additionsChangeCallbackIndex);
                     scope.evEventService.removeEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, verticalAdditionsChangeCallbackIndex);
 
                     setDefaultHeights();
+
                 })
 
             }
