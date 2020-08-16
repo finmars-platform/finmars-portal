@@ -56,6 +56,9 @@
                 top: headerToolbarHeight,
                 width: filterAreaWidth
             },
+            verticalSplitPanel: {
+                width: 0
+            },
             splitPanel: {
                 height: 0
             }
@@ -112,6 +115,7 @@
             allRowsSelected: false,
             rootEntityViewer: false,
             splitPanelIsActive: false,
+            verticalSplitPanelIsActive: false,
             splitPanelDefaultLayout: {}, // serves to manage default layout inside split panel
             splitPanelLayoutToOpen: null,
             additions: {},
@@ -213,6 +217,14 @@
 
         function isSplitPanelActive() {
             return data.splitPanelIsActive;
+        }
+
+        function setVerticalSplitPanelStatus(status) {
+            data.verticalSplitPanelIsActive = status;
+        }
+
+        function isVerticalSplitPanelActive() {
+            return data.verticalSplitPanelIsActive;
         }
 
         function setEntityType(entityType) {
@@ -604,8 +616,6 @@
         }
 
         function getRequestParameters(id) {
-
-            // console.log('data.requestParameters', data.requestParameters);
 
             if (data.requestParameters[id]) {
                 return data.requestParameters[id]
@@ -1434,6 +1444,8 @@
 
             setSplitPanelStatus: setSplitPanelStatus,
             isSplitPanelActive: isSplitPanelActive,
+            setVerticalSplitPanelStatus: setVerticalSplitPanelStatus,
+            isVerticalSplitPanelActive: isVerticalSplitPanelActive,
             setSplitPanelDefaultLayout: setSplitPanelDefaultLayout,
             getSplitPanelDefaultLayout: getSplitPanelDefaultLayout,
             setSplitPanelLayoutToOpen: setSplitPanelLayoutToOpen,

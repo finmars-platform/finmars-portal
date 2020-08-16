@@ -111,7 +111,7 @@
 
         }
 
-        var layoutChanged = objectComparisonHelper.comparePropertiesOfObjects(activeLayoutConfig, layoutCurrentConfig);
+        var layoutChanged = objectComparisonHelper.areObjectsTheSame(activeLayoutConfig, layoutCurrentConfig);
 
         return layoutChanged;
     };

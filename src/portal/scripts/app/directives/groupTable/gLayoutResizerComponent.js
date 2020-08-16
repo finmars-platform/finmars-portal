@@ -73,10 +73,10 @@
                         resizeWorkarea();
                     }, 0);
 
-                    window.addEventListener('resize', function () {
+                    /*window.addEventListener('resize', function () {
                         resizeWorkarea();
 
-                    });
+                    });*/
 
                     scope.evEventService.addEventListener('UPDATE_EV_UI', function () {
 
@@ -94,11 +94,11 @@
 
                     });
 
-                    scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
+                    /*scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
 
                         console.log("gLayoutResizeComponent Vertical Additions Change")
 
-                    });
+                    });*/
 
                 };
 

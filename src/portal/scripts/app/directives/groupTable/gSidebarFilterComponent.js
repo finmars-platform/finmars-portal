@@ -369,10 +369,10 @@
                         var objectId = lastClickedRow.___id;
                         var parentGroupHashId = lastClickedRow.___parentId;
 
-                        var contextMenuPosition = 'top: ' + $event.pageY + 'px; right: 0;';
+                        //var contextMenuPosition = 'top: ' + $event.pageY + 'px; right: 0;';
+                        var contextMenuPosition = {positionX: $event.pageX, positionY: $event.pageY};
 
                         if (scope.isReport) {
-
                             rvDomManager.createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, scope.evDataService, scope.evEventService, contextMenuPosition);
 
                         } else {

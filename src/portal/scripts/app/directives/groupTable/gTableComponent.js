@@ -71,7 +71,6 @@
 
                 scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
                 scope.workareaWrapElem = elem[0].querySelector('.g-workarea-wrap');
-
                 scope.rootWrapElem = document.querySelector('.g-wrapper.g-root-wrapper');  // we are looking for parent
 
                 if (scope.isRootEntityViewer) {
@@ -138,6 +137,23 @@
                 scope.toggleDashboardFilter = function () {
                     scope.dashboardFilterCollapsed = !scope.dashboardFilterCollapsed
                 };
+
+                scope.getWrapperClasses = function () {
+                    var classes = '';
+
+                    if (scope.isRootEntityViewer) {
+                        classes = 'g-root-wrapper';
+                    } else if (scope.isRecon) {
+                        classes = 'g-reconciliation-wrapper';
+                    }
+
+                    if (scope.evDataService.isVerticalSplitPanelActive()) {
+                        classes += ' g-v-split-panel-active';
+                    }
+
+                    return classes;
+
+                }
 
                 var initEventListeners = function () {
 
