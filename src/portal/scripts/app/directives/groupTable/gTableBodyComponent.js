@@ -341,6 +341,7 @@
                     if (isReport) {
                         contentElem.style.opacity = '1';
                     }
+
                     updateTableContent();
 
                     if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {

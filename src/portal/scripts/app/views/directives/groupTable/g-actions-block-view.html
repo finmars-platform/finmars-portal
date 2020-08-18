@@ -302,10 +302,10 @@
 
             </div>
 
-            <div data-ng-if="!isReport && entityType == 'reconciliation' ">
+            <div data-ng-if="!isReport && entityType === 'reconciliation'">
 
                 <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
-                    <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                    <button class="md-raised md-button full-width md-ink-ripple" type="button"
                             ng-click="openViewConstructor($event)">Columns/Groups/Filters
                     </button>
                 </div>

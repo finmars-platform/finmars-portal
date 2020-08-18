@@ -3,6 +3,8 @@
   height: 100%;
   background: #ddd;
   position: relative;
+  padding-right: 6px;
+  box-sizing: border-box;
   /*position: absolute;
   left: 0;
   top: 0;*/
@@ -132,11 +134,26 @@
   margin: 1px;
   text-align: center;
   box-sizing: border-box;
+  padding-bottom: 56px;
+
+  &.recon-cards-container-dragged-over {
+    padding-bottom: 0;
+  }
+}
+
+.recon-cards-container-dragged-over {
+  box-shadow: 0 0 8px #363636 inset;
+  background: rgba(174, 174, 174, 0.3);
+}
+
+.recon-dragged-over-card {
+  .match-recon-card {
+    box-shadow: 0 0 8px #363636 inset;
+  }
 }
 
 .match-recon-card {
   background: #fff;
-
   padding: 5px;
   cursor: pointer;
 }
