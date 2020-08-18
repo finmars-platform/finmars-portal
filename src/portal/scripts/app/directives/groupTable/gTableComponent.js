@@ -65,7 +65,7 @@
 
                 scope.isRecon = false;
 
-                if (scope.evDataService.getViewContext() === 'reconciliation_viewer') {
+                if (viewContext === 'reconciliation_viewer') {
                     scope.isRecon = true;
                 }
 

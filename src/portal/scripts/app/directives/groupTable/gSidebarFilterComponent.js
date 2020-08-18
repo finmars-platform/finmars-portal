@@ -971,7 +971,7 @@
                     } else {
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
-                            templateUrl: 'views/directives/groupTable/modal-view.html',
+                            templateUrl: 'views/directives/groupTable/g-modal-view.html',
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
