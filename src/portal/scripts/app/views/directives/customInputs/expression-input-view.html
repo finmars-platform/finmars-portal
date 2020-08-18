@@ -1,85 +1,104 @@
-<div class="custom-input-container expression-input-container textInputContainer"
-     data-ng-class="getInputContainerClasses()">
-    <div class="custom-input-top-row">
-        <div data-ng-bind="label" class="custom-input-label"></div>
+<div
+  class="custom-input-container expression-input-container textInputContainer"
+  data-ng-class="getInputContainerClasses()"
+>
+  <div class="custom-input-top-row">
+    <div data-ng-bind="label" class="custom-input-label"></div>
 
-        <div data-ng-if="tooltipText" class="custom-input-tooltip">
-            <ng-md-icon icon="info"
-                        size="16"
-                        class="tooltip-sign"
-                        style="fill: #777777"></ng-md-icon>
-            <md-tooltip class="tooltip_2"
-                        md-direction="top"
-                        data-ng-bind="tooltipText"></md-tooltip>
+    <div data-ng-if="tooltipText" class="custom-input-tooltip">
+      <ng-md-icon
+        icon="info"
+        size="16"
+        class="tooltip-sign"
+        style="fill: #777777;"
+      ></ng-md-icon>
+      <md-tooltip
+        class="tooltip_2"
+        md-direction="top"
+        data-ng-bind="tooltipText"
+      ></md-tooltip>
+    </div>
+  </div>
+
+  <div class="custom-input-main-container">
+    <div class="custom-input-borders">
+      <div class="custom-input-content">
+        <div data-ng-if="error" class="custom-input-error-tooltip">
+          <ng-md-icon icon="info" size="18" class="tooltip-sign"></ng-md-icon>
+          <md-tooltip class="error-tooltip" md-direction="top"
+            >{{error}}</md-tooltip
+          >
         </div>
+
+        <div class="flex-row">
+          <input
+            data-ng-model="model"
+            data-ng-change="onInputChange()"
+            data-ng-model-options="{debounce: 500}"
+            placeholder="Expression"
+            class="custom-input expression-input textInputElem"
+            ng-readonly="isReadonly"
+            ng-disabled="isDisabled"
+          />
+
+          <button
+            data-ng-if="!noIndicatorBtn"
+            class="custom-input-indicator-btn"
+            data-ng-click="openExpressionBuilder($event)"
+            data-ng-disabled="isReadonly"
+          >
+            <i class="fas fa-arrows-alt-h"></i>
+          </button>
+        </div>
+
+        <div class="custom-input-custom-btns-holder">
+          <div
+            data-ng-if="customButtons && customButtons.length"
+            class="height-100"
+          >
+            <button
+              data-ng-repeat="button in customButtons"
+              class="{{button.classes}} custom-input-custom-btn"
+              data-ng-click="callFnForCustomBtn(button.action)"
+            >
+              {{button.caption}}
+
+              <ng-md-icon
+                data-ng-if="button.iconObj.type === 'angular-material'"
+                size="22"
+                icon="{{button.iconObj.icon}}"
+              ></ng-md-icon>
+              a
+              <i
+                data-ng-if="button.iconObj.type === 'fontawesome'"
+                class="{{button.iconObj.icon}}"
+              ></i>
+
+              <md-tooltip
+                data-ng-if="button.tooltip"
+                class="tooltip_1"
+                md-direction="top"
+                >{{button.tooltip}}</md-tooltip
+              >
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="custom-input-main-container">
-
-        <div class="custom-input-borders">
-            <div class="custom-input-content">
-
-                <div data-ng-if="error" class="custom-input-error-tooltip">
-                    <ng-md-icon icon="info"
-                                size="18"
-                                class="tooltip-sign"></ng-md-icon>
-                    <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
-                </div>
-
-                <div class="flex-row">
-                    <input data-ng-model="model"
-                              data-ng-change="onInputChange()"
-                              data-ng-model-options="{debounce: 500}"
-                              placeholder="Expression"
-                              class="custom-input expression-input textInputElem"
-                              ng-readonly="isReadonly"
-                              ng-disabled="isDisabled">
-
-                    <button data-ng-if="!noIndicatorBtn"
-                            class="custom-input-indicator-btn"
-                            data-ng-click="openExpressionBuilder($event)"
-                            data-ng-disabled="isReadonly">
-                        <i class="fas fa-arrows-alt-h"></i>
-                    </button>
-                </div>
-
-                <div class="custom-input-custom-btns-holder">
-                    <div data-ng-if="customButtons && customButtons.length" class="height-100">
-
-                        <button data-ng-repeat="button in customButtons"
-                                class="{{button.classes}} custom-input-custom-btn"
-                                data-ng-click="callFnForCustomBtn(button.action)">
-                            {{button.caption}}
-
-                            <ng-md-icon data-ng-if="button.iconObj.type === 'angular-material'"
-                                        size="22"
-                                        icon="{{button.iconObj.icon}}"></ng-md-icon>
-a
-                            <i data-ng-if="button.iconObj.type === 'fontawesome'"
-                               class="{{button.iconObj.icon}}"></i>
-
-                            <md-tooltip data-ng-if="button.tooltip"
-                                        class="tooltip_1"
-                                        md-direction="top">{{button.tooltip}}</md-tooltip>
-                        </button>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="custom-input-full-text-container customInputFullText">
-            <textarea data-ng-model="model"
-                      class="custom-input-full-text customInputFullText">
+    <div class="custom-input-full-text-container customInputFullText">
+      <textarea
+        data-ng-model="model"
+        class="custom-input-full-text customInputFullText"
+      >
                 <button data-ng-if="!noIndicatorBtn"
                         class="custom-input-indicator-btn2"
                         data-ng-click="openTextInDialog($event)"
                         data-ng-disabled="isReadonly">
                     <i class="fas fa-edit"></i>
                 </button>
-            </textarea>
-        </div>
-
+            </textarea
+      >
     </div>
+  </div>
 </div>
