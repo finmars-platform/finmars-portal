@@ -10,15 +10,7 @@
         itemList.forEach(function (item) {
 
             var itemKey = item[key] || '-';
-            var itemTotal;
-
-            /*if (result.indexOf(item[key]) === -1) {
-
-                if (item[key]) {
-                    result.push(item[key])
-                }
-
-            }*/
+            var itemTotal = null;
 
             if (item[valueKey] !== null) {
                 itemTotal = item[valueKey];
@@ -36,14 +28,19 @@
                 result.push(itemObj);
                 foundItems.push(itemObj.key);
 
-            } else if (itemTotal) {
-                result[itemIndex].total += itemTotal;
+            } else {
+
+                if ((itemTotal || itemTotal === 0) && result[itemIndex].total === null) {
+                    result[itemIndex].total = 0;
+                }
+
+                if (itemTotal) {
+                    result[itemIndex].total += itemTotal;
+                }
 
             }
 
         });
-
-        result.push({key :'-column_row', total: 0});
 
         result = result.sort(function (a, b) {
 
@@ -55,7 +52,7 @@
                 return -1;
             }
 
-            if (a.key.indexOf('-') === 0 && b.key.indexOf('-') === 0) { // if both words starts with '-', filter as ususal
+            if (a.key.indexOf('-') === 0 && b.key.indexOf('-') === 0) { // if both words starts with '-', filter as usual
 
                 var aWithoutDash = a.key.slice(1);
                 var bWithoutDash = b.key.slice(1);
@@ -175,18 +172,41 @@
 
             row.items.forEach(function (column) {
 
+                var cellHasNumericVal = false;
+
                 if (column.data.flatListItems.length) {
 
-                    var columnData = {
-                        key: valueKey,
-                        report_settings: {
-                            subtotal_formula_id: subtotal_formula_id
+                    for (var i = 0; i < column.data.flatListItems.length; i++) { // check if at least one flatListItem has number in valueKey
+
+                        var flItem = column.data.flatListItems[i];
+
+                        if (flItem[valueKey] || flItem[valueKey] === 0) {
+
+                            cellHasNumericVal = true;
+                            break;
+
                         }
-                    };
 
-                    var colValueObj = rvSubtotalService.calculateColumn(column.data.flatListItems, columnData);
-                    column.data.value = colValueObj[valueKey];
+                    }
 
+                    if (cellHasNumericVal) {
+
+                        var columnData = {
+                            key: valueKey,
+                            report_settings: {
+                                subtotal_formula_id: subtotal_formula_id
+                            }
+                        };
+
+                        var colValueObj = rvSubtotalService.calculateColumn(column.data.flatListItems, columnData);
+                        column.data.value = colValueObj[valueKey];
+
+                    } else {
+                        column.data.value = null;
+                    }
+
+                } else {
+                    column.data.value = null;
                 }
 
                 delete column.data.flatListItems;
@@ -241,7 +261,7 @@
 
     }*/
 
-    function hideEmptyRows (matrix) {
+    /*function hideEmptyRows (matrix) {
 
         matrix.forEach(function (row, rowIndex) {
 
@@ -263,9 +283,9 @@
 
     }
 
-    function hideEmptyCols (columns) {
+    function hideEmptyCols (matrix, columns) {
 
-        /*var colsToDelete = [];
+        var colsToDelete = [];
 
         matrix.forEach(function (row) {
 
@@ -293,20 +313,20 @@
 
             });
 
-        });*/
+        });
 
         return columns;
-    }
+    }*/
 
 
     module.exports = {
 
         getMatrixUniqueValues: getMatrixUniqueValues,
-        getMatrix: getMatrix,
+        getMatrix: getMatrix
         //getMatrixTotals: getMatrixTotals,
 
-        hideEmptyRows: hideEmptyRows,
-        hideEmptyCols: hideEmptyCols
+        /*hideEmptyRows: hideEmptyRows,
+        hideEmptyCols: hideEmptyCols*/
 
     }
 

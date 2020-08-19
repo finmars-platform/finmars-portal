@@ -31,6 +31,10 @@
                 scope.matrixView = scope.matrixSettings.matrix_view;
                 scope.emptyLinesHidingType = '';
 
+                if (scope.matrixSettings.hide_empty_lines) {
+                    scope.emptyLinesHidingType = scope.matrixSettings.hide_empty_lines;
+                }
+
                 var cellWidth = 0;
 
                 var matrixHolder;
@@ -330,6 +334,8 @@
 
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
                     scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);
+
+                    //scope.rows.push({key: 'Строка с null', total: 0});
 
                 };
 

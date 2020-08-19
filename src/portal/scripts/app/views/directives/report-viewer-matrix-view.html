@@ -20,7 +20,7 @@
                     <md-menu-content width="3">
 
                         <md-menu-item>
-                            <md-menu >
+                            <md-menu>
 
                                 <md-button aria-label="show number formatting menu"
                                            ng-click="$mdOpenMenu($event)">
@@ -163,7 +163,7 @@
                                 <md-button aria-label="Open phone interactions menu"
                                            class=""
                                            ng-click="$mdOpenMenu($event)">
-                                    <span>Hide empty columns or/and rows</span>
+                                    <span>Hide empty columns or / and rows</span>
                                     <ng-md-icon icon="arrow_drop_up"
                                                 class="z-dropdown-icon"></ng-md-icon>
                                 </md-button>
@@ -214,11 +214,11 @@
 
             <div class="rvm-header-row-holder">
                 <div class="rv-matrix-part-to-scroll rvmHeaderScrollableRow">
-                    <div class="report-viewer-matrix-column-header-cell rvMatrixCell"
+                    <div data-ng-repeat="column in columns track by $index"
+                         class="report-viewer-matrix-column-header-cell rvMatrixCell"
                          data-ng-class="{'active': activeItem == 'column_total:' + $index}"
                          title="{{column.key}}"
-                         data-ng-click="singleColumnTotalClick($event, $index)"
-                         data-ng-repeat="column in columns track by $index">
+                         data-ng-click="singleColumnTotalClick($event, $index)">
                         {{column.key}}
                     </div>
 
