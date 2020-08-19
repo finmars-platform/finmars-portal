@@ -152,6 +152,23 @@
 
                     </div>
 
+                </md-content>
+            </md-tab>
+
+            <md-tab label="ADVANCE SETTINGS">
+                <md-content class="p-16">
+
+                    <div class="m-b-24">
+                        <md-input-container class="dashboard-constructor-field1" style="margin: 0 10px;">
+                            <label for="">Hide empty columns or / and rows</label>
+                            <md-select data-ng-model="vm.item.settings.hide_empty_lines">
+                                <md-option value="columns">Hide columns</md-option>
+                                <md-option value="rows">Hide rows</md-option>
+                                <md-option value="columns_rows">Hide columns and rows</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
                     <div class="m-b-24" layout="row">
 
                         <md-input-container class="dashboard-constructor-field1" style="margin: 0 10px;">
@@ -167,7 +184,6 @@
 
                 </md-content>
             </md-tab>
-
             <!-- COMMITTED: 07.07.2020 -->
             <!--<md-tab label="LINKING">
                 <md-content class="p-16">

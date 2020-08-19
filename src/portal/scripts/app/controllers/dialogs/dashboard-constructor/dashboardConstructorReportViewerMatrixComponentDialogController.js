@@ -42,7 +42,8 @@
                     },
                     auto_refresh: false,
                     auto_scaling: false,
-                    linked_components: {}
+                    linked_components: {},
+                    hide_empty_lines: ''
                 },
 
                 user_settings: {}
@@ -149,6 +150,10 @@
 
         };
 
+        vm.clearSelect = function (item, propToDelete) {
+            delete item[propToDelete];
+        }
+
         vm.getAttributes = function(){
 
             vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
@@ -175,7 +180,7 @@
             vm.item.settings.content_type = vm.getContentTypeByEntityType();
 
 
-            if(vm.item.settings.subtotal_formula_id) {
+            if (vm.item.settings.subtotal_formula_id) {
                 vm.item.settings.subtotal_formula_id = parseInt(vm.item.settings.subtotal_formula_id, 10);
             }
 
@@ -213,41 +218,6 @@
             }, 100);
 
             vm.componentsTypes = dataService.getComponents();
-
-            /*vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control';
-            });
-
-            vm.dateControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' && componentType.settings.value_type === 40
-            });
-
-            vm.currencyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' &&
-                    componentType.settings.value_type === 100 &&
-                    componentType.settings.content_type === 'currencies.currency'
-            });
-
-            vm.pricingPolicyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' &&
-                    componentType.settings.value_type === 100 &&
-                    componentType.settings.content_type === 'instruments.pricingpolicy'
-            });
-
-            vm.componentsTypes.forEach(function (comp) {
-
-                if (componentsForLinking.indexOf(comp.type) !== -1 &&
-                    comp.id !== vm.item.id) {
-
-                    vm.componentsForMultiselector.push(
-                        {
-                            id: comp.id,
-                            name: comp.name
-                        });
-
-                }
-
-            });*/
 
             dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.id);
 
