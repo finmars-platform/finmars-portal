@@ -568,23 +568,23 @@
                 scope.item.buttons = [];
               }
 
-              if (scope.item.options.dateToday) {
-                scope.item.buttons.push({
-                  icon: "",
-                  tooltip: "Set today's date",
-                  caption: "T",
-                  classes: "date-input-specific-btns",
-                  action: { callback: scope.setDateToday },
-                });
-              }
-
               if (scope.item.options.dateTodayPlus) {
                 scope.item.buttons.push({
                   icon: "",
                   tooltip: "Increase by one day",
-                  caption: "T+1",
+                  caption: "+",
                   classes: "date-input-specific-btns",
                   action: { callback: scope.setDatePlus },
+                });
+              }
+
+              if (scope.item.options.dateToday) {
+                scope.item.buttons.push({
+                  icon: "",
+                  tooltip: "Set today's date",
+                  caption: "○",
+                  classes: "date-input-specific-btns",
+                  action: { callback: scope.setDateToday },
                 });
               }
 
@@ -592,7 +592,7 @@
                 scope.item.buttons.push({
                   icon: "",
                   tooltip: "Decrease by one day",
-                  caption: "T-1",
+                  caption: "-",
                   classes: "date-input-specific-btns",
                   action: { callback: scope.setDateMinus },
                 });

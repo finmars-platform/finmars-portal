@@ -1,3 +1,5 @@
+<!-- Левый край верх -->
+
 <div
   class="custom-input-container smart-search-input-container smartSearchInputContainer"
   data-ng-class="getInputContainerClasses()"
@@ -7,8 +9,8 @@
     <div data-ng-if="tooltipText" class="custom-input-tooltip">
       <ng-md-icon
         data-ng-if="!error"
-        icon="info"
-        size="16"
+        icon="info_outline"
+        size="24"
         class="tooltip-sign"
         style="fill: #777777;"
       ></ng-md-icon>
@@ -29,7 +31,11 @@
     <div class="custom-input-borders">
       <div class="custom-input-content">
         <div data-ng-if="error" class="custom-input-error-tooltip">
-          <ng-md-icon icon="info" size="18" class="tooltip-sign"></ng-md-icon>
+          <ng-md-icon
+            icon="info_outline"
+            size="18"
+            class="tooltip-sign"
+          ></ng-md-icon>
           <md-tooltip class="error-tooltip" md-direction="top"
             >{{error}}</md-tooltip
           >
@@ -50,11 +56,18 @@
             class="custom-input-indicator-btn position-relative"
             data-ng-click="openSmartSearch($event)"
           >
-            <i data-ng-if="!iconData" class="fas fa-link"></i>
-            <i
+            <!-- <i data-ng-if="!iconData" class="fas fa-link"></i> -->
+            <!-- <i
               data-ng-if="iconData && iconData.type === 'class'"
               class="{{iconData.icon}}"
-            ></i>
+            ></i> -->
+            <ng-md-icon
+              data-ng-if="iconData && iconData.type === 'class'"
+              icon="dehaze"
+              size="24"
+              style="fill: #777777;"
+            ></ng-md-icon>
+            <!-- dehaze -->
           </button>
         </div>
 
@@ -72,14 +85,14 @@
 
               <ng-md-icon
                 data-ng-if="button.iconObj.type === 'angular-material'"
-                size="22"
+                size="24"
                 icon="{{button.iconObj.icon}}"
               ></ng-md-icon>
 
-              <i
+              <!-- <i
                 data-ng-if="button.iconObj.type === 'fontawesome'"
                 class="{{button.iconObj.icon}}"
-              ></i>
+              ></i> -->
 
               <md-tooltip
                 data-ng-if="button.tooltip"
