@@ -233,7 +233,13 @@
 
                             <md-button data-ng-if="entityType === 'complex-transaction'"
                                        class="md-raised long-text-btn"
-                                       data-ng-click="openReconDialog($event)">Reconciliation
+                                       data-ng-click="toggleRecon($event)">
+                                <span data-ng-hide="verticalAdditions && verticalAdditions.type === 'reconciliation'">
+                                    Reconciliation
+                                </span>
+                                <span data-ng-hide="!verticalAdditions || verticalAdditions.type !== 'reconciliation'" style="font-size: 8px;">
+                                    Close reconciliation
+                                </span>
                             </md-button>
                         </div>
                     </div>
