@@ -4,14 +4,8 @@
 >
   <div class="custom-input-top-row">
     <span class="custom-input-textarea-sapan-pan">{{label}}</span>
-    <div data-ng-if="tooltipText" class="custom-input-tooltip">
-      <ng-md-icon
-        data-ng-if="!error"
-        icon="info"
-        size="16"
-        class="tooltip-sign"
-        style="fill: #777777;"
-      ></ng-md-icon>
+    <div data-ng-if="tooltipText && !error" class="custom-input-tooltip">
+      <span class="material-icons">info_outline</span>
       <md-tooltip
         class="tooltip_2"
         md-direction="top"
