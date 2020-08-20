@@ -64,6 +64,10 @@
             }
         ];
 
+        var dragAndDropBankFileLines;
+        var dragAndDropComplexTransactionLines;
+        var dragAndDropFields;
+
         vm.createBankField = function (bankLine, field) {
 
             return new Promise(function (resolve, reject) {
@@ -703,7 +707,7 @@
 
         vm.initDragula = function () {
 
-            var dragAndDropBankFileLines = {
+            dragAndDropBankFileLines = {
 
                 init: function () {
                     this.dragulaInit();
@@ -751,10 +755,15 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
+                    dragAndDropBankFileLines = null;
                 }
             };
 
-            var dragAndDropComplexTransactionLines = {
+            dragAndDropComplexTransactionLines = {
 
                 init: function () {
                     this.dragulaInit();
@@ -799,10 +808,15 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
+                    dragAndDropComplexTransactionLines = null;
                 }
             };
 
-            var dragAndDropFields = {
+            dragAndDropFields = {
 
                 init: function () {
                     this.dragulaInit();
@@ -814,7 +828,8 @@
                     var areaItemsChanged;
                     var drake = this.dragula;
 
-                    var draggedOverElem = null;
+                    var draggedOverElem;
+                    var shadowElem;
 
                     drake.on('dragstart', function () {
                         areaItemsChanged = false;
@@ -822,12 +837,6 @@
 
                     drake.on('drag', function () {
                         document.addEventListener('wheel', DnDWheel);
-                    });
-
-                    drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
-
-                        vm.syncStatuses();
                     });
 
                     drake.on('over', function (elem, container, source) {
@@ -845,26 +854,12 @@
 
                     });
 
-                    drake.on('out', function (elem, container, source) {
-
-                        draggedOverElem = null;
-
-                        container.classList.remove('active');
-                        container.classList.remove('recon-cards-container-dragged-over');
-
-                        var lastDraggedOverCard = container.querySelector('.recon-dragged-over-card');
-                        if (lastDraggedOverCard) {
-                            lastDraggedOverCard.classList.remove('recon-dragged-over-card');
-                        }
-
-                    });
-
                     drake.on('shadow', function (elem, container, source) { // used to prevent showing shadow of card in deletion area
 
-                        console.log('elem', {elem: elem});
-
-                        var cardType = elem.dataset.type;
-                        var containerType;
+                        /*var cardType = elem.dataset.type;
+                        var containerType;*/
+                        elem.classList.remove('display-none');
+                        shadowElem = elem;
 
                         var elemType = elem.dataset.type;
                         var elemContainerStatus = source.dataset.status;
@@ -941,7 +936,23 @@
                         }*/
 
                         if (hideShadow || nextSibling) {
-                            $(elem).remove();
+                            //$(elem).hide();
+                            elem.classList.add('display-none');
+                        }
+
+                    });
+
+                    drake.on('out', function (elem, container, source) {
+
+                        draggedOverElem = null;
+                        shadowElem.classList.add('display-none');
+
+                        container.classList.remove('active');
+                        container.classList.remove('recon-cards-container-dragged-over');
+
+                        var lastDraggedOverCard = container.querySelector('.recon-dragged-over-card');
+                        if (lastDraggedOverCard) {
+                            lastDraggedOverCard.classList.remove('recon-dragged-over-card');
                         }
 
                     });
@@ -1142,6 +1153,7 @@
                                     }
 
                                     else if (targetStatus === 'ignore') {
+
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
 
                                         if (bankFileFieldStatus === 'new') {
@@ -1170,7 +1182,7 @@
                                     } else {
 
                                         // vm.processing = false;
-                                        drake.cancel(true);
+                                        drake.cancel();
                                         //$(elem).show();
 
                                     }
@@ -1242,7 +1254,7 @@
 
                             else {
 
-                                drake.cancel(true);
+                                drake.cancel();
                                 //$(elem).show();
 
                                 // vm.processing = false;
@@ -1252,7 +1264,6 @@
 
                         } else {
                             // Dropped on the other side
-                            console.log("Drop on other side");
 
                             if (nextSibling) {
 
@@ -1281,11 +1292,11 @@
                                 var complexTransactionFieldStatus = reconMatchHelper.getComplexTransactionFieldStatusNameById(complexTransactionField.status);
 
 
-                                console.log("Result bankFileField?", bankFileField);
+                                /*console.log("Result bankFileField?", bankFileField);
                                 console.log("Result complexTransactionField?", complexTransactionField);
 
                                 console.log("Result bankFileFieldStatus?", bankFileFieldStatus);
-                                console.log("Result complexTransactionFieldStatus?", complexTransactionFieldStatus);
+                                console.log("Result complexTransactionFieldStatus?", complexTransactionFieldStatus);*/
 
 
                                 if (['new', 'conflict', 'resolved', 'ignore', 'matched', 'auto_matched'].indexOf(bankFileFieldStatus) !== -1 &&
@@ -1314,8 +1325,6 @@
                                     bankFileLine.matched_fields = bankFileLine.matched_fields.filter(function (item) {
                                         return item.id !== bankFileField.id
                                     });
-
-                                    console.log('bankFileLine', bankFileLine);
 
 
                                     bankFileLine.matched_fields.push(bankFileField);
@@ -1366,7 +1375,7 @@
                                     })
 
                                 } else {
-                                    drake.cancel(true);
+                                    drake.cancel();
                                     //$(elem).show();
                                 }
 
@@ -1375,7 +1384,7 @@
 
                                 // vm.processing = false;
 
-                                drake.cancel(true);
+                                drake.cancel();
                                 //$(elem).show();
 
                             }
@@ -1384,6 +1393,13 @@
 
                         vm.syncStatuses();
 
+                    });
+
+                    drake.on('dragend', function (elem) {
+                        document.removeEventListener('wheel', DnDWheel);
+
+                        vm.syncStatuses();
+                        elem.classList.remove('display-none');
                     });
 
                 },
@@ -1447,6 +1463,11 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
+                    dragAndDropFields = null;
                 }
             };
 
@@ -1606,6 +1627,13 @@
         };
 
         vm.init();
+
+        $scope.$on("$destroy", function () {
+            dragAndDropBankFileLines.destroy();
+            dragAndDropComplexTransactionLines.destroy();
+            dragAndDropFields.destroy();
+        });
+
     }
 
 }());
