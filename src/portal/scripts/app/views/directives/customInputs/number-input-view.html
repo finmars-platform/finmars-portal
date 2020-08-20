@@ -1,3 +1,5 @@
+<!-- Калькулятор -->
+
 <div
   class="custom-input-container number-input-container numberInputContainer"
   data-ng-class="getInputContainerClasses()"
@@ -7,8 +9,8 @@
     <div data-ng-if="tooltipText" class="custom-input-tooltip">
       <ng-md-icon
         data-ng-if="!error"
-        icon="info"
-        size="16"
+        icon="info_outline"
+        size="24"
         class="tooltip-sign"
         style="fill: #777777;"
       ></ng-md-icon>
@@ -19,9 +21,6 @@
       ></md-tooltip>
     </div>
     <!-- <div data-ng-bind="label" class="custom-input-label"></div>
-
-
-
        -->
   </div>
 
@@ -29,7 +28,11 @@
     <div class="custom-input-borders">
       <div class="custom-input-content">
         <div data-ng-if="error" class="custom-input-error-tooltip">
-          <ng-md-icon icon="info" size="18" class="tooltip-sign"></ng-md-icon>
+          <ng-md-icon
+            icon="info_outline"
+            size="18"
+            class="tooltip-sign"
+          ></ng-md-icon>
           <md-tooltip class="error-tooltip" md-direction="top"
             >{{error}}</md-tooltip
           >
@@ -50,7 +53,12 @@
             data-ng-click="openCalculatorDialog($event)"
           >
             <!-- <ng-md-icon icon="chrome_reader_mode" size="20" class="number-input-calculator-btn"></ng-md-icon> -->
-            <i class="fas fa-calculator"></i>
+            <!-- <i class="fas fa-calculator"></i> -->
+            <ng-md-icon
+              icon="apps"
+              size="24"
+              style="fill: #777777;"
+            ></ng-md-icon>
           </button>
         </div>
 
@@ -68,14 +76,14 @@
 
               <ng-md-icon
                 data-ng-if="button.iconObj.type === 'angular-material'"
-                size="22"
+                size="24"
                 icon="{{button.iconObj.icon}}"
               ></ng-md-icon>
 
-              <i
+              <!-- <i
                 data-ng-if="button.iconObj.type === 'fontawesome'"
                 class="{{button.iconObj.icon}}"
-              ></i>
+              ></i> -->
 
               <md-tooltip
                 data-ng-if="button.tooltip"

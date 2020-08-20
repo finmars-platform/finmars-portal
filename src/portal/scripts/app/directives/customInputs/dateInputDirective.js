@@ -22,11 +22,15 @@
 
         var stylePreset;
 
+        if (scope.customButtons.tooltip == "Recalculate linked field") {
+          scope.customButtons.iconObj.type == "angular-material";
+          alert("cool");
+        }
         // TIPS
         // scope.smallOptions probable properties
         // tooltipText: custom tolltip text
         // notNull: turn on error mode if field is not filled
-
+        console.log(scope.customButtons, "customButtons super1");
         var inputContainer = elem[0].querySelector(".numberInputContainer");
         var inputElem = elem[0].querySelector(".numberInputElem");
 
