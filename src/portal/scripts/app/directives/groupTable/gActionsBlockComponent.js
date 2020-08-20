@@ -58,7 +58,6 @@
 
                 var dleEventIndex;
 
-
                 /*var checkIsLayoutDefault = function () {
 
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
@@ -682,20 +681,52 @@
 
                 };
 
-                scope.openReconDialog = function ($event) {
+                scope.toggleRecon = function ($event) {
 
                     var additions = scope.evDataService.getVerticalAdditions();
 
                     if (additions.type === 'reconciliation') {
 
-                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
-                        interfaceLayout.verticalSplitPanel.width = 0;
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                warning: {
+                                    title: 'Warning',
+                                    description: "Reconciliation will be closed and it's tables settings will be reset.",
+                                    actionButtons: [
+                                        {
+                                            name: 'CANCEL',
+                                            response: {status: 'disagree'}
+                                        },
+                                        {
+                                            name: 'OK',
+                                            response: {status: 'agree'}
+                                        }
+                                    ]
+                                }
+                            }
 
-                        scope.evDataService.setVerticalSplitPanelStatus(false);
-                        scope.evDataService.setVerticalAdditions({});
+                        }).then(function (res) {
 
-                        scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
-                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            if (res.status === 'agree') {
+
+                                var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                                interfaceLayout.verticalSplitPanel.width = 0;
+
+                                scope.evDataService.setVerticalSplitPanelStatus(false);
+                                scope.evDataService.setVerticalAdditions({});
+
+                                scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
+                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            }
+
+                        });
 
                     } else {
 
