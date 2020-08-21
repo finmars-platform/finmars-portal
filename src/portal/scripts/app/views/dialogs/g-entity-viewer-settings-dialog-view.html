@@ -22,7 +22,7 @@
             </md-input-container>
         </div>
 
-        <div layout="row" >
+        <!--<div layout="row" >
             <md-input-container flex="100">
                 <label>Filter items by statuses</label>
                 <md-select data-ng-model="vm.entityFilters" multiple>
@@ -42,8 +42,18 @@
                     <md-option value="partially_visible">Partially Visible</md-option>
                 </md-select>
             </md-input-container>
-        </div>
+        </div>-->
 
+        <div layout="row" >
+            <md-input-container flex="100">
+                <label>Filter items by statuses</label>
+                <md-select data-ng-model="vm.entityFilters" multiple>
+                    <md-option data-ng-repeat="option in vm.multiselectorOptions"
+                               ng-value="option.value"
+                               data-ng-bind="option.name"></md-option>
+                </md-select>
+            </md-input-container>
+        </div>
 
     </md-dialog-content>
 
