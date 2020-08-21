@@ -945,7 +945,11 @@
                     drake.on('out', function (elem, container, source) {
 
                         draggedOverElem = null;
-                        shadowElem.classList.add('display-none');
+
+                        if (shadowElem) {
+                            shadowElem.classList.add('display-none');
+                            shadowElem = null;
+                        }
 
                         container.classList.remove('active');
                         container.classList.remove('recon-cards-container-dragged-over');
