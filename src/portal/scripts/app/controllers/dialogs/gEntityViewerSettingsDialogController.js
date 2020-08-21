@@ -12,12 +12,63 @@
         var vm = this;
 
         vm.entityType = entityViewerDataService.getEntityType();
+        vm.multiselectorOptions = [];
 
         var pagePagination = entityViewerDataService.getPagination();
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
+
+        var getMultiselectorData = function () {
+
+            var result = {
+                optionsList: [],
+                selectedByDefault: []
+            };
+
+            switch (vm.entityType) {
+                case "instrument":
+
+                    result.optionsList = [
+                        {value: 'active', name: 'Active', activeByDefault: ''},
+                        {value: 'inactive', name: 'Inactive', activeByDefault: ''},
+                        {value: 'disabled', name: 'Disabled', activeByDefault: ''},
+                        {value: 'deleted', name: 'Deleted', activeByDefault: ''}
+                    ]
+
+                    result.selectedByDefault = ['active', 'inactive', 'disabled']
+
+                    break;
+
+                case "complex-transaction":
+
+                    result.optionsList = [
+                        {value: 'locked', name: 'Locked'},
+                        {value: 'unlocked', name: 'Unlocked'},
+                        {value: 'ignored', name: 'Ignored'}
+                    ]
+
+                    result.selectedByDefault = ['locked', 'unlocked']
+
+                    break;
+
+                default:
+
+                    result.optionsList = [
+                        {value: 'enabled', name: 'Enabled'},
+                        {value: 'disabled', name: 'Disabled'},
+                        {value: 'deleted', name: 'Deleted'}
+                    ]
+
+                    result.selectedByDefault = ['enabled', 'disabled']
+
+                    break;
+            }
+
+            return result;
+
+        }
 
         vm.saveSettings = function () {
 
@@ -33,9 +84,9 @@
             }
 
             var entityViewerOptions = {};
-            entityViewerOptions.complex_transaction_filters = vm.complexTransactionFilters;
+            //entityViewerOptions.complex_transaction_filters = vm.complexTransactionFilters;
             entityViewerOptions.entity_filters = vm.entityFilters;
-
+            console.log("ev settings entityViewerOptions", entityViewerOptions);
             entityViewerDataService.setEntityViewerOptions(entityViewerOptions);
 
             $mdDialog.hide({status: 'agree'});
@@ -45,9 +96,16 @@
 
             var entityViewerOptions = entityViewerDataService.getEntityViewerOptions();
 
-            vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters;
+            var multselData = getMultiselectorData();
+            vm.multiselectorOptions = multselData.optionsList;
+            //vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters;
             vm.entityFilters = entityViewerOptions.entity_filters;
 
+            if (!vm.entityFilters) {
+                vm.entityFilters = multselData.selectedByDefault;
+            }
+
+            console.log("ev settings entityFilters ", vm.entityFilters);
             vm.itemsToLoad = pagePagination.page_size;
 
         };

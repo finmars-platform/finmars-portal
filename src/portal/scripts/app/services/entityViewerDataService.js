@@ -137,7 +137,7 @@
             viewType: 'report_viewer',
             viewSettings: {},
             lastViewSettings: {},
-            ev_options: {},
+            ev_options: null,
             activeLayoutConfiguration: {},
             interfaceLayout: null,
             requestParameters: {},
@@ -1177,7 +1177,7 @@
         }
 
         function getEntityViewerOptions() {
-            return data.ev_options || {};
+            return data.ev_options;
         }
 
         function setCurrentMember(member) {
