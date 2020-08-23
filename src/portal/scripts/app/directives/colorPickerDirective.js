@@ -18,7 +18,7 @@
                 scope.selectedColor = {};
 
                 scope.getColorDivStyle = function () {
-                    var styleText = 'background-color: #000;';
+                    var styleText;
 
                     if (scope.selectedColor.value) {
                         styleText = 'background-color: ' + scope.selectedColor.value + ';';
@@ -39,7 +39,7 @@
                             scope.selectedPalette = scope.palettesList[i];
                             paletteNotFound = false;
 
-                            for (a = 0; a < scope.selectedPalette.colors.length; a++) {
+                            /*for (a = 0; a < scope.selectedPalette.colors.length; a++) {
 
                                 if (scope.selectedPalette.colors[a].order === scope.model.colorOrder) {
 
@@ -48,7 +48,9 @@
 
                                 }
 
-                            }
+                            }*/
+
+                            scope.selectedColor = JSON.parse(JSON.stringify(scope.palettesList[i].colors[scope.model.colorOrder]));
 
                         }
 
@@ -78,10 +80,6 @@
                     }
 
                 };
-
-                if (scope.model && typeof scope.model === 'object') {
-                    findSelectedColor();
-                }
 
                 scope.openSelectColorDialog = function ($event) {
 
@@ -134,6 +132,16 @@
                         }
 
                     });
+
+                }
+
+                if (scope.model && typeof scope.model === 'object' && scope.model.paletteUserCode) {
+                    findSelectedColor();
+
+                } else {
+
+                    scope.selectedPalette = JSON.parse(JSON.stringify(scope.palettesList[0]));
+                    scope.selectedColor = scope.selectedPalette.colors[0];
 
                 }
 
