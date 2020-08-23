@@ -170,7 +170,7 @@
                                 <div layout="row"
                                      data-ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
-                                    <div data-ng-repeat="field in tab.layout.fields track by $index"
+                                    <div data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
                                          data-ng-if="vm.checkFieldRender(tab, row, field)"
                                          class="ev-data-field"
                                          data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"

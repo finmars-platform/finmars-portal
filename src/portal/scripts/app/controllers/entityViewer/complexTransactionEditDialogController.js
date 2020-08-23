@@ -299,7 +299,6 @@
             };
 
             var attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.tabs, attributes, dataConstructorLayout, true);
-
             vm.attributesLayout = attributesLayoutData.attributesLayout;
 
             if (vm.fixedArea && vm.fixedArea.isActive) {
@@ -945,12 +944,13 @@
 
 
                     if (spannedCols.indexOf(field.column) !== -1) {
-                        return false
+                        return false;
                     }
 
                     return true;
                 }
             }
+
             return false;
 
         };
@@ -1229,7 +1229,7 @@
                     }
                 })
 
-            } /*else {
+            } else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -1336,7 +1336,7 @@
 
                 })
 
-            }*/
+            }
 
         };
 
