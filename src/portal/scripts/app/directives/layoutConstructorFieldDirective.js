@@ -72,13 +72,13 @@
                     if (scope.item.backgroundColor) {
 
                         scope.fieldUsesBackgroundColor = true;
-                        //scope.fieldBackgroundColor = scope.item.backgroundColor;
                         scope.backgroundColor.color = scope.item.backgroundColor;
 
                     } else {
+
                         scope.fieldUsesBackgroundColor = false;
-                        //scope.fieldBackgroundColor = '#000000';
                         scope.backgroundColor.color = {};
+
                     }
 
                     if (scope.item.attribute && scope.item.attribute.value_type !== "decoration") {
@@ -609,7 +609,21 @@
                 };
 
                 scope.toggleBackgroundColor = function () {
+
                     scope.fieldUsesBackgroundColor = !scope.fieldUsesBackgroundColor;
+
+                    if (scope.fieldUsesBackgroundColor) {
+
+                        if (!scope.backgroundColor || !Object.keys(scope.backgroundColor.color).length) {
+
+                            scope.backgroundColor = {
+                                color: {colorOrder: 0, paletteUserCode: "Default Palette"}
+                            };
+
+                        }
+
+                    }
+
                 };
 
                 /*scope.setFieldBackgroundColor = function (color) {
