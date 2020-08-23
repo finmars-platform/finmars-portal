@@ -109,9 +109,9 @@
 
                             scope.model.paletteUserCode = res.data.palette.user_code;
                             scope.model.colorOrder = res.data.color.order;
-                            /*if (scope.onChangeCallback) {
+                            /*if (scope.onPalettesChangeCallback) {
                                 setTimeout(function () {
-                                    scope.onChangeCallback();
+                                    scope.onPalettesChangeCallback();
                                 }, 100);
                             }*/
 
@@ -125,9 +125,9 @@
                                 findSelectedColor();
                             }
 
-                            if (scope.onChangeCallback) {
+                            if (scope.onPalettesChangeCallback) {
                                 setTimeout(function () {
-                                    scope.onChangeCallback();
+                                    scope.onPalettesChangeCallback();
                                 }, 100);
                             }
 

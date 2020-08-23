@@ -169,7 +169,7 @@
                                                     ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
                                             <div data-ng-repeat="row in vm.range(tab.layout.rows)"
                                                  layout="row"
-                                                 class="entity-editor-row" data-row-number="{{row}}">
+                                                 class="entity-editor-row">
                                                 <div data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
                                                      data-ng-if="vm.checkFieldRender(tab, row, field)"
                                                      class="ev-data-field"

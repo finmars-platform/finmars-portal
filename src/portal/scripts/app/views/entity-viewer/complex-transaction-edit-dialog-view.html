@@ -81,7 +81,7 @@
                                 <div layout="row"
                                      ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
-                                    <div data-ng-repeat="field in tab.layout.fields track by $index"
+                                    <div data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
                                          class="ev-data-field {{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
                                          flex="{{vm.bindFlex(tab, field)}}"
                                          data-ng-if="vm.checkFieldRender(tab, row, field)">

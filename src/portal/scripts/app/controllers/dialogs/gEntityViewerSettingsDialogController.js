@@ -46,7 +46,8 @@
                     result.optionsList = [
                         {value: 'locked', name: 'Locked'},
                         {value: 'unlocked', name: 'Unlocked'},
-                        {value: 'ignored', name: 'Ignored'}
+                        {value: 'ignored', name: 'Ignored'},
+                        {value: 'partially_visible', name: 'Partially Visible'}
                     ]
 
                     result.selectedByDefault = ['locked', 'unlocked']

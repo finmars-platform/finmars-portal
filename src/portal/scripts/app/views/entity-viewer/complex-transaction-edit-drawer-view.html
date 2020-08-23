@@ -49,10 +49,10 @@
                     <md-tab-body>
                         <md-content class="md-padding p-t-26"
                                     ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
-                            <div layout="row"
-                                 ng-repeat="row in vm.range(tab.layout.rows)"
+                            <div ng-repeat="row in vm.range(tab.layout.rows)"
+                                 layout="row"
                                  class="entity-editor-row">
-                                <div data-ng-repeat="field in tab.layout.fields track by $index"
+                                <div data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
                                      class="ev-data-field {{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
                                      flex="{{vm.bindFlex(tab, field)}}"
                                      data-ng-if="vm.checkFieldRender(tab, row, field)">
