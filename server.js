@@ -8,17 +8,17 @@ var url = require('url');
 var proxy = require('proxy-middleware');
 var app = express();
 
-app.use(function (req, res, next) {
-
-    var host = process.env.HOSTNAME || 'none';
-
-    console.info('host', host);
-
-    res.header("Access-Control-Expose-Headers", "x-hostname");
-    res.header('x-hostname', host);
-
-    next()
-});
+// app.use(function (req, res, next) {
+//
+//     var host = process.env.HOSTNAME || 'none';
+//
+//     console.info('host', host);
+//
+//     res.header("Access-Control-Expose-Headers", "x-hostname");
+//     res.header('x-hostname', host);
+//
+//     next()
+// });
 
 
 app.use('/build/:uid/*', function(req, res, next) {
