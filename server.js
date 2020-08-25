@@ -30,14 +30,17 @@ app.use('*', function (req, res, next) {
 
     var host = process.env.HOSTNAME || 'none';
 
-    res.header('X-HOSTNAME', host);
+    console.info('host', host);
+
+    res.header("Access-Control-Expose-Headers", "x-hostname");
+    res.header('x-hostname', host);
 
     next()
 });
 
 app.use('/build/:uid/*', function(req, res, next) {
 
-    console.log(req.originalUrl);
+    console.info(req.originalUrl);
 
     var uid = req.params.uid;
 
