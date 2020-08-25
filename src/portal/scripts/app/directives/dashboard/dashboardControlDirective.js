@@ -8,6 +8,8 @@
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
+    var uiService = require('../../services/uiService');
+
 
     module.exports = function () {
         return {
@@ -169,17 +171,56 @@
 
                 };
 
+                var getItemDataStore = function (componentData) {
+
+                    var promisify = function (value) {
+                        return new Promise(function (resolve) {
+                            return resolve(value);
+                        });
+                    };
+
+                    if (scope.item.data.store && scope.item.data.store.value) {
+                        return promisify(scope.item.data.store);
+                    }
+
+                    if (!componentData.defaultValue) {
+                        return promisify({});
+                    }
+
+                    var mode = componentData.defaultValue.mode;
+
+                    if (mode === 1) {
+                        return promisify({value: componentData.defaultValue.setValue});
+                    }
+
+                    if (mode === 0) {
+
+                        var layoutId = componentData.defaultValue.layout;
+
+                        return uiService.getListLayoutByKey(layoutId).then(function (layout) {
+
+                            var value = layout.data.reportOptions[componentData.defaultValue.report_field];
+
+                            return {value: value};
+
+                        });
+                    }
+
+                };
+
                 scope.init = function () {
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
-
-                    console.log('scope.componentData', scope.componentData);
-
                     scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
-                    console.log('dashboard control scope.entityType', scope.entityType);
-                    if (!scope.item.data.store) {
-                        scope.item.data.store = {} // "store" - property for all dashboard data related properties
-                    }
+
+                    getItemDataStore(scope.componentData).then(function (store) {
+                        scope.item.data.store = store;
+                        scope.$apply();
+                    });
+
+                    // if (!scope.item.data.store) {
+                    //     scope.item.data.store = {} // "store" - property for all dashboard data related properties
+                    // }
 
                     console.log('scope.item', scope);
 
