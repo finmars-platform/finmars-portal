@@ -86,6 +86,17 @@
         vm.agree = function () {
 
             vm.item.settings.value_type = parseInt(vm.item.settings.value_type, 10);
+            var defaultValue = getItemDefaultValue(vm.defaultValue);
+
+            if (defaultValue) {
+
+                vm.item.defaultValue = defaultValue;
+
+            } else {
+
+                delete vm.item.defaultValue;
+
+            }
 
             if (vm.item.id) {
 
@@ -205,8 +216,27 @@
                     key: field.key,
                     name: field.name,
                     value: layout.data.reportOptions[field.key]
-                }
-            })
+                };
+            });
+        };
+
+        var getItemDefaultValue = function (defaultValue) {
+
+            if (defaultValue.mode === 1) {
+                return {mode: 1, setValue: defaultValue.setValue};
+            }
+
+            if (defaultValue.mode === 0) {
+                return {
+                    mode: 0,
+                    entity_type: defaultValue.entity_type,
+                    layout: defaultValue.layout,
+                    report_field: defaultValue.report_field.key
+                };
+            }
+
+            return null;
+
         };
 
         vm.init()
