@@ -4,51 +4,8 @@
     <div class="md-toolbar-tools">
       <is-draggable-sign></is-draggable-sign>
 
-<<<<<<< HEAD
       <h2>Search {{vm.entityType}}</h2>
       <span flex></span>
-=======
-            <h2>Search {{vm.entityType}}</h2>
-            <span flex></span>
-        </div>
-    </md-toolbar>
-
-    <div data-ng-if="vm.readyStatus.data">
-        <div class="entity-search-fixed-thead-wrapper">
-
-            <md-progress-linear data-ng-if="vm.processing" md-mode="indeterminate"></md-progress-linear>
-            <table>
-                <thead>
-                <tr>
-                    <th data-ng-repeat="column in vm.columns[vm.entityType]">
-                        <md-input-container class="md-block entity-search-filter"
-                                            data-ng-if="column.name !== 'Instrument type'">
-                            <label>{{column.name}}</label>
-                            <input data-ng-model="vm.search[vm.entityType][column.key]"
-                                   data-ng-model-options="{debounce: 1000}"
-                                   data-ng-change="vm.getEntityItems('reloadTable')">
-                        </md-input-container>
-                    </th>
-                    <th class="entity-search-settings-header"></th>
-                </tr>
-                <tr>
-                    <th data-ng-repeat="column in vm.columns[vm.entityType]">
-                        <div layout="row" data-ng-click="vm.sortBy(column.sortParameter || column.key)">
-                            <b class="entity-search-col-b">
-                                {{column.name}}
-                                <span class="sortorder"
-                                      data-ng-show="vm.sort === column.key"
-                                      data-ng-class="{reverse: vm.sortDescending}"
-                                ></span>
-                            </b>
-                        </div>
-                    </th>
-                    <th class="entity-search-settings-header"></th>
-                </tr>
-                </thead>
-            </table>
-        </div>
->>>>>>> c7a408e019495c16c9bc476a898ff60fdd44c967
     </div>
   </md-toolbar>
 
