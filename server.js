@@ -26,7 +26,18 @@ app.use('/healthcheck', function (req, res) {
 
 });
 
+app.use('*', function (req, res, next) {
+
+    var host = process.env.HOSTNAME || 'none';
+
+    res.header('X-HOSTNAME', host);
+
+    next()
+});
+
 app.use('/build/:uid/*', function(req, res, next) {
+
+    console.log(req.originalUrl);
 
     var uid = req.params.uid;
 
