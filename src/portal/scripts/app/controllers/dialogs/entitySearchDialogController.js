@@ -448,7 +448,7 @@
 
     // Тут я
     vm.addEntity = function (ev) {
-      console.log(vm.entityType, "Панов")
+
       if (vm.entityType === "transaction-type") {
         $mdDialog
           .show({
