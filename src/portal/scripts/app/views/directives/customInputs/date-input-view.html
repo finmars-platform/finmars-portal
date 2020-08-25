@@ -1,5 +1,5 @@
 <div
-  class="custom-input-container number-input-container numberInputContainer"
+  class="custom-input-container date-input-container dateInputContainer"
   data-ng-class="getInputContainerClasses()"
 >
   <div class="custom-input-top-row">
@@ -36,9 +36,9 @@
             size="28"
             class="tooltip-sign"
           ></ng-md-icon>
-          <md-tooltip class="error-tooltip" md-direction="top"
-            >{{error}}</md-tooltip
-          >
+          <md-tooltip class="error-tooltip" md-direction="top">
+            {{error}}
+          </md-tooltip>
         </div>
 
         <div class="flex-row">
@@ -46,7 +46,7 @@
             type="text"
             data-ng-model="dateValue"
             placeholder="{{placeholderText}}"
-            class="custom-input date-input pick-me-up numberInputElem"
+            class="custom-input date-input pick-me-up dateInputElem"
           />
 
           <button
@@ -66,13 +66,11 @@
         <div class="custom-input-custom-btns-holder">
           <div
             data-ng-if="customButtons && customButtons.length"
-            class="height-100 flex_ccp"
-          >
+            class="height-100 flex_ccp">
             <button
               data-ng-repeat="button in customButtons"
               class="{{button.classes}} custom-input-custom-btn"
-              data-ng-click="callFnForCustomBtn(button.action)"
-            >
+              data-ng-click="callFnForCustomBtn(button.action)">
               {{button.caption}}
 
               <ng-md-icon
