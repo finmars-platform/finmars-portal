@@ -178,7 +178,7 @@
 
         };
 
-        vm.exportDashboardLayout = function($event) {
+        vm.exportDashboardLayout = function ($event) {
 
             $mdDialog.show({
                 controller: 'DashboardLayoutExportDialogController as vm',
@@ -339,13 +339,15 @@
                     throw "id of defective dashboard component " + compId;
                 }
 
-            // }, 8000);
-            // }, 15000);
+                // }, 8000);
+                // }, 15000);
             }, 60000);
 
         };
 
         vm.initDashboardComponents = function () {
+
+            var LIMIT = 2;
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
@@ -357,32 +359,41 @@
                 var keys = Object.keys(statusesObject);
                 var key;
 
+                var activeProcessingComponents = 0;
+
                 for (var i = 0; i < keys.length; i = i + 1) {
 
                     key = keys[i];
 
-                    if (statusesObject[key] === dashboardComponentStatuses.INIT && nextComponentToStart === null) {
-                        nextComponentToStart = key;
-                    }
-
                     if (statusesObject[key] === dashboardComponentStatuses.PROCESSING || statusesObject[key] === dashboardComponentStatuses.START) {
-                        nextComponentToStart = null;
-
-                        onComponentBuildingForTooLong(key);
-                        break;
+                        activeProcessingComponents = activeProcessingComponents + 1;
                     }
 
-                }
-
-                console.log('statusesObject', statusesObject);
-                console.log('nextComponentToStart', nextComponentToStart);
-
-                if (nextComponentToStart) {
-
-                    vm.dashboardDataService.setComponentStatus(nextComponentToStart, dashboardComponentStatuses.START);
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                 }
+
+                console.log('initDashboardComponents.activeProcessingComponents', activeProcessingComponents);
+                console.log('initDashboardComponents.statusesObject', statusesObject);
+
+                if (activeProcessingComponents < LIMIT) {
+
+                    for (var i = 0; i < keys.length; i = i + 1) {
+
+                        key = keys[i];
+
+                        console.log('initDashboardComponents.key', key);
+
+                        if (statusesObject[key] === dashboardComponentStatuses.INIT) {
+                            vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
+                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                            onComponentBuildingForTooLong(key);
+                            break;
+                        }
+
+                    }
+                }
+
 
             });
 
@@ -395,8 +406,6 @@
 
             vm.openDashboardLayout();
             vm.initEventListeners();
-
-
 
 
         };
