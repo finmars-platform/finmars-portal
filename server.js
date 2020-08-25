@@ -26,6 +26,17 @@ app.use('/healthcheck', function (req, res) {
 
 });
 
+app.use('/build/:uid/*', function(req, res, next) {
+
+    var uid = req.params.uid;
+
+    path = req.params[0] ? req.params[0] : 'index.html';
+
+    res.sendFile(path, {root: './dist'});
+
+});
+
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // WARNING ONLY FOR DEV PURPOSE
 // var pdfProxyOptions = url.parse('http://0.0.0.0:80');
