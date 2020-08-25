@@ -259,6 +259,7 @@
       }
     };
 
+<<<<<<< HEAD
     vm.selectRow = function (item) {
       vm.items.forEach(function (item) {
         item.active = false;
@@ -273,6 +274,223 @@
         data: { item: item, items: vm.items },
       });
     };
+=======
+        var page = 1;
+        vm.pageSize = 40;
+
+        vm.search = {
+            'instrument': {
+                'user_code': '',
+                'name': '',
+                'short_name': '',
+                'user_text_1': '',
+                'user_text_2': '',
+                'user_text_3': ''
+            },
+            'account': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'portfolio': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'responsible': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'counterparty': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'currency': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'strategy-1': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'strategy-2': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'strategy-3': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            }
+        };
+
+        vm.columns = {
+            'instrument': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                },
+                {
+                    key: 'user_text_1',
+                    name: 'User text 1'
+                },
+                {
+                    key: 'user_text_2',
+                    name: 'User text 2'
+                },
+                {
+                    key: 'user_text_3',
+                    name: 'User text 3'
+                },
+                {
+                    key: 'instrument_type_object.name',
+                    sortParameter: 'instrument_type',
+                    name: 'Instrument type'
+                }
+            ],
+            'account': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'portfolio': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'responsible': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'counterparty': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'currency': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'strategy-1': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'strategy-2': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'strategy-3': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ]
+        };
+
+        vm.items = [];
+        vm.selectedItem = {};
+
+        var scrollElem = null;
+        var scrollAtTheEnd = false;
+        var elemScrollHeight = null;
+        var scrollPositionToLoadItems = null;
+
+        vm.agree = function () {
+
+            if (itemsToDelete.length > 0) {
+                itemsToDelete.forEach(function (itemId) {
+                    entityResolverService.deleteByKey(vm.entityType, itemId);
+                });
+            }
+>>>>>>> c7a408e019495c16c9bc476a898ff60fdd44c967
 
     vm.sort;
     vm.sortDescending = true;
@@ -397,11 +615,57 @@
               vm.itemsCount = data.count;
             }
 
+<<<<<<< HEAD
             if (reloadTable) {
               vm.items = data.results;
             } else {
               vm.items = vm.items.concat(data.results);
             }
+=======
+            vm.sortingOptions = {
+                key: sortParameter,
+                direction: sortOrder
+            };
+
+            vm.getEntityItems('reloadTable').then(refreshScrollHeight);
+
+        };
+
+        vm.editItem = function (itemId, $event) {
+
+            $mdDialog.show({
+                controller: 'EntityViewerEditDialogController as vm',
+                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                parent: $(''),
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    entityType: vm.entityType,
+                    entityId: itemId,
+                    data: {}
+                }
+            }).then(function (data) {
+
+                if (data.res === 'agree') {
+                    vm.getEntityItems('reloadTable');
+                }
+
+            })
+        };
+
+        var itemsToDelete = [];
+
+        vm.deleteItem = function (item, index) {
+            vm.items.splice(index, 1);
+            itemsToDelete.push(item.id);
+        };
+
+        vm.loadOnScroll = function () {
+
+            scrollElem.addEventListener('scroll', function () {
+>>>>>>> c7a408e019495c16c9bc476a898ff60fdd44c967
 
             setTimeout(function () {
               vm.processing = false;
@@ -413,6 +677,7 @@
       });
     };
 
+<<<<<<< HEAD
     vm.init = function () {
       setTimeout(function () {
         vm.dialogElemToResize = document.querySelector(
@@ -428,6 +693,9 @@
           if (data.hasOwnProperty("count")) {
             vm.itemsCount = data.count;
           }
+=======
+                        vm.getEntityItems().then(refreshScrollHeight);
+>>>>>>> c7a408e019495c16c9bc476a898ff60fdd44c967
 
           vm.items = data.results;
 
@@ -439,7 +707,15 @@
 
               return item;
             });
+<<<<<<< HEAD
           }
+=======
+
+        };
+
+        var getTableOptions = function () {
+            var options = {};
+>>>>>>> c7a408e019495c16c9bc476a898ff60fdd44c967
 
           $scope.$apply();
           vm.loadOnScroll();
@@ -466,6 +742,7 @@
             if (res && res.res === "agree") {
               vm.insertObjectAfterCreateHandler(res.data);
             }
+<<<<<<< HEAD
           });
       } else {
         if (vm.entityType === "complex-transaction") {
@@ -486,6 +763,91 @@
               if (res && res.res === "agree") {
                 vm.insertObjectAfterCreateHandler(res.data.complex_transaction);
               }
+=======
+
+            options.filters = vm.search[vm.entityType];
+
+            return options;
+        };
+
+        var refreshScrollHeight = function () {
+
+            // refreshing of scroll height after loading new page of items
+            elemScrollHeight = scrollElem.scrollHeight;
+            scrollPositionToLoadItems = scrollElem.clientHeight * 1.5; // start item loading when scroll almost at the end
+            scrollAtTheEnd = false;
+
+        };
+
+        vm.getEntityItems = function (reloadTable) {
+
+            vm.processing = true;
+
+            return new Promise(function (resolve, reject) {
+
+                // if reloadTable parameter exist, reset options and vm.items
+                if (reloadTable) {
+                    page = 1;
+                    vm.itemsCount = null;
+                    scrollElem.scrollTop = 0;
+                }
+
+
+                entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
+
+                    if (data.hasOwnProperty('count')) {
+                        vm.itemsCount = data.count;
+                    }
+
+                    if (reloadTable) {
+                        vm.items = data.results;
+                    } else {
+                        vm.items = vm.items.concat(data.results);
+                    }
+
+                    vm.processing = false;
+
+                    $scope.$apply();
+                    resolve({status: 'loaded'});
+
+                });
+            })
+        };
+
+        vm.init = function () {
+            setTimeout(function () {
+                vm.dialogElemToResize = document.querySelector('.entityEditorElemToResize');
+            }, 100);
+
+            entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
+
+                vm.readyStatus.data = true;
+
+                if (data.hasOwnProperty('count')) {
+                    vm.itemsCount = data.count;
+                }
+
+                vm.items = data.results;
+
+                if (selectedRow) {
+                    vm.items = vm.items.map(function (item) {
+
+                        if (item.id === selectedRow) {
+                            item.active = true;
+                        }
+
+                        return item;
+                    });
+                }
+
+                $scope.$apply();
+
+                scrollElem = document.querySelector('.entity-search-scroll-container');
+                refreshScrollHeight();
+
+                vm.loadOnScroll();
+
+>>>>>>> c7a408e019495c16c9bc476a898ff60fdd44c967
             });
         } else {
           $mdDialog
