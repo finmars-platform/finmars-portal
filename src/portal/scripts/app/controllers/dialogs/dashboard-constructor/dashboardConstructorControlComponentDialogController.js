@@ -26,6 +26,22 @@
             }
         }
 
+        if (vm.item.defaultValue) {
+
+            vm.defaultValue = vm.item.defaultValue;
+
+        } else {
+
+            vm.defaultValue = {
+                mode: 2,
+                entity_type: null,
+                layout: null,
+                report_field: {},
+                setValue: null
+            };
+
+        }
+
         vm.componentsTypes = [];
 
         vm.contentTypes = [
@@ -71,58 +87,6 @@
             }
         ];
 
-        vm.defaultValue = {
-            mode: 2,
-            entity_type: null,
-            layout: null,
-            report_field: {},
-            setValue: null
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.agree = function () {
-
-            vm.item.settings.value_type = parseInt(vm.item.settings.value_type, 10);
-            var defaultValue = getItemDefaultValue(vm.defaultValue);
-
-            if (defaultValue) {
-
-                vm.item.defaultValue = defaultValue;
-
-            } else {
-
-                delete vm.item.defaultValue;
-
-            }
-
-            if (vm.item.id) {
-
-                dataService.updateComponentById(vm.item);
-
-            } else {
-
-                var pattern = new Date().getTime() + '_' + vm.componentsTypes.length;
-
-                vm.item.id = dataService.___generateId(pattern);
-
-                vm.componentsTypes.push(vm.item);
-
-            }
-
-            dataService.setComponents(vm.componentsTypes);
-
-            $mdDialog.hide({status: 'agree'});
-        };
-
-        vm.init = function () {
-
-            vm.componentsTypes = dataService.getComponents()
-
-        };
-
         vm.isRequiredDefaultValue = function () {
             var dateValueType = 40;
             var contentTypesThatNeedsDefaultValues = [
@@ -144,19 +108,7 @@
             vm.defaultValue.layout = null;
             vm.defaultValue.report_field = null;
 
-            vm.processing = true;
-
-            uiService.getListLayout(vm.defaultValue.entity_type).then(function (data) {
-
-                var layouts = data.results;
-                vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(layouts);
-                vm.processing = false;
-
-                $scope.$apply();
-
-            }).catch(function() {
-                vm.processing = false;
-            });
+            vm.getLayoutsList();
 
         };
 
@@ -167,16 +119,33 @@
                 return;
             }
 
+            vm.defaultValue.report_field = null;
+
+            vm.requestReportFieldsFromLayout(vm.defaultValue.layout);
+
+
+        };
+
+
+        vm.requestReportFieldsFromLayout = function (layoutId) {
+
             vm.processing = true;
             $scope.$apply();
 
-            vm.defaultValue.report_field = null;
-
-            var layoutId = vm.defaultValue.layout;
-
-            uiService.getListLayoutByKey(layoutId).then(function (layout) {
+            return uiService.getListLayoutByKey(layoutId).then(function (layout) {
 
                 vm.reportFields = getReportFields(vm.defaultValue.entity_type, layout);
+
+
+                if (vm.defaultValue.report_field) {
+
+                    vm.defaultValue.report_field = vm.reportFields.find(function(reportField) {
+
+                        return reportField.key === vm.defaultValue.report_field;
+
+                    });
+
+                }
 
                 if (vm.defaultValue.entity_type === 'balance-report') {
 
@@ -189,11 +158,13 @@
                 $scope.$apply();
 
             }).catch(function() {
+
                 vm.processing = false;
+                $scope.$apply();
+
             });
 
         };
-
 
         var getReportFields = function (reportType, layout) {
 
@@ -236,6 +207,80 @@
             }
 
             return null;
+
+        };
+
+        vm.cancel = function () {
+            $mdDialog.hide({status: 'disagree'});
+        };
+
+        vm.agree = function () {
+
+            vm.item.settings.value_type = parseInt(vm.item.settings.value_type, 10);
+            var defaultValue = getItemDefaultValue(vm.defaultValue);
+
+            if (defaultValue) {
+
+                vm.item.defaultValue = defaultValue;
+
+            } else {
+
+                delete vm.item.defaultValue;
+
+            }
+
+            if (vm.item.id) {
+
+                dataService.updateComponentById(vm.item);
+
+            } else {
+
+                var pattern = new Date().getTime() + '_' + vm.componentsTypes.length;
+
+                vm.item.id = dataService.___generateId(pattern);
+
+                vm.componentsTypes.push(vm.item);
+
+            }
+
+            dataService.setComponents(vm.componentsTypes);
+
+            $mdDialog.hide({status: 'agree'});
+        };
+
+        vm.getLayoutsList = function () {
+            vm.processing = true;
+
+            return uiService.getListLayout(vm.defaultValue.entity_type).then(function (data) {
+
+                var layouts = data.results;
+                vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(layouts);
+                vm.processing = false;
+
+                $scope.$apply();
+
+            }).catch(function() {
+                vm.processing = false;
+                $scope.$apply();
+            });
+
+        }
+
+
+        vm.init = function () {
+
+            vm.componentsTypes = dataService.getComponents();
+
+            if (vm.defaultValue.mode !== 0) {
+                return;
+            }
+
+            vm.getLayoutsList().then(function () {
+
+                vm.requestReportFieldsFromLayout(vm.defaultValue.layout);
+
+            });
+
 
         };
 
