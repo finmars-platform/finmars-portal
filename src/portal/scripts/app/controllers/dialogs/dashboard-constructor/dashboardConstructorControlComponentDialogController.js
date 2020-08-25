@@ -36,7 +36,7 @@
                 mode: 2,
                 entity_type: null,
                 layout: null,
-                report_field: {},
+                report_field: null,
                 setValue: null
             };
 
@@ -264,7 +264,28 @@
                 $scope.$apply();
             });
 
-        }
+        };
+
+        vm.isValidDefaultValue = function () {
+
+            if (vm.defaultValue.mode === 0) { // Get default value
+
+                return vm.defaultValue.entity_type
+                    && vm.defaultValue.layout
+                    && vm.defaultValue.report_field
+                    && Object.keys(vm.defaultValue.report_field).length > 0;
+
+            }
+
+            if (vm.defaultValue.mode === 1) { // Set default value
+
+                return Boolean(Date.parse(vm.defaultValue.setValue));
+
+            }
+
+            return vm.defaultValue.mode === 2  // No default value
+
+        };
 
 
         vm.init = function () {
