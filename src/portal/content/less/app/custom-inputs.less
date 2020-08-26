@@ -1,5 +1,9 @@
 @import "variables";
-
+.date-input-specific-btns {
+  display: block;
+  height: 33% !important;
+  margin-right: 10px;
+}
 .text_tester {
   border: 2px solid red;
   white-space: nowrap; /* Запрещаем перенос строк */
@@ -115,6 +119,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   font-weight: 400;
+}
+.bgInstrument {
+  background-color: @labelInstrumentPan !important;
 }
 
 .custom-input {
@@ -466,8 +473,9 @@
     top: 1px;
     // Изменение 5
     // left: 3px;
+
     right: 0;
-    transform: translate(-10px, 12px);
+    transform: translate(-10px, 8px);
     z-index: 2;
     ng-md-icon {
       // fill: #fa393e;
