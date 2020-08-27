@@ -57,19 +57,44 @@
 .custom-input-tooltip {
   opacity: 0;
   position: absolute;
-  right: 1px;
+  // right: 1px;
   cursor: pointer;
-  right: 27px;
-  transform: translate(15px,-12px);
-
+  right: 9px;
+  top:1px;
+  // display: flex;
+  // justify-content: center;
+  // flex-direction: column;
+  // height: 40px;
+  // border:1px solid red;
+  // transform: translate(15px,-12px);
   z-index: 11;
   .tooltip-sign {
+    ng-md-icon  {
+      height: 28px !important;
+      width: 28px !important;
+    }
+
     svg {
+      position: absolute;
+      height: 28px;
+      top:5px;
+      right: 8px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
       height: 28px !important;
       width: 28px !important;
       // fill: red;
     }
   }
+}
+.tooltip-sign {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 40px;
+
+  // border:1px solid red;
 }
 .custom-input-main-container {
   position: relative;
@@ -83,7 +108,7 @@
 
 .custom-input-content {
   position: relative;
-  height: 23px;
+  // height: 23px;
   width: 100%;
   border-radius: 6px;
   .flex-row {
@@ -374,15 +399,38 @@
   .custom-input-tooltip {
     opacity: 0;
   }
+  // --------------------
+  
   .custom-input-error-tooltip {
     position: absolute;
     cursor: pointer;
-    top: 1px;
-    right: 0;
-    transform: translate(-10px, 4px);
+    top: 0px;
+    right: 8px;
+    // transform: translate(-10px, 4px);
+    // display: flex;
+    // justify-content: center;
+    // flex-direction: column;
+    // height: 40px;
+    // border:1px solid red;
+    // height: 90%;
     z-index: 2;
     ng-md-icon {
+      display: block;
       fill: @orange;
+      height: 28px !important;
+      width: 28px !important;
+      svg {
+        position: absolute;
+        height: 28px;
+        top:5px;
+        right: 8px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 28px !important;
+        width: 28px !important;
+        // fill: red;
+      }
     }
   }
 
