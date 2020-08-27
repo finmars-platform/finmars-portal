@@ -4,7 +4,6 @@
   height: 33% !important;
   margin-right: 10px;
 }
-
 .entity-editor-fixed-fields-container {
   .custom-input-container {
     .custom-input-textarea-sapan-pan {
@@ -23,7 +22,6 @@
   position: relative;
   padding: 4px 18px 0 4px;
   height: 16px;
-  // transform: translate(8px, 12px);
   transform: translate(8px, -10px);
   padding: 0 5px;
   z-index: 9;
@@ -36,31 +34,19 @@
   text-overflow: ellipsis;
 }
 .custom-input-top-row {
-  // Изменение 7
   position: relative;
-  // padding: 4px 18px 0 4px;
-  // height: 20px;
   box-sizing: border-box;
-  // Добавил
-  // transform: translate(8px, 12px);
-  // background: #fafafa;
-  // z-index: 1;
-  // padding: 0 1px;
   height: 0;
   font-size: 12px;
-  // border: 1px solid red;
-  // display: inline-block;
   .custom-input-label {
     position: relative;
     padding: 4px 18px 0 4px;
     height: 15px;
-    // transform: translate(8px, 12px);
     transform: translate(8px, -10px);
     padding: 0 5px;
     z-index: 1;
     background: white;
     display: inline-block;
-    //
     white-space: nowrap; /* Запрещаем перенос строк */
     overflow: hidden; /* Обрезаем все, что не помещается в область */
     text-overflow: ellipsis;
@@ -72,38 +58,26 @@
   opacity: 0;
   position: absolute;
   right: 1px;
-  // top: 2px;
   cursor: pointer;
-  // Изменение 4
   right: 27px;
-  // top: 47px;
-  // top: 27px;
-  // transform: translate(0.4px, 0.4px);
   transform: translate(15px,-12px);
 
   z-index: 11;
   .tooltip-sign {
     svg {
-      // Поставил импортант , чтобы не трогать шаблон
-      // transform: translate(15px, -19px);
-      // transform: translate(50%,-65%);;
-      
       height: 28px !important;
       width: 28px !important;
       // fill: red;
     }
   }
 }
-
 .custom-input-main-container {
   position: relative;
   border-radius: 6px;
 }
-
 .custom-input-borders {
   overflow: hidden;
   border-radius: 6px;
-  //padding: 1px 0 1px 1px;
   border: 2px solid #7d7d7d;
 }
 
@@ -120,11 +94,9 @@
 .custom-input-label {
   font-weight: bold;
   font-size: 13px;
-  //color: rgba(0,0,0,0.54);
   color: #000;
   white-space: nowrap;
   text-overflow: ellipsis;
-  // Тут-2
   font-size: 12px;
   color: #747474;
   white-space: nowrap;
@@ -134,59 +106,44 @@
 .bgInstrument {
   background-color: @labelInstrumentPan !important;
 }
-
 .custom-input {
   flex: 0 1 100%;
   min-width: 0;
   height: 23px;
   padding-left: 8px;
-  /*border: 2px solid #7d7d7d;
-  border-right: none;*/
   border: none;
   border-radius: 6px 0 0 6px;
   background: transparent;
   box-sizing: border-box;
-
   &:focus {
-    //border-color: #000;
     outline: none;
   }
 }
 
 .custom-input.text-input {
   overflow: hidden;
-  //resize: none;
   text-overflow: ellipsis;
 }
 
 .custom-input:focus + .custom-input-indicator-btn {
-  //border-color: #000000;
   outline: none;
 }
 
 .custom-input-custom-btns-holder {
-  /*display: flex;
-  flex-direction: row;*/
   position: absolute;
   height: 100%;
-  //height: 23px;
   background-color: #fff;
   opacity: 0;
   top: 0;
   right: 30px;
   margin-right: 6px;
   box-sizing: border-box;
-  
-
   .custom-input-custom-btn {
     height: 100%;
     min-width: 20px;
     background: transparent;
     border: none;
     padding: 0 2px;
-    //margin: 2px 0;
-    // vertical-align: middle;
-
     &:hover {
       opacity: 0.5;
     }
@@ -196,25 +153,18 @@
 .custom-input-indicator-btn {
   flex: 0 0 30px;
   height: 23px;
-  //border: 2px solid #7d7d7d;
-  //border-left: none;
   border: none;
   background-color: transparent;
-  //border-radius: 0 6px 6px 0;
   border-radius: 0;
   padding: 2px 2px;
   fill: #7b7b7b;
-
   z-index: 9;
-  // изменение 2
   color: #7d7d7d;
   transition: 0.2s ease-in-out;
   &:hover {
     opacity: 0.5;
-    // background-color: #cecece;
   }
 }
-
 .custom-input-indicator-btn2 {
   .custom-input-indicator-btn();
   position: absolute;
@@ -226,7 +176,6 @@
   width: 100%;
   position: relative;
 }
-
 .custom-input-sel-menu-block {
   position: absolute;
   width: 100%;
@@ -240,18 +189,15 @@
   overflow: auto;
   z-index: 52;
   box-sizing: border-box;
-
   .custom-input-sel-option {
     padding: 4px 10px;
     cursor: pointer;
     white-space: nowrap;
-
     &:hover {
       background-color: rgba(158, 158, 158, 0.18);
     }
   }
 }
-
 .custom-input-full-text-container {
   display: none;
   opacity: 0;
@@ -262,31 +208,24 @@
   left: 0;
   background-color: #fff;
   border: 2px solid #7d7d7d;
-  // box-shadow: 0 0 2px rgba(0, 0, 0, 1);
-
   border-radius: 6px;
   border-radius: 1px;
   padding-top: 23px;
   box-sizing: border-box;
   z-index: 1;
 }
-
 .custom-input-full-text {
   width: 100%;
   height: 100%;
   background-color: #fff;
-  // border-radius: 6px;
-
   border: none;
   resize: none;
   box-sizing: border-box;
-
   &:focus {
     border: none;
     outline: none;
   }
 }
-
 .custom-input-full-text-focused {
   .custom-input-indicator-btn {
     z-index: 11;
@@ -295,15 +234,12 @@
     z-index: 11;
   }
 }
-
 .custom-input-full-text-shown {
-  // Изменение 10 - Текстарея
   display: block;
   padding-top: 50px;
   opacity: 1;
   z-index: 10;
   border-radius: 6px;
-  // transform: translateY(-10px);
   textarea {
     position: absolute;
     top: 0;
@@ -313,30 +249,24 @@
     border-radius: 4px;
   }
 }
-
 .custom-input-container.custom-input-set-from-outside {
   .custom-input-borders,
   .custom-input-full-text-container {
     border-color: rgba(26, 26, 236, 0.6);
   }
-
   .custom-input {
-    //border-color: rgba(26, 26, 236, 0.6);
     color: rgba(26, 26, 236, 0.6);
   }
 }
-
 .custom-input-container.custom-input-hovered,
 .custom-input-container.custom-input-focused {
   .custom-input-custom-btns-holder {
     opacity: 1;
   }
-
   .custom-input-tooltip {
     opacity: 1;
   }
 }
-
 .number-input-calculator-btn {
   position: absolute;
   top: 0;
@@ -346,33 +276,18 @@
   -ms-transform: rotate(90deg);
   transform: rotate(-90deg);
 }
-
 .custom-input-container.custom-input-preset1 {
-  // Изменение- 3
   .custom-input-label {
-    // color: #0404f3;
   }
   .custom-input-borders .custom-input-content .flex-row input {
     color: #f05a22;
     font-weight: bold;
   }
   .custom-input {
-    // border-color: #0404f3;
-    // color: #0404f3;
-    // Изменение- 3
     color: @orange;
   }
 
   .custom-input-indicator-btn {
-    // border-color: #0404f3;
-    // color: #0404f3;
-    // fill: #0404f3;
-    // Изменение 3
-    // border: 20px solid red;
-
-    // color: @orange;
-    // color: #f05a22;
-    // fill: @orange;
   }
 }
 
@@ -380,14 +295,10 @@
   .custom-input-label {
     color: #000;
   }
-
   .custom-input {
-    //border-color: #000;
     color: #000;
   }
-
   .custom-input-indicator-btn {
-    //border-color: #000;
     color: #000;
     fill: #000;
   }
@@ -395,23 +306,19 @@
 
 .custom-input-container.custom-input-is-valid {
   .custom-input {
-    //border-color: #015f01;
     color: #015f01;
   }
 
   .custom-input-indicator-btn {
-    //border-color: #015f01;
     color: #015f01;
     fill: #015f01;
   }
 }
-
 .text-input-container.expression-input {
   .custom-input {
     font-style: italic;
   }
 }
-
 .custom-input.expression-input {
   overflow: hidden;
   //resize: none;
@@ -422,21 +329,14 @@
 // should always be at the bottom
 .custom-input-container.no-indicator-btn {
   .custom-input {
-    //border-right: 2px solid #7d7d7d;
     border-radius: 6px;
   }
 }
 
 .custom-input-container.custom-input-focused {
   .custom-input-main-container {
-    // изменение 1 - фокус
-    // box-shadow: 0 0 2px rgba(0, 0, 0, 1);
-    //
     .custom-input-borders {
-      // outline: 2px solid #7d7d7d;
       box-shadow: 0 0 0 1px #7d7d7d ;
-      // overflow: hidden;
-      // border: 2px solid #7d7d7d;
       .custom-input-content {
         .flex-row {
           input {
@@ -448,18 +348,14 @@
       }
     }
   }
-
   .custom-input-indicator-btn {
-    //border-color: #000;
     outline: none;
   }
 }
 .custom-input-container {
-  // border: 2px solid red;
   padding: 6px !important;
 }
 .custom-input-container.custom-input-error {
-  // Изменение 6
   .custom-input-label,
   .custom-input-textarea-sapan-pan {
     color: @orange;
@@ -470,7 +366,6 @@
     bottom: 0;
     transform: translate(35px, 16px);
     position: relative;
-
     font-size: 12px;
   }
   .custom-input-borders .custom-input-content .flex-row button {
@@ -483,14 +378,10 @@
     position: absolute;
     cursor: pointer;
     top: 1px;
-    // Изменение 5
-    // left: 3px;
-
     right: 0;
     transform: translate(-10px, 4px);
     z-index: 2;
     ng-md-icon {
-      // fill: #fa393e;
       fill: @orange;
     }
   }
@@ -499,19 +390,11 @@
   .custom-input-full-text-container {
     border-color: #fa393e;
   }
-
   .custom-input {
     padding-left: 20px;
-    //border-color: #fa393e;
     color: #fa393e;
   }
-
-  /*.custom-input-indicator-btn {
-    border-color: #fa393e;
-  }*/
-
   .custom-input:focus {
-    //border-color: #fa393e;
     outline: none;
   }
 }
@@ -521,50 +404,34 @@
   pointer-events: none;
 }
 // < should always be at the bottom >
-
 .custom-input-container {
   margin-bottom: 13px;
-  // border: 2px solid red;
-  // padding:100px;
 }
 
 .custom-input-main-container {
-  // border:2px solid red;
 }
 
 .custom-input-borders {
   min-height: 40px;
-  // Изменени 11 текстарея
   position: relative;
-  // border:1px solid black !important;
   border: 1px solid #7d7d7d;
   .custom-input-content {
     height: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    // border:2px solid pink;
     .flex-row {
-      // border:2px solid gold;
       input {
         order: 2;
         color: #7d7d7d;
         font-weight: 400;
       }
-      // textarea {
-      //   order: 2;
-      //   color: #7d7d7d;
-      //   color: white;
-      //   font-weight: 400;
-      // }
       button {
         order: 1;
       }
     }
   }
 }
-
 .custom-input-full-text-container {
   color: white;
 }
@@ -572,41 +439,26 @@
 }
 
 .md-panel.md-tooltip.error-tooltip {
-  // border-bottom: 1px solid @orange;
   background-color: @orange;
-  // background-color: #fafafa !important;
-  // transform: translate(-160%, 300%);
-  // color: black;
-  // color: @orange;
-  // font-size: 12px !important;
-
-  // top: 0 !important;
-  // left: 0 !important;
 }
-
 .flex_ccp {
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   font-size: 12px;
-
   button {
   }
-
   .custom-input-custom-btn {
     color: @grey;
     &:nth-child(2) {
       font-size: 14px;
       font-weight: normal;
-      // border: 2px solid red;
     }
-
     font-size: 12px;
     font-weight: bold;
   }
 }
-
 .custom-input-indicator-btn {
   display: flex;
   align-items: center;
