@@ -621,6 +621,7 @@
                 "background-color: " + scope.options.backgroundColor + ";",
             };
           }
+          console.log("Panov scope: ", scope)
 
           if (scope.item.frontOptions) {
             /*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {

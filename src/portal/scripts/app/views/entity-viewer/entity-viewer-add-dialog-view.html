@@ -1,7 +1,6 @@
 <md-dialog aria-label="entity viewer add dialog"
-           class="entity-editor-dialog draggable-dialog dialog-actions-bottom evEditorDialogElemToResize"
-           drag-dialog
-           style="height: 100%">
+    class="entity-editor-dialog draggable-dialog dialog-actions-bottom evEditorDialogElemToResize" drag-dialog
+    style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -23,70 +22,54 @@
             <div data-ng-if="vm.checkReadyStatus()">
 
                 <div data-ng-if="vm.fixedFieldsAttributes.length > 0" class="entity-editor-fixed-fields-container">
-                    <div layout="row"
-                         class="entity-editor-row">
+                    <div layout="row" class="entity-editor-row">
                         <div class="ev-data-field"
-                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                             flex="50">
-                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
-                                                entity-type="vm.entityType"
-                                                entity="vm.entity"
-                                                ev-editor-data-service="vm.evEditorDataService"
-                                                ev-editor-event-service="vm.evEditorEventService"
-                                                item="vm.fixedFieldsAttributes[0]"
-                                                entity-change="vm.entityChange()"
-                                                on-field-blur="vm.onNameInputBlur()"></bind-field-control>
+                            data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                            flex="50">
+
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]" entity-type="vm.entityType"
+                                entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
+                                ev-editor-event-service="vm.evEditorEventService" item="vm.fixedFieldsAttributes[0]"
+                                entity-change="vm.entityChange()" on-field-blur="vm.onNameInputBlur()">
+                            </bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
-                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                             flex="35">
-                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]"
-                                                entity-type="vm.entityType"
-                                                entity="vm.entity"
-                                                ev-editor-data-service="vm.evEditorDataService"
-                                                ev-editor-event-service="vm.evEditorEventService"
-                                                entity-change="vm.entityChange()"
-                                                item="vm.fixedFieldsAttributes[1]"></bind-field-control>
+                            data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                            flex="35">
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]" entity-type="vm.entityType"
+                                entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
+                                ev-editor-event-service="vm.evEditorEventService" entity-change="vm.entityChange()"
+                                item="vm.fixedFieldsAttributes[1]"></bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
-                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                             flex="15">
-                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]"
-                                                entity-type="vm.entityType"
-                                                entity="vm.entity"
-                                                ev-editor-data-service="vm.evEditorDataService"
-                                                ev-editor-event-service="vm.evEditorEventService"
-                                                entity-change="vm.entityChange()"
-                                                item="vm.fixedFieldsAttributes[2]"></bind-field-control>
+                            data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                            flex="15">
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]" entity-type="vm.entityType"
+                                entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
+                                ev-editor-event-service="vm.evEditorEventService" entity-change="vm.entityChange()"
+                                item="vm.fixedFieldsAttributes[2]"></bind-field-control>
                         </div>
                     </div>
 
-                    <div layout="row"
-                         class="entity-editor-row">
+                    <div layout="row" class="entity-editor-row">
                         <div class="ev-data-field"
-                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                             flex="50">
-                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]"
-                                                entity-type="vm.entityType"
-                                                entity="vm.entity"
-                                                ev-editor-data-service="vm.evEditorDataService"
-                                                ev-editor-event-service="vm.evEditorEventService"
-                                                entity-change="vm.entityChange()"
-                                                item="vm.fixedFieldsAttributes[3]"></bind-field-control>
+                            data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                            flex="50">
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]" entity-type="vm.entityType"
+                                entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
+                                ev-editor-event-service="vm.evEditorEventService" entity-change="vm.entityChange()"
+                                item="vm.fixedFieldsAttributes[3]"></bind-field-control>
                         </div>
 
                         <div class="ev-data-field"
-                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                             flex="35">
-                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]"
-                                                entity-type="vm.entityType"
-                                                entity="vm.entity"
-                                                ev-editor-data-service="vm.evEditorDataService"
-                                                ev-editor-event-service="vm.evEditorEventService"
-                                                entity-change="vm.entityChange()"
-                                                item="vm.fixedFieldsAttributes[4]"></bind-field-control>
+                            data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                            flex="35">
+                            <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]" entity-type="vm.entityType"
+                                entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
+                                ev-editor-event-service="vm.evEditorEventService" entity-change="vm.entityChange()"
+                                item="vm.fixedFieldsAttributes[4]"></bind-field-control>
                         </div>
 
                         <!--<div class="ev-data-field"
@@ -120,18 +103,18 @@
                         <md-tab-body>
                             <md-content class="md-padding p-t-26">
                                 <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
-                                     class="entity-editor-row">
+                                    class="entity-editor-row">
                                     <div class="ev-data-field
 								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
-                                         data-ng-repeat="field in tab.layout.fields track by $index"
-                                         flex="{{vm.bindFlex(tab, field)}}"
-                                         data-ng-if="vm.checkFieldRender(tab, row, field)">
-                                        <bind-field-control entity-type="vm.entityType"
-                                                            entity="vm.entity"
-                                                            entity-change="vm.entityChange(fieldKey)"
-                                                            ev-editor-data-service="vm.evEditorDataService"
-                                                            ev-editor-event-service="vm.evEditorEventService"
-                                                            item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"></bind-field-control>
+                                        data-ng-repeat="field in tab.layout.fields track by $index"
+                                        flex="{{vm.bindFlex(tab, field)}}"
+                                        data-ng-if="vm.checkFieldRender(tab, row, field)">
+                                        <bind-field-control entity-type="vm.entityType" entity="vm.entity"
+                                            entity-change="vm.entityChange(fieldKey)"
+                                            ev-editor-data-service="vm.evEditorDataService"
+                                            ev-editor-event-service="vm.evEditorEventService"
+                                            item="vm.attributesLayout[tab.tabOrder][field.row][field.column]">
+                                        </bind-field-control>
                                     </div>
                                 </div>
                             </md-content>
@@ -166,23 +149,18 @@
                                         <div>
                                             <div layout="column">
                                                 <div layout="row" layout-align="space-between center"
-                                                     class="permissions-table-header">
+                                                    class="permissions-table-header">
                                                     <div>
                                                         <div class="permissions-columns">Group name
                                                         </div>
                                                     </div>
-                                                    <div layout="row"
-                                                         class="permissions-checkbox-holder"
-                                                         flex="30"
-                                                         layout-align="space-between center">
+                                                    <div layout="row" class="permissions-checkbox-holder" flex="30"
+                                                        layout-align="space-between center">
                                                         <div class="permissions-columns" flex="33">
                                                             Delegate
-                                                            <ng-md-icon class="tooltip-inline-block"
-                                                                        icon="info"
-                                                                        size="20"
-                                                                        style="fill: #777777">
-                                                                <md-tooltip class="tooltip_2"
-                                                                            md-direction="top">
+                                                            <ng-md-icon class="tooltip-inline-block" icon="info"
+                                                                size="20" style="fill: #777777">
+                                                                <md-tooltip class="tooltip_2" md-direction="top">
                                                                     tooltip
                                                                     text
                                                                 </md-tooltip>
@@ -190,25 +168,20 @@
                                                         </div>
                                                         <div class="permissions-columns" flex="33">
                                                             Write
-                                                            <ng-md-icon class="tooltip-inline-block"
-                                                                        icon="info"
-                                                                        size="20"
-                                                                        style="fill: #777777">
-                                                                <md-tooltip class="tooltip_2"
-                                                                            md-direction="top">
+                                                            <ng-md-icon class="tooltip-inline-block" icon="info"
+                                                                size="20" style="fill: #777777">
+                                                                <md-tooltip class="tooltip_2" md-direction="top">
                                                                     tooltip
                                                                     text
                                                                 </md-tooltip>
                                                             </ng-md-icon>
                                                         </div>
-                                                        <div class="permissions-columns" flex="33" data-ng-if="vm.entityType !== 'currency'">
+                                                        <div class="permissions-columns" flex="33"
+                                                            data-ng-if="vm.entityType !== 'currency'">
                                                             Read
-                                                            <ng-md-icon class="tooltip-inline-block"
-                                                                        icon="info"
-                                                                        size="20"
-                                                                        style="fill: #777777">
-                                                                <md-tooltip class="tooltip_2"
-                                                                            md-direction="top">
+                                                            <ng-md-icon class="tooltip-inline-block" icon="info"
+                                                                size="20" style="fill: #777777">
+                                                                <md-tooltip class="tooltip_2" md-direction="top">
                                                                     tooltip
                                                                     text
                                                                 </md-tooltip>
@@ -221,28 +194,27 @@
                                             </div>
                                             <div data-ng-repeat="group in vm.groups" layout="column">
                                                 <div layout="row" layout-align="space-between center"
-                                                     class="permissions-table-row">
+                                                    class="permissions-table-row">
                                                     <div>
                                                         <p> {{ group.name }} </p>
                                                     </div>
-                                                    <div layout="row"
-                                                         class="permissions-checkbox-holder"
-                                                         flex="30"
-                                                         layout-align="space-between center">
+                                                    <div layout="row" class="permissions-checkbox-holder" flex="30"
+                                                        layout-align="space-between center">
                                                         <div flex="33" layout="center center">
                                                             <md-checkbox class="md-secondary"
-                                                                         data-ng-class="{'disabled-btn': (vm.isInheritRights || !group.objectPermissions.manage) && !vm.currentMember.is_admin}"
-                                                                         ng-model="group.objectPermissions.manage"></md-checkbox>
+                                                                data-ng-class="{'disabled-btn': (vm.isInheritRights || !group.objectPermissions.manage) && !vm.currentMember.is_admin}"
+                                                                ng-model="group.objectPermissions.manage"></md-checkbox>
                                                         </div>
                                                         <div flex="33" layout="center center">
                                                             <md-checkbox class="md-secondary"
-                                                                         data-ng-class="{'disabled-btn': (vm.isInheritRights || !group.objectPermissions.manage) && !vm.currentMember.is_admin}"
-                                                                         ng-model="group.objectPermissions.change"></md-checkbox>
+                                                                data-ng-class="{'disabled-btn': (vm.isInheritRights || !group.objectPermissions.manage) && !vm.currentMember.is_admin}"
+                                                                ng-model="group.objectPermissions.change"></md-checkbox>
                                                         </div>
-                                                        <div flex="33" layout="center center" data-ng-if="vm.entityType !== 'currency'">
+                                                        <div flex="33" layout="center center"
+                                                            data-ng-if="vm.entityType !== 'currency'">
                                                             <md-checkbox class="md-secondary"
-                                                                         data-ng-class="{'disabled-btn': (vm.isInheritRights || !group.objectPermissions.manage) && !vm.currentMember.is_admin}"
-                                                                         ng-model="group.objectPermissions.view"></md-checkbox>
+                                                                data-ng-class="{'disabled-btn': (vm.isInheritRights || !group.objectPermissions.manage) && !vm.currentMember.is_admin}"
+                                                                ng-model="group.objectPermissions.view"></md-checkbox>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -253,7 +225,7 @@
                                     </div>
                                     <div data-ng-if="!vm.readyStatus.permissions">
                                         <div layout="row" layout-sm="column" layout-align="space-around"
-                                             class="m-large">
+                                            class="m-large">
                                             <!--<md-progress-circular md-mode="indeterminate"-->
                                             <!--md-diameter="96"></md-progress-circular>-->
                                             <progress-circular diameter="100"></progress-circular>
@@ -283,7 +255,8 @@
             <md-button ng-click="vm.editLayout()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Edit Form
             </md-button>
-            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
+            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary"
+                ng-disabled="!vm.checkReadyStatus()">
                 Manage attributes
             </md-button>
         </div>
@@ -292,16 +265,13 @@
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
-                       ng-click="vm.save()"
-                       style="margin-right:20px;">
+            <md-button class="md-raised" data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
+                ng-click="vm.save()" style="margin-right:20px;">
                 Add and Exit
             </md-button>
         </div>
 
-        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
-                               data-elem-to-resize="vm.dialogElemToResize"
-                               class="dialog-window-resizer_type1"></dialog-window-resizer>
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize" data-elem-to-resize="vm.dialogElemToResize"
+            class="dialog-window-resizer_type1"></dialog-window-resizer>
     </md-dialog-actions>
 </md-dialog>
