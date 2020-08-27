@@ -4,6 +4,14 @@
   height: 33% !important;
   margin-right: 10px;
 }
+
+.entity-editor-fixed-fields-container {
+  .custom-input-container {
+    .custom-input-textarea-sapan-pan {
+      background-color: #fff7e1 !important;
+    }
+  }
+}
 .text_tester {
   border: 2px solid red;
   white-space: nowrap; /* Запрещаем перенос строк */
@@ -64,20 +72,22 @@
   opacity: 0;
   position: absolute;
   right: 1px;
-  top: 2px;
+  // top: 2px;
   cursor: pointer;
-
   // Изменение 4
   right: 27px;
-  top: 47px;
-  top: 27px;
-  transform: translate(0.4px, 0.4px);
+  // top: 47px;
+  // top: 27px;
+  // transform: translate(0.4px, 0.4px);
+  transform: translate(15px,-12px);
 
   z-index: 11;
   .tooltip-sign {
     svg {
       // Поставил импортант , чтобы не трогать шаблон
-      transform: translate(15px, -17px);
+      // transform: translate(15px, -19px);
+      // transform: translate(50%,-65%);;
+      
       height: 28px !important;
       width: 28px !important;
       // fill: red;
@@ -166,6 +176,7 @@
   right: 30px;
   margin-right: 6px;
   box-sizing: border-box;
+  
 
   .custom-input-custom-btn {
     height: 100%;
@@ -174,7 +185,7 @@
     border: none;
     padding: 0 2px;
     //margin: 2px 0;
-    vertical-align: middle;
+    // vertical-align: middle;
 
     &:hover {
       opacity: 0.5;
@@ -476,7 +487,7 @@
     // left: 3px;
 
     right: 0;
-    transform: translate(-10px, 8px);
+    transform: translate(-10px, 4px);
     z-index: 2;
     ng-md-icon {
       // fill: #fa393e;
@@ -528,7 +539,7 @@
   // border:1px solid black !important;
   border: 1px solid #7d7d7d;
   .custom-input-content {
-    height: 45px;
+    height: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;

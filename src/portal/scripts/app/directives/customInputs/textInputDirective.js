@@ -17,6 +17,7 @@
       templateUrl: "views/directives/customInputs/text-input-view.html",
       link: function (scope, elem, attr) {
         var inputContainer = elem[0].querySelector(".textInputContainer");
+
         var inputElem = elem[0].querySelector(".textInputElem");
         var fullTextElem = elem[0].querySelector(".customInputFullText");
         var fullTextTextarea = fullTextElem.querySelector("textarea");
@@ -30,8 +31,15 @@
         // var inpLabel = document.querySelectorAll(".custom-input-label");
         // //
 
-        // console.log(scope.label, "cool");
-        // console.log(inpLabel, "second");
+        scope.getLabelBg = function () {
+          const { "custom-input-main-container": labelBg } = scope.customStyles
+          return labelBg.slice(0, -1) + " !important;"
+        }
+        scope.getLabelColor = function () {
+          const { "custom-input-main-container": labelBg } = scope.customStyles
+          return ` !important; color: ${labelBg} ; -webkit-filter: invert(100%); filter: invert(100%); position:relative; z-index:1000;`
+        }
+
         //
         scope.isReadonly = false;
         scope.isDisabled = false;

@@ -1,6 +1,8 @@
 <div class="custom-input-container text-input-container textInputContainer" data-ng-class="getInputContainerClasses()">
   <div class="custom-input-top-row">
-    <span class="custom-input-textarea-sapan-pan bgInstrument">{{label}}</span>
+    <!-- <div style={{getLabelColor()}}> -->
+    <span class="custom-input-textarea-sapan-pan" data-ng-style="getLabelBg()">{{label}}</span>
+    <!-- </div> -->
     <div data-ng-if="tooltipText && !error" class="custom-input-tooltip">
       <!-- <span class="material-icons">info_outline</span> -->
       <ng-md-icon data-ng-if="!error" icon="info_outline" size="28" class="tooltip-sign" style="fill: #777777;">
