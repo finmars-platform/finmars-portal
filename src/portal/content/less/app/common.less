@@ -1,4 +1,5 @@
 @import "variables";
+@import "./mixins.less";
 
 .p-0 {
   padding: 0;
@@ -521,6 +522,9 @@ md-progress-circular.progress-circular-white {
 .some-checkboxes-ticked {
   div.md-icon {
     border-color: #ff4081;
+    &::after {
+      .checkboxUntouched(#ff4081, 11px, -55%, -45%);
+    }
   }
 }
 

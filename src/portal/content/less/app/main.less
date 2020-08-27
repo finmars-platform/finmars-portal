@@ -1,3 +1,5 @@
+@import "./mixins.less";
+
 md-content.md-default-theme {
   background-color: #eee;
 }
@@ -2742,10 +2744,5 @@ md-dialog.two-rows-dialog-actions {
 // 
 
 md-checkbox.md-indeterminate .md-icon:after {
-  background: rgba(255,64,129,0.87);
-  height: 12px;
-  border:none;
-  border-radius: 2px;
-  -webkit-transform:  translate(-46%,-55%);
-  transform: translate(-46%,-55%);
+  .checkboxUntouched(#ff4081,12px, -46%, -55% )
 }

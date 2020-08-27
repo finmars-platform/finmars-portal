@@ -1,0 +1,27 @@
+@import "./variables.less";
+
+.checkboxUntouched(@background:#ff4081;@size:12px; @x:-50%; @y:-50% ) {
+    position: absolute;
+    content: "";
+    top:50%;
+    left:50%;
+    background: @checkboxColor;
+    width:@size;
+    height: @size;
+    border:none;
+    border-radius: 2px;
+    -webkit-transform:  translate(@x,@y);
+    transform: translate(@x,@y);
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.centerAbs(@x:-50%;@y:-50%;@top:50%;@left:50%) {
+    position: absolute;
+    top:@top;
+    left:@left;
+    transform: translate(@x,@y);
+}
