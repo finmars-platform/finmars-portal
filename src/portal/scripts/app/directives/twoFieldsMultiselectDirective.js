@@ -23,6 +23,9 @@
             link: function (scope, elem, attr, ngModel) {
 
                 scope.inputText = '';
+                scope.itemsSelected = []
+                scope.itemAxact = ""
+
 
                 if (!scope.nameProperty) {
                     scope.nameProperty = 'name';
@@ -37,6 +40,7 @@
                 var defaultInputText = function () {
 
                     var selElemNumber = 0;
+                    let chipsName = ""
                     if (scope.model && scope.model.length > 0) {
                         selElemNumber = scope.model.length;
                     }
@@ -53,7 +57,19 @@
                         }
 
                     } else {
-                        scope.inputText = selElemNumber + " " + "items selected";
+                        console.log(scope, "text +1")
+                        // scope.inputText = selElemNumber + " " + "items selected";
+                        // console.log(scope, "")
+
+                        scope.itemsSelected.forEach(el => {
+                            scope.model.forEach(element => {
+                                if (el.id == element) {
+                                    chipsName = el.user_code
+                                    scope.itemAxact = el.user_code
+                                }
+                            })
+                        })
+                        scope.inputText = `+${selElemNumber}`;
                     }
 
                 };
@@ -64,7 +80,9 @@
 
                     if (scope.model && scope.model.length) {
 
+
                         if (scope.items && scope.items.length) {
+
 
                             scope.inputText = '[';
                             scope.tooltipText = 'Values selected:';
@@ -191,6 +209,8 @@
 
                             if (res.status === "agree") {
 
+                                // console.log(res, "response", items)
+                                scope.itemsSelected = items
                                 scope.model = res.selectedItems;
 
                                 if (scope.onChangeCallback) {
