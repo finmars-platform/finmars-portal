@@ -14,7 +14,7 @@
             scope: {
                 label: '<',
                 item: '=',
-                itemName: '<',
+                itemName: '=',
                 entityType: '<',
                 customButtons: '=',
                 customStyles: '<',
@@ -270,54 +270,6 @@
 
                 };
 
-                /*$(elem).on('click', function (event) {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    if (!scope.isDisabled) {
-
-                        $mdDialog.show({
-                            controller: 'EntitySearchDialogController as vm',
-                            templateUrl: 'views/dialogs/entity-search-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: event,
-                            preserveScope: false,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            clickOutsideToClose: false,
-                            locals: {
-                                data: {
-                                    entityType: scope.entityType,
-                                    selectedItem: scope.item
-                                }
-                            }
-                        }).then(function (res) {
-
-                            if (res.status === 'agree') {
-
-                                scope.item = res.data.item.id;
-                                scope.inputText = res.data.item.name;
-
-                                console.log('res', res);
-
-                                setTimeout(function () {
-
-                                    scope.callback();
-
-                                    scope.$apply();
-
-                                }, 0)
-
-
-                            }
-                        });
-
-                    }
-
-                });*/
-
                 var applyCustomStyles = function () {
 
                     Object.keys(scope.customStyles).forEach(function (className) {
@@ -417,24 +369,34 @@
 
                     });
 
-                }
+                    scope.$watch('entityType', function () {
+                        changeIconAndPlaceholder(scope.entityType);
+                    })
 
-                var init = function () {
+                };
 
-                    initEventListeners();
+                var changeIconAndPlaceholder = function (entityType) {
 
-                    scope.iconData = entityIndicatorIcons[scope.entityType];
+                    scope.iconData = entityIndicatorIcons[entityType];
 
                     var entitiesData = metaContentTypeService.getList();
 
                     for (var i = 0; i < entitiesData.length; i++) {
 
-                        if (entitiesData[i].entity === scope.entityType) {
+                        if (entitiesData[i].entity === entityType) {
                             scope.placeholderText = entitiesData[i].name;
                             break;
                         }
 
                     }
+
+                };
+
+                var init = function () {
+
+                    initEventListeners();
+
+                    changeIconAndPlaceholder(scope.entityType);
 
                     if (scope.customStyles) {
                         applyCustomStyles();
@@ -442,7 +404,7 @@
 
                     initScopeWatchers();
 
-                }
+                };
 
                 init();
 

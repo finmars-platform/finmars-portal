@@ -38,10 +38,11 @@
                             <md-input-container class="md-block" style="height: 58px">
                                 <label>Value Type</label>
                                 <md-select data-ng-model="vm.item.settings.value_type">
-                                    <md-option ng-value="10">Text</md-option>
-                                    <md-option ng-value="20">Number</md-option>
-                                    <md-option ng-value="40">Date</md-option>
-                                    <md-option ng-value="100">Relation</md-option>
+<!--                                    <md-option ng-value="10">Text</md-option>-->
+<!--                                    <md-option ng-value="20">Number</md-option>-->
+<!--                                    <md-option ng-value="40">Date</md-option>-->
+<!--                                    <md-option ng-value="100">Relation</md-option>-->
+                                    <md-option ng-repeat="valueType in vm.valueTypes" ng-value="valueType.code">{{valueType.name}}</md-option>
                                 </md-select>
                             </md-input-container>
 
@@ -51,9 +52,10 @@
                                                     aria-label="select with filter"
                                                     style="height: 58px">
                                     <label>Content Type</label>
-                                    <md-select ng-model="vm.item.settings.content_type"
+                                    <md-select ng-model="vm.currentContentType"
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
+                                               ng-change="vm.onContentTypeChange()"
                                                style="margin-bottom: 10px">
 
                                         <md-select-header>
@@ -68,7 +70,7 @@
 
                                             <md-option
                                                     data-ng-repeat="contentType in vm.contentTypes | filter: {name: searchTerm}"
-                                                    ng-value="contentType.key"
+                                                    ng-value="contentType"
                                                     ng-bind="contentType.name">
                                             </md-option>
 
@@ -117,6 +119,8 @@
 
                             <div class="p-t-24" data-ng-if="vm.defaultValue.mode === 0">
 
+                                <div class="p-b-24">Value type: {{vm.getCurrentValueTypeName()}}</div>
+
                                 <md-input-container class="dashboard-constructor-field1" style="height: 58px">
                                     <label for="">Report Type</label>
                                     <md-select data-ng-model="vm.defaultValue.entity_type"
@@ -135,9 +139,12 @@
                                                            data-on-change-callback="vm.onRvLayoutChange()"
                                                            class="dashboard-constructor-selector-directive"></expandable-items-selector>
 
-                                <md-input-container class="dashboard-constructor-field1" style="height: 58px">
+                                <md-input-container ng-if="vm.defaultValue.entity_type !== 'balance-report'"
+                                                    class="dashboard-constructor-field1" style="height: 58px">
+
                                     <label for="">Report Field</label>
-                                    <md-select data-ng-model="vm.defaultValue.report_field">
+                                    <md-select data-ng-model="vm.defaultValue.report_field"
+                                               data-ng-disabled="!vm.defaultValue.layout">
 
                                         <md-option
                                                 data-ng-repeat="reportField in vm.reportFields"
@@ -148,7 +155,7 @@
                                     </md-select>
                                 </md-input-container>
 
-                                <div class="p-t-24" data-ng-if="vm.defaultValue.report_field.value">
+                                <div data-ng-if="vm.defaultValue.report_field.value">
                                     Current default value: {{vm.defaultValue.report_field.value}}
                                 </div>
 
@@ -156,10 +163,30 @@
 
                             <div class="p-t-24" data-ng-if="vm.defaultValue.mode === 1">
 
-                                <md-input-container class="field-date-pick-holder no-error-spacer">
+                                <div class="p-b-24">Value type: {{vm.getCurrentValueTypeName()}}</div>
+
+                                <md-input-container data-ng-if="vm.item.settings.value_type === 40" class="field-date-pick-holder no-error-spacer">
                                     <label data-ng-bind="vm.item.custom_component_name || vm.item.name"></label>
                                     <zh-date-picker data-date-value="vm.defaultValue.setValue"></zh-date-picker>
                                 </md-input-container>
+
+                                <div data-ng-if="vm.item.settings.value_type === 100 && vm.currentContentType">
+
+                                    <entity-search-select data-ng-if="!vm.item.settings.multiple"
+                                                          data-item="vm.defaultValue.setValue"
+                                                          data-label="vm.currentContentType.name"
+                                                          data-item-name="vm.defaultValue.setValueName"
+                                                          data-entity-type="vm.currentContentType.entityType"></entity-search-select>
+
+                                    <two-fields-multiselect data-ng-if="vm.item.settings.multiple"
+                                                            data-title="{{vm.currentContentType.name}}"
+                                                            data-items="vm.multiselectItems"
+                                                            data-model="vm.defaultValue.setValue"
+                                                            data-name-property="short_name"
+                                                            data-get-data-method="vm.getDataForMultiselect()"
+                                                            class="two-fields-multiselect no-error-spacer dashboard-control-multiselect"></two-fields-multiselect>
+
+                                </div>
 
                             </div>
 
