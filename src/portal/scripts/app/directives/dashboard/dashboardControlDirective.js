@@ -179,27 +179,31 @@
                         });
                     };
 
-                    if (scope.item.data.store && scope.item.data.store.value) {
+                    if (scope.item.data.store && scope.item.data.store.value) { // Value already exist, default value don't need
                         return promisify(scope.item.data.store);
                     }
 
-                    if (!componentData.defaultValue) {
+                    if (!componentData.settings.defaultValue) {
                         return promisify({});
                     }
 
-                    var mode = componentData.defaultValue.mode;
+                    var mode = componentData.settings.defaultValue.mode;
 
-                    if (mode === 1) {
-                        return promisify({value: componentData.defaultValue.setValue});
+                    if (mode === 1) { // Set default value
+                        var value = componentData.settings.defaultValue.setValue;
+                        var name = componentData.settings.defaultValue.setValueName;
+                        var label = componentData.settings.defaultValue.setValueLabel;
+
+                        return promisify({value: value, name: name, label: label});
                     }
 
-                    if (mode === 0) {
+                    if (mode === 0) { // Get default value
 
-                        var layoutId = componentData.defaultValue.layout;
+                        var layoutId = componentData.settings.defaultValue.layout;
 
                         return uiService.getListLayoutByKey(layoutId).then(function (layout) {
 
-                            var value = layout.data.reportOptions[componentData.defaultValue.report_field];
+                            var value = layout.data.reportOptions[componentData.settings.defaultValue.report_field];
 
                             return {value: value};
 
@@ -218,11 +222,11 @@
                         scope.$apply();
                     });
 
-                    // if (!scope.item.data.store) {
-                    //     scope.item.data.store = {} // "store" - property for all dashboard data related properties
-                    // }
+                    if (scope.componentData.settings.content_type == 'currencies.currency' || scope.componentData.settings.content_type == 'instruments.pricingpolicy') {
 
-                    console.log('scope.item', scope);
+                        scope.getData();
+
+                    }
 
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
