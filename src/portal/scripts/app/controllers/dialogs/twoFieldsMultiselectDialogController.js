@@ -16,6 +16,8 @@
         var getDataMethod = data.getDataMethod;
         var selectedItems = data.model;
 
+        console.log('selectedItems', selectedItems)
+
         if (!selectedItems) {
             selectedItems = [];
         }
