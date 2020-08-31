@@ -202,25 +202,15 @@
                         var layoutId = componentData.settings.defaultValue.layout;
 
                         return uiService.getListLayoutByKey(layoutId).then(function (layout) {
-                            console.log('componentData.settings.defaultValue', componentData.settings.defaultValue);
-                            console.log('Layout', layout);
+
                             var key = componentData.settings.defaultValue.reportOptionsKey;
                             var value = layout.data.reportOptions[key];
-
-                            if (['report_currency', 'pricing_policy'].some(function(reportType) {
-                                return reportType === key;
-                            })) {
-
-                            }
 
                             if (key === 'report_currency' || key === 'pricing_policy') {
                                 value = [value];
                             }
 
-                            console.log('default value', value);
-
                             return {value: value};
-
 
                         });
                     }
