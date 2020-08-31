@@ -1,9 +1,11 @@
 @import "variables";
+
 .date-input-specific-btns {
   display: block;
   height: 33% !important;
   margin-right: 10px;
 }
+
 .entity-editor-fixed-fields-container {
   .custom-input-container {
     .custom-input-textarea-sapan-pan {
@@ -11,12 +13,16 @@
     }
   }
 }
+
 .text_tester {
   border: 2px solid red;
-  white-space: nowrap; /* Запрещаем перенос строк */
-  overflow: hidden; /* Обрезаем все, что не помещается в область */
+  white-space: nowrap;
+  /* Запрещаем перенос строк */
+  overflow: hidden;
+  /* Обрезаем все, что не помещается в область */
   text-overflow: ellipsis;
 }
+
 .custom-input-textarea-sapan-pan {
   color: #7d7d7d;
   position: relative;
@@ -29,15 +35,19 @@
   display: inline-block;
   font-size: 12px;
   max-width: 80%;
-  white-space: nowrap; /* Запрещаем перенос строк */
-  overflow: hidden; /* Обрезаем все, что не помещается в область */
+  white-space: nowrap;
+  /* Запрещаем перенос строк */
+  overflow: hidden;
+  /* Обрезаем все, что не помещается в область */
   text-overflow: ellipsis;
 }
+
 .custom-input-top-row {
   position: relative;
   box-sizing: border-box;
   height: 0;
   font-size: 12px;
+
   .custom-input-label {
     position: relative;
     padding: 4px 18px 0 4px;
@@ -47,8 +57,10 @@
     z-index: 1;
     background: white;
     display: inline-block;
-    white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    white-space: nowrap;
+    /* Запрещаем перенос строк */
+    overflow: hidden;
+    /* Обрезаем все, что не помещается в область */
     text-overflow: ellipsis;
     max-width: 80%;
   }
@@ -60,7 +72,7 @@
   // right: 1px;
   cursor: pointer;
   right: 9px;
-  top:1px;
+  top: 1px;
   // display: flex;
   // justify-content: center;
   // flex-direction: column;
@@ -68,11 +80,11 @@
   // border:1px solid red;
   // transform: translate(15px,-12px);
   z-index: 11;
-  .custom-input-container {
 
-  }
+  .custom-input-container {}
+
   .tooltip-sign {
-    ng-md-icon  {
+    ng-md-icon {
       height: 28px !important;
       width: 28px !important;
     }
@@ -80,7 +92,7 @@
     svg {
       position: absolute;
       height: 28px;
-      top:4px;
+      top: 4px;
       right: 4px;
       display: flex;
       justify-content: center;
@@ -91,6 +103,7 @@
     }
   }
 }
+
 .tooltip-sign {
   display: flex;
   justify-content: center;
@@ -99,10 +112,12 @@
 
   // border:1px solid red;
 }
+
 .custom-input-main-container {
   position: relative;
   border-radius: 6px;
 }
+
 .custom-input-borders {
   overflow: hidden;
   border-radius: 6px;
@@ -114,6 +129,7 @@
   // height: 23px;
   width: 100%;
   border-radius: 6px;
+
   .flex-row {
     padding: 0px 10px;
   }
@@ -131,9 +147,11 @@
   text-overflow: ellipsis;
   font-weight: 400;
 }
+
 .bgInstrument {
-  background-color: @labelInstrumentPan !important;
+  background-color: @labelInstrumentPan  !important;
 }
+
 .custom-input {
   flex: 0 1 100%;
   min-width: 0;
@@ -143,6 +161,7 @@
   border-radius: 6px 0 0 6px;
   background: transparent;
   box-sizing: border-box;
+
   &:focus {
     outline: none;
   }
@@ -153,7 +172,7 @@
   text-overflow: ellipsis;
 }
 
-.custom-input:focus + .custom-input-indicator-btn {
+.custom-input:focus+.custom-input-indicator-btn {
   outline: none;
 }
 
@@ -166,12 +185,14 @@
   right: 30px;
   margin-right: 6px;
   box-sizing: border-box;
+
   .custom-input-custom-btn {
     height: 100%;
     min-width: 20px;
     background: transparent;
     border: none;
     padding: 0 2px;
+
     &:hover {
       opacity: 0.5;
     }
@@ -189,10 +210,12 @@
   z-index: 9;
   color: #7d7d7d;
   transition: 0.2s ease-in-out;
+
   &:hover {
     opacity: 0.5;
   }
 }
+
 .custom-input-indicator-btn2 {
   .custom-input-indicator-btn();
   position: absolute;
@@ -204,6 +227,7 @@
   width: 100%;
   position: relative;
 }
+
 .custom-input-sel-menu-block {
   position: absolute;
   width: 100%;
@@ -217,15 +241,18 @@
   overflow: auto;
   z-index: 52;
   box-sizing: border-box;
+
   .custom-input-sel-option {
     padding: 4px 10px;
     cursor: pointer;
     white-space: nowrap;
+
     &:hover {
       background-color: rgba(158, 158, 158, 0.18);
     }
   }
 }
+
 .custom-input-full-text-container {
   display: none;
   opacity: 0;
@@ -242,6 +269,7 @@
   box-sizing: border-box;
   z-index: 1;
 }
+
 .custom-input-full-text {
   width: 100%;
   height: 100%;
@@ -249,25 +277,30 @@
   border: none;
   resize: none;
   box-sizing: border-box;
+
   &:focus {
     border: none;
     outline: none;
   }
 }
+
 .custom-input-full-text-focused {
   .custom-input-indicator-btn {
     z-index: 11;
   }
+
   .custom-input-textarea-sapan-pan {
     z-index: 11;
   }
 }
+
 .custom-input-full-text-shown {
   display: block;
   padding-top: 50px;
   opacity: 1;
   z-index: 10;
   border-radius: 6px;
+
   textarea {
     position: absolute;
     top: 0;
@@ -277,24 +310,30 @@
     border-radius: 4px;
   }
 }
+
 .custom-input-container.custom-input-set-from-outside {
+
   .custom-input-borders,
   .custom-input-full-text-container {
     border-color: rgba(26, 26, 236, 0.6);
   }
+
   .custom-input {
     color: rgba(26, 26, 236, 0.6);
   }
 }
+
 .custom-input-container.custom-input-hovered,
 .custom-input-container.custom-input-focused {
   .custom-input-custom-btns-holder {
     opacity: 1;
   }
+
   .custom-input-tooltip {
     opacity: 1;
   }
 }
+
 .number-input-calculator-btn {
   position: absolute;
   top: 0;
@@ -304,28 +343,31 @@
   -ms-transform: rotate(90deg);
   transform: rotate(-90deg);
 }
+
 .custom-input-container.custom-input-preset1 {
-  .custom-input-label {
-  }
+  .custom-input-label {}
+
   .custom-input-borders .custom-input-content .flex-row input {
     color: #f05a22;
     font-weight: bold;
   }
+
   .custom-input {
     color: @orange;
   }
 
-  .custom-input-indicator-btn {
-  }
+  .custom-input-indicator-btn {}
 }
 
 .custom-input-container.custom-input-preset2 {
   .custom-input-label {
     color: #000;
   }
+
   .custom-input {
     color: #000;
   }
+
   .custom-input-indicator-btn {
     color: #000;
     fill: #000;
@@ -342,11 +384,13 @@
     fill: #015f01;
   }
 }
+
 .text-input-container.expression-input {
   .custom-input {
     font-style: italic;
   }
 }
+
 .custom-input.expression-input {
   overflow: hidden;
   //resize: none;
@@ -364,30 +408,36 @@
 .custom-input-container.custom-input-focused {
   .custom-input-main-container {
     .custom-input-borders {
-      box-shadow: 0 0 0 1px #7d7d7d ;
+      box-shadow: 0 0 0 1px #7d7d7d;
+
       .custom-input-content {
         .flex-row {
           input {
             color: black;
           }
-          button {
-          }
+
+          button {}
         }
       }
     }
   }
+
   .custom-input-indicator-btn {
     outline: none;
   }
 }
+
 .custom-input-container {
   padding: 6px !important;
 }
+
 .custom-input-container.custom-input-error {
+
   .custom-input-label,
   .custom-input-textarea-sapan-pan {
     color: @orange;
   }
+
   &::after {
     content: "Invalid value";
     color: @orange;
@@ -396,14 +446,17 @@
     position: relative;
     font-size: 12px;
   }
+
   .custom-input-borders .custom-input-content .flex-row button {
     color: @orange;
   }
+
   .custom-input-tooltip {
     opacity: 0;
   }
+
   // --------------------
-  
+
   .custom-input-error-tooltip {
     position: absolute;
     cursor: pointer;
@@ -417,15 +470,17 @@
     // border:1px solid red;
     // height: 90%;
     z-index: 2;
+
     ng-md-icon {
       display: block;
       fill: @orange;
       height: 28px !important;
       width: 28px !important;
+
       svg {
         position: absolute;
         height: 28px;
-        top:3px;
+        top: 3px;
         right: 4px;
         display: flex;
         justify-content: center;
@@ -441,10 +496,12 @@
   .custom-input-full-text-container {
     border-color: #fa393e;
   }
+
   .custom-input {
     padding-left: 20px;
     color: #fa393e;
   }
+
   .custom-input:focus {
     outline: none;
   }
@@ -454,62 +511,71 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
 // < should always be at the bottom >
 .custom-input-container {
   margin-bottom: 13px;
 }
 
-.custom-input-main-container {
-}
+.custom-input-main-container {}
 
 .custom-input-borders {
   min-height: 40px;
   position: relative;
   border: 1px solid #7d7d7d;
+
   .custom-input-content {
     height: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
     .flex-row {
       input {
         order: 2;
         color: #7d7d7d;
         font-weight: 400;
       }
+
       button {
         order: 1;
       }
     }
   }
 }
+
 .custom-input-full-text-container {
   color: white;
 }
-.md-panel-is-showing {
-}
+
+.md-panel-is-showing {}
 
 .md-panel.md-tooltip.error-tooltip {
   background-color: @orange;
 }
+
 .flex_ccp {
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   font-size: 12px;
-  button {
-  }
+
+  button {}
+
   .custom-input-custom-btn {
     color: @grey;
+
     &:nth-child(2) {
       font-size: 14px;
       font-weight: normal;
     }
+
     font-size: 12px;
     font-weight: bold;
   }
 }
+
 .custom-input-indicator-btn {
   display: flex;
   align-items: center;
