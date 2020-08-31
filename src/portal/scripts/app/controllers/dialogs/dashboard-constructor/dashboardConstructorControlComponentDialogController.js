@@ -64,12 +64,14 @@
             {
                 name: 'Portfolio',
                 key: 'portfolios.portfolio',
-                entityType: 'portfolio'
+                relationType: 'portfolio',
+                reportOptionsKey: 'portfolios'
             },
             {
                 name: 'Account',
                 key: 'accounts.account',
-                entityType: 'account'
+                relationType: 'account',
+                reportOptionsKey: 'accounts'
             },
             {
                 name: 'Counterparty',
@@ -82,27 +84,32 @@
             {
                 name: 'Currency',
                 key: 'currencies.currency',
-                entityType: 'currency'
+                relationType: 'currency',
+                reportOptionsKey: 'report_currency'
             },
             {
                 name: 'Strategy 1',
                 key: 'strategies.strategy1',
-                entityType: 'strategy-1'
+                relationType: 'strategy-1',
+                reportOptionsKey: 'strategies1'
             },
             {
                 name: 'Strategy 2',
                 key: 'strategies.strategy2',
-                entityType: 'strategy-2'
+                relationType: 'strategy-2',
+                reportOptionsKey: 'strategies2'
             },
             {
                 name: 'Strategy 3',
                 key: 'strategies.strategy3',
-                entityType: 'strategy-3'
+                relationType: 'strategy-3',
+                reportOptionsKey: 'strategies3'
             },
             {
                 name: 'Pricing Policy',
                 key: 'instruments.pricingpolicy',
-                entityType: 'pricing-policy'
+                relationType: 'pricing-policy',
+                reportOptionsKey: 'pricing_policy'
             }
         ];
 
@@ -117,11 +124,23 @@
 
         vm.isRequiredDefaultValue = function () {
             var isDateSelected = vm.item.settings.value_type === 40;
-            var isRelationNeedDefaultValue = vm.currentContentType && vm.currentContentType.entityType;
+            var isRelationNeedDefaultValue = vm.currentContentType && vm.currentContentType.relationType;
 
             return isDateSelected || isRelationNeedDefaultValue;
 
         };
+
+        vm.onValueTypeChange = function () {
+            console.log('onValueTypeChange');
+
+            vm.defaultValue.setValue = null;
+            vm.defaultValue.setValueName = null;
+            vm.defaultValue.setValueTitle = null;
+            vm.multiselectItems = [];
+
+            //$scope.$apply();
+
+        }
 
         vm.onContentTypeChange = function () {
 
@@ -132,7 +151,7 @@
 
         };
 
-        vm.reportTypeChange = function() {
+        vm.onReportTypeChange = function() {
 
             vm.defaultValue.layout = null;
             vm.defaultValue.report_field = null;
@@ -143,9 +162,13 @@
 
         };
 
-        vm.onRvLayoutChange = function () {
+        vm.onLayoutChange = function () {
 
             if (!vm.defaultValue.layout) {
+                return;
+            }
+
+            if (vm.item.settings.value_type !== 40) { // not Date
                 return;
             }
 
@@ -221,12 +244,26 @@
             }
 
             if (defaultValue.mode === 0) {
-                return {
+
+                var result = {
                     mode: 0,
                     entity_type: defaultValue.entity_type,
-                    layout: defaultValue.layout,
-                    report_field: defaultValue.report_field.key
-                };
+                    layout: defaultValue.layout
+                }
+
+                if (vm.item.settings.value_type === 40) { // Date
+
+                    result.reportOptionsKey = defaultValue.report_field.key
+
+                }
+
+                if (vm.item.settings.value_type === 100) { // Relations
+
+                    result.reportOptionsKey = vm.currentContentType.reportOptionsKey;
+
+                }
+
+                return result;
             }
 
             return null;
@@ -305,18 +342,31 @@
 
             if (vm.defaultValue.mode === 0) { // Get default value
 
+                if (vm.item.settings.value_type === 40) { // Date
+
+                    return vm.defaultValue.entity_type
+                        && vm.defaultValue.layout
+                        && vm.defaultValue.report_field
+                        && Object.keys(vm.defaultValue.report_field).length > 0;
+
+                }
+
                 return vm.defaultValue.entity_type
                     && vm.defaultValue.layout
-                    && vm.defaultValue.report_field
-                    && Object.keys(vm.defaultValue.report_field).length > 0;
 
             }
 
             if (vm.defaultValue.mode === 1) { // Set default value
 
-                if (vm.item.settings.value_type === 40) {
+                if (vm.item.settings.value_type === 40) { //Date
 
                     return Boolean(Date.parse(vm.defaultValue.setValue));
+
+                }
+
+                if (Array.isArray(vm.defaultValue.setValue)) {
+
+                    return vm.defaultValue.setValue.length > 0;
 
                 }
 
@@ -356,7 +406,7 @@
         };
 
         vm.getDataForMultiselect = function () {
-            return entityResolverService.getList(vm.currentContentType.entityType);
+            return entityResolverService.getList(vm.currentContentType.relationType);
         };
 
         vm.init = function () {

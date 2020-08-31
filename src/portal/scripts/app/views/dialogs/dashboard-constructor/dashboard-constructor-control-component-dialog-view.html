@@ -37,7 +37,7 @@
 
                             <md-input-container class="md-block" style="height: 58px">
                                 <label>Value Type</label>
-                                <md-select data-ng-model="vm.item.settings.value_type">
+                                <md-select data-ng-model="vm.item.settings.value_type" ng-change="vm.onValueTypeChange()">
 <!--                                    <md-option ng-value="10">Text</md-option>-->
 <!--                                    <md-option ng-value="20">Number</md-option>-->
 <!--                                    <md-option ng-value="40">Date</md-option>-->
@@ -83,7 +83,7 @@
 
                                     <md-input-container style="height: 58px">
 
-                                        <md-checkbox data-ng-model="vm.item.settings.multiple">Multiple Select</md-checkbox>
+                                        <md-checkbox data-ng-model="vm.item.settings.multiple" ng-change="vm.onContentTypeChange()">Multiple Select</md-checkbox>
 
                                     </md-input-container>
 
@@ -124,7 +124,7 @@
                                 <md-input-container class="dashboard-constructor-field1" style="height: 58px">
                                     <label for="">Report Type</label>
                                     <md-select data-ng-model="vm.defaultValue.entity_type"
-                                               data-ng-change="vm.reportTypeChange()">
+                                               data-ng-change="vm.onReportTypeChange()">
                                         <md-option value="balance-report">Balance Report</md-option>
                                         <md-option value="pl-report">P&L Report</md-option>
                                         <md-option value="transaction-report">Transaction Report</md-option>
@@ -136,10 +136,10 @@
                                                            data-dialog-title="Choose layout"
                                                            data-items="vm.layoutsWithLinkToFilters"
                                                            data-is-disabled="!vm.defaultValue.entity_type"
-                                                           data-on-change-callback="vm.onRvLayoutChange()"
+                                                           data-on-change-callback="vm.onLayoutChange()"
                                                            class="dashboard-constructor-selector-directive"></expandable-items-selector>
 
-                                <md-input-container ng-if="vm.defaultValue.entity_type !== 'balance-report'"
+                                <md-input-container ng-if="vm.item.settings.value_type == 40 && vm.defaultValue.entity_type !== 'balance-report'"
                                                     class="dashboard-constructor-field1" style="height: 58px">
 
                                     <label for="">Report Field</label>
@@ -155,7 +155,7 @@
                                     </md-select>
                                 </md-input-container>
 
-                                <div data-ng-if="vm.defaultValue.report_field.value">
+                                <div data-ng-if="vm.item.settings.value_type == 40 && vm.defaultValue.report_field.value">
                                     Current default value: {{vm.defaultValue.report_field.value}}
                                 </div>
 
@@ -176,7 +176,7 @@
                                                           data-item="vm.defaultValue.setValue"
                                                           data-label="vm.currentContentType.name"
                                                           data-item-name="vm.defaultValue.setValueName"
-                                                          data-entity-type="vm.currentContentType.entityType"></entity-search-select>
+                                                          data-entity-type="vm.currentContentType.relationType"></entity-search-select>
 
                                     <two-fields-multiselect data-ng-if="vm.item.settings.multiple"
                                                             data-title="{{vm.currentContentType.name}}"
