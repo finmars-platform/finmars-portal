@@ -789,7 +789,7 @@ md-card.small-width {
   margin: 0 auto;
 }
 
-.permissions-checkbox-holder>div {
+.permissions-checkbox-holder > div {
   margin-right: 10px;
   text-align: center;
 }
@@ -832,16 +832,16 @@ md-menu-bar.header-logout-menu {
 
 #js-tree-select-wrapper.js-tree-select {
   .jstree-container-ul {
-    &>li {
-      &>div {
+    & > li {
+      & > div {
         display: none;
       }
 
-      &>i {
+      & > i {
         display: none;
       }
 
-      &>a {
+      & > a {
         display: none;
       }
     }
@@ -1004,7 +1004,6 @@ md-menu-bar.header-logout-menu {
 }
 
 .bookmarks-editor-layouts-input-container {
-
   label,
   input {
     cursor: pointer;
@@ -1120,11 +1119,11 @@ md-menu-bar.header-logout-menu {
   position: relative;
   height: 100%;
 
-  &:hover>.ps-scrollbar-y-rail:hover>.ps-scrollbar-y {
+  &:hover > .ps-scrollbar-y-rail:hover > .ps-scrollbar-y {
     background: #4c334d;
   }
 
-  .ps-scrollbar-y-rail>.ps-scrollbar-y {
+  .ps-scrollbar-y-rail > .ps-scrollbar-y {
     background: #4c334d;
   }
 }
@@ -1186,24 +1185,24 @@ table {
   border-spacing: 0;
 }
 
-table.bordered>thead>tr,
-table.bordered>tbody>tr {
+table.bordered > thead > tr,
+table.bordered > tbody > tr {
   border-bottom: 1px solid #d0d0d0;
 }
 
-table.striped>tbody>tr:nth-child(odd) {
+table.striped > tbody > tr:nth-child(odd) {
   background-color: #f2f2f2;
 }
 
-table.striped>tbody>tr>td {
+table.striped > tbody > tr > td {
   border-radius: 0;
 }
 
-table.highlight>tbody>tr {
+table.highlight > tbody > tr {
   transition: background-color 0.25s ease;
 }
 
-table.highlight>tbody>tr:hover {
+table.highlight > tbody > tr:hover {
   background-color: #f2f2f2;
 }
 
@@ -1506,7 +1505,7 @@ md-select-header input {
 }*/
 
 .instrument-scheme-fields-holder {
-  md-input-container>md-select {
+  md-input-container > md-select {
     margin: 10px 0;
   }
 
@@ -1571,7 +1570,7 @@ md-input-container.SC-entity-select-container {
   }
 }
 
-.vAccordion--default v-pane.is-expanded>v-pane-header {
+.vAccordion--default v-pane.is-expanded > v-pane-header {
   border-bottom-color: rgb(63, 81, 181);
 }
 
@@ -1634,7 +1633,7 @@ md-input-container.SC-entity-select-container {
 md-menu-content md-menu.md-menu {
   padding: 0;
 
-  &>button.md-button {
+  & > button.md-button {
     margin: 0;
     padding: 0;
     padding: 0 16px;
@@ -1695,14 +1694,14 @@ md-menu-content md-menu.md-menu {
   }
 }
 
-.layout-row>.flex-16 {
+.layout-row > .flex-16 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 16.6%;
   flex: 1 1 16.6%;
 }
 
 .flex-16,
-.layout-row>.flex-16 {
+.layout-row > .flex-16 {
   max-width: 16.6%;
   max-height: 100%;
   box-sizing: border-box;
@@ -1727,7 +1726,7 @@ md-menu-content md-menu.md-menu {
   }
 }
 
-.ui-select-bootstrap .ui-select-choices-row.active>span {
+.ui-select-bootstrap .ui-select-choices-row.active > span {
   background-color: #4c334d;
 }
 
@@ -1903,7 +1902,7 @@ md-menu-content md-menu.md-menu {
     box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 
-  &.open>.dropdown-menu {
+  &.open > .dropdown-menu {
     display: block;
   }
 
@@ -2611,7 +2610,7 @@ md-checkbox.checkbox-center {
   top: 30px;
   right: 30px;
 
-  &>div {
+  & > div {
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -2715,7 +2714,7 @@ md-dialog.two-rows-dialog-actions {
   color: #f00;
 }
 
-#toast-container>div {
+#toast-container > div {
   opacity: 0.95;
 }
 
@@ -2797,16 +2796,14 @@ md-dialog.two-rows-dialog-actions {
   padding-bottom: 12px;
 }
 
-
-// 
+//
 
 md-checkbox.md-indeterminate .md-icon:after {
-  .checkboxUntouched(#ff4081, 12px, -46%, -55%)
+  .checkboxUntouched(#ff4081, 12px, -46%, -55%);
 }
 
 .rel-container {
   position: relative;
-
 
   // border: 1px solid black;
   input {
@@ -2830,8 +2827,9 @@ md-checkbox.md-indeterminate .md-icon:after {
     position: absolute;
     top: 50%;
     left: 0;
-    transform: translate(70%, 0%);
+    transform: translate(25%, 0%);
     display: flex;
+    color: red;
     justify-content: space-between;
     align-items: center;
   }
@@ -2859,7 +2857,5 @@ md-checkbox.md-indeterminate .md-icon:after {
       font-size: 14px;
       font-weight: 400;
     }
-
   }
-
 }
