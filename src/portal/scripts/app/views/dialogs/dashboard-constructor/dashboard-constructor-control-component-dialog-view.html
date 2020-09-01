@@ -37,7 +37,7 @@
 
                             <md-input-container class="md-block" style="height: 58px">
                                 <label>Value Type</label>
-                                <md-select data-ng-model="vm.item.settings.value_type" ng-change="vm.onValueTypeChange()">
+                                <md-select data-ng-model="vm.item.settings.value_type" ng-change="vm.clearDefaultValue()">
                                     <md-option ng-repeat="valueType in vm.valueTypes" ng-value="valueType.code">{{valueType.name}}</md-option>
                                 </md-select>
                             </md-input-container>
@@ -51,7 +51,7 @@
                                     <md-select ng-model="vm.currentContentType"
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
-                                               ng-change="vm.onContentTypeChange()"
+                                               ng-change="vm.clearDefaultValue()"
                                                style="margin-bottom: 10px">
 
                                         <md-select-header>
@@ -79,7 +79,7 @@
 
                                     <md-input-container style="height: 58px">
 
-                                        <md-checkbox data-ng-model="vm.item.settings.multiple" ng-change="vm.onContentTypeChange()">Multiple Select</md-checkbox>
+                                        <md-checkbox data-ng-model="vm.item.settings.multiple" ng-change="vm.clearDefaultValue()">Multiple Select</md-checkbox>
 
                                     </md-input-container>
 
