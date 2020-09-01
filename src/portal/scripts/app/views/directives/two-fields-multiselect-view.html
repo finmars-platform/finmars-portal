@@ -1,24 +1,55 @@
-<md-input-container class="two-fields-multiselect-input rel-container" data-ng-click="handleClick($event)">
-       <label data-ng-bind="title" class="cursor-pointer two-fields-multiselect-input-label"></label>
-       <input type="text" class="cursor-pointer two-fields-multiselect-input-style" readonly>
-       <div class="two-fields-multiselect-input-count-container" data-ng-if="inputText=='Off'">
-              <div class="two-fields-multiselect-input-count">
-                     <span>{{inputText}}</span>
-              </div>
-       </div>
-       <div class="two-fields-multiselect-input-count-container" data-ng-if="inputText!=='Off'">
-              <div class="two-fields-multiselect-input-count">
-                     <span>{{itemAxact}}</span>
-                     <ng-md-icon icon="cancel" size="18" class="tooltip-sign two-fields-multiselect-color"></ng-md-icon>
-              </div>
-              <div class="two-fields-multiselect-input-count">
-                     <span>{{inputText}}</span>
-                     <ng-md-icon icon="cancel" size="18" class="tooltip-sign two-fields-multiselect-color"></ng-md-icon>
-              </div>
-       </div>
+<md-input-container
+  class="two-fields-multiselect-input rel-container"
+  data-ng-click="handleClick($event)"
+>
+  <label
+    data-ng-bind="title"
+    class="cursor-pointer two-fields-multiselect-input-label"
+  ></label>
+  <input
+    type="text"
+    class="cursor-pointer two-fields-multiselect-input-style"
+    readonly
+  />
+  <div
+    class="two-fields-multiselect-input-count-container"
+    data-ng-if="inputText=='Off'"
+  >
+    <div class="two-fields-multiselect-input-count">
+      <span>{{inputText}}</span>
+    </div>
+  </div>
+  <div
+    class="two-fields-multiselect-input-count-container"
+    data-ng-if="inputText!=='Off'"
+  >
+    <div class="two-fields-multiselect-input-count">
+      <span>{{itemAxact}}</span>
+      <ng-md-icon
+        icon="cancel"
+        size="18"
+        class="tooltip-sign two-fields-multiselect-color"
+      ></ng-md-icon>
+    </div>
+    <div
+      class="two-fields-multiselect-input-count two-fields-multiselect-input-delete"
+      id="delete"
+      data-ng-click="deleteAllSelectedItems($event)"
+    >
+      <span>{{inputText}}</span>
 
-
-
+      <ng-md-icon
+        icon="cancel"
+        size="18"
+        class="tooltip-sign two-fields-multiselect-color"
+        data-delete="true"
+      ></ng-md-icon>
+    </div>
+  </div>
 </md-input-container>
-<md-tooltip data-ng-if="model && model.length > 0 && tooltipText" class="tooltip_1 f-s-15" md-direction="top"
-       data-ng-bind="tooltipText"></md-tooltip>
+<md-tooltip
+  data-ng-if="model && model.length > 0 && tooltipText"
+  class="tooltip_1 f-s-15"
+  md-direction="top"
+  data-ng-bind="tooltipText"
+></md-tooltip>
