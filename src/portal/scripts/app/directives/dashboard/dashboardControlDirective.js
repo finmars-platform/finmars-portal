@@ -202,18 +202,15 @@
                         var layoutId = componentData.settings.defaultValue.layout;
 
                         return uiService.getListLayoutByKey(layoutId).then(function (layout) {
-                            console.log('layout', layout);
-                            console.log('componentData.settings', componentData.settings);
 
                             var key = componentData.settings.defaultValue.reportOptionsKey;
                             var value = layout.data.reportOptions[key];
 
-                            console.log('value', value);
-
                             if (!value) {
-                                return {};
-                            }
 
+                                return {};
+
+                            }
 
                             if (componentData.settings.multiple) {
 
@@ -222,15 +219,19 @@
                             }
 
                             if (componentData.settings.value_type === 100) {
+
                                 value = Array.isArray(value) ? value[0] : value;
-                                console.log('scope.fields', scope.fields);
+
                                 var selectedRelation = scope.fields.find(function (field) {
+
                                     return field.id === value;
 
                                 });
 
                                 if (selectedRelation) {
-                                    return {value: value, name: selectedRelation.name}
+
+                                    return {value: value, name: selectedRelation.name};
+
                                 }
 
                                 return {};
@@ -253,37 +254,25 @@
 
                     scope.getData()
                         .then(function() {
-                            return getItemDataStore(scope.componentData)
+
+                            return getItemDataStore(scope.componentData);
+
                         })
                         .then(function (store) {
+
                             scope.item.data.store = store;
-                            console.log('scope.item.data.store', scope.item.data.store)
                             scope.$apply();
+
                         });
-
-                    // getItemDataStore(scope.componentData).then(function (store) {
-                    //     scope.item.data.store = store;
-                    //     console.log('scope.item.data.store', scope.item.data.store)
-                    //     scope.$apply();
-                    // });
-
-                    //if (scope.componentData.settings.content_type == 'currencies.currency' || scope.componentData.settings.content_type == 'instruments.pricingpolicy') {
-
-                        //scope.getData();
-
-                    //}
 
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
 
                     if (scope.componentData.custom_component_name) {
                         scope.customName = scope.componentData.custom_component_name;
                     }
 
-
-                    scope.initEventListeners()
-
+                    scope.initEventListeners();
 
                 };
 
