@@ -123,7 +123,7 @@
                                                data-ng-change="vm.onReportTypeChange()">
                                         <md-option value="balance-report">Balance Report</md-option>
                                         <md-option value="pl-report">P&L Report</md-option>
-                                        <md-option value="transaction-report">Transaction Report</md-option>
+                                        <md-option value="transaction-report" data-ng-disabled="vm.isTransactionReportDisabled()">Transaction Report</md-option>
                                     </md-select>
                                 </md-input-container>
 
