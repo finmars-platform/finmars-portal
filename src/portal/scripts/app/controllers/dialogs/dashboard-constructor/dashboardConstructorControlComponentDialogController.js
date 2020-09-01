@@ -29,6 +29,8 @@
             }
         }
 
+        console.log('vm.item', vm.item);
+
         vm.layouts = [];
         vm.layoutsWithLinkToFilters = [];
         vm.reportFields = [];
@@ -131,18 +133,21 @@
         };
 
         vm.onValueTypeChange = function () {
-            console.log('onValueTypeChange');
+
+            vm.defaultValue.layout = null;
+            vm.defaultValue.entity_type = null;
 
             vm.defaultValue.setValue = null;
             vm.defaultValue.setValueName = null;
             vm.defaultValue.setValueTitle = null;
             vm.multiselectItems = [];
 
-            //$scope.$apply();
-
         }
 
         vm.onContentTypeChange = function () {
+
+            vm.defaultValue.layout = null;
+            vm.defaultValue.entity_type = null;
 
             vm.defaultValue.setValue = null;
             vm.defaultValue.setValueName = null;
@@ -161,6 +166,11 @@
             vm.getLayoutsList();
 
         };
+
+        vm.isTransactionReportDisabled = function () {
+            return vm.currentContentType.key === 'currencies.currency' || vm.currentContentType.key === 'instruments.pricingpolicy'
+
+        }
 
         vm.onLayoutChange = function () {
 
@@ -188,11 +198,11 @@
             vm.reportFields = getReportFields(vm.defaultValue.entity_type, layout);
 
 
-            if (vm.defaultValue.report_field) {
+            if (vm.defaultValue.reportOptionsKey) {
 
                 vm.defaultValue.report_field = vm.reportFields.find(function(reportField) {
 
-                    return reportField.key === vm.defaultValue.report_field;
+                    return reportField.key === vm.defaultValue.reportOptionsKey;
 
                 });
 

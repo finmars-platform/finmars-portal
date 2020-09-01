@@ -202,18 +202,47 @@
                         var layoutId = componentData.settings.defaultValue.layout;
 
                         return uiService.getListLayoutByKey(layoutId).then(function (layout) {
+                            console.log('layout', layout);
+                            console.log('componentData.settings', componentData.settings);
 
                             var key = componentData.settings.defaultValue.reportOptionsKey;
                             var value = layout.data.reportOptions[key];
 
-                            if (key === 'report_currency' || key === 'pricing_policy') {
-                                value = [value];
+                            console.log('value', value);
+
+                            if (!value) {
+                                return {};
                             }
 
-                            return {value: value};
+
+                            if (componentData.settings.multiple) {
+
+                                return Array.isArray(value) ? {value: value} : {value: [value]};
+
+                            }
+
+                            if (componentData.settings.value_type === 100) {
+                                value = Array.isArray(value) ? value[0] : value;
+                                console.log('scope.fields', scope.fields);
+                                var selectedRelation = scope.fields.find(function (field) {
+                                    return field.id === value;
+
+                                });
+
+                                if (selectedRelation) {
+                                    return {value: value, name: selectedRelation.name}
+                                }
+
+                                return {};
+
+                            }
+
+                            return Array.isArray(value) ? {value: value[0]} : {value: value};
 
                         });
                     }
+
+                    return promisify({});
 
                 };
 
@@ -222,16 +251,27 @@
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
                     scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
 
-                    getItemDataStore(scope.componentData).then(function (store) {
-                        scope.item.data.store = store;
-                        scope.$apply();
-                    });
+                    scope.getData()
+                        .then(function() {
+                            return getItemDataStore(scope.componentData)
+                        })
+                        .then(function (store) {
+                            scope.item.data.store = store;
+                            console.log('scope.item.data.store', scope.item.data.store)
+                            scope.$apply();
+                        });
 
-                    if (scope.componentData.settings.content_type == 'currencies.currency' || scope.componentData.settings.content_type == 'instruments.pricingpolicy') {
+                    // getItemDataStore(scope.componentData).then(function (store) {
+                    //     scope.item.data.store = store;
+                    //     console.log('scope.item.data.store', scope.item.data.store)
+                    //     scope.$apply();
+                    // });
 
-                        scope.getData();
+                    //if (scope.componentData.settings.content_type == 'currencies.currency' || scope.componentData.settings.content_type == 'instruments.pricingpolicy') {
 
-                    }
+                        //scope.getData();
+
+                    //}
 
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
