@@ -1,0 +1,30 @@
+<div class="grid-table-top-panel">
+    <div data-ng-show="!mode" class="flex-row fc-space-between">
+        <div>
+            <md-button data-ng-click="mode = 'row_addition'">+</md-button>
+            <md-button>ADD FILTER</md-button>
+        </div>
+
+        <div>
+            <md-button>SEARCH</md-button>
+            <md-button>COLUMNS</md-button>
+        </div>
+    </div>
+
+    <div data-ng-show="mode === 'row_addition'" class="grid-table-row">
+
+        <div>
+            <md-button>ADD</md-button>
+        </div>
+
+        <div data-ng-repeat="cell in newRow.columns track by cell.key"
+             class="grid-table-cell">
+
+            <grid-table-cell data-row="newRow"
+                             data-cell="cell"
+                             data-grid-table-data-service="gridTableDataService"
+                             data-grid-table-event-service="gridTableEventService"></grid-table-cell>
+        </div>
+
+    </div>
+</div>

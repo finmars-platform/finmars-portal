@@ -22,20 +22,19 @@
 
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
-    var tagService = require('../../services/tagService');
+    var referenceTableService = require('../../services/referenceTablesService');
+    var transactionTypeService = require('../../services/transactionTypeService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
     var uiService = require('../../services/uiService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
+    var GridTableDataService = require('../../services/gridTableDataService');
+    var GridTableEventService = require('../../services/gridTableEventService');
+    var gridTableEvents = require('../../services/gridTableEvents');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
-
-    var referenceTableService = require('../../services/referenceTablesService');
-
-    var complexTransactionService = require('../../services/transaction/complexTransactionService');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    var transactionTypeService = require('../../services/transactionTypeService');
 
     module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $state, entityType, entityId) {
 
@@ -60,7 +59,7 @@
         };
         // < Creating various variables to use as search terms for filters of repeating md-select components >
 
-        vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false};
+        vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false, inputs: false};
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -80,6 +79,9 @@
         };
 
         var inputsToDelete = [];
+        var referenceTables = [];
+
+        var relationDefaultValueIndex;
 
         vm.loadPermissions = function () {
 
@@ -295,14 +297,14 @@
 
         };
 
-        vm.getItem = function (fromChild) {
+        vm.getItem = function () {
 
             return new Promise(function (res, rej) {
 
                 transactionTypeService.getByKey(vm.entityId).then(function (data) {
 
                     vm.entity = data;
-
+                    console.log("grid table vm.entity", vm.entity.inputs);
                     /*vm.inputsGroup = {
                         "name": "<b>Inputs</b>",
                         "key": 'input'
@@ -371,23 +373,20 @@
 
                         vm.loadPermissions();
 
-                        if (vm.entityType !== 'transaction-type') {
+                        console.log("grid table getItem another end");
+                        vm.readyStatus.layout = true;
+                        $scope.$apply();
 
-                            vm.getLayout();
+                        vm.setStateInActionsControls();
 
-                            // Resolving promise to inform child about end of editor building
-                            res();
+                        res();
 
-                        } else {
-                            vm.readyStatus.layout = true;
-                            $scope.$apply();
-
-                        }
-
+                    }).catch(function (error) {
+                        rej(error);
                     });
 
-                    vm.setStateInActionsControls();
-
+                }).catch(function (error) {
+                    rej(error);
                 });
 
             });
@@ -395,7 +394,7 @@
         };
 
         vm.getAttrs = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
 
                 console.log('vm.attrs', vm.attrs);
@@ -405,7 +404,7 @@
         };
 
         vm.checkReadyStatus = function () {
-            return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout;
+            return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.inputs;
         };
 
         vm.handleErrors = function (data, $event) {
@@ -829,13 +828,16 @@
         };
 
         vm.getReferenceTables = function () {
-            referenceTableService.getList().then(function (data) {
+            return referenceTableService.getList().then(function (data) {
 
-                vm.referenceTables = data.results;
+                referenceTables = data.results.map(function (rTable) {
+                    return {id: rTable.name, name: rTable.name};
+                });
+                /*vm.referenceTables = data.results;
 
                 console.log('vm.referenceTables', vm.referenceTables);
 
-                $scope.$apply();
+                $scope.$apply();*/
 
             })
         };
@@ -989,15 +991,6 @@
             })
         };
 
-        /*vm.getTags = function () {
-            tagService.getListByContentType('transaction-type').then(function (data) {
-                vm.tags = data.results;
-                vm.readyStatus.tags = true;
-                $scope.$apply();
-            });
-
-        };*/
-
         vm.unselectAllEntities = function (entity) {
 
             if (entity === 'instruments') {
@@ -1033,60 +1026,11 @@
             $scope.$apply();
         };
 
-        /*vm.bindSelectedText = function (entity, fallback) {
-            if (entity) {
-                return '[' + entity.length + ']';
-            }
-            return fallback;
-        };*/
-
-
-        //vm.getTags();
-
-        /*vm.tagTransform = function (newTag) {
-            //console.log('newTag', newTag);
-            var item = {
-                name: newTag,
-                id: null
-            };
-
-            return item;
-        };*/
-
-        /*$scope.$watch('vm.entity.tags', function () {
-
-            if (vm.entity.tags) {
-                vm.entity.tags.forEach(function (item) {
-                    if (item.id == null) {
-                        tagService.create({
-                            name: item.name,
-                            content_types: ['transactions.transactiontype']
-                        })
-                    }
-                })
-
-            }
-        });*/
-
-        vm.checkReadyStatus = function () {
-            if (vm.readyStatus.transactionTypeGroups == true &&
-                vm.readyStatus.portfolios == true &&
-                vm.readyStatus.instrumentTypes == true) {
-                return true;
-            }
-            return false;
-        };
-
-
-        // Transaction Type General Controller end
-
-        // Transaction Type Inputs Controller start
-
         vm.contextProperties = {
 
             'instruments.instrument': [
                 {
-                    key: 'instrument',
+                    id: 'instrument',
                     name: 'Instrument'
                 }
 
@@ -1102,41 +1046,41 @@
             ],
             'currencies.currency': [
                 {
-                    key: 'pricing_currency',
+                    id: 'pricing_currency',
                     name: 'Pricing Currency'
                 },
                 {
-                    key: 'accrued_currency',
+                    id: 'accrued_currency',
                     name: 'Accrued Currency'
                 }
             ],
             'portfolios.portfolio': [
                 {
-                    key: 'portfolio',
+                    id: 'portfolio',
                     name: 'Portfolio'
                 }
             ],
             'accounts.account': [
                 {
-                    key: 'account',
+                    id: 'account',
                     name: 'Account'
                 }
             ],
             'strategies.strategy1': [
                 {
-                    key: 'strategy1',
+                    id: 'strategy1',
                     name: 'Strategy 1'
                 }
             ],
             'strategies.strategy2': [
                 {
-                    key: 'strategy2',
+                    id: 'strategy2',
                     name: 'Strategy 2'
                 }
             ],
             'strategies.strategy3': [
                 {
-                    key: 'strategy3',
+                    id: 'strategy3',
                     name: 'Strategy 3'
                 }
             ]
@@ -1165,7 +1109,7 @@
             pricing_policy: null
         };
 
-        vm.valueTypes = [
+        /*vm.valueTypes = [
             {
                 "display_name": "Number",
                 "value": 20
@@ -1186,17 +1130,40 @@
                 "display_name": "Selector",
                 "value": 110
             }
+        ];*/
+
+        vm.valueTypes = [
+            {
+                "name": "Number",
+                "id": 20
+            },
+            {
+                "name": "String",
+                "id": 10
+            },
+            {
+                "name": "Date",
+                "id": 40
+            },
+            {
+                "name": "Relation",
+                "id": 100
+            },
+            {
+                "name": "Selector",
+                "id": 110
+            }
         ];
 
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
-        vm.bindValueType = function (row) {
+        /* vm.bindValueType = function (row) { // TODO delete
             var name;
 
             vm.valueTypes.forEach(function (item) {
-                if (row.value_type == item.value) {
-                    row.value_type_name = item.display_name;
-                    name = item.display_name;
+                if (row.value_type == item.id) {
+                    row.value_type_name = item.name;
+                    name = item.name;
                 }
             });
 
@@ -1212,15 +1179,15 @@
                 }
             });
             return name;
-        };
+        }; */
 
-        vm.resolveRelation = function (item) {
+        vm.resolveRelation = function (contentType) {
 
             var entityKey;
 
             for (var i = 0; i < vm.contentTypes.length; i++) {
 
-                if (vm.contentTypes[i].key === item.content_type) {
+                if (vm.contentTypes[i].key === contentType) {
                     entityKey = vm.contentTypes[i].entity;
 
                     if (entityKey === 'strategy-1') {
@@ -1242,8 +1209,6 @@
         };
 
         vm.resolveDefaultValue = function (item) {
-
-            console.log('vm.resolveDefaultValue.item', item);
 
             var entityKey = '';
 
@@ -1297,6 +1262,334 @@
 
         }
 
+        // Transaction Type tab INPUTS
+        var updateInputsBasedOnTableGrid = function () {
+
+            vm.entity.inputs.forEach(function (input, index) {
+
+                var row = vm.inputsGridTableData.body[index];
+
+                row.columns.forEach(function (column) {
+
+                    if (column.objPath) { // in case property located deeper into object
+
+                        var objPlace = input;
+
+                        column.objPath.forEach(function (prop) {
+                            objPlace = objPlace[prop];
+                        });
+
+                        objPlace = column.settings.value;
+
+                    } else {
+
+                        var propName = column.key;
+
+                        input[propName] = column.settings.value;
+
+                    }
+
+                });
+
+            });
+
+        }
+
+        var formatDataForInputsTableGrid = function () {
+
+            var gtContentType = vm.contentTypes.map(function (cType) {
+                return {id: cType.key, name: cType.name};
+            });
+
+            vm.inputsGridTableData = {
+                header: [
+                    {
+                        key: 'name',
+                        name: 'Name'
+                    },
+                    {
+                        key: 'verbose_name',
+                        name: 'Verbose name'
+                    },
+                    {
+                        key: 'tooltip',
+                        name: 'Tooltip'
+                    },
+                    {
+                        key: 'value_type',
+                        name: 'Value type'
+                    },
+                    {
+                        key: 'content_type',
+                        name: 'Content type'
+                    },
+                    {
+                        key: 'is_fill_from_context',
+                        name: 'Use Default Value from Context'
+                    },
+                    {
+                        key: 'default_value',
+                        name: 'Default value'
+                    },
+                    {
+                        key: 'input_calc_expr',
+                        name: 'Input expr'
+                    },
+                    {
+                        key: 'linked_inputs_names',
+                        name: 'Linked Inputs'
+                    }
+                ],
+                body: [],
+                newRow: {
+                    order: 'newRow',
+                    isActive: false,
+                    columns: [
+                        {
+                            key: 'name',
+                            objPath: 'name',
+                            columnName: 'Name',
+                            order: 0,
+                            cellType: 'text',
+                            settings: {
+                                value: null
+                            }
+                        },
+                        {
+                            key: 'verbose_name',
+                            objPath: ['verbose_name'],
+                            columnName: 'Verbose name',
+                            order: 1,
+                            cellType: 'text',
+                            settings: {
+                                value: null
+                            }
+                        },
+                        {
+                            key: 'tooltip',
+                            objPath: ['tooltip'],
+                            columnName: 'Tooltip',
+                            order: 2,
+                            cellType: 'text',
+                            settings: {
+                                value: null
+                            }
+                        },
+                        {
+                            key: 'value_type',
+                            objPath: ['value_type'],
+                            columnName: 'Value type',
+                            order: 3,
+                            cellType: 'selector',
+                            settings: {
+                                value: null,
+                                selectorOptions: vm.valueTypes
+                            }
+                        },
+                        {
+                            key: 'content_type',
+                            objPath: ['content_type'],
+                            columnName: 'Content type',
+                            order: 4,
+                            cellType: 'selector',
+                            settings: {
+                                value: null,
+                                selectorOptions: gtContentType,
+                                isDisabled: true
+                            }
+                        },
+                        {
+                            key: 'is_fill_from_context',
+                            objPath: ['is_fill_from_context'],
+                            columnName: 'Use Default Value from Context',
+                            order: 5,
+                            cellType: 'checkbox',
+                            settings: {
+                                value: false
+                            }
+                        },
+                        {
+                            key: 'default_value',
+                            objPath: ['value'],
+                            columnName: 'Default value',
+                            order: 6,
+                            cellType: 'expression',
+                            settings: {
+                                value: ''
+                            }
+                        },
+                        {
+                            key: 'input_calc_expr',
+                            objPath: ['value_expr'],
+                            columnName: 'Input expr',
+                            order: 7,
+                            cellType: 'expression',
+                            settings: {
+                                value: ''
+                            }
+                        },
+                        {
+                            key: 'linked_inputs_names',
+                            objPath: ['settings', 'linked_inputs_names'],
+                            columnName: 'Linked Inputs',
+                            order: 8,
+                            cellType: 'multiselector',
+                            settings: {
+                                value: [],
+                                getDataMethod: vm.getInputForLinking,
+                                selectorOptions: vm.valueTypes
+                            }
+                        }
+                    ]
+                }
+            }
+            console.log("grid table formatDataForInputsTableGrid", JSON.parse(JSON.stringify(vm.entity.inputs)));
+            vm.entity.inputs.forEach(function (input, index) {
+
+                /*var rowObj = {
+                    order: index,
+                    isActive: false,
+                    columns: [
+                        {
+                            key: 'name',
+                            columnName: 'Name',
+                            order: 0,
+                            cellType: 'text',
+                            settings: {
+                                value: input.name
+                            }
+                        },
+                        {
+                            key: 'verbose_name',
+                            order: 1,
+                            cellType: 'text',
+                            settings: {
+                                value: input.verbose_name
+                            }
+                        },
+                        {
+                            key: 'tooltip',
+                            order: 2,
+                            cellType: 'text',
+                            settings: {
+                                value: input.tooltip
+                            }
+                        },
+                        {
+                            key: 'value_type',
+                            order: 3,
+                            cellType: 'selector',
+                            settings: {
+                                value: input.value_type,
+                                selectorOptions: vm.valueTypes,
+                                isDisabled: true
+                            }
+                        },
+                        {
+                            key: 'content_type',
+                            order: 4,
+                            cellType: 'selector',
+                            settings: {
+                                value: input.content_type,
+                                selectorOptions: gtContentType,
+                                isDisabled: true
+                            }
+                        },
+                        {
+                            key: 'is_fill_from_context',
+                            order: 5,
+                            cellType: 'checkbox',
+                            settings: {
+                                value: input.is_fill_from_context,
+                            }
+                        },
+                        {
+                            key: 'value',
+                            order: 6,
+                            cellType: 'expression',
+                            settings: {
+                                value: input.value
+                            }
+                        },
+                        {
+                            key: 'value_expr',
+                            order: 7,
+                            cellType: 'expression',
+                            settings: {
+                                value: input.value_expr
+                            }
+                        },
+                        {
+                            key: 'linked_inputs_names',
+                            objPath: ['settings', 'linked_inputs_names'],
+                            order: 8,
+                            cellType: 'multiselector',
+                            settings: {
+                                value: input.settings.linked_inputs_names,
+                                getDataMethod: vm.getInputForLinking,
+                                selectorOptions: vm.valueTypes
+                            }
+                        }
+                    ]
+                }*/
+
+                var rowObj = JSON.parse(JSON.stringify(vm.inputsGridTableData.newRow));
+
+                rowObj.order = index;
+
+                rowObj.columns[0].settings.value = input.name;
+                rowObj.columns[1].settings.value = input.verbose_name;
+                rowObj.columns[2].settings.value = input.tooltip;
+
+                rowObj.columns[3].settings.value = input.value_type;
+                rowObj.columns[3].settings.isDisabled = true;
+
+                // Change cells if Value Type relation or selector
+                var valueTypeCell = rowObj.columns[3].settings.value;
+
+                var contentTypeCell = rowObj.columns[4];
+                var defaultValueCell = rowObj.columns[6];
+
+                if (valueTypeCell === 100) { // for relation
+
+                    contentTypeCell.settings.isDisabled = true;
+
+                    defaultValueCell.cellType = 'selector';
+                    defaultValueCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(vm.newItem)];
+
+                }
+
+                else if (valueTypeCell === 110) { // for selector
+
+                    contentTypeCell.key = 'reference_table';
+                    contentTypeCell.settings.isDisabled = true;
+                    contentTypeCell.settings.selectorOptions = referenceTables;
+
+                    if (defaultValueCell.cellType === 'selector') {
+
+                        defaultValueCell.cellType = 'expression';
+                        defaultValueCell.settings = {value: ''}
+
+                    }
+
+                }
+                // < Change cells if Value Type relation or selector >
+
+                rowObj.columns[4].settings.value = input.content_type;
+                rowObj.columns[5].settings.value = input.is_fill_from_context;
+                rowObj.columns[6].settings.value = input.value;
+
+                rowObj.columns[7].settings.value = input.value_expr;
+
+                rowObj.columns[8].settings.value = input.settings.linked_inputs_names;
+                rowObj.columns[8].settings.getDataMethod = vm.getInputForLinking;
+
+                vm.inputsGridTableData.body.push(rowObj);
+
+            });
+
+        }
+
         vm.toggleQuery = function () {
             vm.queryStatus = !vm.queryStatus;
             vm.query = {};
@@ -1339,31 +1632,6 @@
             }
 
         };
-
-        /*vm.editItem = function (item) {
-            item.editStatus = true;
-        };
-
-        vm.saveItem = function (item) {
-
-            vm.updateInputFunctions();
-
-            item.editStatus = false;
-        };*/
-
-        /*vm.saveInputsRow = function (input) {
-            for (var i = 0; i < originalEntity.inputs.length; i++) {
-
-                if (originalEntity.inputs[i].id === input.id) {
-                    originalEntity.inputs[i] = JSON.parse(JSON.stringify(input));
-
-                    vm.save(originalEntity, true);
-                    break;
-
-                }
-
-            }
-        };*/
 
         vm.delete = function ($event) {
 
@@ -1557,6 +1825,7 @@
         };
 
         vm.valueTypeChanged = function (item) {
+
             item.content_type = null;
             item.is_fill_from_context = false;
             item.context_property = null;
@@ -1564,6 +1833,7 @@
             if (item.value_type === 100) {
                 item.content_type = "accounts.account";
             }
+
         };
 
         vm.validateInputName = function () {
@@ -1706,7 +1976,7 @@
 
         };
 
-        // Transaction Type Input Controller end
+        // < Transaction Type tab INPUTS >
 
         // Transaction Type Recon start
 
@@ -1729,8 +1999,6 @@
         // Transaction type Actions controller start
 
         vm.relationItems = {};
-
-        vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
         vm.toggleItem = function (pane, item, $event) {
 
@@ -2323,37 +2591,30 @@
 
             field = field.replace(/-/g, "_"); // replace all '_' with '-'
 
-            return new Promise(function (resolve, reject) {
+            if (!vm.relationItems.hasOwnProperty(field)) {
 
-                fieldResolverService.getFields(field).then(function (data) {
-                    vm.relationItems[field] = data.data;
+                return new Promise(function (resolve, reject) {
 
-                    $scope.$apply();
+                    fieldResolverService.getFields(field).then(function (data) {
+                        vm.relationItems[field] = data.data;
 
-                    resolve(vm.relationItems[field]);
-                })
+                        $scope.$apply();
 
-                // if (!vm.relationItems[field]) {
-                //
-                //     fieldResolverService.getFields(field).then(function (data) {
-                //         vm.relationItems[field] = data.data;
-                //
-                //         $scope.$apply();
-                //
-                //         resolve(vm.relationItems[field]);
-                //     })
-                // } else {
-                //     resolve(vm.relationItems[field]);
-                // }
+                        resolve(vm.relationItems[field]);
+                    })
 
-            })
+                });
+
+            }
+
+            return 'item_exist';
         };
 
         vm.getNameByValueType = function (value) {
 
             for (var i = 0; i < vm.valueTypes.length; i++) {
-                if (vm.valueTypes[i].value === value) {
-                    return vm.valueTypes[i].display_name;
+                if (vm.valueTypes[i].id === value) {
+                    return vm.valueTypes[i].name;
                 }
             }
 
@@ -2705,6 +2966,151 @@
             })
         };
 
+        var onValueTypeChange = function (rowOrder, cellOrder, changedCell) {
+
+            var contentTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'content_type');
+            var defaultValueCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'default_value');
+
+            var valueType = changedCell.settings.value;
+            var fillFromContextCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'is_fill_from_context');
+
+            fillFromContextCell.settings.value = false;
+
+            switch (valueType) {
+
+                case 110:
+
+                    contentTypeCell.key = 'reference_table';
+                    contentTypeCell.settings.isDisabled = false;
+                    contentTypeCell.settings.value = null;
+                    contentTypeCell.settings.selectorOptions = referenceTables;
+
+                    if (defaultValueCell.cellType === 'selector') {
+
+                        defaultValueCell.cellType = 'expression';
+                        defaultValueCell.settings = {value: ''}
+
+                    }
+
+                    break;
+
+                case 100:
+
+                    contentTypeCell.settings.isDisabled = false;
+                    contentTypeCell.settings.value = "accounts.account";
+
+                    defaultValueCell.cellType = 'selector';
+                    defaultValueCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(vm.newItem)];
+
+                    break;
+
+                default:
+
+                    contentTypeCell.settings.isDisabled = true;
+                    defaultValueCell.cellType = 'expression';
+                    defaultValueCell.settings = {value: ''};
+
+                    break;
+
+            }
+
+        }
+
+        var onRelationFillFromContextChange = function (rowOrder, cellOrder, changedCell) {
+
+            var contentTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'content_type');
+            var defaultValueCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'default_value');
+
+            if (changedCell.settings.value) {
+                defaultValueCell.settings.selectorOptions = vm.contextProperties[contentTypeCell.settings.value]
+
+            } else {
+
+                defaultValueCell.settings.selectorOptions = []
+
+            }
+            console.log("grid table checkbox changed");
+
+        }
+
+
+        var onRelationDefaultValueSelOpen = function (rowOrder, cellOrder, cellWithSel) {
+
+            if (changedCell.cellType === 'default_value') {
+
+                    var contentTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'content_type');
+
+                    var loadRelationRes = vm.loadRelation();
+
+                    if (loadRelationRes === 'item_exist') {
+                        changedCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(contentTypeCell.settings.value)]
+                        console.log("grid table onRelationDefaultValueSelOpen2", changedCell);
+
+                    } else {
+
+                        loadRelationRes.then(function (relItem) {
+                            changedCell.settings.selectorOptions = relItem
+                            console.log("grid table onRelationDefaultValueSelOpen2", changedCell);
+                        });
+
+                    }
+
+                }
+
+        }
+
+        var initGridTableEvents = function () {
+
+            vm.inputsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+
+                if (argumentsObj) {
+
+                    var rowOrder = argumentsObj.rowOrder;
+                    var cellOrder = argumentsObj.cellOrder;
+                    console.log("grid table initGridTableEvents", argumentsObj);
+                    var changedCell = vm.inputsGridTableDataService.getCell(rowOrder, cellOrder);
+                    var valueTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'value_type');
+                    /*var changedRow = vm.inputsGridTableDataService.getRow(rowOrder);*/
+
+                    if (changedCell.key === 'value_type') {
+                        onValueTypeChange(rowOrder, cellOrder, changedCell);
+                    }
+
+                    else if (changedCell.key === 'is_fill_from_context' &&
+                             valueTypeCell.settings.value === 100) {
+
+                        onRelationFillFromContextChange(rowOrder, cellOrder, changedCell);
+
+                    }
+
+                }
+
+                console.log("grid table inputsGridTableData", vm.inputsGridTableData);
+
+                if (rowOrder !== 'newRow') {
+                    updateInputsBasedOnTableGrid();
+                }
+
+            });
+
+            /* relationDefaultValueIndex = vm.inputsGridTableEventService.addEventListener(gridTableEvents.SELECTOR_INSIDE_CELL_OPENED, function (argumentsObj) {
+
+                if (argumentsObj) {
+
+                    var rowOrder = argumentsObj.rowOrder;
+                    var cellOrder = argumentsObj.cellOrder;
+                    var cellWithSel = vm.inputsGridTableDataService.getCell(rowOrder, cellOrder);
+
+                    var valueTypeCell = vm.inputsGridTableDataService.getCell(rowOrder, 'value_type');
+                    var
+
+                }
+                onRelationDefaultValueSelOpen();
+
+            }) */
+
+        };
+
 
         vm.init = function () {
 
@@ -2712,21 +3118,35 @@
                 vm.dialogElemToResize = document.querySelector('.ttypeEditorElemToDrag');
             });
 
+            vm.inputsGridTableDataService = new GridTableDataService();
+            vm.inputsGridTableEventService = new GridTableEventService();
+
+            // initGridTableEvents();
+
             ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
             });
 
-            vm.getItem();
-            vm.getAttrs();
-            vm.getReferenceTables();
+            var getItemPromise = vm.getItem();
+            var getAttrsPromise = vm.getAttrs();
+            var getRefTablesPromise = vm.getReferenceTables();
 
             vm.getTransactionTypeGroups();
             vm.getPortfolios();
             vm.getInstrumentTypes();
 
-            vm.getInputTemplates();
+            var getInputTemplPromise = vm.getInputTemplates();
             vm.getFieldTemplates();
             vm.getActionTemplates();
+
+            Promise.all([getItemPromise, getAttrsPromise, getRefTablesPromise, getInputTemplPromise]).then(function () {
+
+                formatDataForInputsTableGrid();
+                // console.log("grid table vm.inputsGridTableData", vm.inputsGridTableData);
+                vm.inputsGridTableDataService.setTableData(vm.inputsGridTableData);
+                vm.readyStatus.inputs = true;
+
+            });
 
             vm.layoutAttrs = layoutService.getLayoutAttrs();
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);

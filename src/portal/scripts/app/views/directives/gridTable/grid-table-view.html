@@ -1,0 +1,29 @@
+<div class="grid-table">
+    <!-- Top panel with filters will be here -->
+    <grid-table-top-panel data-grid-table-data-service="gridTableDataService"
+                          data-grid-table-event-service="gridTableEventService"></grid-table-top-panel>
+
+    <div class="grid-table-header">
+        <div data-ng-repeat="cell in gridTableData.header track by cell.key"
+             class="gird-table-cell">
+            <span data-ng-bind="cell.name"></span>
+        </div>
+    </div>
+
+    <div data-ng-repeat="row in gridTableData.body track by row.order"
+         class="grid-table-row">
+
+        <div class="grid-table-cell grid-table-first-col-cell">
+            <md-checkbox data-ng-model="row.isActive"></md-checkbox>
+        </div>
+
+        <div data-ng-repeat="cell in row.columns track by cell.key"
+             class="grid-table-cell">
+            <grid-table-cell data-row="row"
+                             data-cell="cell"
+                             data-grid-table-data-service="gridTableDataService"
+                             data-grid-table-event-service="gridTableEventService"></grid-table-cell>
+        </div>
+
+    </div>
+</div>

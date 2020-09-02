@@ -608,6 +608,7 @@ app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDire
 app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
+app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
 
 // Inputs
 
@@ -618,6 +619,13 @@ app.directive('expressionInput', ['$mdDialog', require('./app/directives/customI
 app.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
 
 // Inputs End
+
+// Grid Table
+app.directive('gridTable', [require('./app/directives/gridTable/gridTableDirective')]);
+app.directive('gridTableTopPanel', [require('./app/directives/gridTable/gridTableTopPanelDirective')]);
+app.directive('gridTableCell', ['$compile', require('./app/directives/gridTable/gridTableCellDirective')]);
+app.directive('gridTableTextCell', [require('./app/directives/gridTable/gridTableTextCellDirective')]);
+// Grid Table End
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
 
