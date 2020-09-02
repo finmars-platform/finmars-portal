@@ -2,64 +2,67 @@
     <div class="tt-inputs-tab-view">
         <table class="bordered">
             <thead>
-            <tr>
-                <th data-ng-click="vm.setSort('name')">Name<span class="sortorder"
-                                                                 data-ng-show="vm.sort === 'name'"
-                                                                 data-ng-class="{reverse: vm.direction}"></span>
-                </th>
-                <th data-ng-click="vm.setSort('verbose_name')">Verbose name<span class="sortorder"
-                                                                                 data-ng-show="vm.sort === 'verbose_name'"
-                                                                                 data-ng-class="{reverse: vm.direction}"></span>
-                </th>
-                <th data-ng-click="vm.setSort('tooltip')">Tooltip<span class="sortorder"
-                                                                                 data-ng-show="vm.sort === 'tooltip'"
-                                                                                 data-ng-class="{reverse: vm.direction}"></span>
-                </th>
-                <th data-ng-click="vm.setSort('value_type_name')">Value type<span class="sortorder"
-                                                                                  data-ng-show="vm.sort === 'value_type_name'"
-                                                                                  data-ng-class="{reverse: vm.direction}"></span>
-                </th>
-                <th data-ng-click="vm.setSort('content_type_name')">Content type<span class="sortorder"
-                                                                                      data-ng-show="vm.sort === 'content_type_name'"
+
+                <tr>
+                    <th data-ng-click="vm.setSort('name')">Name<span class="sortorder"
+                                                                     data-ng-show="vm.sort === 'name'"
+                                                                     data-ng-class="{reverse: vm.direction}"></span>
+                    </th>
+                    <th data-ng-click="vm.setSort('verbose_name')">Verbose name<span class="sortorder"
+                                                                                     data-ng-show="vm.sort === 'verbose_name'"
+                                                                                     data-ng-class="{reverse: vm.direction}"></span>
+                    </th>
+                    <th data-ng-click="vm.setSort('tooltip')">Tooltip<span class="sortorder"
+                                                                           data-ng-show="vm.sort === 'tooltip'"
+                                                                           data-ng-class="{reverse: vm.direction}"></span>
+                    </th>
+                    <th data-ng-click="vm.setSort('value_type_name')">Value type<span class="sortorder"
+                                                                                      data-ng-show="vm.sort === 'value_type_name'"
                                                                                       data-ng-class="{reverse: vm.direction}"></span>
-                </th>
-                <th>Use Default Value from Context</th>
-                <th>Default value</th>
-                <th>Input expr</th>
-                <th>Linked Inputs</th>
-                <th style="text-align: center">
-                    <md-button class="md-icon-button" aria-label="ttype inputs search button">
-                        <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
-                    </md-button>
-                </th>
-            </tr>
-            <tr style="border: 0" data-ng-if="vm.queryStatus" class="filter-row-holder">
-                <th>
-                    <md-input-container class="no-error-spacer">
-                        <ng-md-icon icon="search"></ng-md-icon>
-                        <input type="text" data-ng-model="vm.query.name">
-                    </md-input-container>
-                </th>
-                <th>
-                    <md-input-container class="no-error-spacer">
-                        <ng-md-icon icon="search"></ng-md-icon>
-                        <input type="text" data-ng-model="vm.query.verbose_name">
-                    </md-input-container>
-                </th>
-                <th>
-                    <md-input-container class="no-error-spacer">
-                        <ng-md-icon icon="search"></ng-md-icon>
-                        <input type="text" data-ng-model="vm.query.tooltip">
-                    </md-input-container>
-                </th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
+                    </th>
+                    <th data-ng-click="vm.setSort('content_type_name')">Content type<span class="sortorder"
+                                                                                          data-ng-show="vm.sort === 'content_type_name'"
+                                                                                          data-ng-class="{reverse: vm.direction}"></span>
+                    </th>
+                    <th>Use Default Value from Context</th>
+                    <th>Default value</th>
+                    <th>Input expr</th>
+                    <th>Linked Inputs</th>
+                    <th style="text-align: center">
+                        <md-button class="md-icon-button" aria-label="ttype inputs search button">
+                            <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                        </md-button>
+                    </th>
+                </tr>
+
+                <tr style="border: 0" data-ng-if="vm.queryStatus" class="filter-row-holder">
+                    <th>
+                        <md-input-container class="no-error-spacer">
+                            <ng-md-icon icon="search"></ng-md-icon>
+                            <input type="text" data-ng-model="vm.query.name">
+                        </md-input-container>
+                    </th>
+                    <th>
+                        <md-input-container class="no-error-spacer">
+                            <ng-md-icon icon="search"></ng-md-icon>
+                            <input type="text" data-ng-model="vm.query.verbose_name">
+                        </md-input-container>
+                    </th>
+                    <th>
+                        <md-input-container class="no-error-spacer">
+                            <ng-md-icon icon="search"></ng-md-icon>
+                            <input type="text" data-ng-model="vm.query.tooltip">
+                        </md-input-container>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+
             </thead>
             <tbody>
             <tr data-ng-repeat="item in vm.entity.inputs | filter:vm.query | orderBy:vm.sort:vm.direction">
@@ -334,7 +337,7 @@
 
                     </div>
 
-                    <div data-ng-if="item.is_fill_from_context && item.value_type == 100">
+                    <!--<div data-ng-if="item.is_fill_from_context && item.value_type == 100">
 
                         <md-select ng-model="item.context_property"
                                    md-container-class="common-select-container">
@@ -350,7 +353,7 @@
                             </div>
                         </md-select>
 
-                    </div>
+                    </div>-->
 
                     <div data-ng-if="!vm.newItem.is_fill_from_context && vm.newItem.value_type == 100">
 
@@ -412,6 +415,9 @@
             </tr>
             </tbody>
         </table>
+
+        <grid-table data-grid-table-data-service="vm.inputsGridTableDataService"
+                    data-grid-table-event-service="vm.inputsGridTableEventService"></grid-table>
 
         <div layout="row">
 
