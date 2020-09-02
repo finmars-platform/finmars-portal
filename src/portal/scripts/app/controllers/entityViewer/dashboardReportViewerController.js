@@ -5,6 +5,7 @@
 (function () {
 
         'use strict';
+        var message;
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
@@ -47,6 +48,7 @@
             vm.matrixSettings = null;
 
             vm.grandTotalProcessing = true;
+            $scope.readyStatus.calculating = false;
 
             vm.linkedActiveObjects = {}; // If we have several components linked to spit panel;
             var lastActiveComponentId;
@@ -445,6 +447,9 @@
                 });
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+                    $scope.readyStatus.calculating = true;
+                    message = 'Component: ' + vm.componentData.name + ' Type: ' + vm.componentData.settings.entity_type + 'listener DATA_LOAD_START';
+                    console.log('%c%s', 'color: blue', message, vm.readyStatus);
 
                     vm.entityViewerDataService.setDataLoadStatus(false);
 
@@ -456,6 +461,8 @@
                 });
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    message = 'Component: ' + vm.componentData.name + ' Type: ' + vm.componentData.settings.entity_type + 'listener DATA_LOAD_END';
+                    console.log('%c %s', 'color: blue', message, vm.readyStatus);
 
                     vm.entityViewerDataService.setDataLoadStatus(true);
 
@@ -463,6 +470,8 @@
                         vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
                         vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     }
+
+                    $scope.readyStatus.calculating = false;
 
                 });
 
@@ -1547,7 +1556,14 @@
 
                 });
 
+
+                var message;
+
                 vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
+
+                    message = 'Component: ' + vm.componentData.name + ' Type: ' + vm.componentData.settings.entity_type + 'listener COMPONENT_OUTPUT_CHANGE';
+                    console.log('dashboardReportViewerController', vm);
+                    console.log(message);
                     if (vm.componentData.settings.auto_refresh) {
                         updateReportSettingsUsingDashboardData();
                     }
@@ -1656,6 +1672,9 @@
                 vm.userSettings = vm.componentData.user_settings;
                 vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
+
+                console.log('vm.dashboardEventService', vm.dashboardEventService);
+
                 vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
                 vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
 
