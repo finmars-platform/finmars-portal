@@ -2804,14 +2804,17 @@ md-checkbox.md-indeterminate .md-icon:after {
 
 .rel-container {
   position: relative;
+  outline: none;
 
   // border: 1px solid black;
   input {
+    outline: none;
     .inputStyle();
     // border: 2px solid red;
   }
 
   label {
+    outline: none;
     overflow: visible;
     position: absolute;
     z-index: 1000;
@@ -2824,17 +2827,18 @@ md-checkbox.md-indeterminate .md-icon:after {
   }
 
   .two-fields-multiselect-input-count-container {
+    outline: none;
     position: absolute;
     top: 50%;
     left: 0;
     transform: translate(25%, 0%);
     display: flex;
-    color: red;
     justify-content: space-between;
     align-items: center;
   }
 
   .two-fields-multiselect-input-count {
+    outline: none;
     height: 33px;
     border-radius: 30px;
     padding: 0 10px;
@@ -2846,9 +2850,12 @@ md-checkbox.md-indeterminate .md-icon:after {
     margin-right: 15px;
 
     .two-fields-multiselect-color {
+      outline: none;
       fill: @grey;
     }
-
+    &:focus {
+      outline: none;
+    }
     &:hover {
       background-color: rgba(216, 216, 216, 1);
     }
