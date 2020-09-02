@@ -23,7 +23,10 @@
         scope.inputText = "";
         scope.itemsSelected = [];
         scope.itemAxact = "";
-        scope.deleteAllSelectedItems = function (event) {};
+        scope.deleteAllSelectedItems = function (event) {
+          scope.inputText = "Off";
+          scope.model = [];
+        };
 
         if (!scope.nameProperty) {
           scope.nameProperty = "name";
@@ -149,13 +152,33 @@
             }
           });
         };
-
+        // scope.change = function () {
+        //   scope.inputText = "Off";
+        //   console.log("test")
+        // };
         $(elem).click(function (event) {
           event.preventDefault();
           event.stopPropagation();
-          if ($(event.target)[0].id == "delete") {
-            console.log($(event.target)[0], "eventer:", scope);
-            scope.model = [];
+          console.log(
+            $(event),
+            "eventer:",
+            scope.inputText,
+            "cool",
+            $(event.target),
+            "my:",
+            $(event.target)[0].innerText,
+            "hz:",
+            $(event.target)[0].innerText
+          );
+          if (
+            $(event.target)[0].id == "delete" ||
+            $(event.target)[0].tagName == "svg" ||
+            $(event.target)[0].tagName == "path"
+          ) {
+            scope.$watch("inputText", function () {});
+            // scope.model = [];
+            // scope.inputText = "Off";
+            scope.deleteAllSelectedItems();
           } else {
             getItems().then(function (data) {
               items = data;
