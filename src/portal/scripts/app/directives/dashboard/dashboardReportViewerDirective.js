@@ -26,7 +26,8 @@
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {
-                    data: 'processing'
+                    data: 'processing',
+                    disabled: false
                 };
 
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
@@ -294,6 +295,10 @@
                             scope.customName = null;
                         }
 
+                    });
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.TOGGLE_COMPONENT_BLOCKAGE, function () {
+                        scope.readyStatus.disabled = !scope.readyStatus.disabled;
                     });
 
                 };
