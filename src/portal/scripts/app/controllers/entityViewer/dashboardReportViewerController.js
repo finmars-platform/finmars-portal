@@ -48,7 +48,6 @@
             vm.matrixSettings = null;
 
             vm.grandTotalProcessing = true;
-            $scope.readyStatus.calculating = false;
 
             vm.linkedActiveObjects = {}; // If we have several components linked to spit panel;
             var lastActiveComponentId;
@@ -447,7 +446,9 @@
                 });
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
-                    $scope.readyStatus.calculating = true;
+                    //$scope.readyStatus.calculating = true;
+
+                    vm.dashboardEventService.dispatchEvent(dashboardEvents.TOGGLE_COMPONENT_BLOCKAGE);
                     message = 'Component: ' + vm.componentData.name + ' Type: ' + vm.componentData.settings.entity_type + 'listener DATA_LOAD_START';
                     console.log('%c%s', 'color: blue', message, vm.readyStatus);
 
@@ -471,7 +472,8 @@
                         vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     }
 
-                    $scope.readyStatus.calculating = false;
+                    //$scope.readyStatus.calculating = false;
+                    vm.dashboardEventService.dispatchEvent(dashboardEvents.TOGGLE_COMPONENT_BLOCKAGE);
 
                 });
 
