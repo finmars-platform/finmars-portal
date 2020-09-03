@@ -57,10 +57,8 @@
               scope.inputText = "0 items selected";
             }
           } else {
-            const test = await getItems();
-            console.log(scope, "text +1", test);
-            // scope.inputText = selElemNumber + " " + "items selected";
-            // console.log(scope, "")
+            const items = await getItems();
+            console.log("text +8", items, "model:", scope.model);
 
             scope.itemsSelected.forEach((el) => {
               scope.model.forEach((element) => {
@@ -156,68 +154,106 @@
         //   scope.inputText = "Off";
         //   console.log("test")
         // };
-        $(elem).click(function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          console.log(
-            $(event),
-            "eventer:",
-            scope.inputText,
-            "cool",
-            $(event.target),
-            "my:",
-            $(event.target)[0].innerText,
-            "hz:",
-            $(event.target)[0].innerText
-          );
-          if (
-            $(event.target)[0].id == "delete" ||
-            $(event.target)[0].tagName == "svg" ||
-            $(event.target)[0].tagName == "path"
-          ) {
-            scope.$watch("inputText", function () {});
-            // scope.model = [];
-            // scope.inputText = "Off";
-            scope.deleteAllSelectedItems();
-          } else {
-            getItems().then(function (data) {
-              items = data;
-              $mdDialog
-                .show({
-                  controller: "TwoFieldsMultiselectDialogController as vm",
-                  templateUrl:
-                    "views/dialogs/two-fields-multiselect-dialog-view.html",
-                  targetEvent: event,
-                  multiple: true,
-                  locals: {
-                    data: {
-                      items: items,
-                      model: scope.model,
-                      title: scope.title,
-                      nameProperty: scope.nameProperty,
-                    },
+        scope.selectItemModal = function (event) {
+          //   event.preventDefault();
+          //   event.stopPropagation();
+          getItems().then(function (data) {
+            items = data;
+            $mdDialog
+              .show({
+                controller: "TwoFieldsMultiselectDialogController as vm",
+                templateUrl:
+                  "views/dialogs/two-fields-multiselect-dialog-view.html",
+                targetEvent: event,
+                multiple: true,
+                locals: {
+                  data: {
+                    items: items,
+                    model: scope.model,
+                    title: scope.title,
+                    nameProperty: scope.nameProperty,
                   },
-                })
-                .then(function (res) {
-                  if (res.status === "agree") {
-                    // console.log(res, "response", items)
-                    scope.itemsSelected = items;
+                },
+              })
+              .then(function (res) {
+                if (res.status === "agree") {
+                  scope.itemsSelected = items;
+                  scope.model = res.selectedItems;
+                  if (scope.onChangeCallback) {
                     scope.model = res.selectedItems;
-
-                    if (scope.onChangeCallback) {
-                      scope.model = res.selectedItems;
-
-                      setTimeout(function () {
-                        scope.onChangeCallback();
-                      }, 500);
-                    } else if (ngModel) {
-                      ngModel.$setViewValue(res.selectedItems);
-                    }
+                    setTimeout(function () {
+                      scope.onChangeCallback();
+                    }, 500);
+                  } else if (ngModel) {
+                    ngModel.$setViewValue(res.selectedItems);
                   }
-                });
-            });
-          }
-        });
+                }
+              });
+          });
+        };
+
+        // $(elem).click(function (event) {
+        //   event.preventDefault();
+        //   event.stopPropagation();
+        //   console.log(
+        //     $(event),
+        //     "eventer:",
+        //     scope.inputText,
+        //     "cool",
+        //     $(event.target),
+        //     "my:",
+        //     $(event.target)[0].innerText,
+        //     "hz:",
+        //     $(event.target)[0].innerText
+        //   );
+        //   if (
+        //     $(event.target)[0].id == "delete" ||
+        //     $(event.target)[0].tagName == "svg" ||
+        //     $(event.target)[0].tagName == "path"
+        //   ) {
+        //     scope.$watch("inputText", function () {});
+        //     // scope.model = [];
+        //     // scope.inputText = "Off";
+        //     scope.deleteAllSelectedItems();
+        //   } else if(){} else {
+        //     getItems().then(function (data) {
+        //       items = data;
+        //       $mdDialog
+        //         .show({
+        //           controller: "TwoFieldsMultiselectDialogController as vm",
+        //           templateUrl:
+        //             "views/dialogs/two-fields-multiselect-dialog-view.html",
+        //           targetEvent: event,
+        //           multiple: true,
+        //           locals: {
+        //             data: {
+        //               items: items,
+        //               model: scope.model,
+        //               title: scope.title,
+        //               nameProperty: scope.nameProperty,
+        //             },
+        //           },
+        //         })
+        //         .then(function (res) {
+        //           if (res.status === "agree") {
+        //             // console.log(res, "response", items)
+        //             scope.itemsSelected = items;
+        //             scope.model = res.selectedItems;
+
+        //             if (scope.onChangeCallback) {
+        //               scope.model = res.selectedItems;
+
+        //               setTimeout(function () {
+        //                 scope.onChangeCallback();
+        //               }, 500);
+        //             } else if (ngModel) {
+        //               ngModel.$setViewValue(res.selectedItems);
+        //             }
+        //           }
+        //         });
+        //     });
+        //   }
+        // });
       },
     };
   };
