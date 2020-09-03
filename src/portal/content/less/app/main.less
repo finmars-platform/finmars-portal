@@ -2805,6 +2805,7 @@ md-checkbox.md-indeterminate .md-icon:after {
 .rel-container {
   position: relative;
   outline: none;
+  margin: 10px;
 
   // border: 1px solid black;
   input {
@@ -2831,10 +2832,18 @@ md-checkbox.md-indeterminate .md-icon:after {
     position: absolute;
     top: 50%;
     left: 0;
-    transform: translate(25%, 0%);
+    transform: translate(25px, 0%);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .two-fields-multiselect-custom-btn {
+      transition: 0.2s ease-in-out;
+      fill: @grey;
+      margin-right: 15px;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
   }
 
   .two-fields-multiselect-input-count {

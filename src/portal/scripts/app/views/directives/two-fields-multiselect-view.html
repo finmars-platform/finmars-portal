@@ -14,16 +14,29 @@
   <div
     class="two-fields-multiselect-input-count-container"
     data-ng-if="inputText=='Off'"
+    data-ng-click="selectItemModal()"
   >
-    <div class="two-fields-multiselect-input-count m-l-8">
-      <span>{{inputText}}</span>
+    <ng-md-icon
+      icon="menu"
+      size="18"
+      class="tooltip-sign two-fields-multiselect-custom-btn cursor-pointer"
+    ></ng-md-icon>
+
+    <div class="m-l-8">
+      <span class="cursor-pointer f-s-15 hovO">{{title}}</span>
     </div>
   </div>
   <div
     class="two-fields-multiselect-input-count-container"
     data-ng-if="inputText!=='Off'"
   >
-    <div class="two-fields-multiselect-input-count">
+    <ng-md-icon
+      icon="menu"
+      size="18"
+      class="tooltip-sign two-fields-multiselect-custom-btn cursor-pointer"
+      data-ng-click="selectItemModal()"
+    ></ng-md-icon>
+    <div class="two-fields-multiselect-input-count cursor-pointer">
       <span>{{itemAxact}}</span>
       <ng-md-icon
         icon="cancel"
@@ -32,8 +45,7 @@
       ></ng-md-icon>
     </div>
     <div
-      class="two-fields-multiselect-input-count two-fields-multiselect-input-delete"
-      id="delete"
+      class="two-fields-multiselect-input-count two-fields-multiselect-input-delete cursor-pointer"
       data-ng-click="deleteAllSelectedItems()"
     >
       <span>{{inputText}}</span>
