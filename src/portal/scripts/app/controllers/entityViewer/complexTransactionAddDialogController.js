@@ -347,7 +347,8 @@
             dataConstructorLayout = JSON.parse(JSON.stringify(transactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
             vm.userInputs = [];
-            vm.tabs.forEach(function (tab) {
+            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+            /*vm.tabs.forEach(function (tab) {
                 tab.layout.fields.forEach(function (field) {
                     if (field.attribute_class === 'userInput') {
                         vm.userInputs.push(field.attribute);
@@ -383,7 +384,7 @@
                     userInput.frontOptions.autocalculated = true;
                 }
 
-            });
+            });*/
 
             inputsWithCalculations = transactionData.transaction_type_object.inputs;
 
