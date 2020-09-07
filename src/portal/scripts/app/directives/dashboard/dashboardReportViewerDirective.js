@@ -297,8 +297,21 @@
 
                     });
 
-                    scope.dashboardEventService.addEventListener(dashboardEvents.TOGGLE_COMPONENT_BLOCKAGE, function () {
-                        scope.readyStatus.disabled = !scope.readyStatus.disabled;
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
+
+                        console.log('scope.readyStatus.disabled = true;')
+                        console.log(Date.now());
+                        scope.readyStatus.disabled = true;
+
+                    });
+
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
+
+                        console.log('scope.readyStatus.disabled = false;')
+                        console.log(Date.now());
+
+                        scope.readyStatus.disabled = false;
+
                     });
 
                 };
