@@ -61,8 +61,9 @@
         data-delete="true"
       ></ng-md-icon>
     </div>
+
     <!--  -->
-    <div data-ng-if="tooltipText" class="custom-input-tooltip">
+    <!-- <div data-ng-if="tooltipText" class="custom-input-tooltip">
       <ng-md-icon
         data-ng-if="!error"
         icon="info_outline"
@@ -76,12 +77,23 @@
         md-direction="top"
         data-ng-bind="tooltipText"
       ></md-tooltip>
-    </div>
+    </div> -->
+  </div>
+  <div class="two-fields-multiselect-input-tooltip" data-ng-if="toltipShow">
+    <ng-md-icon
+      icon="info_outline"
+      size="18"
+      style="fill: #777777"
+    ></ng-md-icon>
+    <md-tooltip>{{title}}</md-tooltip>
   </div>
 </md-input-container>
-<md-tooltip
+<!-- <div class="two-fields-multiselect-input-tooltip"> -->
+
+<!-- </div> -->
+<!-- <md-tooltip
   data-ng-if="model && model.length > 0 && tooltipText"
   class="tooltip_1 f-s-15"
   md-direction="top"
   data-ng-bind="tooltipText"
-></md-tooltip>
+></md-tooltip> -->

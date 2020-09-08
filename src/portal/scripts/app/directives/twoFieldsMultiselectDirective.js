@@ -53,20 +53,16 @@
         if (!scope.nameProperty) {
           scope.nameProperty = "name";
         }
-
         var items = [];
-
         scope.$watch("model", function () {
           setInputText();
         });
-
         var defaultInputText = async function () {
           var selElemNumber = 0;
           let chipsName = "";
           if (scope.model && scope.model.length > 0) {
             selElemNumber = scope.model.length;
           }
-
           if (selElemNumber === 0) {
             scope.inputText = "";
             if (
@@ -79,8 +75,6 @@
             }
           } else {
             const items = await getItems();
-            // const maxItemSize = 130;
-            // scope.clientWidth = await parseInt(scope.clientWidth / maxItemSize);
             console.log("text +8", items, "model:", scope.model);
             let idx = Math.min(...scope.model);
             scope.itemAxact = items
@@ -109,29 +103,23 @@
             scope.$apply();
           }
         };
-
         var arrayLikeInputText = function () {
           var propName = scope.nameProperty || "name";
-
           if (scope.model && scope.model.length) {
             if (scope.items && scope.items.length) {
               scope.inputText = "[";
               scope.tooltipText = "Values selected:";
-
               scope.model.forEach(function (sItemId, index) {
                 for (var i = 0; i < scope.items.length; i++) {
                   if (scope.items[i].id === sItemId) {
                     if (index > 0) {
-                      // add comma between selected items
                       scope.inputText = scope.inputText + ",";
                       scope.tooltipText = scope.tooltipText + ",";
                     }
-
                     scope.inputText =
                       scope.inputText + " " + scope.items[i][propName];
                     scope.tooltipText =
                       scope.tooltipText + " " + scope.items[i][propName];
-
                     break;
                   }
                 }
@@ -142,15 +130,12 @@
               // in case of error
               scope.inputText = scope.model.length + " items selected";
             }
-
-            //scope.inputText = '[' + scope.model.join(', ') + ']';
           } else if (scope.nothingSelectedText) {
             scope.inputText = scope.nothingSelectedText;
           } else {
             scope.inputText = "[ ]";
           }
         };
-
         var setInputText = function () {
           if (scope.selectedItemsIndication) {
             switch (scope.selectedItemsIndication) {
@@ -162,9 +147,6 @@
             defaultInputText();
           }
         };
-
-        //setInputText();
-
         var getItems = function () {
           return new Promise(function (resolve, reject) {
             if (items && items.length) {
@@ -188,10 +170,6 @@
             }
           });
         };
-        // scope.change = function () {
-        //   scope.inputText = "Off";
-        //   console.log("test")
-        // };
         scope.selectItemModal = function (event) {
           if (scope.clientWidth < event.currentTarget.clientWidth) {
             const maxItemSize = 130;
@@ -298,6 +276,21 @@
         //     });
         //   }
         // });
+
+        //
+
+        $(elem).mouseover(function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          scope.toltipShow = true;
+          scope.$apply();
+        });
+        $(elem).mouseleave(function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          scope.toltipShow = false;
+          scope.$apply();
+        });
       },
     };
   };
