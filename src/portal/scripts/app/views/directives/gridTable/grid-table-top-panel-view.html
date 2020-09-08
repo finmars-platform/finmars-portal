@@ -21,10 +21,21 @@
              class="grid-table-cell">
 
             <grid-table-cell data-row="newRow"
-                             data-cell="cell"
-                             data-grid-table-data-service="gridTableDataService"
-                             data-grid-table-event-service="gridTableEventService"></grid-table-cell>
+                             data-column="cell"
+                             data-gt-data-service="gtDataService"
+                             data-gt-event-service="gtEventService"></grid-table-cell>
         </div>
 
+    </div>
+
+    <div data-ng-show="mode === 'rows_deletion'" class="flex-row fc-space-between">
+        <div>
+            <div>{{ activeRows.length }} selected</div>
+            <md-button data-ng-click="deleteRows()">delete</md-button>
+        </div>
+
+        <div>
+            <md-button data-ng-click="mode = false"></md-button>
+        </div>
     </div>
 </div>

@@ -106,13 +106,6 @@
 
                 var applyCustomStyles = function () {
 
-                    // scope.customStyles should have next structure
-                    /*
-                        {
-                          'class-of-element-to-which-styles-added': 'string with styles content',
-                          'another-class-of-another-element': 'string with styles content'
-                        }
-                    */
                     Object.keys(scope.customStyles).forEach(function (className) {
 
                         var elemClass = '.' + className;

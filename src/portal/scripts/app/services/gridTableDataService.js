@@ -5,7 +5,11 @@
     module.exports = function () {
 
         var data = {
-            tableData: null
+            tableData: null,
+            sortingSettings: {
+                columns: null,
+                reverse: false
+            }
         };
 
         function setTableData (tableData) {
@@ -29,6 +33,33 @@
 
         }
 
+        function deleteRows (rows) {
+
+            if (Array.isArray(rows)) {
+
+                rows.forEach(function (row) {
+                    data.tableData.body.splice(row.order, 1);
+                });
+
+            } else {
+                data.tableData.body.splice(rows.order, 1);
+
+            }
+
+            data.tableData.body.forEach(function (row, index) {
+                row.order = index;
+            });
+            console.log("grid table rows after deletion", data.tableData.body);
+        }
+
+        function getSelectedRows () {
+            var rows = data.tableData.body.filter(function (row) {
+                return row.isActive;
+            });
+
+            return rows;
+        }
+
         function getCell (rowOrder, cellOrder) {
 
             if (rowOrder === 'newRow') {
@@ -42,9 +73,9 @@
         }
 
         function getCellByKey (rowOrder, colKey) {
-            console.log("grid table getCellByKey", rowOrder, colKey);
+
             var row = getRow(rowOrder);
-            console.log("grid table getCellByKey", row);
+
             for (var i = 0; i < row.columns.length; i++) {
 
                 if (row.columns[i].key === colKey) {
@@ -55,13 +86,36 @@
 
         }
 
+        function setSortingSettings (colOrder) {
+
+            if (data.sortingSettings.column === colOrder) {
+                data.sortingSettings.reverse = !data.sortingSettings.reverse
+
+            } else {
+                data.sortingSettings.column = colOrder
+                data.sortingSettings.reverse = false
+            }
+
+
+        }
+
+        function getSortingSettings () {
+            return data.sortingSettings;
+        }
+
         return {
             setTableData: setTableData,
             getTableData: getTableData,
 
             getRow: getRow,
+            getSelectedRows: getSelectedRows,
+            deleteRows: deleteRows,
+
             getCell: getCell,
-            getCellByKey: getCellByKey
+            getCellByKey: getCellByKey,
+
+            setSortingSettings: setSortingSettings,
+            getSortingSettings: getSortingSettings
         }
 
     };

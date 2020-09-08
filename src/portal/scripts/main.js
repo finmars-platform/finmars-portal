@@ -624,6 +624,7 @@ app.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customIn
 app.directive('gridTable', [require('./app/directives/gridTable/gridTableDirective')]);
 app.directive('gridTableTopPanel', [require('./app/directives/gridTable/gridTableTopPanelDirective')]);
 app.directive('gridTableCell', ['$compile', require('./app/directives/gridTable/gridTableCellDirective')]);
+app.directive('gridTableHeaderCell', [require('./app/directives/gridTable/cells/gridTableHeaderCellDirective')]);
 app.directive('gridTableTextCell', [require('./app/directives/gridTable/gridTableTextCellDirective')]);
 // Grid Table End
 

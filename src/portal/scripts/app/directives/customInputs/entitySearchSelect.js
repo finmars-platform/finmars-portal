@@ -12,13 +12,13 @@
         return {
             restrict: 'E',
             scope: {
-                label: '<',
+                label: '=',
                 item: '=',
-                itemName: '<',
-                entityType: '<',
+                itemName: '=',
+                entityType: '=',
                 customButtons: '=',
-                customStyles: '<',
-                isDisabled: '<',
+                customStyles: '=',
+                isDisabled: '=',
                 eventSignal: '=',
                 smallOptions: '=',
                 callback: '&'
