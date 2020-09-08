@@ -2832,10 +2832,13 @@ md-checkbox.md-indeterminate .md-icon:after {
     position: absolute;
     top: 50%;
     left: 0;
-    transform: translate(25px, 0%);
+    transform: translate(18px, 0%);
+    width: 90%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    // border: 1px solid gold;
+    // overflow-x: auto;
     .two-fields-multiselect-custom-btn {
       transition: 0.2s ease-in-out;
       fill: @grey;
@@ -2874,4 +2877,9 @@ md-checkbox.md-indeterminate .md-icon:after {
       font-weight: 400;
     }
   }
+}
+.two-fields-multiselect-input-delete {
+  // position: absolute;
+  // z-index: 1000;
+  display: none;
 }

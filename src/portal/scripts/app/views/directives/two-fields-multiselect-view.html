@@ -14,14 +14,13 @@
   <div
     class="two-fields-multiselect-input-count-container"
     data-ng-if="inputText=='Off'"
-    data-ng-click="selectItemModal()"
+    data-ng-click="selectItemModal($event)"
   >
     <ng-md-icon
       icon="menu"
       size="18"
       class="tooltip-sign two-fields-multiselect-custom-btn cursor-pointer"
     ></ng-md-icon>
-
     <div class="m-l-8">
       <span class="cursor-pointer f-s-15 hovO">{{title}}</span>
     </div>
@@ -34,10 +33,16 @@
       icon="menu"
       size="18"
       class="tooltip-sign two-fields-multiselect-custom-btn cursor-pointer"
-      data-ng-click="selectItemModal()"
+      data-ng-click="selectItemModal($event)"
     ></ng-md-icon>
-    <div class="two-fields-multiselect-input-count cursor-pointer">
-      <span>{{itemAxact}}</span>
+
+    <div
+      class="two-fields-multiselect-input-count cursor-pointer"
+      data-ng-click="deleteById(item, $index)"
+      data-ng-repeat="item in itemsSelected track by $index"
+      ng-show="{{$index<clientWidth}}"
+    >
+      <span>{{item.name}}</span>
       <ng-md-icon
         icon="cancel"
         size="18"
@@ -45,17 +50,32 @@
       ></ng-md-icon>
     </div>
     <div
-      class="two-fields-multiselect-input-count two-fields-multiselect-input-delete cursor-pointer"
+      class=" {{inputText!==0 ?'two-fields-multiselect-input-count two-fields-multiselect-input-delete cursor-pointer': 'two-fields-multiselect-input-delete' }}"
       data-ng-click="deleteAllSelectedItems()"
     >
-      <span>{{inputText}}</span>
-
+      <span>+{{inputText}}</span>
       <ng-md-icon
         icon="cancel"
         size="18"
         class="tooltip-sign two-fields-multiselect-color"
         data-delete="true"
       ></ng-md-icon>
+    </div>
+    <!--  -->
+    <div data-ng-if="tooltipText" class="custom-input-tooltip">
+      <ng-md-icon
+        data-ng-if="!error"
+        icon="info_outline"
+        size="28"
+        class="tooltip-sign"
+        style="fill: #777777"
+      >
+      </ng-md-icon>
+      <md-tooltip
+        class="tooltip_2"
+        md-direction="top"
+        data-ng-bind="tooltipText"
+      ></md-tooltip>
     </div>
   </div>
 </md-input-container>
