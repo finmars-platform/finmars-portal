@@ -5,7 +5,6 @@
 (function () {
 
         'use strict';
-        var message;
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
@@ -447,6 +446,13 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
+                    setTimeout(function () {
+
+                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+                        $scope.$apply();
+
+                    }, 0);
+
                     vm.entityViewerDataService.setDataLoadStatus(false);
 
                     if (!fillInModeEnabled) {
@@ -458,7 +464,6 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-
                     vm.entityViewerDataService.setDataLoadStatus(true);
 
                     if (!fillInModeEnabled) {
@@ -466,12 +471,12 @@
                         vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     }
 
+                    setTimeout(function () {
 
-                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
-                    console.log('COMPONENT_BLOCKAGE_OFF $scope.$apply();', Date.now());
-                    message = 'Component: ' + vm.componentData.name + ' Type: ' + vm.componentData.settings.entity_type + 'listener DATA_LOAD_END,';
-                    console.log('%c%s', 'color: blue', message, vm.readyStatus);
-                    $scope.$apply();
+                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
+                        $scope.$apply();
+
+                    }, 0);
 
                 });
 
@@ -1138,6 +1143,9 @@
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+                    $scope.$apply();
+
                 }
 
             };
@@ -1263,7 +1271,7 @@
 
             var updateActiveObjectUsingDashboardData = function () {
 
-                // if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
+                 if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
 
                     if (Array.isArray(vm.componentData.settings.linked_components.active_object)) {
 
@@ -1333,7 +1341,7 @@
                         vm.handleDashboardActiveObject(componentId);
                     }
 
-                // }
+                 }
 
             }
 
@@ -1390,7 +1398,6 @@
 
                         vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                         vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
-                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
                     }
 
                 }
@@ -1545,56 +1552,30 @@
                 });
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
+                    // update report filters from dashboard component
 
-                    if (!vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
-                        return;
-                    }
-
-                    if (vm.componentData.settings.linked_components.filter_links.length > 0) {
-
-                        // update report filters from dashboard component
-
-                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-
-                        console.log('COMPONENT_BLOCKAGE_ON $scope.$apply();', Date.now());
-                        message = 'Component: ' + vm.componentData.name + ' Type: ' + vm.componentData.settings.entity_type + 'listener COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE 1';
-                        console.log('%c%s', 'color: blue', message, vm.readyStatus);
-                        $scope.$apply();
+                    // add linked to filter from dashboard component
+                    if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                         vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
                             vm.handleDashboardFilterLink(filter_link);
                         });
 
                     }
+                    // < add linked to filter from dashboard component >
 
+                    /*if (vm.componentData.settings.auto_refresh) {
+                        updateReportSettingsUsingDashboardData();
+                    }*/
 
-
-                    if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
-
-                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-                        console.log('COMPONENT_BLOCKAGE_ON $scope.$apply();', Date.now());
-                        message = 'Component: ' + vm.componentData.name + ' Type: ' + vm.componentData.settings.entity_type + 'listener COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE 2';
-                        console.log('%c%s', 'color: blue', message, vm.readyStatus);
-                        $scope.$apply();
-
-                        setTimeout(function () {
-
-                            updateActiveObjectUsingDashboardData();
-
-                        }, 0);
-
-                    }
+                    updateActiveObjectUsingDashboardData();
 
                 });
 
-
-
                 vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
-
                     if (vm.componentData.settings.auto_refresh) {
                         updateReportSettingsUsingDashboardData();
                     }
-
                 });
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS, function () {
@@ -1700,9 +1681,6 @@
                 vm.userSettings = vm.componentData.user_settings;
                 vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
-
-                console.log('vm.dashboardEventService', vm.dashboardEventService);
-
                 vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
                 vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
 

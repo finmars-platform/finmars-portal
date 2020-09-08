@@ -26,7 +26,8 @@
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {
-                    data: 'processing'
+                    data: 'processing',
+                    disabled: false
                 };
 
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
@@ -249,6 +250,18 @@
                         scope.vm.entityType = componentData.settings.entity_type;
 
                         scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_CONTENT_OF_COMPONENT);
+
+                    });
+
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
+
+                        scope.readyStatus.disabled = true;
+
+                    });
+
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
+
+                        scope.readyStatus.disabled = false;
 
                     });
 
