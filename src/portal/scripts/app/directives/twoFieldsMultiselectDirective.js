@@ -23,9 +23,31 @@
         scope.inputText = "";
         scope.itemsSelected = [];
         scope.itemAxact = "";
+        scope.clientWidth = 0;
         scope.deleteAllSelectedItems = function (event) {
           scope.inputText = "Off";
           scope.model = [];
+        };
+        scope.deleteById = async function ({ id }, $index) {
+          console.log(
+            "scope.itemsSelectedL",
+            scope.itemsSelected,
+            "width",
+            scope.clientWidth
+          );
+          let items = await getItems();
+          scope.model = await scope.itemsSelected
+            .filter((el) => el.id !== id)
+            .map((s) => s.id);
+          scope.itemsSelected = await scope.itemsSelected.filter(
+            (el) => el.id !== id
+          );
+          //   idx = Math.min(...scope.model);
+          scope.itemAxact = items
+            .filter((el) => el.id == id)
+            .map((n) => n.name)
+            .join("");
+          scope.$apply();
         };
 
         if (!scope.nameProperty) {
@@ -47,7 +69,6 @@
 
           if (selElemNumber === 0) {
             scope.inputText = "";
-
             if (
               scope.nothingSelectedText ||
               typeof scope.nothingSelectedText === "string"
@@ -58,17 +79,34 @@
             }
           } else {
             const items = await getItems();
+            // const maxItemSize = 130;
+            // scope.clientWidth = await parseInt(scope.clientWidth / maxItemSize);
             console.log("text +8", items, "model:", scope.model);
-
-            scope.itemsSelected.forEach((el) => {
-              scope.model.forEach((element) => {
-                if (el.id == element) {
-                  chipsName = el.user_code;
-                  scope.itemAxact = el.user_code;
+            let idx = Math.min(...scope.model);
+            scope.itemAxact = items
+              .filter((el) => el.id == idx)
+              .map((n) => n.name)
+              .join("");
+            scope.itemsSelected = [];
+            scope.model.forEach((Elem) => {
+              items.forEach((el) => {
+                if (Elem == el.id) {
+                  scope.itemsSelected.push(el);
                 }
               });
             });
-            scope.inputText = `+${selElemNumber}`;
+
+            scope.inputText = selElemNumber - scope.clientWidth;
+            console.log(
+              `+${selElemNumber - scope.clientWidth}`,
+              "width:",
+              scope.clientWidth,
+              "selElemNumber:",
+              selElemNumber,
+              "scope.inputText:",
+              scope.inputText
+            );
+            scope.$apply();
           }
         };
 
@@ -155,6 +193,12 @@
         //   console.log("test")
         // };
         scope.selectItemModal = function (event) {
+          if (scope.clientWidth < event.currentTarget.clientWidth) {
+            const maxItemSize = 130;
+            scope.clientWidth = parseInt(
+              event.currentTarget.clientWidth / maxItemSize
+            );
+          }
           //   event.preventDefault();
           //   event.stopPropagation();
           getItems().then(function (data) {
@@ -177,7 +221,6 @@
               })
               .then(function (res) {
                 if (res.status === "agree") {
-                  scope.itemsSelected = items;
                   scope.model = res.selectedItems;
                   if (scope.onChangeCallback) {
                     scope.model = res.selectedItems;
@@ -192,6 +235,7 @@
           });
         };
 
+        // Last code
         // $(elem).click(function (event) {
         //   event.preventDefault();
         //   event.stopPropagation();
