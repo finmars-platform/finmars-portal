@@ -1,13 +1,5 @@
 <div class="height-100" data-ng-if="readyStatus.data === 'ready'" layout="column">
 
-    <div data-ng-if="readyStatus.disabled" class="dashboard-recalculate-loader-holder">
-
-        <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-component-loader">
-            <progress-circular diameter="40"></progress-circular>
-        </div>
-
-    </div>
-
     <div class="dashboard-component-header" flex="noshrink">
         <div class="dashboard-component-name">
             <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
@@ -62,6 +54,13 @@
     </div>
 
     <div class="dashboard-component-body" flex="grow">
+
+        <div data-ng-if="readyStatus.disabled" class="dashboard-recalculate-loader-holder">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-component-loader">
+                <progress-circular diameter="40"></progress-circular>
+            </div>
+        </div>
+
         <div data-ng-include="'views/entity-viewer/dashboard-report-viewer.html'"
              class="report-data-layer-wrapper"></div>
     </div>
