@@ -17,6 +17,9 @@
                 newO[i] = recursiveDeepCopy(o[i]);
             }
             return newO;
+
+        } else if ({}.toString.call(o) === '[object Function') {
+            return o;
         }
 
         newO = {};

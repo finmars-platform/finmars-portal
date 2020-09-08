@@ -1,24 +1,43 @@
-<div data-ng-if="cellWithEditBtn()">
-    <span data-ng-bind="cellValue"></span>
-    <md-button data-ng-click="editCell($event)">I</md-button>
-</div>
+<div class="grid-table-cell" ng-class="{'gt-sorting-cell': row.order === 'header', 'gt-sorting-on': sortingOn}">
 
-<div data-ng-if="cell.cellType === 'selector'">
-    <md-select data-ng-model="cell.settings.value"
-               data-ng-change="onCellValueChange()"
-               data-ng-disabled="cell.settings.isDisabled">
-        <md-option data-ng-repeat="options in cell.settings.selectorOptions"
-                   data-ng-value="options.id"
-                   data-ng-bind="options.name"></md-option>
-    </md-select>
-</div>
+    <div ng-if="row.order === 'header'" class="gt-header-cell-content">
+        <grid-table-header-cell column="column"
+                                gt-data-service="gtDataService"
+                                gt-event-service="gtEventService"
+                                on-load-end="onChildrenLoadEnd()"></grid-table-header-cell>
+    </div>
 
-<div data-ng-if="cell.cellType === 'checkbox'">
-    <md-checkbox data-ng-model="cell.settings.value"
-                 data-ng-change="onCellValueChange()"></md-checkbox>
-</div>
+    <div data-ng-if="cellWithPopup()">
+        <div class="gt-cell-text-container">
+            <div class="gt-cell-text">
+                <span data-ng-bind="cellValue"></span>
+            </div>
+            <md-button data-ng-click="editCell($event)"
+                       class="gt-cell-edit-btn">
+                <ng-md-icon icon="edit" size="24"></ng-md-icon>
+            </md-button>
+        </div>
+    </div>
 
-<div data-ng-if="cell.cellType === 'multiselector'">
-    <!-- PUT MULTISELECTOR HERE -->
+    <div data-ng-if="cell.cellType === 'selector'">
+        <md-select data-ng-model="cell.settings.value"
+                   data-ng-change="onCellValueChange()"
+                   data-md-on-open="onSelOpen()"
+                   data-ng-disabled="cell.settings.isDisabled">
+            <md-option data-ng-repeat="options in cell.settings.selectorOptions"
+                       data-ng-value="options.id"
+                       data-ng-bind="options.name"></md-option>
+        </md-select>
+    </div>
+
+    <div data-ng-if="cell.cellType === 'checkbox'">
+        <md-checkbox data-ng-model="cell.settings.value"
+                     data-ng-change="onCellValueChange()"></md-checkbox>
+    </div>
+
+    <div data-ng-if="cell.cellType === 'multiselector'">
+        <!-- PUT MULTISELECTOR HERE -->
+
+    </div>
 
 </div>

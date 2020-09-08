@@ -35,6 +35,7 @@
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
+    var metaHelper = require('../../helpers/meta.helper');
 
     module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $state, entityType, entityId) {
 
@@ -1267,33 +1268,198 @@
 
             vm.entity.inputs.forEach(function (input, index) {
 
-                var row = vm.inputsGridTableData.body[index];
+                // var row = vm.inputsGridTableData.body[index];
 
-                row.columns.forEach(function (column) {
+                var inputName = input.name;
 
-                    if (column.objPath) { // in case property located deeper into object
+                for (var i = 0; i < vm.inputsGridTableData.body.length; i++) {
 
-                        var objPlace = input;
+                    var row = vm.inputsGridTableData.body[i];
+                    var tableInputName = vm.inputsGridTableDataService.getCellByKey(i, 'name');
 
-                        column.objPath.forEach(function (prop) {
-                            objPlace = objPlace[prop];
+                    if (inputName === tableInputName) {
+
+                        row.columns.forEach(function (column) {
+
+                            if (column.objPath) { // in case property located deeper into object
+
+                                var objPlace = input;
+
+                                column.objPath.forEach(function (prop) {
+                                    objPlace = objPlace[prop];
+                                });
+
+                                objPlace = column.settings.value;
+
+                            }
+
                         });
 
-                        objPlace = column.settings.value;
-
-                    } else {
-
-                        var propName = column.key;
-
-                        input[propName] = column.settings.value;
-
                     }
-
-                });
+                }
 
             });
 
         }
+
+        var deleteInputsRows = function (gtDataService, gtEventService, data) {
+
+            var selectedRows = gtDataService.getSelectedRows();
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Please note that in Action all links to this input will be deleted. Expressions will not be affected, so you would need to amend them manually.",
+                        actionsButtons: [
+                            {
+                                name: "OK, PROCEED",
+                                response: {status: 'agree'}
+                            },
+                            {
+                                name: "CANCEL",
+                                response: {status: 'disagree'}
+                            }
+                        ]
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    selectedRows.forEach(function (sRow) {
+
+                        var nameCell = gtDataService.getCellByKey(sRow.order, 'name');
+                        var inputName = nameCell.settings.value;
+
+                        vm.entity.inputs.splice(sRow.order, 1);
+                        vm.updateInputFunctions();
+
+                        gtDataService.deleteRows(sRow);
+
+                        removeInputFromActions(inputName);
+
+                    });
+
+                    gtEventService.dispatchEvent(gridTableEvents.ROW_SELECTION_TOGGLED);
+
+                    $scope.$apply();
+
+                }
+
+            });
+
+        }
+
+        /*var deleteInputsBasedOnTableGrid = function (deletedRows) {
+
+
+
+        };*/
+
+        var onValueTypeChange = function (rowOrder, colOrder, gtDataService) {
+
+            var changedCell = gtDataService.getCell(rowOrder, colOrder);
+            var contentTypeCell = gtDataService.getCellByKey(rowOrder, 'content_type');
+            var defaultValueCell = gtDataService.getCellByKey(rowOrder, 'default_value');
+
+            var valueType = changedCell.settings.value;
+            var fillFromContextCell = gtDataService.getCellByKey(rowOrder, 'is_fill_from_context');
+
+            fillFromContextCell.settings.value = false;
+
+            switch (valueType) {
+
+                case 110:
+
+                    contentTypeCell.key = 'reference_table';
+                    contentTypeCell.settings.isDisabled = false;
+                    contentTypeCell.settings.value = null;
+                    contentTypeCell.settings.selectorOptions = referenceTables;
+
+                    if (defaultValueCell.cellType === 'selector') {
+
+                        defaultValueCell.cellType = 'expression';
+                        defaultValueCell.settings = {value: ''}
+
+                    }
+
+                    break;
+
+                case 100:
+
+                    contentTypeCell.settings.isDisabled = false;
+                    contentTypeCell.settings.value = "accounts.account";
+
+                    defaultValueCell.cellType = 'selector';
+                    defaultValueCell.methods = {
+                        onOpen: onRelationDefaultValueSelOpen
+                    }
+                    defaultValueCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(vm.newItem)];
+
+                    break;
+
+                default:
+
+                    contentTypeCell.settings.isDisabled = true;
+                    defaultValueCell.cellType = 'expression';
+                    defaultValueCell.settings = {value: ''};
+
+                    break;
+
+            }
+
+        }
+
+        var onRelationFillFromContextChange = function (rowOrder, colOrder, gtDataService) {
+
+            var changedCell = gtDataService.getCell(rowOrder, colOrder);
+            var contentTypeCell = gtDataService.getCellByKey(rowOrder, 'content_type');
+            var defaultValueCell = gtDataService.getCellByKey(rowOrder, 'default_value');
+
+            if (changedCell.settings.value) {
+                defaultValueCell.settings.selectorOptions = vm.contextProperties[contentTypeCell.settings.value]
+
+            } else {
+
+                defaultValueCell.settings.selectorOptions = []
+
+            }
+            console.log("grid table checkbox changed");
+
+        }
+
+        var onRelationDefaultValueSelOpen = function (rowOrder, colOrder, gtDataService) {
+
+            var changedCell = gtDataService.getCell(rowOrder, colOrder);
+
+            var contentTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'content_type');
+
+            var loadRelationRes = vm.loadRelation(vm.resolveRelation(contentTypeCell.settings.value), true);
+
+            if (loadRelationRes === 'item_exist') {
+                changedCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(contentTypeCell.settings.value)]
+
+            } else {
+
+                loadRelationRes.then(function (relItem) {
+
+                    changedCell.settings.selectorOptions = relItem
+                    $scope.$apply();
+
+                });
+
+            }
+
+        }
+
 
         var formatDataForInputsTableGrid = function () {
 
@@ -1302,44 +1468,10 @@
             });
 
             vm.inputsGridTableData = {
-                header: [
-                    {
-                        key: 'name',
-                        name: 'Name'
-                    },
-                    {
-                        key: 'verbose_name',
-                        name: 'Verbose name'
-                    },
-                    {
-                        key: 'tooltip',
-                        name: 'Tooltip'
-                    },
-                    {
-                        key: 'value_type',
-                        name: 'Value type'
-                    },
-                    {
-                        key: 'content_type',
-                        name: 'Content type'
-                    },
-                    {
-                        key: 'is_fill_from_context',
-                        name: 'Use Default Value from Context'
-                    },
-                    {
-                        key: 'default_value',
-                        name: 'Default value'
-                    },
-                    {
-                        key: 'input_calc_expr',
-                        name: 'Input expr'
-                    },
-                    {
-                        key: 'linked_inputs_names',
-                        name: 'Linked Inputs'
-                    }
-                ],
+                header: {
+                    order: 'header',
+                    columns: []
+                },
                 body: [],
                 newRow: {
                     order: 'newRow',
@@ -1353,6 +1485,9 @@
                             cellType: 'text',
                             settings: {
                                 value: null
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '165px'}
                             }
                         },
                         {
@@ -1363,6 +1498,9 @@
                             cellType: 'text',
                             settings: {
                                 value: null
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '140px'}
                             }
                         },
                         {
@@ -1373,6 +1511,9 @@
                             cellType: 'text',
                             settings: {
                                 value: null
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '145px'}
                             }
                         },
                         {
@@ -1384,6 +1525,12 @@
                             settings: {
                                 value: null,
                                 selectorOptions: vm.valueTypes
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '85px'}
+                            },
+                            methods: {
+                                onChange: onValueTypeChange
                             }
                         },
                         {
@@ -1396,6 +1543,9 @@
                                 value: null,
                                 selectorOptions: gtContentType,
                                 isDisabled: true
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '110px'}
                             }
                         },
                         {
@@ -1406,6 +1556,12 @@
                             cellType: 'checkbox',
                             settings: {
                                 value: false
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '180px'}
+                            },
+                            methods: {
+                                onChange: onRelationFillFromContextChange
                             }
                         },
                         {
@@ -1416,6 +1572,9 @@
                             cellType: 'expression',
                             settings: {
                                 value: ''
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '230px'}
                             }
                         },
                         {
@@ -1426,6 +1585,9 @@
                             cellType: 'expression',
                             settings: {
                                 value: ''
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '160px'}
                             }
                         },
                         {
@@ -1438,104 +1600,44 @@
                                 value: [],
                                 getDataMethod: vm.getInputForLinking,
                                 selectorOptions: vm.valueTypes
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '140px'}
                             }
                         }
                     ]
+                },
+                tableMethods: {
+                    deleteRows: deleteInputsRows
                 }
             }
             console.log("grid table formatDataForInputsTableGrid", JSON.parse(JSON.stringify(vm.entity.inputs)));
+            var rowObj = metaHelper.recursiveDeepCopy(vm.inputsGridTableData.newRow);
+            // assemble header columns
+            var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
+
+            vm.inputsGridTableData.header.columns = rowObj.columns.map(function (column) {
+
+                return {
+                    key: column.key,
+                    columnName: column.columnName,
+                    order: column.order,
+                    sorting: rowsWithSorting.indexOf(column.key) > -1,
+                    styles: {
+                        'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
+                    }
+                }
+
+            });
+            // < assemble header columns >
+
+            // assemble body rows
             vm.entity.inputs.forEach(function (input, index) {
 
-                /*var rowObj = {
-                    order: index,
-                    isActive: false,
-                    columns: [
-                        {
-                            key: 'name',
-                            columnName: 'Name',
-                            order: 0,
-                            cellType: 'text',
-                            settings: {
-                                value: input.name
-                            }
-                        },
-                        {
-                            key: 'verbose_name',
-                            order: 1,
-                            cellType: 'text',
-                            settings: {
-                                value: input.verbose_name
-                            }
-                        },
-                        {
-                            key: 'tooltip',
-                            order: 2,
-                            cellType: 'text',
-                            settings: {
-                                value: input.tooltip
-                            }
-                        },
-                        {
-                            key: 'value_type',
-                            order: 3,
-                            cellType: 'selector',
-                            settings: {
-                                value: input.value_type,
-                                selectorOptions: vm.valueTypes,
-                                isDisabled: true
-                            }
-                        },
-                        {
-                            key: 'content_type',
-                            order: 4,
-                            cellType: 'selector',
-                            settings: {
-                                value: input.content_type,
-                                selectorOptions: gtContentType,
-                                isDisabled: true
-                            }
-                        },
-                        {
-                            key: 'is_fill_from_context',
-                            order: 5,
-                            cellType: 'checkbox',
-                            settings: {
-                                value: input.is_fill_from_context,
-                            }
-                        },
-                        {
-                            key: 'value',
-                            order: 6,
-                            cellType: 'expression',
-                            settings: {
-                                value: input.value
-                            }
-                        },
-                        {
-                            key: 'value_expr',
-                            order: 7,
-                            cellType: 'expression',
-                            settings: {
-                                value: input.value_expr
-                            }
-                        },
-                        {
-                            key: 'linked_inputs_names',
-                            objPath: ['settings', 'linked_inputs_names'],
-                            order: 8,
-                            cellType: 'multiselector',
-                            settings: {
-                                value: input.settings.linked_inputs_names,
-                                getDataMethod: vm.getInputForLinking,
-                                selectorOptions: vm.valueTypes
-                            }
-                        }
-                    ]
-                }*/
-
-                var rowObj = JSON.parse(JSON.stringify(vm.inputsGridTableData.newRow));
+                rowObj = metaHelper.recursiveDeepCopy(vm.inputsGridTableData.newRow);
 
                 rowObj.order = index;
+                rowObj.key = input.name;
 
                 rowObj.columns[0].settings.value = input.name;
                 rowObj.columns[1].settings.value = input.verbose_name;
@@ -1555,6 +1657,11 @@
                     contentTypeCell.settings.isDisabled = true;
 
                     defaultValueCell.cellType = 'selector';
+
+                    defaultValueCell.methods = {
+                        onOpen: onRelationDefaultValueSelOpen
+                    }
+
                     defaultValueCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(vm.newItem)];
 
                 }
@@ -1587,7 +1694,8 @@
                 vm.inputsGridTableData.body.push(rowObj);
 
             });
-
+            // < assemble body rows >
+            console.log("grid table deepCopy ", vm.inputsGridTableData.body);
         }
 
         vm.toggleQuery = function () {
@@ -1699,7 +1807,7 @@
                 });
 
             });
-
+            console.log("grid table removeInputFromActions called", inputsToDelete);
         };
 
         var removeInputFromEditLayout = function () {
@@ -1761,7 +1869,7 @@
 
         };
 
-        vm.deleteInput = function (item, index, $event) {
+        /*vm.deleteInput = function (item, index, $event) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -1800,7 +1908,7 @@
 
             });
 
-        };
+        };*/
 
         vm.openExpressionDialog = function ($event, item, options) {
 
@@ -2585,7 +2693,7 @@
             return result;
         };
 
-        vm.loadRelation = function (field) {
+        vm.loadRelation = function (field, noScopeUpdate) {
             console.log("loadrelation2");
             console.log('field', field);
 
@@ -2598,7 +2706,9 @@
                     fieldResolverService.getFields(field).then(function (data) {
                         vm.relationItems[field] = data.data;
 
-                        $scope.$apply();
+                        if (noScopeUpdate) {
+                            $scope.$apply();
+                        }
 
                         resolve(vm.relationItems[field]);
                     })
@@ -2966,111 +3076,18 @@
             })
         };
 
-        var onValueTypeChange = function (rowOrder, cellOrder, changedCell) {
-
-            var contentTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'content_type');
-            var defaultValueCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'default_value');
-
-            var valueType = changedCell.settings.value;
-            var fillFromContextCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'is_fill_from_context');
-
-            fillFromContextCell.settings.value = false;
-
-            switch (valueType) {
-
-                case 110:
-
-                    contentTypeCell.key = 'reference_table';
-                    contentTypeCell.settings.isDisabled = false;
-                    contentTypeCell.settings.value = null;
-                    contentTypeCell.settings.selectorOptions = referenceTables;
-
-                    if (defaultValueCell.cellType === 'selector') {
-
-                        defaultValueCell.cellType = 'expression';
-                        defaultValueCell.settings = {value: ''}
-
-                    }
-
-                    break;
-
-                case 100:
-
-                    contentTypeCell.settings.isDisabled = false;
-                    contentTypeCell.settings.value = "accounts.account";
-
-                    defaultValueCell.cellType = 'selector';
-                    defaultValueCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(vm.newItem)];
-
-                    break;
-
-                default:
-
-                    contentTypeCell.settings.isDisabled = true;
-                    defaultValueCell.cellType = 'expression';
-                    defaultValueCell.settings = {value: ''};
-
-                    break;
-
-            }
-
-        }
-
-        var onRelationFillFromContextChange = function (rowOrder, cellOrder, changedCell) {
-
-            var contentTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'content_type');
-            var defaultValueCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'default_value');
-
-            if (changedCell.settings.value) {
-                defaultValueCell.settings.selectorOptions = vm.contextProperties[contentTypeCell.settings.value]
-
-            } else {
-
-                defaultValueCell.settings.selectorOptions = []
-
-            }
-            console.log("grid table checkbox changed");
-
-        }
-
-
-        var onRelationDefaultValueSelOpen = function (rowOrder, cellOrder, cellWithSel) {
-
-            if (changedCell.cellType === 'default_value') {
-
-                    var contentTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'content_type');
-
-                    var loadRelationRes = vm.loadRelation();
-
-                    if (loadRelationRes === 'item_exist') {
-                        changedCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(contentTypeCell.settings.value)]
-                        console.log("grid table onRelationDefaultValueSelOpen2", changedCell);
-
-                    } else {
-
-                        loadRelationRes.then(function (relItem) {
-                            changedCell.settings.selectorOptions = relItem
-                            console.log("grid table onRelationDefaultValueSelOpen2", changedCell);
-                        });
-
-                    }
-
-                }
-
-        }
-
         var initGridTableEvents = function () {
 
             vm.inputsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
 
-                if (argumentsObj) {
+                /*if (argumentsObj) {
 
                     var rowOrder = argumentsObj.rowOrder;
                     var cellOrder = argumentsObj.cellOrder;
                     console.log("grid table initGridTableEvents", argumentsObj);
                     var changedCell = vm.inputsGridTableDataService.getCell(rowOrder, cellOrder);
                     var valueTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'value_type');
-                    /*var changedRow = vm.inputsGridTableDataService.getRow(rowOrder);*/
+                    /!*var changedRow = vm.inputsGridTableDataService.getRow(rowOrder);*!/
 
                     if (changedCell.key === 'value_type') {
                         onValueTypeChange(rowOrder, cellOrder, changedCell);
@@ -3089,7 +3106,8 @@
 
                 if (rowOrder !== 'newRow') {
                     updateInputsBasedOnTableGrid();
-                }
+                }*/
+                updateInputsBasedOnTableGrid();
 
             });
 
@@ -3121,7 +3139,7 @@
             vm.inputsGridTableDataService = new GridTableDataService();
             vm.inputsGridTableEventService = new GridTableEventService();
 
-            // initGridTableEvents();
+            initGridTableEvents();
 
             ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
