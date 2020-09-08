@@ -71,12 +71,28 @@
         })
     };
 
+    var activateTwoFactor = function (id) {
+        return window.fetch(baseUrl + 'users/two-factor/' + id + '/', {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({id: id, is_active: true})
+        }).then(function (data) {
+            return data.json();
+        })
+    };
+
 
     module.exports = {
         getList: getList,
         generateCode: generateCode,
         validateCode: validateCode,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        activateTwoFactor: activateTwoFactor
     }
 
 }());
