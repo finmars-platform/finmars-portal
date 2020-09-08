@@ -1,10 +1,23 @@
-<div class="custom-input-container date-input-container dateInputContainer" data-ng-class="getInputContainerClasses()">
+<div
+  class="custom-input-container date-input-container dateInputContainer"
+  data-ng-class="getInputContainerClasses()"
+>
   <div class="custom-input-top-row">
-    <span class="custom-input-textarea-sapan-pan">{{label}}</span>
+    <span class="custom-input-textarea-sapan-pan">{{label}} </span>
     <div data-ng-if="tooltipText" class="custom-input-tooltip">
-      <ng-md-icon data-ng-if="!error" icon="info_outline" size="28" class="tooltip-sign" style="fill: #777777;">
+      <ng-md-icon
+        data-ng-if="!error"
+        icon="info_outline"
+        size="28"
+        class="tooltip-sign"
+        style="fill: #777777"
+      >
       </ng-md-icon>
-      <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
+      <md-tooltip
+        class="tooltip_2"
+        md-direction="top"
+        data-ng-bind="tooltipText"
+      ></md-tooltip>
     </div>
   </div>
   <!-- <div class="custom-input-top-row">
@@ -19,39 +32,71 @@
     <div class="custom-input-borders">
       <div class="custom-input-content">
         <div data-ng-if="error" class="custom-input-error-tooltip">
-          <ng-md-icon icon="info_outline" size="28" class="tooltip-sign"></ng-md-icon>
+          <ng-md-icon
+            icon="info_outline"
+            size="28"
+            class="tooltip-sign"
+          ></ng-md-icon>
           <md-tooltip class="error-tooltip" md-direction="top">
             {{error}}
           </md-tooltip>
         </div>
 
         <div class="flex-row">
-          <input type="text" data-ng-model="dateValue" placeholder="{{placeholderText}}"
-            class="custom-input date-input pick-me-up dateInputElem" />
+          <input
+            type="text"
+            data-ng-model="dateValue"
+            placeholder="{{placeholderText}}"
+            class="custom-input date-input pick-me-up dateInputElem"
+          />
 
-          <button data-ng-if="!noIndicatorBtn" class="custom-input-indicator-btn position-relative"
-            data-ng-click="focusDateInput()">
-            <ng-md-icon icon="event" size="28" style="fill: #777777;"></ng-md-icon>
+          <button
+            data-ng-if="!noIndicatorBtn"
+            class="custom-input-indicator-btn position-relative"
+            data-ng-click="focusDateInput()"
+          >
+            <ng-md-icon
+              icon="event"
+              size="28"
+              style="fill: #777777"
+            ></ng-md-icon>
             <!-- <i class="fas fa-calendar-alt"></i> -->
           </button>
         </div>
 
-        <div class="custom-input-custom-btns-holder">
-          <div data-ng-if="customButtons && customButtons.length" class="height-100 ">
-            <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
-              data-ng-click="callFnForCustomBtn(button.action)">
+        <div class="custom-input-custom-btns-holder" data-ng-click="test()">
+          <div
+            data-ng-if="customButtons && customButtons.length"
+            class="height-100"
+          >
+            <button
+              data-ng-repeat="button in customButtons"
+              class="{{button.classes}} custom-input-custom-btn"
+              data-ng-click="callFnForCustomBtn(button.action)"
+            >
               {{button.caption}}
-              <ng-md-icon data-ng-if="button.iconObj.type === 'angular-material'" size="28"
-                icon="{{button.iconObj.icon}}"></ng-md-icon>
-              <ng-md-icon data-ng-if="button.iconObj.type === 'fontawesome'" icon="{{button.iconObj.icon}}" size="28"
-                style="fill: #777777;"></ng-md-icon>
+              <ng-md-icon
+                data-ng-if="button.iconObj.type === 'angular-material'"
+                size="28"
+                icon="{{button.iconObj.icon}}"
+              ></ng-md-icon>
+              <ng-md-icon
+                data-ng-if="button.iconObj.type === 'fontawesome'"
+                icon="{{button.iconObj.icon}}"
+                size="28"
+                style="fill: #777777"
+              ></ng-md-icon>
 
               <!-- <i
                 data-ng-if="button.iconObj.type === 'fontawesome'"
                 class="{{button.iconObj.icon}}"
               ></i> -->
 
-              <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
+              <md-tooltip
+                data-ng-if="button.tooltip"
+                class="tooltip_1"
+                md-direction="top"
+                >{{button.tooltip}}
               </md-tooltip>
             </button>
           </div>

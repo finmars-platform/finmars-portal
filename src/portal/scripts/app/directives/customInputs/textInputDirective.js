@@ -30,15 +30,15 @@
         // myLabel.style.maxWidth = inputContainer.clientWidth - padding + "px";
         // var inpLabel = document.querySelectorAll(".custom-input-label");
         // //
-
-        scope.getLabelBg = function () {
-          const { "custom-input-main-container": labelBg } = scope.customStyles
-          return labelBg.slice(0, -1) + " !important;"
-        }
-        scope.getLabelColor = function () {
-          const { "custom-input-main-container": labelBg } = scope.customStyles
-          return ` !important; color: ${labelBg} ; -webkit-filter: invert(100%); filter: invert(100%); position:relative; z-index:1000;`
-        }
+        // Инверсия цвета
+        // scope.getLabelBg = function () {
+        //   const { "custom-input-main-container": labelBg } = scope.customStyles;
+        //   return labelBg.slice(0, -1) + " !important;";
+        // };
+        // scope.getLabelColor = function () {
+        //   const { "custom-input-main-container": labelBg } = scope.customStyles;
+        //   return ` !important; color: ${labelBg} ; -webkit-filter: invert(100%); filter: invert(100%); position:relative; z-index:1000;`;
+        // };
 
         //
         scope.isReadonly = false;
