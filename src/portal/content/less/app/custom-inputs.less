@@ -1,4 +1,4 @@
-@import "variables";
+@import "./variables.less";
 
 .date-input-specific-btns {
   display: block;
@@ -591,4 +591,28 @@
   top: 1px;
   right: 8px;
   // color: red;
+}
+
+.md-select-pan {
+  md-select {
+    height: 40px;
+    border: 1px solid @grey;
+    border-radius: 5px;
+    margin: 2.5px;
+    &:active {
+      md-select-value {
+        border-bottom: 2px solid transparent !important;
+      }
+    }
+    md-select-value {
+      border-bottom: 2px solid transparent !important;
+      span {
+        &:first-of-type {
+          color: @grey !important;
+          background-color: white;
+          max-width: 70%;
+        }
+      }
+    }
+  }
 }
