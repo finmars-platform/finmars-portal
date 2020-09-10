@@ -81,7 +81,8 @@
   // transform: translate(15px,-12px);
   z-index: 11;
 
-  .custom-input-container {}
+  .custom-input-container {
+  }
 
   .tooltip-sign {
     ng-md-icon {
@@ -149,7 +150,7 @@
 }
 
 .bgInstrument {
-  background-color: @labelInstrumentPan  !important;
+  background-color: @labelInstrumentPan !important;
 }
 
 .custom-input {
@@ -172,7 +173,7 @@
   text-overflow: ellipsis;
 }
 
-.custom-input:focus+.custom-input-indicator-btn {
+.custom-input:focus + .custom-input-indicator-btn {
   outline: none;
 }
 
@@ -312,7 +313,6 @@
 }
 
 .custom-input-container.custom-input-set-from-outside {
-
   .custom-input-borders,
   .custom-input-full-text-container {
     border-color: rgba(26, 26, 236, 0.6);
@@ -345,7 +345,8 @@
 }
 
 .custom-input-container.custom-input-preset1 {
-  .custom-input-label {}
+  .custom-input-label {
+  }
 
   .custom-input-borders .custom-input-content .flex-row input {
     color: #f05a22;
@@ -356,7 +357,8 @@
     color: @orange;
   }
 
-  .custom-input-indicator-btn {}
+  .custom-input-indicator-btn {
+  }
 }
 
 .custom-input-container.custom-input-preset2 {
@@ -416,7 +418,8 @@
             color: black;
           }
 
-          button {}
+          button {
+          }
         }
       }
     }
@@ -432,7 +435,6 @@
 }
 
 .custom-input-container.custom-input-error {
-
   .custom-input-label,
   .custom-input-textarea-sapan-pan {
     color: @orange;
@@ -517,7 +519,8 @@
   margin-bottom: 13px;
 }
 
-.custom-input-main-container {}
+.custom-input-main-container {
+}
 
 .custom-input-borders {
   min-height: 40px;
@@ -548,7 +551,8 @@
   color: white;
 }
 
-.md-panel-is-showing {}
+.md-panel-is-showing {
+}
 
 .md-panel.md-tooltip.error-tooltip {
   background-color: @orange;
@@ -561,7 +565,8 @@
   align-items: center;
   font-size: 12px;
 
-  button {}
+  button {
+  }
 
   .custom-input-custom-btn {
     color: @grey;
@@ -580,4 +585,10 @@
   display: flex;
   align-items: center;
   margin-top: 1px;
+}
+.custom-input-container.custom-input-error .custom-input-error-tooltip {
+  position: absolute;
+  top: 1px;
+  right: 8px;
+  // color: red;
 }
