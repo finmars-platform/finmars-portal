@@ -2140,6 +2140,8 @@ md-menu-content.dropdown-buttons-menu {
 }
 
 .two-fields-multiselect-input-style {
+  height: 40px;
+  border: 2px solid red;
   // .inputStyle();
   // border-radius: 5px !important;
   // height: 40px !important;
@@ -2190,6 +2192,7 @@ md-menu-content.dropdown-buttons-menu {
     }
 
     input {
+      // height: 40px !important;
       text-overflow: ellipsis;
       cursor: pointer;
     }
@@ -2197,7 +2200,7 @@ md-menu-content.dropdown-buttons-menu {
     span {
       border-radius: 35px;
       background-color: @grey;
-      padding: 10px 20px;
+      padding: 5px 10px;
       color: black;
     }
   }
@@ -2801,7 +2804,7 @@ md-dialog.two-rows-dialog-actions {
 md-checkbox.md-indeterminate .md-icon:after {
   .checkboxUntouched(#ff4081, 12px, -46%, -55%);
 }
-
+// Тут
 .rel-container {
   position: relative;
   outline: none;
@@ -2832,7 +2835,7 @@ md-checkbox.md-indeterminate .md-icon:after {
     position: absolute;
     top: 50%;
     left: 0;
-    transform: translate(18px, 0%);
+    transform: translate(18px, -14%);
     width: 90%;
     display: flex;
     justify-content: space-between;
@@ -2854,7 +2857,7 @@ md-checkbox.md-indeterminate .md-icon:after {
 
   .two-fields-multiselect-input-count {
     outline: none;
-    height: 33px;
+    height: 25px;
     border-radius: 30px;
     padding: 0 10px;
     display: flex;
@@ -2891,6 +2894,6 @@ md-checkbox.md-indeterminate .md-icon:after {
   position: absolute;
   top: 50%;
   right: 0;
-  transform: translate(0%, 50%);
+  transform: translate(0%, 30%);
   cursor: pointer;
 }
