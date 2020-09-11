@@ -139,7 +139,7 @@
                     });
                     break;
                 case 'instrument':
-                    instrumentRepository.getList({pageSize: 1000}).then(function (data) {
+                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'instrument', data: data.results});
                     });
                     break;
@@ -154,7 +154,7 @@
                     });
                     break;
                 case 'instrument_type':
-                    instrumentTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    instrumentTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'instrument_type', data: data.results});
                     });
                     break;
@@ -164,47 +164,47 @@
                     });
                     break;
                 case 'accrued_currency':
-                    currencyRepository.getList({pageSize: 1000}).then(function (data) {
+                    currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'accrued_currency', data: data.results});
                     });
                     break;
                 case 'pricing_currency':
-                    currencyRepository.getList({pageSize: 1000}).then(function (data) {
+                    currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'pricing_currency', data: data.results});
                     });
                     break;
                 case 'transaction_currency':
-                    currencyRepository.getList({pageSize: 1000}).then(function (data) {
+                    currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'transaction_currency', data: data.results});
                     });
                     break;
                 case 'settlement_currency':
-                    currencyRepository.getList({pageSize: 1000}).then(function (data) {
+                    currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'settlement_currency', data: data.results});
                     });
                     break;
                 case 'currency':
-                    currencyRepository.getList({pageSize: 1000}).then(function (data) {
+                    currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'currency', data: data.results});
                     });
                     break;
                 case 'portfolio':
-                    portfolioRepository.getList({pageSize: 1000}).then(function (data) {
+                    portfolioRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'portfolio', data: data.results});
                     });
                     break;
                 case 'account':
-                    accountRepository.getList({pageSize: 10000}).then(function (data) {
+                    accountRepository.getListLight({pageSize: 10000}).then(function (data) {
                         resolve({type: 'id', key: 'account', data: data.results});
                     });
                     break;
                 case 'counterparty':
-                    counterpartyRepository.getList({pageSize: 1000}).then(function (data) {
+                    counterpartyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'counterparty', data: data.results});
                     });
                     break;
                 case 'responsible':
-                    responsibleRepository.getList({pageSize: 1000}).then(function (data) {
+                    responsibleRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'responsible', data: data.results});
                     });
                     break;
@@ -219,82 +219,82 @@
                     });
                     break;
                 case 'transaction_type':
-                    transactionTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'transaction_type', data: data.results});
                     });
                     break;
                 case 'account_cash':
-                    accountRepository.getList({pageSize: 1000}).then(function (data) {
+                    accountRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'account_cash', data: data.results});
                     });
                     break;
                 case 'account_position':
-                    accountRepository.getList({pageSize: 1000}).then(function (data) {
+                    accountRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'account_position', data: data.results});
                     });
                     break;
                 case 'account_interim':
-                    accountRepository.getList({pageSize: 1000}).then(function (data) {
+                    accountRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'account_interim', data: data.results});
                     });
                     break;
                 case 'strategy1':
-                    strategyRepository.getList(1).then(function (data) {
+                    strategyRepository.getListLight(1).then(function (data) {
                         resolve({type: 'id', key: 'strategy1', data: data.results});
                     });
                     break;
                 case 'strategy_1': // TODO do something with inconsistency of entity name
-                    strategyRepository.getList(1).then(function (data) {
+                    strategyRepository.getListLight(1).then(function (data) {
                         resolve({type: 'id', key: 'strategy_1', data: data.results});
                     });
                     break;
                 case 'strategy1_position':
-                    strategyRepository.getList(1).then(function (data) {
+                    strategyRepository.getListLight(1).then(function (data) {
                         resolve({type: 'id', key: 'strategy1_position', data: data.results});
                     });
                     break;
                 case 'strategy1_cash':
-                    strategyRepository.getList(1).then(function (data) {
+                    strategyRepository.getListLight(1).then(function (data) {
                         resolve({type: 'id', key: 'strategy1_cash', data: data.results});
                     });
                     break;
                 case 'strategy2':
-                    strategyRepository.getList(2).then(function (data) {
+                    strategyRepository.getListLight(2).then(function (data) {
                         resolve({type: 'id', key: 'strategy2', data: data.results});
                     });
                     break;
                 case 'strategy_2': // TODO do something with inconsistency of entity name
-                    strategyRepository.getList(2).then(function (data) {
+                    strategyRepository.getListLight(2).then(function (data) {
                         resolve({type: 'id', key: 'strategy_2', data: data.results});
                     });
                     break;
                 case 'strategy2_position':
-                    strategyRepository.getList(2).then(function (data) {
+                    strategyRepository.getListLight(2).then(function (data) {
                         resolve({type: 'id', key: 'strategy2_position', data: data.results});
                     });
                     break;
                 case 'strategy2_cash':
-                    strategyRepository.getList(2).then(function (data) {
+                    strategyRepository.getListLight(2).then(function (data) {
                         resolve({type: 'id', key: 'strategy2_cash', data: data.results});
                     });
                     break;
                 case 'strategy3':
-                    strategyRepository.getList(3).then(function (data) {
+                    strategyRepository.getListLight(3).then(function (data) {
                         resolve({type: 'id', key: 'strategy3', data: data.results});
                     });
                     break;
                 case 'strategy_3': // TODO do something with inconsistency of entity name
-                    strategyRepository.getList(3).then(function (data) {
+                    strategyRepository.getListLight(3).then(function (data) {
                         resolve({type: 'id', key: 'strategy_3', data: data.results});
                     });
                     break;
                 case 'strategy3_position':
-                    strategyRepository.getList(3).then(function (data) {
+                    strategyRepository.getListLight(3).then(function (data) {
                         resolve({type: 'id', key: 'strategy3_position', data: data.results});
                     });
                     break;
                 case 'strategy3_cash':
-                    strategyRepository.getList(3).then(function (data) {
+                    strategyRepository.getListLight(3).then(function (data) {
                         resolve({type: 'id', key: 'strategy3_cash', data: data.results});
                     });
                     break;
@@ -333,7 +333,7 @@
 
 
                 case 'portfolios':
-                    portfolioRepository.getList({pageSize: 1000}).then(function (data) {
+                    portfolioRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'portfolios', data: data.results});
                     });
                     break;
@@ -343,47 +343,47 @@
                     });
                     break;
                 case 'transaction_types':
-                    transactionTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
                     break;
                 case 'one_off_event':
-                    transactionTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
                     break;
                 case 'regular_event':
-                    transactionTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
                     break;
                 case 'factor_same':
-                    transactionTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
                     break;
                 case 'factor_down':
-                    transactionTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
                     break;
                 case 'factor_up':
-                    transactionTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
                     break;
                 case 'instrument_types':
-                    instrumentTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    instrumentTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'instrument_types', data: data.results});
                     });
                     break;
                 case 'counterparties':
-                    counterpartyRepository.getList({pageSize: 1000}).then(function (data) {
+                    counterpartyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'counterparties', data: data.results});
                     });
                     break;
                 case 'accounts':
-                    accountRepository.getList({pageSize: 10000}).then(function (data) {
+                    accountRepository.getListLight({pageSize: 10000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'accounts', data: data.results});
                     });
                     break;
@@ -395,7 +395,7 @@
                     });
                     break;
                 case 'responsibles':
-                    responsibleRepository.getList({pageSize: 1000}).then(function (data) {
+                    responsibleRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'responsibles', data: data.results});
                     });
                     break;

@@ -2333,19 +2333,6 @@
                     resolve(vm.relationItems[field]);
                 })
 
-                // if (!vm.relationItems[field]) {
-                //
-                //     fieldResolverService.getFields(field).then(function (data) {
-                //         vm.relationItems[field] = data.data;
-                //
-                //         $scope.$apply();
-                //
-                //         resolve(vm.relationItems[field]);
-                //     })
-                // } else {
-                //     resolve(vm.relationItems[field]);
-                // }
-
             })
         };
 
