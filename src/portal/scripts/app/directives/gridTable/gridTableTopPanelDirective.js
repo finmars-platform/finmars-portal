@@ -16,14 +16,14 @@
             link: function (scope, elem, attr) {
 
                 scope.gridTableData = scope.gtDataService.getTableData();
-                scope.newRow = scope.gridTableData.newRow;
+                scope.newRow = scope.gridTableData.templateRow;
                 scope.mode = false;
 
                 var tableMethods = scope.gridTableData.tableMethods;
 
                 scope.addRow = function () {
 
-                    scope.newRow.order = scope.gridTableData.columns.length;
+                    scope.templateRow.order = scope.gridTableData.columns.length;
 
                 };
 

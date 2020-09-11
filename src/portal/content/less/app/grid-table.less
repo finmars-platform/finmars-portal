@@ -32,43 +32,15 @@
 
 .grid-table-cell {
   position: relative;
-  box-sizing: border-box;
+  height: 100%;
   padding: 0 14px;
+  box-sizing: border-box;
 
-  /*  &.grid-table-first-col-cell {
+  .gt-cell-content {
+    height: 100%;
     display: flex;
-    flex-direction: row;
-  }*/
-
-  .gt-cell-text-container {
-    display: flex;
-    flex-direction: row;
-    padding: 12px 0;
-
-    .gt-cell-text {
-      flex: 0 1 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      span {
-        font-size: 14px;
-        vertical-align: middle;
-      }
-    }
-
-    .gt-cell-edit-btn {
-      display: block;
-      flex: 0 0 24px;
-      min-width: 24px;
-      width: 24px;
-      min-height: 24px;
-      height: 24px;
-      padding: 0;
-      margin: 0;
-      fill: #747474;
-      opacity: 1;
-    }
+    flex-direction: column;
+    justify-content: center;
   }
 
   .gt-header-cell-content {
@@ -99,7 +71,60 @@
     }
   }
 
+  .gt-cell-text-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
 
+    .gt-cell-text {
+      position: relative;
+      flex: 0 1 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      span {
+        // position: absolute;
+        font-size: 14px;
+        /*overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        bottom: 0;
+        left: 0;*/
+      }
+    }
+
+    .gt-cell-edit-btn {
+      flex: 0 0 24px;
+      min-width: 24px;
+      width: 24px;
+      min-height: 24px;
+      height: 24px;
+      padding: 0;
+      margin: 0;
+      fill: #747474;
+      opacity: 0;
+    }
+  }
+
+  .gt-cell-selector-container {
+    padding-top: 5px;
+
+    md-input-container {
+      width: 100%;
+
+      md-select {
+        font-size: 14px;
+        margin: 0;
+      }
+    }
+  }
+
+}
+
+.grid-table-cell:hover .gt-cell-edit-btn {
+    opacity: 1;
 }
 
 .popup-area-backdrop {

@@ -1,14 +1,21 @@
 <div class="grid-table-cell" ng-class="{'gt-sorting-cell': row.order === 'header', 'gt-sorting-on': sortingOn}">
 
-    <div ng-if="row.order === 'header'" class="gt-header-cell-content">
+    <div ng-if="row.order === 'header'"
+         class="gt-header-cell-content gt-cell-content">
         <grid-table-header-cell column="column"
                                 gt-data-service="gtDataService"
                                 gt-event-service="gtEventService"
                                 on-load-end="onChildrenLoadEnd()"></grid-table-header-cell>
     </div>
 
-    <div data-ng-if="cellWithPopup()">
-        <div class="gt-cell-text-container">
+    <div data-ng-if="cellWithPopup()" class="gt-cell-content">
+
+        <grid-table-popup-cell row="row"
+                               column="column"
+                               gt-data-service="gtDataService"
+                               gt-event-service="gtEventService"
+                               on-load-end="onLoadEnd()"></grid-table-popup-cell>
+        <!--<div class="gt-cell-text-container">
             <div class="gt-cell-text">
                 <span data-ng-bind="cellValue"></span>
             </div>
@@ -16,26 +23,31 @@
                        class="gt-cell-edit-btn">
                 <ng-md-icon icon="edit" size="24"></ng-md-icon>
             </md-button>
-        </div>
+        </div>-->
     </div>
 
-    <div data-ng-if="cell.cellType === 'selector'">
-        <md-select data-ng-model="cell.settings.value"
-                   data-ng-change="onCellValueChange()"
-                   data-md-on-open="onSelOpen()"
-                   data-ng-disabled="cell.settings.isDisabled">
-            <md-option data-ng-repeat="options in cell.settings.selectorOptions"
-                       data-ng-value="options.id"
-                       data-ng-bind="options.name"></md-option>
-        </md-select>
+    <div ng-if="column.cellType === 'selector'"
+         class="gt-cell-selector-container">
+
+        <md-input-container class="m-0">
+            <md-select data-ng-model="column.settings.value"
+                       data-ng-change="onCellValueChange()"
+                       data-md-on-open="onSelOpen()"
+                       data-ng-disabled="column.settings.isDisabled">
+                <md-option data-ng-repeat="options in column.settings.selectorOptions"
+                           data-ng-value="options.id"
+                           data-ng-bind="options.name"></md-option>
+            </md-select>
+        </md-input-container>
+
     </div>
 
-    <div data-ng-if="cell.cellType === 'checkbox'">
-        <md-checkbox data-ng-model="cell.settings.value"
+    <div data-ng-if="column.cellType === 'checkbox'">
+        <md-checkbox data-ng-model="column.settings.value"
                      data-ng-change="onCellValueChange()"></md-checkbox>
     </div>
 
-    <div data-ng-if="cell.cellType === 'multiselector'">
+    <div data-ng-if="column.cellType === 'multiselector'">
         <!-- PUT MULTISELECTOR HERE -->
 
     </div>

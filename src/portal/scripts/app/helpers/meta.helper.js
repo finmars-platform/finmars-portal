@@ -1,6 +1,6 @@
 (function () {
 
-    function recursiveDeepCopy(o) {
+    function recursiveDeepCopy(o, saveFunctions) {
         var newO,
             i;
 
@@ -18,7 +18,7 @@
             }
             return newO;
 
-        } else if ({}.toString.call(o) === '[object Function') {
+        } else if (saveFunctions && {}.toString.call(o) === '[object Function') {
             return o;
         }
 

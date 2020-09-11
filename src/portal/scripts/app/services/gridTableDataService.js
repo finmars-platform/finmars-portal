@@ -24,7 +24,7 @@
         function getRow (rowOrder) {
 
             if (rowOrder === 'newRow') {
-                return data.tableData.newRow;
+                return data.tableData.templateRow;
 
             } else {
                 return data.tableData.body[rowOrder];
@@ -63,7 +63,7 @@
         function getCell (rowOrder, cellOrder) {
 
             if (rowOrder === 'newRow') {
-                return data.tableData.newRow.columns[cellOrder];
+                return data.tableData.templateRow.columns[cellOrder];
 
             } else {
                 return data.tableData.body[rowOrder].columns[cellOrder];

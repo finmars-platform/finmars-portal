@@ -45,7 +45,7 @@
         vm.entityId = entityId;
 
         vm.entity = {};
-        //var originalEntity = {};
+        // var originalEntity = {};
         vm.complexTransactionOptions = {};
 
         var originalEntityInputs = null;
@@ -1379,7 +1379,7 @@
 
                 case 110:
 
-                    contentTypeCell.key = 'reference_table';
+                    contentTypeCell.objPath = ['reference_table']
                     contentTypeCell.settings.isDisabled = false;
                     contentTypeCell.settings.value = null;
                     contentTypeCell.settings.selectorOptions = referenceTables;
@@ -1463,9 +1463,9 @@
 
         var formatDataForInputsTableGrid = function () {
 
-            var gtContentType = vm.contentTypes.map(function (cType) {
+            /*var gtContentType = vm.contentTypes.map(function (cType) {
                 return {id: cType.key, name: cType.name};
-            });
+            });*/
 
             vm.inputsGridTableData = {
                 header: {
@@ -1473,7 +1473,7 @@
                     columns: []
                 },
                 body: [],
-                newRow: {
+                templateRow: {
                     order: 'newRow',
                     isActive: false,
                     columns: [
@@ -1527,7 +1527,7 @@
                                 selectorOptions: vm.valueTypes
                             },
                             styles: {
-                                'grid-table-cell': {'width': '85px'}
+                                'grid-table-cell': {'width': '90px'}
                             },
                             methods: {
                                 onChange: onValueTypeChange
@@ -1535,20 +1535,17 @@
                         },
                         {
                             key: 'content_type',
-                            objPath: ['content_type'],
                             columnName: 'Content type',
                             order: 4,
-                            cellType: 'selector',
+                            cellType: 'empty',
                             settings: {
-                                value: null,
-                                selectorOptions: gtContentType,
-                                isDisabled: true
+                                value: null
                             },
                             styles: {
                                 'grid-table-cell': {'width': '110px'}
                             }
                         },
-                        {
+                        /*{
                             key: 'is_fill_from_context',
                             objPath: ['is_fill_from_context'],
                             columnName: 'Use Default Value from Context',
@@ -1562,6 +1559,18 @@
                             },
                             methods: {
                                 onChange: onRelationFillFromContextChange
+                            }
+                        },*/
+                        {
+                            key: 'is_fill_from_context',
+                            columnName: 'Use Default Value from Context',
+                            order: 5,
+                            cellType: 'empty',
+                            settings: {
+                                value: null
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '180px'}
                             }
                         },
                         {
@@ -1612,7 +1621,8 @@
                 }
             }
             console.log("grid table formatDataForInputsTableGrid", JSON.parse(JSON.stringify(vm.entity.inputs)));
-            var rowObj = metaHelper.recursiveDeepCopy(vm.inputsGridTableData.newRow);
+            var rowObj = metaHelper.recursiveDeepCopy(vm.inputsGridTableData.templateRow, true);
+
             // assemble header columns
             var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
 
@@ -1634,17 +1644,23 @@
             // assemble body rows
             vm.entity.inputs.forEach(function (input, index) {
 
-                rowObj = metaHelper.recursiveDeepCopy(vm.inputsGridTableData.newRow);
+                rowObj = metaHelper.recursiveDeepCopy(vm.inputsGridTableData.templateRow, true);
 
                 rowObj.order = index;
                 rowObj.key = input.name;
 
                 rowObj.columns[0].settings.value = input.name;
+                rowObj.columns[0].settings.isDisabled = true;
                 rowObj.columns[1].settings.value = input.verbose_name;
                 rowObj.columns[2].settings.value = input.tooltip;
 
                 rowObj.columns[3].settings.value = input.value_type;
                 rowObj.columns[3].settings.isDisabled = true;
+
+                rowObj.columns[4].settings.value = input.content_type;
+                rowObj.columns[4].settings.isDisabled = true;
+                // rowObj.columns[5].settings.value = input.is_fill_from_context;
+                rowObj.columns[6].settings.value = input.value;
 
                 // Change cells if Value Type relation or selector
                 var valueTypeCell = rowObj.columns[3].settings.value;
@@ -1654,37 +1670,40 @@
 
                 if (valueTypeCell === 100) { // for relation
 
-                    contentTypeCell.settings.isDisabled = true;
+                    contentTypeCell.objPath = ['content_type']
+                    contentTypeCell.cellType = 'selector'
+                    contentTypeCell.settings.isDisabled = true
 
-                    defaultValueCell.cellType = 'selector';
+                    var fillFromContextCell = rowObj.columns[5];
+                    fillFromContextCell.cellType = 'selector'
+                    fillFromContextCell.settings.value = input.context_property
+                    fillFromContextCell.settings.selectorOptions = vm.contextProperties[contentTypeCell.settings.value]
+
+                    defaultValueCell.cellType = 'selector'
+                    defaultValueCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(vm.newItem)]
 
                     defaultValueCell.methods = {
                         onOpen: onRelationDefaultValueSelOpen
                     }
 
-                    defaultValueCell.settings.selectorOptions = vm.relationItems[vm.resolveRelation(vm.newItem)];
-
                 }
 
                 else if (valueTypeCell === 110) { // for selector
 
-                    contentTypeCell.key = 'reference_table';
+                    contentTypeCell.objPath = ['reference_table'];
+                    contentTypeCell.cellType = 'selector'
                     contentTypeCell.settings.isDisabled = true;
                     contentTypeCell.settings.selectorOptions = referenceTables;
 
                     if (defaultValueCell.cellType === 'selector') {
 
                         defaultValueCell.cellType = 'expression';
-                        defaultValueCell.settings = {value: ''}
+                        defaultValueCell.settings = {value: input.value}
 
                     }
 
                 }
                 // < Change cells if Value Type relation or selector >
-
-                rowObj.columns[4].settings.value = input.content_type;
-                rowObj.columns[5].settings.value = input.is_fill_from_context;
-                rowObj.columns[6].settings.value = input.value;
 
                 rowObj.columns[7].settings.value = input.value_expr;
 
