@@ -531,7 +531,7 @@
                         if (action === 'edit_fx_rate') {
 
                             var filters = {
-                                instrument: activeObject['instrument.id'],
+                                currency: activeObject['currency.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
@@ -546,7 +546,8 @@
                                     var locals = {
                                         entityType: 'currency-history',
                                         entityId: item.id,
-                                        contextData: contextData
+                                        contextData: contextData,
+                                        data: {}
                                     };
 
                                     editEntity(activeObject, locals);
@@ -559,7 +560,10 @@
                                         entity: {
                                             currency: activeObject['currency.id'],
                                             currency_object: {
-                                                id: activeObject['currency.id']
+                                                id: activeObject['currency.id'],
+                                                name: activeObject['currency.name'],
+                                                short_name: activeObject['currency.short_name'],
+                                                user_code: activeObject['currency.user_code']
                                             },
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,

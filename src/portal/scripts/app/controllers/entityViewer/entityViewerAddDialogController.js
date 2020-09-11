@@ -126,7 +126,7 @@
 
         vm.getCurrencies = function () {
 
-            entityResolverService.getList('currency').then(function (data) {
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data) {
 
                 vm.currencies = data.results;
 
