@@ -625,7 +625,7 @@ app.directive('gridTable', [require('./app/directives/gridTable/gridTableDirecti
 app.directive('gridTableTopPanel', [require('./app/directives/gridTable/gridTableTopPanelDirective')]);
 app.directive('gridTableCell', ['$compile', require('./app/directives/gridTable/gridTableCellDirective')]);
 app.directive('gridTableHeaderCell', [require('./app/directives/gridTable/cells/gridTableHeaderCellDirective')]);
-app.directive('gridTableTextCell', [require('./app/directives/gridTable/gridTableTextCellDirective')]);
+app.directive('gridTablePopupCell', ['$compile', require('./app/directives/gridTable/cells/gridTablePopupCellDirective')]);
 // Grid Table End
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);

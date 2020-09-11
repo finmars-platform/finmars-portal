@@ -1,0 +1,58 @@
+<md-input-container style="margin-bottom: 21px;" aria-label="select with filter">
+
+    <label for="">Periodicity</label>
+
+    <md-select ng-model="column.settings.value.accrual_calculation_model"
+               md-container-class="common-select-container"
+               md-on-close="searchTerm = ''">
+
+        <md-select-header>
+            <input data-ng-model="searchTerm"
+                   type="search"
+                   placeholder="Search for a ..."
+                   class="md-text md-select-search-pattern select-input-filter"
+                   ng-keydown="$event.stopPropagation()">
+        </md-select-header>
+
+        <div class="select-options-holder">
+
+            <md-option
+                    data-ng-repeat="model in column.settings.popupSettings.fieldsData[0].selectorOptions | filter: {name: searchTerm}"
+                    ng-value="model.id"
+                    ng-bind="model.name">
+            </md-option>
+
+        </div>
+
+    </md-select>
+</md-input-container>
+
+<number-input label=""
+              model="column.settings.value.periodicity_n"></number-input>
+
+<md-input-container stiyle="margin-bottom: 24px;" aria-label="select with filter">
+    <label for="">Calculation model</label>
+    <md-select ng-model="column.settings.value.periodicity"
+               md-container-class="common-select-container"
+               md-on-close="searchTerm = ''">
+
+        <md-select-header>
+            <input data-ng-model="accrualSearchTerm"
+                   type="search"
+                   placeholder="Search for a ..."
+                   class="md-text md-select-search-pattern select-input-filter"
+                   ng-keydown="$event.stopPropagation()">
+        </md-select-header>
+
+        <div class="select-options-holder">
+
+            <md-option
+                    data-ng-repeat="model in column.settings.popupSettings.fieldsData[1].selectorOptions | filter: {name: accrualSearchTerm}"
+                    ng-value="model.id"
+                    ng-bind="model.name">
+            </md-option>
+
+        </div>
+
+    </md-select>
+</md-input-container>
