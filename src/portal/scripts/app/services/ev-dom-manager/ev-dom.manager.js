@@ -523,45 +523,52 @@
 
             console.log('detail', event.detail);
 
-            if (event.detail === 1) {
+            var selection = window.getSelection().toString();
 
-                if (clickData.___type === 'group') {
+            console.log('selection', selection);
 
-                    handleGroupClick(clickData, evDataService, evEventService);
+            if (!selection.length) {
+
+                if (event.detail === 1) {
+
+                    if (clickData.___type === 'group') {
+
+                        handleGroupClick(clickData, evDataService, evEventService);
+
+                    }
+
+                    if (clickData.___type === 'control') {
+                        handleControlClick(clickData, evDataService, evEventService);
+                    }
+
+                    if (clickData.___type === 'object') {
+
+                        handleObjectClick(clickData, evDataService, evEventService);
+
+                    }
+                }
+
+                if (event.detail === 2) {
+
+                    if (clickData.___type === 'object') {
+
+                        var objectId = clickData.___id;
+                        var parentGroupHashId = clickData.___parentId;
+
+                        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                        var dropdownAction = 'edit';
+
+                        evDataService.setActiveObject(obj);
+                        evDataService.setActiveObjectAction(dropdownAction);
+
+                        evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                    }
 
                 }
 
-                if (clickData.___type === 'control') {
-                    handleControlClick(clickData, evDataService, evEventService);
-                }
-
-                if (clickData.___type === 'object') {
-
-                    handleObjectClick(clickData, evDataService, evEventService);
-
-                }
             }
-
-            if (event.detail === 2) {
-
-                if (clickData.___type === 'object') {
-
-                    var objectId = clickData.___id;
-                    var parentGroupHashId = clickData.___parentId;
-
-                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                    var dropdownAction = 'edit';
-
-                    evDataService.setActiveObject(obj);
-                    evDataService.setActiveObjectAction(dropdownAction);
-
-                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-                }
-
-            }
-
         });
 
 
