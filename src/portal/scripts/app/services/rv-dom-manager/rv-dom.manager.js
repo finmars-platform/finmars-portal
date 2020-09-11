@@ -539,14 +539,23 @@
 
             } else {
 
-                switch (clickData.___type) {
-                    case 'object':
-                        handleObjectClick(clickData, evDataService, evEventService);
-                        break;
+                var selection = window.getSelection().toString();
 
-                    case 'subtotal':
-                        handleSubtotalClick(clickData, evDataService, evEventService);
-                        break;
+                console.log('selection', selection);
+
+                if (!selection.length) {
+
+                    switch (clickData.___type) {
+
+                        case 'object':
+                            handleObjectClick(clickData, evDataService, evEventService);
+                            break;
+
+                        case 'subtotal':
+                            handleSubtotalClick(clickData, evDataService, evEventService);
+                            break;
+                    }
+
                 }
 
             }
@@ -909,7 +918,7 @@
             if (item.action === 'open_layout') {
 
                 result = result +
-                    '<div class="ev-dropdown-option' + (item.items ? ' ev-dropdown-menu-holder' : '') + '">'+
+                    '<div class="ev-dropdown-option' + (item.items ? ' ev-dropdown-menu-holder' : '') + '">' +
                     '<a href="' + getContextMenuActionLink(evDataService, item, obj) + '"' +
                     ' target="_blank"' +
                     ' data-ev-dropdown-action="' + item.action + '"' +
@@ -986,7 +995,7 @@
 
     var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
 
-        function sendContextMenuActionToActiveObj (event) {
+        function sendContextMenuActionToActiveObj(event) {
 
             var objectId = event.target.dataset.objectId;
             var parentGroupHashId = event.target.dataset.parentGroupHashId;
@@ -1103,7 +1112,6 @@
 
         var contextMenu = {};
         var ttypes = null;
-
 
 
         /*transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
