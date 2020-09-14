@@ -1,0 +1,73 @@
+<md-dialog aria-label="dashboard constructor control component"
+           class="draggable-dialog width-50"
+           drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Edit identification config for {{vm.provider.name}}</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="p-24">
+
+            <div class="p-r-24 p-t-24" style="width: 300px;">
+
+                <md-input-container class="width-100">
+                    <label for="">Config Name</label>
+                    <input type="text" data-ng-model="vm.name">
+                </md-input-container>
+
+            </div>
+
+            <div class="p-r-24" style="width: 300px;">
+
+                <md-input-container class="width-100">
+                    <label>User Code</label>
+                    <input data-ng-model="vm.user_code"
+                           data-ng-keydown="vm.userCodeIsTouched = true"
+                           data-ng-keyup="vm.validateUserCode()">
+                </md-input-container>
+
+            </div>
+            <div class="color-danger m-l-16" data-ng-if="vm.userCodeIsTouched && vm.userCodeError">Only alphabet, numbers
+                and underscores allowed
+            </div>
+
+
+            <div class="p-r-24" style="width: 300px;">
+                <md-input-container class="width-100">
+                    <label for="">Login</label>
+                    <input type="text" data-ng-model="vm.username" data-ng-change="vm.error = false">
+                </md-input-container>
+            </div>
+
+            <div class="p-r-24" style="width: 300px;">
+                <md-input-container class="width-100">
+                    <label for="">Password</label>
+                    <input type="password" data-ng-model="vm.password" data-ng-change="vm.error = false">
+                </md-input-container>
+            </div>
+
+            <div class="p-r-24" style="width: 300px;">
+                <md-input-container class="width-100">
+                    <label for="">Public key</label>
+                    <input type="text" data-ng-model="vm.key" data-ng-change="vm.error = false">
+                </md-input-container>
+            </div>
+
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()" style="margin-right:20px;">
+            Cancel
+        </md-button>
+        <md-button ng-click="vm.clear($event)"
+                   data-ng-disabled="!vm.provider.credential"
+                   style="margin-right:20px;">
+            Clear
+        </md-button>
+        <md-button ng-click="vm.agree($event)" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
