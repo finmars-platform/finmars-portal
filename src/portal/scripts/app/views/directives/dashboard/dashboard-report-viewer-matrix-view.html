@@ -60,7 +60,7 @@
 
     <div class="dashboard-component-body" flex="grow">
 
-        <div data-ng-if="readyStatus.disabled" class="dashboard-recalculate-loader-holder">
+        <div data-ng-if="readyStatus.disabled && readyStatus.data !== 'processing'" class="dashboard-recalculate-loader-holder">
             <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-component-loader">
                 <progress-circular diameter="40"></progress-circular>
             </div>
