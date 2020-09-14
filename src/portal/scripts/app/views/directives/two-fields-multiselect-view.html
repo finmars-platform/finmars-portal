@@ -1,4 +1,5 @@
-<md-input-container
+<!-- Andrew's html here -->
+<!--<md-input-container
   class="two-fields-multiselect-input rel-container"
   data-ng-click="handleClick($event)"
 >
@@ -62,22 +63,6 @@
       ></ng-md-icon>
     </div>
 
-    <!--  -->
-    <!-- <div data-ng-if="tooltipText" class="custom-input-tooltip">
-      <ng-md-icon
-        data-ng-if="!error"
-        icon="info_outline"
-        size="28"
-        class="tooltip-sign"
-        style="fill: #777777"
-      >
-      </ng-md-icon>
-      <md-tooltip
-        class="tooltip_2"
-        md-direction="top"
-        data-ng-bind="tooltipText"
-      ></md-tooltip>
-    </div> -->
   </div>
   <div class="two-fields-multiselect-input-tooltip" data-ng-if="toltipShow">
     <ng-md-icon
@@ -87,13 +72,17 @@
     ></ng-md-icon>
     <md-tooltip>{{title}}</md-tooltip>
   </div>
+</md-input-container>-->
+<!-- < Andrew's html here > -->
+<md-input-container class="two-fields-multiselect-input" data-ng-click="handleClick($event)">
+    <label data-ng-bind="title"
+           class="cursor-pointer"></label>
+    <input type="text"
+           data-ng-model="inputText"
+           class="cursor-pointer"
+           readonly>
 </md-input-container>
-<!-- <div class="two-fields-multiselect-input-tooltip"> -->
-
-<!-- </div> -->
-<!-- <md-tooltip
-  data-ng-if="model && model.length > 0 && tooltipText"
-  class="tooltip_1 f-s-15"
-  md-direction="top"
-  data-ng-bind="tooltipText"
-></md-tooltip> -->
+<md-tooltip data-ng-if="model && model.length > 0 && tooltipText"
+            class="tooltip_1 f-s-15"
+            md-direction="top"
+            data-ng-bind="tooltipText"></md-tooltip>

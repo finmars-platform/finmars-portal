@@ -617,8 +617,8 @@
 
               if (inputWithCalc.can_recalculate === true) {
                 userInput.buttons.push({
-                  iconObj: { type: "angular-material", icon: "rotate_right" },
-                  //   iconObj: { type: "fontawesome", icon: "fas fa-redo" },
+                  iconObj: { type: "angular-material", icon: "refresh" },
+                  // iconObj: { type: "fontawesome", icon: "fas fa-redo" },
                   tooltip: "Recalculate this field",
                   caption: "",
                   classes: "",
@@ -633,17 +633,13 @@
                 });
               }
 
-              if (
-                inputWithCalc.settings &&
-                inputWithCalc.settings.linked_inputs_names
-              ) {
-                var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(
-                  ","
-                );
+              if (inputWithCalc.settings &&
+                  inputWithCalc.settings.linked_inputs_names) {
+                var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(",");
 
                 userInput.buttons.push({
-                  // тут    iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
-                  iconObj: { type: "angular-material", icon: "autorenew" },
+                  // iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                  iconObj: { type: "angular-material", icon: "loop" },
                   tooltip: "Recalculate linked fields",
                   caption: "",
                   classes: "",
