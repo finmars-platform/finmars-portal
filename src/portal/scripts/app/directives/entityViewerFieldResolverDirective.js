@@ -374,10 +374,8 @@
                     if (scope.options.backgroundColor) {
 
                         scope.customStyles = {
-                            'custom-input-main-container': 'background-color: ' + scope.options.backgroundColor + ';',
-                            'custom-input-custom-btns-holder': 'background-color: ' + scope.options.backgroundColor + ';'
+                            'customInputBackgroundColor': 'background-color: ' + scope.options.backgroundColor + ';'
                         }
-
                     }
 
                     if (scope.item.frontOptions) {

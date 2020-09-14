@@ -1,29 +1,21 @@
 @import "./variables.less";
 
-.date-input-specific-btns {
-  display: block;
-  height: 33% !important;
-  margin-right: 10px;
-}
+@customInputsRightSpace: 8px;
 
 .entity-editor-fixed-fields-container {
   .custom-input-container {
-    .custom-input-textarea-sapan-pan {
-      background-color: #fff7e1 !important;
+    .custom-input-textarea-span-pan {
+      background-color: #fff7e1;
     }
   }
 }
 
-.text_tester {
-  border: 2px solid red;
-  white-space: nowrap;
-  /* Запрещаем перенос строк */
-  overflow: hidden;
-  /* Обрезаем все, что не помещается в область */
-  text-overflow: ellipsis;
+.ci-icon-color {
+  fill: @grey;
+  color: @grey;
 }
 
-.custom-input-textarea-sapan-pan {
+.custom-input-textarea-span-pan {
   color: #7d7d7d;
   position: relative;
   padding: 4px 18px 0 4px;
@@ -66,53 +58,39 @@
   }
 }
 
+/*.custom-input-tooltips-pos() {
+  right: 7px;
+  top: 4px;
+}*/
+
 .custom-input-tooltip {
-  opacity: 0;
-  position: absolute;
+  // position: absolute;
+  position :relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   // right: 1px;
-  cursor: pointer;
-  right: 9px;
-  top: 1px;
   // display: flex;
   // justify-content: center;
   // flex-direction: column;
   // height: 40px;
   // border:1px solid red;
   // transform: translate(15px,-12px);
+  opacity: 0;
+  box-sizing: border-box;
   z-index: 11;
-
-  .custom-input-container {
-  }
-
-  .tooltip-sign {
-    ng-md-icon {
-      height: 28px !important;
-      width: 28px !important;
-    }
-
-    svg {
-      position: absolute;
-      height: 28px;
-      top: 4px;
-      right: 4px;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      height: 28px !important;
-      width: 28px !important;
-      // fill: red;
-    }
-  }
+  cursor: default;
 }
 
-.tooltip-sign {
+/*.tooltip-sign {
   display: flex;
   justify-content: center;
   flex-direction: column;
   height: 40px;
 
   // border:1px solid red;
-}
+}*/
 
 .custom-input-main-container {
   position: relative;
@@ -130,10 +108,8 @@
   // height: 23px;
   width: 100%;
   border-radius: 6px;
-
-  .flex-row {
-    padding: 0px 10px;
-  }
+  padding-right: @customInputsRightSpace;
+  box-sizing: border-box;
 }
 
 .custom-input-label {
@@ -160,11 +136,32 @@
   padding-left: 8px;
   border: none;
   border-radius: 6px 0 0 6px;
+  color: #000;
   background: transparent;
   box-sizing: border-box;
 
   &:focus {
     outline: none;
+  }
+}
+
+.date-input-specific-btns {
+  position: relative;
+  display: block;
+  flex: 1 0 33%;
+
+  span.material-icons {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    color: #747474;
+    width: 100%;
+    font-size: 12px;
+  }
+
+  &:hover {
+    background-color: #cecece;
   }
 }
 
@@ -177,17 +174,29 @@
   outline: none;
 }
 
-.custom-input-custom-btns-holder {
+.custom-input-side-items {
   position: absolute;
+  opacity: 0;
   height: 100%;
   background-color: #fff;
-  opacity: 0;
   top: 0;
-  right: 30px;
-  margin-right: 6px;
+  right: @customInputsRightSpace;
+}
+
+.custom-input-custom-btns-holder {
+  // position: absolute;
+  position: relative;
+  height: 100%;
+  opacity: 0;
+  /*top: 0;
+  right: 30px;*/
+  // margin-right: 6px;
   box-sizing: border-box;
 
   .custom-input-custom-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     height: 100%;
     min-width: 20px;
     background: transparent;
@@ -197,16 +206,25 @@
     &:hover {
       opacity: 0.5;
     }
+
+    .ci-custom-btn-icon {
+      fill: @grey;
+      color: @grey;
+    }
   }
 }
 
 .custom-input-indicator-btn {
   flex: 0 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   height: 23px;
-  border: none;
   background-color: transparent;
-  border-radius: 0;
   padding: 2px 2px;
+  border: none;
+  border-radius: 0;
+  margin-left: 6px;
   fill: #7b7b7b;
   z-index: 9;
   color: #7d7d7d;
@@ -215,14 +233,18 @@
   &:hover {
     opacity: 0.5;
   }
+
+  ng-md-icon {
+    fill: #747474;
+  }
 }
 
-.custom-input-indicator-btn2 {
+/*.custom-input-indicator-btn2 {
   .custom-input-indicator-btn();
   position: absolute;
   top: 1px;
   right: 8px;
-}
+}*/
 
 .custom-input-sel-menu-container {
   width: 100%;
@@ -285,33 +307,6 @@
   }
 }
 
-.custom-input-full-text-focused {
-  .custom-input-indicator-btn {
-    z-index: 11;
-  }
-
-  .custom-input-textarea-sapan-pan {
-    z-index: 11;
-  }
-}
-
-.custom-input-full-text-shown {
-  display: block;
-  padding-top: 50px;
-  opacity: 1;
-  z-index: 10;
-  border-radius: 6px;
-
-  textarea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 28px;
-    z-index: 11;
-    border-radius: 4px;
-  }
-}
-
 .custom-input-container.custom-input-set-from-outside {
   .custom-input-borders,
   .custom-input-full-text-container {
@@ -324,7 +319,13 @@
 }
 
 .custom-input-container.custom-input-hovered,
-.custom-input-container.custom-input-focused {
+.custom-input-container.custom-input-focused,
+.custom-input-container.custom-input-full-text-focused {
+
+  .custom-input-side-items {
+    opacity: 1;
+  }
+
   .custom-input-custom-btns-holder {
     opacity: 1;
   }
@@ -407,21 +408,17 @@
   }
 }
 
+// When input focused
 .custom-input-container.custom-input-focused {
+
   .custom-input-main-container {
     .custom-input-borders {
       box-shadow: 0 0 0 1px #7d7d7d;
+    }
 
-      .custom-input-content {
-        .flex-row {
-          input {
-            color: black;
-          }
-
-          button {
-          }
-        }
-      }
+    .custom-input {
+      color: #000;
+      font-weight: 700;
     }
   }
 
@@ -430,96 +427,105 @@
   }
 }
 
-.custom-input-container {
-  padding: 6px !important;
+.custom-input-full-text-focused {
+
+  .custom-input-textarea-span-pan {
+    z-index: 11;
+  }
+
+  .custom-input-indicator-btn {
+    z-index: 11;
+  }
+
+  .custom-input-full-text-container {
+    display: block;
+    padding-top: 50px;
+    opacity: 1;
+    z-index: 10;
+    border-radius: 6px;
+  }
+
+  textarea.custom-input-full-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 28px;
+    margin: 0;
+    z-index: 11;
+    font-weight: 700;
+  }
 }
+// < When input focused >
 
+// When input in error mode
 .custom-input-container.custom-input-error {
+
+  .custom-input-indicator-btn {
+      fill: @orange;
+      color: @orange;
+  }
+
   .custom-input-label,
-  .custom-input-textarea-sapan-pan {
-    color: @orange;
-  }
-
-  &::after {
-    content: "Invalid value";
-    color: @orange;
-    bottom: 0;
-    transform: translate(35px, 16px);
-    position: relative;
-    font-size: 12px;
-  }
-
-  .custom-input-borders .custom-input-content .flex-row button {
+  .custom-input-textarea-span-pan {
     color: @orange;
   }
 
   .custom-input-tooltip {
-    opacity: 0;
+    // opacity: 0;
+
+    span {
+      fill: @orange;
+      color: @orange;
+    }
+
+    ng-md-icon {
+      fill: @orange;
+    }
+
   }
 
   // --------------------
-
-  .custom-input-error-tooltip {
-    position: absolute;
-    cursor: pointer;
-    top: 0px;
-    right: 8px;
-    // transform: translate(-10px, 4px);
-    // display: flex;
-    // justify-content: center;
-    // flex-direction: column;
-    // height: 40px;
-    // border:1px solid red;
-    // height: 90%;
-    z-index: 2;
-
-    ng-md-icon {
-      display: block;
-      fill: @orange;
-      height: 28px !important;
-      width: 28px !important;
-
-      svg {
-        position: absolute;
-        height: 28px;
-        top: 3px;
-        right: 4px;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        height: 28px !important;
-        width: 28px !important;
-        // fill: red;
-      }
-    }
-  }
 
   .custom-input-borders,
   .custom-input-full-text-container {
     border-color: #fa393e;
   }
 
-  .custom-input {
-    padding-left: 20px;
-    color: #fa393e;
+  .custom-input-borders {
+    border-width: 2px;
   }
 
-  .custom-input:focus {
-    outline: none;
+  .custom-input {
+    &:not(.smart-search-input) {
+      font-weight: 700;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .custom-input-full-text {
+    font-weight: 700;
+  }
+
+  .custom-input-bottom-error-text {
+    position: relative;
+    color: @orange;
+    font-size: 12px;
+    padding: 0 12px;
   }
 }
+// < When input in error mode >
 
 .custom-input-container.custom-input-is-disabled {
   opacity: 0.5;
   pointer-events: none;
 }
-
 // < should always be at the bottom >
+
 .custom-input-container {
   margin-bottom: 13px;
-}
-
-.custom-input-main-container {
 }
 
 .custom-input-borders {
@@ -532,18 +538,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    .flex-row {
-      input {
-        order: 2;
-        color: #7d7d7d;
-        font-weight: 400;
-      }
-
-      button {
-        order: 1;
-      }
-    }
   }
 }
 
@@ -551,59 +545,24 @@
   color: white;
 }
 
-.md-panel-is-showing {
-}
-
 .md-panel.md-tooltip.error-tooltip {
   background-color: @orange;
 }
 
-.flex_ccp {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  font-size: 12px;
+/*.md-select-pan {
 
-  button {
-  }
-
-  .custom-input-custom-btn {
-    color: @grey;
-
-    &:nth-child(2) {
-      font-size: 14px;
-      font-weight: normal;
-    }
-
-    font-size: 12px;
-    font-weight: bold;
-  }
-}
-
-.custom-input-indicator-btn {
-  display: flex;
-  align-items: center;
-  margin-top: 1px;
-}
-.custom-input-container.custom-input-error .custom-input-error-tooltip {
-  position: absolute;
-  top: 1px;
-  right: 8px;
-  // color: red;
-}
-
-.md-select-pan {
   md-select {
     height: 40px;
     border: 1px solid @grey;
     border-radius: 5px;
     margin: 2.5px;
+
     &:active {
       md-select-value {
         border-bottom: 2px solid transparent !important;
       }
     }
+
     md-select-value {
       border-bottom: 2px solid transparent !important;
       span {
@@ -615,4 +574,5 @@
       }
     }
   }
-}
+
+}*/

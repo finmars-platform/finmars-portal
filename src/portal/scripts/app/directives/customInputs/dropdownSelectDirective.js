@@ -151,11 +151,15 @@
 
                     Object.keys(scope.customStyles).forEach(function (className) {
 
-                        var elemClass = '.' + className;
-                        var elemToApplyStyles = elem[0].querySelector(elemClass);
+                        var elemClass = "." + className;
+                        var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-                        if (elemToApplyStyles) {
-                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles.length) {
+
+                            elemToApplyStyles.forEach(function (htmlNode) {
+                                htmlNode.style.cssText = scope.customStyles[className];
+                            })
+
                         }
 
                     });

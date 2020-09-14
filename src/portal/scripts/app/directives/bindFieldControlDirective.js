@@ -570,9 +570,9 @@
 
               if (scope.item.options.dateTodayPlus) {
                 scope.item.buttons.push({
-                  icon: "",
+                  iconObj: {type: "angular-material", icon: "add"},
                   tooltip: "Increase by one day",
-                  caption: "+",
+                  // caption: "+",
                   classes: "date-input-specific-btns",
                   action: { callback: scope.setDatePlus },
                 });
@@ -580,9 +580,9 @@
 
               if (scope.item.options.dateToday) {
                 scope.item.buttons.push({
-                  icon: "",
+                  iconObj: {type: "angular-material", icon: "radio_button_unchecked"},
                   tooltip: "Set today's date",
-                  caption: "○",
+                  // caption: "○",
                   classes: "date-input-specific-btns",
                   action: { callback: scope.setDateToday },
                 });
@@ -590,9 +590,9 @@
 
               if (scope.item.options.dateTodayMinus) {
                 scope.item.buttons.push({
-                  icon: "",
+                  iconObj: {type: "angular-material", icon: "remove"},
                   tooltip: "Decrease by one day",
-                  caption: "-",
+                  // caption: "-",
                   classes: "date-input-specific-btns",
                   action: { callback: scope.setDateMinus },
                 });
@@ -613,12 +613,7 @@
 
           if (scope.options.backgroundColor) {
             scope.customStyles = {
-              "custom-input-main-container":
-                "background-color: " + scope.options.backgroundColor + ";",
-              "custom-input-custom-btns-holder":
-                "background-color: " + scope.options.backgroundColor + ";",
-              "custom-input-full-text":
-                "background-color: " + scope.options.backgroundColor + ";",
+              "customInputBackgroundColor": "background-color: " + scope.options.backgroundColor + ";"
             };
           }
           console.log("Panov scope: ", scope)

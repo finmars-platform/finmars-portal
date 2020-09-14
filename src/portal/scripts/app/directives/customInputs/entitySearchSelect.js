@@ -51,7 +51,7 @@
                 var inputContainer = elem[0].querySelector('.smartSearchInputContainer');
                 var inputElem = elem[0].querySelector('.smartSearchInputElem');
 
-                var entityIndicatorIcons = {
+                /*var entityIndicatorIcons = {
                     'account': {
                         type: 'class',
                         icon: 'fas fa-university'
@@ -89,7 +89,7 @@
                         icon: 'fas fa-tag'
                     }
 
-                }
+                }*/
 
                 scope.getInputContainerClasses = function () {
                     var classes = '';
@@ -322,11 +322,15 @@
 
                     Object.keys(scope.customStyles).forEach(function (className) {
 
-                        var elemClass = '.' + className;
-                        var elemToApplyStyles = elem[0].querySelector(elemClass);
+                        var elemClass = "." + className;
+                        var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-                        if (elemToApplyStyles) {
-                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles.length) {
+
+                            elemToApplyStyles.forEach(function (htmlNode) {
+                                htmlNode.style.cssText = scope.customStyles[className];
+                            })
+
                         }
 
                     });
@@ -423,7 +427,7 @@
 
                     initEventListeners();
 
-                    scope.iconData = entityIndicatorIcons[scope.entityType];
+                    // scope.iconData = entityIndicatorIcons[scope.entityType];
 
                     var entitiesData = metaContentTypeService.getList();
 
