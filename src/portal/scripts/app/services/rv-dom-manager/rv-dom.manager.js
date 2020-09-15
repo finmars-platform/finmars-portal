@@ -7,8 +7,12 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
+    var priceHistoryService = require('../../services/priceHistoryService'); // TODO this is temp service here
+
     var transactionTypeService = require('../../services/transactionTypeService');
     var uiService = require('../../services/uiService');
+
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     var RvScrollManager = require('./rv-scroll.manager');
 
@@ -525,35 +529,249 @@
 
     };
 
+    var updateDataFromCellEdit = function (obj, column, evDataService, evEventService) {
+
+        var reportOptions = evDataService.getReportOptions();
+
+        if (column.key === 'instrument_principal_price') {
+
+            priceHistoryService.getList({
+                filters: {
+                    instrument: obj['instrument.id'],
+                    pricing_policy: reportOptions.pricing_policy,
+                    date_after: reportOptions.report_date
+                }
+            }).then(function (data) {
+
+                var item;
+
+                if (data.results.length) {
+
+                    item = data.results[0];
+
+                    item.principal_price = obj[column.key];
+
+                    priceHistoryService.update(item.id, item).then(function (data) {
+
+                        toastNotificationService.success("Price History updated");
+
+                    })
+
+                } else {
+
+                    item = {
+                        pricing_policy: reportOptions.pricing_policy,
+                        date_after: reportOptions.report_date,
+                        instrument: obj['instrument.id'],
+                        accrued_price: 0,
+                        principal_price: obj[column.key]
+                    };
+
+                    priceHistoryService.create(item).then(function (data) {
+
+                        toastNotificationService.success("Price History created");
+
+                    })
+
+
+                }
+
+
+            });
+
+
+        }
+
+        if (column.key === 'instrument_accrued_price') {
+
+            priceHistoryService.getList({
+                filters: {
+                    instrument: obj['instrument.id'],
+                    pricing_policy: reportOptions.pricing_policy,
+                    date_after: reportOptions.report_date
+                }
+            }).then(function (data) {
+
+                var item;
+
+                if (data.results.length) {
+
+                    item = data.results[0];
+
+                    item.accrued_price = obj[column.key];
+
+                    priceHistoryService.update(item.id, item).then(function (data) {
+
+                        toastNotificationService.success("Price History updated");
+
+                    })
+
+                } else {
+
+                    item = {
+                        pricing_policy: reportOptions.pricing_policy,
+                        date_after: reportOptions.report_date,
+                        instrument: obj['instrument.id'],
+                        accrued_price: obj[column.key],
+                        principal_price: 0
+                    };
+
+                    priceHistoryService.create(item).then(function (data) {
+
+                        toastNotificationService.success("Price History created");
+
+                    })
+
+
+                }
+
+
+            });
+
+
+        }
+
+
+    };
+
+    var handleCellEdit = function (cellElem, clickData, obj, column, columnNumber, evDataService, evEventService) {
+
+        console.log('column', column);
+
+        cellElem.classList.add('g-cell-input');
+        cellElem.innerHTML = '<input value="" autofocus>';
+
+        var input = cellElem.querySelector('input');
+
+        input.focus();
+
+        input.value = obj[column.key];
+
+        input.addEventListener('blur', function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (obj[column.key] !== input.value) {
+
+                if (!obj.___modified_cells) {
+                    obj.___modified_cells = []
+                }
+
+                obj.___modified_cells.push({
+                    oldValue: obj[column.key],
+                    newValue: input.value,
+                    columnNumber: columnNumber,
+                    column: column
+                });
+            }
+
+            obj[column.key] = input.value;
+            evDataService.setObject(obj);
+
+            updateDataFromCellEdit(obj, column, evDataService, evEventService);
+
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+        });
+
+        input.addEventListener("keyup", function (event) {
+
+            if (event.keyCode === 13) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (obj[column.key] !== input.value) {
+
+                    if (!obj.___modified_cells) {
+                        obj.___modified_cells = []
+                    }
+
+                    obj.___modified_cells.push({
+                        oldValue: obj[column.key],
+                        newValue: input.value,
+                        columnNumber: columnNumber,
+                        column: column
+                    });
+                }
+
+                obj[column.key] = input.value;
+                evDataService.setObject(obj);
+
+                updateDataFromCellEdit(obj, column, evDataService, evEventService);
+
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            }
+        });
+
+
+    };
+
     var initEventDelegation = function (elem, evDataService, evEventService) {
 
         elem.addEventListener('click', function (event) {
 
             var clickData = getClickData(event);
 
-            console.log('clickData', clickData);
+            if (event.detail === 2) { // double click handler
 
-            if (clickData.isFoldButtonPressed) {
+                var cellElem;
 
-                handleFoldButtonClick(clickData, evDataService, evEventService);
+                // TODO make recursive get parent of g-cell
+                if (event.target.classList.contains('g-cell')) {
+                    cellElem = event.target
+                } else if (event.target.parentElement.classList.contains('g-cell')) {
+                    cellElem = event.target.parentElement;
+                } else if (event.target.parentElement.parentElement.classList.contains('g-cell')) {
+                    cellElem = event.target.parentElement.parentElement;
+                }
 
-            } else {
+                if (cellElem) {
 
-                var selection = window.getSelection().toString();
+                    var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
+                    var columns = evDataService.getColumns();
+                    console.log('obj', obj);
 
-                console.log('selection', selection);
+                    var columnNumber = parseInt(cellElem.dataset.column, 10);
 
-                if (!selection.length) {
+                    var column = columns[columnNumber - 1];
 
-                    switch (clickData.___type) {
+                    console.log('clickData', clickData);
 
-                        case 'object':
-                            handleObjectClick(clickData, evDataService, evEventService);
-                            break;
+                    if (['instrument_principal_price', 'instrument_accrued_price'].indexOf(column.key) !== -1) {
 
-                        case 'subtotal':
-                            handleSubtotalClick(clickData, evDataService, evEventService);
-                            break;
+                        handleCellEdit(cellElem, clickData, obj, column, columnNumber, evDataService, evEventService)
+
+                    }
+
+                }
+
+            } else if (event.detail === 1) {
+
+                if (clickData.isFoldButtonPressed) {
+
+                    handleFoldButtonClick(clickData, evDataService, evEventService);
+
+                } else {
+
+                    var selection = window.getSelection().toString();
+
+                    console.log('selection', selection);
+
+                    if (!selection.length) {
+
+                        switch (clickData.___type) {
+
+                            case 'object':
+                                handleObjectClick(clickData, evDataService, evEventService);
+                                break;
+
+                            case 'subtotal':
+                                handleSubtotalClick(clickData, evDataService, evEventService);
+                                break;
+                        }
+
                     }
 
                 }

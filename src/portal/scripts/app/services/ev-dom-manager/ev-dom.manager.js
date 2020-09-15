@@ -527,6 +527,26 @@
 
             console.log('selection', selection);
 
+            if (event.detail === 2) { // double click handler
+
+                if (clickData.___type === 'object') {
+
+                    var objectId = clickData.___id;
+                    var parentGroupHashId = clickData.___parentId;
+
+                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                    var dropdownAction = 'edit';
+
+                    evDataService.setActiveObject(obj);
+                    evDataService.setActiveObjectAction(dropdownAction);
+
+                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                }
+
+            }
+
             if (!selection.length) {
 
                 if (event.detail === 1) {
@@ -548,25 +568,7 @@
                     }
                 }
 
-                if (event.detail === 2) {
 
-                    if (clickData.___type === 'object') {
-
-                        var objectId = clickData.___id;
-                        var parentGroupHashId = clickData.___parentId;
-
-                        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                        var dropdownAction = 'edit';
-
-                        evDataService.setActiveObject(obj);
-                        evDataService.setActiveObjectAction(dropdownAction);
-
-                        evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-                    }
-
-                }
 
             }
         });
