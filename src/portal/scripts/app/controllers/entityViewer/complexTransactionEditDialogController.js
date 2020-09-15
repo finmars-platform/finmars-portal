@@ -814,6 +814,7 @@
         var exists_in_ttype = false;
 
         if (vm.transactionType.inputs) {
+
           vm.transactionType.inputs.forEach(function (ttypeInput) {
             if (ttypeInput.name === key) {
               exists_in_ttype = true;
@@ -837,15 +838,18 @@
               if (input.value_type === 100) {
                 input.verbose_value_type = "Relation";
 
-                if (vm.complexTransactionData.values[key + "_object"].name) {
-                  input.value =
-                    vm.complexTransactionData.values[key + "_object"].name;
-                } else {
-                  input.value =
-                    vm.complexTransactionData.values[
-                      key + "_object"
-                    ].public_name;
+                if (vm.complexTransactionData.values[key + "_object"]) {
+
+                  if (vm.complexTransactionData.values[key + "_object"].name) {
+                    input.value = vm.complexTransactionData.values[key + "_object"].name;
+
+                  } else {
+                    input.value = vm.complexTransactionData.values[key + "_object"].public_name;
+
+                  }
+
                 }
+
               }
             }
           });

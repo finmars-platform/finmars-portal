@@ -37,8 +37,6 @@
         var position = "right";
         var defaultDate = false;
 
-        console.log("custom inputs customButtons", scope.label, scope.customButtons);
-
         if (scope.smallOptions) {
           if (scope.smallOptions.tooltipText) {
             scope.tooltipText = scope.smallOptions.tooltipText;
@@ -172,7 +170,7 @@
             }
 
           });
-          console.log("custom inputs buttons", scope.plussMinusButtons, scope.usualCustomButtons);
+
         }
 
         var initEventListeners = function () {
@@ -296,7 +294,9 @@
 
         var init = function () {
 
-          prepareCustomButtons();
+          if (scope.customButtons) {
+            prepareCustomButtons();
+          }
 
           if (scope.dateValue) {
 

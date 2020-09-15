@@ -24,6 +24,7 @@
         onFieldBlur: "&?", // for now implemented only for textInputDirective
       },
       link: function (scope, elem, attr) {
+
         scope.readyStatus = { classifier: false };
 
         var attrs = scope.$parent.vm.attrs || [];
