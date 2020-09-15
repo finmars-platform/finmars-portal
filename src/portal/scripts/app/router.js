@@ -379,6 +379,14 @@
                 templateUrl: 'views/pages/pricing-parent-procedure-page-view.html',
                 controller: 'PricingParentProcedurePageController as vm'
             })
+            // тут
+            .state('app.transaction-file-procedure', {
+                url: '/transaction-file-procedure',
+                templateUrl: 'views/pages/transaction-file-procedure-view.html',
+                controller: 'TransactionFileProcedurePageController as vm'
+            })
+
+            // 
 
             .state('app.run-pricing-procedure', {
                 url: '/run-pricing-procedures',
