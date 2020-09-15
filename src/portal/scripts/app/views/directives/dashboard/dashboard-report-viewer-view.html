@@ -66,15 +66,6 @@
     </div>
 </div>
 
-<div data-ng-if="readyStatus.data === 'processing'" class="dashboard-component-loader-holder">
-
-    <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-component-loader">
-        <!--<md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>-->
-        <progress-circular diameter="50"></progress-circular>
-    </div>
-
-</div>
-
 <div data-ng-if="readyStatus.data === 'error'" class="center-text-message">
     <span data-ng-bind="compErrorMessage"></span>
 </div>
