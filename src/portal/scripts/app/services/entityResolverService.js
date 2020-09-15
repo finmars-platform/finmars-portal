@@ -76,7 +76,6 @@
                 return instrumentTypeService.getList(options);
                 break;
             case 'transaction-type':
-                // return transactionTypeService.getList(options);
                 return transactionTypeService.getListLight(options);
                 break;
             case 'periodicity':

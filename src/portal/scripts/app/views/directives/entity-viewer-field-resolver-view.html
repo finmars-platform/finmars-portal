@@ -11,244 +11,288 @@
                                   event-signal="ciEventObj.event"
                                   small-options="{notNull: options.notNull, tooltipText: tooltipText}"
                                   entity-type="getModelKeyEntity()"></entity-search-select>
-
-            <md-button data-ng-click="">q</md-button>
         </div>
 
-        <div data-ng-if="!isSpecialSearchRelation()">
-            <div data-ng-if="checkComplexEntityType()">
-                <md-input-container class="md-block no-error-spacer"
-                                    aria-label="select with search">
-                    <label data-ng-bind="getName()"></label>
+    <div data-ng-if="!isSpecialSearchRelation()">
+      <div data-ng-if="checkComplexEntityType()">
+        <md-input-container
+          class="md-block no-error-spacer"
+          aria-label="select with search"
+        >
+          <label data-ng-bind="getName()"></label>
 
-                    <md-select md-on-close="searchTerm = ''"
-                               data-ng-model="entity[fieldKey]"
-                               data-ng-change="changeHandler()"
-                               md-on-open="getData()"
-                               md-selected-text="bindFormFields()"
-                               md-container-class="common-select-container"
-                               style="{{inputBackgroundColor()}}">
-                        <md-select-header>
-                            <input data-ng-model="searchTerm"
-                                   type="search"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern select-input-filter"
-                                   ng-keydown="$event.stopPropagation()">
-                        </md-select-header>
+          <md-select
+            md-on-close="searchTerm = ''"
+            data-ng-model="entity[fieldKey]"
+            data-ng-change="changeHandler()"
+            md-on-open="getData()"
+            md-selected-text="bindFormFields()"
+            md-container-class="common-select-container"
+            style="{{inputBackgroundColor()}}"
+          >
+            <md-select-header>
+              <input
+                data-ng-model="searchTerm"
+                type="search"
+                placeholder="Search for a ..."
+                class="md-text md-select-search-pattern select-input-filter"
+                ng-keydown="$event.stopPropagation()"
+              />
+            </md-select-header>
 
-                        <div data-ng-if="groups" class="select-options-holder">
-
-                            <md-optgroup data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id"
-                                         data-ng-if="group.fields.length"
-                                         label="{{group.name}}">
-                                <md-option
-                                        data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by $index"
-                                        ng-value="field.id">
-                                    {{bindListFields(field)}}
-                                </md-option>
-                            </md-optgroup>
-
-                        </div>
-
-                        <div data-ng-if="!groups && field && field[0]" class="select-options-holder">
-                            <md-option data-ng-value="fields[0].id">{{bindListFields(fields[0])}}</md-option>
-                        </div>
-                    </md-select>
-                </md-input-container>
+            <div data-ng-if="groups" class="select-options-holder">
+              <md-optgroup
+                data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id"
+                data-ng-if="group.fields.length"
+                label="{{group.name}}"
+              >
+                <md-option
+                  data-ng-repeat="field in group.fields | orderBy:resolveSort(field) | filter:{name: searchTerm} track by $index"
+                  ng-value="field.id"
+                >
+                  {{bindListFields(field)}}
+                </md-option>
+              </md-optgroup>
             </div>
 
-            <div data-ng-if="!checkComplexEntityType()">
-                <div data-ng-if="fieldKey !== 'price_download_scheme'">
-                    <div data-ng-if="!checkForCrudSelects()">
-                        <md-input-container class="md-block no-error-spacer">
-                            <label data-ng-bind="getName()"></label>
-                            <md-select md-on-close="searchTerm = ''"
-                                       data-ng-model="entity[fieldKey]"
-                                       data-ng-change="changeHandler()"
-                                       md-on-open="getData()"
-                                       md-selected-text="bindFormFields()"
-                                       md-container-class="common-select-container"
-                                       style="{{inputBackgroundColor()}}">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
-                                <div class="select-options-holder">
-                                    <md-option
-                                            data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} as results track by field.id "
-                                            ng-value="field.id">
-                                        {{bindListFields(field)}}
-                                    </md-option>
-                                </div>
-                            </md-select>
-                        </md-input-container>
-                    </div>
-
-                    <div data-ng-if="checkForCrudSelects()">
-                        <crud-select data-label="getName()"
-                                     data-item="entity[fieldKey]"
-                                     data-entity-type="crudEntityType"
-                                     data-options="fields"
-                                     data-ng-click="getData()"></crud-select>
-                    </div>
-                </div>
-
-                <div data-ng-if="fieldKey == 'price_download_scheme'">
-                    <md-input-container class="md-block no-error-spacer">
-                        <label data-ng-bind="getName()"></label>
-                        <md-select md-on-close="searchTerm = ''"
-                                   data-ng-model="entity[fieldKey]"
-                                   data-ng-change="changeHandler()"
-                                   md-on-open="getData()"
-                                   md-container-class="common-select-container"
-                                   style="{{inputBackgroundColor()}}">
-                            <md-select-header>
-                                <input data-ng-model="searchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-                            <div class="select-options-holder">
-                                <md-option
-                                        data-ng-repeat="field in fields | orderBy:'-'+field.scheme_name | filter:{scheme_name:searchTerm} track by field.id "
-                                        ng-value="field.id">
-                                    {{field['scheme_name']}}
-                                </md-option>
-                            </div>
-                        </md-select>
-                    </md-input-container>
-                </div>
-
+            <div
+              data-ng-if="!groups && field && field[0]"
+              class="select-options-holder"
+            >
+              <md-option data-ng-value="fields[0].id"
+                >{{bindListFields(fields[0])}}</md-option
+              >
             </div>
-        </div>
-    </div>
+          </md-select>
+        </md-input-container>
+      </div>
 
-    <div data-ng-if="type === 'multiple-ids'">
-        <div data-ng-if="checkComplexEntityType()">
-            <md-input-container class="md-block no-error-spacer">
-                <label data-ng-bind="getName()"></label>
-                <md-select md-on-close="searchTerm = ''"
-                           md-on-open="getData()"
-                           data-ng-model="entity[fieldKey]"
-                           data-ng-change="changeHandler()"
-                           multiple="true"
-                           md-selected-text="bindMCField()"
-                           style="{{inputBackgroundColor()}}">
-                    <md-select-header>
-                        <input data-ng-model="searchTerm"
-                               type="search"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern"
-                               ng-keydown="$event.stopPropagation()">
-                    </md-select-header>
+      <div data-ng-if="!checkComplexEntityType()">
+        <div data-ng-if="fieldKey !== 'price_download_scheme'">
+          <div data-ng-if="!checkForCrudSelects()">
+            <md-input-container class="md-block no-error-spacer md-select-pan">
+              <label data-ng-bind="getName()"></label>
+              <md-select
+                md-on-close="searchTerm = ''"
+                data-ng-model="entity[fieldKey]"
+                data-ng-change="changeHandler()"
+                md-on-open="getData()"
+                md-selected-text="bindFormFields()"
+                md-container-class="common-select-container"
+                style="{{inputBackgroundColor()}}"
+              >
+                <md-select-header>
+                  <input
+                    data-ng-model="searchTerm"
+                    type="search"
+                    placeholder="Search for a ..."
+                    class="md-text md-select-search-pattern select-input-filter"
+                    ng-keydown="$event.stopPropagation()"
+                  />
+                </md-select-header>
 
-                    <div data-ng-if="groups" class="select-options-holder">
-                        <md-optgroup data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id"
-                                     data-ng-if="group.fields.length"
-                                     label="{{group.name}}">
-                            <md-option
-                                    data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm}"
-                                    ng-value="field.id">
-                                {{bindListFields(field)}}
-                            </md-option>
-                        </md-optgroup>
-                    </div>
+                <div class="select-options-holder">
+                  <md-option
+                    data-ng-repeat="field in fields | orderBy:resolveSort(field) | filter:{name: searchTerm} as results track by field.id "
+                    ng-value="field.id">
+                    {{bindListFields(field)}}
+                  </md-option>
+                </div>
 
-                    <div data-ng-if="!groups && field && field[0]" class="select-options-holder">
-                        <md-option data-ng-value="fields[0].id">{{bindListFields(fields[0])}}</md-option>
-                    </div>
-                </md-select>
+              </md-select>
             </md-input-container>
+          </div>
+
+          <div data-ng-if="checkForCrudSelects()">
+            <crud-select
+              data-label="getName()"
+              data-item="entity[fieldKey]"
+              data-entity-type="crudEntityType"
+              data-options="fields"
+              data-ng-click="getData()"
+            ></crud-select>
+          </div>
         </div>
 
-        <div data-ng-if="!checkComplexEntityType()">
-            <div data-ng-if="fieldKey !== 'content_types'">
-                <div data-ng-if="resolveMultiple()">
-                    <md-input-container class="md-block no-error-spacer">
-                        <label data-ng-bind="getName()"></label>
-                        <md-select md-on-close="searchTerm = ''"
-                                   md-on-open="getData()"
-                                   data-ng-model="entity[fieldKey]"
-                                   data-ng-change="changeHandler()"
-                                   md-selected-text="bindMCField()"
-                                   multiple="true"
-                                   style="{{inputBackgroundColor()}}">
-                            <md-select-header>
-                                <input data-ng-model="searchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-                            <md-option
-                                    data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by field.id"
-                                    ng-value="field.id">
-                                {{bindListFields(field)}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
-                </div>
-
-                <div data-ng-if="!resolveMultiple()">
-                    <md-input-container class="md-block no-error-spacer">
-                        <label data-ng-bind="getName()"></label>
-                        <md-select md-on-close="searchTerm = ''"
-                                   md-on-open="getData()"
-                                   data-ng-model="entity[fieldKey]"
-                                   data-ng-change="changeHandler()"
-                                   md-selected-text="bindFormFields()"
-                                   md-container-class="common-select-container"
-                                   style="{{inputBackgroundColor()}}">
-                            <md-select-header>
-                                <input data-ng-model="searchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter"
-                                       ng-keydown="$event.stopPropagation()">
-                            </md-select-header>
-                            <div class="select-options-holder">
-                                <md-option
-                                        data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by field.id"
-                                        ng-value="field.id">
-                                    {{bindListFields(field)}}
-                                </md-option>
-                            </div>
-                        </md-select>
-                    </md-input-container>
-                </div>
-
-            </div>
-
-            <div data-ng-if="fieldKey === 'content_types'">
-                <md-input-container class="md-block no-error-spacer">
-                    <label data-ng-bind="getName()"></label>
-                    <md-select md-on-close="searchTerm = ''"
-                               md-on-open="getData()"
-                               data-ng-model="entity[fieldKey]"
-                               data-ng-change="changeHandler()"
-                               md-selected-text="bindMCField()"
-                               multiple="true"
-                               style="{{inputBackgroundColor()}}">
-                        <md-select-header>
-                            <input data-ng-model="searchTerm"
-                                   type="search"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern"
-                                   ng-keydown="$event.stopPropagation()">
-                        </md-select-header>
-                        <md-option
-                                data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:{name: searchTerm}"
-                                ng-value="field.key">
-                            {{field.name}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>
-            </div>
+        <div data-ng-if="fieldKey == 'price_download_scheme'">
+          <md-input-container class="md-block no-error-spacer">
+            <label data-ng-bind="getName()"></label>
+            <md-select
+              md-on-close="searchTerm = ''"
+              data-ng-model="entity[fieldKey]"
+              data-ng-change="changeHandler()"
+              md-on-open="getData()"
+              md-container-class="common-select-container"
+              style="{{inputBackgroundColor()}}"
+            >
+              <md-select-header>
+                <input
+                  data-ng-model="searchTerm"
+                  type="search"
+                  placeholder="Search for a ..."
+                  class="md-text md-select-search-pattern select-input-filter"
+                  ng-keydown="$event.stopPropagation()"
+                />
+              </md-select-header>
+              <div class="select-options-holder">
+                <md-option
+                  data-ng-repeat="field in fields | orderBy:'-'+field.scheme_name | filter:{scheme_name:searchTerm} track by field.id "
+                  ng-value="field.id"
+                >
+                  {{field['scheme_name']}}
+                </md-option>
+              </div>
+            </md-select>
+          </md-input-container>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-ng-if="type === 'multiple-ids'">
+    <div data-ng-if="checkComplexEntityType()">
+      <md-input-container class="md-block no-error-spacer">
+        <label data-ng-bind="getName()"></label>
+        <md-select
+          md-on-close="searchTerm = ''"
+          md-on-open="getData()"
+          data-ng-model="entity[fieldKey]"
+          data-ng-change="changeHandler()"
+          multiple="true"
+          md-selected-text="bindMCField()"
+          style="{{inputBackgroundColor()}}"
+        >
+          <md-select-header>
+            <input
+              data-ng-model="searchTerm"
+              type="search"
+              placeholder="Search for a ..."
+              class="md-text md-select-search-pattern"
+              ng-keydown="$event.stopPropagation()"
+            />
+          </md-select-header>
+
+          <div data-ng-if="groups && groups.length" class="select-options-holder">
+            <md-optgroup
+              data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id"
+              data-ng-if="group.fields.length"
+              label="{{group.name}}"
+            >
+              <md-option
+                data-ng-repeat="field in group.fields | orderBy:resolveSort(field) | filter:{name: searchTerm}"
+                ng-value="field.id"
+              >
+                {{bindListFields(field)}}
+              </md-option>
+            </md-optgroup>
+          </div>
+
+          <div
+            data-ng-if="!groups && field && field[0]"
+            class="select-options-holder"
+          >
+            <md-option data-ng-value="fields[0].id"
+              >{{bindListFields(fields[0])}}</md-option
+            >
+          </div>
+        </md-select>
+      </md-input-container>
     </div>
 
+    <div data-ng-if="!checkComplexEntityType()">
+      <div data-ng-if="fieldKey !== 'content_types'">
+
+        <md-input-container class="md-block no-error-spacer">
+          <label data-ng-bind="getName()"></label>
+          <md-select
+            md-on-close="searchTerm = ''"
+            md-on-open="getData()"
+            data-ng-model="entity[fieldKey]"
+            data-ng-change="changeHandler()"
+            md-selected-text="bindMCField()"
+            multiple="true"
+            style="{{inputBackgroundColor()}}"
+          >
+            <md-select-header>
+              <input
+                data-ng-model="searchTerm"
+                type="search"
+                placeholder="Search for a ..."
+                class="md-text md-select-search-pattern"
+                ng-keydown="$event.stopPropagation()"
+              />
+            </md-select-header>
+            <md-option
+              data-ng-repeat="field in fields | orderBy:resolveSort(field) | filter:{name: searchTerm} track by field.id"
+              ng-value="field.id"
+            >
+              {{bindListFields(field)}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+
+        <md-input-container class="md-block no-error-spacer">
+          <label data-ng-bind="getName()"></label>
+          <md-select
+            md-on-close="searchTerm = ''"
+            md-on-open="getData()"
+            data-ng-model="entity[fieldKey]"
+            data-ng-change="changeHandler()"
+            md-selected-text="bindFormFields()"
+            md-container-class="common-select-container"
+            style="{{inputBackgroundColor()}}"
+          >
+            <md-select-header>
+              <input
+                data-ng-model="searchTerm"
+                type="search"
+                placeholder="Search for a ..."
+                class="md-text md-select-search-pattern select-input-filter"
+                ng-keydown="$event.stopPropagation()"
+              />
+            </md-select-header>
+            <div class="select-options-holder">
+              <md-option
+                data-ng-repeat="field in fields | orderBy:resolveSort(field) | filter:{name: searchTerm} track by field.id"
+                ng-value="field.id">
+                {{bindListFields(field)}}
+              </md-option>
+            </div>
+          </md-select>
+        </md-input-container>
+
+      </div>
+
+      <div data-ng-if="fieldKey === 'content_types'">
+        <md-input-container class="md-block no-error-spacer">
+          <label data-ng-bind="getName()"></label>
+          <md-select
+            md-on-close="searchTerm = ''"
+            md-on-open="getData()"
+            data-ng-model="entity[fieldKey]"
+            data-ng-change="changeHandler()"
+            md-selected-text="bindMCField()"
+            multiple="true"
+            style="{{inputBackgroundColor()}}"
+          >
+            <md-select-header>
+              <input
+                data-ng-model="searchTerm"
+                type="search"
+                placeholder="Search for a ..."
+                class="md-text md-select-search-pattern"
+                ng-keydown="$event.stopPropagation()"
+              />
+            </md-select-header>
+            <md-option
+              data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:{name: searchTerm}"
+              ng-value="field.key"
+            >
+              {{field.name}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,3 +1,79 @@
+<!-- Andrew's html here -->
+<!--<md-input-container
+  class="two-fields-multiselect-input rel-container"
+  data-ng-click="handleClick($event)"
+>
+  <label
+    data-ng-bind="title"
+    class="cursor-pointer two-fields-multiselect-input-label"
+  ></label>
+  <input
+    type="text"
+    class="cursor-pointer two-fields-multiselect-input-style"
+    readonly
+  />
+  <div
+    class="two-fields-multiselect-input-count-container"
+    data-ng-if="inputText=='Off'"
+    data-ng-click="selectItemModal($event)"
+  >
+    <ng-md-icon
+      icon="menu"
+      size="18"
+      class="tooltip-sign two-fields-multiselect-custom-btn cursor-pointer"
+    ></ng-md-icon>
+    <div class="m-l-8">
+      <span class="cursor-pointer f-s-15 hovO">{{title}}</span>
+    </div>
+  </div>
+  <div
+    class="two-fields-multiselect-input-count-container"
+    data-ng-if="inputText!=='Off'"
+  >
+    <ng-md-icon
+      icon="menu"
+      size="18"
+      class="tooltip-sign two-fields-multiselect-custom-btn cursor-pointer"
+      data-ng-click="selectItemModal($event)"
+    ></ng-md-icon>
+
+    <div
+      class="two-fields-multiselect-input-count cursor-pointer"
+      data-ng-click="deleteById(item, $index)"
+      data-ng-repeat="item in itemsSelected track by $index"
+      ng-show="{{$index<clientWidth}}"
+    >
+      <span>{{item.name}}</span>
+      <ng-md-icon
+        icon="cancel"
+        size="18"
+        class="tooltip-sign two-fields-multiselect-color"
+      ></ng-md-icon>
+    </div>
+    <div
+      class=" {{inputText!==0 ?'two-fields-multiselect-input-count two-fields-multiselect-input-delete cursor-pointer': 'two-fields-multiselect-input-delete' }}"
+      data-ng-click="deleteAllSelectedItems()"
+    >
+      <span>+{{inputText}}</span>
+      <ng-md-icon
+        icon="cancel"
+        size="18"
+        class="tooltip-sign two-fields-multiselect-color"
+        data-delete="true"
+      ></ng-md-icon>
+    </div>
+
+  </div>
+  <div class="two-fields-multiselect-input-tooltip" data-ng-if="toltipShow">
+    <ng-md-icon
+      icon="info_outline"
+      size="18"
+      style="fill: #777777"
+    ></ng-md-icon>
+    <md-tooltip>{{title}}</md-tooltip>
+  </div>
+</md-input-container>-->
+<!-- < Andrew's html here > -->
 <md-input-container class="two-fields-multiselect-input" data-ng-click="handleClick($event)">
     <label data-ng-bind="title"
            class="cursor-pointer"></label>
