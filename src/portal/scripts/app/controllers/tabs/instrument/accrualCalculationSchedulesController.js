@@ -216,8 +216,6 @@
 
                         instrumentEventScheduleService.rebuildEvents(vm.entity.id, vm.entity).then(function (data) {
 
-                            console.log('events rebuilt data', data);
-
                             $scope.$parent.vm.getItem().then(function (getItemData) {
                                 vm.entity = $scope.$parent.vm.entity;
                                 vm.readyStatus.eventSchedulesReady = true;

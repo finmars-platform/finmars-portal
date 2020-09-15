@@ -1211,6 +1211,7 @@
 
         vm.resolveDefaultValue = function (item) {
 
+            // console.log('vm.resolveDefaultValue.item', item);
             var entityKey = '';
 
             vm.contentTypes.forEach(function (contentType) {
