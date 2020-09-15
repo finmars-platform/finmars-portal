@@ -60,11 +60,12 @@
               <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
                       data-ng-click="callFnForCustomBtn(button.action)">
                 {{button.caption}}
-
                 <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
                             size="24"
                             icon="{{button.iconObj.icon}}"
-                            class="ci-custom-btn-icon"></ng-md-icon>
+                            class="ci-icon-color"></ng-md-icon>
+                <span data-ng-if="button.iconObj.type === 'angular-material'"
+                      class="material-icons ci-icon-color">{{button.iconObj.icon}}</span>
 
                 <md-tooltip data-ng-if="button.tooltip"
                             class="tooltip_1"

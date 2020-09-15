@@ -8,6 +8,7 @@
         label: "@",
         placeholderText: "@",
         model: "=",
+        customButtons: '=',
         customStyles: "=",
         eventSignal: "=",
         smallOptions: "=",
@@ -77,7 +78,7 @@
         };
 
         scope.onInputChange = function () {
-          console.log("custom inputs onInputChange called", scope.model);
+
           scope.error = "";
           stylePreset = "";
           scope.valueIsValid = false;
@@ -89,7 +90,7 @@
               scope.error = "Field should not be null";
             }
           }
-          console.log("custom inputs onInputChange called2", scope.valueIsValid);
+
           if (scope.onChangeCallback) {
             setTimeout(function () {
               scope.onChangeCallback();
@@ -113,6 +114,16 @@
             }
 
           });
+
+        };
+
+        scope.callFnForCustomBtn = function (actionData) {
+
+          if (actionData.parameters) {
+            actionData.callback(actionData.parameters);
+          } else {
+            actionData.callback();
+          }
 
         };
 

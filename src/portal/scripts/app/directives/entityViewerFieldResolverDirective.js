@@ -83,8 +83,8 @@
                     return modelKeyEntity;
                 };
 
-                scope.resolveMultiple = function () {
-                    if (scope.$parent.entityType !== 'instrument-type') { // refactor this
+                /*scope.resolveMultiple = function () {
+                    if (scope.entityType !== 'instrument-type') { // refactor this
                         return true
                     }
 
@@ -93,7 +93,7 @@
                     }
 
                     return false;
-                };
+                };*/
 
                 scope.getFieldsGrouped = function () {
 
@@ -128,22 +128,22 @@
                 scope.resolveSort = function (field) {
                     if (field) {
                         if (field.hasOwnProperty('name')) {
-                            return field.name
+                            return '-' + field.name;
                         }
                         if (field.hasOwnProperty('user_code')) {
-                            return field.user_code
+                            return '-' + field.user_code;
                         }
                         if (field.hasOwnProperty('public_name')) {
-                            return field.public_name
+                            return '-' + field.public_name;
                         }
                     }
                 };
 
                 scope.checkComplexEntityType = function () {
                     if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
-                        return true
+                        return true;
                     }
-                    return false
+                    return false;
                 };
 
                 scope.inputBackgroundColor = function () {
@@ -286,6 +286,7 @@
                 scope.getData = function () {
                     console.log('getData.key', scope.item.key);
                     if (!fieldsDataIsLoaded) {
+
                         var options = {};
 
                         if (scope.options.entityType) {
@@ -317,6 +318,7 @@
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
+
                                 scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
 
