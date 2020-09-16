@@ -390,7 +390,7 @@
 
     };
 
-    var render = function (evDataService, obj) {
+    var render = function (evDataService, obj, markedReportRows) {
 
         var classList = ['g-row'];
 
@@ -413,6 +413,9 @@
             rowSelection = '<div class="g-row-selection"></div>';
         }
 
+        if (markedReportRows.hasOwnProperty(obj.id)) {
+            classList.push('g-row-marked-' + markedReportRows[obj.id].color)
+        }
 
         var classes = classList.join(' ');
 

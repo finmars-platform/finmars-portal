@@ -1203,9 +1203,21 @@
             result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
         });
 
+        result = result + '<div class="ev-dropdown-option"' +
+            ' data-ev-dropdown-action="mark_row_red"' +
+            ' data-object-id="' + objectId + '"' +
+            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Red';
+
         result = result + '</div>';
 
-        //console.log("generateContextMenu.result", result);
+        result = result + '<div class="ev-dropdown-option"' +
+            ' data-ev-dropdown-action="mark_row_green"' +
+            ' data-object-id="' + objectId + '"' +
+            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Green';
+
+        result = result + '</div>';
+
+        result = result + '</div>';
 
         return result;
 
@@ -1225,31 +1237,72 @@
                 dropdownActionData.id = event.target.dataset.evDropdownActionDataId
             }
 
-            if (objectId && dropdownAction && parentGroupHashId) {
+            console.log('sendContextMenuActionToActiveObj.dropdownAction', dropdownAction);
 
-                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+            if (dropdownAction === 'mark_row_red' || dropdownAction === 'mark_row_green') {
 
-                if (!obj) {
-                    obj = {}
+                if (objectId && dropdownAction && parentGroupHashId) {
+
+                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                    var color;
+
+                    if (dropdownAction === 'mark_row_red') {
+                        color = 'red'
+                    }
+
+                    if (dropdownAction === 'mark_row_green') {
+                        color = 'green'
+                    }
+
+                    var markedReportRows = localStorage.getItem("marked_report_rows");
+
+                    if (markedReportRows) {
+                        markedReportRows = JSON.parse(markedReportRows);
+                    } else {
+                        markedReportRows = {};
+                    }
+
+                    markedReportRows[obj.id] = {
+                        color: color
+                    };
+
+                    localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
+
+                    console.log('markedReportRows', markedReportRows);
+
                 }
-
-                obj.event = event;
-
-                evDataService.setActiveObject(obj);
-                evDataService.setActiveObjectAction(dropdownAction);
-                evDataService.setActiveObjectActionData(dropdownActionData);
-
-                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
                 clearDropdowns();
 
             } else {
 
-                if (!event.target.classList.contains('ev-dropdown-option')) {
-                    clearDropdowns();
-                }
+                if (objectId && dropdownAction && parentGroupHashId) {
 
+                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                    if (!obj) {
+                        obj = {}
+                    }
+
+                    obj.event = event;
+
+                    evDataService.setActiveObject(obj);
+                    evDataService.setActiveObjectAction(dropdownAction);
+                    evDataService.setActiveObjectActionData(dropdownActionData);
+
+                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                    clearDropdowns();
+
+                }
             }
+
+            if (!event.target.classList.contains('ev-dropdown-option')) {
+                clearDropdowns();
+            }
+
+
 
         }
 
