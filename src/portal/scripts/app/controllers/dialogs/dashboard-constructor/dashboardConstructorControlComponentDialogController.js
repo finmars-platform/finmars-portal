@@ -153,7 +153,13 @@
 
         vm.isTransactionReportDisabled = function () {
 
-            return vm.currentContentType.key === 'currencies.currency' || vm.currentContentType.key === 'instruments.pricingpolicy'
+            if (!vm.currentContentType) {
+
+                return false;
+
+            }
+
+            return vm.currentContentType.key === 'currencies.currency' || vm.currentContentType.key === 'instruments.pricingpolicy';
 
         };
 

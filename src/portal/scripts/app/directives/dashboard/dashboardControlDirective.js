@@ -247,23 +247,34 @@
 
                 };
 
+                scope.settingUpDefaultValue = function (componentData) {
+
+                    getItemDataStore(componentData).then(function (store) {
+                        scope.item.data.store = store;
+                        scope.$apply();
+                    });
+
+                };
+
                 scope.init = function () {
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
                     scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
 
-                    scope.getData()
-                        .then(function() {
+                    if (scope.entityType) {
 
-                            return getItemDataStore(scope.componentData);
+                        scope.getData()
+                            .then(function() {
 
-                        })
-                        .then(function (store) {
+                                scope.settingUpDefaultValue(scope.componentData);
 
-                            scope.item.data.store = store;
-                            scope.$apply();
+                            });
 
-                        });
+                    } else {
+
+                        scope.settingUpDefaultValue(scope.componentData);
+
+                    }
 
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
