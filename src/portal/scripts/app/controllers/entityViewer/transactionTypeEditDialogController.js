@@ -319,15 +319,15 @@
                     vm.expressionData.functions[0] = vm.entity.inputs.map(function (input) {
 
                         return {
-                                "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                                "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
-                                "groups": "input",
-                                "func": input.name
+                            "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                            "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
+                            "groups": "input",
+                            "func": input.name
                         }
 
                     });
 
-                    vm.expressionEditorData = {groups: [vm.inputsGroup], functions: [vm.inputsFunctions]};
+                    // vm.expressionEditorData = {groups: [vm.inputsGroup], functions: [vm.inputsFunctions]};
 
                     if (vm.entity.inputs) {
                         vm.entity.inputs.forEach(function (input) {
@@ -352,14 +352,14 @@
                         $mdDialog.hide();
                     };*/
 
-                    /*vm.manageAttrs = function () {
+                    /* vm.manageAttrs = function () {
                         $state.go('app.attributesManager', {
                             entityType: 'transaction-type',
                             from: vm.entityType,
                             instanceId: data.id
                         });
                         $mdDialog.hide();
-                    };*/
+                    }; */
 
 
                     //originalEntity = JSON.parse(angular.toJson(vm.entity));

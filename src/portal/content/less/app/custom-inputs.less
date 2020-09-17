@@ -64,10 +64,9 @@
 }*/
 
 .custom-input-tooltip {
-  // position: absolute;
-  position :relative;
+  position: relative;
   height: 100%;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   // right: 1px;
@@ -77,7 +76,7 @@
   // height: 40px;
   // border:1px solid red;
   // transform: translate(15px,-12px);
-  opacity: 0;
+  // opacity: 0;
   box-sizing: border-box;
   z-index: 11;
   cursor: default;
@@ -176,7 +175,7 @@
 
 .custom-input-side-items {
   position: absolute;
-  opacity: 0;
+  // opacity: 0;
   height: 100%;
   background-color: #fff;
   top: 0;
@@ -187,7 +186,9 @@
   // position: absolute;
   position: relative;
   height: 100%;
-  opacity: 0;
+  // opacity: 0;
+  display: none;
+  flex-direction: row;
   /*top: 0;
   right: 30px;*/
   // margin-right: 6px;
@@ -226,7 +227,7 @@
   border-radius: 0;
   margin-left: 6px;
   fill: #7b7b7b;
-  z-index: 9;
+  // z-index: 9;
   color: #7d7d7d;
   transition: 0.2s ease-in-out;
 
@@ -294,10 +295,16 @@
 }
 
 .custom-input-full-text {
+  position: absolute;
   width: 100%;
   height: 100%;
   background-color: #fff;
+  padding: 28px;
   border: none;
+  margin: 0;
+  top: 0;
+  left: 0;
+  font-weight: 700;
   resize: none;
   box-sizing: border-box;
 
@@ -322,17 +329,15 @@
 .custom-input-container.custom-input-focused,
 .custom-input-container.custom-input-full-text-focused {
 
-  .custom-input-side-items {
-    opacity: 1;
-  }
-
   .custom-input-custom-btns-holder {
-    opacity: 1;
+    display: flex;
   }
 
   .custom-input-tooltip {
-    opacity: 1;
+    // opacity: 1;
+    display: flex;
   }
+
 }
 
 .number-input-calculator-btn {
@@ -356,9 +361,6 @@
 
   .custom-input {
     color: @orange;
-  }
-
-  .custom-input-indicator-btn {
   }
 }
 
@@ -429,11 +431,7 @@
 
 .custom-input-full-text-focused {
 
-  .custom-input-textarea-span-pan {
-    z-index: 11;
-  }
-
-  .custom-input-indicator-btn {
+  .custom-input-textarea-span-pan, .custom-input-indicator-btn, textarea.custom-input-full-text {
     z-index: 11;
   }
 
@@ -445,15 +443,14 @@
     border-radius: 6px;
   }
 
-  textarea.custom-input-full-text {
-    position: absolute;
+  /*textarea.custom-input-full-text {
+    !*position: absolute;
     top: 0;
     left: 0;
     padding: 28px;
-    margin: 0;
+    margin: 0;*!
     z-index: 11;
-    font-weight: 700;
-  }
+  }*/
 }
 // < When input focused >
 
@@ -471,7 +468,7 @@
   }
 
   .custom-input-tooltip {
-    // opacity: 0;
+    display: flex;
 
     span {
       fill: @orange;
@@ -503,10 +500,6 @@
     &:focus {
       outline: none;
     }
-  }
-
-  .custom-input-full-text {
-    font-weight: 700;
   }
 
   .custom-input-bottom-error-text {

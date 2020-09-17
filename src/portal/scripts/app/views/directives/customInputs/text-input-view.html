@@ -39,9 +39,11 @@
             <span class="material-icons">edit</span>
           </button>
 
-          <input data-ng-model="model" data-ng-model-options="{debounce: 500}"
-            placeholder="{{placeholderText}}" class="custom-input text-input textInputElem" ng-readonly="isReadonly"
-            ng-disabled="isDisabled" />
+          <input data-ng-model="model"
+                 data-ng-model-options="{debounce: 500}"
+                 placeholder="{{placeholderText}}" class="custom-input text-input textInputElem"
+                 ng-readonly="isReadonly"
+                 ng-disabled="isDisabled" />
 
           <!--<input type="text"
                            data-ng-model="model"
@@ -55,6 +57,7 @@
         </div>
 
         <div class="custom-input-side-items flex-row customInputBackgroundColor">
+
           <div class="custom-input-custom-btns-holder">
             <div data-ng-if="customButtons && customButtons.length" class="height-100">
               <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
@@ -84,6 +87,7 @@
             <span class="material-icons ci-icon-color">info_outline</span>
             <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
           </div>
+
         </div>
 
       </div>
