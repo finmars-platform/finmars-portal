@@ -1265,39 +1265,34 @@
         }
 
         // Transaction Type tab INPUTS
-        var updateInputsBasedOnTableGrid = function () {
+        var updateInputsBasedOnGridTable = function () {
 
-            vm.entity.inputs.forEach(function (input, index) {
+            vm.entity.inputs.forEach(function (input) {
 
                 // var row = vm.inputsGridTableData.body[index];
 
                 var inputName = input.name;
 
-                for (var i = 0; i < vm.inputsGridTableData.body.length; i++) {
+                vm.inputsGridTableData.body.forEach(function (row, rowIndex) {
 
-                    var row = vm.inputsGridTableData.body[i];
-                    var tableInputName = vm.inputsGridTableDataService.getCellByKey(i, 'name');
+                    var tableInputName = vm.inputsGridTableDataService.getCellByKey(rowIndex, 'name');
 
                     if (inputName === tableInputName) {
 
                         row.columns.forEach(function (column) {
 
-                            if (column.objPath) { // in case property located deeper into object
+                            /* var objPlace = input;
 
-                                var objPlace = input;
+                            column.objPath.forEach(function (prop) {
+                                objPlace = objPlace[prop];
+                            });
 
-                                column.objPath.forEach(function (prop) {
-                                    objPlace = objPlace[prop];
-                                });
-
-                                objPlace = column.settings.value;
-
-                            }
+                            objPlace = column.settings.value; */
 
                         });
 
                     }
-                }
+                })
 
             });
 
@@ -3099,53 +3094,8 @@
         var initGridTableEvents = function () {
 
             vm.inputsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
-
-                /*if (argumentsObj) {
-
-                    var rowOrder = argumentsObj.rowOrder;
-                    var cellOrder = argumentsObj.cellOrder;
-                    console.log("grid table initGridTableEvents", argumentsObj);
-                    var changedCell = vm.inputsGridTableDataService.getCell(rowOrder, cellOrder);
-                    var valueTypeCell = vm.inputsGridTableDataService.getCellByKey(rowOrder, 'value_type');
-                    /!*var changedRow = vm.inputsGridTableDataService.getRow(rowOrder);*!/
-
-                    if (changedCell.key === 'value_type') {
-                        onValueTypeChange(rowOrder, cellOrder, changedCell);
-                    }
-
-                    else if (changedCell.key === 'is_fill_from_context' &&
-                             valueTypeCell.settings.value === 100) {
-
-                        onRelationFillFromContextChange(rowOrder, cellOrder, changedCell);
-
-                    }
-
-                }
-
-                console.log("grid table inputsGridTableData", vm.inputsGridTableData);
-
-                if (rowOrder !== 'newRow') {
-                    updateInputsBasedOnTableGrid();
-                }*/
-                updateInputsBasedOnTableGrid();
-
+                updateInputsBasedOnGridTable();
             });
-
-            /* relationDefaultValueIndex = vm.inputsGridTableEventService.addEventListener(gridTableEvents.SELECTOR_INSIDE_CELL_OPENED, function (argumentsObj) {
-
-                if (argumentsObj) {
-
-                    var rowOrder = argumentsObj.rowOrder;
-                    var cellOrder = argumentsObj.cellOrder;
-                    var cellWithSel = vm.inputsGridTableDataService.getCell(rowOrder, cellOrder);
-
-                    var valueTypeCell = vm.inputsGridTableDataService.getCell(rowOrder, 'value_type');
-                    var
-
-                }
-                onRelationDefaultValueSelOpen();
-
-            }) */
 
         };
 

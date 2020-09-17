@@ -2,6 +2,16 @@
 
     <div ng-if="row.order === 'header'"
          class="gt-header-cell-content gt-cell-content">
+
+        <ng-md-icon data-ng-show="sortingOn && !sortRowsReverse"
+                    icon="arrow_upwards"
+                    size="14"
+                    class="gt-sorting-icon"></ng-md-icon>
+        <ng-md-icon data-ng-show="sortingOn && sortRowsReverse"
+                    icon="arrow_downward"
+                    size="14"
+                    class="gt-sorting-icon"></ng-md-icon>
+
         <grid-table-header-cell column="column"
                                 gt-data-service="gtDataService"
                                 gt-event-service="gtEventService"

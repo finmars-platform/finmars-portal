@@ -15,14 +15,6 @@
             },
             template: '<div class="gt-cell-text-container">' +
                 '<div class="gt-cell-text">' +
-                    '<ng-md-icon data-ng-show="sortingOn && !sortRowsReverse" ' +
-                                'icon="arrow_upwards" ' +
-                                'size="14" ' +
-                                'class="gt-sorting-icon"></ng-md-icon>' +
-                    '<ng-md-icon data-ng-show="sortingOn && sortRowsReverse" ' +
-                                'icon="arrow_downward" ' +
-                                'size="14" ' +
-                                'class="gt-sorting-icon"></ng-md-icon>' +
                     '<span data-ng-bind="column.columnName" class="sortingOnClick"></span>' +
                 '</div>' +
             '</div>',
@@ -31,15 +23,24 @@
                 scope.sortRowsReverse = false;
                 scope.sortingOn = false;
 
+                if (scope.column.sorting) {
 
-                var sortOnClickElem = elem[0].querySelector(".sortingOnClick");
+                    var sortOnClickElem = elem[0].querySelector(".sortingOnClick");
 
-                sortOnClickElem.addEventListener('click', function () {
+                    sortOnClickElem.addEventListener('click', function () {
 
-                    scope.gtDataService.setSortingSettings(scope.column.order);
-                    scope.gtEventService.dispatchEvent(gtEvents.SORTING_SETTINGS_CHANGED);
+                        var options;
 
-                });
+                        if (typeof scope.column.sorting === 'object') {
+                            options = scope.column.sorting;
+                        }
+
+                        scope.gtDataService.setSortingSettings(scope.column.order, options);
+                        scope.gtEventService.dispatchEvent(gtEvents.SORTING_SETTINGS_CHANGED);
+
+                    });
+
+                }
 
                 var sortSettingsChangeIndex = scope.gtEventService.addEventListener(gtEvents.SORTING_SETTINGS_CHANGED, function () {
 

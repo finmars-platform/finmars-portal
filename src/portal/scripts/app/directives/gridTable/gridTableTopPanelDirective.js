@@ -1,6 +1,7 @@
 (function () {
 
     var gtEvents = require('../../services/gridTableEvents');
+    var metaHelper = require('../../helpers/meta.helper');
 
     'use strict';
 
@@ -16,14 +17,24 @@
             link: function (scope, elem, attr) {
 
                 scope.gridTableData = scope.gtDataService.getTableData();
-                scope.newRow = scope.gridTableData.templateRow;
                 scope.mode = false;
 
                 var tableMethods = scope.gridTableData.tableMethods;
 
                 scope.addRow = function () {
 
-                    scope.templateRow.order = scope.gridTableData.columns.length;
+                    var newRow = metaHelper.recursiveDeepCopy(scope.gridTableData.templateRow, true);
+                    newRow.key = 'newRow';
+
+                    var lowestOrder = -1;
+                    scope.gridTableData.body.forEach(function (bRow) {
+                        lowestOrder = Math.min(lowestOrder, bRow.order)
+                    })
+
+                    newRow.order = lowestOrder - 1
+                    scope.gridTableData.body.unshift(newRow);
+
+                    scope.gtEventService.dispatchEvent(gtEvents.ROW_ADDED);
 
                 };
 

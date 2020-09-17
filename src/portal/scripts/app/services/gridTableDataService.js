@@ -4,12 +4,15 @@
 
     module.exports = function () {
 
+        var defaultSortingSettings = {
+            columns: null,
+            valueOrder: null, // value number from multiple values to use in sorting
+            reverse: false
+        }
+
         var data = {
             tableData: null,
-            sortingSettings: {
-                columns: null,
-                reverse: false
-            }
+            sortingSettings: Object.assign({}, defaultSortingSettings)
         };
 
         function setTableData (tableData) {
@@ -48,8 +51,7 @@
 
             data.tableData.body.forEach(function (row, index) {
                 row.order = index;
-            });
-            console.log("grid table rows after deletion", data.tableData.body);
+            })
         }
 
         function getSelectedRows () {
@@ -86,16 +88,25 @@
 
         }
 
-        function setSortingSettings (colOrder) {
+        function setSortingSettings (colOrder, options) {
 
             if (data.sortingSettings.column === colOrder) {
                 data.sortingSettings.reverse = !data.sortingSettings.reverse
 
             } else {
+
+                data.sortingSettings = Object.assign({}, defaultSortingSettings) // reset sorting settings on column change
                 data.sortingSettings.column = colOrder
-                data.sortingSettings.reverse = false
+
             }
 
+            if (options) {
+
+                Object.keys(options).forEach(function (sortOnsProp) {
+                    data.sortingSettings[sortOnsProp] = options[sortOnsProp]
+                })
+
+            }
 
         }
 

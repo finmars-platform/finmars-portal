@@ -49,12 +49,12 @@
                 var inputContainer = elem[0].querySelector('.dropdownSelectInputContainer');
                 var inputElem = elem[0].querySelector('.dropdownSelectInputElem');
 
-                var entityIndicatorIcons = {
+                /*var entityIndicatorIcons = {
                     'type1': {
                         type: 'class',
                         icon: 'fas fa-align-justify'
                     }
-                }
+                }*/
 
                 scope.getInputContainerClasses = function () {
                     var classes = '';
@@ -302,7 +302,7 @@
 
                     initEventListeners();
 
-                    scope.iconData = entityIndicatorIcons[indicatorBtnIcon];
+                    /*scope.iconData = entityIndicatorIcons[indicatorBtnIcon];*/
 
                     if (scope.customStyles) {
                         applyCustomStyles();

@@ -85,11 +85,15 @@
                     scope.gtEventService.addEventListener(gtEvents.SORTING_SETTINGS_CHANGED, function () {
 
                         scope.sortingOn = false;
+                        scope.sortRowsReverse = false;
 
                         var sortSettings = scope.gtDataService.getSortingSettings();
 
                         if (sortSettings.column === scope.column.order) {
-                            scope.sortingOn = true;
+
+                            scope.sortingOn = true
+                            scope.sortRowsReverse = sortSettings.reverse
+
                         }
 
                     });
