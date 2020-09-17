@@ -64,6 +64,7 @@
             delete vm.item.settings.legends_position;
             delete vm.item.settings.legends_columns_number;
             delete vm.item.settings.chart_form;
+            delete vm.item.settings.pie_size_percent;
 
         };
 
@@ -147,6 +148,7 @@
                     vm.item.settings.legends_position = 'right';
                     vm.item.settings.tooltip_font_size = 10;
                     vm.item.settings.chart_form = 'doughnut';
+                    vm.item.settings.pie_size_percent = 100;
                     break;
             }
 
@@ -264,6 +266,10 @@
 
             $mdDialog.hide({status: 'agree'});
         };
+
+        vm.isFormValid = function () {
+            return vm.item.type && vm.item.settings.pie_size_percent > 0 && vm.item.settings.pie_size_percent <= 100;
+        }
 
         vm.init = function () {
 

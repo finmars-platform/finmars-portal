@@ -1724,7 +1724,8 @@
                         legends_columns_number: vm.componentData.settings.legends_columns_number,
                         number_format: vm.componentData.settings.number_format,
                         tooltip_font_size: vm.componentData.settings.tooltip_font_size,
-                        chart_form: vm.componentData.settings.chart_form
+                        chart_form: vm.componentData.settings.chart_form,
+                        pie_size_percent: vm.componentData.settings.pie_size_percent
                     };
                 }
 
