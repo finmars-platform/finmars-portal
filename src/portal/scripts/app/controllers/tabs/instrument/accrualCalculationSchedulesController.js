@@ -29,17 +29,93 @@
 
         vm.readyStatus = {accrualModals: false, periodicityItems: false};
 
-        accrualCalculationModelService.getList().then(function (data) {
-            vm.accrualModels = data;
-            vm.readyStatus.accrualModals = true;
-            $scope.$apply();
+        var accrualCalcModelPromise = new Promise(function (resolve, reject) {
+
+            vm.accrualModels = [];
+
+            accrualCalculationModelService.getList().then(function (data) {
+
+                vm.accrualModels = data;
+                console.log("grid table vm.accrualModels", vm.accrualModels);
+                vm.readyStatus.accrualModals = true;
+                resolve();
+
+            }).catch(function () {
+                resolve();
+            });
+
         });
 
-        instrumentPeriodicityService.getList().then(function (data) {
-            vm.periodicityItems = data;
-            vm.readyStatus.periodicityItems = true;
-            $scope.$apply();
+        var instrumentPeriodicPromise = new Promise(function (resolve) {
+
+            vm.periodicityItems = [];
+
+            instrumentPeriodicityService.getList().then(function (data) {
+
+                vm.periodicityItems = data;
+                console.log("grid table vm.periodicityItems", vm.periodicityItems);
+                vm.readyStatus.periodicityItems = true;
+                resolve();
+
+            }).catch(function () {
+                resolve();
+            });
+
         });
+
+        var addAccrualCalcSchedule = function () {
+
+            var newSchedule = {
+                "accrual_start_date": '',
+                "first_payment_date": '',
+                "accrual_size": '',
+                "accrual_calculation_model": '',
+                "periodicity": '',
+                "periodicity_n": '',
+                "notes": ''
+            };
+
+            vm.entity.accrual_calculation_schedules.unshift(newSchedule)
+
+            // Update rows in schedules grid table
+            vm.entity.accrual_calculation_schedules.forEach(function (schedule, scheduleIndex) {
+                vm.schedulesGridTableData.body[scheduleIndex].key = scheduleIndex
+                vm.schedulesGridTableData.body[scheduleIndex].order = scheduleIndex
+
+            })
+
+            console.log("grid table schedules after addition", vm.entity.accrual_calculation_schedules, vm.schedulesGridTableData);
+
+        };
+
+         var updateSchedulesBasedOnGridTable = function () {
+
+            vm.entity.accrual_calculation_schedules.forEach(function (schedule, scheduleIndex) {
+
+                var row = vm.schedulesGridTableData.body[scheduleIndex];
+
+                row.columns.forEach(function (column) {
+
+                    if (column.objPath) {
+                        metaHelper.setObjectNestedPropVal(schedule, column.objPath, column.settings.value)
+
+                    } else {
+
+                        column.objPaths.forEach(function (objPath, index) {
+
+                            metaHelper.setObjectNestedPropVal(schedule, objPath, column.settings.value[index])
+
+                        })
+
+                    }
+
+                })
+
+            })
+
+             console.log("grid table schedules after update", vm.entity.accrual_calculation_schedules);
+
+        };
 
         vm.checkReadyStatus = function () {
             if (vm.readyStatus.accrualModals == true && vm.readyStatus.periodicityItems == true) {
@@ -73,14 +149,14 @@
             var name;
             vm.periodicityItems.forEach(function (item) {
                 if (row.periodicity == item.id) {
-                    row.periodicity_name = item.name;
+                    row.periodicity_name = item.name
                     name = item.name
                 }
             });
             return name;
         };
 
-        vm.newItem = {
+        /* vm.newItem = {
             "accrual_start_date": new Date(),
             "first_payment_date": new Date(),
             "accrual_size": '',
@@ -103,6 +179,7 @@
         };
 
         vm.addRow = function () {
+
             vm.entity.accrual_calculation_schedules.push({
                 "accrual_start_date": moment(new Date(vm.newItem.accrual_start_date)).format('YYYY-MM-DD'),
                 "first_payment_date": moment(new Date(vm.newItem.first_payment_date)).format('YYYY-MM-DD'),
@@ -122,7 +199,8 @@
                 "periodicity_n": '',
                 "notes": ""
             };
-        };
+
+        }; */
 
         vm.getCurrencyFields = function () {
 
@@ -282,20 +360,21 @@
                     },
                     {
                         key: 'periodicity',
-                        objPath: ['accrual_size'],
+                        objPaths: [['accrual_calculation_model'], ['periodicity_n'], ['periodicity']],
                         columnName: 'Periodicity',
                         order: 3,
                         cellType: 'custom_popup',
                         settings: {
-                            value: {
-                                accrual_calculation_model: null,
-                                periodicity_n: null,
-                                periodicity: null
-                            },
+                            value: [
+                                null, // for accrual_calculation_model
+                                null, // for periodicity_n
+                                null // for periodicity
+                            ],
+                            closeOnMouseOut: false,
                             cellText: '',
                             popupSettings: {
                                 contentHtml: {
-                                    main: '<div ng-include="views/directives/gridTable/cells/popups/instrument-accrual-schedules-periodicity-view.html"></div>'
+                                    main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-accrual-schedules-periodicity-view.html'\"></div>"
                                 },
                                 fieldsData: [
                                     {selectorOptions: vm.periodicityItems},
@@ -304,12 +383,20 @@
                             },
                         },
                         methods: {
-                            acceptPopupChanges: function (popupData, rowOrder, gtDataService, gtEventService) {
+                            onChange: function (rowOrder, colOrder, gtDataService, gtEventService) {
 
-                                var popoupValues = Object.assign({}, popupData);
-                                var cellData = gtDataService.getCellByKey(rowOrder, 'periodicity');
+                                var periodicityCell = gtDataService.getCellByKey(rowOrder, 'periodicity');
 
-                                cellData.settings.value = popoupValues;
+                                for (var i = 0; i < vm.periodicityItems.length; i++) {
+
+                                    if (vm.periodicityItems[i].id === periodicityCell.settings.value[2]) {
+
+                                        periodicityCell.settings.cellText = vm.periodicityItems[i].name
+                                        break;
+
+                                    }
+
+                                }
 
                             }
                         },
@@ -336,12 +423,17 @@
 
         var formatDataForSchedulesGridTable = function () {
 
+            // Needed to update data after downloading it from server
+            var tmplRowPeriodicityPopup = vm.schedulesGridTableData.templateRow.columns[3].settings.popupSettings;
+            tmplRowPeriodicityPopup.fieldsData[0].selectorOptions = vm.accrualModels;
+            tmplRowPeriodicityPopup.fieldsData[1].selectorOptions = vm.periodicityItems;
+
             // assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);
 
             vm.schedulesGridTableData.header.columns = rowObj.columns.map(function (column) {
 
-                return {
+                 var headerData = {
                     key: column.key,
                     columnName: column.columnName,
                     order: column.order,
@@ -349,21 +441,44 @@
                     styles: {
                         'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
                     }
+                };
+
+                if (column.key === 'periodicity') {
+                    headerData.sorting = {valueOrder: 0}
                 }
+
+                return headerData;
 
             });
             // < assemble header columns >
 
             // assemble body rows
-            vm.entity.accrual_calculation_schedules.forEach(function (schedule, index) {
+            vm.entity.accrual_calculation_schedules.forEach(function (schedule, scheduleIndex) {
 
-                rowObj.key = index;
-                rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);
+                rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true)
+                rowObj.key = scheduleIndex
+                rowObj.order = scheduleIndex
 
-                rowObj.columns[0].settings.value = schedule.accrual_start_date;
-                rowObj.columns[1].settings.value = schedule.first_payment_date;
-                rowObj.columns[2].settings.value = schedule.accrual_size;
-                rowObj.columns[3].settings.value = schedule.periodicity;
+                rowObj.columns[0].settings.value = schedule.accrual_start_date
+                rowObj.columns[1].settings.value = schedule.first_payment_date
+                rowObj.columns[2].settings.value = schedule.accrual_size
+
+                rowObj.columns[3].settings.value = [
+                    schedule.accrual_calculation_model,
+                    schedule.periodicity_n,
+                    schedule.periodicity
+                ]
+
+                for (var i = 0; i < vm.periodicityItems.length; i++) {
+
+                    if (vm.periodicityItems[i].id === schedule.periodicity) {
+
+                        rowObj.columns[3].settings.cellText = vm.periodicityItems[i].name
+                        break;
+
+                    }
+                }
+
                 rowObj.columns[4].settings.value = schedule.notes;
 
                 vm.schedulesGridTableData.body.push(rowObj);
@@ -374,6 +489,17 @@
         }
         // < Schedules grid table >
 
+        var initGridTableEvents = function () {
+
+            vm.schedulesGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
+                addAccrualCalcSchedule();
+            });
+
+            vm.schedulesGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function () {
+                updateSchedulesBasedOnGridTable();
+            });
+
+        };
 
         vm.init = function () {
 
@@ -383,7 +509,14 @@
             vm.schedulesGridTableDataService = new GridTableDataService();
             vm.schedulesGridTableEventService = new GridTableEventService();
 
-            formatDataForSchedulesGridTable();
+            initGridTableEvents();
+
+            Promise.all([accrualCalcModelPromise, instrumentPeriodicPromise]).then(function () {
+
+                $scope.$apply();
+                formatDataForSchedulesGridTable();
+
+            })
 
             vm.schedulesGridTableDataService.setTableData(vm.schedulesGridTableData);
             console.log("grid table vm.schedulesGridTableDataService", vm.schedulesGridTableDataService);

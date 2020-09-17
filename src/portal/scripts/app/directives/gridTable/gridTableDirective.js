@@ -34,9 +34,19 @@
                 }
 
                 scope.sortRowsByCol = function (row) {
+
                     if (scope.sortByCol) {
-                        return row.columns[scope.sortByCol].settings.value;
+
+                        if (scope.sortValueOrder || scope.sortValueOrder === 0) { // for sorting by column with multiple values
+                            return row.columns[scope.sortByCol].settings.value[scope.sortValueOrder];
+
+                        } else {
+                            return row.columns[scope.sortByCol].settings.value;
+
+                        }
+
                     }
+
                 }
 
                 scope.toggleAllRows = function () {
@@ -73,10 +83,9 @@
 
                     var sortSettings = scope.gtDataService.getSortingSettings();
 
-                    scope.sortByCol = sortSettings.column;
-                    scope.sortRowsReverse = sortSettings.reverse;
-
-                    // scope.$apply();
+                    scope.sortByCol = sortSettings.column
+                    scope.sortRowsReverse = sortSettings.reverse
+                    scope.sortValueOrder = sortSettings.valueOrder
 
                 })
 

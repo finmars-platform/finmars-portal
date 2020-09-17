@@ -75,6 +75,18 @@
                         <!--<div class="ev-data-field"
                              data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                              flex="15">
+                            <dropdown-select label="Status"
+                                             model="vm.entityStatus"
+                                             placeholder-text="System List"
+                                             menu-options="vm.statusSelectorOptions"
+                                             small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                                             on-change-callback="vm.entityStatusChanged()"
+                                             class="ev-editor-field"></dropdown-select>-->
+
+                        <!-- Old selector -->
+                        <!--<div class="ev-data-field"
+                             data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                             flex="15">
                             <md-input-container class="md-block">
                                 <label>Status</label>
                                 <md-select data-ng-model="vm.entityStatus"
@@ -85,6 +97,7 @@
                                 </md-select>
                             </md-input-container>
                         </div>-->
+
                     </div>
 
                     <div class="entity-editor-divider-holder">

@@ -1,7 +1,7 @@
 <div class="grid-table-top-panel">
-    <div data-ng-show="!mode" class="flex-row fc-space-between">
+    <div data-ng-show="!mode" class="flex-row fc-space-between width-100">
         <div>
-            <md-button data-ng-click="mode = 'row_addition'">+</md-button>
+            <md-button data-ng-click="addRow()">+</md-button>
             <md-button>ADD FILTER</md-button>
         </div>
 
@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div data-ng-show="mode === 'row_addition'" class="grid-table-row">
+    <!--<div data-ng-show="mode === 'row_addition'" class="grid-table-row">
 
         <div>
             <md-button>ADD</md-button>
@@ -26,7 +26,7 @@
                              data-gt-event-service="gtEventService"></grid-table-cell>
         </div>
 
-    </div>
+    </div>-->
 
     <div data-ng-show="mode === 'rows_deletion'" class="flex-row fc-space-between">
         <div>
