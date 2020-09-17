@@ -50,6 +50,9 @@
     vm.cancel = function () {
       $mdDialog.hide({ status: "disagree" });
     };
+    vm.cool = function () {
+      $mdDialog.hide({ status: "disagree" });
+    };
 
     vm.agree = function () {
       pricingPolicyService.update(vm.item.id, vm.item).then(function (data) {

@@ -22,15 +22,36 @@
       <div class="m-t-16">
         <div><label for="">Notes</label></div>
         <textarea
+          class="textAreaProcedure"
           name=""
           data-ng-model="vm.item.notes"
           cols="60"
           rows="5"
         ></textarea>
       </div>
+      <div class="m-t-16">
+        <div><label for="">Notes for users</label></div>
+        <textarea
+          class="textAreaProcedure"
+          data-ng-model="vm.item.notesForUsers"
+          cols="60"
+          rows="5"
+        ></textarea>
+      </div>
+      <div class="m-t-16">
+        <date-input
+          data-ng-model="vm.item.modified"
+          label="Date"
+          model="vm.item.modified"
+          custom-buttons="item.buttons"
+          custom-styles="customStyles"
+          event-signal="ciEventObj.event"
+          small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+        ></date-input>
+      </div>
 
       <md-input-container class="m-t-16">
-        <label>Default Instrument Pricing Scheme</label>
+        <label>Provider</label>
         <md-select data-ng-model="vm.item.default_instrument_pricing_scheme">
           <md-option
             ng-value="item.id"
@@ -41,7 +62,7 @@
       </md-input-container>
 
       <md-input-container class="m-t-16">
-        <label>Default Currency Pricing Scheme</label>
+        <label>Scheme name</label>
         <md-select data-ng-model="vm.item.default_currency_pricing_scheme">
           <md-option
             ng-value="item.id"

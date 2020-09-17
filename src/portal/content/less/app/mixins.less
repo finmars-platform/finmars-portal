@@ -1,5 +1,8 @@
 @import "./variables.less";
 
+:root {
+  --primary-color: @grey;
+}
 .checkboxUntouched(@background: #ff4081; @size: 12px; @x: -50%; @y: -50%) {
   position: absolute;
   content: "";
@@ -44,4 +47,17 @@
 }
 
 .cheaps() {
+}
+.textarea() {
+  border-radius: 5px;
+  width: 100%;
+  resize: none;
+  outline: none;
+  margin: 0 auto;
+  border: 1px solid var(--primary-color);
+  padding: 10px 20px;
+  box-sizing: border-box;
+  &:focus {
+    border: 2px solid var(--primary-color);
+  }
 }

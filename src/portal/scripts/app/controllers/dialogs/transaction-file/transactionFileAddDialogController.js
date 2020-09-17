@@ -7,10 +7,16 @@
   var transactionFileProcedureService = require("../../../services/transaction/transactionFileProcedureService");
 
   var portfolioService = require("../../../services/portfolioService");
-  var instrumentTypeService = require("../../../services/instrumentTypeService");
-  var pricingPolicyService = require("../../../services/pricingPolicyService");
+  //   var instrumentTypeService = require("../../../services/instrumentTypeService");
+  var instrumentTypeService = require("../../../services/transactionTypeService");
+  //
+  //
+  var pricingPolicyService = require("../../../services/transactionService");
+  // var pricingPolicyService = require("../../../services/pricingPolicyService");
+  //
+  //   var instrumentPricingSchemeService = require("../../../services/transaction/transactionFileSchemeService"); // тут
 
-  var instrumentPricingSchemeService = require("../../../services/pricing/instrumentPricingSchemeService");
+  var transactionFileSchemeService = require("../../../services/transaction/transactionFileSchemeService"); // тут
   var currencyPricingSchemeService = require("../../../services/pricing/currencyPricingSchemeService");
 
   module.exports = function ($scope, $mdDialog, data) {
@@ -26,6 +32,9 @@
     vm.instrumentTypes = [];
     vm.instrumentPricingSchemes = [];
     vm.currencyPricingSchemes = [];
+    //
+    vm.transactionFileSchemes = [];
+    //
 
     vm.portfolio_filters = [];
     vm.pricing_policy_filters = [];
@@ -54,54 +63,67 @@
     };
 
     vm.agree = function () {
-      if (vm.item.price_date_from_expr) {
-        vm.item.price_date_from = null;
-      }
+      //   vm.item = {
+      //     // id: 4,
+      //     name: "test",
 
-      if (vm.item.price_date_to_expr) {
-        vm.item.price_date_to = null;
-      }
+      //     notes: "21",
+      //     provider: 4,
+      //     scheme_name: "1",
+      //     modified: "2020-09-17T18:21:58.310693Z",
+      //   };
+      vm.item.provider = 8;
+      vm.item.scheme_name = "1";
+      //   vm.item.modified = "2020-09-17T18:21:58.310693Z";
 
-      if (vm.item.portfolio_filters) {
-        vm.item.portfolio_filters = vm.item.portfolio_filters.join(",");
-      }
+      //   if (vm.item.price_date_from_expr) {
+      //     vm.item.price_date_from = null;
+      //   }
 
-      if (vm.item.pricing_policy_filters) {
-        vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.join(
-          ","
-        );
-      }
+      //   if (vm.item.price_date_to_expr) {
+      //     vm.item.price_date_to = null;
+      //   }
 
-      if (vm.item.instrument_type_filters) {
-        vm.item.instrument_type_filters = vm.item.instrument_type_filters.join(
-          ","
-        );
-      }
+      //   if (vm.item.portfolio_filters) {
+      //     vm.item.portfolio_filters = vm.item.portfolio_filters.join(",");
+      //   }
 
-      if (vm.item.instrument_pricing_scheme_filters) {
-        vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.join(
-          ","
-        );
-      }
+      //   if (vm.item.pricing_policy_filters) {
+      //     vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.join(
+      //       ","
+      //     );
+      //   }
 
-      if (vm.item.instrument_pricing_condition_filters) {
-        vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.join(
-          ","
-        );
-      }
+      //   if (vm.item.instrument_type_filters) {
+      //     vm.item.instrument_type_filters = vm.item.instrument_type_filters.join(
+      //       ","
+      //     );
+      //   }
 
-      if (vm.item.currency_pricing_scheme_filters) {
-        vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.join(
-          ","
-        );
-      }
+      //   if (vm.item.instrument_pricing_scheme_filters) {
+      //     vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.join(
+      //       ","
+      //     );
+      //   }
 
-      if (vm.item.currency_pricing_condition_filters) {
-        vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.join(
-          ","
-        );
-      }
+      //   if (vm.item.instrument_pricing_condition_filters) {
+      //     vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.join(
+      //       ","
+      //     );
+      //   }
 
+      //   if (vm.item.currency_pricing_scheme_filters) {
+      //     vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.join(
+      //       ","
+      //     );
+      //   }
+
+      //   if (vm.item.currency_pricing_condition_filters) {
+      //     vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.join(
+      //       ","
+      //     );
+      //   }
+      console.log(vm.item, "panov vm.item");
       transactionFileProcedureService.create(vm.item).then(function (data) {
         $mdDialog.hide({ status: "agree", data: { item: data } });
       });
@@ -127,7 +149,7 @@
     };
 
     vm.getInstrumentPricingSchemes = function () {
-      instrumentPricingSchemeService
+      transactionFileSchemeService
         .getList({
           pageSize: 1000,
         })
@@ -140,7 +162,7 @@
           });
 
           console.log(
-            "vm.instrumentPricingSchemes",
+            "vm.instrumentPricingSchemesЗ",
             vm.instrumentPricingSchemes
           );
 
@@ -161,7 +183,7 @@
             };
           });
 
-          console.log("vm.currencyPricingSchemes", vm.currencyPricingSchemes);
+          console.log("vm.transactionFileSchemes", vm.currencyPricingSchemes);
 
           $scope.$apply();
         });
