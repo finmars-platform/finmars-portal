@@ -261,14 +261,12 @@
 
                         //inputContainer.classList.add('custom-input-focused');
                         inputContainer.classList.add('custom-input-full-text-focused');
-                        fullTextElem.classList.add('custom-input-full-text-shown');
                         fullTextTextarea.focus();
 
                     });
 
                     fullTextTextarea.addEventListener('blur', function () {
 
-                        fullTextElem.classList.remove('custom-input-full-text-shown');
                         inputContainer.classList.remove('custom-input-full-text-focused');
                         /*if (scope.onBlurCallback) {
 
