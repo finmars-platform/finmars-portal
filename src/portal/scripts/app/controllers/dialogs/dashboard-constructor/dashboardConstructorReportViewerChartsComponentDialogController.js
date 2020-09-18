@@ -268,8 +268,9 @@
         };
 
         vm.isFormValid = function () {
-            return vm.item.type && vm.item.settings.pie_size_percent > 0 && vm.item.settings.pie_size_percent <= 100;
-        }
+            var pie_size_percent = vm.item.settings.pie_size_percent;
+            return vm.item.type && (!pie_size_percent || pie_size_percent > 0 && pie_size_percent <= 100);
+        };
 
         vm.init = function () {
 
