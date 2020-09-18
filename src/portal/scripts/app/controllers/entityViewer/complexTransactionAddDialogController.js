@@ -922,24 +922,98 @@
 
                         }).catch(function (data) {
 
-                            vm.processing = false;
+                            console.log('here?', data);
 
-                            $mdDialog.show({
-                                controller: 'ValidationDialogController as vm',
-                                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                targetEvent: $event,
-                                parent: angular.element(document.body),
-                                multiple: true,
-                                locals: {
-                                    validationData: {
-                                        errorData: data,
-                                        tableColumnsNames: ['Name of fields', 'Error Cause'],
-                                        entityType: 'complex-transaction'
+                            if (data.hasOwnProperty('message') && data.message.reason == 410) {
+
+                                vm.processing = false;
+
+                                $mdDialog.show({
+                                    controller: 'BookUniquenessWarningDialogController as vm',
+                                    templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+                                    targetEvent: $event,
+                                    parent: angular.element(document.body),
+                                    multiple: true,
+                                    locals: {
+                                        data: {
+                                            errorData: data
+                                        }
                                     }
-                                }
-                            });
+                                }).then(function (response) {
 
-                            reject(data);
+                                    console.log('response', response);
+
+                                    if(response.reaction === 'cancel') {
+                                        // do nothing
+                                    }
+
+                                    if(response.reaction === 'skip') {
+                                        $mdDialog.hide({res: 'agree', data: null});
+                                    }
+
+                                    if(response.reaction === 'book_without_unique_code') {
+
+                                        // TODO refactor here
+                                        // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+
+                                        res.uniqueness_reaction = 2;
+
+                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                            vm.processing = false;
+
+                                            toastNotificationService.success('Transaction was successfully booked');
+
+                                            resolve(data);
+
+                                        })
+
+                                    }
+
+                                    if(response.reaction === 'overwrite') {
+
+                                        // TODO refactor here
+                                        //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+
+                                        res.uniqueness_reaction = 3;
+
+                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                            vm.processing = false;
+
+                                            toastNotificationService.success('Transaction was successfully booked');
+
+                                            resolve(data);
+
+                                        })
+
+                                    }
+
+                                })
+
+
+                            } else {
+
+                                vm.processing = false;
+
+                                $mdDialog.show({
+                                    controller: 'ValidationDialogController as vm',
+                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                    targetEvent: $event,
+                                    parent: angular.element(document.body),
+                                    multiple: true,
+                                    locals: {
+                                        validationData: {
+                                            errorData: data,
+                                            tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                            entityType: 'complex-transaction'
+                                        }
+                                    }
+                                });
+
+                                reject(data);
+
+                            }
 
                         });
 
@@ -1368,7 +1442,7 @@
 
                 if (inputsWithCalculations) {
 
-                    var i,a;
+                    var i, a;
                     for (i = 0; i < vm.userInputs.length; i++) {
 
                         if (vm.userInputs[i].key === fieldKey) {
