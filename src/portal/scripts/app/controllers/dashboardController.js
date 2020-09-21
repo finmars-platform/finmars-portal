@@ -360,9 +360,11 @@
 
                     key = keys[i];
 
-                    if (statusesObject[key] === dashboardComponentStatuses.ACTIVE && componentBuildingTimeTimeout.hasOwnProperty(key)) {
-                        clearTimeout(componentBuildingTimeTimeout[key]);
-                        delete componentBuildingTimeTimeout[key];
+                    if (statusesObject[key] === dashboardComponentStatuses.ACTIVE || statusesObject[key] === dashboardComponentStatuses.ERROR) {
+                        if (componentBuildingTimeTimeout.hasOwnProperty(key)) {
+                            clearTimeout(componentBuildingTimeTimeout[key]);
+                            delete componentBuildingTimeTimeout[key];
+                        }
                     }
 
                     if (statusesObject[key] === dashboardComponentStatuses.PROCESSING || statusesObject[key] === dashboardComponentStatuses.START) {
