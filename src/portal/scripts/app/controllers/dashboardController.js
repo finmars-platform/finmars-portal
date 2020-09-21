@@ -325,12 +325,11 @@
 
         };
 
-        var componentBuildingTimeTimeout;
+        var componentBuildingTimeTimeout = {};
         var onComponentBuildingForTooLong = function (compId) {
 
-            componentBuildingTimeTimeout = setTimeout(function () {
+            componentBuildingTimeTimeout[compId] = setTimeout(function () {
 
-                // var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
                 var statusesObject = metaHelper.recursiveDeepCopy(vm.dashboardDataService.getComponentStatusesAll());
 
                 if (statusesObject[compId] === dashboardComponentStatuses.PROCESSING || statusesObject[compId] === dashboardComponentStatuses.START) {
@@ -339,8 +338,6 @@
                     throw "id of defective dashboard component " + compId;
                 }
 
-                // }, 8000);
-                // }, 15000);
             }, 60000);
 
         };
@@ -350,8 +347,6 @@
             var LIMIT = 2;
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                clearTimeout(componentBuildingTimeTimeout);
 
                 var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
                 var nextComponentToStart = null;
@@ -364,6 +359,11 @@
                 for (var i = 0; i < keys.length; i = i + 1) {
 
                     key = keys[i];
+
+                    if (statusesObject[key] === dashboardComponentStatuses.ACTIVE && componentBuildingTimeTimeout.hasOwnProperty(key)) {
+                        clearTimeout(componentBuildingTimeTimeout[key]);
+                        delete componentBuildingTimeTimeout[key];
+                    }
 
                     if (statusesObject[key] === dashboardComponentStatuses.PROCESSING || statusesObject[key] === dashboardComponentStatuses.START) {
                         activeProcessingComponents = activeProcessingComponents + 1;
