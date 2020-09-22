@@ -390,6 +390,13 @@ md-checkbox.checkbox-bind-field {
   box-sizing: border-box;
 
   .ec-decoration {
+    &.plain-text {
+      display: block;
+      position: relative;
+      width: 100%;
+      text-align: left;
+      margin: 30px 0;
+    }
     &.line {
       //position: absolute;
       width: 100%;
@@ -400,11 +407,7 @@ md-checkbox.checkbox-bind-field {
       margin: 15px 0 30px;
     }
     &.labeled {
-      display: block;
-      position: relative;
-      width: 100%;
-      text-align: left;
-      margin: 30px 0;
+      .plain-text;
       // .w-rp {
       // 	position: relative;
       // 	background: #fff;
