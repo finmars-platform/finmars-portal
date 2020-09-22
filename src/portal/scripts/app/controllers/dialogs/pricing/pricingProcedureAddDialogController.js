@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
+    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
 
     var portfolioService = require('../../../services/portfolioService');
     var instrumentTypeService = require('../../../services/instrumentTypeService');

@@ -1,20 +1,20 @@
 /**
  * Created by szhitenev on 25.08.2016.
  */
-(function () {
+(function(){
 
     'use strict';
 
-    var cookieService = require('../../../../../core/services/cookieService');
-    var xhrService = require('../../../../../core/services/xhrService');
-    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
-    var baseUrlService = require('../../services/baseUrlService');
+    var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
 
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'pricing/procedure/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'schedules/schedule/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -26,7 +26,7 @@
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'pricing/procedure/' + id + '/',
+        return xhrService.fetch(baseUrl + 'schedules/schedule/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -38,7 +38,7 @@
     };
 
     var create = function (item) {
-        return xhrService.fetch(baseUrl + 'pricing/procedure/',
+        return xhrService.fetch(baseUrl + 'schedules/schedule/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -52,7 +52,7 @@
     };
 
     var update = function (id, item) {
-        return xhrService.fetch(baseUrl + 'pricing/procedure/' + id + '/',
+        return xhrService.fetch(baseUrl + 'schedules/schedule/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -67,7 +67,7 @@
 
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'pricing/procedure/' + id + '/',
+        return xhrService.fetch(baseUrl + 'schedules/schedule/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -86,31 +86,14 @@
     };
 
 
-    function runProcedure(id, data) {
-
-        return xhrService.fetch(baseUrl + 'pricing/procedure/' + id + '/run-procedure/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-    }
-
     module.exports = {
 
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey,
+        deleteByKey: deleteByKey
 
-
-        runProcedure: runProcedure
     }
 
 }());
