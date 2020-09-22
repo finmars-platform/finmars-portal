@@ -13,7 +13,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (providerId) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme/?provider' + providerId,
+        return xhrService.fetch(baseUrl + 'import/instrument-scheme/?provider=' + providerId,
             {
                 method: 'GET',
                 credentials: 'include',

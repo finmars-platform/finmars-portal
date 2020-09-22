@@ -1204,7 +1204,7 @@
         });
 
         result = result + '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="mark_row_red"' +
+            ' data-ev-dropdown-action="mark_row"' +
             ' data-object-id="' + objectId + '"' +
             ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Red';
 
