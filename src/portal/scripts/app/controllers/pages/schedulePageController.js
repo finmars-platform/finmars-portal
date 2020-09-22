@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingScheduleService = require('../../services/pricing/pricingScheduleService');
+    var scheduleService = require('../../services/scheduleService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -17,7 +17,7 @@
 
         vm.getList = function () {
 
-            pricingScheduleService.getList().then(function (data) {
+            scheduleService.getList().then(function (data) {
 
                 vm.schedules = data.results;
 
@@ -31,8 +31,8 @@
         vm.editPricingSchedule = function ($event, item) {
 
             $mdDialog.show({
-                controller: 'PricingScheduleEditDialogController as vm',
-                templateUrl: 'views/dialogs/pricing/pricing-schedule-edit-dialog-view.html',
+                controller: 'ScheduleEditDialogController as vm',
+                templateUrl: 'views/dialogs/schedules/schedule-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -78,7 +78,7 @@
 
                 if (res.status === 'agree') {
 
-                    pricingScheduleService.deleteByKey(item.id).then(function (data) {
+                    scheduleService.deleteByKey(item.id).then(function (data) {
                         vm.getList();
                     })
 
@@ -91,8 +91,8 @@
         vm.addPricingSchedule = function ($event) {
 
             $mdDialog.show({
-                controller: 'PricingScheduleAddDialogController as vm',
-                templateUrl: 'views/dialogs/pricing/pricing-schedule-add-dialog-view.html',
+                controller: 'ScheduleAddDialogController as vm',
+                templateUrl: 'views/dialogs/schedules/schedule-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,

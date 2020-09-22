@@ -3,7 +3,7 @@
  */
 (function () {
 
-    var pricingProcedureService = require('../../services/pricing/pricingProcedureService');
+    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 

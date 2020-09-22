@@ -14,7 +14,7 @@
 
 
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'pricing/parent-procedure-instance/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'procedures/pricing-parent-procedure-instance/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -26,7 +26,7 @@
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'pricing/parent-procedure-instance/' + id + '/',
+        return xhrService.fetch(baseUrl + 'procedures/pricing-parent-procedure-instance/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -38,7 +38,7 @@
     };
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'pricing/parent-procedure-instance/' + id + '/',
+        return xhrService.fetch(baseUrl + 'procedures/pricing-parent-procedure-instance/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',

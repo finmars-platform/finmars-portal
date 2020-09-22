@@ -154,10 +154,6 @@
                 result = 'User Triggered Prices Download'
             }
 
-            if (item.task_type === 'automated_download_pricing') {
-                result = 'Automated Prices Download'
-            }
-
             if (item.task_type === 'configuration_import') {
                 result = 'Configuration Import';
             }
