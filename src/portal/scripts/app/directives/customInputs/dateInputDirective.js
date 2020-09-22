@@ -13,6 +13,7 @@
         eventSignal: "=",
         smallOptions: "=",
         onChangeCallback: "&?",
+        format: "@",
       },
       templateUrl: "views/directives/customInputs/date-input-view.html",
       link: function (scope, elem, attr) {
@@ -51,9 +52,7 @@
             defaultDate = scope.defaultDate;
           }
         }
-        scope.test = function (event) {
-          console.log(scope, "customButtons1");
-        };
+        scope.test = function (event) {};
         scope.getInputContainerClasses = function () {
           var classes = "";
 
@@ -73,7 +72,11 @@
           stylePreset = "";
 
           if (scope.dateValue) {
-            if (scope.dateValue !== scope.model) {
+            if (scope.dateValue !== scope.model && scope.format !== "full") {
+              if (scope.format == "full") {
+                scope.valueIsValid = true;
+                scope.model = JSON.parse(JSON.stringify(scope.dateValue));
+              }
               if (moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
                 scope.valueIsValid = true;
                 scope.model = JSON.parse(JSON.stringify(scope.dateValue));
@@ -164,8 +167,15 @@
           });
 
           inputElem.addEventListener("pickmeup-change", function (event) {
-            scope.dateValue = event.detail.formatted_date;
-            scope.$apply();
+            if (scope.format == "full") {
+              scope.dateValue = new Date(
+                ...event.detail.formatted_date.split("-")
+              ).toISOString();
+              scope.$apply();
+            } else {
+              scope.dateValue = event.detail.formatted_date;
+              scope.$apply();
+            }
           });
 
           inputElem.addEventListener("pickmeup-hide", function (event) {
@@ -175,14 +185,32 @@
 
         var initScopeWatchers = function () {
           scope.$watch("model", function () {
-            //if (scope.model && scope.model.value) {
+            //
             if (scope.model) {
-              if (scope.model !== scope.dateValue) {
+              if (scope.format == "full") {
+                scope.error = "";
+                scope.dateValue = JSON.parse(JSON.stringify(scope.model));
+              } else {
+                if (scope.dateValue) {
+                  if (!scope.error) {
+                    scope.dateValue = "";
+                  }
+                } else if (
+                  scope.smallOptions &&
+                  scope.smallOptions.notNull &&
+                  inputLoaded
+                ) {
+                  scope.error = "Field should not be null";
+                }
+              }
+              //
+              if (scope.model !== scope.dateValue && scope.format !== "full") {
                 scope.error = "";
                 scope.dateValue = JSON.parse(JSON.stringify(scope.model));
 
                 if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
                   scope.valueIsValid = false;
+
                   scope.error =
                     "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
                   scope.model = null;

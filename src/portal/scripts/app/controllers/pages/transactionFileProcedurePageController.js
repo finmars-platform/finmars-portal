@@ -27,7 +27,6 @@
     };
 
     vm.editProcedure = function ($event, item) {
-      console.log(vm.readyStatus, "panov1");
       $mdDialog
         .show({
           controller: "TransactionFileEditDialogController as vm",

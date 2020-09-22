@@ -33,7 +33,7 @@
         <div><label for="">Notes for users</label></div>
         <textarea
           class="textAreaProcedure"
-          data-ng-model="vm.item.notesForUsers"
+          data-ng-model="vm.item.notes_for_users"
           cols="60"
           rows="5"
         ></textarea>
@@ -42,6 +42,7 @@
         <date-input
           data-ng-model="vm.item.modified"
           label="Date"
+          format="full"
           model="vm.item.modified"
           custom-buttons="item.buttons"
           custom-styles="customStyles"
@@ -52,10 +53,17 @@
 
       <md-input-container class="m-t-16">
         <label>Provider</label>
-        <md-select data-ng-model="vm.item.default_instrument_pricing_scheme">
-          <md-option
+        <md-select data-ng-model="vm.item.provider">
+          <!-- data-ng-model="vm.item.default_instrument_pricing_scheme" -->
+          <!-- ng-change="getProvider($event) -->
+          <!-- <md-option
             ng-value="item.id"
             data-ng-repeat="item in vm.instrumentPricingSchemes"
+            >{{item.name}}</md-option
+          > -->
+          <md-option
+            ng-value="$index+1"
+            data-ng-repeat="item in vm.transactionFileProviderScheme track by $index"
             >{{item.name}}</md-option
           >
         </md-select>
@@ -63,10 +71,10 @@
 
       <md-input-container class="m-t-16">
         <label>Scheme name</label>
-        <md-select data-ng-model="vm.item.default_currency_pricing_scheme">
+        <md-select data-ng-model="vm.item.scheme_name">
           <md-option
-            ng-value="item.id"
-            data-ng-repeat="item in vm.currencyPricingSchemes"
+            ng-value="$index+1"
+            data-ng-repeat="item in vm.transactionFileSchemes track by $index"
             >{{item.name}}</md-option
           >
         </md-select>

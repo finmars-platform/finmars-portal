@@ -5,42 +5,25 @@
   "use strict";
 
   var transactionFileProcedureService = require("../../../services/transaction/transactionFileProcedureService");
-
-  var portfolioService = require("../../../services/portfolioService");
-  //   var instrumentTypeService = require("../../../services/instrumentTypeService");
-  var instrumentTypeService = require("../../../services/transactionTypeService");
-  //
-  //
-  var pricingPolicyService = require("../../../services/transactionService");
-  // var pricingPolicyService = require("../../../services/pricingPolicyService");
-  //
-  //   var instrumentPricingSchemeService = require("../../../services/transaction/transactionFileSchemeService"); // тут
-
+  var transactionTypeService = require("../../../services/transactionTypeService");
+  var transactionService = require("../../../services/transactionService");
   var transactionFileSchemeService = require("../../../services/transaction/transactionFileSchemeService"); // тут
-  var currencyPricingSchemeService = require("../../../services/pricing/currencyPricingSchemeService");
 
   module.exports = function ($scope, $mdDialog, data) {
     var vm = this;
-
-    vm.item = {
-      instrument_pricing_condition_filters: [2, 3],
-      currency_pricing_condition_filters: [2, 3],
-    };
-
-    vm.portfolios = [];
-    vm.pricingPolicies = [];
-    vm.instrumentTypes = [];
-    vm.instrumentPricingSchemes = [];
-    vm.currencyPricingSchemes = [];
-    //
-    vm.transactionFileSchemes = [];
-    //
-
-    vm.portfolio_filters = [];
-    vm.pricing_policy_filters = [];
-    vm.instrument_type_filters = [];
-    vm.instrument_pricing_scheme_filters = [];
-    vm.currency_pricing_scheme_filters = [];
+    vm.transactionFileProviderScheme = [
+      { name: "CIM bank" },
+      { name: "Julius Baer" },
+      { name: "Lombard Odier" },
+      { name: "Revolut" },
+    ];
+    vm.transactionFileSchemes = [
+      { name: "Import HNWI balances" },
+      { name: "BJB_scheme" },
+      { name: "Reconciliation_scheme" },
+      { name: "Client_scheme_1" },
+      { name: "Universal_scheme_all_types" },
+    ];
 
     vm.toggleStatus = {
       price_date_from: "datepicker",
@@ -63,91 +46,13 @@
     };
 
     vm.agree = function () {
-      //   vm.item = {
-      //     // id: 4,
-      //     name: "test",
-
-      //     notes: "21",
-      //     provider: 4,
-      //     scheme_name: "1",
-      //     modified: "2020-09-17T18:21:58.310693Z",
-      //   };
-      vm.item.provider = 8;
-      vm.item.scheme_name = "1";
-      //   vm.item.modified = "2020-09-17T18:21:58.310693Z";
-
-      //   if (vm.item.price_date_from_expr) {
-      //     vm.item.price_date_from = null;
-      //   }
-
-      //   if (vm.item.price_date_to_expr) {
-      //     vm.item.price_date_to = null;
-      //   }
-
-      //   if (vm.item.portfolio_filters) {
-      //     vm.item.portfolio_filters = vm.item.portfolio_filters.join(",");
-      //   }
-
-      //   if (vm.item.pricing_policy_filters) {
-      //     vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.join(
-      //       ","
-      //     );
-      //   }
-
-      //   if (vm.item.instrument_type_filters) {
-      //     vm.item.instrument_type_filters = vm.item.instrument_type_filters.join(
-      //       ","
-      //     );
-      //   }
-
-      //   if (vm.item.instrument_pricing_scheme_filters) {
-      //     vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.join(
-      //       ","
-      //     );
-      //   }
-
-      //   if (vm.item.instrument_pricing_condition_filters) {
-      //     vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.join(
-      //       ","
-      //     );
-      //   }
-
-      //   if (vm.item.currency_pricing_scheme_filters) {
-      //     vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.join(
-      //       ","
-      //     );
-      //   }
-
-      //   if (vm.item.currency_pricing_condition_filters) {
-      //     vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.join(
-      //       ","
-      //     );
-      //   }
-      console.log(vm.item, "panov vm.item");
       transactionFileProcedureService.create(vm.item).then(function (data) {
         $mdDialog.hide({ status: "agree", data: { item: data } });
       });
     };
-
-    vm.getPortfolios = function () {
-      portfolioService
-        .getList({
-          pageSize: 1000,
-        })
-        .then(function (data) {
-          vm.portfolios = data.results.map(function (item) {
-            return {
-              id: item.user_code,
-              name: item.user_code,
-            };
-          });
-
-          console.log("vm.portfolios", vm.portfolios);
-
-          $scope.$apply();
-        });
+    vm.getProvider = function (event) {
+      vm.provider = 1;
     };
-
     vm.getInstrumentPricingSchemes = function () {
       transactionFileSchemeService
         .getList({
@@ -170,27 +75,8 @@
         });
     };
 
-    vm.getCurrencyPricingSchemes = function () {
-      currencyPricingSchemeService
-        .getList({
-          pageSize: 1000,
-        })
-        .then(function (data) {
-          vm.currencyPricingSchemes = data.results.map(function (item) {
-            return {
-              id: item.user_code,
-              name: item.user_code,
-            };
-          });
-
-          console.log("vm.transactionFileSchemes", vm.currencyPricingSchemes);
-
-          $scope.$apply();
-        });
-    };
-
     vm.getInstrumentTypes = function () {
-      instrumentTypeService
+      transactionTypeService
         .getList({
           pageSize: 1000,
         })
@@ -209,7 +95,7 @@
     };
 
     vm.getPricingPolicies = function () {
-      pricingPolicyService
+      transactionService
         .getList({
           pageSize: 1000,
         })
@@ -228,10 +114,8 @@
     vm.init = function () {
       vm.getInstrumentTypes();
       vm.getPricingPolicies();
-      vm.getPortfolios();
 
       vm.getInstrumentPricingSchemes();
-      vm.getCurrencyPricingSchemes();
     };
 
     vm.init();

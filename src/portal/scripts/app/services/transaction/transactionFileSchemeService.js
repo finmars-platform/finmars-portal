@@ -2,31 +2,30 @@
  * Created by szhitenev on 04.05.2016.
  */
 (function () {
-  //   var instrumentPricingSchemeRepository = require("../../repositories/pricing/instrumentPricingSchemeRepository");
-  var instrumentPricingSchemeRepository = require("../../repositories/transaction/transactionFileRepository");
+  var transactionFileRepository = require("../../repositories/transaction/transactionFileRepository");
 
   var getTypes = function (options) {
-    return instrumentPricingSchemeRepository.getTypes(options);
+    return transactionFileRepository.getTypes(options);
   };
 
   var getList = function (options) {
-    return instrumentPricingSchemeRepository.getList(options);
+    return transactionFileRepository.getList(options);
   };
 
   var getByKey = function (id) {
-    return instrumentPricingSchemeRepository.getByKey(id);
+    return transactionFileRepository.getByKey(id);
   };
 
   var create = function (account) {
-    return instrumentPricingSchemeRepository.create(account);
+    return transactionFileRepository.create(account);
   };
 
   var update = function (id, account) {
-    return instrumentPricingSchemeRepository.update(id, account);
+    return transactionFileRepository.update(id, account);
   };
 
   var deleteByKey = function (id) {
-    return instrumentPricingSchemeRepository.deleteByKey(id);
+    return transactionFileRepository.deleteByKey(id);
   };
 
   module.exports = {

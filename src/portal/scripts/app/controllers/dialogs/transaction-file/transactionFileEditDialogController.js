@@ -4,10 +4,8 @@
 (function () {
   "use strict";
 
-  var pricingPolicyService = require("../../../services/pricingPolicyService");
-
-  var currencyPricingSchemeService = require("../../../services/pricing/currencyPricingSchemeService");
-  var instrumentPricingSchemeService = require("../../../services/pricing/instrumentPricingSchemeService");
+  var transactionFileProcedureService = require("../../../services/transaction/transactionFileProcedureService");
+  //
 
   module.exports = function ($scope, $mdDialog, data) {
     var vm = this;
@@ -16,36 +14,22 @@
 
     vm.item = {};
 
-    vm.currencyPricingSchemes = [];
-    vm.instrumentPricingSchemes = [];
-
     vm.readyStatus = {
       policy: false,
-      currencyPricingSchemes: false,
-      instrumentPricingSchemes: false,
-      //   procedures: true,
     };
-
-    vm.getCurrencyPricingSchemesList = function () {
-      currencyPricingSchemeService.getList().then(function (data) {
-        vm.currencyPricingSchemes = data.results;
-
-        vm.readyStatus.currencyPricingSchemes = true;
-        vm.readyStatus.procedures = true;
-
-        $scope.$apply();
-      });
-    };
-
-    vm.getInstrumentPricingSchemesList = function () {
-      instrumentPricingSchemeService.getList().then(function (data) {
-        vm.instrumentPricingSchemes = data.results;
-
-        vm.readyStatus.instrumentPricingSchemes = true;
-
-        $scope.$apply();
-      });
-    };
+    vm.transactionFileProviderScheme = [
+      { name: "CIM bank" },
+      { name: "Julius Baer" },
+      { name: "Lombard Odier" },
+      { name: "Revolut" },
+    ];
+    vm.transactionFileSchemes = [
+      { name: "Import HNWI balances" },
+      { name: "BJB_scheme" },
+      { name: "Reconciliation_scheme" },
+      { name: "Client_scheme_1" },
+      { name: "Universal_scheme_all_types" },
+    ];
 
     vm.cancel = function () {
       $mdDialog.hide({ status: "disagree" });
@@ -55,15 +39,17 @@
     };
 
     vm.agree = function () {
-      pricingPolicyService.update(vm.item.id, vm.item).then(function (data) {
-        vm.item = data;
+      transactionFileProcedureService
+        .update(vm.item.id, vm.item)
+        .then(function (data) {
+          vm.item = data;
 
-        $mdDialog.hide({ status: "agree", data: { item: vm.item } });
-      });
+          $mdDialog.hide({ status: "agree", data: { item: vm.item } });
+        });
     };
 
     vm.getItem = function () {
-      pricingPolicyService.getByKey(vm.itemId).then(function (data) {
+      transactionFileProcedureService.getByKey(vm.itemId).then(function (data) {
         vm.item = data;
 
         vm.readyStatus.policy = true;
@@ -73,8 +59,8 @@
     };
 
     vm.init = function () {
-      vm.getCurrencyPricingSchemesList();
-      vm.getInstrumentPricingSchemesList();
+      //   vm.getCurrencyPricingSchemesList();
+      //   vm.getInstrumentPricingSchemesList();
 
       vm.getItem();
     };
