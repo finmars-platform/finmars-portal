@@ -1,7 +1,7 @@
 /**
  * Created by szhitenev on 25.08.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
@@ -14,7 +14,7 @@
 
 
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'schedules/pricing/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'procedures/pricing-procedure/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -26,7 +26,7 @@
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'schedules/pricing/' + id + '/',
+        return xhrService.fetch(baseUrl + 'procedures/pricing-procedure/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -38,7 +38,7 @@
     };
 
     var create = function (item) {
-        return xhrService.fetch(baseUrl + 'schedules/pricing/',
+        return xhrService.fetch(baseUrl + 'procedures/pricing-procedure/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -52,7 +52,7 @@
     };
 
     var update = function (id, item) {
-        return xhrService.fetch(baseUrl + 'schedules/pricing/' + id + '/',
+        return xhrService.fetch(baseUrl + 'procedures/pricing-procedure/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -67,7 +67,7 @@
 
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'schedules/pricing/' + id + '/',
+        return xhrService.fetch(baseUrl + 'procedures/pricing-procedure/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -86,34 +86,20 @@
     };
 
 
-    // DEPRECATED SINCE 01.2020
-    var updateSchedule = function(schedule){
-        return xhrService.fetch(baseUrl + 'schedules/pricing/0/',
+    function runProcedure(id, data) {
+
+        return xhrService.fetch(baseUrl + 'procedures/pricing-procedure/' + id + '/run-procedure/',
             {
-                method: 'PUT',
+                method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(schedule)
+                body: JSON.stringify(data)
             })
-    };
-
-    // DEPRECATED SINCE 01.2020
-    var getSchedule = function(){
-        return xhrService.fetch(baseUrl + 'schedules/pricing/0/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+    }
 
     module.exports = {
 
@@ -123,8 +109,8 @@
         update: update,
         deleteByKey: deleteByKey,
 
-        updateSchedule: updateSchedule,
-        getSchedule: getSchedule
+
+        runProcedure: runProcedure
     }
 
 }());
