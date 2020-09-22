@@ -3,13 +3,13 @@
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
 
-            <h2>Create Pricing Schedule</h2>
+            <h2>Edit Schedule</h2>
             <span flex></span>
         </div>
     </md-toolbar>
     <md-dialog-content class="p-24">
 
-        <div layout="column" data-ng-if="vm.readyStatus.pricingProcedures">
+        <div layout="column" data-ng-if="vm.readyStatus.schedule">
 
             <md-input-container>
                 <label>Name</label>
@@ -100,19 +100,18 @@
                         <label for="">Day</label>
 
                         <md-select data-ng-model="vm.cron.day" multiple>
-                            <md-option value="{{item + 1}}" data-ng-repeat="item in vm.getRange(31)">{{item + 1}}</md-option>
+                            <md-option value="{{item + 1}}" data-ng-repeat="item in vm.getRange(31)">{{item + 1}}
+                            </md-option>
                         </md-select>
                     </md-input-container>
                 </div>
             </div>
             <div>
-
                 <div>
 
                     <p>Server time: {{vm.getServerTime()}}</p>
 
                 </div>
-
                 <md-input-container style="padding-left: 0; padding-top: 16px">
                     <label for="">Time</label>
                     <mdp-time-picker class="custom-time-picker" data-ng-model="vm.cron.time"></mdp-time-picker>
@@ -122,24 +121,82 @@
                 </ng-md-icon>
             </div>
 
-            <h4>Pricing Procedures</h4>
+            <div>
+
+                <md-input-container>
+                    <label>Error handling</label>
+                    <md-select data-ng-model="vm.schedule.error_handler">
+                        <md-option value="continue">Continue</md-option>
+                        <md-option value="break">Break on first error</md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
+
+            <h4>Procedures</h4>
 
             <div>
 
-                <two-fields-multiselect ng-model="vm.schedule.pricing_procedures"
-                                        data-title="Pricing Procedures"
-                                        data-items="vm.pricingProcedures"
-                                        data-model="vm.schedule.pricing_procedures"
+                <div layout="row">
+                    <div style="min-width: 50px">
+                        Order
+                    </div>
+                    <div style="min-width: 200px">
+                        Type
+                    </div>
+                    <div style="min-width: 200px">
+                        Code
+                    </div >
+                </div>
 
-                                        data-name-property="name"
-                                        class="table-filter-input-container">
-                </two-fields-multiselect>
+                <div data-ng-repeat="item in vm.schedule.procedures track by $index" layout="row">
+
+                    <div style="min-width: 50px; padding-left: 10px; padding-top: 25px;">{{item.order}}</div>
+                    <div  style="min-width: 200px">
+                        <md-select data-ng-model="item.type">
+                            <md-option value="pricing">Pricing Procedure</md-option>
+                            <md-option value="data_provider">Download Transaction File Procedure</md-option>
+                        </md-select>
+                    </div>
+                    <div  style="min-width: 200px">
+
+                        <div data-ng-if="item.type == 'pricing'">
+
+                            <md-select data-ng-model="item.user_code">
+                                <md-option ng-value="procedure.user_code" data-ng-repeat="procedure in vm.pricingProcedures">{{procedure.name}} ({{procedure.user_code}})</md-option>
+                            </md-select>
+
+                        </div>
+
+                        <div data-ng-if="item.type == 'data_provider'">
+
+                            <md-select data-ng-model="item.user_code">
+                                <md-option ng-value="procedure.user_code" data-ng-repeat="procedure in vm.transactionDownloadProcedures">{{procedure.name}} ({{procedure.user_code}})</md-option>
+                            </md-select>
+
+                        </div>
+
+
+                    </div>
+                    <div  style="min-width: 200px; padding-top: 10px;">
+                        <md-button data-ng-click="vm.deleteProcedure($event, item, $index)">Delete</md-button>
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <md-button class="md-raised" data-ng-click="vm.addProcedure($event)">Add</md-button>
+
+                </div>
+
 
             </div>
 
         </div>
 
-        <div data-ng-if="!vm.readyStatus.pricingProcedures">
+        <div data-ng-if="!vm.readyStatus.schedule || !vm.readyStatus.pricingProcedures">
 
             <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
                 <progress-circular diameter="100"></progress-circular>
@@ -153,7 +210,7 @@
             Close
         </md-button>
         <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
-            Create
+            Save
         </md-button>
     </md-dialog-actions>
 </md-dialog>
