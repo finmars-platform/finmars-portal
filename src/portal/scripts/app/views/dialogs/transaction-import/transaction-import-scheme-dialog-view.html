@@ -180,6 +180,20 @@
                                     <md-tab label="Booking">
                                         <md-content class="md-padding">
 
+                                            <div class="m-b-16">
+
+                                                <md-input-container style="width: 260px;">
+                                                    <label >Transaction Unique Code Settings</label>
+                                                    <md-select data-ng-model="vm.scheme.book_uniqueness_settings">
+                                                        <md-option ng-value="1" >Skip</md-option>
+                                                        <md-option ng-value="2" >Book without Unique Code</md-option>
+                                                        <md-option ng-value="3" >Overwrite</md-option>
+                                                        <md-option ng-value="4" >Treat as error</md-option>
+                                                    </md-select>
+                                                </md-input-container>
+
+                                            </div>
+
                                             <div layout="column">
                                                 <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">
                                                     <div layout="row" flex="100">

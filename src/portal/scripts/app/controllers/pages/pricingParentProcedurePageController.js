@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingParentProcedureService = require('../../services/pricing/pricingParentProcedureService');
+    var pricingParentProcedureService = require('../../services/procedures/pricingParentProcedureService');
 
     module.exports = function ($scope, $mdDialog) {
 

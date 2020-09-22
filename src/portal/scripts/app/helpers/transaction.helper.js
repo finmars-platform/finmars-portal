@@ -58,8 +58,62 @@
 
     };
 
+    // updating user inputs from input form editor layout using user inputs inside transaction type
+    var updateTransactionUserInputs = function (userInputs, tabs, fixedArea, ttype) {
+
+        tabs.forEach(function (tab) {
+            tab.layout.fields.forEach(function (field) {
+                if (field.attribute_class === 'userInput') {
+                    userInputs.push(field.attribute);
+                }
+            });
+        });
+
+        if (fixedArea && fixedArea.isActive) {
+            fixedArea.layout.fields.forEach(function (field) {
+                if (field.attribute_class === 'userInput') {
+                    userInputs.push(field.attribute);
+                }
+            });
+        }
+
+        if (tabs.length && !tabs[0].hasOwnProperty('tabOrder')) {
+            tabs.forEach(function (tab, index) {
+                tab.tabOrder = index;
+            });
+        }
+
+
+        userInputs.forEach(function (userInput) {
+
+            if (!userInput.frontOptions) {
+                userInput.frontOptions = {};
+            }
+
+            if (isUserInputUsedInTTypeExpr(userInput, ttype.actions)) {
+                userInput.frontOptions.usedInExpr = true;
+            }
+
+            for (var i = 0; i < ttype.inputs.length; i++) {
+
+                if (ttype.inputs[i].name === userInput.name) {
+
+                    userInput.tooltip = ttype.inputs[i].tooltip;
+                    userInput.verbose_name = ttype.inputs[i].verbose_name;
+                    userInput.reference_table = ttype.inputs[i].reference_table;
+
+                }
+
+            }
+
+        });
+
+    };
+    // < updating user inputs from input form editor layout using user inputs inside transaction type >
+
     module.exports = {
-        isUserInputUsedInTTypeExpr: isUserInputUsedInTTypeExpr
+        isUserInputUsedInTTypeExpr: isUserInputUsedInTTypeExpr,
+        updateTransactionUserInputs: updateTransactionUserInputs
     }
 
 }());

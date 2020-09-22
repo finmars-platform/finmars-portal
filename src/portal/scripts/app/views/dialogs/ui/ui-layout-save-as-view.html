@@ -25,8 +25,15 @@
 
             <md-input-container style="width: 100%">
                 <label for="">Layout User Code</label>
-                <input type="text" data-ng-model="vm.layoutUserCode">
+                <input
+                        type="text"
+                        data-ng-model="vm.layoutUserCode"
+                        data-ng-keydown="vm.userCodeIsTouched = true"
+                        data-ng-keyup="vm.validateUserCode()">
             </md-input-container>
+            <div class="color-danger m-l-16" data-ng-if="vm.userCodeIsTouched && vm.userCodeError">Only alphabet, numbers
+                and underscores allowed
+            </div>
 
         </div>
 
@@ -35,8 +42,8 @@
         <md-button ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button ng-click="vm.agree($event)" style="margin-right:20px;">
-            OK
+        <md-button ng-click="vm.agree($event)" style="margin-right:20px;" data-ng-disabled="!vm.userCodeIsTouched || vm.userCodeError">
+            Save
         </md-button>
     </md-dialog-actions>
 </md-dialog>

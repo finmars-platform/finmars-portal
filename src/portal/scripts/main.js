@@ -624,33 +624,44 @@ app.controller("ReportViewerMatrixSettingsDialogController", [
   require("./app/controllers/dialogs/reportViewerMatrixSettingsDialogController"),
 ]);
 
-app.controller("FillPriceManuallyInstrumentDialogController", [
+app.controller("ClassifierImportDialogController", [
   "$scope",
   "$mdDialog",
   "data",
-  require("./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController"),
+  require("./app/controllers/dialogs/classifierImportDialogController"),
 ]);
-app.controller("FloatCustomFieldConstructorController", [
+app.controller("ClassifierExportDialogController", [
   "$scope",
-  require("./app/controllers/floatCustomFieldConstructorController"),
+  "$mdDialog",
+  "data",
+  require("./app/controllers/dialogs/classifierExportDialogController"),
 ]);
-app.controller("DateCustomFieldConstructorController", [
+app.controller("LayoutExportDialogController", [
   "$scope",
-  require("./app/controllers/dateCustomFieldConstructorController"),
+  "$mdDialog",
+  "data",
+  require("./app/controllers/dialogs/layoutExportDialogController"),
 ]);
-app.controller("AuditController", [
+app.controller("FileReportsController", [
   "$scope",
-  require("./app/controllers/system/auditController"),
+  "$mdDialog",
+  require("./app/controllers/pages/fileReportsController"),
 ]);
-app.controller("SettingsFormDesignController", [
+app.controller("LoginDialogController", [
   "$scope",
-  "$state",
-  require("./app/controllers/settings/settingsFormDesignController"),
+  "$mdDialog",
+  "data",
+  require("./app/controllers/dialogs/loginDialogController"),
 ]);
-app.controller("SettingBloombergImportInstrumentController", [
+app.controller("twoFactorLoginDialogController", [
   "$scope",
-  "$state",
-  require("./app/controllers/settings/settingBloombergImportInstrumentController"),
+  "$mdDialog",
+  "username",
+  require("./app/controllers/dialogs/twoFactorLoginDialogController"),
+]);
+app.controller("HealthcheckController", [
+  "$scope",
+  require("./app/controllers/pages/healthcheckController"),
 ]);
 
 app.controller("ClassifierImportDialogController", [
@@ -714,12 +725,6 @@ app.controller("ActionsController", [
   "$scope",
   "$mdDialog",
   require("./app/controllers/actionsController"),
-]);
-app.controller("AutomatedUploadsHistoryDialogController", [
-  "$scope",
-  "$mdDialog",
-  "$mdpTimePicker",
-  require("./app/controllers/dialogs/automatedUploadsHistoryDialogController"),
 ]);
 app.controller("FillPriceHistoryDialogController", [
   "$scope",
@@ -1167,6 +1172,12 @@ app.controller("ComplexTransactionsTransactionEditDialogController", [
   "$mdDialog",
   "entityId",
   require("./app/controllers/entityViewer/complexTransactionsTransactionEditDialogController"),
+]);
+app.controller("BookUniquenessWarningDialogController", [
+  "$scope",
+  "$mdDialog",
+  "data",
+  require("./app/controllers/dialogs/bookUniquenessWarningDialogController"),
 ]);
 
 // Instrument form - tabs
@@ -1705,11 +1716,11 @@ app.controller("PricingSchemePageController", [
   "$mdDialog",
   require("./app/controllers/pages/pricingSchemePageController"),
 ]);
-app.controller("PricingSchedulePageController", [
-  "$scope",
-  "$mdDialog",
-  require("./app/controllers/pages/pricingSchedulePageController"),
-]);
+// app.controller("PricingSchedulePageController", [
+//   "$scope",
+//   "$mdDialog",
+//   require("./app/controllers/pages/pricingSchedulePageController"),
+// ]);
 app.controller("PricingProcedurePageController", [
   "$scope",
   "$mdDialog",
@@ -1726,13 +1737,31 @@ app.controller("RunPricingProcedurePageController", [
   require("./app/controllers/pages/runPricingProcedurePageController"),
 ]);
 
-//test
-app.controller("TransactionFileProcedurePageController", [
+app.controller("PricingPolicyPageController", [
   "$scope",
   "$mdDialog",
-  require("./app/controllers/pages/transactionFileProcedurePageController"),
+  require("./app/controllers/pages/pricingPolicyPageController"),
 ]);
-//
+app.controller("PricingSchemePageController", [
+  "$scope",
+  "$mdDialog",
+  require("./app/controllers/pages/pricingSchemePageController"),
+]);
+app.controller("PricingProcedurePageController", [
+  "$scope",
+  "$mdDialog",
+  require("./app/controllers/pages/pricingProcedurePageController"),
+]);
+app.controller("PricingParentProcedurePageController", [
+  "$scope",
+  "$mdDialog",
+  require("./app/controllers/pages/pricingParentProcedurePageController"),
+]);
+app.controller("RunPricingProcedurePageController", [
+  "$scope",
+  "$mdDialog",
+  require("./app/controllers/pages/runPricingProcedurePageController"),
+]);
 app.controller("RunPricingInstrumentDialogController", [
   "$scope",
   "$mdDialog",
@@ -1765,6 +1794,19 @@ app.controller("CurrencyPricingSchemeEditDialogController", [
   require("./app/controllers/dialogs/pricing/currencyPricingSchemeEditDialogController"),
 ]);
 
+app.controller("CurrencyPricingSchemeAddDialogController", [
+  "$scope",
+  "$mdDialog",
+  "data",
+  require("./app/controllers/dialogs/pricing/currencyPricingSchemeAddDialogController"),
+]);
+app.controller("CurrencyPricingSchemeEditDialogController", [
+  "$scope",
+  "$mdDialog",
+  "data",
+  require("./app/controllers/dialogs/pricing/currencyPricingSchemeEditDialogController"),
+]);
+
 app.controller("InstrumentPricingSchemeAddDialogController", [
   "$scope",
   "$mdDialog",
@@ -1778,31 +1820,18 @@ app.controller("InstrumentPricingSchemeEditDialogController", [
   require("./app/controllers/dialogs/pricing/instrumentPricingSchemeEditDialogController"),
 ]);
 
-app.controller("PricingPolicyAddDialogController", [
-  "$scope",
-  "$mdDialog",
-  "data",
-  require("./app/controllers/dialogs/pricing/pricingPolicyAddDialogController"),
-]);
-app.controller("PricingPolicyEditDialogController", [
-  "$scope",
-  "$mdDialog",
-  "data",
-  require("./app/controllers/dialogs/pricing/pricingPolicyEditDialogController"),
-]);
-
-app.controller("PricingScheduleAddDialogController", [
-  "$scope",
-  "$mdDialog",
-  "data",
-  require("./app/controllers/dialogs/pricing/pricingScheduleAddDialogController"),
-]);
-app.controller("PricingScheduleEditDialogController", [
-  "$scope",
-  "$mdDialog",
-  "data",
-  require("./app/controllers/dialogs/pricing/pricingScheduleEditDialogController"),
-]);
+// app.controller("PricingScheduleAddDialogController", [
+//   "$scope",
+//   "$mdDialog",
+//   "data",
+//   require("./app/controllers/dialogs/pricing/pricingScheduleAddDialogController"),
+// ]);
+// app.controller("PricingScheduleEditDialogController", [
+//   "$scope",
+//   "$mdDialog",
+//   "data",
+//   require("./app/controllers/dialogs/pricing/pricingScheduleEditDialogController"),
+// ]);
 
 app.controller("PricingProcedureAddDialogController", [
   "$scope",
@@ -1817,6 +1846,13 @@ app.controller("TransactionFileAddDialogController", [
   "data",
   require("./app/controllers/dialogs/transaction-file/transactionFileAddDialogController"),
 ]);
+app.controller("TransactionFileProcedurePageController", [
+  "$scope",
+  "$mdDialog",
+
+  require("./app/controllers/pages/transactionFileProcedurePageController"),
+]);
+
 app.controller("TransactionFileEditDialogController", [
   "$scope",
   "$mdDialog",
@@ -1837,6 +1873,33 @@ app.controller("PricingMultipleParametersDialogController", [
   "data",
   require("./app/controllers/dialogs/pricing/pricingMultipleParametersDialogController"),
 ]);
+
+// Schedules
+
+app.controller("SchedulePageController", [
+  "$scope",
+  "$mdDialog",
+  require("./app/controllers/pages/schedulePageController"),
+]);
+
+app.controller("ScheduleAddDialogController", [
+  "$scope",
+  "$mdDialog",
+  "data",
+  require("./app/controllers/dialogs/schedules/scheduleAddDialogController"),
+]);
+app.controller("ScheduleEditDialogController", [
+  "$scope",
+  "$mdDialog",
+  "data",
+  require("./app/controllers/dialogs/schedules/scheduleEditDialogController"),
+]);
+// app.controller("ScheduleEditDialogController", [
+//   "$scope",
+//   "$mdDialog",
+//   "data",
+//   require("./app/controllers/d"),
+// ]);
 
 // Reference Table
 
@@ -1897,11 +1960,6 @@ app.controller("EntitiesCustomAttributesController", [
 app.controller("PriceDownloadSchemeController", [
   "$scope",
   require("./app/controllers/pages/priceDownloadSchemeController"),
-]);
-app.controller("AutomatedUploadsHistoryController", [
-  "$scope",
-  "$mdDialog",
-  require("./app/controllers/pages/automatedUploadsHistoryController"),
 ]);
 app.controller("TemplateFieldsController", [
   "$scope",
