@@ -5,14 +5,16 @@
 
     'use strict';
 
-    var pricingScheduleService = require('../../../services/schedules/pricingScheduleService');
-    var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
+    var scheduleService = require('../../../services/scheduleService');
+    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function scheduleEditDialogController($scope, $mdDialog, data) {
 
         var vm = this;
 
-        vm.readyStatus = {pricingProcedures: false};
+        vm.itemId = data.item.id;
+
+        vm.readyStatus = {schedule: false, pricingProcedures: false};
 
         vm.days = [];
         vm.schedule = {};
@@ -21,6 +23,9 @@
             periodicity: 1
         };
         vm.cron.time = new Date();
+
+        vm.pricingProcedures = [];
+        vm.transactionDownloadProcedures = [];
 
         vm.setDay = function (day) {
             if (!vm.cron.day) {
@@ -41,6 +46,58 @@
                 res.push(i);
             }
             return res;
+        };
+
+        vm.getItem = function () {
+
+            scheduleService.getByKey(vm.itemId).then(function (data) {
+
+                console.log('data', data);
+
+                vm.schedule = data;
+                vm.readyStatus.schedule = true;
+
+                var values = vm.schedule.cron_expr.split(' ');
+
+
+                console.log('value', values);
+
+
+                if (values.length === 5) {
+
+                    vm.cron.time = new Date();
+                    vm.cron.time.setMinutes(values[0]);
+                    vm.cron.time.setHours(values[1]);
+
+
+                    if (values[3] === '*' && values[2] === '*') {
+                        vm.cron.periodicity = 2;
+                        vm.cron.day = values[4].split(',');
+                        vm.cron.day.forEach(function (day) {
+                            vm.days[day - 1] = {status: true};
+                        })
+
+                    }
+                    if (values[4] === '*') {
+                        vm.cron.periodicity = 3;
+                        vm.cron.day = values[2].split(',');
+                        if (values[3].length > 1) {
+                            vm.cron.month = values[3].split(',');
+                        } else {
+                            vm.cron.month = [values[3]];
+                        }
+                    }
+
+                    if (values[4] === '*' && values[3] === '*' && values[2] === '*') {
+                        vm.cron.periodicity = 1
+                    }
+                }
+
+                console.log('vm.periodicity', vm.periodicity);
+
+                $scope.$apply();
+            });
+
         };
 
         vm.cancel = function () {
@@ -71,7 +128,7 @@
                 vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day + ' ' + vm.cron.month + ' *'
             }
 
-            pricingScheduleService.create(vm.schedule).then(function (data) {
+            scheduleService.update(vm.schedule.id, vm.schedule).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: 'success'});
                 $scope.$apply();
@@ -107,17 +164,52 @@
 
         };
 
-        vm.getServerTime = function() {
+        vm.getServerTime = function () {
 
             return new Date().toISOString().split('T')[1].split('.')[0]
 
         };
 
+        vm.deleteProcedure = function($event, item, $index)  {
+
+            vm.schedule.procedures.splice(1, $index);
+
+            vm.orderProcedures();
+
+        };
+
+        vm.addProcedure = function ($event) {
+
+            if (!vm.schedule.procedures) {
+                vm.schedule.procedures = [];
+            }
+
+            vm.schedule.procedures.push({})
+
+            vm.orderProcedures();
+
+        };
+
+        vm.orderProcedures = function () {
+
+            vm.schedule.procedures = vm.schedule.procedures.map(function (item, index) {
+
+                item.order = index + 1;
+
+                return item
+            })
+
+        };
+
         vm.init = function () {
+
+            vm.getItem();
             vm.getPricingProcedures();
+
         };
 
         vm.init();
+
 
     }
 
