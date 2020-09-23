@@ -172,7 +172,9 @@
 
         vm.deleteProcedure = function($event, item, $index)  {
 
-            vm.schedule.procedures.splice(1, $index);
+            vm.schedule.procedures.splice($index, 1);
+
+            console.log('vm.schedule.procedures', vm.schedule.procedures);
 
             vm.orderProcedures();
 
