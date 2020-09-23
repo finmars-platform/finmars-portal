@@ -5,6 +5,11 @@
 
     'use strict';
 
+    var MARK_ROW_TYPES = [
+        { id: 1, name: 'Mark row red', action_data: 'red' },
+        { id: 2, name: 'Mark row green', action_data: 'green' },
+        { id: 3, name: 'Undo mark row', action_data: 'undo_mark_row' }
+    ];
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -83,8 +88,14 @@
             {
                 name: 'Open Layout',
                 action: 'open_layout'
+            },
+            {
+                name: 'Mark row',
+                action: 'mark_row'
             }
         ];
+
+        vm.markRowTypes = MARK_ROW_TYPES;
 
         vm.updateLayout = function (item) {
 
