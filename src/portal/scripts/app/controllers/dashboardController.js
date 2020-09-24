@@ -342,6 +342,35 @@
 
         };
 
+        vm.getDatesDependenciesForComponent = function (compId) {
+
+            var DATES_DEPENDENCIES = ['report_date', 'pl_first_date', 'begin_date', 'end_date'];
+
+            var componentData = vm.dashboardDataService.getComponentById(compId);
+
+            if (!componentData || !componentData.settings || ! componentData.settings.linked_components || !componentData.settings.linked_components.report_settings) {
+                return [];
+            }
+
+            var reportSettings = componentData.settings.linked_components.report_settings;
+
+            var dependencies = [];
+
+            for (var property in reportSettings) {
+
+                if (DATES_DEPENDENCIES.includes(property)) {
+
+                    dependencies.push(reportSettings[property]);
+
+                }
+
+            }
+
+            return dependencies;
+
+        };
+
+
         vm.initDashboardComponents = function () {
 
             var LIMIT = 2;
@@ -386,11 +415,21 @@
                         console.log('initDashboardComponents.key', key);
 
                         if (statusesObject[key] === dashboardComponentStatuses.INIT) {
-                            vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
-                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            var componentDependencies = vm.getDatesDependenciesForComponent(key);
 
-                            onComponentBuildingForTooLong(key);
-                            break;
+                            var areAllDependenciesCompleted = componentDependencies.every(function (id) {
+                                return statusesObject[id] === dashboardComponentStatuses.ACTIVE || statusesObject[id] === dashboardComponentStatuses.ERROR;
+                            });
+
+                            if (areAllDependenciesCompleted) {
+
+                                vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
+                                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                                onComponentBuildingForTooLong(key);
+                                break;
+
+                            }
                         }
 
                     }
