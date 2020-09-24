@@ -58,8 +58,8 @@
                  layout="row"
                  layout-align="space-between center"
                  style="padding: 10px"
+                 ng-dblclick="vm.openLayout(item, $event)"
                  ng-click="vm.selectLayout(item, $event)">
-                <!--                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">-->
                 <div layout="row" class="ll-name">
                     <ng-md-icon ng-if="item.hasUseFromAboveFilter"
                                 icon="flag"

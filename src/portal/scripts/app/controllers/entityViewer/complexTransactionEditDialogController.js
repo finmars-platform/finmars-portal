@@ -530,7 +530,8 @@
             dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
             vm.userInputs = [];
-            vm.tabs.forEach(function (tab) {
+            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+            /*vm.tabs.forEach(function (tab) {
                 tab.layout.fields.forEach(function (field) {
                     if (field.attribute_class === 'userInput') {
                         vm.userInputs.push(field.attribute);
@@ -566,12 +567,15 @@
                 for (var i = 0; i < vm.transactionType.inputs.length; i++) {
 
                     if (vm.transactionType.inputs[i].name === userInput.name) {
+
                         userInput.tooltip = vm.transactionType.inputs[i].tooltip;
+                        userInput.verbose_name = vm.transactionType.inputs[i].verbose_name;
+
                     }
 
                 }
 
-            });
+            });*/
 
             inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
 
@@ -626,7 +630,6 @@
                 });
 
             }
-
 
             mapAttributesAndFixFieldsLayout();
 
@@ -1229,7 +1232,7 @@
                     }
                 })
 
-            } /*else {
+            } else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -1336,7 +1339,7 @@
 
                 })
 
-            }*/
+            }
 
         };
 
