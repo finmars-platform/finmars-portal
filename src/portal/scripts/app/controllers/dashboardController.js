@@ -342,7 +342,7 @@
 
         };
 
-        var areAllDependenciesCompleted = function (compId, statusesObject) {
+        var areAllDependenciesCompleted = function (compId, statusesObject, waitingComponents) {
 
             var componentData = vm.dashboardDataService.getComponentById(compId);
 
@@ -352,7 +352,9 @@
 
             var reportSettings = componentData.settings.linked_components.report_settings;
 
-            var dependencies = Object.values(reportSettings);
+            var dependencies = Object.values(reportSettings).filter(function (id) {
+                return !waitingComponents.includes(id);
+            });
 
             return dependencies.every(function (id) {
                 return statusesObject[id] === dashboardComponentStatuses.ACTIVE || statusesObject[id] === dashboardComponentStatuses.ERROR;
@@ -374,6 +376,7 @@
                 var key;
 
                 var activeProcessingComponents = 0;
+                var waitingComponents = [];
 
                 for (var i = 0; i < keys.length; i = i + 1) {
 
@@ -403,13 +406,25 @@
 
                         console.log('initDashboardComponents.key', key);
 
-                        if (statusesObject[key] === dashboardComponentStatuses.INIT && areAllDependenciesCompleted(key, statusesObject)) {
+                        if (statusesObject[key] === dashboardComponentStatuses.INIT) {
 
-                            vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
-                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            if (areAllDependenciesCompleted(key, statusesObject, waitingComponents)) {
 
-                            onComponentBuildingForTooLong(key);
-                            break;
+                                waitingComponents = waitingComponents.filter(function (id) {
+                                    return id !== key;
+                                })
+
+                                vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
+                                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                                onComponentBuildingForTooLong(key);
+                                break;
+
+                            } else {
+
+                                waitingComponents.push(key);
+
+                            }
 
                         }
 
