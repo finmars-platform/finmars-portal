@@ -342,31 +342,21 @@
 
         };
 
-        vm.getDatesDependenciesForComponent = function (compId) {
-
-            var DATES_DEPENDENCIES = ['report_date', 'pl_first_date', 'begin_date', 'end_date'];
+        var areAllDependenciesCompleted = function (compId, statusesObject) {
 
             var componentData = vm.dashboardDataService.getComponentById(compId);
 
             if (!componentData || !componentData.settings || ! componentData.settings.linked_components || !componentData.settings.linked_components.report_settings) {
-                return [];
+                return true;
             }
 
             var reportSettings = componentData.settings.linked_components.report_settings;
 
-            var dependencies = [];
+            var dependencies = Object.values(reportSettings);
 
-            for (var property in reportSettings) {
-
-                if (DATES_DEPENDENCIES.includes(property)) {
-
-                    dependencies.push(reportSettings[property]);
-
-                }
-
-            }
-
-            return dependencies;
+            return dependencies.every(function (id) {
+                return statusesObject[id] === dashboardComponentStatuses.ACTIVE || statusesObject[id] === dashboardComponentStatuses.ERROR;
+            });
 
         };
 
@@ -400,7 +390,6 @@
                         activeProcessingComponents = activeProcessingComponents + 1;
                     }
 
-
                 }
 
                 console.log('initDashboardComponents.activeProcessingComponents', activeProcessingComponents);
@@ -414,22 +403,14 @@
 
                         console.log('initDashboardComponents.key', key);
 
-                        if (statusesObject[key] === dashboardComponentStatuses.INIT) {
-                            var componentDependencies = vm.getDatesDependenciesForComponent(key);
+                        if (statusesObject[key] === dashboardComponentStatuses.INIT && areAllDependenciesCompleted(key, statusesObject)) {
 
-                            var areAllDependenciesCompleted = componentDependencies.every(function (id) {
-                                return statusesObject[id] === dashboardComponentStatuses.ACTIVE || statusesObject[id] === dashboardComponentStatuses.ERROR;
-                            });
+                            vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
+                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                            if (areAllDependenciesCompleted) {
+                            onComponentBuildingForTooLong(key);
+                            break;
 
-                                vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
-                                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                                onComponentBuildingForTooLong(key);
-                                break;
-
-                            }
                         }
 
                     }
