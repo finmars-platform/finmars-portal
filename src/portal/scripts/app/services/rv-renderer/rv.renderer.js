@@ -23,6 +23,13 @@
 
         var rows = [];
 
+        var markedReportRows = localStorage.getItem("marked_report_rows");
+        if (markedReportRows) {
+            markedReportRows = JSON.parse(markedReportRows);
+        } else {
+            markedReportRows = {};
+        }
+
         for (var i = 0; i < projection.length; i = i + 1) {
 
             item = projection[i];
@@ -40,7 +47,7 @@
             }
 
             if (item.___type === 'object') {
-                rows.push(objectRender.render(evDataService, item));
+                rows.push(objectRender.render(evDataService, item, markedReportRows));
             }
 
             if (item.___type === 'subtotal' && item.___subtotal_type !== 'proxyline') {
