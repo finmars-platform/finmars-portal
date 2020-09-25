@@ -15,6 +15,7 @@
                 //customStyles: '<',
                 eventSignal: '=',
                 smallOptions: '=',
+                isDisabled: '=',
                 onChangeCallback: '&?',
                 onBlurCallback: '&?'
             },
@@ -28,33 +29,25 @@
                 var stylePreset;
 
                 scope.isReadonly = false;
-                scope.isDisabled = false;
                 scope.fullTextEnabled = false;
 
                 // TIPS
                 // scope.smallOptions probable properties
-                // tooltipText: custom tolltip text
-                // notNull: turn on error mode if field is not filled
-                // noIndicatorBtn: whether to show button at the right part of input
-                // readonly: making input readonly
-                // disabled: disabling input
+                    // tooltipText: custom tolltip text
+                    // notNull: turn on error mode if field is not filled
+                    // noIndicatorBtn: whether to show button at the right part of input
+                    // readonly: making input readonly
+                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
+
 
                 if (scope.smallOptions) {
 
-                    if (scope.smallOptions.tooltipText) {
-                        scope.tooltipText = scope.smallOptions.tooltipText;
-                    }
+                    scope.tooltipText = scope.smallOptions.tooltipText
+                    scope.isReadonly = scope.smallOptions.readonly
+                    scope.dialogParent = scope.smallOptions.dialogParent
 
                     if (scope.smallOptions.noIndicatorBtn) {
-                        scope.noIndicatorBtn = true;
-                    }
-
-                    if (scope.smallOptions.readonly) {
-                        scope.isReadonly = scope.smallOptions.readonly;
-                    }
-
-                    if (scope.smallOptions.disabled) {
-                        scope.isDisabled = scope.smallOptions.disabled;
+                        scope.noIndicatorBtn = true
                     }
 
                 }
@@ -62,23 +55,23 @@
                 scope.getInputContainerClasses = function () {
                     var classes = '';
 
-                    if (scope.error) {
+                    if (scope.isDisabled) {
+                        classes += "custom-input-is-disabled";
+
+                    } else if (scope.error) {
                         classes = 'custom-input-error';
 
-                    } /*else if (stylePreset) {
+                    } else if (stylePreset) {
                         classes = 'custom-input-preset' + stylePreset;
 
-                    } else if (scope.valueIsValid) {
+                    }/* else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
+
                     }*/
 
-                    if (scope.isDisabled) {
-                        classes += ' custom-input-is-disabled';
+                    if (scope.noIndicatorBtn) {
+                        classes += " no-indicator-btn";
                     }
-
-                    /*if (scope.noIndicatorBtn) {
-                        classes += ' no-indicator-btn'
-                    }*/
 
                     return classes;
                 };
@@ -131,10 +124,22 @@
 
                 scope.openExpressionBuilder = function ($event) {
 
+                    var dialogParent = angular.element(document.body);
+
+                    if (scope.dialogParent) {
+
+                        var dialogParentElem = document.querySelector(scope.dialogParent);
+
+                        if (dialogParentElem) {
+                            dialogParent = dialogParentElem
+                        }
+
+                    }
+
                     $mdDialog.show({
                         controller: 'ExpressionEditorDialogController as vm',
                         templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: dialogParent,
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
@@ -249,6 +254,7 @@
                 };
 
                 var initEventListeners = function () {
+
                     elem[0].addEventListener('mouseover', function () {
                         inputContainer.classList.add('custom-input-hovered');
                     });

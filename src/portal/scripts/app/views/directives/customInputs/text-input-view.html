@@ -35,7 +35,8 @@
           <button data-ng-if="!noIndicatorBtn"
                   class="custom-input-indicator-btn"
                   data-ng-click="openTextInDialog($event)"
-                  data-ng-disabled="isReadonly">
+                  data-ng-disabled="isReadonly"
+                  ng-disabled="isDisabled">
             <span class="material-icons">edit</span>
           </button>
 
@@ -59,7 +60,7 @@
         <div class="custom-input-side-items flex-row customInputBackgroundColor">
 
           <div class="custom-input-custom-btns-holder">
-            <div data-ng-if="customButtons && customButtons.length" class="height-100">
+            <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
               <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
                       data-ng-click="callFnForCustomBtn(button.action)">
                 {{button.caption}}
@@ -78,12 +79,12 @@
             </div>
           </div>
 
-          <div data-ng-show="error" class="custom-input-tooltip">
+          <div data-ng-if="error" class="custom-input-tooltip">
             <span class="material-icons">info</span>
             <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
           </div>
 
-          <div data-ng-show="tooltipText && !error" class="custom-input-tooltip">
+          <div data-ng-if="tooltipText" data-ng-show="!error" class="custom-input-tooltip">
             <span class="material-icons ci-icon-color">info_outline</span>
             <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
           </div>

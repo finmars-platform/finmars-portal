@@ -18,8 +18,8 @@
                 scope.allRowsAreActive = false;
 
                 scope.gridTableData = scope.gtDataService.getTableData();
-                scope.sortByCol = false;
-                scope.sortRowsReverse = false;
+                scope.sortByCol = false
+                scope.sortRowsReverse = false
 
                 scope.setSortByCol = function (colOrder) {
 
@@ -59,11 +59,11 @@
 
                     scope.gtEventService.dispatchEvent(gtEvents.ROW_SELECTION_TOGGLED);
 
-                };
+                }
 
-                scope.toggleRowSelection = function (rowOrder) {
+                scope.toggleRowSelection = function (row) {
 
-                    scope.gridTableData.body[rowOrder].isActive = !scope.gridTableData.body[rowOrder].isActive;
+                    row.isActive = !row.isActive;
 
                     var selectedRows = scope.gtDataService.getSelectedRows();
 
@@ -76,7 +76,21 @@
 
                     scope.gtEventService.dispatchEvent(gtEvents.ROW_SELECTION_TOGGLED);
 
-                };
+                }
+
+                /*scope.acceptNewRow = function (rowKey) {
+
+                    var newRow = scope.getRowByKey(rowKey);
+                    delete newRow.isNewRow;
+                    scope.gridTableData.body.unshift(newRow);
+
+                    scope.gtEventService.dispatchEvent(gtEvents.ROW_ADDED);
+
+                }
+
+                scope.cancelNewRow = function () {
+
+                }*/
 
 
                 scope.gtEventService.addEventListener(gtEvents.SORTING_SETTINGS_CHANGED, function () {
@@ -87,9 +101,7 @@
                     scope.sortRowsReverse = sortSettings.reverse
                     scope.sortValueOrder = sortSettings.valueOrder
 
-                })
-
-                console.log("grid table scope.gridTableData", scope.gridTableData);
+                });
 
             }
         }

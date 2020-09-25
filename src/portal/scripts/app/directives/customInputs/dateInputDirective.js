@@ -12,6 +12,7 @@
         elemsStyles: "=",
         eventSignal: "=",
         smallOptions: "=",
+        isDisabled: '=',
         onChangeCallback: "&?",
       },
       templateUrl: "views/directives/customInputs/date-input-view.html",
@@ -25,8 +26,8 @@
 
         // TIPS
         // scope.smallOptions probable properties
-        // tooltipText: custom tolltip text
-        // notNull: turn on error mode if field is not filled
+          // tooltipText: custom tolltip text
+          // notNull: turn on error mode if field is not filled
 
         var inputContainer = elem[0].querySelector(".dateInputContainer");
         var inputElem = elem[0].querySelector(".dateInputElem");
@@ -38,9 +39,8 @@
         var defaultDate = false;
 
         if (scope.smallOptions) {
-          if (scope.smallOptions.tooltipText) {
-            scope.tooltipText = scope.smallOptions.tooltipText;
-          }
+
+          scope.tooltipText = scope.smallOptions.tooltipText;
 
           if (scope.smallOptions.position) {
             position = scope.position;
@@ -49,18 +49,29 @@
           if (scope.smallOptions.defaultDate) {
             defaultDate = scope.defaultDate;
           }
+
         }
 
         scope.getInputContainerClasses = function () {
 
           var classes = "";
 
-          if (scope.error) {
-            classes = "custom-input-error";
+          if (scope.isDisabled) {
+            classes += "custom-input-is-disabled";
+
+          } else if (scope.error) {
+            classes = 'custom-input-error';
+
           } else if (stylePreset) {
-            classes = "custom-input-preset" + stylePreset;
+            classes = 'custom-input-preset' + stylePreset;
+
           } else if (scope.valueIsValid) {
-            classes = "custom-input-is-valid";
+            classes = 'custom-input-is-valid';
+
+          }
+
+          if (scope.noIndicatorBtn) {
+            classes += " no-indicator-btn";
           }
 
           return classes;

@@ -995,7 +995,8 @@
 
             } else {
 
-                var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
 
                 console.log('resultEntity', resultEntity);
 

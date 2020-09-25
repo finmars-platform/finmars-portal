@@ -18,22 +18,50 @@
 
                 scope.cellValue = '';
 
-                var cellMethods = scope.column.methods;
+                var cellMethods = scope.column.methods || {};
                 var cellsWithPopup = ['text', 'number', 'date', 'expression', 'custom_popup'];
 
                 scope.onCellValueChange = function () {
 
-                    if (cellMethods && cellMethods.onChange) {
-                        cellMethods.onChange(scope.row.order, scope.column.order, scope.gtDataService, scope.gtEventService);
+                    var rowData = {
+                        key: scope.row.key,
+                        order: scope.row.order
+                    };
+
+                    var colData = {
+                        key: scope.column.key,
+                        order: scope.column.order
+                    };
+
+                    if (cellMethods.onChange) {
+
+                        cellMethods.onChange(rowData, colData, scope.gtDataService, scope.gtEventService);
                     }
 
-                    scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED);
+                    /*var changedCellData = {
+                        row: {
+                            key: scope.row.key,
+                            order: scope.row.order
+                        },
+                        column: {
+                            key: scope.column.key,
+                            order: scope.column.order
+                        }
+                    };*/
+
+                    scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, {row: rowData, column: colData});
+
                 };
 
                 scope.onSelOpen = function () {
-                    if (cellMethods && cellMethods.onOpen) {
+                    if (cellMethods.onOpen) {
                         cellMethods.onOpen(scope.row.order, scope.column.order, scope.gtDataService, scope.gtEventService);
                     }
+                }
+
+                scope.unselectOptions = function () {
+                    scope.column.settings.value = null
+                    scope.onCellValueChange();
                 }
 
                 scope.cellWithPopup = function () {
@@ -70,12 +98,21 @@
                         setCellCustomStyles();
                     }
 
+                    if (cellMethods.onInit) {
+
+                        var rowData = {key: scope.row.key, order: scope.row.order};
+                        var colData = {key: scope.column.key, order: scope.column.order};
+
+                        cellMethods.onInit(rowData, colData, scope.gtDataService, scope.gtEventService);
+
+                    }
+
                 };
 
                 var init = function () {
 
-                    if (scope.row.order !== 'header' && scope.column.styles) {
-                        setCellCustomStyles();
+                    if (scope.row.order !== 'header' && scope.column.styles) { // if no child directive initialized
+                        scope.onChildrenLoadEnd();
                     }
 
                     if (scope.column.settings && scope.column.settings.value) {

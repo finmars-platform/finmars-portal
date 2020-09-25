@@ -29,9 +29,31 @@
          class="grid-table-row">
 
         <div class="grid-table-row-checkbox">
-            <md-checkbox data-ng-checked="row.isActive"
-                         data-ng-click="toggleRowSelection($index)"></md-checkbox>
+            <md-checkbox checked="row.isActive"
+                         ng-click="toggleRowSelection(row)"></md-checkbox>
         </div>
+
+        <!--<div ng-if="row.isNewRow" class="grid-table-new-row-actions">
+            <md-menu>
+                <md-button ng-click="$mdOpenMenu($event)"
+                           class="grid-table-nr-actions-btn">
+                    <span class="material-icons">settings</span>
+                </md-button>
+
+                <md-menu-content>
+                    <md-menu-item>
+                        <md-button ng-click="vm.acceptNewRow(row.key)">
+                            ADD
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="vm.cancelNewRow(row.key)">
+                            DELETE
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>-->
 
         <div data-ng-repeat="cell in row.columns track by cell.key">
             <grid-table-cell data-row="row"

@@ -5,6 +5,24 @@
 
     'use strict';
 
+    var clearFrontProperties = function (entity, entityType) {
+
+        switch (entityType) {
+
+            case 'instrument':
+
+                if (entity.accrual_calculation_schedules) {
+                    entity.accrual_calculation_schedules.forEach(function (schedule) {
+                        delete schedule.frontOptions;
+                    });
+                }
+
+                break;
+
+        }
+
+    }
+
 
     var removeNullFields = function (item) {
 
@@ -46,6 +64,16 @@
         return attributes
 
     };
+
+    var clearEntityBeforeSave = function (entity, entityType) {
+
+        entity = removeNullFields(entity);
+
+        clearFrontProperties(entity, entityType);
+
+        return entity;
+
+    }
 
     var checkEntityAttrTypes = function (entity, entityAttrs) {
         var i;
@@ -1339,6 +1367,7 @@
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
         removeNullFields: removeNullFields,
+        clearEntityBeforeSave: clearEntityBeforeSave,
         clearUnusedAttributeValues: clearUnusedAttributeValues,
         appendAttribute: appendAttribute,
         updateValue: updateValue,

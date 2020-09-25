@@ -78,7 +78,7 @@
   // transform: translate(15px,-12px);
   // opacity: 0;
   box-sizing: border-box;
-  z-index: 11;
+  z-index: 9;
   cursor: default;
 }
 
@@ -231,7 +231,7 @@
   color: #7d7d7d;
   transition: 0.2s ease-in-out;
 
-  &:hover {
+  &:not([disabled]):hover {
     opacity: 0.5;
   }
 
@@ -514,6 +514,14 @@
 .custom-input-container.custom-input-is-disabled {
   opacity: 0.5;
   pointer-events: none;
+
+  .custom-input-side-items {
+    display: none;
+  }
+
+  .custom-input-bottom-error-text {
+    display: none;
+  }
 }
 // < should always be at the bottom >
 

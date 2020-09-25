@@ -53,12 +53,12 @@
             </div>
           </div>
 
-          <div data-ng-show="error" class="custom-input-tooltip">
+          <div data-ng-if="error" class="custom-input-tooltip">
             <span class="material-icons">info</span>
             <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
           </div>
 
-          <div data-ng-show="tooltipText && !error" class="custom-input-tooltip">
+          <div data-ng-if="tooltipText" data-ng-show="!error" class="custom-input-tooltip">
             <span class="material-icons ci-icon-color">info_outline</span>
             <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
           </div>
