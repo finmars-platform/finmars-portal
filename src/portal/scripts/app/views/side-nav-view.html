@@ -676,7 +676,15 @@
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.pricing-procedure">
-                                                <span class="side-nav-title">Procedures</span>
+                                                <span class="side-nav-title">Pricing Procedures</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.data-procedure">
+                                                <span class="side-nav-title">Data Procedures</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
