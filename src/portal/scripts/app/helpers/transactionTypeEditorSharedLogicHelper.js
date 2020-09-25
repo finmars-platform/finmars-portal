@@ -705,7 +705,7 @@
                         var inputName = nameCell.settings.value;
 
                         viewModel.entity.inputs.splice(sRow.order, 1);
-                        viewModel.updateInputFunctions();
+                        updateInputFunctions();
 
                         gtDataService.deleteRows(sRow);
 
