@@ -17,20 +17,43 @@
 
         function setTableData (tableData) {
             data.tableData = tableData
-            console.log("grid table setTableData", tableData);
         }
 
         function getTableData () {
             return data.tableData;
         }
 
+        function getTemplateRow() {
+            return data.tableData.templateRow;
+        }
+
         function getRow (rowOrder) {
 
-            if (rowOrder === 'newRow') {
-                return data.tableData.templateRow;
+             /* if (typeof rowOrder === 'string') {
+
+                 for (var i = 0; i < data.tableData.body.length; i++) {
+
+                     if (data.tableData.body[i].order === rowOrder) {
+                         return data.tableData.body[i];
+                     }
+
+                 }
 
             } else {
                 return data.tableData.body[rowOrder];
+            } */
+
+            return data.tableData.body[rowOrder];
+
+        }
+
+        function getRowByKey (rowKey) {
+
+            for (var i = 0; i < data.tableData.body.length; i++) {
+
+                if (data.tableData.body[i].key === rowKey) {
+                    return data.tableData.body[i];
+                }
 
             }
 
@@ -41,17 +64,28 @@
             if (Array.isArray(rows)) {
 
                 rows.forEach(function (row) {
-                    data.tableData.body.splice(row.order, 1);
+
+                    for (var i = 0; i < data.tableData.body.length; i++) {
+
+                        if (data.tableData.body[i].key === row.key) {
+
+                            data.tableData.body.splice(i, 1);
+                            break;
+
+                        }
+
+                    }
+
                 });
 
             } else {
                 data.tableData.body.splice(rows.order, 1);
-
             }
 
             data.tableData.body.forEach(function (row, index) {
-                row.order = index;
-            })
+                row.order = index
+            });
+
         }
 
         function getSelectedRows () {
@@ -64,19 +98,26 @@
 
         function getCell (rowOrder, cellOrder) {
 
-            if (rowOrder === 'newRow') {
+            if (rowOrder === 'templateRow') {
                 return data.tableData.templateRow.columns[cellOrder];
 
             } else {
                 return data.tableData.body[rowOrder].columns[cellOrder];
 
             }
+            // return data.tableData.body[rowOrder].columns[cellOrder];
 
         }
 
         function getCellByKey (rowOrder, colKey) {
 
-            var row = getRow(rowOrder);
+            if (rowOrder === 'templateRow') {
+                var row = data.tableData.templateRow;
+
+            } else {
+                var row = getRow(rowOrder);
+
+            }
 
             for (var i = 0; i < row.columns.length; i++) {
 
@@ -118,7 +159,9 @@
             setTableData: setTableData,
             getTableData: getTableData,
 
+            getTemplateRow: getTemplateRow,
             getRow: getRow,
+            getRowByKey: getRowByKey,
             getSelectedRows: getSelectedRows,
             deleteRows: deleteRows,
 

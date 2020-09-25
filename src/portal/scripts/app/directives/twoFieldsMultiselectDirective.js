@@ -8,10 +8,11 @@
     return {
       restrict: "E",
       scope: {
-        getDataMethod: "&?",
+        getDataMethod: "&?", // needed for downloading items on opening multiselector
         items: "=",
         model: "=",
         title: "@",
+        dialogTitle: "@",
         nothingSelectedText: "@",
         selectedItemsIndication: "@",
         nameProperty: "@",
@@ -249,6 +250,7 @@
           scope.nameProperty = 'name';
         }
 
+        var dialogTitle = scope.dialogTitle || scope.title;
         var items = [];
 
         scope.$watch('model', function () {
@@ -354,10 +356,10 @@
 
           return new Promise(function (resolve, reject) {
 
-            if (items && items.length) {
+            /*if (items && items.length) {
               resolve(items);
 
-            } else {
+            } else {*/
 
               if (scope.items && scope.items.length) {
 
@@ -368,7 +370,8 @@
 
                 scope.getDataMethod().then(function (resData) {
 
-                  items = JSON.parse(JSON.stringify(resData.results));
+                  scope.items = resData.results;
+                  items = JSON.parse(JSON.stringify(scope.items));
                   resolve(items);
 
                 }).catch(function (error) {
@@ -380,7 +383,7 @@
 
               }
 
-            }
+            // }
 
           })
 
@@ -404,7 +407,7 @@
                 data: {
                   items: items,
                   model: scope.model,
-                  title: scope.title,
+                  title: dialogTitle,
                   nameProperty: scope.nameProperty
                 }
               }

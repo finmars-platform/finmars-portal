@@ -2,6 +2,70 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  .grid-table-add-row-btn {
+    background-color: @orange;
+    min-width: 40px;
+    width: 40px;
+    min-height: 40px;
+    height: 40px;
+    border-radius: 100%;
+    color: #fff;
+    padding: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, .54);
+
+    &:hover, &.md-button:not([disabled]):hover {
+      background-color: rgba(240, 90, 34, 0.7);
+    }
+  }
+
+  .grid-table-top-row-btns {
+    font-weight: 700;
+    padding: 0 10px;
+    color: @grey;
+
+    &:hover {
+      background-color: rgba(240, 90, 34, 0.15);
+    }
+  }
+
+  .grid-table-deletion-row {
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: @orange;
+    padding: 0 16px;
+    color: #fff;
+  }
+
+  .grid-table-deletion-number {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid #fff;
+    padding-right: 24px;
+  }
+
+  .grid-table-delete-rows-btn {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin: 0 0 0 16px;
+    text-transform: none;
+    font-size: 16px;
+  }
+
+  .grid-table-cancel-deletion-btn {
+    min-width: 0;
+    width: 24px;
+    min-height: 0;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+  }
 }
 
 /*.grid-table-header {
@@ -15,9 +79,14 @@
   display: flex;
   flex-direction: row;
   height: 48px;
+  padding-right: 16px;
   padding-left: 36px;
   border-top: 1px solid #e0e0e0;
   box-sizing: border-box;
+
+  &:not(.grid-table-header-row):hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .grid-table-row-checkbox {
@@ -28,6 +97,23 @@
   md-checkbox {
     margin-bottom: 0;
   }
+}
+
+.grid-table-new-row-actions {
+
+  .grid-table-nr-actions-btn {
+    position: absolute;
+    min-width: 24px;
+    width: 24px;
+    min-height: 24px;
+    height: 24px;
+    top: 14px;
+    left: 14px;
+    color: @grey;
+    padding: 0;
+    margin: 0;
+  }
+
 }
 
 .grid-table-cell {
@@ -47,9 +133,10 @@
 
     .gt-sorting-icon {
       position: absolute;
-      left: 1px;
-      top: 14px;
-      fill: #747474;
+      left: -1px;
+      top: 16px;
+      color: #747474;
+      font-size: 16px;
     }
 
     .gt-cell-text {
@@ -64,11 +151,6 @@
       }
     }
 
-    &.gt-sorting-on {
-      .gt-cell-text {
-        font-weight: bold;
-      }
-    }
   }
 
   .gt-cell-text-container {
@@ -103,22 +185,114 @@
       height: 24px;
       padding: 0;
       margin: 0;
-      fill: #747474;
+      color: #747474;
       opacity: 0;
     }
   }
 
   .gt-cell-selector-container {
     padding-top: 5px;
+    height: 100%;
+    box-sizing: border-box;
 
-    md-input-container {
-      width: 100%;
+    .gt-cell-selector-holder {
+      flex: 0 1 100%;
+      min-width: 0;
 
-      md-select {
-        font-size: 14px;
+      md-input-container {
+        min-width: 0;
+        width: 100%;
+
+        md-select {
+          font-size: 14px;
+          margin: 0;
+
+          .md-select-value {
+            border-bottom: none;
+
+            .md-select-icon {
+              width: 13px;
+              margin: 0 2px;
+              opacity: 0;
+            }
+          }
+
+        }
+
+        md-select.md-default-theme[disabled] .md-select-value, md-select[disabled] .md-select-value {
+          background-image: none;
+        }
+      }
+
+    }
+
+    .gt-cell-selector-unselect-btn-holder {
+      opacity: 0;
+      flex: 0 1 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      button.md-button {
+        min-width: 20px;
+        width: 20px;
+        min-height: 20px;
+        height: 20px;
         margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: @grey;
+
+        span.material-icons {
+          font-size: 18px;
+        }
+
+        &:hover {
+          background-color: transparent;
+          opacity: .5;
+        }
       }
     }
+
+    &:hover {
+
+      md-select:not([disabled]) {
+        .md-select-value .md-select-icon {
+          opacity: 1;
+        }
+      }
+
+      .gt-cell-selector-unselect-btn-holder {
+        opacity: 1;
+      }
+
+    }
+
+  }
+
+  .grid-table-cell-multiselector {
+
+    md-input-container {
+      input.md-input {
+        border-bottom: none;
+      }
+    }
+
+  }
+
+}
+
+.grid-table-cell.gt-sorting-on { // header cell with sorting on
+
+  .gt-header-cell-content {
+
+    .gt-cell-text {
+      font-weight: bold;
+    }
+
   }
 
 }

@@ -4,7 +4,7 @@
 
     'use strict';
 
-    module.exports = function ($compile) {
+    module.exports = function ($compile, $mdDialog) {
         return {
             restrict: 'E',
             scope: {
@@ -17,11 +17,11 @@
             template: '<div class="gt-cell-text-container">' +
                 '<div class="gt-cell-text"><span data-ng-bind="column.settings.cellText"></span></div>' +
                 '<div class="gt-cell-edit-btn">' +
-                    '<ng-md-icon icon="edit" size="24"></ng-md-icon>' +
+                    '<span class="material-icons">edit</span>' +
                 '</div>' +
             '</div>',
             link: function (scope, elem, attrs) {
-                // console.log("grid table popupDirective column", scope.column);
+
                 scope.popupData = {};
                 scope.popupSettings = null;
 
@@ -39,6 +39,7 @@
                         "<md-button class='m-r-0' data-ng-click='acceptPopupChanges()'>Agree</md-button>" +
                     "</div>"
 
+                // Popup methods
                 var getPopupHtmlContent = function () {
 
                     var popupMain;
@@ -47,13 +48,18 @@
                         case 'text':
 
                             popupMain = "<text-input label='{{column.columnName}}' " +
-                                "placeholder-text='{{column.columnName}}' " +
-                                "model='popupData.value'></text-input>"
+                                                    "placeholder-text='{{column.columnName}}' " +
+                                                    "model='popupData.value' " +
+                                                    "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
+                                        "</text-input>"
 
                             break;
 
                         case 'number':
-                            popupMain = "<number-input label='{{column.columnName}}' model='popupData.value'></number-input>"
+                            popupMain = "<number-input label='{{column.columnName}}' " +
+                                                      "model='popupData.value' " +
+                                                      "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
+                                        "</number-input>"
                             break;
 
                         case 'custom_popup':
@@ -72,16 +78,14 @@
 
                 };
 
-                // Popup methods
                 var createPopup = function (posX, posY) {
 
                     popUpElem = document.createElement("div");
                     popUpElem.classList.add("popup-area");
-                    console.log("grid table popupContent", popupContent);
+
                     popUpElem.innerHTML = popupContent
 
                     $compile($(popUpElem))(scope);
-                    console.log("grid table popUpElem", popUpElem);
 
                     bodyElem.appendChild(popupBackdropElem);
                     $(bodyElem).append($(popUpElem));
@@ -110,13 +114,35 @@
 
                     scope.column.settings.cellText = popupValue
                     scope.column.settings.value = popupValue
-                    // gridTableData.body[scope.row.order].columns[scope.column.order].settings.value = popupValue;
-                    console.log("grid table after cell change", scope.popupData, scope.column)
+
                     if (cellMethods && cellMethods.onChange) {
-                        cellMethods.onChange(scope.row.order, scope.column.order, scope.gtDataService, scope.gtEventService)
+
+                        var rowData = {
+                            key: scope.row.key,
+                            order: scope.row.order
+                        };
+
+                        var colData = {
+                            key: scope.column.key,
+                            order: scope.column.order
+                        };
+
+                        cellMethods.onChange(rowData, colData, scope.gtDataService, scope.gtEventService);
+
                     }
 
-                    scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED);
+                    var changedCellData = {
+                        row: {
+                            key: scope.row.key,
+                            order: scope.row.order
+                        },
+                        column: {
+                            key: scope.column.key,
+                            order: scope.column.order
+                        }
+                    };
+
+                    scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
 
                     closePopupArea();
 
@@ -264,11 +290,68 @@
                                 scope.column.settings.cellText = event.detail.formatted_date;
                                 scope.$apply();
 
-                                scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED);
+                                var changedCellData = {
+                                    row: {
+                                        key: scope.row.key,
+                                        order: scope.row.order
+                                    },
+                                    column: {
+                                        key: scope.column.key,
+                                        order: scope.column.order
+                                    }
+                                };
+
+                                scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
 
                             });
 
                             break;
+
+                        case 'expression':
+
+                            cellTextContainer.addEventListener('click', function (e) {
+
+                                $mdDialog.show({
+                                    controller: 'ExpressionEditorDialogController as vm',
+                                    templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                                    parent: angular.element(document.body),
+                                    targetEvent: e,
+                                    preserveScope: true,
+                                    multiple: true,
+                                    autoWrap: true,
+                                    skipHide: true,
+                                    locals: {
+                                        item: {expression: scope.column.settings.value},
+                                        data: scope.column.settings.exprData
+                                    }
+
+                                }).then(function (res) {
+
+                                    if (res.status === 'agree') {
+
+                                        scope.column.settings.cellText = res.data.item.expression;
+                                        scope.column.settings.value = res.data.item.expression;
+
+                                        var changedCellData = {
+                                            row: {
+                                                key: scope.row.key,
+                                                order: scope.row.order
+                                            },
+                                            column: {
+                                                key: scope.column.key,
+                                                order: scope.column.order
+                                            }
+                                        };
+
+                                        scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
+
+                                    }
+
+                                });
+
+                            })
+
+                        break;
 
                     }
 

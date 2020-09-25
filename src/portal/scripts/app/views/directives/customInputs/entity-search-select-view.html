@@ -12,19 +12,12 @@
   <div class="custom-input-main-container customInputBackgroundColor">
     <div class="custom-input-borders">
       <div class="custom-input-content">
-        <div data-ng-if="error" class="custom-input-error-tooltip">
-          <ng-md-icon
-            icon="info_outline"
-            size="18"
-            class="tooltip-sign"
-          ></ng-md-icon>
-          <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
-        </div>
 
         <div class="flex-row">
           <button data-ng-if="!noIndicatorBtn"
                   class="custom-input-indicator-btn position-relative"
-                  data-ng-click="openSmartSearch($event)">
+                  data-ng-click="openSmartSearch($event)"
+                  ng-disabled="isDisabled">
             <span class="material-icons">menu</span>
           </button>
 
@@ -42,14 +35,16 @@
         <div class="custom-input-side-items flex-row customInputBackgroundColor">
 
           <div class="custom-input-custom-btns-holder">
-            <div data-ng-if="customButtons && customButtons.length" class="height-100">
+            <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
               <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
                       data-ng-click="callFnForCustomBtn(button.action)">
                 {{button.caption}}
                 <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
                             size="24"
                             icon="{{button.iconObj.icon}}"
-                            class="ci-custom-btn-icon"></ng-md-icon>
+                            class="ci-icon-color"></ng-md-icon>
+                <span data-ng-if="button.iconObj.type === 'angular-material'"
+                      class="material-icons ci-icon-color">{{button.iconObj.icon}}</span>
 
                 <md-tooltip data-ng-if="button.tooltip"
                             class="tooltip_1"
@@ -59,12 +54,12 @@
             </div>
           </div>
 
-          <div data-ng-show="error" class="custom-input-tooltip">
+          <div data-ng-if="error" class="custom-input-tooltip">
             <span class="material-icons">info</span>
             <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
           </div>
 
-          <div data-ng-show="tooltipText && !error" class="custom-input-tooltip">
+          <div data-ng-if="tooltipText" data-ng-show="!error" class="custom-input-tooltip">
             <span class="material-icons ci-icon-color">info_outline</span>
             <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
           </div>

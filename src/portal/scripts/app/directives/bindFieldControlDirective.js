@@ -646,12 +646,10 @@
           scope.evEditorEventService.addEventListener(
             evEditorEvents.FIELDS_RECALCULATED,
             function () {
-              if (
-                scope.item &&
-                scope.item.frontOptions &&
-                (scope.entity[scope.fieldKey] ||
-                  scope.entity[scope.fieldKey] === 0)
-              ) {
+              if (scope.item &&
+                  scope.item.frontOptions &&
+                  (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
+
                 setItemSpecificSettings();
 
                 /*if (scope.item.frontOptions.recalculated === 'input') {
@@ -662,11 +660,11 @@
 
                             }*/
 
-                if (
-                  scope.item.frontOptions.recalculated ||
-                  scope.item.frontOptions.autocalculated
-                ) {
+                if (scope.item.frontOptions.recalculated ||
+                    scope.item.frontOptions.autocalculated) {
+
                   scope.ciEventObj.event = { key: "set_style_preset1" };
+
                 }
               }
             }

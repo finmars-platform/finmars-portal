@@ -69,7 +69,7 @@ app.service('$customDialog', ['$rootScope', '$templateCache', '$compile', '$cont
 app.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/bigDrawerService')]);
 
 app.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
-
+app.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
 // Dashboard
 
 app.component('dashboardEntityViewer', require('./app/components/dashboardEntityViewerComponent'));
@@ -293,9 +293,22 @@ app.controller('CurrencyHistoryErrorEditDialogController', ['$scope', '$mdDialog
 
 // Transaction type form
 
-app.controller('TransactionTypeAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/transactionTypeAddDialogController')]);
-app.controller('TransactionTypeEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/transactionTypeEditDialogController')]);
+app.controller(
+    'TransactionTypeAddDialogController',
+    [
+        '$scope', '$mdDialog', '$state', 'entityType', 'entity',
+        require('./app/controllers/entityViewer/transactionTypeAddDialogController')
+    ]
+);
+app.controller(
+    'TransactionTypeEditDialogController',
+    [
+        '$scope', '$mdDialog', '$state', 'entityType', 'entityId',
+        require('./app/controllers/entityViewer/transactionTypeEditDialogController')
+    ]
+);
 app.controller('TransactionTypeValidationErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/entityViewer/transactionTypeValidationErrorsDialogController')]);
+app.controller('TransactionTypeAddInputDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionTypeAddInputDialogController')]);
 
 // Complex transaction form
 
@@ -308,7 +321,7 @@ app.controller('ComplexTransactionsTransactionEditDialogController', ['$scope', 
 
 // Instrument form - tabs
 
-app.controller('AccrualCalculationSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
+app.controller('AccrualCalculationSchedulesTabController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
 app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/eventSchedulesTabController')]);
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
@@ -625,7 +638,7 @@ app.directive('gridTable', [require('./app/directives/gridTable/gridTableDirecti
 app.directive('gridTableTopPanel', [require('./app/directives/gridTable/gridTableTopPanelDirective')]);
 app.directive('gridTableCell', ['$compile', require('./app/directives/gridTable/gridTableCellDirective')]);
 app.directive('gridTableHeaderCell', [require('./app/directives/gridTable/cells/gridTableHeaderCellDirective')]);
-app.directive('gridTablePopupCell', ['$compile', require('./app/directives/gridTable/cells/gridTablePopupCellDirective')]);
+app.directive('gridTablePopupCell', ['$compile', '$mdDialog', require('./app/directives/gridTable/cells/gridTablePopupCellDirective')]);
 // Grid Table End
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);

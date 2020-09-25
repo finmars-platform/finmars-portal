@@ -22,7 +22,8 @@
         <div class="flex-row">
           <button data-ng-if="!noIndicatorBtn"
                   class="custom-input-indicator-btn position-relative"
-                  data-ng-click="focusDateInput()">
+                  data-ng-click="focusDateInput()"
+                  ng-disabled="isDisabled">
             <span class="material-icons">event</span>
           </button>
 
@@ -30,6 +31,7 @@
             type="text"
             data-ng-model="dateValue"
             placeholder="{{placeholderText}}"
+            ng-disabled="isDisabled"
             class="custom-input date-input pick-me-up dateInputElem"/>
         </div>
 
@@ -54,7 +56,7 @@
             </div>
 
             <div data-ng-if="usualCustomButtons.length"
-                 class="height-100">
+                 class="height-100 flex-row">
 
               <button data-ng-repeat="button in usualCustomButtons"
                       class="{{button.classes}} custom-input-custom-btn"
@@ -87,7 +89,7 @@
             <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
           </div>
 
-          <div data-ng-if="tooltipText && !error" class="custom-input-tooltip">
+          <div data-ng-if="tooltipText" data-ng-show="!error" class="custom-input-tooltip">
             <span class="material-icons ci-icon-color">info_outline</span>
             <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
           </div>

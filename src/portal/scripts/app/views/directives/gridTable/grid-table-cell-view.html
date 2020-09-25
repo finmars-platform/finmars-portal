@@ -2,15 +2,10 @@
 
     <div ng-if="row.order === 'header'"
          class="gt-header-cell-content gt-cell-content">
-
-        <ng-md-icon data-ng-show="sortingOn && !sortRowsReverse"
-                    icon="arrow_upwards"
-                    size="14"
-                    class="gt-sorting-icon"></ng-md-icon>
-        <ng-md-icon data-ng-show="sortingOn && sortRowsReverse"
-                    icon="arrow_downward"
-                    size="14"
-                    class="gt-sorting-icon"></ng-md-icon>
+        <span data-ng-show="sortingOn && !sortRowsReverse"
+              class="material-icons gt-sorting-icon">arrow_upward</span>
+        <span data-ng-show="sortingOn && sortRowsReverse"
+              class="material-icons gt-sorting-icon">arrow_downward</span>
 
         <grid-table-header-cell column="column"
                                 gt-data-service="gtDataService"
@@ -34,21 +29,37 @@
                 <ng-md-icon icon="edit" size="24"></ng-md-icon>
             </md-button>
         </div>-->
+        <md-tooltip ng-if="column.settings.cellText"
+                    class="tooltip_1"
+                    md-direction="top"
+                    ng-bind="column.settings.cellText"></md-tooltip>
     </div>
 
     <div ng-if="column.cellType === 'selector'"
-         class="gt-cell-selector-container">
+         class="gt-cell-selector-container flex-row">
 
-        <md-input-container class="m-0">
-            <md-select data-ng-model="column.settings.value"
-                       data-ng-change="onCellValueChange()"
-                       data-md-on-open="onSelOpen()"
-                       data-ng-disabled="column.settings.isDisabled">
-                <md-option data-ng-repeat="options in column.settings.selectorOptions"
-                           data-ng-value="options.id"
-                           data-ng-bind="options.name"></md-option>
-            </md-select>
-        </md-input-container>
+        <div class="gt-cell-selector-holder">
+            <md-input-container class="m-0">
+                <md-select data-ng-model="column.settings.value"
+                           data-ng-change="onCellValueChange()"
+                           data-md-on-open="onSelOpen()"
+                           data-ng-disabled="column.settings.isDisabled">
+                    <md-option data-ng-repeat="options in column.settings.selectorOptions"
+                               data-ng-value="options.id"
+                               data-ng-bind="options.name"></md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+
+        <div ng-if="!column.settings.isDisabled && column.settings.unselectButton"
+             class="gt-cell-selector-unselect-btn-holder">
+            <md-button class="gt-cell-selector-unselect-btn"
+                       data-ng-click="unselectOptions()">
+                <span class="material-icons">close</span>
+
+                <md-tooltip class="tooltip_1" md-direction="top">Discard selected option.</md-tooltip>
+            </md-button>
+        </div>
 
     </div>
 
@@ -57,8 +68,24 @@
                      data-ng-change="onCellValueChange()"></md-checkbox>
     </div>
 
-    <div data-ng-if="column.cellType === 'multiselector'">
-        <!-- PUT MULTISELECTOR HERE -->
+    <div data-ng-if="column.cellType === 'multiselector'" class="gt-cell-content">
+
+        <div class="gt-cell-text-container">
+            <two-fields-multiselect ng-model="column.settings.value"
+                                    items="column.settings.selectorOptions"
+                                    model="column.settings.value"
+                                    dialog-title="{{column.columnName}}"
+                                    name-property="name"
+                                    get-data-method="column.settings.getItemsMethod()"
+                                    selected-items-indication="array"
+                                    on-change-callback="onCellValueChange()"
+                                    class="grid-table-cell-multiselector no-error-spacer">
+            </two-fields-multiselect>
+
+            <div class="gt-cell-edit-btn">
+                <span class="material-icons">edit</span>
+            </div>
+        </div>
 
     </div>
 

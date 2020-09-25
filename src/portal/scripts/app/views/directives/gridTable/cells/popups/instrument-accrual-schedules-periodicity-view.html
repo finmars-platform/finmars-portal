@@ -2,14 +2,17 @@
                  model="popupData.value[0]"
                  placeholder-text="Periodicity"
                  menu-options="column.settings.popupSettings.fieldsData[0].selectorOptions"
-                 small-options="{tooltipText: 'Periodicity'}"></dropdown-select>
+                 small-options="{tooltipText: 'Periodicity', dialogParent: '.dialog-containers-wrap'}">
+</dropdown-select>
 
 <number-input label="Number of days"
               model="popupData.value[1]"
-              small-options="{tooltipText: 'Number of days'}"></number-input>
+              small-options="{tooltipText: 'Number of days', dialogParent: '.dialog-containers-wrap'}">
+</number-input>
 
 <dropdown-select label="Calculation model"
                  model="popupData.value[2]"
                  placeholder-text="Calculation model"
                  menu-options="column.settings.popupSettings.fieldsData[1].selectorOptions"
-                 small-options="{tooltipText: 'Calculation model'}"></dropdown-select>
+                 small-options="{tooltipText: 'Calculation model', dialogParent: '.dialog-containers-wrap'}">
+</dropdown-select>
