@@ -63,7 +63,16 @@
     };
 
     var getTransactionReport = function (options) {
-        return xhrService.fetch(baseUrl + 'reports/transaction-report/',
+
+        var url;
+
+        if (window.location.search.indexOf('sql=true') !== -1) {
+            url = 'reports/transaction-report-sql/'
+        } else {
+            url = 'reports/transaction-report/'
+        }
+
+        return xhrService.fetch(baseUrl + url,
             {
                 method: 'POST',
                 credentials: 'include',
