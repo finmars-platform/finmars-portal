@@ -244,7 +244,7 @@
 
                         new Promise(function (resolve, reject) {
 
-                            pricingPolicyService.getList(ppOptions).then(function (data) {
+                            pricingPolicyService.getListLight(ppOptions).then(function (data) {
 
                                 scope.pricingPolicies = scope.pricingPolicies.concat(data.results);
 
@@ -280,7 +280,7 @@
 
                         new Promise(function (resolve, reject) {
 
-                            currencyService.getList(currencyOptions).then(function (data) {
+                            currencyService.getListLight(currencyOptions).then(function (data) {
 
                                 scope.currencies = scope.currencies.concat(data.results);
 
