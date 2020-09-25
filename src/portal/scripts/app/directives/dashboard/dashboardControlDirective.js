@@ -252,6 +252,7 @@
                     getItemDataStore(componentData).then(function (store) {
                         scope.item.data.store = store;
                         scope.$apply();
+                        scope.valueChanged();
                     });
 
                 };
