@@ -26,7 +26,16 @@
     };
 
     var getBalanceReport = function (options) {
-        return xhrService.fetch(baseUrl + 'reports/balance-report/',
+
+        var url;
+
+        if (window.location.search.indexOf('sql=true') !== -1) {
+            url = 'reports/balance-report-sql/'
+        } else {
+            url = 'reports/balance-report/'
+        }
+
+        return xhrService.fetch(baseUrl + url,
             {
                 method: 'POST',
                 credentials: 'include',
