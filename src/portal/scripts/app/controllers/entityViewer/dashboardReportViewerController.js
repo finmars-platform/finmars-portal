@@ -956,6 +956,35 @@
 
             };
 
+            vm.getOptionsFromDependencies = function () {
+
+                var reportOptions = {};
+
+                Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
+
+                    var componentId = vm.componentData.settings.linked_components.report_settings[property];
+
+                    var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+
+                    if (!componentOutput || !componentOutput.data) {
+                        return;
+                    }
+
+                    if (['portfolios', 'strategies1', 'strategies2', 'strategies3'].indexOf(property) > -1 &&
+                        !Array.isArray(componentOutput.data.value)) {
+
+                        reportOptions[property] = [componentOutput.data.value];
+
+                    } else {
+                        reportOptions[property] = componentOutput.data.value;
+                    }
+
+                });
+
+                return reportOptions;
+
+            }
+
             vm.setLayout = function (layout) {
 
                 return new Promise(function (resolve, reject) {
@@ -964,6 +993,15 @@
 
                     var reportOptions = vm.entityViewerDataService.getReportOptions();
                     var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
+
+                    console.log('setLayout.vm.componentData', vm.componentData);
+                    console.log('setLayout.layout', layout);
+                    console.log('setLayout.reportOptions', reportOptions);
+                    var reportOptionsFromDependenciesComponents = vm.getOptionsFromDependencies()
+                    console.log('setLayout.reportOptionsFromDependenciesComponents', reportOptionsFromDependenciesComponents);
+
+                    Object.assign(reportOptions, reportOptionsFromDependenciesComponents);
+                    console.log()
 
                     // Check are there report datepicker expressions to solve
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
@@ -1334,6 +1372,10 @@
                         var componentId = vm.componentData.settings.linked_components.report_settings[property];
 
                         var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+                        console.log('updateReportSettingsUsingDashboardData.componentOutput', property, componentOutput)
+
+                        // console.log('updateReportSettingsUsingDashboardData.layoutData', vm.dashboardDataService.getData());
+                        // console.log('updateReportSettingsUsingDashboardData.componentOutput', componentOutput)
 
                         if (componentOutput && componentOutput.data) {
 
@@ -1346,7 +1388,8 @@
 
                             if (reportOptions[property] !== componentOutput.data.value) {
 
-                                if (property.indexOf(['portfolios', 'strategies1', 'strategies2', 'strategies3']) > -1 &&
+
+                                if (['portfolios', 'strategies1', 'strategies2', 'strategies3'].indexOf(property) > -1 &&
                                     !Array.isArray(componentOutput.data.value)) {
 
                                     reportOptions[property] = [componentOutput.data.value];
@@ -1368,6 +1411,8 @@
                         }
 
                     })
+
+                    console.log('updateReportSettingsUsingDashboardData', reportOptions);
 
                     if (reportOptionsChanged) {
                         vm.entityViewerDataService.setReportOptions(reportOptions);
