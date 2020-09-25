@@ -54,7 +54,7 @@
                     scope.allRowsAreActive = !scope.allRowsAreActive;
 
                     scope.gridTableData.body.forEach(function (row) {
-                        row.isActive = scope.allRowsAreActive;
+                        row.isActive = scope.allRowsAreActive
                     });
 
                     scope.gtEventService.dispatchEvent(gtEvents.ROW_SELECTION_TOGGLED);
