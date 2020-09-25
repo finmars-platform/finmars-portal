@@ -610,7 +610,7 @@
 
                             new Promise(function (resolve, reject) {
 
-                                currencyService.getList(currencyOptions).then(function (data) {
+                                currencyService.getListLight(currencyOptions).then(function (data) {
 
                                     scope.currencies = scope.currencies.concat(data.results);
 
