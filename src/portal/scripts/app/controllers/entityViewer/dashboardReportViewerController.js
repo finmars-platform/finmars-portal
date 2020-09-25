@@ -962,15 +962,19 @@
 
                 Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
 
+
                     var componentId = vm.componentData.settings.linked_components.report_settings[property];
 
                     var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                    if (!componentOutput || !componentOutput.data) {
+                    if (!componentOutput || !componentOutput.data || !componentOutput.data.value) {
                         return;
                     }
 
-                    if (['portfolios', 'strategies1', 'strategies2', 'strategies3'].indexOf(property) > -1 &&
+                    console.log('setLayout.getOptionsFromDependencies.property', property, componentOutput)
+
+
+                    if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].indexOf(property) > -1 &&
                         !Array.isArray(componentOutput.data.value)) {
 
                         reportOptions[property] = [componentOutput.data.value];
@@ -1001,7 +1005,6 @@
                     console.log('setLayout.reportOptionsFromDependenciesComponents', reportOptionsFromDependenciesComponents);
 
                     Object.assign(reportOptions, reportOptionsFromDependenciesComponents);
-                    console.log()
 
                     // Check are there report datepicker expressions to solve
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
@@ -1389,10 +1392,15 @@
                             if (reportOptions[property] !== componentOutput.data.value) {
 
 
-                                if (['portfolios', 'strategies1', 'strategies2', 'strategies3'].indexOf(property) > -1 &&
+                                if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].indexOf(property) > -1 &&
                                     !Array.isArray(componentOutput.data.value)) {
+                                    if (componentOutput.data.value) {
 
-                                    reportOptions[property] = [componentOutput.data.value];
+                                        reportOptions[property] = [componentOutput.data.value];
+
+                                    } else {
+                                        reportOptions[property] = [];
+                                    }
 
                                 } else {
                                     reportOptions[property] = componentOutput.data.value;

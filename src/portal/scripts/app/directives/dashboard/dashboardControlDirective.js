@@ -250,6 +250,9 @@
                 scope.settingUpDefaultValue = function (componentData) {
 
                     getItemDataStore(componentData).then(function (store) {
+                        if (!store.value) {
+                            return;
+                        }
                         scope.item.data.store = store;
                         scope.$apply();
                         scope.valueChanged();
