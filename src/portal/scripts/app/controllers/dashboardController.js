@@ -352,7 +352,7 @@
 
             var reportSettings = componentData.settings.linked_components.report_settings;
 
-            var dependencies = Object.values(reportSettings).filter(function (id) {
+            var dependencies = Object.values(reportSettings).filter(function (id) { // prevent loop
                 return !waitingComponents.includes(id);
             });
 
@@ -366,6 +366,7 @@
         vm.initDashboardComponents = function () {
 
             var LIMIT = 2;
+            var waitingComponents = [];
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
@@ -376,7 +377,6 @@
                 var key;
 
                 var activeProcessingComponents = 0;
-                var waitingComponents = [];
 
                 for (var i = 0; i < keys.length; i = i + 1) {
 
@@ -395,16 +395,13 @@
 
                 }
 
-                console.log('initDashboardComponents.activeProcessingComponents', activeProcessingComponents);
-                console.log('initDashboardComponents.statusesObject', statusesObject);
-
                 if (activeProcessingComponents < LIMIT) {
 
                     for (var i = 0; i < keys.length; i = i + 1) {
 
                         key = keys[i];
 
-                        console.log('initDashboardComponents.key', key);
+                        //console.log('initDashboardComponents.key', key);
 
                         if (statusesObject[key] === dashboardComponentStatuses.INIT) {
 
@@ -422,7 +419,11 @@
 
                             } else {
 
-                                waitingComponents.push(key);
+                                if (!waitingComponents.includes(key)) {
+
+                                    waitingComponents.push(key);
+
+                                }
 
                             }
 
@@ -430,7 +431,6 @@
 
                     }
                 }
-
 
             });
 

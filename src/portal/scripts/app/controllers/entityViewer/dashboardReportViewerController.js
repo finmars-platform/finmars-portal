@@ -971,9 +971,6 @@
                         return;
                     }
 
-                    console.log('setLayout.getOptionsFromDependencies.property', property, componentOutput)
-
-
                     if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].indexOf(property) > -1 &&
                         !Array.isArray(componentOutput.data.value)) {
 
