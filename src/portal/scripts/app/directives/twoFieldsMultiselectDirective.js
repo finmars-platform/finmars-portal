@@ -361,7 +361,7 @@
 
             } else {*/
 
-              if (scope.items && scope.items.length) {
+              if (scope.items && Array.isArray(scope.items)) {
 
                 items = JSON.parse(JSON.stringify(scope.items));
                 resolve(items);
