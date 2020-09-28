@@ -1015,6 +1015,12 @@
 
                             //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
+                        }).catch(function () {
+                            vm.readyStatus.layout = true;
+
+                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                            $scope.$apply();
                         });
 
 

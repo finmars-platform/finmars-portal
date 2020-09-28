@@ -971,13 +971,19 @@
                         return;
                     }
 
-                    if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].indexOf(property) > -1 &&
+                    if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
                         !Array.isArray(componentOutput.data.value)) {
 
                         reportOptions[property] = [componentOutput.data.value];
 
+                    } else if (['report_currency', 'pricing_policy'].includes(property) && Array.isArray((componentOutput.data.value)))  {
+
+                        reportOptions[property] = componentOutput.data.value[0];
+
                     } else {
+
                         reportOptions[property] = componentOutput.data.value;
+
                     }
 
                 });
@@ -1036,6 +1042,10 @@
                             }
 
                             Promise.all(datepickerExpressionsToSolve).then(function () {
+
+                                resolve();
+
+                            }).catch(function () {
 
                                 resolve();
 
@@ -1374,33 +1384,28 @@
                         var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
                         console.log('updateReportSettingsUsingDashboardData.componentOutput', property, componentOutput)
 
-                        // console.log('updateReportSettingsUsingDashboardData.layoutData', vm.dashboardDataService.getData());
-                        // console.log('updateReportSettingsUsingDashboardData.componentOutput', componentOutput)
-
                         if (componentOutput && componentOutput.data) {
-
-                            // var reportOptions = vm.entityViewerDataService.getReportOptions();
-                            // console.log('reportOptions', reportOptions);
-                            // console.log('componentOutput', componentOutput);
-                            //
-                            // console.log('reportOptions[property]', reportOptions[property]);
-                            // console.log('componentOutput.data.value', componentOutput.data.value);
 
                             if (reportOptions[property] !== componentOutput.data.value) {
 
-
-                                if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].indexOf(property) > -1 &&
+                                if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
                                     !Array.isArray(componentOutput.data.value)) {
                                     if (componentOutput.data.value) {
-
                                         reportOptions[property] = [componentOutput.data.value];
-
                                     } else {
+
                                         reportOptions[property] = [];
+
                                     }
 
+                                } else if (['report_currency', 'pricing_policy'].includes(property) && Array.isArray((componentOutput.data.value)))  {
+
+                                    reportOptions[property] = componentOutput.data.value[0];
+
                                 } else {
+
                                     reportOptions[property] = componentOutput.data.value;
+
                                 }
 
                                 reportOptionsChanged = true;
