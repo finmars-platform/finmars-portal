@@ -980,6 +980,7 @@
                                 var solveFirstExpression = function () {
                                     return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
                                         reportOptions.pl_first_date = data.result;
+                                        // reportOptions.begin_date = data.result;
                                     });
                                 };
 
@@ -991,6 +992,7 @@
                                 var solveLastExpression = function () {
                                     return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
                                         reportOptions.report_date = data.result;
+                                        // reportOptions.end_date = data.result;
                                     });
                                 };
 

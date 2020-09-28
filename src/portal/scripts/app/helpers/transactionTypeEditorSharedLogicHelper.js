@@ -935,7 +935,7 @@
                         cellType: 'multiselector',
                         settings: {
                             value: [],
-                            selectorOptions: viewModel.inputsForMultiselector,
+                            selectorOptions: null,
                             closeOnMouseOut: false
                         },
                         styles: {
@@ -1010,56 +1010,13 @@
                 // default_value
                 rowObj.columns[6].settings.value = input.value
 
-                // Change cells base on Value Type
-                /* var valueTypeCell = rowObj.columns[3].settings.value
-
-                var contentTypeCell = rowObj.columns[4]
-                var fillFromContextCell = rowObj.columns[5]
-                var defaultValueCell = rowObj.columns[6] */
-
                 changeCellsBasedOnValueType(rowObj);
-                /*if (valueTypeCell === 100) { // for relation
 
-                    contentTypeCell.objPath = ['content_type']
-                    contentTypeCell.cellType = 'selector'
-                    contentTypeCell.settings.selectorOptions = selectorContentTypes
-
-                    fillFromContextCell.cellType = 'selector'
-                    fillFromContextCell.settings.value = input.context_property
-                    fillFromContextCell.settings.selectorOptions = contextProperties[contentTypeCell.settings.value]
-
-                    defaultValueCell.cellType = 'selector'
-                    defaultValueCell.settings.selectorOptions = viewModel.relationItems[viewModel.resolveRelation(viewModel.newItem)]
-
-                    defaultValueCell.methods = {
-                        onInit: onRelationDefaultValueSelInit
-                    }
-
-                }
-
-                else if (valueTypeCell === 110) { // for selector
-
-                    contentTypeCell.objPath = ['reference_table']
-                    contentTypeCell.cellType = 'selector'
-                    contentTypeCell.settings.isDisabled = true
-                    contentTypeCell.settings.selectorOptions = referenceTables
-
-                    if (defaultValueCell.cellType === 'selector') {
-
-                        defaultValueCell.cellType = 'expression'
-                        defaultValueCell.settings = {value: input.value}
-
-                    }
-
-                    fillFromContextCell.cellType = 'empty'
-                    fillFromContextCell.settings = {value: null}
-
-                }*/
-                // < Change cells base on Value Type >
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
                 // linked_inputs_names
                 rowObj.columns[8].settings.value = input.settings.linked_inputs_names
+                rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
                 // rowObj.columns[8].settings.getDataMethod = getInputsForLinking;
 
                 viewModel.inputsGridTableData.body.push(rowObj)
