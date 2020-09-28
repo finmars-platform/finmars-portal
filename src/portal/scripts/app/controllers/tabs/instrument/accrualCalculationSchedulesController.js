@@ -420,18 +420,6 @@
                         styles: {
                             'grid-table-cell': {'width': '210px'}
                         }
-                    },
-                    {
-                        key: 'checkbox',
-                        columnName: 'Checkbox',
-                        order: 5,
-                        cellType: 'checkbox',
-                        settings: {
-                            value: true
-                        },
-                        styles: {
-                            'grid-table-cell': {'width': '100px'}
-                        }
                     }
                 ]
             },
