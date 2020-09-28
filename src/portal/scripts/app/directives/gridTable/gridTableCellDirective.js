@@ -111,7 +111,7 @@
 
                 var init = function () {
 
-                    if (scope.row.order !== 'header' && scope.column.styles) { // if no child directive initialized
+                    if (scope.row.order !== 'header' && !scope.cellWithPopup()) { // if no child directive initialized
                         scope.onChildrenLoadEnd();
                     }
 

@@ -93,6 +93,7 @@
   position: absolute;
   top: 14px;
   left: 15px;
+  z-index: 2;
 
   md-checkbox {
     margin-bottom: 0;
@@ -151,6 +152,12 @@
       }
     }
 
+  }
+
+  .gt-cell-readonly-text span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .gt-cell-text-container {
@@ -271,6 +278,25 @@
 
     }
 
+  }
+
+  .gt-cell-checkbox-holder {
+    md-checkbox {
+      display: block;
+      margin: 0;
+      width: 20px;
+
+      .md-icon {
+        border-radius: 100%;
+      }
+
+      &.md-checked.gt-cell-checkbox-readonly[disabled] {
+        .md-icon {
+          background-color: @orange;
+        }
+      }
+
+    }
   }
 
   .grid-table-cell-multiselector {

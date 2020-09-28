@@ -13,13 +13,22 @@
                                 on-load-end="onChildrenLoadEnd()"></grid-table-header-cell>
     </div>
 
+    <div ng-if="column.cellType === 'readonly_text'" class="gt-cell-content gt-cell-readonly-text">
+        <span ng-bind="column.settings.value"></span>
+
+        <md-tooltip ng-if="column.settings.value"
+                    class="tooltip_1"
+                    md-direction="top"
+                    ng-bind="column.settings.value"></md-tooltip>
+    </div>
+
     <div data-ng-if="cellWithPopup()" class="gt-cell-content">
 
         <grid-table-popup-cell row="row"
                                column="column"
                                gt-data-service="gtDataService"
                                gt-event-service="gtEventService"
-                               on-load-end="onLoadEnd()"></grid-table-popup-cell>
+                               on-load-end="onChildrenLoadEnd()"></grid-table-popup-cell>
         <!--<div class="gt-cell-text-container">
             <div class="gt-cell-text">
                 <span data-ng-bind="cellValue"></span>
@@ -63,12 +72,14 @@
 
     </div>
 
-    <div data-ng-if="column.cellType === 'checkbox'">
-        <md-checkbox data-ng-model="column.settings.value"
-                     data-ng-change="onCellValueChange()"></md-checkbox>
+    <div ng-if="column.cellType === 'checkbox'" class="gt-cell-content flex-i-center gt-cell-checkbox-holder">
+        <md-checkbox ng-model="column.settings.value"
+                     ng-change="onCellValueChange()"
+                     ng-disabled="column.settings.readonly || column.settings.isDisabled"
+                     ng-class="{'gt-cell-checkbox-readonly': column.settings.readonly}"></md-checkbox>
     </div>
 
-    <div data-ng-if="column.cellType === 'multiselector'" class="gt-cell-content">
+    <div ng-if="column.cellType === 'multiselector'" class="gt-cell-content">
 
         <div class="gt-cell-text-container">
             <two-fields-multiselect ng-model="column.settings.value"
