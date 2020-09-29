@@ -974,21 +974,77 @@
                     if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
                         !Array.isArray(componentOutput.data.value)) {
 
-                        reportOptions[property] = [componentOutput.data.value];
+                        reportOptions[property] = [componentOutput.data.value]
 
-                    } else if (['report_currency', 'pricing_policy'].includes(property) && Array.isArray((componentOutput.data.value)))  {
+                    } else if (['report_currency', 'pricing_policy'].includes(property) &&
+                               Array.isArray((componentOutput.data.value)) &&
+                               componentOutput.data.value.length) {
 
-                        reportOptions[property] = componentOutput.data.value[0];
+                        reportOptions[property] = componentOutput.data.value[0]
 
-                    } else {
+                    } else if (componentOutput.data.value !== null ||
+                               componentOutput.data.value !== undefined) {
 
-                        reportOptions[property] = componentOutput.data.value;
+                        reportOptions[property] = componentOutput.data.value
 
                     }
 
                 });
 
                 return reportOptions;
+
+            }
+
+            var reportDateProperties = {
+                'balance-report': [null, 'report_date'],
+                'pl-report': ['pl_first_date', 'report_date'],
+                'transaction-report': ['begin_date', 'end_date']
+            };
+
+            var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
+
+                /*var calculateDateExpression = function (dateProp, dateExpr) {
+
+                    var firstDateProm = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
+                        reportOptions[dateProp] = data.result
+                    });
+
+                    datepickerExpressionsToSolve.push(firstDateProm);
+
+                };
+
+                var datepickerExpressionsToSolve = [];
+
+                if (firstDateExpr) {
+
+                    var firstDateProp = reportDateProperties[vm.entityType][0];
+                    calculateDateExpression(firstDateExpr, firstDateProp);
+
+                }
+
+                if (secondDateExpr) {
+
+                    var secondDateProp = reportDateProperties[vm.entityType][1];
+                    calculateDateExpression(secondDateExpr, secondDateProp);
+
+                }*/
+
+                var dateProp = reportDateProperties[vm.entityType][reportDateIndex];
+
+                var result = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
+                    reportOptions[dateProp] = data.result
+                });
+
+                dateExprsProms.push(result);
+
+            };
+
+            var reportDateIsFromDashboard = function (dashboardReportOptions, dateIndex) {
+
+                var dateProp = reportDateProperties[vm.entityType][dateIndex];
+                var roProps = Object.keys(dashboardReportOptions);
+
+                return roProps.includes(dateProp);
 
             }
 
@@ -1012,54 +1068,34 @@
                     // Check are there report datepicker expressions to solve
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                        var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
-                        var reportLastDatepickerExpression = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
+                        var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
+                        var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
 
-                        if (reportFirstDatepickerExpression || reportLastDatepickerExpression) {
+                        var dateExprsProms = [];
 
-                            var datepickerExpressionsToSolve = [];
+                        if (firstDateExpr && !reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0)) {
 
-                            if (reportFirstDatepickerExpression) {
+                            calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
 
-                                var solveFirstExpression = function () {
-                                    return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
-                                        reportOptions.pl_first_date = data.result;
-                                    });
-                                };
-
-                                datepickerExpressionsToSolve.push(solveFirstExpression());
-                            }
-
-                            if (reportLastDatepickerExpression) {
-
-                                var solveLastExpression = function () {
-                                    return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
-                                        reportOptions.report_date = data.result;
-                                    });
-                                };
-
-                                datepickerExpressionsToSolve.push(solveLastExpression());
-                            }
-
-                            Promise.all(datepickerExpressionsToSolve).then(function () {
-
-                                resolve();
-
-                            }).catch(function () {
-
-                                resolve();
-
-                            });
-
-
-                        } else {
-                            resolve();
                         }
 
+                        if (secondDateExpr && !reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)) {
+
+                            calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
+
+                        }
+
+                        Promise.all(dateExprsProms).then(function () {
+                            resolve();
+
+                        }).catch(function () {
+                            resolve();
+                        });
+
                     } else {
-                    // < Check are there report datepicker expressions to solve >
                         resolve();
                     }
+                    // < Check are there report datepicker expressions to solve >
 
 
                 })
@@ -1873,9 +1909,7 @@
                         });
 
                     }).catch(function (error) {
-
                         reject({errorObj: error, errorCause: 'layout'});
-
                     });
 
                 });
