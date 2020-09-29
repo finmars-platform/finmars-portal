@@ -96,7 +96,7 @@
     function weightedExposure(flatListItem,  valueInTotal, numberKey) {
 
         var result = valueInTotal;
-        console.log("d3 service weightedExposure", valueInTotal, flatListItem);
+
         if (flatListItem.hasOwnProperty("exposure") && !isNaN(parseFloat(flatListItem["exposure"]))) {
 
             if (!isNaN(parseFloat(flatListItem[numberKey]))) {
