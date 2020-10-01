@@ -49,7 +49,16 @@
     };
 
     var getPnlReport = function (options) {
-        return xhrService.fetch(baseUrl + 'reports/pl-report/',
+
+        var url;
+
+        if (window.location.search.indexOf('sql=true') !== -1) {
+            url = 'reports/pl-report-sql/'
+        } else {
+            url = 'reports/pl-report/'
+        }
+
+        return xhrService.fetch(baseUrl + url,
             {
                 method: 'POST',
                 credentials: 'include',

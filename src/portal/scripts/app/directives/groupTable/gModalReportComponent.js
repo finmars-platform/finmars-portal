@@ -44,8 +44,11 @@
         $('body').addClass('drag-dialog'); // hide backdrop
 
         var balanceAttrsToRemove = [
+
             'pricing_currency.notes', 'pricing_currency.reference_for_pricing', 'pricing_currency.daily_pricing_model.name', 'pricing_currency.default_fx_rate', 'currency.name',
             'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.reference_for_pricing', 'currency.daily_pricing_model.name', 'currency.default_fx_rate', 'pricing_currency_fx_rate'
+
+
         ];
 
         var performanceAttrsComp = [
@@ -57,7 +60,9 @@
             'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
             'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
             'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
-            'overheads_fx_closed_loc'
+            'overheads_fx_closed_loc',
+
+            'time_invested', 'position_return'
         ];
 
         var linkedInstrumentAttrsComp = [

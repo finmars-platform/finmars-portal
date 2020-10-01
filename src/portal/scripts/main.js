@@ -373,6 +373,7 @@ app.controller('SettingsGeneralTransactionFieldController', ['$scope', '$mdDialo
 app.controller('SettingsGeneralInstrumentFieldController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInstrumentFieldController')]);
 app.controller('SettingsGeneralChangePasswordController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralChangePasswordController')]);
 app.controller('SettingsGeneralDataProvidersController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralDataProvidersController')]);
+app.controller('SettingsPersonalDataProviderController', ['$scope', '$mdDialog', 'provider', require('./app/controllers/settings/settingsPersonalDataProviderController')]);
 app.controller('SettingsGeneralDataProvidersConfigController', ['$scope', '$stateParams', '$mdDialog', '$state', require('./app/controllers/settings/general/settingsGeneralDataProvidersConfigController')]);
 app.controller('SettingsGeneralDataProvidersBloombergController', ['$scope', '$stateParams', '$mdDialog', '$state', require('./app/controllers/settings/general/settingsGeneralDataProvidersBloombergController')]);
 
@@ -455,14 +456,29 @@ app.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./
 app.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
 app.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
 
+// Procedures
+
+app.controller('PricingProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingProcedurePageController')]);
+app.controller('PricingParentProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingParentProcedurePageController')]);
+
+app.controller('PricingProcedureAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/procedures/pricingProcedureAddDialogController')]);
+app.controller('PricingProcedureEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/procedures/pricingProcedureEditDialogController')]);
+app.controller('RunPricingProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/runPricingProcedurePageController')]);
+
+
+app.controller('DataProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/dataProcedurePageController')]);
+
+app.controller('DataProcedureAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/procedures/dataProcedureAddDialogController')]);
+app.controller('DataProcedureEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/procedures/dataProcedureEditDialogController')]);
+
+app.controller('RunDataProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/runDataProcedurePageController')]);
+
+
 // Pricing
 
 
 app.controller('PricingPolicyPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingPolicyPageController')]);
 app.controller('PricingSchemePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingSchemePageController')]);
-app.controller('PricingProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingProcedurePageController')]);
-app.controller('PricingParentProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingParentProcedurePageController')]);
-app.controller('RunPricingProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/runPricingProcedurePageController')]);
 app.controller('RunPricingInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingInstrumentDialogController')]);
 app.controller('RunPricingCurrencyDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingCurrencyDialogController')]);
 app.controller('SingleInstrumentGenerateEventDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/singleInstrumentGenerateEventDialogController')]);
@@ -478,8 +494,6 @@ app.controller('PricingPolicyAddDialogController', ['$scope', '$mdDialog', 'data
 app.controller('PricingPolicyEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyEditDialogController')]);
 
 
-app.controller('PricingProcedureAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingProcedureAddDialogController')]);
-app.controller('PricingProcedureEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingProcedureEditDialogController')]);
 
 app.controller('PricingMultipleParametersDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingMultipleParametersDialogController')]);
 
