@@ -91,7 +91,7 @@
                 page: 1
             };
 
-            pricingPolicyService.getList(opitons).then(function (data) {
+            pricingPolicyService.getListLight(opitons).then(function (data) {
 
                 vm.pricingPolicies = data.results;
                 vm.readyStatus.pricingPolicy = true;
