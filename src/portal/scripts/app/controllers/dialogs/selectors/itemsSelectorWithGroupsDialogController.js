@@ -122,21 +122,29 @@
 
         vm.agree = function () {
 
-            var activeItems = [];
+            var resData = {};
 
-            vm.groups.forEach(function (group) {
+            if (vm.isMultiselector) {
 
-                var activeGroupItems = group.content.filter(function (item) {
-                    return item.isActive;
+                resData.selected = []
+
+                vm.groups.forEach(function (group) {
+
+                    var activeGroupItems = group.content.filter(function (item) {
+                        return item.isActive;
+                    });
+
+                    resData.selected = resData.selected.concat(activeGroupItems);
+
                 });
 
-                activeItems = activeItems.concat(activeGroupItems);
-
-            });
+            } else {
+                resData.selected = vm.groups[activeItem.gOrder].content[activeItem.iOrder]
+            }
 
             $mdDialog.hide({
                 status: 'agree',
-                data: activeItems
+                data: resData
             });
 
         };

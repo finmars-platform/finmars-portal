@@ -1246,7 +1246,7 @@
 
             }).then(function (res) {
 
-                if (res.status === 'agree') {
+                if (res.status === 'agree' && res.data.selected.length) {
 
                     var components = vm.dashboardConstructorDataService.getComponents();
                     var coppiedComponents = [];
@@ -1289,7 +1289,7 @@
 
                     }); */
 
-                    res.data.forEach(function (selItem) {
+                    res.data.selected.forEach(function (selItem) {
 
                         var compIdPattern = new Date().getTime() + '_' + components.length;
                         selItem.itemData.id = vm.dashboardConstructorDataService.___generateId(compIdPattern);
