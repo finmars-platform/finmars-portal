@@ -1,0 +1,80 @@
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Create Data Procedure</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="p-24">
+
+        <div layout="column">
+
+            <div>
+
+                <h3>General</h3>
+
+                <md-input-container>
+                    <label>Name</label>
+                    <input type="text" data-ng-model="vm.item.name">
+                </md-input-container>
+
+                <md-input-container>
+                    <label>User Code</label>
+                    <input type="text" data-ng-model="vm.item.user_code">
+                </md-input-container>
+
+                <div class="m-t-16">
+
+                    <div><label for="">Notes</label></div>
+                    <textarea name="" data-ng-model="vm.item.notes" cols="60" rows="5"></textarea>
+
+                </div>
+
+                <div class="m-t-16">
+
+                    <div><label for="">Notes for Users</label></div>
+                    <textarea name="" data-ng-model="vm.item.notes_for_users" cols="60" rows="5"></textarea>
+
+                </div>
+
+                <div class="m-t-16">
+
+                    <div><label for="">Provider</label></div>
+                    <md-select data-ng-model="vm.item.provider">
+                        <md-option data-ng-repeat="provider in vm.providers" ng-value="provider.id">
+                            {{provider.name}}
+                        </md-option>
+                    </md-select>
+
+                </div>
+
+                <div class="m-t-16">
+
+                    <div><label for="">Scheme name</label></div>
+                    <md-select data-ng-model="vm.item.scheme_name">
+                        <md-option data-ng-repeat="scheme in vm.schemes" ng-value="scheme.scheme_name">
+                            {{scheme.scheme_name}}
+                        </md-option>
+                    </md-select>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Close
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Create
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

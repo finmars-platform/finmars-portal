@@ -156,7 +156,7 @@
                     <div  style="min-width: 200px">
                         <md-select data-ng-model="item.type">
                             <md-option value="pricing">Pricing Procedure</md-option>
-                            <md-option value="data_provider">Download Transaction File Procedure</md-option>
+                            <md-option value="data_provider">Data Procedure</md-option>
                         </md-select>
                     </div>
                     <div  style="min-width: 200px">
@@ -172,7 +172,7 @@
                         <div data-ng-if="item.type == 'data_provider'">
 
                             <md-select data-ng-model="item.user_code">
-                                <md-option ng-value="procedure.user_code" data-ng-repeat="procedure in vm.transactionDownloadProcedures">{{procedure.name}} ({{procedure.user_code}})</md-option>
+                                <md-option ng-value="procedure.user_code" data-ng-repeat="procedure in vm.dataProcedures">{{procedure.name}} ({{procedure.user_code}})</md-option>
                             </md-select>
 
                         </div>

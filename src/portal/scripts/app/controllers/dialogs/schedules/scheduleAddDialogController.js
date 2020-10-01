@@ -7,6 +7,7 @@
 
     var scheduleService = require('../../../services/scheduleService');
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
+    var dataProcedureService = require('../../../services/procedures/dataProcedureService');
 
     module.exports = function scheduleAddDialogController($scope, $mdDialog, data) {
 
@@ -23,7 +24,7 @@
         vm.cron.time = new Date();
 
         vm.pricingProcedures = [];
-        vm.transactionDownloadProcedures = [];
+        vm.dataProcedures = [];
 
         vm.setDay = function (day) {
             if (!vm.cron.day) {
@@ -110,6 +111,21 @@
 
         };
 
+        vm.getDataProcedures = function () {
+
+            dataProcedureService.getList().then(function (data) {
+
+                vm.dataProcedures = data.results;
+
+                vm.readyStatus.dataProcedures = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+
         vm.getServerTime = function() {
 
             return new Date().toISOString().split('T')[1].split('.')[0]
@@ -149,6 +165,7 @@
 
         vm.init = function () {
             vm.getPricingProcedures();
+            vm.getDataProcedures();
         };
 
         vm.init();

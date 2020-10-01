@@ -1,11 +1,11 @@
 /**
- * Created by szhitenev on 31.01.2020.
+ * Created by szhitenev on 25.09.2020.
  */
 (function () {
 
     'use strict';
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
+    var dataProcedureService = require('../../services/procedures/dataProcedureService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -17,7 +17,7 @@
 
         vm.getList = function () {
 
-            pricingProcedureService.getList().then(function (data) {
+            dataProcedureService.getList().then(function (data) {
 
                 vm.procedures = data.results;
 
@@ -31,8 +31,8 @@
         vm.editProcedure = function ($event, item) {
 
             $mdDialog.show({
-                controller: 'PricingProcedureEditDialogController as vm',
-                templateUrl: 'views/dialogs/procedures/pricing-procedure-edit-dialog-view.html',
+                controller: 'DataProcedureEditDialogController as vm',
+                templateUrl: 'views/dialogs/procedures/data-procedure-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -78,7 +78,7 @@
 
                 if (res.status === 'agree') {
 
-                    pricingProcedureService.deleteByKey(item.id).then(function (data) {
+                    dataProcedureService.deleteByKey(item.id).then(function (data) {
                         vm.getList();
                     })
 
@@ -91,8 +91,8 @@
         vm.addProcedure = function ($event) {
 
             $mdDialog.show({
-                controller: 'PricingProcedureAddDialogController as vm',
-                templateUrl: 'views/dialogs/procedures/pricing-procedure-add-dialog-view.html',
+                controller: 'DataProcedureAddDialogController as vm',
+                templateUrl: 'views/dialogs/procedures/data-procedure-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,

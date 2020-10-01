@@ -327,6 +327,15 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li>
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.run-data-procedure">
+                                        <span class="side-nav-title">Import From Bank</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -676,7 +685,15 @@
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.pricing-procedure">
-                                                <span class="side-nav-title">Procedures</span>
+                                                <span class="side-nav-title">Pricing Procedures</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.data-procedure">
+                                                <span class="side-nav-title">Data Procedures</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>

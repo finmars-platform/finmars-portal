@@ -374,6 +374,12 @@
                 controller: 'PricingProcedurePageController as vm'
             })
 
+            .state('app.data-procedure', {
+                url: '/data-procedures',
+                templateUrl: 'views/pages/data-procedure-page-view.html',
+                controller: 'DataProcedurePageController as vm'
+            })
+
             .state('app.pricing-parent-procedure', {
                 url: '/pricing-parent-procedures',
                 templateUrl: 'views/pages/pricing-parent-procedure-page-view.html',
@@ -384,6 +390,11 @@
                 url: '/run-pricing-procedures',
                 templateUrl: 'views/pages/run-pricing-procedure-page-view.html',
                 controller: 'RunPricingProcedurePageController as vm'
+            })
+            .state('app.run-data-procedure', {
+                url: '/run-data-procedures',
+                templateUrl: 'views/pages/run-data-procedure-page-view.html',
+                controller: 'RunDataProcedurePageController as vm'
             })
             .state('app.import', {
                 url: '/import',
