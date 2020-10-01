@@ -10,6 +10,21 @@
     var metaEventClassService = require('../../../services/metaEventClassService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 
+    var EVENT_INIT_OBJECT = {
+        "name": '',
+        "description": "",
+        "notification_class": '',
+        "notify_in_n_days": '',
+        "periodicity": '',
+        "periodicity_n": '',
+        "action_is_sent_to_pending": null,
+        "action_is_book_automatic": null,
+        "actions": [],
+        "effective_date": null,
+        "final_date": null,
+        "event_class": null
+    };
+
     module.exports = function eventSchedulesTabController($scope, $mdDialog) {
 
         var vm = this;
@@ -116,20 +131,22 @@
             return name;
         };
 
-        vm.newItem = {
-            "name": '',
-            "description": "",
-            "notification_class": '',
-            "notify_in_n_days": '',
-            "periodicity": '',
-            "periodicity_n": '',
-            "action_is_sent_to_pending": null,
-            "action_is_book_automatic": null,
-            "actions": [],
-            "effective_date": null,
-            "final_date": null,
-            "event_class": null
-        };
+        vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
+
+        // vm.newItem = {
+        //     "name": '',
+        //     "description": "",
+        //     "notification_class": '',
+        //     "notify_in_n_days": '',
+        //     "periodicity": '',
+        //     "periodicity_n": '',
+        //     "action_is_sent_to_pending": null,
+        //     "action_is_book_automatic": null,
+        //     "actions": [],
+        //     "effective_date": null,
+        //     "final_date": null,
+        //     "event_class": null
+        // };
 
         vm.editItem = function (item) {
             item.editStatus = true;
@@ -183,20 +200,22 @@
                 "periodicity_n": vm.newItem.periodicity_n
             });
 
-            vm.newItem = {
-                "name": '',
-                "description": "",
-                "notification_class": '',
-                "notify_in_n_days": '',
-                "periodicity": '',
-                "periodicity_n": '',
-                "action_is_sent_to_pending": null,
-                "action_is_book_automatic": null,
-                "actions": [],
-                "effective_date": null,
-                "final_date": null,
-                "event_class": null
-            };
+            vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
+
+            // vm.newItem = {
+            //     "name": '',
+            //     "description": "",
+            //     "notification_class": '',
+            //     "notify_in_n_days": '',
+            //     "periodicity": '',
+            //     "periodicity_n": '',
+            //     "action_is_sent_to_pending": null,
+            //     "action_is_book_automatic": null,
+            //     "actions": [],
+            //     "effective_date": null,
+            //     "final_date": null,
+            //     // "event_class": null
+            // };
         }
 
         vm.generateEventInstrument = function($event) {
@@ -245,6 +264,58 @@
                 }
 
             });
+
+        };
+
+        vm.onEventAdd = function ($event) {
+            console.log('vm.onEventAdd');
+
+            $mdDialog.show({
+                controller: 'SingleInstrumentAddEventToTableDialogController as vm',
+                templateUrl: 'views/dialogs/single-instrument-add-event-to-table-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        eventClasses: vm.eventClasses,
+                        notificationClasses: vm.notificationClasses,
+                        periodicityItems: vm.periodicityItems,
+                        event: JSON.parse(JSON.stringify(EVENT_INIT_OBJECT))
+                    }
+
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: res.data.event.name + " Events were added"
+                            }
+                        }
+                    });
+
+                }
+
+            });
+
+
 
         };
 
