@@ -72,8 +72,7 @@
     ></date-input>
   </div>
 
-  <div
-    data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
+  <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
     <md-checkbox
       class="checkbox-bind-field"
       data-ng-model="entity[fieldKey]"
@@ -112,9 +111,8 @@
     </div>
   </div>
 
-  <div
-    data-ng-if="fieldType['display_name'] === 'Decoration'"
-    class="ec-decoration-container"
+  <div data-ng-if="fieldType['display_name'] === 'Decoration'"
+       class="ec-decoration-container"
   >
     <span
       class="ec-decoration line"
@@ -126,9 +124,8 @@
     </span>
   </div>
 
-  <div
-    data-ng-if="fieldType['display_name'] === 'Selector'"
-    class="ec-decoration-container"
+  <div data-ng-if="fieldType['display_name'] === 'Selector'"
+       class="ec-decoration-container"
   >
     <ev-selector-resolver
       data-item="item"
