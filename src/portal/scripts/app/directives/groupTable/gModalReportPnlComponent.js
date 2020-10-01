@@ -56,7 +56,9 @@
             'pricing_currency.name', 'pricing_currency.short_name', 'pricing_currency.user_code',
             'position_size',
             'instrument_pricing_currency_fx_rate', 'instrument_accrued_currency_fx_rate', 'net_cost_price_loc', 'market_value', 'market_value_loc', 'market_value_percent',
-            'exposure', 'exposure_percent', 'exposure_loc', 'instrument_principal_price', 'instrument_accrued_price', 'detail'
+            'exposure', 'exposure_percent', 'exposure_loc', 'instrument_principal_price', 'instrument_accrued_price', 'detail',
+
+            'ytm'
 
 
         ];
@@ -66,7 +68,7 @@
             'overheads', 'overheads_fixed', 'overheads_fx', 'total_loc', 'total_fixed_loc', 'total_fx_loc', 'principal_loc', 'principal_fixed_loc', 'principal_fx_loc',
             'carry_loc', 'carry_fixed_loc', 'carry_fx_loc', 'overheads_loc', 'overheads_fixed_loc',
 
-            'time_invested', 'position_return'
+            'time_invested', 'position_return', 'net_position_return'
         ];
 
         var linkedInstrumentAttrsComp = [
