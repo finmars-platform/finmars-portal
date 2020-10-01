@@ -1,9 +1,9 @@
 /**
- * Created by szhitenev on 05.02.2020.
+ * Created by szhitenev on 25.09.2020.
  */
 (function () {
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
+    var dataProcedureService = require('../../services/procedures/dataProcedureService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -18,15 +18,9 @@
 
         vm.getList = function () {
 
-            pricingProcedureService.getList().then(function (data) {
+            dataProcedureService.getList().then(function (data) {
 
-                vm.procedures = data.results.map(function (item) {
-
-                    item.user_price_date_from =  item.price_date_from_calculated;
-                    item.user_price_date_to =  item.price_date_to_calculated;
-
-                    return item
-                });
+                vm.procedures = data.results;
 
                 console.log('vm.procedures', vm.procedures);
 
@@ -41,7 +35,7 @@
 
             console.log("Execute Procedure", item);
 
-            pricingProcedureService.runProcedure(item.id, item).then(function (data) {
+            dataProcedureService.runProcedure(item.id, item).then(function (data) {
 
                 toastNotificationService.success('Success. Procedure is being processed');
 
@@ -53,8 +47,8 @@
         vm.editProcedure = function ($event, item) {
 
             $mdDialog.show({
-                controller: 'PricingProcedureEditDialogController as vm',
-                templateUrl: 'views/dialogs/procedures/pricing-procedure-edit-dialog-view.html',
+                controller: 'DataProcedureEditDialogController as vm',
+                templateUrl: 'views/dialogs/procedures/data-procedure-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,

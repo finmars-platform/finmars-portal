@@ -6,8 +6,10 @@
     'use strict';
 
     var dataProcedureService = require('../../../services/procedures/dataProcedureService');
+    var dataProvidersService = require('../../../services/import/dataProvidersService');
 
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService')
+
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -34,6 +36,18 @@
 
         };
 
+        vm.getProviders = function(){
+
+            dataProvidersService.getPersonalProvidersList().then(function (data) {
+
+                vm.providers = data;
+
+                $scope.$apply();
+
+            })
+
+        };
+
         vm.agree = function () {
 
             dataProcedureService.create(vm.item).then(function (data) {
@@ -48,6 +62,7 @@
         vm.init = function () {
 
             vm.getSchemes();
+            vm.getProviders();
 
         };
 

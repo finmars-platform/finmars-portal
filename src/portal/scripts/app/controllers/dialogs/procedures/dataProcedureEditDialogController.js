@@ -6,6 +6,7 @@
     'use strict';
 
     var dataProcedureService = require('../../../services/procedures/dataProcedureService');
+    var dataProvidersService = require('../../../services/import/dataProvidersService');
 
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService')
 
@@ -26,6 +27,18 @@
             transactionImportSchemeService.getListLight().then(function (data) {
 
                 vm.schemes = data.results;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getProviders = function(){
+
+            dataProvidersService.getPersonalProvidersList().then(function (data) {
+
+                vm.providers = data;
 
                 $scope.$apply();
 
@@ -65,6 +78,7 @@
 
             vm.getItem();
             vm.getSchemes();
+            vm.getProviders();
 
         };
 
