@@ -41,8 +41,9 @@
 
                 <div class="m-t-16">
 
+                    <div><label for="">Provider</label></div>
                     <md-select data-ng-model="vm.item.provider">
-                        <md-option data-ng-repeat="provider in vm.providers" value="provider.id">
+                        <md-option data-ng-repeat="provider in vm.providers" ng-value="provider.id">
                             {{provider.name}}
                         </md-option>
                     </md-select>
@@ -51,8 +52,9 @@
 
                 <div class="m-t-16">
 
+                    <div><label for="">Scheme name</label></div>
                     <md-select data-ng-model="vm.item.scheme_name">
-                        <md-option data-ng-repeat="scheme in vm.schemes" value="scheme.scheme_name">
+                        <md-option data-ng-repeat="scheme in vm.schemes" ng-value="scheme.scheme_name">
                             {{scheme.scheme_name}}
                         </md-option>
                     </md-select>

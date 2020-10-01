@@ -45,22 +45,28 @@
         var filters = vm.entityViewerDataService.getFilters();
         var groups = vm.entityViewerDataService.getGroups();
 
-        vm.balanceTabName = "Items";
+        vm.balanceTabName = "Profit & Loss";
 
         vm.attrsList = [];
 
         $('body').addClass('drag-dialog'); // hide backdrop
 
         var balanceAttrsComp = [
-            'name', 'short_name', 'user_code', 'item_type_name', 'position_size', 'pricing_currency.name', 'pricing_currency.short_name', 'pricing_currency.user_code',
+            'name', 'short_name', 'user_code', 'item_type_name',
+            'pricing_currency.name', 'pricing_currency.short_name', 'pricing_currency.user_code',
+            'position_size',
             'instrument_pricing_currency_fx_rate', 'instrument_accrued_currency_fx_rate', 'net_cost_price_loc', 'market_value', 'market_value_loc', 'market_value_percent',
             'exposure', 'exposure_percent', 'exposure_loc', 'instrument_principal_price', 'instrument_accrued_price', 'detail'
+
+
         ];
 
         var performanceAttrsComp = [
             'item_group_name', 'item_subtype_name', 'total', 'total_fixed', 'total_fx', 'principal', 'principal_fixed', 'principal_fx', 'carry', 'carry_fixed', 'carry_fx',
             'overheads', 'overheads_fixed', 'overheads_fx', 'total_loc', 'total_fixed_loc', 'total_fx_loc', 'principal_loc', 'principal_fixed_loc', 'principal_fx_loc',
-            'carry_loc', 'carry_fixed_loc', 'carry_fx_loc', 'overheads_loc', 'overheads_fixed_loc'
+            'carry_loc', 'carry_fixed_loc', 'carry_fx_loc', 'overheads_loc', 'overheads_fixed_loc',
+
+            'time_invested', 'position_return'
         ];
 
         var linkedInstrumentAttrsComp = [
