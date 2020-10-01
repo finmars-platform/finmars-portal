@@ -73,9 +73,6 @@
 
                     var minWidth = 100;
 
-                    if (scope.matrixSettings.auto_scaling) {
-                        minWidth = 2;
-                    }
                     //var minHeight = 20;
 
                     var matrixHolderMinHeight = elem[0].querySelector('.report-viewer-matrix').clientHeight;
@@ -83,6 +80,19 @@
                     cellWidth = Math.floor(elemWidth / columnsCount);
                     //var cellHeight = Math.floor(elemHeight / rowsCount);
                     var cellHeight = 25;
+
+                    if (scope.matrixSettings.auto_scaling) {
+
+                        minWidth = 2;
+
+                        var elemHeight = elem.height();
+
+                        var cellHeight = Math.floor(elemHeight / rowsCount);
+
+                        cellHeight = Math.max(cellHeight, 14);
+                        cellHeight = Math.min(cellHeight, 25);
+
+                    }
 
                     var items = elem[0].querySelectorAll('.rvMatrixCell');
 
@@ -480,4 +490,5 @@
             }
         }
     }
+
 }());
