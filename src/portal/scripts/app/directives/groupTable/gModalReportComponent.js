@@ -62,7 +62,7 @@
             'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
             'overheads_fx_closed_loc',
 
-            'time_invested', 'position_return'
+            'time_invested', 'position_return', 'net_position_return'
         ];
 
         var linkedInstrumentAttrsComp = [
