@@ -15,16 +15,20 @@
         return scheduleRepository.getByKey(id);
     };
 
-    var create = function(account) {
-        return scheduleRepository.create(account);
+    var create = function(schedule) {
+        return scheduleRepository.create(schedule);
     };
 
-    var update = function(id, account) {
-        return scheduleRepository.update(id, account);
+    var update = function(id, schedule) {
+        return scheduleRepository.update(id, schedule);
     };
 
     var deleteByKey = function (id) {
         return scheduleRepository.deleteByKey(id);
+    };
+
+    var runSchedule = function(id, schedule) {
+        return scheduleRepository.runSchedule(id, schedule);
     };
 
     module.exports = {
@@ -33,7 +37,9 @@
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        runSchedule: runSchedule
     }
 
 }());

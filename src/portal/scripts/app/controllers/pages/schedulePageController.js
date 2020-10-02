@@ -6,6 +6,7 @@
     'use strict';
 
     var scheduleService = require('../../services/scheduleService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -28,7 +29,7 @@
             })
         };
 
-        vm.editPricingSchedule = function ($event, item) {
+        vm.editSchedule = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'ScheduleEditDialogController as vm',
@@ -56,7 +57,7 @@
 
         };
 
-        vm.editDeleteSchedule = function ($event, item) {
+        vm.deleteSchedule = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -88,7 +89,7 @@
 
         };
 
-        vm.addPricingSchedule = function ($event) {
+        vm.addSchedule = function ($event) {
 
             $mdDialog.show({
                 controller: 'ScheduleAddDialogController as vm',
@@ -108,6 +109,17 @@
                 if (res.status === 'agree') {
                     vm.getList();
                 }
+
+            })
+
+        };
+
+        vm.runSchedule = function ($event, item) {
+
+            scheduleService.runSchedule(item.id, item).then(function (data) {
+
+                toastNotificationService.success('Success. Schedule is being processed');
+
 
             })
 
