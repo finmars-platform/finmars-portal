@@ -9,6 +9,8 @@
     var metaNotificationClassService = require('../../../services/metaNotificationClassService');
     var metaEventClassService = require('../../../services/metaEventClassService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
+    var GridTableDataService = require('../../../services/gridTableDataService');
+    var GridTableEventService = require('../../../services/gridTableEventService');
 
     var EVENT_INIT_OBJECT = {
         "name": '',
@@ -133,6 +135,7 @@
 
         vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
 
+        // Victor 01.10.2020 I use EVENT_INIT_OBJECT
         // vm.newItem = {
         //     "name": '',
         //     "description": "",
@@ -182,7 +185,6 @@
             });
         };
 
-
         vm.addRow = function () {
             vm.entity.event_schedules.push({
                 "name": vm.newItem.name,
@@ -202,6 +204,7 @@
 
             vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
 
+            // Victor 01.10.2020 I use EVENT_INIT_OBJECT
             // vm.newItem = {
             //     "name": '',
             //     "description": "",
@@ -268,7 +271,6 @@
         };
 
         vm.onEventAdd = function ($event) {
-            console.log('vm.onEventAdd');
 
             $mdDialog.show({
                 controller: 'SingleInstrumentAddEventToTableDialogController as vm',
@@ -316,8 +318,99 @@
             });
 
 
-
         };
+
+        // Event schedules grid Table
+        vm.eventSchedulesGridTableDataService = new GridTableDataService();
+        vm.eventSchedulesGridTableEventService = new GridTableEventService();
+
+        vm.eventsGridTable = {
+            header: {
+                order: 'header',
+                columns: []
+            },
+            body:[],
+            templateRow: {
+                isActive: false,
+                columns: [
+                    {
+                        key: 'name',
+                        objPath: ['name'],
+                        columnName: 'Name',
+                        order: 0,
+                        cellType: 'text',
+                        settings: {
+                            value: null,
+                        },
+                        styles: {
+                            'grid-table-cell': {'width': '260px'}
+                        }
+                    },
+                    {
+                        key: 'effective_date',
+                        objPath: ['effective_date'],
+                        columnName: 'Effective date',
+                        order: 1,
+                        cellType: 'date',
+                        settings: {
+                            value: null
+                        },
+                        styles: {
+                            'grid-table-cell': {'width': '210px'}
+                        }
+                    },
+                    {
+                        key: 'final_date',
+                        objPath: ['final_date'],
+                        columnName: 'Final date',
+                        order: 2,
+                        cellType: 'date',
+                        settings: {
+                            value: null
+                        },
+                        styles: {
+                            'grid-table-cell': {'width': '210px'}
+                        }
+                    },
+                    {
+                        key: 'is_auto_generated',
+                        objPath: ['is_auto_generated'],
+                        columnName: 'Auto generated',
+                        order: 2,
+                        cellType: 'checkbox',
+                        settings: {
+                            value: null
+                        },
+                        styles: {
+                            'grid-table-cell': {'width': '130px'},
+                        }
+                    },
+                    {
+                        key: 'transaction_type',
+                        objPath: ['transaction_type'],
+                        columnName: 'Transaction type',
+                        order: 0,
+                        cellType: 'selector',
+                        settings: {
+                            value: null,
+                            selectorOptions: [],
+                        },
+                        styles: {
+                            'grid-table-cell': {'width': '260px'}
+                        }
+                    },
+                ]
+            },
+            components: {
+                topPanel: {
+                    filters: false,
+                    columns: false,
+                    search: false
+                }
+            }
+
+        }
+        // <Event schedules grid Table>
 
     }
 

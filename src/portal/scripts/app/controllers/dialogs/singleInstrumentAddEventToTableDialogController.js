@@ -69,6 +69,7 @@
 
         var onActionsTableDeleteRows = function (deletedRowsKeys) {
 
+
             vm.event.actions = vm.event.actions.filter(function (action) {
 
                 var actionId = action.id || action.frontOptions.gtKey;
@@ -95,7 +96,7 @@
 
         }
 
-        // Schedules grid table
+        // Event actions grid table
         vm.eventActionsGridTableData = {
             header: {
                 order: 'header',
@@ -240,10 +241,12 @@
                 var buttonPosition = gridTableHelperService.getCellFromRowByKey(rowObj, 'button_position');
                 buttonPosition.settings.value = action.button_position;
                 buttonPosition.settings.selectorOptions = getRangeOfNumbers(vm.event.actions.length);
+
+                vm.eventActionsGridTableData.body.push(rowObj);
             });
             // < assemble body rows >
         };
-        // < Schedules grid table >
+        // < Event actions grid table >
 
         var initGridTableEvents = function () {
 
