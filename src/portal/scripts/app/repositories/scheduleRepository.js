@@ -85,6 +85,20 @@
             })
     };
 
+    var runSchedule = function (id, item) {
+        return xhrService.fetch(baseUrl + 'schedules/schedule/' + id + '/run-schedule/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(item)
+            })
+    };
+
 
     module.exports = {
 
@@ -92,7 +106,8 @@
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        runSchedule: runSchedule
 
     }
 
