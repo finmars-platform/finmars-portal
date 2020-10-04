@@ -13,6 +13,7 @@
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
 
+        var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var AttributeDataService = require('../../services/attributeDataService');
@@ -33,6 +34,8 @@
         module.exports = function ($scope, $mdDialog, $transitions) {
 
             var vm = this;
+
+            var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             vm.readyStatus = {
                 attributes: false,
@@ -1068,7 +1071,7 @@
                     // Check are there report datepicker expressions to solve
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                        var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
+                        /* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
                         var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
 
                         var dateExprsProms = [];
@@ -1090,6 +1093,19 @@
 
                         }).catch(function () {
                             resolve();
+                        }); */
+
+                        var calcReportDateOptions = {
+                            noDateExpr_0: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0),
+                            noDateExpr_1: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
+                        }
+
+                        rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions).then(function () {
+                            resolve();
+
+                        }).catch(function () {
+                            resolve();
+
                         });
 
                     } else {

@@ -14,6 +14,7 @@
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
 
+        var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
@@ -27,6 +28,8 @@
         module.exports = function ($scope, $mdDialog, $stateParams, $transitions) {
 
             var vm = this;
+
+            var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             vm.readyStatus = {
                 attributes: false,
@@ -965,7 +968,7 @@
 
             };
 
-            var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
+            /*var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
 
                 var reportDateProperties = {
                     'balance-report': [null, 'report_date'],
@@ -981,28 +984,20 @@
 
                 dateExprsProms.push(result);
 
-            };
+            };*/
 
             vm.setLayout = function (layout) {
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
                 vm.setFiltersValuesFromQueryParameters();
 
-                var reportOptions = vm.entityViewerDataService.getReportOptions();
+                // var reportOptions = vm.entityViewerDataService.getReportOptions();
                 var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
-
-                var onSetLayoutEnd = function () {
-
-                    vm.readyStatus.layout = true;
-                    rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-                    $scope.$apply();
-
-                };
 
                 // Check if there is need to solve report datepicker expression
                 if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                    var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
+                    /* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
                     var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
 
                     var dateExprsProms = [];
@@ -1020,10 +1015,17 @@
 
                     }).catch(function () {
                         onSetLayoutEnd();
+                    }); */
+                    rvSharedLogicHelper.calculateReportDatesExprs().then(function () {
+                        rvSharedLogicHelper.onSetLayoutEnd();
+
+                    }).catch(function () {
+                        rvSharedLogicHelper.onSetLayoutEnd();
+
                     });
 
                 } else {
-                    onSetLayoutEnd();
+                    rvSharedLogicHelper.onSetLayoutEnd();
                 }
 
                 var additions = vm.entityViewerDataService.getAdditions();
