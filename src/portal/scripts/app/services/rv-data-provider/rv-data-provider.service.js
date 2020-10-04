@@ -740,8 +740,6 @@
 
         });
 
-        console.log("columns sorting sortObj requestsParameters after", JSON.parse(JSON.stringify(requestsParameters)));
-
         levelGroups.forEach(function (group) { // delete current content of groups, before adding sorted one
 
             group.results = [];
