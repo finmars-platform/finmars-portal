@@ -110,6 +110,8 @@
                 data: null
             },
             allRowsSelected: false,
+            activeGroupTypeSort: null,
+            activeColumnSort: null,
             rootEntityViewer: false,
             splitPanelIsActive: false,
             splitPanelDefaultLayout: {}, // serves to manage default layout inside split panel
