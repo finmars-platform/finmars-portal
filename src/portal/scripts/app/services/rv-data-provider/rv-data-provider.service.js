@@ -214,7 +214,7 @@
                 var groupData = entityViewerDataService.getData(event.___id);
 
                 console.log('getObjects.data', data);
-                console.log('getObjects.groupData', groupData);;
+                console.log('getObjects.groupData', groupData);
                 console.log('getObjects.event', event);
 
                 var obj;
@@ -596,14 +596,28 @@
 
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
         var groups = evDataService.getGroups();
+        var activeColumnSort = evDataService.getActiveColumnSort();
 
         if (groups.length) {
 
             getGroups(defaultRootRequestParameters, evDataService, evEventService).then(function () {
 
+                // injectRegularFilters() will be called inside updateDataStructureByRequestParameters()
+                // that is inside recursiveRequest()
+                // that is inside initRecursiveRequestParametersCreation()
                 initRecursiveRequestParametersCreation(evDataService, evEventService).then(function () {
 
-                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                    var activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
+
+                    if (activeGroupTypeSort) {
+                        sortGroupType(evDataService, evEventService);
+
+                    } else if (activeColumnSort) {
+                        sortObjects(evDataService, evEventService);
+
+                    } else {
+                        evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                    }
 
                 })
 
@@ -615,7 +629,12 @@
 
             getObjects(defaultRootRequestParameters, evDataService, evEventService).then(function () {
 
-                evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                if (activeColumnSort) {
+                    sortObjects(evDataService, evEventService);
+
+                } else {
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                }
 
             })
 
@@ -684,17 +703,15 @@
 
         var level = entityViewerDataService.getGroups().length;
 
-        var unfoldedGroups = evDataHelper.getUnfoldedGroupsByLevel(level, entityViewerDataService);
-
+        var levelGroups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
         var activeColumnSort = entityViewerDataService.getActiveColumnSort();
-
         var requestsParameters = entityViewerDataService.getAllRequestParameters();
 
-        var requestParametersForUnfoldedGroups = [];
+        var levelRequestParameters = [];
 
         Object.keys(requestsParameters).forEach(function (key) {
 
-            unfoldedGroups.forEach(function (group) {
+            levelGroups.forEach(function (group) {
 
                 if (group.___id === requestsParameters[key].id) {
 
@@ -703,29 +720,29 @@
                     requestsParameters[key].event.groupId = group.___group_identifier;
                     requestsParameters[key].event.parentGroupId = group.___parentId;
 
-                    requestParametersForUnfoldedGroups.push(requestsParameters[key]);
+                    // apply sorting settings
+                    requestsParameters[key].body.page = 1;
+
+                    if (activeColumnSort.options.sort === 'ASC') {
+                        requestsParameters[key].body.ordering = activeColumnSort.key
+                    } else {
+                        requestsParameters[key].body.ordering = '-' + activeColumnSort.key
+                    }
+
+                    entityViewerDataService.setRequestParameters(requestsParameters[key]);
+                    // < apply sorting settings >
+
+                    levelRequestParameters.push(requestsParameters[key]);
+
                 }
 
-
-            })
-
-        });
-
-        requestParametersForUnfoldedGroups.forEach(function (item) {
-
-            item.body.page = 1;
-
-            if (activeColumnSort.options.sort === 'ASC') {
-                item.body.ordering = activeColumnSort.key
-            } else {
-                item.body.ordering = '-' + activeColumnSort.key
-            }
-
-            entityViewerDataService.setRequestParameters(item);
+            });
 
         });
 
-        unfoldedGroups.forEach(function (group) {
+        console.log("columns sorting sortObj requestsParameters after", JSON.parse(JSON.stringify(requestsParameters)));
+
+        levelGroups.forEach(function (group) { // delete current content of groups, before adding sorted one
 
             group.results = [];
 
@@ -735,16 +752,14 @@
 
         var promises = [];
 
-        requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
+        levelRequestParameters.forEach(function (requestParameters) { // get sorted content
 
-            promises.push(getObjects(requestParameters, entityViewerDataService, entityViewerEventService))
+            promises.push(getObjects(requestParameters, entityViewerDataService, entityViewerEventService));
 
         });
 
         Promise.all(promises).then(function () {
-
             entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-
         })
 
     };
