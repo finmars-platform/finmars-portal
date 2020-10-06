@@ -372,6 +372,7 @@
 
                 var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
                 var nextComponentToStart = null;
+                console.table(statusesObject);
 
                 var keys = Object.keys(statusesObject);
                 var key;
@@ -431,7 +432,7 @@
 
                     }
                 }
-
+                console.log('(index)', waitingComponents)
             });
 
         };
