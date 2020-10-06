@@ -960,6 +960,11 @@
 
                 var reportOptions = {};
 
+                console.log('vm.componentData', vm.componentData)
+                if (!vm.componentData || !vm.componentData.settings || !vm.componentData.settings.linked_components || !vm.componentData.settings.linked_components.report_settings) {
+                    return reportOptions;
+                }
+
                 Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
 
 
@@ -968,7 +973,7 @@
                     var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
                     if (!componentOutput || !componentOutput.data || !componentOutput.data.value) {
-                        return;
+                        return reportOptions;
                     }
 
                     if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
