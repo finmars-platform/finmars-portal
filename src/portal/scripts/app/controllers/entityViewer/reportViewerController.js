@@ -14,6 +14,7 @@
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
 
+        var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
@@ -27,6 +28,8 @@
         module.exports = function ($scope, $mdDialog, $stateParams, $transitions) {
 
             var vm = this;
+
+            var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             vm.readyStatus = {
                 attributes: false,
@@ -965,92 +968,69 @@
 
             };
 
+            /*var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
+
+                var reportDateProperties = {
+                    'balance-report': [null, 'report_date'],
+                    'pl-report': ['pl_first_date', 'report_date'],
+                    'transaction-report': ['begin_date', 'end_date']
+                };
+
+                var dateProp = reportDateProperties[vm.entityType][reportDateIndex];
+
+                var result = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
+                    reportOptions[dateProp] = data.result
+                });
+
+                dateExprsProms.push(result);
+
+            };*/
+
             vm.setLayout = function (layout) {
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
                 vm.setFiltersValuesFromQueryParameters();
 
-                var reportOptions = vm.entityViewerDataService.getReportOptions();
+                // var reportOptions = vm.entityViewerDataService.getReportOptions();
                 var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
                 // Check if there is need to solve report datepicker expression
                 if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                    var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
-                    var reportLastDatepickerExpression = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
+                    /* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
+                    var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
 
-                    if (reportFirstDatepickerExpression || reportLastDatepickerExpression) {
+                    var dateExprsProms = [];
 
-                        var datepickerExpressionsToSolve = [];
-
-                        if (reportFirstDatepickerExpression) {
-
-                            var solveFirstExpression = function () {
-                                return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
-                                    reportOptions.pl_first_date = data.result;
-                                });
-                            };
-
-                            datepickerExpressionsToSolve.push(solveFirstExpression());
-                        }
-
-                        if (reportLastDatepickerExpression) {
-
-                            var solveLastExpression = function () {
-                                return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
-                                    reportOptions.report_date = data.result;
-                                });
-                            };
-
-                            datepickerExpressionsToSolve.push(solveLastExpression());
-                        }
-
-                        Promise.all(datepickerExpressionsToSolve).then(function () {
-
-                            vm.readyStatus.layout = true;
-
-                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                            $scope.$apply();
-
-                            //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
-                        }).catch(function () {
-                            vm.readyStatus.layout = true;
-
-                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                            $scope.$apply();
-                        });
-
-
-                    } else {
-
-                        vm.readyStatus.layout = true;
-
-                        rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                        $scope.$apply();
-
-                        //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
+                    if (firstDateExpr) {
+                        calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
                     }
-                    // < Check if there is need to solve report datepicker expression >
+
+                    if (secondDateExpr) {
+                        calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
+                    }
+
+                    Promise.all(dateExprsProms).then(function () {
+                        onSetLayoutEnd();
+
+                    }).catch(function () {
+                        onSetLayoutEnd();
+                    }); */
+                    rvSharedLogicHelper.calculateReportDatesExprs().then(function () {
+                        rvSharedLogicHelper.onSetLayoutEnd();
+
+                    }).catch(function () {
+                        rvSharedLogicHelper.onSetLayoutEnd();
+
+                    });
+
                 } else {
-
-                    vm.readyStatus.layout = true;
-
-                    rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                    $scope.$apply();
-
-                    //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
-
+                    rvSharedLogicHelper.onSetLayoutEnd();
                 }
 
                 var additions = vm.entityViewerDataService.getAdditions();
                 var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+
                 if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
                     vm.entityViewerDataService.setSplitPanelStatus(true);
                 }
