@@ -92,6 +92,24 @@
 
                 }*/
 
+                scope.onRowClick = function ($event, row) {
+
+                    if ($event.target.closest('.grid-table-row-checkbox')) { // User click on checkbox to select row
+                        return;
+                    }
+
+                    if (!row.methods || !row.methods.onClick) {
+                        return;
+                    }
+
+                    var rowData = {
+                        key: row.key,
+                        order: row.order
+                    };
+
+                    row.methods.onClick(rowData, scope.gtDataService, scope.gtEventService);
+                }
+
 
                 scope.gtEventService.addEventListener(gtEvents.SORTING_SETTINGS_CHANGED, function () {
 

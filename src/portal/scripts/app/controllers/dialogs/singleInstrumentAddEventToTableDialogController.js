@@ -263,14 +263,51 @@
         };
 
         vm.agree = function () {
+            var hashTableOfButtonPositions = {};
+            var buttonPositionWithSameValue = false;
 
-            console.log('agree vm.event', vm.event)
+            for (var i = 0; i < vm.event.actions.length; i++) {
+                var prop = vm.event.actions[i].button_position;
 
-            $mdDialog.hide({
-                status: 'agree', data: {
-                    event: vm.event
+                if (hashTableOfButtonPositions.hasOwnProperty(prop)) {
+
+                    buttonPositionWithSameValue = true;
+                    break;
+
+                } else {
+
+                    hashTableOfButtonPositions[prop] = i;
+
                 }
-            });
+
+            }
+
+            if (buttonPositionWithSameValue) {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    //targetEvent: $event,
+                    clickOutsideToClose: false,
+                    multiple: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: 'Button position should contain unique value.'
+                        }
+                    }
+                })
+
+            } else {
+
+                $mdDialog.hide({
+                    status: 'agree', data: {
+                        event: vm.event
+                    }
+                });
+
+            }
 
         };
 

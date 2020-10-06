@@ -26,6 +26,7 @@
     </div>
 
     <div data-ng-repeat="row in gridTableData.body | orderBy:sortRowsByCol:sortRowsReverse track by row.key"
+         ng-click="onRowClick($event, row)"
          class="grid-table-row">
 
         <div class="grid-table-row-checkbox">
