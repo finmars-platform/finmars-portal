@@ -66,8 +66,6 @@
                     vm.layout = data.results[0];
                 }
 
-                console.log('vm.layout', vm.layout);
-
                 vm.dashboardDataService.setData(vm.layout);
                 vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
@@ -295,8 +293,6 @@
 
                 var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
-                // console.log('statusesObject', statusesObject);
-
                 var processed = false;
 
                 Object.keys(statusesObject).forEach(function (componentId) {
@@ -353,7 +349,9 @@
             var reportSettings = componentData.settings.linked_components.report_settings;
 
             var dependencies = Object.values(reportSettings).filter(function (id) { // prevent loop
-                return !waitingComponents.includes(id);
+                var isComponentExist = vm.dashboardDataService.getComponentById(id);
+
+                return isComponentExist && !waitingComponents.includes(id);
             });
 
             return dependencies.every(function (id) {
@@ -372,7 +370,6 @@
 
                 var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
                 var nextComponentToStart = null;
-                console.table(statusesObject);
 
                 var keys = Object.keys(statusesObject);
                 var key;
@@ -402,8 +399,6 @@
 
                         key = keys[i];
 
-                        //console.log('initDashboardComponents.key', key);
-
                         if (statusesObject[key] === dashboardComponentStatuses.INIT) {
 
                             if (areAllDependenciesCompleted(key, statusesObject, waitingComponents)) {
@@ -432,7 +427,6 @@
 
                     }
                 }
-                console.log('(index)', waitingComponents)
             });
 
         };
