@@ -25,9 +25,6 @@
 
         vm.transactionTypes = [];
 
-        console.log('vm.event', vm.event);
-        console.log('vm.periodicityItems', vm.periodicityItems)
-
         var getRangeOfNumbers = function (number) {
             var buttonPositions = [{id: 1, name: 1}];
 
@@ -177,10 +174,7 @@
                 ]
 
             },
-            tableMethods: {
-                //deleteRows: deleteInputsRows,
-                //addRow: onActionsTableAddRow
-            },
+
             components: {
                 topPanel: {
                     filters: false,
@@ -329,7 +323,6 @@
             })
 
             vm.eventActionsGridTableDataService.setTableData(vm.eventActionsGridTableData);
-
 
         };
 
