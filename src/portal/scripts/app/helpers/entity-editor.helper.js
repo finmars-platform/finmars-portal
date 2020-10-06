@@ -17,11 +17,22 @@
                     });
                 }
 
+                if (entity.event_schedules) { // TODO Victor: may be make a deepClearFrontOptions?
+                    entity.event_schedules.forEach(function (event) {
+                        delete event.frontOptions;
+                        if (event.actions) {
+                            event.actions.forEach(function (action) {
+                                delete action.frontOptions;
+                            })
+                        }
+                    })
+                }
+
                 break;
 
         }
 
-    }
+    };
 
 
     var removeNullFields = function (item) {
