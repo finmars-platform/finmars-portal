@@ -64,10 +64,11 @@
                                 splitPanelWrapperElem.style.height = splitPanelHeight + 'px';
                             }
 
-                            scope.contentWrapElem.style.height = (bodyHeight - headerHeight - splitPanelHeight) + 'px';
+                            // scope.contentWrapElem.style.height = (bodyHeight - headerHeight - splitPanelHeight) + 'px';
 
                             if (verticalSPElem) {
-                                verticalSPElem.style.height = (bodyHeight - headerHeight - splitPanelHeight) + 'px';
+                                var rootWrapHeight = scope.rootWrapElem.clientHeight;
+                                verticalSPElem.style.height = (rootWrapHeight - splitPanelHeight) + 'px'
                             }
 
                             scope.evDataService.setInterfaceLayout(interfaceLayout);
@@ -94,43 +95,59 @@
                     interfaceLayout.splitPanel.height = 0;
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
+                    if (verticalSPElem) {
+                        verticalSPElem.style.height = ""
+                    }
+
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT);
+
                 }
 
                 function setSplitHeights() {
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                    var headerToolbarHeight = interfaceLayout.headerToolbar.height;
-                    var bodyHeight = document.body.clientHeight;
+                    // var headerToolbarHeight = interfaceLayout.headerToolbar.height;
+                    // var bodyHeight = document.body.clientHeight;
+                    var rootWrapHeight = scope.rootWrapElem.clientHeight;
                     var splitPanelHeight = interfaceLayout.splitPanel.height;
+
                     if (!splitPanelHeight || splitPanelHeight === 0) {
-                        splitPanelHeight = Math.floor((bodyHeight - headerToolbarHeight) / 2);
+                        splitPanelHeight = Math.floor(rootWrapHeight / 2);
                     }
 
                     var splitPanelElem = scope.rootWrapElem.querySelector('.g-additions');
 
                     interfaceLayout.splitPanel.height = splitPanelHeight;
 
-                    scope.contentWrapElem.style.height = (bodyHeight - headerToolbarHeight - splitPanelHeight) + 'px';
+                    // scope.contentWrapElem.style.height = (bodyHeight - headerToolbarHeight - splitPanelHeight) + 'px';
                     splitPanelElem.style.height = splitPanelHeight + 'px';
 
                     if (verticalSPElem) {
-                        verticalSPElem.style.height = (bodyHeight - headerToolbarHeight - splitPanelHeight) + 'px';
+                        var rootWrapHeight = scope.rootWrapElem.clientHeight;
+                        verticalSPElem.style.height = (rootWrapHeight - splitPanelHeight) + 'px'
                     }
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
                 }
 
-                /*function onWindowResize() {
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
-                }*/
+                 function onWindowResize() {
+
+                     var rootWrapElemHeight = scope.rootWrapElem.clientHeight;
+                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                     if (verticalSPElem) {
+                         verticalSPElem.style.height = (rootWrapElemHeight - interfaceLayout.splitPanel.height) + 'px';
+                     }
+
+                }
 
                 var additionsChangeCallbackIndex = scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
-                    scope.additions = scope.evDataService.getAdditions();
 
-                    if (verticalSPElem) {
+                    scope.additions = scope.evDataService.getAdditions();
+                    /* if (verticalSPElem) {
                         scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
 
                         console.log('VERTICAL_ADDITIONS_CHANGE', scope.verticalAdditions)
@@ -141,7 +158,8 @@
 
                     } else {
                         setSplitHeights()
-                    }
+                    } */
+                    setSplitHeights();
 
 
                 });
@@ -152,15 +170,17 @@
                         verticalSPElem = document.querySelector('.verticalSplitPanelWrapper');
                     }, 100);
 
-
                 });
 
                 scope.init = function () {
 
-                    //window.addEventListener('resize', onWindowResize);
+                    window.addEventListener('resize', onWindowResize);
 
                     setSplitHeights();
+
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT);
+
                     activateHeightSlider();
 
                 };
@@ -169,7 +189,7 @@
 
                 scope.$on('$destroy', function () {
 
-                    //window.removeEventListener('resize', onWindowResize);
+                    // window.removeEventListener('resize', onWindowResize);
                     scope.evEventService.removeEventListener(evEvents.ADDITIONS_CHANGE, additionsChangeCallbackIndex);
                     scope.evEventService.removeEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, verticalAdditionsChangeCallbackIndex);
 

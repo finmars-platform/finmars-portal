@@ -58,25 +58,6 @@
 
                 var dleEventIndex;
 
-                /*var checkIsLayoutDefault = function () {
-
-                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-
-                    if (scope.isRootEntityViewer) {
-                        scope.isLayoutDefault = listLayout.is_default;
-                    } else {
-
-                        var spDefaultLayoutData = scope.evDataService.getSplitPanelDefaultLayout();
-                        if (spDefaultLayoutData.layoutId === listLayout.id) {
-                            scope.isLayoutDefault = true;
-                        } else {
-                            scope.isLayoutDefault = false;
-                        }
-
-                    }
-
-                };*/
-
                 var checkLayoutExistence = function () {
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
@@ -434,7 +415,7 @@
                     scope.currentAdditions = scope.evDataService.getAdditions();
 
                     scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+                    // delete scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                 }
@@ -485,12 +466,13 @@
 
                     if (scope.currentAdditions.type === type) {
 
-                        clearAdditions();
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
                         interfaceLayout.splitPanel.height = 0;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
                         middlewareService.setNewSplitPanelLayoutName(false);
+
+                        clearAdditions();
 
                     } else {
 
@@ -507,19 +489,9 @@
                         if (entityType) { // in case of choosing entity viewer layout
 
                             getListLayoutByEntity(entityType).then(function (layoutsList) {
+
                                 var layouts = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(layoutsList);
-                                //var layouts = rvHelper data;
-                                /*$mdDialog.show({
-                                                                controller: 'SelectLayoutDialogController as vm',
-                                                                templateUrl: 'views/dialogs/select-layout-dialog-view.html',
-                                                                targetEvent: $event,
-                                                                locals: {
-                                                                    options: {
-                                                                        dialogTitle: 'Choose layout to open Split Panel with',
-                                                                        entityType: entityType,
-                                                                        noFolding: true
-                                                                    }
-                                                                }*/
+
                                 $mdDialog.show({
                                     controller: "ExpandableItemsSelectorDialogController as vm",
                                     templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
@@ -1123,8 +1095,6 @@
 
                         }
 
-                        //checkIsLayoutDefault();
-
                     })
                 };
 
@@ -1180,8 +1150,8 @@
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                    clearAdditions();
                     middlewareService.setNewSplitPanelLayoutName(false);
+                    clearAdditions();
 
                     if (scope.isReport) {
 
@@ -1850,8 +1820,6 @@
                         })
 
                     }
-
-                    //checkIsLayoutDefault();
 
                 };
 

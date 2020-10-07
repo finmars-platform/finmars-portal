@@ -929,8 +929,6 @@
 
                                 $scope.$apply();
 
-                                //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
                             });
 
 
@@ -942,8 +940,6 @@
 
                             $scope.$apply();
 
-                            //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
                         }
                     // < Check if there is need to solve report datepicker expression >
                     } else {
@@ -954,7 +950,6 @@
 
                         $scope.$apply();
 
-                        //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
                     }
 
                 };

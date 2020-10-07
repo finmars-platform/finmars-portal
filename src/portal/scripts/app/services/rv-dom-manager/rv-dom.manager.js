@@ -628,6 +628,7 @@
         // console.log('calculateScroll.viewportWidth', viewportWidth);
 
         rvScrollManager.setViewportHeight(viewportHeight);
+
         if (viewportWidth) {
             rvScrollManager.setViewportWidth(viewportWidth);
         }

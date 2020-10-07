@@ -93,7 +93,7 @@
 
                 // IMPORTANT, that variable blocks child component rendering
                 // because child components require some elements that render in this component
-                // we need to query from DOM scope.rootWrapElem, scope.contentWrapElem,scope.workareaWrapElem
+                // we need to query from DOM scope.rootWrapElem, scope.contentWrapElem, scope.workareaWrapElem
                 // Here how it looks like in 2 steps:
                 // 1) template create .g-wrapper, .g-content-wrap, .g-workarea-wrap' and we query them here
                 // 2) then we set domElemsAreReady to true, and child components start rendering and we pass queried elements to them
@@ -175,7 +175,7 @@
 
                             setTimeout(function () { // wait for angular to remove vertical split panel
 
-                                scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+                                // delete scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
                                 scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                             }, 200);

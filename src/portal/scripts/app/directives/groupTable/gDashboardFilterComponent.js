@@ -650,7 +650,7 @@
                     syncFilters();
                     initEventListeners();
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
+                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
                 };
 
                 init();
