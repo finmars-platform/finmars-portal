@@ -1089,7 +1089,7 @@
                             scope.layoutName = listLayout.name;
                         });
 
-                    } else {
+                    } else if (scope.viewContext !== 'reconciliation_viewer') {
 
                         scope.evEventService.addEventListener(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED, function () {
                             checkIsLayoutDefault();
@@ -1119,10 +1119,6 @@
                     });
 
                     syncFilters();
-
-                    /*scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
-                    });*/
 
                     transactionTypeService.getListLight({
                         pageSize: 1000
@@ -1189,12 +1185,14 @@
 
                     initEventListeners();
 
-                    checkIsLayoutDefault();
+                    if (scope.viewContext !== 'reconciliation_viewer') {
+                        checkIsLayoutDefault();
+                    }
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
                     scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
+                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 
                 };
 

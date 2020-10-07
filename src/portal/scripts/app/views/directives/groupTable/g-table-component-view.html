@@ -17,12 +17,12 @@
         <div class="g-width-slider"></div>
 
         <div class="g-additions-workarea" data-ng-if="verticalAdditions.type === 'reconciliation'">
-            <group-vertical-split-panel-report-binder ev-data-service="evDataService"
+            <g-vertical-split-panel-report-binder ev-data-service="evDataService"
                                                       ev-event-service="evEventService"
                                                       sp-exchange-service="spExchangeService"
                                                       root-wrap-elem="rootWrapElem"
                                                       class="display-block height-100">
-            </group-vertical-split-panel-report-binder>
+            </g-vertical-split-panel-report-binder>
         </div>
 
     </div>
@@ -71,6 +71,7 @@
                                               class="group-table-body"
                                               ev-data-service="evDataService"
                                               ev-event-service="evEventService"
+                                              workarea-wrap-element="workareaWrapElem"
                                               content-wrap-element="contentWrapElem"
                                               root-wrap-element="rootWrapElem"
                             ></group-table-body>
@@ -130,7 +131,7 @@
     <div class="g-additions" data-ng-if="isRootEntityViewer && additions.isOpen">
 
         <div data-ng-if="domElemsAreReady">
-            <div group-height-aligner
+            <div g-height-aligner
                  ev-data-service="evDataService"
                  ev-event-service="evEventService"
                  root-wrap-elem="rootWrapElem"
@@ -188,7 +189,7 @@
 
     </div>
 
-    <div ng-if="domElemsAreReady">
+    <!--<div ng-if="domElemsAreReady">
 
         <div group-layout-resizer
              ev-data-service="evDataService"
@@ -196,6 +197,6 @@
              content-wrap-element="contentWrapElem"
              workarea-wrap-element="workareaWrapElem"></div>
 
-    </div>
+    </div>-->
 
 </div>
