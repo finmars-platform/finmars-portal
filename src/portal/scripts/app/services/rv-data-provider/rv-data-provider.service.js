@@ -610,12 +610,25 @@
                     var activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
 
                     if (activeGroupTypeSort) {
-                        sortGroupType(evDataService, evEventService);
 
-                    } else if (activeColumnSort) {
+                        sortGroupType(evDataService, evEventService, false).then(function () {
+
+                            if (activeColumnSort) {
+                                sortObjects(evDataService, evEventService);
+
+                            } else {
+                                evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                            }
+
+                        });
+
+                    }
+
+                    if (activeColumnSort) {
                         sortObjects(evDataService, evEventService);
+                    }
 
-                    } else {
+                    if (!activeGroupTypeSort && !activeColumnSort) {
                         evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                     }
 
@@ -701,12 +714,11 @@
 
     var sortObjects = function (entityViewerDataService, entityViewerEventService) {
 
+        var activeColumnSort = entityViewerDataService.getActiveColumnSort();
         var level = entityViewerDataService.getGroups().length;
 
         var levelGroups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
-        var activeColumnSort = entityViewerDataService.getActiveColumnSort();
         var requestsParameters = entityViewerDataService.getAllRequestParameters();
-
         var levelRequestParameters = [];
 
         Object.keys(requestsParameters).forEach(function (key) {
@@ -714,11 +726,6 @@
             levelGroups.forEach(function (group) {
 
                 if (group.___id === requestsParameters[key].id) {
-
-                    requestsParameters[key].event.___id = group.___id;
-                    requestsParameters[key].event.groupName = group.___group_name;
-                    requestsParameters[key].event.groupId = group.___group_identifier;
-                    requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     // apply sorting settings
                     requestsParameters[key].body.page = 1;
@@ -762,7 +769,7 @@
 
     };
 
-    var sortGroupType = function (entityViewerDataService, entityViewerEventService) {
+    var sortGroupType = function (entityViewerDataService, entityViewerEventService, signalDataLoadEnd) {
 
         var activeGroupSort = entityViewerDataService.getActiveGroupTypeSort();
 
@@ -800,12 +807,6 @@
             groups.forEach(function (group) {
 
                 if (group.___id === requestsParameters[key].id) {
-
-                    requestsParameters[key].event.___id = group.___id;
-                    requestsParameters[key].event.groupName = group.___group_name;
-                    requestsParameters[key].event.groupId = group.___group_identifier;
-                    requestsParameters[key].event.parentGroupId = group.___parentId;
-
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);
                 }
 
@@ -840,9 +841,11 @@
 
         });
 
-        Promise.all(promises).then(function () {
+        return Promise.all(promises).then(function () {
 
-            entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+            if (signalDataLoadEnd || signalDataLoadEnd === undefined) {
+                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+            }
 
         });
 
