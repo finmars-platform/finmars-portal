@@ -19,7 +19,7 @@
 
         if (obj.object_permissions) {
 
-            result = lockIcon; // lock
+            result = 'lockIcon'; // lock
 
             obj.object_permissions.forEach(function (perm) {
 
@@ -43,7 +43,7 @@
             });
 
             if (hasManage) {
-                result = starIcon;
+                result = 'starIcon';
 
             } else if (hasChange) {
                 result = '';
@@ -75,6 +75,7 @@
             result = 'lock2Icon';
         }
 
+        /* TODO uncomment after enabling angular material icons
         else if (obj.is_deleted) {
             result = 'deletedIcon'
         }
@@ -85,7 +86,7 @@
 
         else if (!obj.is_active) {
             result = 'inactiveIcon'
-        }
+        } */
 
         else if (currentMember && currentMember.is_admin) {
             result = 'starIcon'

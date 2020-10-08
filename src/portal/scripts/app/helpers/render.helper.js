@@ -49,7 +49,7 @@
     }; */
 
     var getIconByKey = function (key) {
-        return icons[key];
+        return icons[key] || '';
     }
 
 
