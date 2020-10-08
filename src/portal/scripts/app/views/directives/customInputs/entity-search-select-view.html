@@ -56,7 +56,7 @@
         <button class="md-raised md-primary md-button md-ink-ripple" data-ng-click="createEntity($event)">
           Create
         </button>
-        <button class="md-raised md-primary md-button md-ink-ripple">
+        <button data-ng-if="entityType === 'instrument'" class="md-raised md-primary md-button md-ink-ripple"  data-ng-click="downloadEntity($event)">
           Download
         </button>
         <button class="md-raised md-primary md-button md-ink-ripple">
