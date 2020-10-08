@@ -98,8 +98,18 @@
 
                     setPopupPosition(posX, posY);
 
+                    document.addEventListener('keyup', function (event) {
+                        if (event.key === "Escape") {
+                            closePopupArea();
+                        }
+                    }, {once: true});
+
                     if (scope.column.settings.closeOnMouseOut !== false) {
                         popupBackdropElem.addEventListener('mouseenter', closePopupArea, {once: true});
+                    }
+
+                    if (scope.column.settings.closeOnClick !== false) {
+                        popupBackdropElem.addEventListener('click', closePopupArea, {once: true});
                     }
 
                 }
