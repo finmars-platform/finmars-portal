@@ -422,6 +422,25 @@
                         });
                 };
 
+                scope.downloadEntity = function ($event) {
+                  $event.stopPropagation();
+
+                    console.log('scope.downloadEntity');
+
+                    $mdDialog.show({
+                        controller: 'InstrumentDownloadDialogController as vm',
+                        templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {}
+                        }
+                    }).then(function (res) {
+                        var item = res.data;
+                        scope.selectOption(item);
+                    })
+                };
+
                 init();
 
                 scope.$on("$destroy", function () {
