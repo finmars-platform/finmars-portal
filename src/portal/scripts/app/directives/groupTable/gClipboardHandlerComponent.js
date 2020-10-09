@@ -29,7 +29,6 @@
 
                     var handler = function (event) {
 
-                        console.log('event', event);
                         console.log('evDataService', scope.evDataService);
                         console.log('evEventService', scope.evEventService);
 

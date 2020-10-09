@@ -24,6 +24,7 @@
         onFieldBlur: "&?", // for now implemented only for textInputDirective
       },
       link: function (scope, elem, attr) {
+
         scope.readyStatus = { classifier: false };
 
         var attrs = scope.$parent.vm.attrs || [];
@@ -32,11 +33,6 @@
         var entityAttrs = metaService.getEntityAttrs(scope.entityType) || [];
 
         var palettesList = [];
-
-        console.log("bind-field-control max1", scope.item);
-        if (scope.item) {
-          console.log("bind-field-control max2", Object.freeze(scope.item));
-        }
 
         /*var numberInputElem = null;
                 var numberInputContainerElem = null;*/
@@ -573,31 +569,31 @@
                 scope.item.buttons = [];
               }
 
-              if (scope.item.options.dateToday) {
-                scope.item.buttons.push({
-                  icon: "",
-                  tooltip: "Set today's date",
-                  caption: "T",
-                  classes: "date-input-specific-btns",
-                  action: { callback: scope.setDateToday },
-                });
-              }
-
               if (scope.item.options.dateTodayPlus) {
                 scope.item.buttons.push({
-                  icon: "",
+                  iconObj: {type: "angular-material", icon: "add"},
                   tooltip: "Increase by one day",
-                  caption: "T+1",
+                  // caption: "+",
                   classes: "date-input-specific-btns",
                   action: { callback: scope.setDatePlus },
                 });
               }
 
+              if (scope.item.options.dateToday) {
+                scope.item.buttons.push({
+                  iconObj: {type: "angular-material", icon: "radio_button_unchecked"},
+                  tooltip: "Set today's date",
+                  // caption: "○",
+                  classes: "date-input-specific-btns",
+                  action: { callback: scope.setDateToday },
+                });
+              }
+
               if (scope.item.options.dateTodayMinus) {
                 scope.item.buttons.push({
-                  icon: "",
+                  iconObj: {type: "angular-material", icon: "remove"},
                   tooltip: "Decrease by one day",
-                  caption: "T-1",
+                  // caption: "-",
                   classes: "date-input-specific-btns",
                   action: { callback: scope.setDateMinus },
                 });
@@ -618,12 +614,7 @@
 
           if (scope.options.backgroundColor) {
             scope.customStyles = {
-              "custom-input-main-container":
-                "background-color: " + scope.options.backgroundColor + ";",
-              "custom-input-custom-btns-holder":
-                "background-color: " + scope.options.backgroundColor + ";",
-              "custom-input-full-text":
-                "background-color: " + scope.options.backgroundColor + ";",
+              "customInputBackgroundColor": "background-color: " + scope.options.backgroundColor + ";"
             };
           }
 
@@ -655,12 +646,10 @@
           scope.evEditorEventService.addEventListener(
             evEditorEvents.FIELDS_RECALCULATED,
             function () {
-              if (
-                scope.item &&
-                scope.item.frontOptions &&
-                (scope.entity[scope.fieldKey] ||
-                  scope.entity[scope.fieldKey] === 0)
-              ) {
+              if (scope.item &&
+                  scope.item.frontOptions &&
+                  (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
+
                 setItemSpecificSettings();
 
                 /*if (scope.item.frontOptions.recalculated === 'input') {
@@ -671,11 +660,11 @@
 
                             }*/
 
-                if (
-                  scope.item.frontOptions.recalculated ||
-                  scope.item.frontOptions.autocalculated
-                ) {
+                if (scope.item.frontOptions.recalculated ||
+                    scope.item.frontOptions.autocalculated) {
+
                   scope.ciEventObj.event = { key: "set_style_preset1" };
+
                 }
               }
             }

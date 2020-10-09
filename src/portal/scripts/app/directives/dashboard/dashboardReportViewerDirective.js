@@ -13,7 +13,6 @@
     module.exports = function ($mdDialog) {
         return {
             restriction: 'E',
-            templateUrl: 'views/directives/dashboard/dashboard-report-viewer-view.html',
             scope: {
                 tabNumber: '=',
                 rowNumber: '=',
@@ -23,6 +22,7 @@
                 dashboardEventService: '=',
                 fillInModeData: '=?' // data about component inside tabs for filled in component
             },
+            templateUrl: 'views/directives/dashboard/dashboard-report-viewer-view.html',
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {

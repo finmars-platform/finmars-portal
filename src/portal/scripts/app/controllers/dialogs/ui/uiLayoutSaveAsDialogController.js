@@ -2,14 +2,16 @@
  * Created by sergey on 04.11.16.
  */
 (function () {
-  "use strict";
 
-  var logService = require("../../../../../../core/services/logService");
+  'use strict';
 
-  var uiService = require("../../../services/uiService");
+  var logService = require('../../../../../../core/services/logService');
+
+  var uiService = require('../../../services/uiService');
 
   module.exports = function ($scope, $mdDialog, options) {
-    logService.controller("UiLayoutSaveAsDialogController", "initialized");
+
+    logService.controller('UiLayoutSaveAsDialogController', 'initialized');
 
     var vm = this;
 
@@ -18,75 +20,94 @@
     vm.userCodeError = false;
 
     var layoutsUserCodes = ["New Layout"];
-    // var layName = document.querySelector(".layout-name-pan");
-    // console.log(layName, "cool");
-    // console.log($mdDialog, options);
 
     if (options) {
+
       if (options.complexSaveAsLayoutDialog) {
+
         vm.complexSaveAsLayoutDialog = true;
         vm.entityType = options.complexSaveAsLayoutDialog.entityType;
 
         uiService.getListLayout(vm.entityType).then(function (data) {
+
           var layouts = data.results;
 
           layouts.map(function (layout) {
             layoutsUserCodes.push(layout.user_code);
           });
+
         });
+
       }
 
       if (options.layoutName) {
+
         vm.layoutName = options.layoutName;
-        // console.log(vm.layoutName, "cool");
-        //    vm.layoutName.addEventListener("")
+
       }
 
       if (options.layoutUserCode) {
         vm.layoutUserCode = options.layoutUserCode;
       }
+
     }
 
     vm.cancel = function () {
-      $mdDialog.hide({ status: "disagree" });
+      $mdDialog.hide({ status: 'disagree' });
     };
 
     vm.agree = function ($event) {
+
       var layoutNameOccupied = false;
 
       if (vm.complexSaveAsLayoutDialog) {
+
         var i;
         for (i = 0; i < layoutsUserCodes.length; i++) {
+
           if (layoutsUserCodes[i] === vm.layoutUserCode) {
             layoutNameOccupied = true;
 
-            $mdDialog.show({
-              controller: "WarningDialogController as vm",
-              templateUrl: "views/warning-dialog-view.html",
-              parent: angular.element(document.body),
-              targetEvent: $event,
-              clickOutsideToClose: false,
-              multiple: true,
-              locals: {
-                warning: {
-                  title: "Warning",
-                  description:
-                    "There is already layout with such user code. Layouts should have unique user codes.",
-                },
-              },
-            });
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                warning: {
+                                    title: 'Warning',
+                                    description: 'Layout with such user code already exists. Do you want to overwrite?',
+                                    actionsButtons: [
+                                        {
+                                            name: "Cancel",
+                                            response: {}
+                                        },
+                                        {
+                                            name: "Overwrite",
+                                            response: {status: 'overwrite'}
+                                        }
+                                    ]
+                                }
+                            }
+                        }).then(function (res) {
 
-            break;
-          }
-        }
-      }
+                            if (res.status === 'overwrite') {
+                                $mdDialog.hide({status: 'overwrite', data: {name: vm.layoutName, user_code: vm.layoutUserCode}});
+                            }
+
+                        });
+
+                        break;
+                    }
+                }
+            }
 
       if (!layoutNameOccupied) {
-        $mdDialog.hide({
-          status: "agree",
-          data: { name: vm.layoutName, user_code: vm.layoutUserCode },
-        });
+        $mdDialog.hide({ status: 'agree', data: { name: vm.layoutName, user_code: vm.layoutUserCode } });
       }
+
     };
 
     vm.change = function ($event) {

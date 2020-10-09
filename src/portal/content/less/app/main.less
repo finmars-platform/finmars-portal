@@ -1,3 +1,5 @@
+@import "./mixins.less";
+
 md-content.md-default-theme {
   background-color: #eee;
 }
@@ -528,6 +530,7 @@ md-backdrop.md-select-backdrop {
     0% {
       transform: rotate(0deg);
     }
+
     100% {
       transform: rotate(360deg);
     }
@@ -2134,18 +2137,69 @@ md-menu-content.dropdown-buttons-menu {
   background-color: #dcdcdc;
 }
 
+.two-fields-multiselect-input-style {
+  height: 40px;
+  border: 2px solid red;
+  // .inputStyle();
+  // border-radius: 5px !important;
+  // height: 40px !important;
+  // border: 1px solid @grey  !important;
+  // padding: 10px 20px !important;
+
+  // &:focus {
+  //   box-shadow: 0 0 0 1px #7d7d7d !important;
+  // }
+}
+
+.two-fields-multiselect-input-label {
+  // position: absolute;
+  // z-index: 1000;
+  // transform: translate(11px, 8px);
+  // background: white;
+  // display: inline;
+  // font-size: 12px;
+  // max-width: 130px;
+  // display: inline-block !important;
+  // transform: translate(10px, 10px) !important;
+  // width: 130px !important;
+}
+
 .two-fields-multiselect {
+  border: 2px solid red;
+
   .two-fields-multiselect-input {
+    // position: relative !important;
+    // border: 2px solid red !important;
+
     width: 100%;
+
     cursor: pointer;
 
     label {
-      cursor: pointer;
+      // display: inline;
+      // position: absolute;
+      // z-index: 1000;
+      // display: inline-block !important;
+      // transform: translate(10px, 10px) !important;
+      // width: 111px !important;
+      // background: white;
+      // display: inline;
+      // font-size: 12px;
+      // max-width: 130px;
+      // cursor: pointer;
     }
 
     input {
+      // height: 40px !important;
       text-overflow: ellipsis;
       cursor: pointer;
+    }
+
+    span {
+      border-radius: 35px;
+      background-color: @grey;
+      padding: 5px 10px;
+      color: black;
     }
   }
 }
@@ -2348,6 +2402,8 @@ md-menu-content.dropdown-buttons-menu {
   }
 }
 
+
+
 button.md-button.toggle-calculator-block-btn {
   min-width: 20px;
   min-height: 20px;
@@ -2378,13 +2434,16 @@ button.md-button.toggle-calculator-block-btn {
     .cise-action-hCol-1 {
       text-align: center;
     }
+
     .cise-action-hCol-2 {
       width: 200px;
     }
+
     .cise-action-hCol-3 {
       width: 700px;
     }
   }
+
   tbody {
     td {
       padding: 10px 20px;
@@ -2476,6 +2535,12 @@ button.md-button.toggle-calculator-block-btn {
   display: block;
 }
 
+md-checkbox.md-checked {
+  .md-icon {
+    background-color: @orange;
+  }
+}
+
 md-checkbox.permission-checkbox {
   margin-left: auto;
   margin-right: auto;
@@ -2564,6 +2629,7 @@ md-checkbox.checkbox-center {
   th {
     padding: 10px;
   }
+
   td {
     padding: 10px;
   }
@@ -2731,6 +2797,7 @@ md-dialog.two-rows-dialog-actions {
     background-color: white;
   }
 }
+
 // < big drawer element >
 
 .login-dialog {
@@ -2741,3 +2808,103 @@ md-dialog.two-rows-dialog-actions {
 md-tabs [role="tabpanel"] {
   transition: none;
 }
+
+//
+
+md-checkbox.md-indeterminate .md-icon:after {
+  .checkboxUntouched(#ff4081, 12px, -46%, -55%);
+}
+// Styles of Andrew
+/*.rel-container {
+  position: relative;
+  outline: none;
+  margin: 10px;
+
+  // border: 1px solid black;
+  input {
+    outline: none;
+    .inputStyle();
+    // border: 2px solid red;
+  }
+
+  label {
+    outline: none;
+    overflow: visible;
+    position: absolute;
+    z-index: 1000;
+    transform: translate(11px, 8px);
+    background: white;
+    display: inline;
+    font-size: 12px;
+    transform: translate(20px, 17px) !important;
+    width: auto !important;
+  }
+
+  .two-fields-multiselect-input-count-container {
+    outline: none;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(18px, -14%);
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // border: 1px solid gold;
+    // overflow-x: auto;
+    .m-l-8 {
+      margin-right: 15px;
+    }
+    .two-fields-multiselect-custom-btn {
+      transition: 0.2s ease-in-out;
+      fill: @grey;
+      margin-right: 15px;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .two-fields-multiselect-input-count {
+    outline: none;
+    height: 25px;
+    border-radius: 30px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(235, 235, 235, 1);
+    max-width: 119px;
+    margin-right: 15px;
+
+    .two-fields-multiselect-color {
+      outline: none;
+      fill: @grey;
+    }
+    &:focus {
+      outline: none;
+    }
+    &:hover {
+      background-color: rgba(216, 216, 216, 1);
+    }
+
+    span {
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+}
+.two-fields-multiselect-input-delete {
+  // position: absolute;
+  // z-index: 1000;
+  display: none;
+}
+.two-fields-multiselect-input-tooltip {
+  fill: #777777;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(0%, 30%);
+  cursor: pointer;
+  // color: red;
+}*/
