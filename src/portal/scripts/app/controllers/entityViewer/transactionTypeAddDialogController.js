@@ -28,19 +28,28 @@
 
     var uiService = require('../../services/uiService');
 
+    var GridTableDataService = require('../../services/gridTableDataService');
+    var GridTableEventService = require('../../services/gridTableEventService');
+
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
+    var TransactionTypeEditorSharedLogicHelper = require('../../helpers/transactionTypeEditorSharedLogicHelper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $state, entityType, entity) {
 
         var vm = this;
-        vm.readyStatus = {content: false, entity: true, permissions: true};
+
+        var ttypeEditorSlHelper = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
+
+        vm.readyStatus = {content: false, entity: true, permissions: true, inputs: false};
         vm.entityType = entityType;
 
         vm.entity = {$_isValid: true, visibility_status: 1};
 
         vm.processing = false;
+
+        vm.selectorContentTypes = [];
 
         if (Object.keys(entity).length) {
             vm.entity = entity;
@@ -76,8 +85,11 @@
             functions: [null]
         };
 
+        vm.inputsToDelete = [];
+        vm.referenceTables = [];
+        vm.inputsForMultiselector = [];
+
         var ecosystemDefaultData = {};
-        var inputsToDelete = [];
 
         vm.loadPermissions = function () {
 
@@ -268,28 +280,25 @@
         };
 
         vm.getAttributeTypes = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+
+            var ttypeAttrTypesProm = attributeTypeService.getList(vm.entityType).then(function (data) {
+
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
 
-                vm.getTransactionUserFields().then(function () {
-
-                    vm.readyStatus.entity = true;
-                    vm.loadPermissions();
-
-                })
-
             });
 
-            attributeTypeService.getList('complex-transaction').then(function (data) {
+            var complTransactionAttrTypesProm = attributeTypeService.getList('complex-transaction').then(function (data) {
                 complexTransactionsAttrs = data.results;
             });
 
 
+            return Promise.all([ttypeAttrTypesProm, complTransactionAttrTypesProm]);
+
         };
 
         vm.checkReadyStatus = function () {
-            return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions
+            return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.inputs;
         };
 
         vm.range = gridHelperService.range;
@@ -351,6 +360,7 @@
 
         };
 
+        /* TODO grid table delete 2020-9-24
         var checkFieldExprForDeletedInput = function (actionFieldValue, actionItemKey, actionNotes) {
 
             for (var a = 0; a < inputsToDelete.length; a++) {
@@ -570,7 +580,7 @@
 
             return result;
 
-        };
+        };*/
 
         var getUserInputs = function (inputs) {
 
@@ -739,8 +749,11 @@
 
                 vm.updateEntityBeforeSave();
 
-                var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
-                var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
+                /*var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
+                var entityErrors = vm.checkEntityForEmptyFields(vm.entity);*/
+
+                var actionsErrors = ttypeEditorSlHelper.checkActionsForEmptyFields(vm.entity.actions);
+                var entityErrors = ttypeEditorSlHelper.checkEntityForEmptyFields(vm.entity);
 
                 console.log('vm.entity before save', vm.entity);
 
@@ -950,7 +963,7 @@
 
         // Transaction Type Inputs Controller start
 
-        vm.contextProperties = {
+        /*vm.contextProperties = {
 
             'instruments.instrument': [
                 {
@@ -1009,53 +1022,10 @@
                 }
             ]
 
-        };
-
+        };*/
+        vm.contextProperties = ttypeEditorSlHelper.getContextProperties();
         vm.relationItems = {};
-
-        vm.newItem = {
-            content_type: null,
-            account: null,
-            instrument_type: null,
-            instrument: null,
-            currency: null,
-            counterparty: null,
-            is_fill_from_context: false,
-            reference_table: null,
-            responsible: null,
-            portfolio: null,
-            strategy1: null,
-            strategy2: null,
-            strategy3: null,
-            daily_pricing_model: null,
-            payment_size_detail: null,
-            price_download_scheme: null,
-            pricing_policy: null
-        };
-
-        vm.valueTypes = [
-            {
-                "display_name": "Number",
-                "value": 20
-            },
-            {
-                "display_name": "String",
-                "value": 10
-            },
-            {
-                "display_name": "Date",
-                "value": 40
-            },
-            {
-                "display_name": "Relation",
-                "value": 100
-            },
-            {
-                "display_name": "Selector",
-                "value": 110
-            }
-        ];
-
+        vm.valueTypes = ttypeEditorSlHelper.getValueTypes();
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
         vm.bindValueType = function (row) {
@@ -1080,7 +1050,7 @@
             return name;
         };
 
-        vm.resolveRelation = function (item) {
+        /*vm.resolveRelation = function (item) {
             var entityKey;
 
             for (var i = 0; i < vm.contentTypes.length; i++) {
@@ -1117,7 +1087,8 @@
 
         vm.editItem = function (item) {
             item.editStatus = true;
-        };
+        };*/
+        vm.resolveRelation = ttypeEditorSlHelper.resolveRelation;
 
         vm.updateInputFunctions = function () {
 
@@ -1146,8 +1117,7 @@
 
             } else {
 
-                //vm.inputsFunctions = null;
-                vm.expressionData.functions[0] = null;
+                vm.expressionData.functions = []
 
             }
 
@@ -1155,11 +1125,12 @@
 
         vm.saveItem = function (item) {
 
-            vm.updateInputFunctions();
+            ttypeEditorSlHelper.updateInputFunctions();
 
             item.editStatus = false;
         };
 
+        /* TODO grid table delete
         var removeInputFromActions = function (deletedInputName) {
 
             inputsToDelete.push(deletedInputName);
@@ -1240,7 +1211,7 @@
 
             });
 
-        };
+        };*/
 
         vm.openExpressionDialog = function ($event, item, options) {
 
@@ -1294,7 +1265,7 @@
 
         };
 
-        vm.addRow = function ($event) {
+        /*vm.addRow = function ($event) {
 
             if (vm.newItem.name && vm.newItem.value_type) {
 
@@ -1412,7 +1383,7 @@
 
             }
 
-        };
+        };*/
 
         // Transaction Type Input Controller end
 
@@ -2035,7 +2006,7 @@
 
         };
 
-        vm.getInputTemplates = function () {
+        /* vm.getInputTemplates = function () {
 
             vm.readyStatus.input_templates = false;
 
@@ -2049,7 +2020,7 @@
 
             })
 
-        };
+        }; */
 
         vm.getFieldTemplates = function () {
 
@@ -2349,23 +2320,50 @@
                 vm.dialogElemToResize = document.querySelector('.ttypeCreationElemToDrag');
             });
 
+            vm.inputsGridTableDataService = new GridTableDataService();
+            vm.inputsGridTableEventService = new GridTableEventService();
+
+            ttypeEditorSlHelper.initGridTableEvents();
+
             ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
             });
 
-            vm.getAttributeTypes();
+            var attrsProm = vm.getAttributeTypes(); // this
+            var userFieldsProm = vm.getTransactionUserFields();
+            var permissionProm = vm.loadPermissions();
+            var getRefTablesPromise = ttypeEditorSlHelper.getReferenceTables();
+
             vm.getTransactionTypeGroups();
             vm.getPortfolios();
             vm.getInstrumentTypes();
             // vm.getTags();
 
-            vm.getInputTemplates();
+            // vm.getInputTemplates();
+            var getInputTemplPromise = ttypeEditorSlHelper.getInputTemplates();
             vm.getFieldTemplates();
             vm.getActionTemplates();
 
-            vm.updateInputFunctions();
+            ttypeEditorSlHelper.updateInputFunctions();
 
-            /*$scope.$watch('vm.entity.tags', function () {
+            var allDataPromises = [
+                attrsProm,
+                userFieldsProm,
+                permissionProm,
+                getRefTablesPromise,
+                getInputTemplPromise
+            ];
+
+            Promise.all(allDataPromises).then(function () {
+
+                ttypeEditorSlHelper.initAfterMainDataLoaded();
+
+                vm.readyStatus.entity = true;
+                vm.readyStatus.inputs = true;
+
+            });
+
+            /* $scope.$watch('vm.entity.tags', function () {
 
                 if (vm.entity.tags) {
                     vm.entity.tags.forEach(function (item) {
@@ -2378,7 +2376,7 @@
                     })
 
                 }
-            });*/
+            }); */
 
         };
 

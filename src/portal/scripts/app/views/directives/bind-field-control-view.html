@@ -1,39 +1,7 @@
 <div ng-class="{'disabled-field': !isEditableField()}">
   <div
     data-ng-if="fieldType['display_name'] === 'Number'"
-    class="bind-field-number-field-container"
-  >
-    <!--<md-input-container class="md-block no-error-spacer bfNumberInputContainer">
-            <label data-ng-bind="getName()"></label>
-
-            <input type="text"
-                   data-ng-model="numericInputValue.numberVal"
-                   data-ng-focus="onNumericInputFocus()"
-                   data-ng-change="numericItemChange()"
-                   data-ng-blur="onNumericInputBlur()"
-                   class="no-input-arrows bfNumberInput"
-                   style="{{styleForInputsWithButtons()}}">
-
-            <div class="bind-field-buttons-block">
-                <md-button class="bind-field-calculator-btn" ng-click="openCalculatorDialog($event)">
-                    <ng-md-icon icon="chrome_reader_mode" size="19">
-                        <md-tooltip md-direction="top">Calculator</md-tooltip>
-                    </ng-md-icon>
-                </md-button>
-
-                <div ng-if="item.buttons.length" style="display: inline-block">
-                    <md-button data-ng-repeat="button in item.buttons"
-                               class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
-                               data-ng-click="button.action(item)">
-                        {{button.caption}}
-                        <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                        <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
-                        </md-tooltip>
-                    </md-button>
-                </div>
-            </div>
-
-        </md-input-container>-->
+    class="bind-field-number-field-container">
 
     <number-input
       label="{{getName()}}"
@@ -50,50 +18,6 @@
   </div>
 
   <div data-ng-if="fieldType['display_name'] === 'String'">
-    <!--<div data-ng-if="fieldKey === 'notes' ">
-            <md-input-container class="md-block no-error-spacer textarea-bind-field">
-                <label data-ng-bind="getName()"></label>
-                <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}"
-                          data-ng-model="entity[fieldKey]"
-                          data-ng-change="itemChange()"
-                          cols="30"
-                          rows="{{item.options.rowCount}}"
-                          style="{{inputBackgroundColor()}}"></textarea>
-            </md-input-container>
-        </div>
-
-        <div data-ng-if="fieldKey !== 'notes' ">
-            <md-input-container
-                    class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}} {{checkValid() ? 'mdc-error' : ''}}
-                    {{entity[fieldKey] != '' ? 'md-input-has-value' : ''}}">
-                <label data-ng-bind="getName()"></label>
-                <input type="text"
-                       data-ng-model="entity[fieldKey]"
-                       data-ng-change="itemChange()"
-                       style="{{styleForInputsWithButtons()}}">
-
-                <div class="bind-field-buttons-block">
-
-                    <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
-                               data-ng-click="copyFromField(item.options.copyFrom)">
-                        <ng-md-icon icon="content_copy"></ng-md-icon>
-                    </md-button>
-
-                    <div ng-if="item.buttons.length" style="display: inline-block">
-                        <md-button data-ng-repeat="button in item.buttons"
-                                   class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
-                                   data-ng-click="button.action(item)">
-                            {{button.caption}}
-                            <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                            <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">
-                                {{button.tooltip}}
-                            </md-tooltip>
-                        </md-button>
-                    </div>
-                </div>
-
-            </md-input-container>
-        </div>-->
 
     <text-input
       label="{{getName()}}"
@@ -108,52 +32,6 @@
     ></text-input>
   </div>
 
-  <!--<div data-ng-if="fieldType['display_name'] === 'Float'">
-        <md-input-container class="md-block bfNumberInputContainer">
-            <label data-ng-bind="getName()"></label>
-            &lt;!&ndash;<input data-ng-model="entity[fieldKey]"
-                   data-ng-change="itemChange()"
-                   data-float-numbers
-                   data-ng-if="!item.options.onlyPositive"
-                   style="{{styleForInputsWithButtons()}}">
-            <input data-ng-model="entity[fieldKey]"
-                   data-ng-change="itemChange()"
-                   data-float-numbers
-                   data-only-positive="true"
-                   data-ng-if="item.options.onlyPositive"
-                   style="{{styleForInputsWithButtons()}}">&ndash;&gt;
-
-            <input type="text"
-                   data-ng-model="numericInputValue.numberVal"
-                   data-ng-focus="onNumericInputFocus()"
-                   data-ng-change="numericItemChange()"
-                   data-ng-blur="onNumericInputBlur()"
-                   class="no-input-arrows bfNumberInput"
-                   style="{{styleForInputsWithButtons()}}">
-
-            <div class="bind-field-buttons-block">
-                <md-button class="bind-field-calculator-btn" ng-click="openCalculatorDialog($event)">
-                    <ng-md-icon icon="chrome_reader_mode" size="19">
-                        <md-tooltip md-direction="top">Calculator</md-tooltip>
-                    </ng-md-icon>
-                </md-button>
-
-                <div ng-if="item.buttons.length" style="display: inline-block">
-                    <md-button data-ng-repeat="button in item.buttons"
-                               class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
-                               data-ng-click="button.action(item)">
-                        {{button.caption}}
-                        <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                        <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
-                        </md-tooltip>
-                    </md-button>
-                </div>
-            </div>
-
-        </md-input-container>
-
-    </div>-->
-
   <div data-ng-if="fieldType['display_name'] === 'Field'">
     <div>
       <ev-field-resolver
@@ -167,16 +45,6 @@
       ></ev-field-resolver>
     </div>
 
-    <!--<div data-ng-if="item.buttons.length" class="bind-field-number-btn">
-            <md-button data-ng-repeat="button in item.buttons"
-                       class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
-                       data-ng-click="button.action(item)">
-                {{button.caption}}
-                <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>
-                <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
-                </md-tooltip>
-            </md-button>
-        </div>-->
   </div>
 
   <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
@@ -192,41 +60,7 @@
   </div>
 
   <div ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
-    <!--<md-input-container class="field-date-pick-holder no-error-spacer md-block">
-            <label data-ng-bind="getName()"></label>
-            <zh-date-picker data-date-value="entity[fieldKey]"
-                            ng-class="{'disabled-btn': isDisabled}"
-                            data-callback-method="onDateChange()"
-                            style="{{inputBackgroundColor()}}"></zh-date-picker>
-            <div class="bind-field-buttons-block">
-                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayMinus"
-                           data-ng-click="setDateMinus()">
-                    T - 1
-                </md-button>
-                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateToday"
-                           data-ng-click="setDateToday()">
-                    T
-                </md-button>
-                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayPlus"
-                           data-ng-click="setDatePlus()">
-                    T + 1
-                </md-button>
 
-                <div ng-if="item.buttons.length" style="display: inline-block">
-                    <md-button data-ng-repeat="button in item.buttons"
-                               class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
-                               data-ng-click="button.action(item)">
-                        {{button.caption}}
-                        <ng-md-icon data-ng-if="button.icon" size="22" icon="{{button.icon}}"></ng-md-icon>
-                        <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="bottom">
-                            {{button.tooltip}}
-                        </md-tooltip>
-                    </md-button>
-                </div>
-
-            </div>
-
-        </md-input-container>-->
     <date-input
       label="{{getName()}}"
       model="entity[fieldKey]"
@@ -238,22 +72,19 @@
     ></date-input>
   </div>
 
-  <div
-    data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())"
-  >
+  <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
     <md-checkbox
       class="checkbox-bind-field"
       data-ng-model="entity[fieldKey]"
       data-ng-change="itemChange()"
-      aria-label="checkbox"
-    >
+      aria-label="checkbox">
       <label data-ng-bind="getName()"></label>
     </md-checkbox>
   </div>
 
   <div data-ng-if="fieldType['display_name'] === 'Classifier'">
     <div data-ng-if="readyStatus.classifier">
-      <md-input-container class="md-block">
+      <md-input-container class="md-block md-select-pan">
         <label data-ng-bind="getName()"></label>
 
         <md-select
@@ -280,9 +111,8 @@
     </div>
   </div>
 
-  <div
-    data-ng-if="fieldType['display_name'] === 'Decoration'"
-    class="ec-decoration-container"
+  <div data-ng-if="fieldType['display_name'] === 'Decoration'"
+       class="ec-decoration-container"
   >
     <span
       class="ec-decoration line"
@@ -294,9 +124,8 @@
     </span>
   </div>
 
-  <div
-    data-ng-if="fieldType['display_name'] === 'Selector'"
-    class="ec-decoration-container"
+  <div data-ng-if="fieldType['display_name'] === 'Selector'"
+       class="ec-decoration-container"
   >
     <ev-selector-resolver
       data-item="item"

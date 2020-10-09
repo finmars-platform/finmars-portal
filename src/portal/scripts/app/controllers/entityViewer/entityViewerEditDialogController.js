@@ -1021,7 +1021,8 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                // var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
 
                 if (dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
