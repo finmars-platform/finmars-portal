@@ -369,7 +369,7 @@
       options.pageSize = vm.pageSize;
 
       if (vm.sortingOptions) {
-        options.sort = new Object();
+        //options.sort = new Object();
         options.sort = vm.sortingOptions;
       }
 
@@ -380,7 +380,7 @@
 
     vm.getEntityItems = function (reloadTable) {
       vm.processing = true;
-      $scope.$apply();
+      //$scope.$apply();
 
       return new Promise(function (resolve, reject) {
         // if reloadTable parameter exist, reset options and vm.items
@@ -446,69 +446,104 @@
         });
     };
 
-    // Тут я
-    vm.addEntity = function (ev) {
+    vm.createEntity = function ($event) {
+      console.log('vm.items', vm.items)
 
-      if (vm.entityType === "transaction-type") {
-        $mdDialog
+      $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
+
+      $mdDialog
           .show({
-            controller: "TransactionTypeAddDialogController as vm",
-            templateUrl:
-              "views/entity-viewer/transaction-type-add-dialog-view.html",
+            controller: "EntityViewerAddDialogController as vm",
+            templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
             parent: angular.element(document.body),
-            targetEvent: ev,
+            targetEvent: $event,
+            multiple: true,
             locals: {
               entityType: vm.entityType,
               entity: {},
+              data: {},
             },
           })
           .then(function (res) {
             if (res && res.res === "agree") {
-              vm.insertObjectAfterCreateHandler(res.data);
+              console.log('res', res)
+              var item = res.data;
+              //vm.items.push(item);
+              vm.items = [item].concat(vm.items);
+              vm.selectRow(item);
+              //$scope.$apply();
+
+              console.log('vm.items', vm.items)
+
+              // scope.selectOption(item);
             }
           });
-      } else {
-        if (vm.entityType === "complex-transaction") {
-          $mdDialog
-            .show({
-              controller: "ComplexTransactionAddDialogController as vm",
-              templateUrl:
-                "views/entity-viewer/complex-transaction-add-dialog-view.html",
-              parent: angular.element(document.body),
-              targetEvent: ev,
-              locals: {
-                entityType: vm.entityType,
-                entity: {},
-                data: {},
-              },
-            })
-            .then(function (res) {
-              if (res && res.res === "agree") {
-                vm.insertObjectAfterCreateHandler(res.data.complex_transaction);
-              }
-            });
-        } else {
-          $mdDialog
-            .show({
-              controller: "EntityViewerAddDialogController as vm",
-              templateUrl:
-                "views/entity-viewer/entity-viewer-add-dialog-view.html",
-              parent: angular.element(document.body),
-              targetEvent: ev,
-              locals: {
-                entityType: vm.entityType,
-                entity: {},
-                data: {},
-              },
-            })
-            .then(function (res) {
-              if (res && res.res === "agree") {
-                vm.insertObjectAfterCreateHandler(res.data);
-              }
-            });
-        }
-      }
+
     };
+
+    // Тут я
+    // vm.addEntity = function (ev) {
+    //
+    //   if (vm.entityType === "transaction-type") {
+    //     $mdDialog
+    //       .show({
+    //         controller: "TransactionTypeAddDialogController as vm",
+    //         templateUrl:
+    //           "views/entity-viewer/transaction-type-add-dialog-view.html",
+    //         parent: angular.element(document.body),
+    //         targetEvent: ev,
+    //         locals: {
+    //           entityType: vm.entityType,
+    //           entity: {},
+    //         },
+    //       })
+    //       .then(function (res) {
+    //         if (res && res.res === "agree") {
+    //           vm.insertObjectAfterCreateHandler(res.data);
+    //         }
+    //       });
+    //   } else {
+    //     if (vm.entityType === "complex-transaction") {
+    //       $mdDialog
+    //         .show({
+    //           controller: "ComplexTransactionAddDialogController as vm",
+    //           templateUrl:
+    //             "views/entity-viewer/complex-transaction-add-dialog-view.html",
+    //           parent: angular.element(document.body),
+    //           targetEvent: ev,
+    //           locals: {
+    //             entityType: vm.entityType,
+    //             entity: {},
+    //             data: {},
+    //           },
+    //         })
+    //         .then(function (res) {
+    //           if (res && res.res === "agree") {
+    //             vm.insertObjectAfterCreateHandler(res.data.complex_transaction);
+    //           }
+    //         });
+    //     } else {
+    //       $mdDialog
+    //         .show({
+    //           controller: "EntityViewerAddDialogController as vm",
+    //           templateUrl:
+    //             "views/entity-viewer/entity-viewer-add-dialog-view.html",
+    //           parent: angular.element(document.body),
+    //           targetEvent: ev,
+    //           locals: {
+    //             entityType: vm.entityType,
+    //             entity: {},
+    //             data: {},
+    //           },
+    //         })
+    //         .then(function (res) {
+    //           if (res && res.res === "agree") {
+    //             vm.insertObjectAfterCreateHandler(res.data);
+    //           }
+    //         });
+    //     }
+    //   }
+    // };
 
     vm.init();
   };
