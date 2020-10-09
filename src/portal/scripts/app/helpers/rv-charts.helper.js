@@ -68,8 +68,9 @@
 
             }
 
-        } else {
-            throw Error("market_value is not set");
+        } else if (flatListItem["market_value"] !== 0) {
+            // throw Error("market_value is not set");
+            console.log("market_value is not set", flatListItem);
         }
 
         return result;
@@ -86,8 +87,9 @@
                 result = result + parseFloat(flatListItem[numberKey]) * parseFloat(flatListItem["market_value_percent"]);
             }
 
-        } else {
-            throw Error("market_value_percent is not set")
+        } else if (flatListItem["market_value_percent"] !== 0) {
+            // throw Error("market_value_percent is not set")
+            console.log("market_value_percent is not set", flatListItem);
         }
 
         return result;
@@ -96,15 +98,16 @@
     function weightedExposure(flatListItem,  valueInTotal, numberKey) {
 
         var result = valueInTotal;
-        console.log("d3 service weightedExposure", valueInTotal, flatListItem);
+
         if (flatListItem.hasOwnProperty("exposure") && !isNaN(parseFloat(flatListItem["exposure"]))) {
 
             if (!isNaN(parseFloat(flatListItem[numberKey]))) {
                 result = result + parseFloat(flatListItem[numberKey]) * parseFloat(flatListItem["exposure"]);
             }
 
-        } else {
-            throw Error('exposure is not set')
+        } else if (flatListItem["exposure"] !== 0) {
+            // throw Error('exposure is not set')
+            console.log('exposure is not set', flatListItem);
         }
 
         return result
@@ -121,8 +124,9 @@
                 result = result + parseFloat(flatListItem[numberKey]) * parseFloat(flatListItem["exposure_percent"]);
             }
 
-        } else {
-            throw Error("exposure_percent is not set");
+        } else if (flatListItem["exposure_percent"] !== 0) {
+            // throw Error("exposure_percent is not set");
+            console.log("exposure_percent is not set", flatListItem);
         }
 
         return result
@@ -139,8 +143,10 @@
 
             if (flatList[i].hasOwnProperty("market_value") && !isNaN(parseFloat(flatList[i]["market_value"]))) {
                 total = total + parseFloat(flatList[i]["market_value"]);
-            } else {
-                throw Error("market_value is not set");
+
+            } else if (flatList[i]["market_value"] !== 0) {
+                // throw Error("market_value is not set");
+                console.log("market_value is not set", flatList[i]);
             }
 
         }
@@ -167,8 +173,10 @@
 
             if (flatList[i]["market_value_percent"] && !isNaN(parseFloat(flatList[i]["market_value_percent"]))) {
                 total = total + parseFloat(flatList[i]["market_value_percent"]);
-            } else {
-                throw Error("market_value_percent is not set");
+
+            } else if (flatList[i]["market_value_percent"] !== 0) {
+                // throw Error("market_value_percent is not set");
+                console.log("market_value_percent is not set", flatList[i]);
             }
 
         }
@@ -195,8 +203,10 @@
 
             if (flatList[i].hasOwnProperty("exposure") && !isNaN(parseFloat(flatList[i]["exposure"]))) {
                 total = total + parseFloat(flatList[i]["exposure"]);
-            } else {
-                throw Error("exposure is not set");
+
+            } else if (flatList[i]["exposure"] !== 0) {
+                // throw Error("exposure is not set");
+                console.log("exposure is not set", flatList[i]);
             }
 
         }
@@ -224,8 +234,10 @@
 
             if (flatList[i]["exposure_percent"] && !isNaN(parseFloat(flatList[i]["exposure_percent"]))) {
                 total = total + parseFloat(flatList[i]["exposure_percent"]);
-            } else {
-                throw Error("exposure_percent is not set");
+
+            } else if (flatList[i]["exposure_percent"] !== 0) {
+                // throw Error("exposure_percent is not set");
+                console.log("exposure_percent is not set", flatList[i]);
             }
 
         }
