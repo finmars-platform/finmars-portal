@@ -111,12 +111,13 @@
       </div>
     </div>
   </md-dialog-content>
-  <md-dialog-actions layout="row" data-ng-if="vm.entityType==='instrument'" class="flex_cb">
+<!--  <md-dialog-actions layout="row" data-ng-if="vm.entityType==='instrument'" class="flex_cb">-->
+  <md-dialog-actions layout="row" class="flex_cb">
     <div>
       <md-button class="md-raised" data-ng-click="vm.createEntity($event)">
         Create
       </md-button>
-      <md-button class="md-raised" data-ng-click="vm.addEntity($event)">
+      <md-button class="md-raised" data-ng-if="vm.entityType==='instrument'" data-ng-click="vm.downloadEntity($event)">
         Download
       </md-button>
     </div>

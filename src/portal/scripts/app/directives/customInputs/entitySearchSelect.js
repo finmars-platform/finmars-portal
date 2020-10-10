@@ -467,7 +467,7 @@
                     initScopeWatchers();
                 };
 
-                // Victor 08.102020
+                // Victor 08.10.2020
                 scope.createEntity = function ($event) {
                     $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
 
