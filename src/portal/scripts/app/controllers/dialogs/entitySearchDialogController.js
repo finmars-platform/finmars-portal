@@ -366,7 +366,7 @@
       var options = {};
 
       options.page = page;
-      options.pageSize = vm.pageSize;
+      options.pageSize = pageSize;
 
       if (vm.sortingOptions) {
         //options.sort = new Object();
@@ -446,8 +446,8 @@
         });
     };
 
+    // Victor 09.10.2020
     vm.createEntity = function ($event) {
-      console.log('vm.items', vm.items)
 
       $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
 
@@ -466,19 +466,34 @@
           })
           .then(function (res) {
             if (res && res.res === "agree") {
-              console.log('res', res)
-              var item = res.data;
-              //vm.items.push(item);
-              vm.items = [item].concat(vm.items);
-              vm.selectRow(item);
-              //$scope.$apply();
-
-              console.log('vm.items', vm.items)
-
-              // scope.selectOption(item);
+              // var item = res.data;
+              // //vm.items = [item].concat(vm.items);
+              //
+              // vm.selectRow(item);
+              // //vm.agree();
             }
           });
 
+    };
+
+    vm.downloadEntity = function ($event) {
+
+      $mdDialog.show({
+        controller: 'InstrumentDownloadDialogController as vm',
+        templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+        targetEvent: $event,
+        multiple: true,
+        locals: {
+          data: {}
+        }
+      }).then(function (res) {
+        // console.log('res', res);
+        // var item = res.data;
+        // vm.items = [item].concat(vm.items);
+        // vm.selectRow(item);
+        // vm.agree();
+
+      })
     };
 
     // Тут я
