@@ -1,18 +1,21 @@
-<md-dialog class="draggable-dialog" aria-label="two fields multiselector dialog" drag-dialog>
-    <md-toolbar>
+<md-dialog class="two-fields-multiselector-dialog draggable-dialog"
+           aria-label="two fields multiselector dialog"
+           drag-dialog>
+     <!--<md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
 
             <h2>{{ vm.title }}</h2>
         </div>
-    </md-toolbar>
+    </md-toolbar>-->
 
     <md-dialog-content>
 
         <div data-ng-if="vm.readyStatus" style="padding:20px">
-            <two-fields-options data-all-options="vm.items"
-                                data-selected-options="vm.selectedItems"
-                                data-name-property="{{vm.nameProperty}}"></two-fields-options>
+            <two-fields-options all-options="vm.items"
+                                selected-options="vm.selectedItems"
+                                name-property="{{vm.nameProperty}}"
+                                strict-order="vm.strictOrder"></two-fields-options>
         </div>
 
         <div data-ng-if="!vm.readyStatus">
@@ -25,7 +28,9 @@
 
     <md-dialog-actions layout="row">
         <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
-        <md-button class="md-raised" ng-class="{'disabled-btn': !vm.readyStatus}" data-ng-click="vm.agree()">Save</md-button>
+        <md-button class="md-raised"
+                   ng-class="{'disabled-btn': !vm.readyStatus}"
+                   data-ng-click="vm.agree()">Save</md-button>
     </md-dialog-actions>
 
 </md-dialog>

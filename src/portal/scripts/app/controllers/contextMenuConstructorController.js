@@ -164,6 +164,7 @@
         };
 
         vm.moveUp = function (itemIndex) {
+
             var prevItemIndex = itemIndex - 1;
             var menuRoot = vm.layout.data.menu.root;
 

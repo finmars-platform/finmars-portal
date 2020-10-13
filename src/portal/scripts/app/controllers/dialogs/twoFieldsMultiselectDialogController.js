@@ -27,6 +27,7 @@
         }
 
         vm.nameProperty = data.nameProperty;
+        vm.strictOrder = data.strictOrder;
         vm.readyStatus = false;
 
         vm.selectedItems = [];
@@ -92,10 +93,8 @@
 
         vm.agree = function () {
 
-            vm.selectedItemsId = [];
-
-            vm.selectedItems.map(function (selItem) {
-               vm.selectedItemsId.push(selItem.id);
+            vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
+               return selItem.id;
             });
 
             $mdDialog.hide({status: "agree", selectedItems: vm.selectedItemsId});

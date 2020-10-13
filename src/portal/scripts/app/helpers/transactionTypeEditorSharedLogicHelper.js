@@ -936,6 +936,7 @@
                         settings: {
                             value: [],
                             selectorOptions: null,
+                            strictOrder: true,
                             closeOnMouseOut: false
                         },
                         styles: {
