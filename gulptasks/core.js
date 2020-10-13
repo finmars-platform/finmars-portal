@@ -96,12 +96,19 @@
 
     gulp.task(appName + '-copy-libs-fonts', function () {
 
+        /*var pathToCSS = [
+            'node_modules/material-design-icons/iconfont/!*.eot',
+            'node_modules/material-design-icons/iconfont/!*.svg',
+            'node_modules/material-design-icons/iconfont/!*.ttf',
+            'node_modules/material-design-icons/iconfont/!*.woff',
+            'node_modules/material-design-icons/iconfont/!*.woff2'
+        ];*/
         var pathToCSS = [
-            'node_modules/material-design-icons/iconfont/*.eot',
-            'node_modules/material-design-icons/iconfont/*.svg',
-            'node_modules/material-design-icons/iconfont/*.ttf',
-            'node_modules/material-design-icons/iconfont/*.woff',
-            'node_modules/material-design-icons/iconfont/*.woff2'
+            'src/core/content/fonts/**/*.eot',
+            'src/core/content/fonts/**/*.svg',
+            'src/core/content/fonts/**/*.ttf',
+            'src/core/content/fonts/**/*.woff',
+            'src/core/content/fonts/**/*.woff2'
         ];
 
         return gulp.src(pathToCSS)

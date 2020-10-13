@@ -1,71 +1,112 @@
-<div layout="row" class="two-fields-options-content" layout-align="center center">
+<div layout="row" layout-align="center stretch"
+     class="two-fields-options-content"
+     ng-class="{'two-fields-strict-order': strictOrder}">
 
 	<div class="two-fields-field-container"
 		 layout="column"
 		 style="width: 450px">
-		<p>Available</p>
+		<p class="two-fields-area-h text-weight-bold">Available</p>
 		<input type="search"
 			   placeholder="Search for a ..."
 			   data-ng-model="availableSearchTerm"
 			   class="two-fields-filter-input">
 		<div class="all-options-field two-fields-options">
-			<p ng-repeat="option in allOptions | orderBy: nameProperty | filter: {name: availableSearchTerm} as results track by option.id"
-			   ng-bind="option['{{nameProperty}}']"
-			   class="two-fields-available-option"
-			   data-member-group-id="{{option.id}}"
-			   ng-click="highlightOption($event)"
-			   ng-dblclick="switchOptionOnDoubleClick('select', option.id)"></p>
+
+            <div ng-repeat="option in allOptions | orderBy: nameProperty | filter: {name: availableSearchTerm} as results track by option.id"
+                 class="two-fields-available-option two-fields-option"
+                 ng-class="{'active-option': option.isActive}"
+                 data-ng-click="option.isActive = !option.isActive"
+                 ng-dblclick="switchOptionOnDoubleClick('select', option.id)"
+                 data-option-id="{{option.id}}">
+                <p ng-bind="option['{{nameProperty}}']"
+                   class="two-fields-option-text"></p>
+            </div>
 		</div>
 	</div>
 
-	<div class="two-fields-buttons" layout="column" layout-align="center center">
-		<md-button class="two-fields-select-btn two-fields-btn md-raised"
-				   data-ng-click="switchOptions('select')">
-			<ng-md-icon icon="chevron_right" size="30"></ng-md-icon>
-		</md-button>
-		<md-button class="two-fields-select-all-btn two-fields-btn md-raised"
-				   data-ng-click="selectAll()">
-			<ng-md-icon class="two-fields-two-chevron-icons"
-						icon="chevron_right"
-						size="30"
-						style="left: 7px;"></ng-md-icon>
-			<ng-md-icon class="two-fields-two-chevron-icons"
-						icon="chevron_right"
-						size="30"
-						style="left: 15px;"></ng-md-icon>
-		</md-button>
+	<div class="two-fields-buttons" layout="column" layout-align="space-between center">
 
-		<md-button class="two-fields-select-btn two-fields-btn md-raised"
-				   data-ng-click="switchOptions('deselect')">
-			<ng-md-icon icon="chevron_left" size="30"></ng-md-icon>
-		</md-button>
-		<md-button class="two-fields-select-all-btn two-fields-btn md-raised"
-				   data-ng-click="deselectAll()">
-			<ng-md-icon class="two-fields-two-chevron-icons"
-						icon="chevron_left"
-						size="30"
-						style="left: 7px;"></ng-md-icon>
-			<ng-md-icon class="two-fields-two-chevron-icons"
-						icon="chevron_left"
-						size="30"
-						style="left: 15px;"></ng-md-icon>
+        <div layout="column" layout-align="center center">
+
+            <md-button class="two-fields-select-btn two-fields-btn"
+                       data-ng-click="switchOptions('select')">
+    <!--			<ng-md-icon icon="chevron_right" size="30"></ng-md-icon>-->
+                <span class="material-icons">chevron_right</span>
+            </md-button>
+
+            <md-button class="two-fields-select-all-btn two-fields-btn"
+                       data-ng-click="selectAll()">
+                <!--<ng-md-icon class="two-fields-two-chevron-icons"
+                            icon="chevron_right"
+                            size="30"
+                            style="left: 7px;"></ng-md-icon>
+                <ng-md-icon class="two-fields-two-chevron-icons"
+                            icon="chevron_right"
+                            size="30"
+                            style="left: 15px;"></ng-md-icon>-->
+                <span class="material-icons two-fields-two-chevron-icons">chevron_right</span>
+                <span class="material-icons two-fields-two-chevron-icons">chevron_right</span>
+            </md-button>
+
+            <md-button class="two-fields-select-btn two-fields-btn"
+                       data-ng-click="switchOptions('deselect')">
+    <!--			<ng-md-icon icon="chevron_left" size="30"></ng-md-icon>-->
+                <span class="material-icons">chevron_left</span>
+            </md-button>
+
+            <md-button class="two-fields-select-all-btn two-fields-btn"
+                       data-ng-click="deselectAll()">
+                <!--<ng-md-icon class="two-fields-two-chevron-icons"
+                            icon="chevron_left"
+                            size="30"
+                            style="left: 7px;"></ng-md-icon>
+                <ng-md-icon class="two-fields-two-chevron-icons"
+                            icon="chevron_left"
+                            size="30"
+                            style="left: 15px;"></ng-md-icon>-->
+                <span class="material-icons two-fields-two-chevron-icons">chevron_left</span>
+                <span class="material-icons two-fields-two-chevron-icons">chevron_left</span>
+            </md-button>
+
+        </div>
+
+        <div data-ng-if="strictOrder" layout="column" layout-align="space-between center">
+            <md-button class="two-fields-select-btn two-fields-btn"
+                       data-ng-click="changeOrder('up')">
+                <span class="material-icons">expand_less</span>
+            </md-button>
+
+            <md-button class="two-fields-select-btn two-fields-btn"
+                       data-ng-click="changeOrder('down')">
+                <span class="material-icons">expand_more</span>
+            </md-button>
+        </div>
+
 	</div>
 
 	<div class="two-fields-field-container"
 		 layout="column"
 		 style="width: 450px">
-			<p>Selected</p>
+			<p class="two-fields-area-h text-weight-bold">Selected</p>
 			<input type="search"
 				   placeholder="Search for a ..."
-				   ng-model="selectedSearchTerm"
+				   ng-model="selOptionsFilter"
 				   class="two-fields-filter-input">
-			<div class="selected-options-field two-fields-options">
-				<p ng-repeat="sOption in selectedOptions | orderBy: nameProperty | filter: {name: selectedSearchTerm} as results track by sOption.id"
-				   ng-bind="sOption['{{nameProperty}}']"
-				   class="two-fields-selected-option"
-				   data-member-group-id="{{sOption.id}}"
-				   ng-click="highlightOption($event)"
-				   ng-dblclick="switchOptionOnDoubleClick('deselect', sOption.id)"></p>
+
+            <div class="selected-options-field two-fields-options twoFieldsSelRowsContainer">
+				<div ng-repeat="sOption in selectedOptions | orderBy: selOptionsOrderSettings | filter: {name: selOptionsFilter} as results track by sOption.id"
+                     class="two-fields-selected-option two-fields-option"
+                     ng-class="{'active-option': sOption.isActive}"
+                     data-ng-click="sOption.isActive = !sOption.isActive"
+                     ng-dblclick="switchOptionOnDoubleClick('deselect', sOption.id)"
+                     ng-init="$last && initDnDEnabled && selOptionsDragAndDrop.init()"
+                     data-option-id="{{sOption.id}}">
+                    <span ng-if="strictOrder"
+                          class="material-icons"
+                          ng-mousedown="turnOnDragging()">drag_indicator</span>
+                    <p ng-bind="sOption['{{nameProperty}}']"
+                       class="two-fields-option-text"></p>
+                </div>
 			</div>
 	</div>
 </div>

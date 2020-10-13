@@ -16,7 +16,8 @@
         nothingSelectedText: "@",
         selectedItemsIndication: "@",
         nameProperty: "@",
-        onChangeCallback: "&?",
+        strictOrder: "=",
+        onChangeCallback: "&?"
       },
       require: "?ngModel",
       templateUrl: "views/directives/two-fields-multiselect-view.html",
@@ -254,8 +255,8 @@
         var items = [];
 
         scope.$watch('model', function () {
-          setInputText();
-        });
+            setInputText();
+        })
 
         var defaultInputText = function () {
 
@@ -336,13 +337,8 @@
 
         var setInputText = function () {
 
-          if (scope.selectedItemsIndication) {
-
-            switch (scope.selectedItemsIndication) {
-              case "array":
-                arrayLikeInputText();
-                break;
-            }
+          if (scope.selectedItemsIndication === "array") {
+            arrayLikeInputText();
 
           } else {
             defaultInputText();
@@ -350,7 +346,7 @@
 
         };
 
-        //setInputText();
+        // setInputText();
 
         var getItems = function () {
 
@@ -408,25 +404,26 @@
                   items: items,
                   model: scope.model,
                   title: dialogTitle,
-                  nameProperty: scope.nameProperty
+                  nameProperty: scope.nameProperty,
+                  strictOrder: scope.strictOrder
                 }
               }
             }).then(function (res) {
 
               if (res.status === "agree") {
 
-                scope.model = res.selectedItems;
-
-                if (scope.onChangeCallback) {
                   scope.model = res.selectedItems;
 
-                  setTimeout(function () {
-                    scope.onChangeCallback();
-                  }, 500);
+                  if (scope.onChangeCallback) {
+                      scope.model = res.selectedItems;
 
-                } else if (ngModel) {
-                  ngModel.$setViewValue(res.selectedItems);
-                }
+                      setTimeout(function () {
+                        scope.onChangeCallback();
+                      }, 500);
+
+                  } else if (ngModel) {
+                      ngModel.$setViewValue(res.selectedItems);
+                  }
 
               }
 
