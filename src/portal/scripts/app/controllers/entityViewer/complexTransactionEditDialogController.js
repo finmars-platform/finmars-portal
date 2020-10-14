@@ -696,7 +696,11 @@
             var inputs = paramsObj.inputs;
             var recalculationData = paramsObj.recalculationData;
 
-            rebookComplexTransaction(inputs, recalculationData);
+            transactionHelper.removeDeletedUserInputs(inputs, vm.transactionInputs);
+
+            if (inputs && inputs.length) {
+                rebookComplexTransaction(inputs, recalculationData);
+            }
 
         };
 
@@ -809,10 +813,20 @@
                             if (input.value_type === 100) {
                                 input.verbose_value_type = 'Relation';
 
-                                if (vm.complexTransactionData.values[key + '_object'].name) {
+                                /*if (vm.complexTransactionData.values[key + '_object'].name) {
                                     input.value = vm.complexTransactionData.values[key + '_object'].name
                                 } else {
                                     input.value = vm.complexTransactionData.values[key + '_object'].public_name
+                                }*/
+
+                                if (vm.complexTransactionData.values[key + '_object']) {
+
+                                    if (vm.complexTransactionData.values[key + '_object'].name) {
+                                        input.value = vm.complexTransactionData.values[key + '_object'].name
+                                    } else {
+                                        input.value = vm.complexTransactionData.values[key + '_object'].public_name
+                                    }
+
                                 }
 
                             }
