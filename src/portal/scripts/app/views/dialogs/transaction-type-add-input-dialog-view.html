@@ -12,13 +12,25 @@
 
     <md-dialog-content class="p-16">
 
-        <div class="flex-column">
+        <div class="flex-column flex-i-start">
             <text-input label="Name"
                         placeholder-text="Enter input name here"
                         model="vm.name"
                         small-options="{tooltipText: 'Input name'}"
                         event-signal="vm.textEventSignal"
                         on-blur-callback="vm.validateInputName()"
+                        style="width: 240px;"></text-input>
+
+            <text-input label="Verbose name"
+                        placeholder-text="Enter input verbose name here"
+                        model="vm.verbose_name"
+                        small-options="{tooltipText: 'Input verbose name'}"
+                        style="width: 240px;"></text-input>
+
+            <text-input label="Tooltip"
+                        placeholder-text="Enter input tooltip here"
+                        model="vm.tooltip"
+                        small-options="{tooltipText: 'Input tooltip'}"
                         style="width: 240px;"></text-input>
 
             <dropdown-select label="Value type"
@@ -37,8 +49,57 @@
                              small-options="{tooltipText: 'Input content type'}"
                              event-signal="vm.contentTypeSignal"
                              is-disabled="vm.contentTypeDisabled()"
+                             on-change-callback="vm.onContentTypeChange()"
                              style="width: 240px;"></dropdown-select>
+
+            <div class="flex-row context-selector-container">
+
+
+                <dropdown-select label="Use Default Value from Context"
+                                 placeholder-text="Choose Context"
+                                 model="vm.fillFromContext"
+                                 menu-options="vm.contextProperties"
+                                 small-options="{tooltipText: 'Input Context for Default value'}"
+                                 is-disabled="vm.isFillFromContentDisabled()"
+                                 style="width: 240px;"></dropdown-select>
+
+                <div ng-if="!vm.isFillFromContentDisabled()"
+                     class="unselect-btn-holder">
+                    <md-button class="unselect-btn"
+                               data-ng-click="vm.unselectContextProperties()">
+                        <span class="material-icons">close</span>
+
+                        <md-tooltip md-direction="top">Discard selected option.</md-tooltip>
+                    </md-button>
+                </div>
+            </div>
+
+            <expression-input ng-if="vm.valueType !== 100"
+                              label="Default value"
+                              model="vm.defaultValue"
+                              data-data="vm.expressionData"></expression-input>
+
+            <dropdown-select ng-if="vm.valueType === 100"
+                             label="Default Value"
+                             placeholder-text="Choose Default Value"
+                             model="vm.defaultValue"
+                             menu-options="vm.defaultValuesItems"
+                             small-options="{tooltipText: 'Input Default value'}"
+                             style="width: 240px;"></dropdown-select>
+
         </div>
+
+        <expression-input label="Input expression"
+                          model="vm.valueExpression"
+                          data-data="vm.expressionData"></expression-input>
+
+        <two-fields-multiselect ng-model="vm.linkedInputsNames"
+                                title="Linked inputs"
+                                items="vm.inputsForMultiselector"
+                                name-property="name"
+                                data-selected-items-indication="array"
+                                model="vm.linkedInputsNames"
+                                class="dashboard-constructor-selector-directive"></two-fields-multiselect>
 
     </md-dialog-content>
 
