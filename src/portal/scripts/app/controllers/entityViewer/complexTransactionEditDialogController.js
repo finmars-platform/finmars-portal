@@ -608,137 +608,134 @@
       inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
 
       if (inputsWithCalculations) {
-        inputsWithCalculations.forEach(function (inputWithCalc) {
-          vm.userInputs.forEach(function (userInput) {
-            if (userInput.name === inputWithCalc.name) {
-              if (!userInput.buttons) {
-                userInput.buttons = [];
-              }
 
-              if (inputWithCalc.can_recalculate === true) {
-                userInput.buttons.push({
-                  iconObj: { type: "angular-material", icon: "refresh" },
-                  // iconObj: { type: "fontawesome", icon: "fas fa-redo" },
-                  tooltip: "Recalculate this field",
-                  caption: "",
-                  classes: "",
-                  action: {
-                    key: "input-recalculation",
-                    callback: vm.recalculate,
-                    parameters: {
-                      inputs: [inputWithCalc.name],
-                      recalculationData: "input",
-                    },
-                  },
-                });
-              }
+          inputsWithCalculations.forEach(function (inputWithCalc) {
 
-              if (inputWithCalc.settings &&
-                  inputWithCalc.settings.linked_inputs_names) {
-                var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(",");
+              vm.userInputs.forEach(function (userInput) {
+                if (userInput.name === inputWithCalc.name) {
 
-                userInput.buttons.push({
-                  // iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
-                  iconObj: { type: "angular-material", icon: "loop" },
-                  tooltip: "Recalculate linked fields",
-                  caption: "",
-                  classes: "",
-                  action: {
-                    key: "linked-inputs-recalculation",
-                    callback: vm.recalculate,
-                    parameters: {
-                      inputs: linkedInputsList,
-                      recalculationData: "linked_inputs",
-                    },
-                  },
-                });
-              }
+                    if (!userInput.buttons) {
+                        userInput.buttons = [];
+                    }
 
-              if (
-                recalculationInfo &&
-                recalculationInfo.recalculatedInputs.indexOf(userInput.name) >
-                  -1
-              ) {
-                // mark userInputs that were recalculated
-                userInput.frontOptions.recalculated =
-                  recalculationInfo.recalculationData;
-              }
-            }
+                    if (inputWithCalc.can_recalculate === true) {
+                        userInput.buttons.push({
+                          iconObj: { type: "angular-material", icon: "refresh" },
+                          // iconObj: { type: "fontawesome", icon: "fas fa-redo" },
+                          tooltip: "Recalculate this field",
+                          caption: "",
+                          classes: "",
+                          action: {
+                            key: "input-recalculation",
+                            callback: vm.recalculate,
+                            parameters: {
+                              inputs: [inputWithCalc.name],
+                              recalculationData: "input",
+                            },
+                          },
+                        });
+                    }
+
+                  if (inputWithCalc.settings &&
+                      inputWithCalc.settings.linked_inputs_names) {
+
+                      var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(",");
+
+                      userInput.buttons.push({
+                          // iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                          iconObj: { type: "angular-material", icon: "loop" },
+                          tooltip: "Recalculate linked fields",
+                          caption: "",
+                          classes: "",
+                          action: {
+                            key: "linked-inputs-recalculation",
+                            callback: vm.recalculate,
+                            parameters: {
+                              inputs: linkedInputsList,
+                              recalculationData: "linked_inputs",
+                            },
+                          },
+                      });
+                  }
+
+                  if (
+                    recalculationInfo &&
+                    recalculationInfo.recalculatedInputs.indexOf(userInput.name) >
+                      -1
+                  ) {
+                    // mark userInputs that were recalculated
+                    userInput.frontOptions.recalculated =
+                      recalculationInfo.recalculationData;
+                  }
+                }
+              });
+
           });
-        });
       }
 
       mapAttributesAndFixFieldsLayout();
     };
 
-    var rebookComplexTransaction = function (
-      inputsToRecalculate,
-      recalculationData
-    ) {
-      vm.processing = true;
+    var rebookComplexTransaction = function (inputsToRecalculate, recalculationData) {
 
-      var values = {};
+        vm.processing = true;
 
-      vm.userInputs.forEach(function (item) {
-        values[item.name] = vm.entity[item.name];
-      });
+        var values = {};
 
-      var book = {
-        id: vm.entityId,
-        transaction_type: vm.entity.transaction_type,
-        recalculate_inputs: inputsToRecalculate,
-        process_mode: "recalculate",
-        complex_transaction: vm.entity,
-        values: values,
-      };
+        vm.userInputs.forEach(function (item) {
+            values[item.name] = vm.entity[item.name];
+        });
 
-      complexTransactionService
-        .rebookComplexTransaction(book.id, book)
-        .then(function (cTransactionData) {
-          vm.transactionTypeId = cTransactionData.transaction_type;
-          vm.editLayoutEntityInstanceId = cTransactionData.transaction_type;
-          vm.entity = cTransactionData.complex_transaction;
+        var book = {
+            id: vm.entityId,
+            transaction_type: vm.entity.transaction_type,
+            recalculate_inputs: inputsToRecalculate,
+            process_mode: "recalculate",
+            complex_transaction: vm.entity,
+            values: values,
+        };
 
-          var recalculationInfo = {
-            recalculatedInputs: inputsToRecalculate,
-            recalculationData: recalculationData,
-          };
+        complexTransactionService.rebookComplexTransaction(book.id, book).then(function (cTransactionData) {
 
-          postRebookComplexTransactionActions(
-            cTransactionData,
-            recalculationInfo
-          );
+            vm.transactionTypeId = cTransactionData.transaction_type;
+            vm.editLayoutEntityInstanceId = cTransactionData.transaction_type;
+            vm.entity = cTransactionData.complex_transaction;
 
-          vm.readyStatus.entity = true;
+            var recalculationInfo = {
+                recalculatedInputs: inputsToRecalculate,
+                recalculationData: recalculationData
+            };
 
-          vm.processing = false;
+            postRebookComplexTransactionActions(cTransactionData, recalculationInfo);
 
-          $scope.$apply();
+            vm.readyStatus.entity = true;
+            vm.processing = false;
 
-          if (
-            recalculationInfo.recalculatedInputs &&
-            recalculationInfo.recalculatedInputs.length
-          ) {
-            vm.evEditorEventService.dispatchEvent(
-              evEditorEvents.FIELDS_RECALCULATED
-            );
-          }
-        })
-        .catch(function (reason) {
-          console.log("Something went wrong with recalculation", reason);
+            $scope.$apply();
 
-          vm.processing = false;
-          vm.readyStatus.layout = true;
+            if (recalculationInfo.recalculatedInputs &&
+                recalculationInfo.recalculatedInputs.length) {
 
-          $scope.$apply();
+                vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
+            }
+
+        }).catch(function (reason) {
+            console.log("Something went wrong with recalculation", reason);
+            vm.processing = false;
+            vm.readyStatus.layout = true;
+
+            $scope.$apply();
+
         });
     };
 
     vm.recalculate = function (paramsObj) {
-      var inputs = paramsObj.inputs;
-      var recalculationData = paramsObj.recalculationData;
 
-      rebookComplexTransaction(inputs, recalculationData);
+        var inputs = paramsObj.inputs;
+        var recalculationData = paramsObj.recalculationData;
+
+        rebookComplexTransaction(inputs, recalculationData);
+
     };
 
     /*vm.recalculateInputs = function (paramsObj) {

@@ -130,7 +130,9 @@
 
 					    if (optionToSwitchId === option.id) {
 
-					        removeFrom.splice(i, 1);
+					        option.isActive = false;
+
+                            removeFrom.splice(i, 1);
 							addTo.push(option);
 
 						}
@@ -144,7 +146,11 @@
 				scope.selectAll = function () {
 
 				    scope.selectedOptions = scope.selectedOptions.concat(scope.allOptions);
-					scope.allOptions = [];
+                    scope.selectedOptions.forEach(function (options) {
+                        options.isActive = false
+                    });
+
+                    scope.allOptions = [];
 
                     resetDnD();
 
@@ -152,9 +158,11 @@
 
 				scope.deselectAll = function () {
 
-					let mergedArray = scope.allOptions.concat(scope.selectedOptions);
+					scope.allOptions = scope.allOptions.concat(scope.selectedOptions);
+                    scope.allOptions.forEach(function (options) {
+                        options.isActive = false
+                    });
 
-					scope.allOptions = mergedArray;
 					scope.selectedOptions = [];
 
                     resetDnD();
