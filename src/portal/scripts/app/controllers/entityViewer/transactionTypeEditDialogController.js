@@ -2247,7 +2247,7 @@
 
             }
 
-            return 'item_exist';
+            return {status: 'item_exist', field: field};
         };
 
         vm.getNameByValueType = function (value) {
