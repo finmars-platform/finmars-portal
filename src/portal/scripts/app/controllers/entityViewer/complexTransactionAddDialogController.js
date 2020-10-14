@@ -529,7 +529,11 @@
             var inputs = paramsObj.inputs;
             var recalculationData = paramsObj.recalculationData;
 
-            bookComplexTransaction(inputs, recalculationData);
+            transactionHelper.removeDeletedUserInputs(inputs, vm.transactionType.inputs);
+
+            if (inputs && inputs.length) {
+                bookComplexTransaction(inputs, recalculationData);
+            }
 
         };
 
