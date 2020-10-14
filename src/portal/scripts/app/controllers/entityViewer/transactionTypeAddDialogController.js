@@ -1720,8 +1720,43 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     vm.entity.actions.splice($index, 1);
+
+                    vm.clearPhantoms();
                 }
             });
+        };
+
+        vm.clearPhantoms = function(){
+
+            console.log('vm.clearPhantoms');
+
+            var count = 0;
+
+            vm.entity.actions.forEach(function (action) {
+
+                Object.keys(action).forEach(function(actionKey) {
+
+                    if (action[actionKey]) {
+                        Object.keys(action[actionKey]).forEach(function (key) {
+
+                            if (key.indexOf("phantom") !== -1) {
+                                action[actionKey][key] = null
+                                count = count + 1
+                            }
+
+                        })
+                    }
+
+
+                })
+
+            });
+
+            if (count > 0) {
+
+                toastNotificationService.warning(count + " phantom inputs were reseted")
+            }
+
         };
 
         vm.addAction = function (actionType) {
