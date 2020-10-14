@@ -34,6 +34,10 @@
                     setInputText();
                 });
 
+                scope.$watch('items', function () {
+                    items = JSON.parse(JSON.stringify(scope.items));
+                });
+
                 var defaultInputText = function () {
 
                     var selElemNumber = 0;
