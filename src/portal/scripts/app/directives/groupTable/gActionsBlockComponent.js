@@ -30,6 +30,7 @@
 
     var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
 
+
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
@@ -58,7 +59,73 @@
 
                 var dleEventIndex;
 
+                // TMP LOGIC FOR REPORT DEBUG STARTS
+                scope.isSqlReport = window.location.search.indexOf('sql=true') !== -1;
 
+                scope.loadingDiff = false
+
+                scope.downloadSqlDiff = function () {
+
+                    var flatList = scope.evDataService.getFlatList();
+                    var columns = scope.evDataService.getColumns();
+                    var groups = scope.evDataService.getGroups();
+                    var reportOptions = scope.evDataService.getReportOptions();
+                    var entityType = scope.evDataService.getEntityType();
+
+                    scope.loadingDiff = true
+
+                    return new Promise(function (resolve, reject) {
+
+                        var reportRepository = require('../../repositories/reportRepository');
+
+                        if (entityType === 'balance-report') {
+
+                            reportRepository.getBalanceReport(reportOptions, false).then(function (data) {
+
+                                resolve(data)
+
+                            })
+
+                        }
+
+                        if (entityType === 'pl-report') {
+
+                            reportRepository.getPnlReport(reportOptions, false).then(function (data) {
+
+                                resolve(data)
+
+                            })
+
+                        }
+
+                        if (entityType === 'transaction-report') {
+
+                            reportRepository.getTransactionReport(reportOptions, false).then(function (data) {
+
+                                resolve(data)
+
+                            })
+
+                        }
+
+                    }).then(function (data) {
+
+                        scope.loadingDiff = false;
+                        scope.$apply();
+
+                        console.log("Old report data", data);
+
+                        var blobPart = convertReportHelper.convertFlatListToCSV(flatList, columns, scope.isReport, groups.length);
+                        downloadFileHelper.downloadFile(blobPart, "text/plain", "report_sql.csv");
+
+                        var blobPartOld = convertReportHelper.convertFlatListToCSV(data.items, columns, scope.isReport, groups.length);
+                        downloadFileHelper.downloadFile(blobPartOld, "text/plain", "report_old.csv");
+
+                    })
+
+                };
+
+                // TMP LOGIC FOR DEBUG ENDS
                 /*var checkIsLayoutDefault = function () {
 
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
@@ -1517,7 +1584,7 @@
                             listLayout.user_code = userCode;
 
                             scope.getLayoutByUserCode(userCode)
-                                .then(function(changeableLayoutData) {
+                                .then(function (changeableLayoutData) {
 
                                     var changeableLayout = changeableLayoutData.results[0];
                                     scope.overwriteLayout(changeableLayout, listLayout);
@@ -1567,7 +1634,7 @@
 
                         middlewareService.setNewEntityViewerLayoutName(layout.name);
 
-                    } else  {
+                    } else {
                         scope.evDataService.setSplitPanelDefaultLayout(layout.id);
                         scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
                         middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active split panel layout name in the toolbar
@@ -1758,7 +1825,7 @@
 
                 };
 
-                scope.saveReconLayout = function($event) {
+                scope.saveReconLayout = function ($event) {
 
                     scope.savingReconLayout = true;
 
