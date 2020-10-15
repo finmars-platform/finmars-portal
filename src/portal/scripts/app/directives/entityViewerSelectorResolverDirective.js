@@ -20,7 +20,7 @@
             },
             templateUrl: 'views/directives/entity-viewer-selector-resolver-view.html',
             link: function (scope, elem, attrs) {
-                console.log("drag n drop evResolver scope", scope.item, scope.content_type, scope.options);
+
                 scope.readyStatus = {content: false, tags: false};
 
                 scope.fields = [];

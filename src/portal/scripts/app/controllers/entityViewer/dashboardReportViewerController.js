@@ -13,6 +13,7 @@
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
 
+        var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var AttributeDataService = require('../../services/attributeDataService');
@@ -33,6 +34,8 @@
         module.exports = function ($scope, $mdDialog, $transitions) {
 
             var vm = this;
+
+            var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             vm.readyStatus = {
                 attributes: false,
@@ -956,6 +959,103 @@
 
             };
 
+            vm.getOptionsFromDependencies = function () {
+
+                var reportOptions = {};
+
+                console.log('vm.componentData', vm.componentData)
+                if (!vm.componentData || !vm.componentData.settings || !vm.componentData.settings.linked_components || !vm.componentData.settings.linked_components.report_settings) {
+                    return reportOptions;
+                }
+
+                Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
+
+
+                    var componentId = vm.componentData.settings.linked_components.report_settings[property];
+
+                    var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+
+                    if (!componentOutput || !componentOutput.data || !componentOutput.data.value) {
+                        return reportOptions;
+                    }
+
+                    if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
+                        !Array.isArray(componentOutput.data.value)) {
+
+                        reportOptions[property] = [componentOutput.data.value]
+
+                    } else if (['report_currency', 'pricing_policy'].includes(property) &&
+                               Array.isArray((componentOutput.data.value)) &&
+                               componentOutput.data.value.length) {
+
+                        reportOptions[property] = componentOutput.data.value[0]
+
+                    } else if (componentOutput.data.value !== null ||
+                               componentOutput.data.value !== undefined) {
+
+                        reportOptions[property] = componentOutput.data.value
+
+                    }
+
+                });
+
+                return reportOptions;
+
+            }
+
+            var reportDateProperties = {
+                'balance-report': [null, 'report_date'],
+                'pl-report': ['pl_first_date', 'report_date'],
+                'transaction-report': ['begin_date', 'end_date']
+            };
+
+            var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
+
+                /*var calculateDateExpression = function (dateProp, dateExpr) {
+
+                    var firstDateProm = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
+                        reportOptions[dateProp] = data.result
+                    });
+
+                    datepickerExpressionsToSolve.push(firstDateProm);
+
+                };
+
+                var datepickerExpressionsToSolve = [];
+
+                if (firstDateExpr) {
+
+                    var firstDateProp = reportDateProperties[vm.entityType][0];
+                    calculateDateExpression(firstDateExpr, firstDateProp);
+
+                }
+
+                if (secondDateExpr) {
+
+                    var secondDateProp = reportDateProperties[vm.entityType][1];
+                    calculateDateExpression(secondDateExpr, secondDateProp);
+
+                }*/
+
+                var dateProp = reportDateProperties[vm.entityType][reportDateIndex];
+
+                var result = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
+                    reportOptions[dateProp] = data.result
+                });
+
+                dateExprsProms.push(result);
+
+            };
+
+            var reportDateIsFromDashboard = function (dashboardReportOptions, dateIndex) {
+
+                var dateProp = reportDateProperties[vm.entityType][dateIndex];
+                var roProps = Object.keys(dashboardReportOptions);
+
+                return roProps.includes(dateProp);
+
+            }
+
             vm.setLayout = function (layout) {
 
                 return new Promise(function (resolve, reject) {
@@ -965,53 +1065,58 @@
                     var reportOptions = vm.entityViewerDataService.getReportOptions();
                     var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
+                    console.log('setLayout.vm.componentData', vm.componentData);
+                    console.log('setLayout.layout', layout);
+                    console.log('setLayout.reportOptions', reportOptions);
+                    var reportOptionsFromDependenciesComponents = vm.getOptionsFromDependencies()
+                    console.log('setLayout.reportOptionsFromDependenciesComponents', reportOptionsFromDependenciesComponents);
+
+                    Object.assign(reportOptions, reportOptionsFromDependenciesComponents);
+
                     // Check are there report datepicker expressions to solve
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                        var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
-                        var reportLastDatepickerExpression = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
+                        /* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
+                        var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
 
-                        if (reportFirstDatepickerExpression || reportLastDatepickerExpression) {
+                        var dateExprsProms = [];
 
-                            var datepickerExpressionsToSolve = [];
+                        if (firstDateExpr && !reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0)) {
 
-                            if (reportFirstDatepickerExpression) {
+                            calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
 
-                                var solveFirstExpression = function () {
-                                    return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
-                                        reportOptions.pl_first_date = data.result;
-                                    });
-                                };
-
-                                datepickerExpressionsToSolve.push(solveFirstExpression());
-                            }
-
-                            if (reportLastDatepickerExpression) {
-
-                                var solveLastExpression = function () {
-                                    return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
-                                        reportOptions.report_date = data.result;
-                                    });
-                                };
-
-                                datepickerExpressionsToSolve.push(solveLastExpression());
-                            }
-
-                            Promise.all(datepickerExpressionsToSolve).then(function () {
-
-                                resolve();
-
-                            });
-
-
-                        } else {
-                            resolve();
                         }
 
+                        if (secondDateExpr && !reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)) {
+
+                            calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
+
+                        }
+
+                        Promise.all(dateExprsProms).then(function () {
+                            resolve();
+
+                        }).catch(function () {
+                            resolve();
+                        }); */
+
+                        var calcReportDateOptions = {
+                            noDateExpr_0: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0),
+                            noDateExpr_1: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
+                        }
+
+                        rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions).then(function () {
+                            resolve();
+
+                        }).catch(function () {
+                            resolve();
+
+                        });
+
                     } else {
-                    // < Check are there report datepicker expressions to solve >
                         resolve();
                     }
+                    // < Check are there report datepicker expressions to solve >
 
 
                 })
@@ -1334,25 +1439,30 @@
                         var componentId = vm.componentData.settings.linked_components.report_settings[property];
 
                         var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
+                        console.log('updateReportSettingsUsingDashboardData.componentOutput', property, componentOutput)
 
                         if (componentOutput && componentOutput.data) {
 
-                            // var reportOptions = vm.entityViewerDataService.getReportOptions();
-                            // console.log('reportOptions', reportOptions);
-                            // console.log('componentOutput', componentOutput);
-                            //
-                            // console.log('reportOptions[property]', reportOptions[property]);
-                            // console.log('componentOutput.data.value', componentOutput.data.value);
-
                             if (reportOptions[property] !== componentOutput.data.value) {
 
-                                if (property.indexOf(['portfolios', 'strategies1', 'strategies2', 'strategies3']) > -1 &&
+                                if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
                                     !Array.isArray(componentOutput.data.value)) {
+                                    if (componentOutput.data.value) {
+                                        reportOptions[property] = [componentOutput.data.value];
+                                    } else {
 
-                                    reportOptions[property] = [componentOutput.data.value];
+                                        reportOptions[property] = [];
+
+                                    }
+
+                                } else if (['report_currency', 'pricing_policy'].includes(property) && Array.isArray((componentOutput.data.value)))  {
+
+                                    reportOptions[property] = componentOutput.data.value[0];
 
                                 } else {
+
                                     reportOptions[property] = componentOutput.data.value;
+
                                 }
 
                                 reportOptionsChanged = true;
@@ -1368,6 +1478,8 @@
                         }
 
                     })
+
+                    console.log('updateReportSettingsUsingDashboardData', reportOptions);
 
                     if (reportOptionsChanged) {
                         vm.entityViewerDataService.setReportOptions(reportOptions);
@@ -1818,9 +1930,7 @@
                         });
 
                     }).catch(function (error) {
-
                         reject({errorObj: error, errorCause: 'layout'});
-
                     });
 
                 });
