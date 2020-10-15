@@ -1795,7 +1795,8 @@
                         subtotal_formula_id: vm.componentData.settings.subtotal_formula_id,
                         matrix_view: vm.componentData.settings.matrix_view,
                         styles: vm.componentData.settings.styles,
-                        auto_scaling: vm.componentData.settings.auto_scaling
+                        auto_scaling: vm.componentData.settings.auto_scaling,
+                        hide_empty_lines: vm.componentData.settings.hide_empty_lines
                     };
                 }
 
