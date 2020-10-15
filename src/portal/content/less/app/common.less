@@ -705,7 +705,7 @@ button.md-button[disabled] {
     align-items: center;
 
     .unselect-btn-holder {
-      opacity: 0;
+      display: none;
       margin-bottom: 13px;
     }
 
@@ -726,6 +726,7 @@ button.md-button[disabled] {
       }
 
       &:hover {
+        display: block;
         background-color: transparent;
         opacity: .5;
       }
@@ -735,12 +736,12 @@ button.md-button[disabled] {
 
       md-select:not([disabled]) {
         .md-select-value .md-select-icon {
-          opacity: 1;
+          display: block;
         }
       }
 
       .unselect-btn-holder {
-        opacity: 1;
+        display: block;
       }
 
     }
