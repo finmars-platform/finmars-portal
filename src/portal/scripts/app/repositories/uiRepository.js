@@ -75,15 +75,15 @@
     var getListLayout = function (entity, options) {
 
         if (entity == 'all') {
-            // return xhrService.fetch(baseUrl + 'ui/list-layout/',
-            //     {
-            //         method: 'GET',
-            //         credentials: 'include',
-            //         headers: {
-            //             Accept: 'application/json',
-            //             'Content-type': 'application/json'
-            //         }
-            //     })
+            /* return xhrService.fetch(baseUrl + 'ui/list-layout/',
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }) */
             return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
                 {
                     method: 'GET',
@@ -93,6 +93,7 @@
                         'Content-type': 'application/json'
                     }
                 })
+
         } else {
 
             var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
@@ -137,7 +138,7 @@
 
     };
 
-    var getActiveListLayout = function (entity) {
+    /* var getActiveListLayout = function (entity) {
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
@@ -151,7 +152,7 @@
                     'Content-type': 'application/json'
                 }
             })
-    };
+    }; */
 
     var getDefaultListLayout = function (entity) {
 
@@ -821,7 +822,7 @@
         getDefaultEditLayout: getDefaultEditLayout,
         getDefaultListLayout: getDefaultListLayout,
 
-        getActiveListLayout: getActiveListLayout,
+        // getActiveListLayout: getActiveListLayout,
 
         getListLayoutTemplate: getListLayoutTemplate,
 

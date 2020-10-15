@@ -29,8 +29,11 @@
     };
 
     var getListLayout = function (entity, options) {
-
         // console.trace();
+
+        if () {
+
+        }
 
         return uiRepository.getListLayout(entity, options);
     };
