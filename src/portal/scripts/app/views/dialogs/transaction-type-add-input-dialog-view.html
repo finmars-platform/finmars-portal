@@ -69,14 +69,13 @@
 
             <div class="flex-row context-selector-container width-50 p-r-8">
 
-
                 <dropdown-select label="Use Default Value from Context"
                                  placeholder-text="Choose Context"
                                  model="vm.fillFromContext"
                                  menu-options="vm.contextProperties"
                                  small-options="{tooltipText: 'Input Context for Default value'}"
                                  is-disabled="vm.isFillFromContentDisabled()"
-                                 style="width: 240px;"></dropdown-select>
+                                 style="width: 100%"></dropdown-select>
 
                 <div ng-if="!vm.isFillFromContentDisabled()"
                      class="unselect-btn-holder">
@@ -89,20 +88,22 @@
                 </div>
             </div>
 
-            <expression-input ng-if="vm.valueType !== 100"
-                              class="width-50 p-l-8"
-                              label="Default value"
-                              model="vm.defaultValue"
-                              data-data="vm.expressionData"
-                              style="width: 100%;"></expression-input>
-            <dropdown-select ng-if="vm.valueType === 100"
-                             class="width-50 p-l-8"
-                             label="Default Value"
-                             placeholder-text="Choose Default Value"
-                             model="vm.defaultValue"
-                             menu-options="vm.defaultValuesItems"
-                             small-options="{tooltipText: 'Input Default value'}"
-                             style="width: 100%;"></dropdown-select>
+            <div class="flex-row width-50 p-l-8">
+
+
+                <expression-input ng-if="vm.valueType !== 100"
+                                  class="width-100"
+                                  label="Default value"
+                                  model="vm.defaultValue"
+                                  data-data="vm.expressionData"></expression-input>
+                <dropdown-select ng-if="vm.valueType === 100"
+                                 class="width-100"
+                                 label="Default Value"
+                                 placeholder-text="Choose Default Value"
+                                 model="vm.defaultValue"
+                                 menu-options="vm.defaultValuesItems"
+                                 small-options="{tooltipText: 'Input Default value'}"></dropdown-select>
+            </div>
         </div>
 
         <div layout="row" class="m-t-8">
