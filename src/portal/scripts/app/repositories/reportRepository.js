@@ -25,11 +25,11 @@
             })
     };
 
-    var getBalanceReport = function (options) {
+    var getBalanceReport = function (options, isSql) {
 
         var url;
 
-        if (window.location.search.indexOf('sql=true') !== -1) {
+        if (isSql) {
             url = 'reports/balance-report-sql/'
         } else {
             url = 'reports/balance-report/'
@@ -48,11 +48,11 @@
             })
     };
 
-    var getPnlReport = function (options) {
+    var getPnlReport = function (options, isSql) {
 
         var url;
 
-        if (window.location.search.indexOf('sql=true') !== -1) {
+        if (isSql) {
             url = 'reports/pl-report-sql/'
         } else {
             url = 'reports/pl-report/'
@@ -71,11 +71,11 @@
             })
     };
 
-    var getTransactionReport = function (options) {
+    var getTransactionReport = function (options, isSql) {
 
         var url;
 
-        if (window.location.search.indexOf('sql=true') !== -1) {
+        if (isSql) {
             url = 'reports/transaction-report-sql/'
         } else {
             url = 'reports/transaction-report/'

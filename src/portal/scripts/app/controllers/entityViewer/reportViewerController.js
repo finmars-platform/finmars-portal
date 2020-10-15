@@ -1122,6 +1122,7 @@
 
                 vm.getView();
 
+
             };
 
             vm.init();
