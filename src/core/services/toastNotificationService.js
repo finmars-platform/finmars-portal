@@ -19,6 +19,10 @@
 
     };
 
+    var warning = function (message) {
+        toastr.warning(message)
+    };
+
     var info = function (message) {
         toastr.info(message);
     };
@@ -26,7 +30,8 @@
     module.exports = {
         success: success,
         error: error,
-        info: info
+        info: info,
+        warning: warning
     }
 
 
