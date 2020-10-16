@@ -6,6 +6,7 @@
     'use strict';
 
     var cookiesService = require('../../../../core/services/cookieService');
+    var localStorageService = require('../../../../core/services/localStorageService');
 
     var usersService = require('../services/usersService');
     var metaContentTypesService = require('../services/metaContentTypesService');
@@ -89,7 +90,10 @@
             vm.masters.forEach(function (item) {
 
                 if (item.is_current) {
+
                     vm.currentMasterUser = item;
+                    localStorageService.setCurrentMasterUser(item);
+
                 }
 
             });
@@ -348,9 +352,12 @@
 
                         } else {
 
-                            uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
-                                var defaultLayoutRes = defaultLayoutData.results;
-                                setLayoutName(defaultLayoutRes);
+                            uiService.getDefaultListLayout(entityType).then(function (defaultLayout) {
+
+                                /* var defaultLayoutRes = defaultLayoutData.results;
+                                setLayoutName(defaultLayoutRes); */
+                                setLayoutName(defaultLayout);
+
                             });
 
                         }

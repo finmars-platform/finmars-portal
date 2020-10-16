@@ -850,15 +850,22 @@
             };
 
             vm.getLayoutByUserCode = function (userCode) {
-
+                console.log("layout caching getLayoutByUserCode called");
                 console.log('vm.getLayoutByUserCode.userCode', userCode);
 
-                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
+                /* var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
                 uiService.getListLayoutDefault({
                     pageSize: 1000,
                     filters: {
                         content_type: contentType,
+                        user_code: userCode
+                    }
+                }) */
+                uiService.getListLayout(vm.entityType, {
+                    pageSize: 1000,
+                    filters: {
+                        // content_type: contentType,
                         user_code: userCode
                     }
                 }).then(function (activeLayoutData) {
@@ -906,11 +913,11 @@
 
             vm.getDefaultLayout = function () {
 
-                uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-                    var defaultLayout = null;
+                uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayout) {
+                    /*var defaultLayout = null;
                     if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
                         defaultLayout = defaultLayoutData.results[0];
-                    }
+                    }*/
 
                     vm.setLayout(defaultLayout);
 
@@ -1083,7 +1090,7 @@
 
                 } else if ($stateParams.layoutUserCode) {
 
-                    layoutUserCode = $stateParams.layoutUserCode;
+                    layoutUserCode = $stateParams.layoutUserCode
                     vm.getLayoutByUserCode(layoutUserCode);
 
                 } else {
