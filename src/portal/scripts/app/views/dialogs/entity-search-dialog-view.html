@@ -9,17 +9,46 @@
     </div>
   </md-toolbar>
 
-  <div data-ng-if="vm.readyStatus.data">
-    <div class="entity-search-fixed-thead-wrapper">
-      <md-progress-linear data-ng-if="vm.processing" md-mode="indeterminate"></md-progress-linear>
+  <div ng-if="vm.recentlyCreatedItems.length > 0">
+    <h4 class="entity-search-recently-crated-header">Created recently</h4>
+    <div class="entity-search-recently-crated-wrapper">
       <table>
         <thead>
+        <tr>
+          <th data-ng-repeat="column in vm.columns[vm.entityType]">
+            <dvi layout="row">
+              <b class="entity-search-recently-created-col">{{column.name}}</b>
+            </dvi>
+          </th>
+          <th class="entity-search-settings-header"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-click="vm.recentlyCreatedSelectRow(item)" ng-dblclick="vm.selectAndSave(item)"
+            data-ng-repeat="item in vm.recentlyCreatedItems track by item.id" ng-class="{'active': item.active}"
+            class="entity-search-row">
+          <td data-ng-repeat="column in vm.columns[vm.entityType]" data-ng-bind="vm.getTdValue(item, column.key)">
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div>
+
+    <div data-ng-if="vm.readyStatus.data">
+      <div class="entity-search-fixed-thead-wrapper">
+        <md-progress-linear data-ng-if="vm.processing" md-mode="indeterminate"></md-progress-linear>
+        <table>
+          <thead>
           <tr>
             <th data-ng-repeat="column in vm.columns[vm.entityType]">
               <md-input-container class="md-block entity-search-filter" data-ng-if="column.name !== 'Instrument type'">
                 <label>{{column.name}}</label>
                 <input data-ng-model="vm.search[vm.entityType][column.key]" data-ng-model-options="{debounce: 1000}"
-                  data-ng-change="vm.getEntityItems('reloadTable')" />
+                       data-ng-change="vm.getEntityItems('reloadTable')" />
               </md-input-container>
             </th>
             <th class="entity-search-settings-header"></th>
@@ -30,15 +59,17 @@
                 <b class="entity-search-col-b">
                   {{column.name}}
                   <span class="sortorder" data-ng-show="vm.sort === column.key"
-                    data-ng-class="{reverse: vm.sortDescending}"></span>
+                        data-ng-class="{reverse: vm.sortDescending}"></span>
                 </b>
               </dvi>
             </th>
             <th class="entity-search-settings-header"></th>
           </tr>
-        </thead>
-      </table>
+          </thead>
+        </table>
+      </div>
     </div>
+
   </div>
 
   <md-dialog-content class="entity-search-scroll-container">
@@ -46,16 +77,6 @@
       <div class="entity-search-table-container">
         <table class="bordered entity-search-table">
           <thead>
-            <tr>
-              <th data-ng-repeat="column in vm.columns[vm.entityType]">
-                <md-input-container class="md-block entity-search-filter"
-                  data-ng-if="column.name !== 'Instrument type'">
-                  <label>{{column.name}}</label>
-                  <input data-ng-model-options="{debounce: 1000}" />
-                </md-input-container>
-              </th>
-              <th class="entity-search-settings-header"></th>
-            </tr>
             <tr>
               <th data-ng-repeat="column in vm.columns[vm.entityType]">
                 <div layout="row">
