@@ -595,8 +595,6 @@
 
             var dropdownActionData = {};
 
-            console.log('event.target.dataset', event.target.dataset);
-
             if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
                 dropdownActionData.id = event.target.dataset.evDropdownActionDataId
             }

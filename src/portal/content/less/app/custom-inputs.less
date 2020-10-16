@@ -1,16 +1,95 @@
-.custom-input-top-row {
-  position: relative;
-  padding: 4px 18px 0 4px;
-  height: 20px;
-  box-sizing: border-box;
+@import "./variables.less";
+
+@customInputsRightSpace: 8px;
+
+.entity-editor-fixed-fields-container {
+  .custom-input-container {
+    .custom-input-textarea-span-pan {
+      background-color: #fff7e1;
+    }
+  }
 }
 
-.custom-input-tooltip {
-  opacity: 0;
-  position: absolute;
-  right: 1px;
-  top: 2px;
+.ci-icon-color {
+  fill: @grey;
+  color: @grey;
 }
+
+.custom-input-textarea-span-pan {
+  color: #7d7d7d;
+  position: relative;
+  padding: 4px 18px 0 4px;
+  height: 16px;
+  transform: translate(8px, -10px);
+  padding: 0 5px;
+  z-index: 9;
+  background: white;
+  display: inline-block;
+  font-size: 12px;
+  max-width: 80%;
+  white-space: nowrap;
+  /* Запрещаем перенос строк */
+  overflow: hidden;
+  /* Обрезаем все, что не помещается в область */
+  text-overflow: ellipsis;
+}
+
+.custom-input-top-row {
+  position: relative;
+  box-sizing: border-box;
+  height: 0;
+  font-size: 12px;
+
+  .custom-input-label {
+    position: relative;
+    padding: 4px 18px 0 4px;
+    height: 15px;
+    transform: translate(8px, -10px);
+    padding: 0 5px;
+    z-index: 1;
+    background: white;
+    display: inline-block;
+    white-space: nowrap;
+    /* Запрещаем перенос строк */
+    overflow: hidden;
+    /* Обрезаем все, что не помещается в область */
+    text-overflow: ellipsis;
+    max-width: 80%;
+  }
+}
+
+/*.custom-input-tooltips-pos() {
+  right: 7px;
+  top: 4px;
+}*/
+
+.custom-input-tooltip {
+  position: relative;
+  height: 100%;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  // right: 1px;
+  // display: flex;
+  // justify-content: center;
+  // flex-direction: column;
+  // height: 40px;
+  // border:1px solid red;
+  // transform: translate(15px,-12px);
+  // opacity: 0;
+  box-sizing: border-box;
+  z-index: 9;
+  cursor: default;
+}
+
+/*.tooltip-sign {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 40px;
+
+  // border:1px solid red;
+}*/
 
 .custom-input-main-container {
   position: relative;
@@ -20,24 +99,33 @@
 .custom-input-borders {
   overflow: hidden;
   border-radius: 6px;
-  //padding: 1px 0 1px 1px;
   border: 2px solid #7d7d7d;
 }
 
 .custom-input-content {
   position: relative;
-  height: 23px;
+  // height: 23px;
   width: 100%;
   border-radius: 6px;
+  padding-right: @customInputsRightSpace;
+  box-sizing: border-box;
 }
 
 .custom-input-label {
   font-weight: bold;
   font-size: 13px;
-  //color: rgba(0,0,0,0.54);
   color: #000;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 12px;
+  color: #747474;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+
+.bgInstrument {
+  background-color: @labelInstrumentPan !important;
 }
 
 .custom-input {
@@ -45,82 +133,119 @@
   min-width: 0;
   height: 23px;
   padding-left: 8px;
-  /*border: 2px solid #7d7d7d;
-  border-right: none;*/
   border: none;
   border-radius: 6px 0 0 6px;
+  color: #000;
   background: transparent;
   box-sizing: border-box;
 
   &:focus {
-    //border-color: #000;
     outline: none;
   }
 }
 
-.custom-input.text-input {
-  overflow: hidden;
-  //resize: none;
-  text-overflow: ellipsis;
-}
+.date-input-specific-btns {
+  position: relative;
+  display: block;
+  flex: 1 0 33%;
 
-.custom-input:focus + .custom-input-indicator-btn {
-  //border-color: #000000;
-  outline: none;
-}
-
-.custom-input-custom-btns-holder {
-  /*display: flex;
-  flex-direction: row;*/
-  position: absolute;
-  height: 100%;
-  //height: 23px;
-  background-color: #fff;
-  opacity: 0;
-  top: 0;
-  right: 30px;
-  margin-right: 6px;
-  box-sizing: border-box;
-
-  .custom-input-custom-btn {
-    height: 100%;
-    min-width: 20px;
-    background: transparent;
-    border: none;
-    padding: 0 2px;
-    //margin: 2px 0;
-    vertical-align: middle;
-
-    &:hover {
-      opacity: 0.5;
-    }
+  span.material-icons {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    color: #747474;
+    width: 100%;
+    font-size: 12px;
   }
-}
-
-.custom-input-indicator-btn {
-  flex: 0 0 30px;
-  height: 23px;
-  //border: 2px solid #7d7d7d;
-  //border-left: none;
-  border: none;
-  background-color: transparent;
-  //border-radius: 0 6px 6px 0;
-  border-radius: 0;
-  padding: 2px 2px;
-  fill: #7b7b7b;
-  z-index: 9;
 
   &:hover {
     background-color: #cecece;
   }
 }
 
-.custom-input-indicator-btn2 {
+.custom-input.text-input {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-input:focus + .custom-input-indicator-btn {
+  outline: none;
+}
+
+.custom-input-side-items {
+  position: absolute;
+  // opacity: 0;
+  height: 100%;
+  background-color: #fff;
+  top: 0;
+  right: @customInputsRightSpace;
+}
+
+.custom-input-custom-btns-holder {
+  // position: absolute;
+  position: relative;
+  height: 100%;
+  // opacity: 0;
+  display: none;
+  flex-direction: row;
+  /*top: 0;
+  right: 30px;*/
+  // margin-right: 6px;
+  box-sizing: border-box;
+
+  .custom-input-custom-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    min-width: 20px;
+    background: transparent;
+    border: none;
+    padding: 0 2px;
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    .ci-custom-btn-icon {
+      fill: @grey;
+      color: @grey;
+    }
+  }
+}
+
+.custom-input-indicator-btn {
+  flex: 0 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 23px;
+  background-color: transparent;
+  padding: 2px 2px;
+  border: none;
+  border-radius: 0;
+  margin-left: 6px;
+  fill: #7b7b7b;
+  // z-index: 9;
+  color: #7d7d7d;
+  transition: 0.2s ease-in-out;
+
+  &:not([disabled]):hover {
+    opacity: 0.5;
+  }
+
+  ng-md-icon {
+    fill: #747474;
+  }
+}
+
+/*.custom-input-indicator-btn2 {
   .custom-input-indicator-btn();
   position: absolute;
   top: 1px;
   right: 8px;
-}
+}*/
 
 .custom-input-sel-menu-container {
   width: 100%;
@@ -136,7 +261,7 @@
   left: 0;
   background: #fff;
   padding: 5px 0;
-  box-shadow: 0 0 2px rgba(0,0,0,1);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 1);
   overflow: auto;
   z-index: 52;
   box-sizing: border-box;
@@ -147,7 +272,7 @@
     white-space: nowrap;
 
     &:hover {
-      background-color: rgba(158,158,158,0.18);
+      background-color: rgba(158, 158, 158, 0.18);
     }
   }
 }
@@ -162,19 +287,24 @@
   left: 0;
   background-color: #fff;
   border: 2px solid #7d7d7d;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 1);
   border-radius: 6px;
+  border-radius: 1px;
   padding-top: 23px;
   box-sizing: border-box;
   z-index: 1;
 }
 
 .custom-input-full-text {
+  position: absolute;
   width: 100%;
   height: 100%;
   background-color: #fff;
-  border-radius: 6px;
+  padding: 28px;
   border: none;
+  margin: 0;
+  top: 0;
+  left: 0;
+  font-weight: 700;
   resize: none;
   box-sizing: border-box;
 
@@ -184,38 +314,30 @@
   }
 }
 
-.custom-input-full-text-focused {
-  .custom-input-indicator-btn {
-    z-index: 11;
-  }
-}
-
-.custom-input-full-text-shown {
-  display: block;
-  opacity: 1;
-  z-index: 10;
-}
-
-
 .custom-input-container.custom-input-set-from-outside {
-  .custom-input-borders, .custom-input-full-text-container {
+  .custom-input-borders,
+  .custom-input-full-text-container {
     border-color: rgba(26, 26, 236, 0.6);
   }
 
   .custom-input {
-    //border-color: rgba(26, 26, 236, 0.6);
     color: rgba(26, 26, 236, 0.6);
   }
 }
 
-.custom-input-container.custom-input-hovered, .custom-input-container.custom-input-focused {
+.custom-input-container.custom-input-hovered,
+.custom-input-container.custom-input-focused,
+.custom-input-container.custom-input-full-text-focused {
+
   .custom-input-custom-btns-holder {
-    opacity: 1;
+    display: flex;
   }
 
   .custom-input-tooltip {
-    opacity: 1;
+    // opacity: 1;
+    display: flex;
   }
+
 }
 
 .number-input-calculator-btn {
@@ -229,19 +351,16 @@
 }
 
 .custom-input-container.custom-input-preset1 {
-  /*.custom-input-label {
-    color: #0404f3;
-  }*/
-
-  .custom-input {
-    //border-color: #0404f3;
-    color: #0404f3;
+  .custom-input-label {
   }
 
-  .custom-input-indicator-btn {
-    //border-color: #0404f3;
-    color: #0404f3;
-    fill: #0404f3;
+  .custom-input-borders .custom-input-content .flex-row input {
+    color: #f05a22;
+    font-weight: bold;
+  }
+
+  .custom-input {
+    color: @orange;
   }
 }
 
@@ -251,12 +370,10 @@
   }
 
   .custom-input {
-    //border-color: #000;
     color: #000;
   }
 
   .custom-input-indicator-btn {
-    //border-color: #000;
     color: #000;
     fill: #000;
   }
@@ -264,12 +381,10 @@
 
 .custom-input-container.custom-input-is-valid {
   .custom-input {
-    //border-color: #015f01;
     color: #015f01;
   }
 
   .custom-input-indicator-btn {
-    //border-color: #015f01;
     color: #015f01;
     fill: #015f01;
   }
@@ -291,59 +406,174 @@
 // should always be at the bottom
 .custom-input-container.no-indicator-btn {
   .custom-input {
-    //border-right: 2px solid #7d7d7d;
     border-radius: 6px;
   }
 }
 
+// When input focused
 .custom-input-container.custom-input-focused {
+
   .custom-input-main-container {
-    box-shadow: 0 0 2px rgba(0, 0, 0, 1);
-  }
+    .custom-input-borders {
+      box-shadow: 0 0 0 1px #7d7d7d;
+    }
 
-  .custom-input-indicator-btn {
-    //border-color: #000;
-    outline: none;
-  }
-}
-
-.custom-input-container.custom-input-error {
-  .custom-input-label {
-    color: #fa393e;
-  }
-
-  .custom-input-error-tooltip {
-    position: absolute;
-    top: 1px;
-    left: 3px;
-
-    ng-md-icon {
-      fill: #fa393e;
+    .custom-input {
+      color: #000;
+      font-weight: 700;
     }
   }
 
-  .custom-input-borders, .custom-input-full-text-container {
-    border-color: #fa393e;
-  }
-
-  .custom-input {
-    padding-left: 20px;
-    //border-color: #fa393e;
-    color:  #fa393e;
-  }
-
-  /*.custom-input-indicator-btn {
-    border-color: #fa393e;
-  }*/
-
-  .custom-input:focus {
-    //border-color: #fa393e;
+  .custom-input-indicator-btn {
     outline: none;
   }
 }
+
+.custom-input-full-text-focused {
+
+  .custom-input-textarea-span-pan, .custom-input-indicator-btn, textarea.custom-input-full-text {
+    z-index: 11;
+  }
+
+  .custom-input-full-text-container {
+    display: block;
+    padding-top: 50px;
+    opacity: 1;
+    z-index: 10;
+    border-radius: 6px;
+  }
+
+  /*textarea.custom-input-full-text {
+    !*position: absolute;
+    top: 0;
+    left: 0;
+    padding: 28px;
+    margin: 0;*!
+    z-index: 11;
+  }*/
+}
+// < When input focused >
+
+// When input in error mode
+.custom-input-container.custom-input-error {
+
+  .custom-input-indicator-btn {
+      fill: @orange;
+      color: @orange;
+  }
+
+  .custom-input-label,
+  .custom-input-textarea-span-pan {
+    color: @orange;
+  }
+
+  .custom-input-tooltip {
+    display: flex;
+
+    span {
+      fill: @orange;
+      color: @orange;
+    }
+
+    ng-md-icon {
+      fill: @orange;
+    }
+
+  }
+
+  // --------------------
+
+  .custom-input-borders,
+  .custom-input-full-text-container {
+    border-color: #fa393e;
+  }
+
+  .custom-input-borders {
+    border-width: 2px;
+  }
+
+  .custom-input {
+    &:not(.smart-search-input) {
+      font-weight: 700;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .custom-input-bottom-error-text {
+    position: relative;
+    color: @orange;
+    font-size: 12px;
+    padding: 0 12px;
+  }
+}
+// < When input in error mode >
 
 .custom-input-container.custom-input-is-disabled {
   opacity: 0.5;
   pointer-events: none;
+
+  .custom-input-side-items {
+    display: none;
+  }
+
+  .custom-input-bottom-error-text {
+    display: none;
+  }
 }
 // < should always be at the bottom >
+
+.custom-input-container {
+  margin-bottom: 13px;
+}
+
+.custom-input-borders {
+  min-height: 40px;
+  position: relative;
+  border: 1px solid #7d7d7d;
+
+  .custom-input-content {
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.custom-input-full-text-container {
+  color: white;
+}
+
+.md-panel.md-tooltip.error-tooltip {
+  background-color: @orange;
+}
+
+/*.md-select-pan {
+
+  md-select {
+    height: 40px;
+    border: 1px solid @grey;
+    border-radius: 5px;
+    margin: 2.5px;
+
+    &:active {
+      md-select-value {
+        border-bottom: 2px solid transparent !important;
+      }
+    }
+
+    md-select-value {
+      border-bottom: 2px solid transparent !important;
+      span {
+        &:first-of-type {
+          color: @grey !important;
+          background-color: white;
+          max-width: 70%;
+        }
+      }
+    }
+  }
+
+}*/
