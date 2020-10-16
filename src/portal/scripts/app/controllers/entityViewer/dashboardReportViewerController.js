@@ -321,44 +321,6 @@
                 }).then(function (res) {
                     if (res.status === 'agree') {
 
-                        /*$mdDialog.show({
-                            controller: 'EntityViewerAddDialogController as vm',
-                            templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: activeObject.event,
-                            locals: {
-                                entityType: 'price-history',
-                                entity: {
-                                    instrument: activeObject['instrument.id'],
-                                    instrument_object: {
-                                        id: activeObject['instrument.id'],
-                                        name: activeObject['instrument.name'],
-                                        user_code: activeObject['instrument.user_code'],
-                                        short_name: activeObject['instrument.short_name']
-                                    },
-                                    pricing_policy: reportOptions.pricing_policy,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                }
-                            }
-                        }).then(function (res) {
-
-                            vm.entityViewerDataService.setActiveObjectAction(null);
-                            vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                            if (res && res.res === 'agree') {
-
-                                vm.entityViewerDataService.resetData();
-                                vm.entityViewerDataService.resetRequestParameters();
-
-                                var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                            }
-                        });*/
-
                         createEntity(activeObject, createEntityLocals);
 
                     }
