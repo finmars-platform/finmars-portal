@@ -85,7 +85,7 @@
             });
         };
 
-        transactionTypeService.getList({pageSize: 1000}).then(function (data) {
+        transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
 
             vm.transactionTypes = data.results;
             vm.readyStatus.transactionType = true;

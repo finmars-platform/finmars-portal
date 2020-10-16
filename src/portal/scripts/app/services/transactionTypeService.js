@@ -5,10 +5,6 @@
 
     var transactionTypeRepository = require('../repositories/transactionTypeRepository');
 
-    var getList = function (options) {
-        return transactionTypeRepository.getList(options);
-    };
-
     var getListLight = function (options) {
         return transactionTypeRepository.getListLight(options)
     };
@@ -70,7 +66,7 @@
     };
 
     module.exports = {
-        getList: getList,
+        // getList: getList,
         getListLight: getListLight,
         getListLightWithInputs: getListLightWithInputs,
         getByKey: getByKey,

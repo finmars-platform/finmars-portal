@@ -1,6 +1,6 @@
 (function () {
 
-    function recursiveDeepCopy(o) {
+    function recursiveDeepCopy(o, saveFunctions) {
         var newO,
             i;
 
@@ -17,6 +17,9 @@
                 newO[i] = recursiveDeepCopy(o[i]);
             }
             return newO;
+
+        } else if (saveFunctions && {}.toString.call(o) === '[object Function') {
+            return o;
         }
 
         newO = {};
@@ -28,8 +31,40 @@
         return newO;
     }
 
+    function setObjectNestedPropVal (obj, pathToProp, value) {
+
+        var objPlace = obj;
+        var lastIndex = Math.max(0, pathToProp.length - 1); // needed to work with one item array
+
+        pathToProp.forEach(function (prop, index) {
+
+            if (lastIndex === index) {
+                objPlace[prop] = value
+
+            } else {
+                objPlace = objPlace[prop]
+            }
+
+        });
+
+    }
+
+    let getObjectNestedPropVal = (obj, pathToProp) => {
+
+        var objPlace = obj;
+
+        pathToProp.forEach(function (prop) {
+            objPlace = objPlace[prop];
+        });
+
+        return objPlace;
+
+    }
+
     module.exports = {
-        recursiveDeepCopy: recursiveDeepCopy
+        recursiveDeepCopy: recursiveDeepCopy,
+        setObjectNestedPropVal: setObjectNestedPropVal,
+        getObjectNestedPropVal: getObjectNestedPropVal
     }
 
 }());
