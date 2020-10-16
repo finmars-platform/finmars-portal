@@ -219,6 +219,7 @@
     };
 
     vm.items = [];
+    vm.recentlyCreatedItems = []
     vm.selectedItem = {};
 
     vm.agree = function () {
@@ -260,12 +261,32 @@
     };
 
     vm.selectRow = function (item) {
+
       vm.items.forEach(function (item) {
         item.active = false;
       });
-      vm.selectedItem = item;
-      item.active = true;
+
+      if (item) {
+        vm.selectedItem = item;
+        item.active = true;
+        vm.recentlyCreatedSelectRow(null);
+      }
+
     };
+
+    vm.recentlyCreatedSelectRow = function (item) {
+
+      vm.recentlyCreatedItems.forEach(function (item) {
+        item.active = false;
+      });
+
+      if (item) {
+        vm.selectedItem = item;
+        item.active = true;
+        vm.selectRow(null);
+      }
+
+    }
 
     vm.selectAndSave = function (item) {
       $mdDialog.hide({
@@ -460,22 +481,24 @@
             multiple: true,
             locals: {
               entityType: vm.entityType,
-              entity: {},
+              entity: {
+                accrual_calculation_schedules: []
+              },
               data: {},
             },
           })
           .then(function (res) {
             if (res && res.res === "agree") {
-              // var item = res.data;
-              // //vm.items = [item].concat(vm.items);
-              //
-              // vm.selectRow(item);
-              // //vm.agree();
+              vm.getEntityItems("reloadTable");
+              var item = res.data;
+              vm.recentlyCreatedItems.push(item);
+              vm.recentlyCreatedSelectRow(item);
             }
           });
 
     };
 
+    // Victor 09.10.2020
     vm.downloadEntity = function ($event) {
 
       $mdDialog.show({
@@ -487,78 +510,12 @@
           data: {}
         }
       }).then(function (res) {
-        // console.log('res', res);
-        // var item = res.data;
-        // vm.items = [item].concat(vm.items);
-        // vm.selectRow(item);
-        // vm.agree();
-
+        vm.getEntityItems("reloadTable");
+        var item = res.data;
+        vm.recentlyCreatedItems.push(item)
+        vm.recentlyCreatedSelectRow(item);
       })
     };
-
-    // Тут я
-    // vm.addEntity = function (ev) {
-    //
-    //   if (vm.entityType === "transaction-type") {
-    //     $mdDialog
-    //       .show({
-    //         controller: "TransactionTypeAddDialogController as vm",
-    //         templateUrl:
-    //           "views/entity-viewer/transaction-type-add-dialog-view.html",
-    //         parent: angular.element(document.body),
-    //         targetEvent: ev,
-    //         locals: {
-    //           entityType: vm.entityType,
-    //           entity: {},
-    //         },
-    //       })
-    //       .then(function (res) {
-    //         if (res && res.res === "agree") {
-    //           vm.insertObjectAfterCreateHandler(res.data);
-    //         }
-    //       });
-    //   } else {
-    //     if (vm.entityType === "complex-transaction") {
-    //       $mdDialog
-    //         .show({
-    //           controller: "ComplexTransactionAddDialogController as vm",
-    //           templateUrl:
-    //             "views/entity-viewer/complex-transaction-add-dialog-view.html",
-    //           parent: angular.element(document.body),
-    //           targetEvent: ev,
-    //           locals: {
-    //             entityType: vm.entityType,
-    //             entity: {},
-    //             data: {},
-    //           },
-    //         })
-    //         .then(function (res) {
-    //           if (res && res.res === "agree") {
-    //             vm.insertObjectAfterCreateHandler(res.data.complex_transaction);
-    //           }
-    //         });
-    //     } else {
-    //       $mdDialog
-    //         .show({
-    //           controller: "EntityViewerAddDialogController as vm",
-    //           templateUrl:
-    //             "views/entity-viewer/entity-viewer-add-dialog-view.html",
-    //           parent: angular.element(document.body),
-    //           targetEvent: ev,
-    //           locals: {
-    //             entityType: vm.entityType,
-    //             entity: {},
-    //             data: {},
-    //           },
-    //         })
-    //         .then(function (res) {
-    //           if (res && res.res === "agree") {
-    //             vm.insertObjectAfterCreateHandler(res.data);
-    //           }
-    //         });
-    //     }
-    //   }
-    // };
 
     vm.init();
   };
