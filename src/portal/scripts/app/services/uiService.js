@@ -6,6 +6,7 @@
     'use strict';
 
     var metaContentTypesService = require('./metaContentTypesService');
+    var localStorageService = require('../../../../core/services/localStorageService');
 
     var uiRepository = require('../repositories/uiRepository');
 
@@ -29,13 +30,20 @@
     };
 
     var getListLayout = function (entity, options) {
-        // console.trace();
 
-        if () {
+        uiRepository.getListLayoutLight(entity, options).then(function (data) {
+
+            console.log("layout caching data", data);
+
+        });
+
+        /* if (localStorageService.getCachedLayout()) {
 
         }
 
         return uiRepository.getListLayout(entity, options);
+        */
+
     };
 
     var getListLayoutDefault = function (options) {
@@ -68,13 +76,56 @@
     var getDefaultListLayout = function (entityType) {
 
         // console.trace();
+        return new Promise (function (resolve, reject) {
 
-        return uiRepository.getDefaultListLayout(entityType);
+            uiRepository.getDefaultListLayoutLight(entityType).then(function (data) {
+
+                console.log("layout caching getDefaultListLayoutLight data", data);
+                if (data.results && data.results.length) {
+
+                    let defaultLayoutLight = data.results[0];
+                    let cachedLayout = localStorageService.getCachedLayout(defaultLayoutLight.id);
+
+                    if (cachedLayout) {
+
+                        let defLayoutModDate = new Date(defaultLayoutLight.modified).getTime();
+                        let cachedLayoutModDate = new Date(cachedLayout.modified).getTime();
+
+                        if (!defaultLayoutLight.modified || defLayoutModDate > cachedLayoutModDate) {
+
+                            uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+
+                                let defaultLayout = defaultLayoutData.results;
+
+                                localStorageService.cacheLayout(defaultLayout);
+                                resolve(defaultLayout);
+
+                            });
+
+
+
+                        } else {
+                            resolve(cachedLayout);
+                        }
+
+                    } else {
+                        resolve(cachedLayout);
+                    }
+
+                }
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
+        })
+
+        // return uiRepository.getDefaultListLayout(entityType);
     };
 
-    var getActiveListLayout = function (entity) {
+    /*var getActiveListLayout = function (entity) {
         return uiRepository.getActiveListLayout(entity);
-    };
+    };*/
 
     var getDefaultEditLayout = function (entityType) {
         return uiRepository.getDefaultEditLayout(entityType);
@@ -223,7 +274,7 @@
 
         getListLayoutTemplate: getListLayoutTemplate,
         getDefaultListLayout: getDefaultListLayout,
-        getActiveListLayout: getActiveListLayout,
+        // getActiveListLayout: getActiveListLayout,
         getDefaultEditLayout: getDefaultEditLayout,
         getEditLayout: getEditLayout,
         createEditLayout: createEditLayout,
