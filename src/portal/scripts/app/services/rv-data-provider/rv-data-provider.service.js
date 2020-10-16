@@ -1,6 +1,7 @@
 (function () {
 
     var evEvents = require('../entityViewerEvents');
+    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var groupsService = require('./groups.service');
     var objectsService = require('./objects.service');
     var evDataHelper = require('../../helpers/ev-data.helper');
@@ -590,6 +591,7 @@
     };
 
     var createDataStructure = function (evDataService, evEventService) {
+        console.log('createDataStructure')
 
         evDataService.resetData();
         evDataService.resetRequestParameters();
@@ -598,10 +600,12 @@
         var groups = evDataService.getGroups();
 
         if (groups.length) {
+            console.log('createDataStructure 1', defaultRootRequestParameters)
 
             getGroups(defaultRootRequestParameters, evDataService, evEventService).then(function () {
 
                 initRecursiveRequestParametersCreation(evDataService, evEventService).then(function () {
+                    console.log('createDataStructure 2', defaultRootRequestParameters)
 
                     evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
 
@@ -611,9 +615,12 @@
 
         } else {
 
+            console.log('createDataStructure 3', defaultRootRequestParameters)
+
             injectRegularFilters(defaultRootRequestParameters, evDataService);
 
             getObjects(defaultRootRequestParameters, evDataService, evEventService).then(function () {
+                console.log('createDataStructure 4', defaultRootRequestParameters)
 
                 evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
 

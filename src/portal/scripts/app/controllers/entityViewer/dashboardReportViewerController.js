@@ -449,6 +449,13 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
+                    setTimeout(function () {
+
+                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+                        $scope.$apply();
+
+                    }, 0);
+
                     vm.entityViewerDataService.setDataLoadStatus(false);
 
                     if (!fillInModeEnabled) {
@@ -466,6 +473,13 @@
                         vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
                         vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     }
+
+                    setTimeout(function () {
+
+                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
+                        $scope.$apply();
+
+                    }, 0);
 
                 });
 
@@ -504,7 +518,13 @@
                             if (compsKeys.length > 0) {
 
                                 compsKeys.forEach(function (compKey) {
-                                    componentsOutputs[compKey].changedLast = false;
+
+                                    if (componentsOutputs[compKey]) {
+
+                                        componentsOutputs[compKey].changedLast = false;
+
+                                    }
+
                                 });
 
                                 vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
@@ -1228,6 +1248,9 @@
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+                    $scope.$apply();
+
                 }
 
             };
@@ -1353,7 +1376,7 @@
 
             var updateActiveObjectUsingDashboardData = function () {
 
-                if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
+                 if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
 
                     if (Array.isArray(vm.componentData.settings.linked_components.active_object)) {
 
@@ -1423,7 +1446,7 @@
                         vm.handleDashboardActiveObject(componentId);
                     }
 
-                }
+                 }
 
             }
 
@@ -1641,8 +1664,9 @@
                 });
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
-
                     // update report filters from dashboard component
+
+                    // add linked to filter from dashboard component
                     if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                         vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
@@ -1650,6 +1674,7 @@
                         });
 
                     }
+                    // < add linked to filter from dashboard component >
 
                     /*if (vm.componentData.settings.auto_refresh) {
                         updateReportSettingsUsingDashboardData();
