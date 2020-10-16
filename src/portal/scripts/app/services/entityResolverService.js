@@ -136,6 +136,8 @@
             case 'transaction-class':
                 return transactionClassService.getList(options)
                 break;
+            // default:
+            //     throw new Error('entityResolverService: Unknown entityType ' + entityType);
         }
     };
 

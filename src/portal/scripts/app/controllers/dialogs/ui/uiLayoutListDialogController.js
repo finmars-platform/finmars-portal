@@ -185,7 +185,7 @@
 
             $event.stopPropagation();
 
-            selectedLayout = layout;
+            vm.selectedLayout = layout;
 
             vm.agree();
         };
