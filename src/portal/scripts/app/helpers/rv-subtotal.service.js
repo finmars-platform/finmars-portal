@@ -151,13 +151,17 @@
 
         }
 
-        for (i = 0; i < items.length; i = i + 1) {
+        if (total) {
 
-            if (!isNaN(parseFloat(items[i][column.key]))) {
+            for (i = 0; i < items.length; i = i + 1) {
 
-                var average = parseFloat(items[i]["market_value"]) / total;
+                if (!isNaN(parseFloat(items[i][column.key]))) {
 
-                result = result + parseFloat(items[i][column.key]) * average;
+                    var average = parseFloat(items[i]["market_value"]) / total;
+
+                    result = result + parseFloat(items[i][column.key]) * average;
+
+                }
 
             }
 
@@ -186,13 +190,17 @@
 
         }
 
-        for (i = 0; i < items.length; i = i + 1) {
+        if (total) {
 
-            if (!isNaN(parseFloat(items[i][column.key]))) {
+            for (i = 0; i < items.length; i = i + 1) {
 
-                var average = parseFloat(items[i]["market_value_percent"]) / total;
+                if (!isNaN(parseFloat(items[i][column.key]))) {
 
-                result = result + parseFloat(items[i][column.key]) * average;
+                    var average = parseFloat(items[i]["market_value_percent"]) / total;
+
+                    result = result + parseFloat(items[i][column.key]) * average;
+
+                }
 
             }
 
@@ -221,17 +229,22 @@
 
         }
 
-        for (i = 0; i < items.length; i = i + 1) {
+        if (total) {
 
-            if (!isNaN(parseFloat(items[i][column.key]))) {
+            for (i = 0; i < items.length; i = i + 1) {
 
-                var average = parseFloat(items[i]["exposure"]) / total;
+                if (!isNaN(parseFloat(items[i][column.key]))) {
 
-                result = result + parseFloat(items[i][column.key]) * average;
+                    var average = parseFloat(items[i]["exposure"]) / total;
+
+                    result = result + parseFloat(items[i][column.key]) * average;
+
+                }
 
             }
 
         }
+
 
         return result;
 
@@ -256,17 +269,22 @@
 
         }
 
-        for (i = 0; i < items.length; i = i + 1) {
+        if (total) {
 
-            if (!isNaN(parseFloat(items[i][column.key]))) {
+            for (i = 0; i < items.length; i = i + 1) {
 
-                var average = parseFloat(items[i]["exposure_percent"]) / total;
+                if (!isNaN(parseFloat(items[i][column.key]))) {
 
-                result = result + parseFloat(items[i][column.key]) * average;
+                    var average = parseFloat(items[i]["exposure_percent"]) / total;
+
+                    result = result + parseFloat(items[i][column.key]) * average;
+
+                }
 
             }
 
         }
+
 
         return result;
 

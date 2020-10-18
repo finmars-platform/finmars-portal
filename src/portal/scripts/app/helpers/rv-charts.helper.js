@@ -151,7 +151,7 @@
 
         }
 
-        if (!isNaN(parseFloat(flatListItem[numberKey]))) {
+        if (!isNaN(parseFloat(flatListItem[numberKey])) && total) {
 
             var average = parseFloat(flatListItem["market_value"]) / total;
 
@@ -181,7 +181,7 @@
 
         }
 
-        if (!isNaN(parseFloat(flatListItem[numberKey]))) {
+        if (!isNaN(parseFloat(flatListItem[numberKey])) && total) {
 
             var average = parseFloat(flatListItem["market_value_percent"]) / total;
 
@@ -211,7 +211,7 @@
 
         }
 
-        if (!isNaN(parseFloat(flatListItem[numberKey]))) {
+        if (!isNaN(parseFloat(flatListItem[numberKey])) && total) {
 
             var average = parseFloat(flatListItem["exposure"]) / total;
 
@@ -242,7 +242,7 @@
 
         }
 
-        if (!isNaN(parseFloat(flatListItem[numberKey]))) {
+        if (!isNaN(parseFloat(flatListItem[numberKey])) && total) {
 
             var average = parseFloat(flatListItem["exposure_percent"]) / total;
 
