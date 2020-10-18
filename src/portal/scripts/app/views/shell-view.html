@@ -4,7 +4,7 @@
 
         <div class="height-100 shellViewDnDDiv">
 
-            <div data-ng-if="vm.isIdentified" class="min-height">
+            <div data-ng-if="vm.isIdentified && vm.readyStatus.masters" class="min-height">
 
                 <div data-ng-if="vm.currentGlobalState == 'profile'" class="min-height">
 
@@ -280,7 +280,7 @@
 
     </div>
 
-    <div data-ng-if="!vm.isAuthenticated" style="padding-top: 120px;">
+    <div data-ng-if="!vm.isAuthenticated && !vm.readyStatus.masters" style="padding-top: 120px;">
 
         <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
             <progress-linear></progress-linear>

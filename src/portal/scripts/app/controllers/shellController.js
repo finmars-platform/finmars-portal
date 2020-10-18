@@ -65,18 +65,19 @@
             return usersService.getMasterListLight().then(function (data) {
 
                 if (data.hasOwnProperty('results')) {
-                    vm.masters = data.results;
-                    vm.readyStatus.masters = true;
+                    vm.masters = data.results
 
                     if (vm.masters.length) {
                         vm.updateCurrentMasterUser();
                     }
 
+                    vm.readyStatus.masters = true
                     $scope.$apply();
-                } else {
 
-                    vm.masters = [];
-                    vm.readyStatus.masters = true;
+                } else {
+                    console.log("layout caching no masters in the begining ");
+                    vm.masters = []
+                    vm.readyStatus.masters = true
                     $scope.$apply();
 
                 }
@@ -91,7 +92,7 @@
 
                 if (item.is_current) {
 
-                    vm.currentMasterUser = item;
+                    vm.currentMasterUser = item
                     localStorageService.setCurrentMasterUser(item);
 
                 }
@@ -312,7 +313,7 @@
             } else {
 
                 var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams.strategyNumber);
-                //var layoutNameFromParams = pageStateParams.layoutName;
+                // var layoutNameFromParams = pageStateParams.layoutName;
                 var layoutUserCode = pageStateParams.layoutUserCode;
                 var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
@@ -352,11 +353,12 @@
 
                         } else {
 
-                            uiService.getDefaultListLayout(entityType).then(function (defaultLayout) {
+                            uiService.getDefaultListLayoutLight(entityType).then(function (defaultLayoutData) {
+                            // uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
 
-                                /* var defaultLayoutRes = defaultLayoutData.results;
-                                setLayoutName(defaultLayoutRes); */
-                                setLayoutName(defaultLayout);
+                                var defaultLayoutRes = defaultLayoutData.results;
+                                setLayoutName(defaultLayoutRes);
+                                // setLayoutName(defaultLayout);
 
                             });
 
@@ -403,10 +405,10 @@
 
                 } else {
 
-                    uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+                    uiService.getDefaultListLayoutLight(entityType).then(function (defaultLayoutData) {
+                    // uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
 
                         var defaultLayoutRes = defaultLayoutData.results;
-
                         setLayoutName(defaultLayoutRes);
 
                     });

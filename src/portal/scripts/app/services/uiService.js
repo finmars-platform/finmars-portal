@@ -5,31 +5,31 @@
 
     'use strict';
 
-    var metaContentTypesService = require('./metaContentTypesService');
-    var localStorageService = require('../../../../core/services/localStorageService');
+    let metaContentTypesService = require('./metaContentTypesService');
+    let localStorageService = require('../../../../core/services/localStorageService');
 
-    var uiRepository = require('../repositories/uiRepository');
+    let uiRepository = require('../repositories/uiRepository');
 
-    var getPortalInterfaceAccess = function () {
+    let getPortalInterfaceAccess = function () {
         return uiRepository.getPortalInterfaceAccess();
     };
 
-    var getEditLayout = function (entity) {
+    let getEditLayout = function (entity) {
         return uiRepository.getEditLayout(entity);
     };
 
-    var createEditLayout = function (entity, ui) {
+    let createEditLayout = function (entity, ui) {
 
         ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
         return uiRepository.createEditLayout(ui);
     };
 
-    var updateEditLayout = function (id, ui) {
+    let updateEditLayout = function (id, ui) {
         return uiRepository.updateEditLayout(id, ui);
     };
 
-    var getListLayout = function (entity, options) {
+    let getListLayout = function (entity, options) {
 
         uiRepository.getListLayoutLight(entity, options).then(function (data) {
 
@@ -46,70 +46,77 @@
 
     };
 
-    var getListLayoutDefault = function (options) {
+    let getListLayoutDefault = function (options) {
         return uiRepository.getListLayoutDefault(options);
     };
 
-    var getListLayoutByKey = function (key) {
+    let getListLayoutByKey = function (key) {
         return uiRepository.getListLayoutByKey(key);
     };
 
-    var createListLayout = function (entity, ui) {
+    let createListLayout = function (entity, ui) {
 
         ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
         return uiRepository.createListLayout(ui);
     };
 
-    var updateListLayout = function (id, ui) {
+    let updateListLayout = function (id, ui) {
         return uiRepository.updateListLayout(id, ui)
     };
 
-    var deleteListLayoutByKey = function (id) {
+    let deleteListLayoutByKey = function (id) {
         return uiRepository.deleteListLayoutByKey(id);
     };
 
-    var getListLayoutTemplate = function () {
+    let getListLayoutTemplate = function () {
         return uiRepository.getListLayoutTemplate();
     };
 
-    var getDefaultListLayout = function (entityType) {
+    let getDefaultListLayout = function (entityType) {
 
         // console.trace();
         return new Promise (function (resolve, reject) {
 
             uiRepository.getDefaultListLayoutLight(entityType).then(function (data) {
-
                 console.log("layout caching getDefaultListLayoutLight data", data);
                 if (data.results && data.results.length) {
 
                     let defaultLayoutLight = data.results[0];
                     let cachedLayout = localStorageService.getCachedLayout(defaultLayoutLight.id);
-
+                    console.log("layout caching cachedLayout ", cachedLayout);
                     if (cachedLayout) {
 
                         let defLayoutModDate = new Date(defaultLayoutLight.modified).getTime();
                         let cachedLayoutModDate = new Date(cachedLayout.modified).getTime();
-
+                        console.log("layout caching defaultLayout cachedLayoutModDate", cachedLayoutModDate);
+                        console.log("layout caching defaultLayout defLayoutModDate", defLayoutModDate, defLayoutModDate > cachedLayoutModDate);
                         if (!defaultLayoutLight.modified || defLayoutModDate > cachedLayoutModDate) {
 
                             uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
 
-                                let defaultLayout = defaultLayoutData.results;
-
+                                let defaultLayout = defaultLayoutData.results[0];
+                                console.log("layout caching defaultLayout defaultLayout", defaultLayout);
                                 localStorageService.cacheLayout(defaultLayout);
-                                resolve(defaultLayout);
+                                resolve(defaultLayoutData);
 
                             });
 
-
-
                         } else {
-                            resolve(cachedLayout);
+                            resolve({results: [cachedLayout]});
                         }
 
                     } else {
-                        resolve(cachedLayout);
+                        console.log("layout caching defaultLayout no cacheLayout");
+                        uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+
+                            let defaultLayout = defaultLayoutData.results[0];
+                            console.log("layout caching defaultLayout defaultLayout", defaultLayout);
+                            localStorageService.cacheLayout(defaultLayout);
+                            resolve(defaultLayoutData);
+
+                        });
+
                     }
 
                 }
@@ -123,147 +130,151 @@
         // return uiRepository.getDefaultListLayout(entityType);
     };
 
-    /*var getActiveListLayout = function (entity) {
+    /*let getActiveListLayout = function (entity) {
         return uiRepository.getActiveListLayout(entity);
     };*/
 
-    var getDefaultEditLayout = function (entityType) {
+    let getDefaultListLayoutLight = function (entityType) {
+        return uiRepository.getDefaultListLayoutLight(entityType);
+    };
+
+    let getDefaultEditLayout = function (entityType) {
         return uiRepository.getDefaultEditLayout(entityType);
     };
 
-    var getConfigurationList = function () {
+    let getConfigurationList = function () {
         return uiRepository.getConfigurationList();
     };
 
-    var createConfiguration = function (data) {
+    let createConfiguration = function (data) {
         return uiRepository.createConfiguration(data)
     };
 
-    var updateConfiguration = function (id, data) {
+    let updateConfiguration = function (id, data) {
         return uiRepository.updateConfiguration(id, data);
     };
 
-    var deleteConfigurationByKey = function (id) {
+    let deleteConfigurationByKey = function (id) {
         return uiRepository.deleteConfigurationByKey(id);
     };
 
 
-    var getTransactionFieldList = function (options) {
+    let getTransactionFieldList = function (options) {
         return uiRepository.getTransactionFieldList(options)
     };
 
-    var createTransactionField = function (data) {
+    let createTransactionField = function (data) {
         return uiRepository.createTransactionField(data);
     };
 
-    var updateTransactionField = function (id, data) {
+    let updateTransactionField = function (id, data) {
         return uiRepository.updateTransactionField(id, data);
     };
 
-    var getInstrumentFieldList = function () {
+    let getInstrumentFieldList = function () {
         return uiRepository.getInstrumentFieldList()
     };
 
-    var createInstrumentField = function (data) {
+    let createInstrumentField = function (data) {
         return uiRepository.createInstrumentField(data);
     };
 
-    var updateInstrumentField = function (id, data) {
+    let updateInstrumentField = function (id, data) {
         return uiRepository.updateInstrumentField(id, data);
     };
 
     // Dashboard Layout
 
-    var getDashboardLayoutList = function (options) {
+    let getDashboardLayoutList = function (options) {
         return uiRepository.getDashboardLayoutList(options);
     };
 
-    var getActiveDashboardLayout = function () {
+    let getActiveDashboardLayout = function () {
         return uiRepository.getActiveDashboardLayout()
     };
 
-    var getDefaultDashboardLayout = function () {
+    let getDefaultDashboardLayout = function () {
         return uiRepository.getDefaultDashboardLayout()
     };
 
-    var getDashboardLayoutByKey = function (key) {
+    let getDashboardLayoutByKey = function (key) {
         return uiRepository.getDashboardLayoutByKey(key);
     };
 
-    var createDashboardLayout = function (data) {
+    let createDashboardLayout = function (data) {
 
         return uiRepository.createDashboardLayout(data);
     };
 
-    var updateDashboardLayout = function (id, data) {
+    let updateDashboardLayout = function (id, data) {
         return uiRepository.updateDashboardLayout(id, data)
     };
 
-    var deleteDashboardLayoutByKey = function (id) {
+    let deleteDashboardLayoutByKey = function (id) {
         return uiRepository.deleteDashboardLayoutByKey(id);
     };
 
     // Template Layout
 
-    var getTemplateLayoutList = function (options) {
+    let getTemplateLayoutList = function (options) {
         return uiRepository.getTemplateLayoutList(options);
     };
 
-    var getDefaultTemplateLayout = function () {
+    let getDefaultTemplateLayout = function () {
         return uiRepository.getDefaultTemplateLayout()
     };
 
-    var getTemplateLayoutByKey = function (key) {
+    let getTemplateLayoutByKey = function (key) {
         return uiRepository.getTemplateLayoutByKey(key);
     };
 
-    var createTemplateLayout = function (data) {
+    let createTemplateLayout = function (data) {
 
         return uiRepository.createTemplateLayout(data);
     };
 
-    var updateTemplateLayout = function (id, data) {
+    let updateTemplateLayout = function (id, data) {
         return uiRepository.updateTemplateLayout(id, data)
     };
 
-    var deleteTemplateLayoutByKey = function (id) {
+    let deleteTemplateLayoutByKey = function (id) {
         return uiRepository.deleteTemplateLayoutByKey(id);
     };
 
     // Context Menu
 
-    var getContextMenuLayoutList = function (options) {
+    let getContextMenuLayoutList = function (options) {
         return uiRepository.getContextMenuLayoutList(options);
     };
 
-    var getContextMenuLayoutByKey = function (key) {
+    let getContextMenuLayoutByKey = function (key) {
         return uiRepository.getContextMenuLayoutByKey(key);
     };
 
-    var createContextMenuLayout = function (data) {
+    let createContextMenuLayout = function (data) {
 
         return uiRepository.createContextMenuLayout(data);
     };
 
-    var updateContextMenuLayout = function (id, data) {
+    let updateContextMenuLayout = function (id, data) {
         return uiRepository.updateContextMenuLayout(id, data)
     };
 
-    var deleteContextMenuLayoutByKey = function (id) {
+    let deleteContextMenuLayoutByKey = function (id) {
         return uiRepository.deleteContextMenuLayoutByKey(id);
     };
 
     // Entity Tooltip
 
-    var getEntityTooltipList = function (options) {
+    let getEntityTooltipList = function (options) {
         return uiRepository.getEntityTooltipList(options);
     };
 
-    var createEntityTooltip = function (data) {
+    let createEntityTooltip = function (data) {
         return uiRepository.createEntityTooltip(data);
     };
 
-    var updateEntityTooltip = function (id, data) {
+    let updateEntityTooltip = function (id, data) {
 
         return uiRepository.updateEntityTooltip(id, data);
     };
@@ -286,6 +297,7 @@
         updateListLayout: updateListLayout,
 
         deleteListLayoutByKey: deleteListLayoutByKey,
+        getDefaultListLayoutLight: getDefaultListLayoutLight,
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,

@@ -913,12 +913,13 @@
 
             vm.getDefaultLayout = function () {
 
-                uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayout) {
-                    /*var defaultLayout = null;
+                uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
+                    console.log("layout caching defaultLayoutData123", defaultLayoutData);
+                    var defaultLayout = null;
                     if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
                         defaultLayout = defaultLayoutData.results[0];
-                    }*/
-
+                    }
+                    console.log("layout caching defaultLayout123", defaultLayout);
                     vm.setLayout(defaultLayout);
 
                 });
@@ -1066,7 +1067,7 @@
                 var layoutUserCode;
 
                 if (vm.isLayoutFromUrl()) {
-
+                    console.log("layout caching getView1");
                     var queryParams = window.location.href.split('?')[1];
                     var params = queryParams.split('&');
 
@@ -1089,12 +1090,12 @@
                     vm.getLayoutByUserCode(layoutUserCode);
 
                 } else if ($stateParams.layoutUserCode) {
-
+                    console.log("layout caching getView2");
                     layoutUserCode = $stateParams.layoutUserCode
                     vm.getLayoutByUserCode(layoutUserCode);
 
                 } else {
-
+                    console.log("layout caching getView3");
                     vm.getDefaultLayout();
 
                 }
