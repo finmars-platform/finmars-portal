@@ -20,23 +20,49 @@
                         </md-select-header>
                         <div class="select-options-holder">
                             <md-option
-                                    data-ng-repeat="item in vm.currencies | orderBy:'-'+item.name | filter:{name: vm.searchTermCurrency} as results track by item.id "
+                                    data-ng-repeat="item in vm.currencies | orderBy: item.name : true | filter:{name: vm.searchTermCurrency} as results track by item.id "
                                     ng-value="item.id">
                                 {{item.name}}
                             </md-option>
+<!--                            data-ng-repeat="item in vm.currencies | orderBy:'-'+item.name | filter:{name: vm.searchTermCurrency} as results track by item.id "-->
                         </div>
                     </md-select>
                 </md-input-container>
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Pricing Multiplier</label>
-                    <input type="text" data-ng-model="vm.entity.price_multiplier">
-                </md-input-container>
+                <dropdown-select class="p-r-8" label="Pricing Currency"
+                                 model="vm.entity.pricing_currency"
+                                 placeholder-text="Pricing Currency"
+                                 menu-options="vm.currencies"
+                                 small-options="{tooltipText: 'Pricing Currency'}"
+                                 style="width: 50%">
+                </dropdown-select>
+<!--                <dropdown-select class="p-r-8" label="Event class"-->
+<!--                                 model="vm.event.event_class"-->
+<!--                                 placeholder-text="Event class"-->
+<!--                                 menu-options="vm.eventClasses"-->
+<!--                                 small-options="{tooltipText: 'Event class'}"-->
+<!--                                 style="width: 50%">-->
+<!--                </dropdown-select>-->
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Default Price</label>
-                    <input type="text" data-ng-model="vm.entity.default_price">
-                </md-input-container>
+<!--                <md-input-container style="width: 200px;">-->
+<!--                    <label for="">Pricing Multiplier</label>-->
+<!--                    <input type="text" data-ng-model="vm.entity.price_multiplier">-->
+<!--                </md-input-container>-->
+                <number-input label="Pricing Multiplier"
+                              model="vm.entity.price_multiplier"
+                              small-options="{tooltipText: 'Pricing Multiplier'}"
+                              style="width: 200px;">
+                </number-input>
+
+<!--                <md-input-container style="width: 200px;">-->
+<!--                    <label for="">Default Price!</label>-->
+<!--                    <input type="text" data-ng-model="vm.entity.default_price">-->
+<!--                </md-input-container>-->
+                <number-input label="Default Price"
+                              model="vm.entity.default_price"
+                              small-options="{tooltipText: 'Default Price'}"
+                              style="width: 200px;">
+                </number-input>
 
             </div>
 
