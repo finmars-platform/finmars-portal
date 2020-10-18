@@ -1022,7 +1022,7 @@
                 listLayout.data = Object.assign({}, defaultList[0].data);
 
             }
-
+            console.log("layout caching listLayout", listLayout);
             if (listLayout.data.interfaceLayout) {
 
                 var interfaceLayout = getInterfaceLayout();
