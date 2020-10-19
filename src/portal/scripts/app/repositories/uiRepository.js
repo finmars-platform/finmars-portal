@@ -181,29 +181,9 @@
         })
     };
 
-    var getListLayoutLight = function (entity, options) {
-
-        if (entity == 'all') {
-            /* return xhrService.fetch(baseUrl + 'ui/list-layout/',
-                {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-type': 'application/json'
-                    }
-                }) */
-            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout-light/', options),
-                getRequestParams)
-
-        } else {
-
-            var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-
-            return xhrService.fetch(baseUrl + 'ui/list-layout-light/?content_type=' + contentType,
-                getRequestParams2)
-        }
-
+    var getListLayoutByKeyPing = function (layoutId) {
+        return xhrService.fetch(baseUrl + 'ui/list-layout-light/' + layoutId + '/ping',
+            getRequestParams2)
     };
 
     var getDefaultListLayoutLight = function (entity) {
@@ -708,7 +688,6 @@
             })
     };
 
-
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -731,7 +710,7 @@
         updateListLayout: updateListLayout,
         deleteListLayoutByKey: deleteListLayoutByKey,
 
-        getListLayoutLight: getListLayoutLight,
+        getListLayoutByKeyPing: getListLayoutByKeyPing,
         getDefaultListLayoutLight: getDefaultListLayoutLight,
 
         getConfigurationList: getConfigurationList,
