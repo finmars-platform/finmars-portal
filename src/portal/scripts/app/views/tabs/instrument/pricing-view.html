@@ -20,11 +20,11 @@
                         </md-select-header>
                         <div class="select-options-holder">
                             <md-option
-                                    data-ng-repeat="item in vm.currencies | orderBy: item.name : true | filter:{name: vm.searchTermCurrency} as results track by item.id "
+                                    data-ng-repeat="item in vm.currencies | orderBy:'-'+item.name | filter:{name: vm.searchTermCurrency} as results track by item.id "
                                     ng-value="item.id">
                                 {{item.name}}
                             </md-option>
-<!--                            data-ng-repeat="item in vm.currencies | orderBy:'-'+item.name | filter:{name: vm.searchTermCurrency} as results track by item.id "-->
+
                         </div>
                     </md-select>
                 </md-input-container>
