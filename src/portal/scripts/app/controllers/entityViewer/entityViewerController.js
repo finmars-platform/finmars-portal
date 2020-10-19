@@ -262,6 +262,8 @@
 
                                     if (res.status === 'agree') {
 
+                                        var evSettings = vm.entityViewerDataService.getEntityViewerOptions();
+                                        console.log("highlight deleted evSettings", evSettings);
                                         var objects = vm.entityViewerDataService.getObjects();
 
                                         objects.forEach(function (obj) {
@@ -270,11 +272,27 @@
 
                                                 var parent = vm.entityViewerDataService.getData(obj.___parentId)
 
-                                                parent.results = parent.results.filter(function (resultItem) {
-                                                    return res.data.ids.indexOf(resultItem.id) === -1
-                                                });
+                                                console.log("highlight deleted evSettings", evSettings);
+                                                // if deleted entities shown, mark them
+                                                if (evSettings.entity_filters && evSettings.entity_filters.includes('deleted')) {
 
-                                                vm.entityViewerDataService.setData(parent)
+                                                    parent.results.forEach(function (resultItem) {
+
+                                                        if (res.data.ids.includes(resultItem.id)) {
+                                                            resultItem.is_deleted = true
+                                                        }
+
+                                                    });
+
+                                                } else { // if deleted entities hidden
+
+                                                    parent.results = parent.results.filter(function (resultItem) {
+                                                        return res.data.ids.includes(resultItem.id);
+                                                    });
+
+                                                }
+
+                                                vm.entityViewerDataService.setData(parent);
 
                                             }
 
@@ -753,7 +771,8 @@
                 if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
                     vm.entityViewerDataService.setSplitPanelStatus(true);
                 }
-
+                var evSettings = vm.entityViewerDataService.getEntityViewerOptions();
+                console.log("highlight deleted evSettings", evSettings, evSettings.entity_filters.includes('deleted'));
                 $scope.$apply();
 
             };
