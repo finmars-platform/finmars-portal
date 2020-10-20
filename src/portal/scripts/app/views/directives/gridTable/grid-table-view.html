@@ -1,0 +1,68 @@
+<div class="grid-table">
+    <!-- Top panel with filters will be here -->
+    <grid-table-top-panel data-gt-data-service="gtDataService"
+                          data-gt-event-service="gtEventService"></grid-table-top-panel>
+
+    <div class="grid-table-row grid-table-header-row">
+        <div class="grid-table-row-checkbox">
+            <md-checkbox data-ng-checked="allRowsAreActive"
+                         data-ng-click="toggleAllRows()"></md-checkbox>
+        </div>
+
+        <div data-ng-repeat="cell in gridTableData.header.columns track by cell.key">
+
+            <grid-table-cell data-row="gridTableData.header"
+                             data-column="cell"
+                             data-gt-data-service="gtDataService"
+                             data-gt-event-service="gtEventService"></grid-table-cell>
+            <!--<div class="gt-cell-text-container">
+                <div class="gt-cell-text">
+                    <span data-ng-bind="cell.columnName"
+                          data-ng-click="setSortByCol($index)"></span>
+                </div>
+            </div>-->
+
+        </div>
+    </div>
+
+    <div data-ng-repeat="row in gridTableData.body | orderBy:sortRowsByCol:sortRowsReverse track by row.key"
+         ng-click="onRowClick($event, row)"
+         class="grid-table-row">
+
+        <div class="grid-table-row-checkbox">
+            <md-checkbox ng-checked="row.isActive"
+                         ng-click="toggleRowSelection(row)"></md-checkbox>
+        </div>
+
+        <!--<div ng-if="row.isNewRow" class="grid-table-new-row-actions">
+            <md-menu>
+                <md-button ng-click="$mdOpenMenu($event)"
+                           class="grid-table-nr-actions-btn">
+                    <span class="material-icons">settings</span>
+                </md-button>
+
+                <md-menu-content>
+                    <md-menu-item>
+                        <md-button ng-click="vm.acceptNewRow(row.key)">
+                            ADD
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="vm.cancelNewRow(row.key)">
+                            DELETE
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>-->
+
+        <div data-ng-repeat="cell in row.columns track by cell.key">
+            <grid-table-cell data-row="row"
+                             data-column="cell"
+                             data-gt-data-service="gtDataService"
+                             data-gt-event-service="gtEventService"></grid-table-cell>
+        </div>
+
+    </div>
+
+</div>

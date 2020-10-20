@@ -18,10 +18,10 @@
                 entityType: '=',
                 customButtons: '=',
                 customStyles: '=',
-                isDisabled: '=',
                 eventSignal: '=',
                 smallOptions: '=',
-                callback: '&'
+                isDisabled: '=',
+                onChangeCallback: '&'
             },
             templateUrl: 'views/directives/customInputs/entity-search-select-view.html',
             link: function (scope, elem, attrs) {
@@ -39,11 +39,13 @@
                 // scope.smallOptions probable properties
                     // tooltipText: custom tolltip text
                     // notNull: turn on error mode if field is not filled
+                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
                 if (scope.smallOptions) {
-                    if (scope.smallOptions.tooltipText) {
-                        scope.tooltipText = scope.smallOptions.tooltipText;
-                    }
+
+                    scope.tooltipText = scope.smallOptions.tooltipText
+                    scope.dialogParent = scope.smallOptions.dialogParent
+
                 }
 
                 var stylePreset;
@@ -51,7 +53,7 @@
                 var inputContainer = elem[0].querySelector('.smartSearchInputContainer');
                 var inputElem = elem[0].querySelector('.smartSearchInputElem');
 
-                var entityIndicatorIcons = {
+                /*var entityIndicatorIcons = {
                     'account': {
                         type: 'class',
                         icon: 'fas fa-university'
@@ -89,12 +91,15 @@
                         icon: 'fas fa-tag'
                     }
 
-                }
+                }*/
 
                 scope.getInputContainerClasses = function () {
                     var classes = '';
 
-                    if (scope.error) {
+                    if (scope.isDisabled) {
+                        classes += "custom-input-is-disabled";
+
+                    } else if (scope.error) {
                         classes = 'custom-input-error';
 
                     } else if (stylePreset) {
@@ -103,6 +108,10 @@
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
 
+                    }
+
+                    if (scope.noIndicatorBtn) {
+                        classes += " no-indicator-btn";
                     }
 
                     return classes;
@@ -141,7 +150,7 @@
 
                         setTimeout(function () {
 
-                            scope.callback();
+                            scope.onChangeCallback();
                             scope.$apply();
 
                         }, 0);
@@ -224,10 +233,22 @@
 
                     if (!scope.isDisabled) {
 
+                        var dialogParent = angular.element(document.body);
+
+                        if (scope.dialogParent) {
+
+                            var dialogParentElem = document.querySelector(scope.dialogParent);
+
+                            if (dialogParentElem) {
+                                dialogParent = dialogParentElem
+                            }
+
+                        }
+
                         $mdDialog.show({
                             controller: 'EntitySearchDialogController as vm',
                             templateUrl: 'views/dialogs/entity-search-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: dialogParent,
                             targetEvent: $event,
                             preserveScope: false,
                             autoWrap: true,
@@ -256,7 +277,7 @@
 
                                 setTimeout(function () {
 
-                                    scope.callback();
+                                    scope.onChangeCallback();
 
                                     scope.$apply();
 
@@ -274,11 +295,15 @@
 
                     Object.keys(scope.customStyles).forEach(function (className) {
 
-                        var elemClass = '.' + className;
-                        var elemToApplyStyles = elem[0].querySelector(elemClass);
+                        var elemClass = "." + className;
+                        var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-                        if (elemToApplyStyles) {
-                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles.length) {
+
+                            elemToApplyStyles.forEach(function (htmlNode) {
+                                htmlNode.style.cssText = scope.customStyles[className];
+                            })
+
                         }
 
                     });
@@ -377,7 +402,7 @@
 
                 var changeIconAndPlaceholder = function (entityType) {
 
-                    scope.iconData = entityIndicatorIcons[entityType];
+                    // scope.iconData = entityIndicatorIcons[scope.entityType];
 
                     var entitiesData = metaContentTypeService.getList();
 
