@@ -10,6 +10,23 @@
 
     let uiRepository = require('../repositories/uiRepository');
 
+    let isCachedLayoutActual = function (cachedLayout, layoutData) {
+
+        if (cachedLayout && cachedLayout.modified) {
+
+            let cachedLayoutModDate = new Date(cachedLayout.modified).getTime();
+            let layoutModDate = new Date(layoutData.modified).getTime();
+
+            if (cachedLayoutModDate >= layoutModDate) {
+                return true;
+            }
+
+        }
+
+        return false;
+
+    };
+
     let getPortalInterfaceAccess = function () {
         return uiRepository.getPortalInterfaceAccess();
     };
@@ -31,19 +48,55 @@
 
     let getListLayout = function (entity, options) {
 
-        uiRepository.getListLayoutLight(entity, options).then(function (data) {
+        if (options && options.filters &&
+            options.filters.content_type && options.filters.user_code) { // if getting one layout by user code
+            console.log("layout caching getListLayout user_code", options.filters.user_code);
+            return new Promise (function (resolve, reject) {
 
-            console.log("layout caching data", data);
+                uiRepository.getListLayoutLight(entity, options).then(function (data) {
 
-        });
+                    let layout = data.results[0];
 
-        /* if (localStorageService.getCachedLayout()) {
+                    if (layout) {
+
+                        let cachedLayout = localStorageService.getCachedLayout(layout.id);
+
+                        if (isCachedLayoutActual(cachedLayout, layout)) {
+
+                            resolve({results: [cachedLayout]});
+
+                        } else {
+
+                            uiRepository.getListLayout(entity, options).then(function (listLayoutData) {
+
+                                let listLayout = listLayoutData.results[0];
+
+                                localStorageService.cacheLayout(listLayout);
+                                resolve(listLayoutData);
+
+                            }).catch(function (error) {
+                                reject(error);
+                            });
+
+                        }
+
+                    } else {
+                        resolve(data);
+                    }
+
+                }).catch(function (error) {
+                    reject(error);
+                });
+
+            });
 
         }
 
         return uiRepository.getListLayout(entity, options);
-        */
+    };
 
+    let getListLayoutLight = function (options) {
+        return uiRepository.getListLayoutLight(options);
     };
 
     let getListLayoutDefault = function (options) {
@@ -78,52 +131,45 @@
         // console.trace();
         return new Promise (function (resolve, reject) {
 
-            uiRepository.getDefaultListLayoutLight(entityType).then(function (data) {
-                console.log("layout caching getDefaultListLayoutLight data", data);
-                if (data.results && data.results.length) {
+            var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+            let cachedLayout = localStorageService.getDefaultLayout(contentType);
 
-                    let defaultLayoutLight = data.results[0];
-                    let cachedLayout = localStorageService.getCachedLayout(defaultLayoutLight.id);
-                    console.log("layout caching cachedLayout ", cachedLayout);
-                    if (cachedLayout) {
+            let fetchDefaultLayout = function () {
 
-                        let defLayoutModDate = new Date(defaultLayoutLight.modified).getTime();
-                        let cachedLayoutModDate = new Date(cachedLayout.modified).getTime();
-                        console.log("layout caching defaultLayout cachedLayoutModDate", cachedLayoutModDate);
-                        console.log("layout caching defaultLayout defLayoutModDate", defLayoutModDate, defLayoutModDate > cachedLayoutModDate);
-                        if (!defaultLayoutLight.modified || defLayoutModDate > cachedLayoutModDate) {
+                uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
 
-                            uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+                    let defaultLayout = defaultLayoutData.results[0];
+                    console.log("layout caching defaultLayout defaultLayout", defaultLayout);
+                    localStorageService.cacheDefaultLayout(contentType, defaultLayout);
+                    resolve(defaultLayoutData);
 
-                                let defaultLayout = defaultLayoutData.results[0];
-                                console.log("layout caching defaultLayout defaultLayout", defaultLayout);
-                                localStorageService.cacheLayout(defaultLayout);
-                                resolve(defaultLayoutData);
+                }).catch(function (error) {
+                    reject(error);
+                });
 
-                            });
+            };
 
-                        } else {
-                            resolve({results: [cachedLayout]});
-                        }
+            if (cachedLayout) {
+
+                uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
+
+                    let serverLayoutModDate = new Date(pingData.modified).getTime();
+                    let cachedLayoutModDate = new Date(cachedLayout.modified).getTime();
+
+                    if (!cachedLayout.modified || serverLayoutModDate > cachedLayoutModDate) {
+                        fetchDefaultLayout();
 
                     } else {
-                        console.log("layout caching defaultLayout no cacheLayout");
-                        uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
-
-                            let defaultLayout = defaultLayoutData.results[0];
-                            console.log("layout caching defaultLayout defaultLayout", defaultLayout);
-                            localStorageService.cacheLayout(defaultLayout);
-                            resolve(defaultLayoutData);
-
-                        });
-
+                        resolve({results: [cachedLayout]});
                     }
 
-                }
+                }).catch(function (error) {
+                    reject(error);
+                });
 
-            }).catch(function (error) {
-                reject(error);
-            });
+            } else {
+                fetchDefaultLayout();
+            }
 
         })
 
@@ -133,10 +179,6 @@
     /*let getActiveListLayout = function (entity) {
         return uiRepository.getActiveListLayout(entity);
     };*/
-
-    let getDefaultListLayoutLight = function (entityType) {
-        return uiRepository.getDefaultListLayoutLight(entityType);
-    };
 
     let getDefaultEditLayout = function (entityType) {
         return uiRepository.getDefaultEditLayout(entityType);
@@ -291,13 +333,13 @@
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
         getListLayout: getListLayout,
+        getListLayoutLight: getListLayoutLight,
         getListLayoutDefault: getListLayoutDefault,
         getListLayoutByKey: getListLayoutByKey,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
 
         deleteListLayoutByKey: deleteListLayoutByKey,
-        getDefaultListLayoutLight: getDefaultListLayoutLight,
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,

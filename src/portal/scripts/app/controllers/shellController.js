@@ -75,7 +75,7 @@
                     $scope.$apply();
 
                 } else {
-                    console.log("layout caching no masters in the begining ");
+
                     vm.masters = []
                     vm.readyStatus.masters = true
                     $scope.$apply();
@@ -248,10 +248,10 @@
 
                 pageStateName = transition.to().name;
                 pageStateParams.strategyNumber = transition.params().strategyNumber;
-                //pageStateParams.layoutName = transition.params().layoutName;
                 pageStateParams.layoutUserCode = transition.params().layoutUserCode;
 
                 if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport(pageStateName)) {
+
                     showLayoutName = true;
                     vm.activeLayoutName = null;
                     vm.activeSPLayoutName = false;
@@ -315,10 +315,9 @@
                 var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams.strategyNumber);
                 // var layoutNameFromParams = pageStateParams.layoutName;
                 var layoutUserCode = pageStateParams.layoutUserCode;
-                var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
                 var setLayoutName = function (layoutData) {
-
+                    console.log("layout caching setLayoutName", layoutData);
                     if (layoutData && layoutData.length) {
                         newLayoutName = layoutData[0].name;
                     } else {
@@ -330,17 +329,11 @@
 
                 };
 
-                /*if (layoutNameFromParams) { // state params value updates earlier than window.location.href
-
-                    vm.activeLayoutName = layoutNameFromParams;
-
-                }*/
                 if (layoutUserCode) {
 
-                    uiService.getListLayoutDefault({
+                    uiService.getListLayout(entityType,{
                         pageSize: 1000,
                         filters: {
-                            content_type: contentType,
                             user_code: layoutUserCode
                         }
 
@@ -353,12 +346,10 @@
 
                         } else {
 
-                            uiService.getDefaultListLayoutLight(entityType).then(function (defaultLayoutData) {
-                            // uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+                            uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
 
                                 var defaultLayoutRes = defaultLayoutData.results;
                                 setLayoutName(defaultLayoutRes);
-                                // setLayoutName(defaultLayout);
 
                             });
 
@@ -390,10 +381,9 @@
 
                     });
 
-                    uiService.getListLayoutDefault({
+                    uiService.getListLayout(entityType, {
                         pageSize: 1000,
                         filters: {
-                            content_type: contentType,
                             name: layoutName
                         }
                     }).then(function (activeLayoutData) {
@@ -405,8 +395,7 @@
 
                 } else {
 
-                    uiService.getDefaultListLayoutLight(entityType).then(function (defaultLayoutData) {
-                    // uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+                    uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
 
                         var defaultLayoutRes = defaultLayoutData.results;
                         setLayoutName(defaultLayoutRes);
@@ -864,15 +853,15 @@
 
                 }
 
+                if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
+                    showLayoutName = true;
+                    vm.getActiveLayoutName();
+                }
+
             });
 
             if (window.BroadcastChannel) {
                 vm.initCrossTabBroadcast();
-            }
-
-            if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
-                showLayoutName = true;
-                vm.getActiveLayoutName();
             }
 
             vm.importOnDragListeners();
