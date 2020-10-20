@@ -44,7 +44,8 @@
 
             return new Promise(function (resolve, reject) {
 
-                uiService.getListLayout(options.entityType).then(function (data) {
+                uiService.getListLayout(options.entityType, {pageSize: 1000}).then(function (data) {
+
                     vm.items = data.results;
                     layoutsList = data.results;
 
@@ -72,6 +73,7 @@
 
                     vm.readyStatus.items = true;
                     $scope.$apply();
+
                 });
 
             })
@@ -185,7 +187,7 @@
 
             $event.stopPropagation();
 
-            selectedLayout = layout;
+            vm.selectedLayout = layout;
 
             vm.agree();
         };

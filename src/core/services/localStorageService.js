@@ -25,71 +25,106 @@
 
     };
 
-    let getCachedLayout = (layoutId) => {
+    let cacheData = function (objPath, item) {
 
         let cache = getCache();
-        let objPath = [currentMasterUser.id, 'layouts', layoutId];
         let objPlace = cache;
-        console.log("layout caching getCachedLayout objPath", objPath);
-        if (objPlace) {
+        let lastProp = objPath.pop();
+        console.log("layout caching cacheData objPath", objPath);
+        for (let i = 0; i < objPath.length; i++) {
 
-            for (let i = 0; i < objPath.length; i++) {
-
-                let prop = objPath[i];
-
-                if (prop && objPlace[prop]) {
-                    objPlace = objPlace[prop]
-
-                } else {
-                    return null;
-                }
-
+            let prop = objPath[i];
+            if (!objPlace[prop]) {
+                objPlace[prop] = {};
             }
 
+            objPlace = objPlace[prop]
+
         }
-        console.log("layout caching getCachedLayout objPlace", objPlace);
+
+
+        objPlace[lastProp] = item
+        console.log("layout caching cacheData", cache);
+        localStorage.setItem("cache", JSON.stringify(cache));
+
+    };
+
+    let getCacheProp = function (objPath) {
+
+        let cache = getCache();
+        let objPlace = cache;
+        console.log("layout caching getCacheProp objPath", objPath);
+        for (let i = 0; i < objPath.length; i++) {
+
+            let prop = objPath[i];
+
+            if (!objPlace[prop]) {
+                return null;
+            }
+
+            objPlace = objPlace[prop]
+
+        }
+        console.log("layout caching getCacheProp", objPlace);
         return objPlace;
+
+    };
+
+
+    let cacheDefaultLayout = function (contentType, layout) {
+
+        let objPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', contentType];
+
+        if (currentMasterUser.id) {
+            cacheData(objPath, layout);
+
+        } else {
+            throw("No current master user set");
+        }
+
+    };
+
+    let getDefaultLayout = (contentType) => {
+
+        let objPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', contentType];
+
+        if (currentMasterUser.id) {
+            return getCacheProp(objPath);
+        }
 
     };
 
     let cacheLayout = (layout) => {
 
-        let cache = getCache();
-        let objPath = [currentMasterUser.id, 'layouts'];
-        let objPlace = cache;
+        let objPath = [currentMasterUser.id, 'layouts', 'layoutsList', layout.id];
 
         if (currentMasterUser.id) {
+            cacheData(objPath, layout);
 
-            for (let i = 0; i < objPath.length; i++) {
-
-                let prop = objPath[i];
-                console.log("layout caching prop", prop);
-                console.log("layout caching objPlace", objPlace, objPlace[prop]);
-                if (!objPlace[prop]) {
-                    objPlace[prop] = {}
-                }
-
-                objPlace = objPlace[prop]
-
-            }
-            console.log("layout caching cacheLayout layout", layout);
-            if (layout.id) {
-
-                objPlace[layout.id] = layout
-                console.log("layout caching prop", cache);
-                localStorage.setItem("cache", JSON.stringify(cache));
-                console.log("layout caching cache after ", getCache());
-            }
-
+        } else {
+            throw("No current master user set");
         }
+
+    };
+
+    let getCachedLayout = (layoutId) => {
+
+        let objPath = [currentMasterUser.id, 'layouts', 'layoutsList', layoutId];
+
+        if (currentMasterUser.id) {
+            return getCacheProp(objPath);
+        }
+
     };
 
     module.exports = {
 
         setCurrentMasterUser: setCurrentMasterUser,
 
-        getCachedLayout: getCachedLayout,
-        cacheLayout: cacheLayout
+        cacheDefaultLayout: cacheDefaultLayout,
+        getDefaultLayout: getDefaultLayout,
+        cacheLayout: cacheLayout,
+        getCachedLayout: getCachedLayout
 
     }
 

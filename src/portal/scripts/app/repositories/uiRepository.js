@@ -85,26 +85,73 @@
 
     var getListLayout = function (entity, options) {
 
-        if (entity == 'all') {
-            /* return xhrService.fetch(baseUrl + 'ui/list-layout/',
-                {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-type': 'application/json'
-                    }
-                }) */
+        /* if (entity == 'all') {
+
             return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
                 getRequestParams)
 
         } else {
 
-            var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            if (!options) {
+                options = {}
+            }
 
-            return xhrService.fetch(baseUrl + 'ui/list-layout/?content_type=' + contentType,
-                getRequestParams2)
+            if (!options.content_type) {
+                options.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
+
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+                getRequestParams);
+        } */
+
+        if (!options) {
+            options = {}
         }
+
+        if (entity !== 'all') {
+
+            if (!options.filters) {
+                options.filters = {}
+            }
+
+            if (!options.filters.content_type) {
+                options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
+
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+                getRequestParams);
+
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+            getRequestParams);
+
+    };
+
+    var getListLayoutLight = function (entity, options) {
+
+        if (!options) {
+            options = {}
+        }
+
+        if (entity !== 'all') {
+
+            if (!options.filters) {
+                options.filters = {}
+            }
+
+            if (!options.filters.content_type) {
+                options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
+
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout-light/', options),
+                getRequestParams);
+
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout-light/', options),
+            getRequestParams);
+
     };
 
     var getListLayoutByKey = function (uiLayoutId) {
@@ -181,16 +228,8 @@
         })
     };
 
-    var getListLayoutByKeyPing = function (layoutId) {
-        return xhrService.fetch(baseUrl + 'ui/list-layout-light/' + layoutId + '/ping',
-            getRequestParams2)
-    };
-
-    var getDefaultListLayoutLight = function (entity) {
-
-        var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-
-        return xhrService.fetch(baseUrl + 'ui/list-layout-light/?is_default=2&content_type=' + contentType,
+    var pingListLayoutByKey = function (layoutId) {
+        return xhrService.fetch(baseUrl + 'ui/list-layout/' + layoutId + '/ping',
             getRequestParams2)
     };
 
@@ -704,14 +743,14 @@
         updateEditLayout: updateEditLayout,
 
         getListLayout: getListLayout,
+        getListLayoutLight: getListLayoutLight,
         getListLayoutByKey: getListLayoutByKey,
         getListLayoutDefault: getListLayoutDefault,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
         deleteListLayoutByKey: deleteListLayoutByKey,
 
-        getListLayoutByKeyPing: getListLayoutByKeyPing,
-        getDefaultListLayoutLight: getDefaultListLayoutLight,
+        pingListLayoutByKey: pingListLayoutByKey,
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,

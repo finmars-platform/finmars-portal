@@ -784,71 +784,6 @@
                 return window.location.href.indexOf('?layout=') !== -1
             };
 
-            // deprecated
-            vm.getLayoutByName = function (name) {
-
-                console.log('vm.getLayoutByName.name', name);
-
-                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
-
-                uiService.getListLayoutDefault({
-                    pageSize: 1000,
-                    filters: {
-                        content_type: contentType,
-                        name: name
-                    }
-                }).then(function (activeLayoutData) {
-
-                    console.log('vm.getLayoutByName.activeLayoutData1', activeLayoutData);
-
-                    var activeLayout = null;
-
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
-
-                        for (var i = 0; i < activeLayoutData.results.length; i++) {
-                            var item = activeLayoutData.results[i];
-
-                            if (item.name === name) {
-                                activeLayout = item;
-                                break;
-                            }
-                        }
-
-                    }
-
-                    if (activeLayout) {
-
-                        vm.setLayout(activeLayout);
-
-                    } else {
-
-                        $mdDialog.show({
-                            controller: 'InfoDialogController as vm',
-                            templateUrl: 'views/info-dialog-view.html',
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: false,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            locals: {
-                                info: {
-                                    title: 'Warning',
-                                    description: "Layout " + name + " is not found. Switching back to Default Layout."
-                                }
-                            }
-                        }).then(function (value) {
-
-                            vm.getDefaultLayout()
-
-                        })
-
-                    }
-
-                });
-
-            };
-
             vm.getLayoutByUserCode = function (userCode) {
                 console.log("layout caching getLayoutByUserCode called");
                 console.log('vm.getLayoutByUserCode.userCode', userCode);
@@ -865,7 +800,6 @@
                 uiService.getListLayout(vm.entityType, {
                     pageSize: 1000,
                     filters: {
-                        // content_type: contentType,
                         user_code: userCode
                     }
                 }).then(function (activeLayoutData) {
@@ -1090,8 +1024,8 @@
                     vm.getLayoutByUserCode(layoutUserCode);
 
                 } else if ($stateParams.layoutUserCode) {
-                    console.log("layout caching getView2");
                     layoutUserCode = $stateParams.layoutUserCode
+                    console.log("layout caching getView2", layoutUserCode);
                     vm.getLayoutByUserCode(layoutUserCode);
 
                 } else {
