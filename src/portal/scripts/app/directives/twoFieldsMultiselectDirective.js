@@ -9,7 +9,8 @@
       restrict: "E",
       scope: {
         getDataMethod: "&?", // needed for downloading items on opening multiselector
-        items: "=",
+        // items: "=",
+        items: "<", // Victor 20.10.20 I need set items as one way binding for reassign items in getDataMethod
         model: "=",
         title: "@",
         dialogTitle: "@",
@@ -369,9 +370,8 @@
               } else if (scope.getDataMethod) {
 
                 scope.getDataMethod().then(function (resData) {
-
                   scope.items = resData.results;
-                  items = JSON.parse(JSON.stringify(scope.items));
+                  items = JSON.parse(JSON.stringify(resData.results));
                   resolve(items);
 
                 }).catch(function (error) {
@@ -390,7 +390,6 @@
         }
 
         $(elem).click(function (event) {
-
           event.preventDefault();
           event.stopPropagation();
 
