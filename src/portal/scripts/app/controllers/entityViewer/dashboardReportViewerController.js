@@ -321,44 +321,6 @@
                 }).then(function (res) {
                     if (res.status === 'agree') {
 
-                        /*$mdDialog.show({
-                            controller: 'EntityViewerAddDialogController as vm',
-                            templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: activeObject.event,
-                            locals: {
-                                entityType: 'price-history',
-                                entity: {
-                                    instrument: activeObject['instrument.id'],
-                                    instrument_object: {
-                                        id: activeObject['instrument.id'],
-                                        name: activeObject['instrument.name'],
-                                        user_code: activeObject['instrument.user_code'],
-                                        short_name: activeObject['instrument.short_name']
-                                    },
-                                    pricing_policy: reportOptions.pricing_policy,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                }
-                            }
-                        }).then(function (res) {
-
-                            vm.entityViewerDataService.setActiveObjectAction(null);
-                            vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                            if (res && res.res === 'agree') {
-
-                                vm.entityViewerDataService.resetData();
-                                vm.entityViewerDataService.resetRequestParameters();
-
-                                var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                            }
-                        });*/
-
                         createEntity(activeObject, createEntityLocals);
 
                     }
@@ -449,6 +411,13 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
+                    setTimeout(function () {
+
+                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+                        $scope.$apply();
+
+                    }, 0);
+
                     vm.entityViewerDataService.setDataLoadStatus(false);
 
                     if (!fillInModeEnabled) {
@@ -466,6 +435,13 @@
                         vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
                         vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     }
+
+                    setTimeout(function () {
+
+                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
+                        $scope.$apply();
+
+                    }, 0);
 
                 });
 
@@ -504,7 +480,13 @@
                             if (compsKeys.length > 0) {
 
                                 compsKeys.forEach(function (compKey) {
-                                    componentsOutputs[compKey].changedLast = false;
+
+                                    if (componentsOutputs[compKey]) {
+
+                                        componentsOutputs[compKey].changedLast = false;
+
+                                    }
+
                                 });
 
                                 vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
@@ -1228,6 +1210,9 @@
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+                    $scope.$apply();
+
                 }
 
             };
@@ -1353,7 +1338,7 @@
 
             var updateActiveObjectUsingDashboardData = function () {
 
-                if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
+                 if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
 
                     if (Array.isArray(vm.componentData.settings.linked_components.active_object)) {
 
@@ -1423,7 +1408,7 @@
                         vm.handleDashboardActiveObject(componentId);
                     }
 
-                }
+                 }
 
             }
 
@@ -1641,8 +1626,9 @@
                 });
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
-
                     // update report filters from dashboard component
+
+                    // add linked to filter from dashboard component
                     if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                         vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
@@ -1650,6 +1636,7 @@
                         });
 
                     }
+                    // < add linked to filter from dashboard component >
 
                     /*if (vm.componentData.settings.auto_refresh) {
                         updateReportSettingsUsingDashboardData();
@@ -1795,7 +1782,8 @@
                         subtotal_formula_id: vm.componentData.settings.subtotal_formula_id,
                         matrix_view: vm.componentData.settings.matrix_view,
                         styles: vm.componentData.settings.styles,
-                        auto_scaling: vm.componentData.settings.auto_scaling
+                        auto_scaling: vm.componentData.settings.auto_scaling,
+                        hide_empty_lines: vm.componentData.settings.hide_empty_lines
                     };
                 }
 
@@ -1836,7 +1824,8 @@
                         legends_columns_number: vm.componentData.settings.legends_columns_number,
                         number_format: vm.componentData.settings.number_format,
                         tooltip_font_size: vm.componentData.settings.tooltip_font_size,
-                        chart_form: vm.componentData.settings.chart_form
+                        chart_form: vm.componentData.settings.chart_form,
+                        pie_size_percent: vm.componentData.settings.pie_size_percent
                     };
                 }
 

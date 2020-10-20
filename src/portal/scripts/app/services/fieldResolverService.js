@@ -218,11 +218,19 @@
                         resolve({type: 'id', key: 'type', data: data.results});
                     });
                     break;
+
                 case 'transaction_type':
+
+                case 'one_off_event':
+                case 'regular_event':
+                case 'factor_same':
+                case 'factor_down':
+                case 'factor_up':
                     transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'transaction_type', data: data.results});
                     });
                     break;
+
                 case 'account_cash':
                     accountRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'account_cash', data: data.results});
@@ -299,7 +307,8 @@
                     });
                     break;
 
-                case 'strategy1_group':
+                // TODO delete later, we are using subgroup as groups
+                /*case 'strategy1_group':
                     strategyGroupRepository.getList(1).then(function (data) {
                         resolve({type: 'id', key: 'strategy1_group', data: data.results});
                     });
@@ -313,7 +322,7 @@
                     strategyGroupRepository.getList(3).then(function (data) {
                         resolve({type: 'id', key: 'strategy3_group', data: data.results});
                     });
-                    break;
+                    break;*/
 
                 case 'strategy1_subgroup':
                     strategySubgroupRepository.getList(1).then(function (data) {
@@ -343,31 +352,6 @@
                     });
                     break;
                 case 'transaction_types':
-                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
-                    });
-                    break;
-                case 'one_off_event':
-                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
-                    });
-                    break;
-                case 'regular_event':
-                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
-                    });
-                    break;
-                case 'factor_same':
-                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
-                    });
-                    break;
-                case 'factor_down':
-                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
-                    });
-                    break;
-                case 'factor_up':
                     transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
@@ -417,7 +401,7 @@
                     break;
                 case 'instruments.pricingpolicy':
                     pricingPolicyRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instruments.pricingpolicy', data: data});
+                        resolve({type: 'id', key: 'instruments.pricingpolicy', data: data.results});
                     });
                     break;
                 case 'instruments.paymentsizedetail':
@@ -482,12 +466,12 @@
                     break;
                 case 'transactions.eventclass':
                     metaEventClassRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'transactions.eventclass', data: data.results});
+                        resolve({type: 'id', key: 'transactions.eventclass', data: data});
                     });
                     break;
                 case 'transactions.notificationclass':
                     metaNotificationClassRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'transactions.notificationclass', data: data.results});
+                        resolve({type: 'id', key: 'transactions.notificationclass', data: data});
                     });
                     break;
                 case 'strategies.strategy1':

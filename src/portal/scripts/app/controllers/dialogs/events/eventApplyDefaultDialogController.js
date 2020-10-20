@@ -36,8 +36,6 @@
 
             instrumentEventService.getEventAction(vm.event.id, action.id).then(function (event) {
 
-                console.log('event', event);
-
                 var status = 5; // 'Booked (user, default)';
 
                 if (action.is_sent_to_pending) {
