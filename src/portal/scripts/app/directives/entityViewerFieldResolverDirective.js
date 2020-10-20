@@ -32,6 +32,7 @@
                 scope.readyStatus = {content: false, tags: false};
                 scope.type = 'id';
                 scope.fields = [];
+
                 scope.ciEventObj = {
                     event: {}
                 };
@@ -230,6 +231,15 @@
                     return field.name;
                 };
 
+                scope.getListWithBindFields = function (items) {
+                    return items.map(function (item) {
+                        return {
+                            id: item.id,
+                            bindFieldsName: scope.bindListFields(item)
+                        }
+                    })
+                };
+
                 scope.bindMCField = function (model) {
                     if (scope.entity[scope.fieldKey] && scope.entity[scope.fieldKey].length > 0) {
                         return '[' + scope.entity[scope.fieldKey].length + '] selected';
@@ -299,7 +309,7 @@
 
                         if (scope.entityType === 'complex-transaction') {
 
-                            fieldResolverService.getFieldsByContentType(scope.item.content_type, options).then(function (res) {
+                            return fieldResolverService.getFieldsByContentType(scope.item.content_type, options).then(function (res) {
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
@@ -314,7 +324,7 @@
 
                         } else {
 
-                            fieldResolverService.getFields(scope.item.key, options).then(function (res) {
+                            return fieldResolverService.getFields(scope.item.key, options).then(function (res) {
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
@@ -331,6 +341,16 @@
 
                     }
 
+                };
+
+                scope.getMultiselectorItems = function () {
+                    return scope.getData().then(function () {
+                        var data = {
+                            results: scope.getListWithBindFields(scope.fields)
+                        };
+
+                        return data;
+                    });
                 };
 
                 scope.$watch('item', function () {
