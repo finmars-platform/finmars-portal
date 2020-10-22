@@ -32,14 +32,23 @@
     };
 
     // If there is actual layout in cache, resolve it. Otherwise resolve layout from server.
-    let resolveLayoutByKey = function (cachedLayout, fetchLayoutFn, resolve, reject) {
+    let resolveLayoutByKey = function (cachedLayoutResponse, fetchLayoutFn, resolve, reject) {
+
+        let cachedLayout;
+
+        if (cachedLayoutResponse.hasOwnProperty('id')) {
+            cachedLayout = cachedLayoutResponse;
+
+        } else { // default layout returns inside results
+            cachedLayout = cachedLayoutResponse.results[0];
+        }
 
         if (cachedLayout) {
 
             uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
 
                 if (isCachedLayoutActual(cachedLayout, pingData)) {
-                    resolve({results: [cachedLayout]});
+                    resolve(cachedLayoutResponse);
 
                 } else {
                     fetchLayoutFn();
@@ -140,12 +149,13 @@
 
             let fetchDefaultLayout = function () {
 
-                uiRepository.getListLayoutByKey(key).then(function (defaultLayoutData) {
+                uiRepository.getListLayoutByKey(key).then(function (layoutData) {
 
-                    let defaultLayout = defaultLayoutData.results[0];
+                    if (layoutData && layoutData.id) {
+                        localStorageService.cacheLayout(layoutData);
+                    }
 
-                    localStorageService.cacheLayout(defaultLayout);
-                    resolve(defaultLayoutData);
+                    resolve(layoutData);
 
                 }).catch(function (error) {
                     reject(error);
@@ -209,6 +219,7 @@
 
             var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
             let cachedLayout = localStorageService.getDefaultLayout(contentType);
+            let cachedLayoutRes = {results: [cachedLayout]};
 
             let fetchDefaultLayout = function () {
 
@@ -232,7 +243,7 @@
 
             };
 
-            resolveLayoutByKey(cachedLayout, fetchDefaultLayout, resolve, reject);
+            resolveLayoutByKey(cachedLayoutRes, fetchDefaultLayout, resolve, reject);
 
         });
 

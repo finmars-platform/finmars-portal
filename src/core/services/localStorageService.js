@@ -32,7 +32,7 @@
 
         let objPlace = cache;
         let lastProp = objPath.pop();
-        // console.log("layout caching cacheData objPath", objPath);
+
         for (let i = 0; i < objPath.length; i++) {
 
             let prop = objPath[i];
@@ -58,7 +58,7 @@
         }
 
         let objPlace = cache;
-        // console.log("layout caching getCacheProp objPath", objPath);
+
         for (let i = 0; i < objPath.length; i++) {
 
             let prop = objPath[i];
@@ -70,7 +70,7 @@
             objPlace = objPlace[prop]
 
         }
-        console.log("layout caching getCacheProp", objPlace);
+
         return objPlace;
 
     };
@@ -80,11 +80,11 @@
         if (!cache) {
             cache = getCache();
         }
-        console.log("layout caching removeLayoutFromCache", objPath, JSON.parse(JSON.stringify(cache)));
+
         let objPlace = cache;
         let lastProp = objPath.pop();
         let propertyExist = true;
-        // console.log("layout caching getCacheProp objPath", objPath);
+
         for (let i = 0; i < objPath.length; i++) {
 
             let prop = objPath[i];
@@ -97,12 +97,11 @@
             objPlace = objPlace[prop]
 
         }
-        console.log("layout caching removeLayoutFromCache propertyExist", JSON.parse(JSON.stringify(objPlace)), propertyExist);
+
         if (propertyExist) {
-            console.log("layout caching removeLayoutFromCache objPlace", JSON.parse(JSON.stringify(objPlace)), lastProp);
             delete objPlace[lastProp];
         }
-        console.log("layout caching removeLayoutFromCache2", JSON.parse(JSON.stringify(cache)));
+
         return cache;
 
     };
@@ -147,7 +146,7 @@
 
             let cache = cacheData(defLayoutDataPath, defaultLayoutData);
             cache = cacheData(layoutPath, layout, cache);
-            console.log("layout caching cacheDefaultLayout", cache);
+
             localStorage.setItem("cache", JSON.stringify(cache));
 
         } else {
@@ -180,20 +179,15 @@
 
         let layoutPath = [currentMasterUser.id, 'layouts', 'layoutsList', layoutId];
         let cache = getCache();
-        console.log("layout caching deleteLayoutFromCache data", layoutId, JSON.parse(JSON.stringify(cache)));
         let layoutToDelete = getCacheProp(layoutPath, cache);
-        // let cache = removeFromCache(layoutPath);
-        console.log("layout caching deleteLayoutFromCache layoutToDelete", layoutToDelete);
+
         // clear content_type default layout
         if (layoutToDelete.is_default) {
             let defLayoutPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', layoutToDelete.content_type];
-            console.log("layout caching deleteLayoutFromCache default layout", defLayoutPath);
             cache = removeFromCache(defLayoutPath, cache);
-            console.log("layout caching deleteLayoutFromCache removeDefaultLayout", JSON.parse(JSON.stringify(cache)));
         }
 
         cache = removeFromCache(layoutPath, cache);
-        console.log("layout caching deleteLayoutFromCache", cache);
         localStorage.setItem("cache", JSON.stringify(cache));
 
     };
