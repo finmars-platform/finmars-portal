@@ -15,6 +15,7 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
+                sorted: '=',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/customInputs/dropdown-select-view.html',

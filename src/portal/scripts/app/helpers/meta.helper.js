@@ -61,9 +61,10 @@
 
     }
 
-    let textWithDashSort = (arr)  => {
+    let textWithDashSort = (arr, field)  => {
         const keys = ['name', 'user_code', 'public_name']; // preferred fields for sort
-        const key = keys.find(key => arr.every(item => item.hasOwnProperty(key)));
+        const key = field || keys.find(key => arr.every(item => item.hasOwnProperty(key)));
+
         if (!key) {
             return arr;
         }

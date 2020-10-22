@@ -9,8 +9,7 @@
       restrict: "E",
       scope: {
         getDataMethod: "&?", // needed for downloading items on opening multiselector
-        // items: "=",
-        items: "<", // Victor 20.10.20 I need set items as one way binding for reassign items in getDataMethod
+        items: "=",
         model: "=",
         title: "@",
         dialogTitle: "@",
