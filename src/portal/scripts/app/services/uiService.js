@@ -36,7 +36,7 @@
 
         let cachedLayout;
 
-        if (cachedLayoutResponse.hasOwnProperty('id')) {
+        if (!cachedLayoutResponse || cachedLayoutResponse.hasOwnProperty('id')) {
             cachedLayout = cachedLayoutResponse;
 
         } else { // default layout returns inside results
