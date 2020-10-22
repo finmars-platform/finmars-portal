@@ -1117,7 +1117,7 @@
                 if (componentOutput && componentOutput.data) {
 
                     var linkedFilter = filters.find(function (item) {
-                        return item.type === 'filter_link' && item.component_id === filter_link.component_id
+                        return item.type === 'filter_link' && item.component_id === filter_link.component_id;
                     });
 
                     if (linkedFilter) {
@@ -1127,10 +1127,10 @@
                         filters = filters.map(function (item) {
 
                             if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
-                                return linkedFilter
+                                return linkedFilter;
                             }
 
-                            return item
+                            return item;
                         })
 
                     } else {
@@ -1388,10 +1388,6 @@
                                     delete vm.linkedActiveObjects[lastActiveComponentId];
                                 }
 
-                                /*if (lastActiveCompChanged) {
-                                    componentOutput.recalculatedComponents.push(vm.componentData.id);
-                                }*/
-
                                 break;
 
                             }
@@ -1404,8 +1400,8 @@
                     } else {
 
                         var componentId = vm.componentData.settings.linked_components.active_object;
-
                         vm.handleDashboardActiveObject(componentId);
+
                     }
 
                  }
@@ -1584,7 +1580,6 @@
                 }
 
             }; */
-
 
             vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
 

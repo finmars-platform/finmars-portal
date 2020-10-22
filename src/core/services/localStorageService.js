@@ -5,7 +5,6 @@
     let currentMasterUser = {};
 
     let setCurrentMasterUser = function (masterUser) {
-        console.log("layout caching masterUser", masterUser);
         currentMasterUser = masterUser
     };
 
@@ -20,17 +19,20 @@
             cache = {}
 
         }
-        console.log("layout caching getCache", cache);
+
         return cache;
 
     };
 
-    let cacheData = function (objPath, item) {
+    let cacheData = function (objPath, item, cache) {
 
-        let cache = getCache();
+        if (!cache) {
+            cache = getCache();
+        }
+
         let objPlace = cache;
         let lastProp = objPath.pop();
-        console.log("layout caching cacheData objPath", objPath);
+        // console.log("layout caching cacheData objPath", objPath);
         for (let i = 0; i < objPath.length; i++) {
 
             let prop = objPath[i];
@@ -44,16 +46,19 @@
 
 
         objPlace[lastProp] = item
-        console.log("layout caching cacheData", cache);
-        localStorage.setItem("cache", JSON.stringify(cache));
+
+        return cache;
 
     };
 
-    let getCacheProp = function (objPath) {
+    let getCacheProp = function (objPath, cache) {
 
-        let cache = getCache();
+        if (!cache) {
+            cache = getCache();
+        }
+
         let objPlace = cache;
-        console.log("layout caching getCacheProp objPath", objPath);
+        // console.log("layout caching getCacheProp objPath", objPath);
         for (let i = 0; i < objPath.length; i++) {
 
             let prop = objPath[i];
@@ -70,36 +75,46 @@
 
     };
 
+    let removeFromCache = (objPath, cache) => {
 
-    let cacheDefaultLayout = function (contentType, layout) {
-
-        let objPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', contentType];
-
-        if (currentMasterUser.id) {
-            cacheData(objPath, layout);
-
-        } else {
-            throw("No current master user set");
+        if (!cache) {
+            cache = getCache();
         }
+        console.log("layout caching removeLayoutFromCache", objPath, JSON.parse(JSON.stringify(cache)));
+        let objPlace = cache;
+        let lastProp = objPath.pop();
+        let propertyExist = true;
+        // console.log("layout caching getCacheProp objPath", objPath);
+        for (let i = 0; i < objPath.length; i++) {
+
+            let prop = objPath[i];
+
+            if (!objPlace[prop]) {
+                propertyExist = false;
+                break;
+            }
+
+            objPlace = objPlace[prop]
+
+        }
+        console.log("layout caching removeLayoutFromCache propertyExist", JSON.parse(JSON.stringify(objPlace)), propertyExist);
+        if (propertyExist) {
+            console.log("layout caching removeLayoutFromCache objPlace", JSON.parse(JSON.stringify(objPlace)), lastProp);
+            delete objPlace[lastProp];
+        }
+        console.log("layout caching removeLayoutFromCache2", JSON.parse(JSON.stringify(cache)));
+        return cache;
 
     };
 
-    let getDefaultLayout = (contentType) => {
 
-        let objPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', contentType];
-
-        if (currentMasterUser.id) {
-            return getCacheProp(objPath);
-        }
-
-    };
-
-    let cacheLayout = (layout) => {
+    let cacheLayout = function (layout) {
 
         let objPath = [currentMasterUser.id, 'layouts', 'layoutsList', layout.id];
 
         if (currentMasterUser.id) {
-            cacheData(objPath, layout);
+            let cache = cacheData(objPath, layout);
+            localStorage.setItem("cache", JSON.stringify(cache));
 
         } else {
             throw("No current master user set");
@@ -117,6 +132,72 @@
 
     };
 
+    let cacheDefaultLayout = function (layout) {
+
+        let defLayoutDataPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', layout.content_type];
+        let layoutPath = [currentMasterUser.id, 'layouts', 'layoutsList', layout.id];
+        let defaultLayoutData = {
+            content_type: layout.content_type,
+            id: layout.id,
+            name: layout.name,
+            user_code: layout.user_code
+        }
+
+        if (currentMasterUser.id) {
+
+            let cache = cacheData(defLayoutDataPath, defaultLayoutData);
+            cache = cacheData(layoutPath, layout, cache);
+            console.log("layout caching cacheDefaultLayout", cache);
+            localStorage.setItem("cache", JSON.stringify(cache));
+
+        } else {
+            throw("No current master user set");
+        }
+
+    };
+
+    let getDefaultLayout = (contentType) => {
+
+        let objPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', contentType];
+
+        if (currentMasterUser.id) {
+
+            let defaultLayoutData = getCacheProp(objPath);
+
+            if (!defaultLayoutData || !defaultLayoutData.id) {
+                return null;
+            }
+
+            let defaultLayout = getCachedLayout(defaultLayoutData.id);
+
+            return defaultLayout;
+
+        }
+
+    };
+
+    let deleteLayoutFromCache = function (layoutId) {
+
+        let layoutPath = [currentMasterUser.id, 'layouts', 'layoutsList', layoutId];
+        let cache = getCache();
+        console.log("layout caching deleteLayoutFromCache data", layoutId, JSON.parse(JSON.stringify(cache)));
+        let layoutToDelete = getCacheProp(layoutPath, cache);
+        // let cache = removeFromCache(layoutPath);
+        console.log("layout caching deleteLayoutFromCache layoutToDelete", layoutToDelete);
+        // clear content_type default layout
+        if (layoutToDelete.is_default) {
+            let defLayoutPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', layoutToDelete.content_type];
+            console.log("layout caching deleteLayoutFromCache default layout", defLayoutPath);
+            cache = removeFromCache(defLayoutPath, cache);
+            console.log("layout caching deleteLayoutFromCache removeDefaultLayout", JSON.parse(JSON.stringify(cache)));
+        }
+
+        cache = removeFromCache(layoutPath, cache);
+        console.log("layout caching deleteLayoutFromCache", cache);
+        localStorage.setItem("cache", JSON.stringify(cache));
+
+    };
+
     module.exports = {
 
         setCurrentMasterUser: setCurrentMasterUser,
@@ -124,7 +205,8 @@
         cacheDefaultLayout: cacheDefaultLayout,
         getDefaultLayout: getDefaultLayout,
         cacheLayout: cacheLayout,
-        getCachedLayout: getCachedLayout
+        getCachedLayout: getCachedLayout,
+        deleteLayoutFromCache: deleteLayoutFromCache
 
     }
 

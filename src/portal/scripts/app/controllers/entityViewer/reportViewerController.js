@@ -784,19 +784,10 @@
                 return window.location.href.indexOf('?layout=') !== -1
             };
 
-            vm.getLayoutByUserCode = function (userCode) {
-                console.log("layout caching getLayoutByUserCode called");
+            /* vm.getLayoutByUserCode = function (userCode) {
+
                 console.log('vm.getLayoutByUserCode.userCode', userCode);
 
-                /* var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
-
-                uiService.getListLayoutDefault({
-                    pageSize: 1000,
-                    filters: {
-                        content_type: contentType,
-                        user_code: userCode
-                    }
-                }) */
                 uiService.getListLayout(vm.entityType, {
                     pageSize: 1000,
                     filters: {
@@ -848,17 +839,17 @@
             vm.getDefaultLayout = function () {
 
                 uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-                    console.log("layout caching defaultLayoutData123", defaultLayoutData);
+
                     var defaultLayout = null;
                     if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
                         defaultLayout = defaultLayoutData.results[0];
                     }
-                    console.log("layout caching defaultLayout123", defaultLayout);
+
                     vm.setLayout(defaultLayout);
 
                 });
 
-            };
+            }; */
 
             vm.getActiveObjectFromQueryParameters = function () {
 
@@ -910,7 +901,7 @@
 
             };
 
-            /*var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
+            /* var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
 
                 var reportDateProperties = {
                     'balance-report': [null, 'report_date'],
@@ -926,7 +917,7 @@
 
                 dateExprsProms.push(result);
 
-            };*/
+            }; */
 
             vm.setLayout = function (layout) {
 
@@ -963,7 +954,6 @@
 
                     }).catch(function () {
                         rvSharedLogicHelper.onSetLayoutEnd();
-
                     });
 
                 } else {
@@ -1001,7 +991,7 @@
                 var layoutUserCode;
 
                 if (vm.isLayoutFromUrl()) {
-                    console.log("layout caching getView1");
+
                     var queryParams = window.location.href.split('?')[1];
                     var params = queryParams.split('&');
 
@@ -1021,17 +1011,18 @@
 
                     });
 
-                    vm.getLayoutByUserCode(layoutUserCode);
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else if ($stateParams.layoutUserCode) {
-                    layoutUserCode = $stateParams.layoutUserCode
-                    console.log("layout caching getView2", layoutUserCode);
-                    vm.getLayoutByUserCode(layoutUserCode);
+
+                    layoutUserCode = $stateParams.layoutUserCode;
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else {
-                    console.log("layout caching getView3");
-                    vm.getDefaultLayout();
-
+                    // vm.getDefaultLayout();
+                    evHelperService.getDefaultLayout(vm);
                 }
 
             };

@@ -156,15 +156,13 @@
 
     var getListLayoutByKey = function (uiLayoutId) {
         return xhrService.fetch(baseUrl + 'ui/list-layout/' + uiLayoutId + '/',
-            getRequestParams2)
+            getRequestParams2);
     };
 
-    var getListLayoutDefault = function (options) {
-
+    /* var getListLayoutDefault = function (options) {
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
-            getRequestParams)
-
-    };
+            getRequestParams);
+    }; */
 
     /* var getActiveListLayout = function (entity) {
 
@@ -745,7 +743,7 @@
         getListLayout: getListLayout,
         getListLayoutLight: getListLayoutLight,
         getListLayoutByKey: getListLayoutByKey,
-        getListLayoutDefault: getListLayoutDefault,
+        // getListLayoutDefault: getListLayoutDefault,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
         deleteListLayoutByKey: deleteListLayoutByKey,
