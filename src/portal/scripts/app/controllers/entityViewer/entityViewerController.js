@@ -812,7 +812,7 @@
                 return window.location.href.indexOf('?layout=') !== -1
             };
 
-            vm.getLayoutByUserCode = function (userCode) {
+            /* vm.getLayoutByUserCode = function (userCode) {
 
                 console.log('vm.getLayoutByUserCode.userCode', userCode);
 
@@ -863,10 +863,10 @@
 
                 });
 
-            };
+            }; */
 
 
-            vm.getDefaultLayout = function () {
+            /* vm.getDefaultLayout = function () {
 
                 uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
 
@@ -879,7 +879,7 @@
 
                 });
 
-            };
+            }; */
 
             vm.getView = function () {
 
@@ -928,15 +928,18 @@
 
                     });
 
-                    vm.getLayoutByUserCode(layoutUserCode);
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
-                    vm.getLayoutByUserCode(layoutUserCode);
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else {
-                    vm.getDefaultLayout();
+                    // vm.getDefaultLayout();
+                    evHelperService.getDefaultLayout(vm);
                 }
 
 

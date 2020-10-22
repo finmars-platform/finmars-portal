@@ -2,8 +2,9 @@
 
     'use strict';
 
-    var getLinkingToFilters = function (layout) {
-        var linkingToFilters = [];
+    let getLinkingToFilters = function (layout) {
+
+        let linkingToFilters = [];
 
         layout.data.filters.forEach(function (filter) {
 
@@ -13,7 +14,7 @@
 
                     if (Object.keys(filter.options.use_from_above).length) {
 
-                        var filterObj = {
+                        let filterObj = {
                             key: filter.options.use_from_above.key,
                             name: filter.name,
                             filter_type: filter.options.filter_type
@@ -30,7 +31,7 @@
 
                 } else {
 
-                    var filterObj = {
+                    let filterObj = {
                         key: filter.options.use_from_above,
                         name: filter.name,
                         filter_type: filter.options.filter_type
@@ -51,13 +52,13 @@
         return linkingToFilters;
     };
 
-    var getDataForLayoutSelectorWithFilters = function (layouts) {
+    let getDataForLayoutSelectorWithFilters = function (layouts) {
 
-        var result = [];
+        let result = [];
 
         layouts.forEach(function (layout) {
 
-            var layoutObj = {
+            let layoutObj = {
                 id: layout.id,
                 name: layout.name,
                 //content_type: layout.content_type,

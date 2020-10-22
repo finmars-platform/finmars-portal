@@ -1606,13 +1606,23 @@
 
                     var contentType = metaContentTypesService.findContentTypeByEntity(scope.entityType, 'ui');
 
-                    return uiService.getListLayoutDefault({
+                    /* return uiService.getListLayoutDefault({
                         pageSize: 1000,
                         filters: {
                             content_type: contentType,
                             user_code: userCode
                         }
-                    });
+                    }); */
+                    return uiService.getListLayout(
+                        null,
+                        {
+                            pageSize: 1000,
+                            filters: {
+                                content_type: contentType,
+                                user_code: userCode
+                            }
+                        }
+                    );
 
                 };
 
