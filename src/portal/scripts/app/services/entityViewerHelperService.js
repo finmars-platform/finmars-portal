@@ -239,7 +239,7 @@
     };
 
     let getLayoutByUserCode = function (viewModel, userCode, $mdDialog) {
-        console.log("layout caching getLayoutByUserCode called");
+
         uiService.getListLayout(viewModel.entityType, {
             pageSize: 1000,
             filters: {
@@ -289,7 +289,7 @@
     let getDefaultLayout = function (viewModel, viewContext) {
 
         uiService.getDefaultListLayout(viewModel.entityType).then(function (defaultLayoutData) {
-            console.log("layout caching template defaultLayoutData2", defaultLayoutData);
+
             var defaultLayout = null;
             if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
 

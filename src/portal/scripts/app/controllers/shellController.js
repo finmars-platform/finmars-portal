@@ -317,7 +317,7 @@
                 var layoutUserCode = pageStateParams.layoutUserCode;
 
                 var setLayoutName = function (layoutData) {
-                    console.log("layout caching setLayoutName", layoutData);
+
                     if (layoutData && layoutData.length) {
                         newLayoutName = layoutData[0].name;
                     } else {
