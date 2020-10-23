@@ -1038,10 +1038,9 @@
                 rowObj.columns[7].settings.value = input.value_expr
                 // linked_inputs_names
                 if (input.settings && input.settings.linked_inputs_names) {
-
                     rowObj.columns[8].settings.value = input.settings.linked_inputs_names
-
                 }
+
                 rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
                 // rowObj.columns[8].settings.getDataMethod = getInputsForLinking;
 

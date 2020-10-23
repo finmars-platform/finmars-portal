@@ -29,6 +29,7 @@
     var uiService = require('../../services/uiService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
+    var metaHelper = require('../../helpers/meta.helper');
 
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
@@ -1021,8 +1022,9 @@
 
             } else {
 
-                // var result = entityEditorHelper.removeNullFields(vm.entity);
-                var result = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
+                var deepCopyOfEntity = metaHelper.recursiveDeepCopy(vm.entity, true);
+
+                var result = entityEditorHelper.clearEntityBeforeSave(deepCopyOfEntity, vm.entityType);
 
                 if (dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
