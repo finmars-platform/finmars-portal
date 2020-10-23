@@ -529,6 +529,10 @@ md-progress-circular.progress-circular-white {
 .flex-i-center {
   align-items: center;
 }
+
+.flex-i-start {
+  align-items: start;
+}
 /* < Flexes > */
 
 .some-checkboxes-ticked {
@@ -688,4 +692,59 @@ button.md-button[disabled] {
   &:hover {
     opacity: 0.7;
   }
+}
+
+.ttype-add-input-dialog {
+
+  .context-selector-container {
+    flex: 0 1 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    .unselect-btn-holder {
+      display: none;
+      margin-bottom: 13px;
+    }
+
+    button.md-button {
+      min-width: 20px;
+      width: 20px;
+      min-height: 20px;
+      height: 20px;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: @grey;
+
+      span.material-icons {
+        font-size: 18px;
+      }
+
+      &:hover {
+        display: block;
+        background-color: transparent;
+        opacity: .5;
+      }
+    }
+
+    &:hover {
+
+      md-select:not([disabled]) {
+        .md-select-value .md-select-icon {
+          display: block;
+        }
+      }
+
+      .unselect-btn-holder {
+        display: block;
+      }
+
+    }
+
+  }
+
 }
