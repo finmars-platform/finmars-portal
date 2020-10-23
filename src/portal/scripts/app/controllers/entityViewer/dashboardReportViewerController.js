@@ -6,6 +6,7 @@
 
         'use strict';
 
+        var localStorageService = require('../../../../../core/services/localStorageService');
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
         var objectComparison = require('../../helpers/objectsComparisonHelper');
@@ -1823,6 +1824,26 @@
                         pie_size_percent: vm.componentData.settings.pie_size_percent
                     };
                 }
+
+            };
+
+             let getLayoutById = function (layoutId) {
+
+                return new Promise(function (resolve, reject) {
+
+                    let actualLayoutsList = vm.dashboardDataService.getActualRvLayoutsInCache();
+
+                    let cachedLayout = localStorageService.getCachedLayout(layoutId);
+                    resolve(cachedLayout);
+
+                    uiService.getListLayoutByKey(layoutId).then(function () {
+
+
+                    }).catch(function (error) {
+                        reject(error);
+                    });
+
+                });
 
             };
 

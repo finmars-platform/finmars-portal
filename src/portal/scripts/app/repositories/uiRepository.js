@@ -227,7 +227,7 @@
     };
 
     var pingListLayoutByKey = function (layoutId) {
-        return xhrService.fetch(baseUrl + 'ui/list-layout/' + layoutId + '/ping',
+        return xhrService.fetch(baseUrl + 'ui/list-layout/' + layoutId + '/ping/',
             getRequestParams2)
     };
 
@@ -238,7 +238,7 @@
         var fields;
         var entitiesWithoutBaseAttrs = metaRestrictionsRepository.getEntitiesWithoutBaseAttrsList();
 
-        /*if (entitiesWithoutBaseAttrs.indexOf(entityType) !== -1) {
+        /* if (entitiesWithoutBaseAttrs.indexOf(entityType) !== -1) {
             fields = []
         } else {
             fields = [
@@ -263,7 +263,7 @@
                     "key": null
                 }
             ];
-        }*/
+        } */
 
         console.log('fields', fields);
 
