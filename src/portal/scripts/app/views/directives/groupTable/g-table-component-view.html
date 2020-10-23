@@ -2,7 +2,8 @@
 <!-- .g-workarea-wrap -->
 <!-- .g-root-wrapper -->
 
-<div class="g-wrapper position-relative" data-ng-class="{'g-root-wrapper': isRootEntityViewer, 'g-reconciliation-wrapper': isRecon}">
+<div class="g-wrapper position-relative"
+     data-ng-class="getWrapperClasses()">
 
     <div class="g-recon verticalSplitPanelWrapper"
          data-ng-if="isRootEntityViewer && verticalAdditions.isOpen && domElemsAreReady">
@@ -16,11 +17,12 @@
         <div class="g-width-slider"></div>
 
         <div class="g-additions-workarea" data-ng-if="verticalAdditions.type === 'reconciliation'">
-            <group-vertical-split-panel-report-binder ev-data-service="evDataService"
+            <g-vertical-split-panel-report-binder ev-data-service="evDataService"
                                                       ev-event-service="evEventService"
                                                       sp-exchange-service="spExchangeService"
                                                       root-wrap-elem="rootWrapElem"
-                                                      class="display-block height-100"></group-vertical-split-panel-report-binder>
+                                                      class="display-block height-100">
+            </g-vertical-split-panel-report-binder>
         </div>
 
     </div>
@@ -69,6 +71,7 @@
                                               class="group-table-body"
                                               ev-data-service="evDataService"
                                               ev-event-service="evEventService"
+                                              workarea-wrap-element="workareaWrapElem"
                                               content-wrap-element="contentWrapElem"
                                               root-wrap-element="rootWrapElem"
                             ></group-table-body>
@@ -84,8 +87,7 @@
                                  ev-data-service="evDataService"
                                  ev-event-service="evEventService"
                                  content-wrap-element="contentWrapElem"
-                                 root-wrap-element="rootWrapElem"
-                            ></div>
+                                 root-wrap-element="rootWrapElem"></div>
 
                         </div>
                     </div>
@@ -128,9 +130,13 @@
 
     <div class="g-additions" data-ng-if="isRootEntityViewer && additions.isOpen">
 
-        <div group-height-aligner
-             ev-data-service="evDataService"
-             ev-event-service="evEventService"></div>
+        <div data-ng-if="domElemsAreReady">
+            <div g-height-aligner
+                 ev-data-service="evDataService"
+                 ev-event-service="evEventService"
+                 root-wrap-elem="rootWrapElem"
+                 content-wrap-elem="contentWrapElem"></div>
+        </div>
 
         <div class="g-height-slider"></div>
 
@@ -183,7 +189,7 @@
 
     </div>
 
-    <div ng-if="domElemsAreReady">
+    <!--<div ng-if="domElemsAreReady">
 
         <div group-layout-resizer
              ev-data-service="evDataService"
@@ -191,6 +197,6 @@
              content-wrap-element="contentWrapElem"
              workarea-wrap-element="workareaWrapElem"></div>
 
-    </div>
+    </div>-->
 
 </div>
