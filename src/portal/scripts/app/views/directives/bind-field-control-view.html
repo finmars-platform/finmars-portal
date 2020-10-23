@@ -84,6 +84,8 @@
 
   <div data-ng-if="fieldType['display_name'] === 'Classifier'">
     <div data-ng-if="readyStatus.classifier">
+
+<!--  Victor 2020.10.23 Change for classifier-select
       <md-input-container class="md-block md-select-pan">
         <label data-ng-bind="getName()"></label>
 
@@ -101,8 +103,16 @@
             {{node.name}}
           </md-option>
         </md-select>
-      </md-input-container>
-      <classifier-select></classifier-select>
+      </md-input-container>-->
+
+      <classifier-select label="{{getName()}}"
+                         placeholder-text="{{getName()}}"
+                         model="entity[fieldKey]"
+                         classifier-attr="item"
+                         classifier-value="entity[fieldKey]"
+                         entity-type="entityType"
+      ></classifier-select>
+
     </div>
 
     <div data-ng-if="!readyStatus.classifier">
