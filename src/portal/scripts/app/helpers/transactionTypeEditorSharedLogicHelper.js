@@ -541,16 +541,21 @@
 
         }
 
+        let relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
+            return viewModel.loadRelation(resolveRelation(contentType), true);
+        }
+
         let onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
 
             let changedCell = gtDataService.getCell(rowData.order, colData.order);
 
             let contentTypeCell = viewModel.inputsGridTableDataService.getCellByKey(rowData.order, 'content_type');
 
-            let loadRelationRes = viewModel.loadRelation(resolveRelation(contentTypeCell.settings.value), true);
+            // let loadRelationRes = viewModel.loadRelation(resolveRelation(contentTypeCell.settings.val ue), true);
+            let loadRelationRes = relationItemsResolver(contentTypeCell.settings.value);
 
-            if (loadRelationRes === 'item_exist') {
-                changedCell.settings.selectorOptions = viewModel.relationItems[resolveRelation(contentTypeCell.settings.value)]
+            if (loadRelationRes && loadRelationRes.status === 'item_exist') {
+                changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field]
 
             } else {
 
@@ -613,7 +618,7 @@
                         onInit: onRelationDefaultValueSelInit
                     }
 
-                    defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)]
+                    defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)] // TODO Victor: this is bug. viewModel.newItem always undefined
 
                     break;
 
@@ -741,7 +746,12 @@
                         contentTypeOptions: {
                             relation: viewModel.selectorContentTypes,
                             selector: viewModel.referenceTables
-                        }
+                        },
+                        contextProperties: contextProperties,
+                        relationItems: viewModel.relationItems,
+                        inputsForMultiselector: viewModel.inputsForMultiselector,
+
+                        relationItemsResolver: relationItemsResolver,
                     }
                 }
 
@@ -753,12 +763,24 @@
                     newRow.key = res.data.name;
 
                     var name = gridTableHelperService.getCellFromRowByKey(newRow, 'name'),
+                        verboseName = gridTableHelperService.getCellFromRowByKey(newRow, 'verbose_name'),
+                        tooltip = gridTableHelperService.getCellFromRowByKey(newRow, 'tooltip'),
                         valueType = gridTableHelperService.getCellFromRowByKey(newRow, 'value_type'),
-                        contentType = gridTableHelperService.getCellFromRowByKey(newRow, 'content_type');
+                        contentType = gridTableHelperService.getCellFromRowByKey(newRow, 'content_type'),
+                        fillFromContext = gridTableHelperService.getCellFromRowByKey(newRow, 'is_fill_from_context'),
+                        defaultValue = gridTableHelperService.getCellFromRowByKey(newRow, 'default_value'),
+                        inputCalcExpression = gridTableHelperService.getCellFromRowByKey(newRow, 'input_calc_expr'),
+                        linkedInputs = gridTableHelperService.getCellFromRowByKey(newRow, 'linked_inputs_names');
 
-                    name.settings.value = res.data.name
-                    valueType.settings.value = res.data.valueType
-                    contentType.settings.value = res.data.contentType
+                    name.settings.value = res.data.name;
+                    verboseName.settings.value = res.data.verbose_name;
+                    tooltip.settings.value = res.data.tooltip;
+                    valueType.settings.value = res.data.valueType;
+                    contentType.settings.value = res.data.contentType;
+                    fillFromContext.settings.value = res.data.context_property;
+                    defaultValue.settings.value = res.data.value;
+                    inputCalcExpression.settings.value = res.data.value_expr;
+                    linkedInputs.settings.value = res.data.linked_inputs_names;
 
                     changeCellsBasedOnValueType(newRow);
                     viewModel.inputsGridTableData.body.unshift(newRow);
@@ -1015,7 +1037,11 @@
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
                 // linked_inputs_names
-                rowObj.columns[8].settings.value = input.settings.linked_inputs_names
+                if (input.settings && input.settings.linked_inputs_names) {
+
+                    rowObj.columns[8].settings.value = input.settings.linked_inputs_names
+
+                }
                 rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
                 // rowObj.columns[8].settings.getDataMethod = getInputsForLinking;
 
