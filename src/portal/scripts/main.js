@@ -70,6 +70,8 @@ app.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$control
 
 app.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
 app.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
+app.service('evRvDomManagerService', ['$mdDialog', require('./app/services/evRvDomManagerService')]);
+
 // Dashboard
 
 app.component('dashboardEntityViewer', require('./app/components/dashboardEntityViewerComponent'));
@@ -564,7 +566,7 @@ app.directive('useFromAboveButton', ['$mdDialog', require('./app/controls/use-fr
 // GROUP TABLE START
 
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
-app.directive('groupTableBody', [require('./app/directives/groupTable/gTableBodyComponent')]);
+app.directive('groupTableBody', ['evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
 app.directive('groupSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupDashboardFilter', ['$mdDialog', require('./app/directives/groupTable/gDashboardFilterComponent')]);
 app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
@@ -581,11 +583,11 @@ app.directive('groupActionsBlock', ['$mdDialog', '$state', require('./app/direct
 app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
 app.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
-app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
+app.directive('gHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 app.directive('groupWidthAligner', [require('./app/directives/groupTable/gWidthAlignerComponent')]);
 app.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', require('./app/directives/groupTable/groupEditorBinderComponent')]);
 app.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
-app.directive('groupVerticalSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gVerticalSplitPanelReportBinderComponent')]);
+app.directive('gVerticalSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gVerticalSplitPanelReportBinderComponent')]);
 app.directive('groupPermissionEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gPermissionEditorBinderComponent')]);
 app.directive('groupReconciliationMatchEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gReconciliationMatchEditorBinderComponent')]);
 app.directive('gCAreasDragAndDrop', ['$mdDialog', require('./app/directives/groupTable/gCAreasDragAndDropDirective')]);

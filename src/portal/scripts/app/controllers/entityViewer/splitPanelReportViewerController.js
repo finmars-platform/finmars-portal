@@ -932,8 +932,6 @@
 
                                 $scope.$apply();
 
-                                //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
                             });
 
 

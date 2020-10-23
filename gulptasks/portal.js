@@ -116,6 +116,7 @@
     gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
 
         console.log('PROJECT_ENV: ' + PROJECT_ENV);
+        console.log('API_HOST: ' + API_HOST);
 
         // console.log('API_HOST: ' + API_HOST);
 

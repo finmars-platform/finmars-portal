@@ -924,7 +924,7 @@
 
             var entityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
 
-            if (objectComparisonHelper.comparePropertiesOfObjects(originalEntityInputs, entityInputs)) {
+            if (objectComparisonHelper.areObjectsTheSame(originalEntityInputs, entityInputs)) {
 
                 openEditLayoutDialog(ev);
 

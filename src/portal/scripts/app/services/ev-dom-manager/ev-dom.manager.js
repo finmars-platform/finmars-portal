@@ -4,8 +4,8 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
     var utilsHelper = require('../../helpers/utils.helper');
-    var evEvents = require('../../services/entityViewerEvents');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
 
@@ -638,12 +638,13 @@
 
         clearDropdowns();
 
+        /*var dropdownWidth = 320;
+        var dropdownOptionHeight = 24;
         var popup = document.createElement('div');
 
         // clearActivated(evDataService);
 
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-        var viewContext = evDataService.getViewContext();
 
         obj.___is_activated = true;
 
@@ -652,11 +653,18 @@
         popup.id = 'dropdown-' + objectId;
         popup.classList.add('ev-dropdown');
 
+        popup.style.width = dropdownWidth + 'px';
+        popup.style.cssText = menuPosition;
+        popup.style.position = 'absolute';*/
+
+        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, false);
+
         var innerHTMLString = '';
+        var viewContext = evDataService.getViewContext();
 
         if (viewContext === 'reconciliation_viewer') {
 
-            innerHTMLString = '<div>' +
+            innerHTMLString = '<div class="ev-dropdown-container">' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="recon_view_bank_file_line"' +
                 ' data-object-id="' + objectId + '"' +
@@ -678,7 +686,7 @@
 
         } else {
 
-            innerHTMLString = '<div>' +
+            innerHTMLString = '<div class="ev-dropdown-container">' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="edit"' +
                 ' data-object-id="' + objectId + '"' +
@@ -738,8 +746,7 @@
 
         popup.innerHTML = innerHTMLString;
 
-        popup.style.cssText = menuPosition;
-        popup.style.position = 'absolute';
+        evDataHelper.calculateMenuPosition(popup, menuPosition);
 
         document.body.appendChild(popup);
 
@@ -818,7 +825,8 @@
                     ev.preventDefault();
                     ev.stopPropagation();
 
-                    var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                    //var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                    var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
                     createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
@@ -897,7 +905,7 @@
 
     };
 
-    var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
+    /*var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
 
         var splitPanelIsActive = evDataService.isSplitPanelActive();
 
@@ -912,7 +920,7 @@
             contentWrapElement.style.height = "";
         }
 
-    };
+    };*/
 
     var calculateScroll = function (elements, evDataService, evScrollManager) {
 
@@ -920,8 +928,6 @@
         evScrollManager.setContentElem(elements.contentElem);
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
         evScrollManager.setRootWrapElem(elements.rootWrapElem);
-
-        var isRootEntityViewer = evDataService.isRootEntityViewer();
 
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();
@@ -1077,7 +1083,8 @@
         initEventDelegation: initEventDelegation,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
         createPopupMenu: createPopupMenu,
-        calculateContentWrapHeight: calculateContentWrapHeight,
+        /*calculateContentWrapHeight: calculateContentWrapHeight,
+        calculateContentWrapWidth: calculateContentWrapWidth,*/
         calculateVirtualStep: calculateVirtualStep,
         calculateScroll: calculateScroll,
         addScrollListener: addScrollListener
