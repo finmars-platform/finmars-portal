@@ -2,7 +2,7 @@
 
     module.exports = function () {
 
-        var layoutData = { // basically its layout that we store on backend
+        var layoutData = { // basically its dashboard layout that we store on backend
             name: '',
             data: {
                 components_types: []
@@ -16,7 +16,8 @@
         var tmpData = { // data that stored only in active session
             componentsStatuses: {},
             componentsRefreshRestriction: {},
-            componentsErrors: {}
+            componentsErrors: {},
+            actualRvLayouts: [] // id of layouts stored in cache that are actual
         };
 
         function setData(data) {
@@ -141,10 +142,19 @@
 
         function setListLayout (listLayout) {
             data.listLayout = listLayout;
+            console.log("layout caching data.listLayout", data.listLayout);
         }
 
         function getListLayout () {
             return data.listLayout;
+        }
+
+        function setActualRvLayoutsInCache (layoutsIds) {
+            tmpData.actualRvLayouts = layoutsIds
+        }
+
+        function getActualRvLayoutsInCache () {
+            return tmpData.actualRvLayouts;
         }
 
         return {
@@ -173,6 +183,9 @@
 
             setActiveTab: setActiveTab,
             getActiveTab: getActiveTab,
+
+            setActualRvLayoutsInCache: setActualRvLayoutsInCache,
+            getActualRvLayoutsInCache: getActualRvLayoutsInCache,
 
             getComponentStatusesAll: getComponentStatusesAll
         }
