@@ -321,7 +321,6 @@
                 vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
 
                 var event = res.data.event;
-                event.notify_in_n_days = 1; // TODO Victor 06.10.2020: Need delete when field 'Notify in n days' appear in form
 
                 var newRowKey = md5Helper.md5('newGridTableRow', newRowsKeys.length);
                 newRowsKeys.push(newRowKey);
