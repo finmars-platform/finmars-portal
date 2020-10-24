@@ -166,7 +166,7 @@
                         pageSize: 20,
                     }
 
-                    if (scope.inputText) {
+                	if (scope.inputText) {
 
                         var inputText = scope.inputText;
 
@@ -174,7 +174,7 @@
                             'short_name': inputText
                         }
 
-                    }
+                	}
 
                     entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
@@ -321,9 +321,12 @@
                     });
 
                     inputElem.addEventListener('focus', function () {
+
+						scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         getOptionsList();
+
                     });
 
                     inputElem.addEventListener('blur', function (event) {
