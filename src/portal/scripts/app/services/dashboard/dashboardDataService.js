@@ -142,15 +142,18 @@
 
         function setListLayout (listLayout) {
             data.listLayout = listLayout;
-            console.log("layout caching data.listLayout", data.listLayout);
         }
 
         function getListLayout () {
             return data.listLayout;
         }
 
-        function setActualRvLayoutsInCache (layoutsIds) {
-            tmpData.actualRvLayouts = layoutsIds
+        function pushToActualRvLayoutsInCache (layoutId) {
+
+            if (!tmpData.actualRvLayouts.includes(layoutId)) {
+                tmpData.actualRvLayouts.push(layoutId);
+            }
+
         }
 
         function getActualRvLayoutsInCache () {
@@ -173,8 +176,8 @@
             setComponentError: setComponentError,
             getComponentError: getComponentError,
             setComponentRefreshRestriction: setComponentRefreshRestriction,
-            /*getComponentRefreshRestriction: getComponentRefreshRestriction,
-            setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction,*/
+            /* getComponentRefreshRestriction: getComponentRefreshRestriction,
+            setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction, */
             getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
             getComponents: getComponents,
             setComponents: setComponents,
@@ -184,7 +187,7 @@
             setActiveTab: setActiveTab,
             getActiveTab: getActiveTab,
 
-            setActualRvLayoutsInCache: setActualRvLayoutsInCache,
+            pushToActualRvLayoutsInCache: pushToActualRvLayoutsInCache,
             getActualRvLayoutsInCache: getActualRvLayoutsInCache,
 
             getComponentStatusesAll: getComponentStatusesAll

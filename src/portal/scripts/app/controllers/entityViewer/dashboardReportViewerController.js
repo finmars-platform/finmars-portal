@@ -1827,21 +1827,29 @@
 
             };
 
-             let getLayoutById = function (layoutId) {
+            let getLayoutById = function (layoutId) {
 
                 return new Promise(function (resolve, reject) {
 
-                    let actualLayoutsList = vm.dashboardDataService.getActualRvLayoutsInCache();
+                    let actualLayoutsIds = vm.dashboardDataService.getActualRvLayoutsInCache();
 
-                    let cachedLayout = localStorageService.getCachedLayout(layoutId);
-                    resolve(cachedLayout);
+                    if (actualLayoutsIds.includes(layoutId)) {
 
-                    uiService.getListLayoutByKey(layoutId).then(function () {
+                        let cachedLayout = localStorageService.getCachedLayout(layoutId);
+                        resolve(cachedLayout);
 
+                    } else {
 
-                    }).catch(function (error) {
-                        reject(error);
-                    });
+                        uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
+
+                            vm.dashboardDataService.pushToActualRvLayoutsInCache(layoutId);
+                            resolve(layoutData);
+
+                        }).catch(function (error) {
+                            reject(error);
+                        });
+
+                    }
 
                 });
 
@@ -1869,18 +1877,19 @@
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 
-                /*if (vm.componentData.type === 'report_viewer_split_panel') {
+                /* if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
-                }*/
+                } */
                 vm.entityViewerDataService.setUseFromAbove(true);
 
                 var layoutId = vm.componentData.settings.layout;
 
                 var setLayoutPromise = new Promise(function (resolve, reject) {
 
-                    uiService.getListLayoutByKey(layoutId).then(function (data) {
+                    // uiService.getListLayoutByKey(layoutId).then(function (data) {
+                    getLayoutById(layoutId).then(function (data) {
 
-                        //vm.layout = data;
+                        // vm.layout = data;
 
                         vm.setLayout(data).then(function () {
 
