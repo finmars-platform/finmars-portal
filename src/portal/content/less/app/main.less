@@ -2748,20 +2748,53 @@ md-dialog.two-rows-dialog-actions {
   z-index: 50;
 }
 
+@keyframes bigDrawerOpening {
+  from {
+    overflow: hidden;
+    width: 0;
+  }
+
+  to {
+    overflow: visible;
+    width: 100%;
+  }
+}
+
+@keyframes bigDrawerClosing {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0;
+  }
+}
+
 .big-drawer-div {
   position: absolute;
   top: 0;
   right: 0;
   height: 100%;
   z-index: 50;
-  border-left: 2px solid #a2a2a2;
 
   .big-drawer-wrap {
-    width: 0;
+    // width: 0;
     height: 100%;
-    overflow: hidden;
-    transition: width 0.5s linear;
+    // overflow: hidden;
     float: right;
+    animation-duration: .5s;
+    border-left: 2px solid #a2a2a2;
+    /*&:not(.no-drawer-animation) {
+      transition: width 0.5s linear;
+    }*/
+    &.big-drawer-opens {
+      animation-name: bigDrawerOpening;
+    }
+
+    &.big-drawer-closes {
+      overflow: hidden;
+      animation-name: bigDrawerClosing;
+    }
   }
 
   .big-drawer-container {
