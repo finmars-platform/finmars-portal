@@ -6,8 +6,10 @@
     'use strict';
 
     var uiService = require('../../../services/uiService');
-    var dashboardHelper = require('../../../helpers/dashboard.helper');
     var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
+
+    var dashboardHelper = require('../../../helpers/dashboard.helper');
+    var metaHelper = require('../../../helpers/meta.helper');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
@@ -152,7 +154,79 @@
 
         vm.clearSelect = function (item, propToDelete) {
             delete item[propToDelete];
-        }
+        };
+
+        // Victor 2020.10.26
+        const getCopyOfComponent = (component, dashboards) => {
+
+            const {name: currentDashboardLayoutName} = dataService.getData();
+
+            const copy = metaHelper.recursiveDeepCopy(component, false);
+
+            const compIdPattern = new Date().getTime() + '_' + dashboards.length;
+            copy.id = dataService.___generateId(compIdPattern);
+            copy.name = `${copy.name} (copied from dashboard: ${currentDashboardLayoutName})`;
+
+            if (copy.settings && copy.settings.linked_components) {
+
+                copy.settings.linked_components = {};
+
+            }
+
+            return copy;
+        };
+
+        // Victor 2020.10.26 Issue #47
+        vm.exportToDashboards = async function ($event) {
+
+            const dashboardLayouts = await uiService.getDashboardLayoutList().then((data) => data.results);
+
+            $mdDialog.show({
+                controller: "ExpandableItemsSelectorDialogController as vm",
+                templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    data: {
+                        dialogTitle: 'Select dashboards to export',
+                        items: dashboardLayouts,
+                        multiselector: true
+                    }
+                }
+            }).then(function ({status, selected}) {
+
+                if (status !== 'agree' || selected.length === 0) {
+                    return;
+                }
+
+                const targetDashboardLayouts = selected;
+                const exportedComponent = getCopyOfComponent(vm.item, targetDashboardLayouts);
+
+                targetDashboardLayouts.forEach(targetLayout => {
+                    targetLayout.data.components_types.push(exportedComponent);
+                })
+
+                Promise.all(targetDashboardLayouts.map(layout => uiService.updateDashboardLayout(layout.id, layout)))
+                    .then((res) => {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: `Dashboard Layouts is Updated (${res.map(({name}) => name).join(', ')})`
+                            }
+                        }
+                    });
+                });
+            });
+
+        };
 
         vm.getAttributes = function(){
 
