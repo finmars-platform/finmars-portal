@@ -288,11 +288,15 @@
       margin: 0;
       width: 20px;
 
-      .md-icon {
-        border-radius: 100%;
+      &.checkbox-indicator {
+
+        .md-icon {
+          border-radius: 100%;
+        }
+
       }
 
-      &.md-checked.gt-cell-checkbox-readonly[disabled] {
+      &.md-checked.checkbox-indicator[disabled] {
         .md-icon {
           background-color: @orange;
         }

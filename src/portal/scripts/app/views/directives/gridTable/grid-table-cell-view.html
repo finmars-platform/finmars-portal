@@ -76,7 +76,7 @@
         <md-checkbox ng-model="column.settings.value"
                      ng-change="onCellValueChange()"
                      ng-disabled="column.settings.readonly || column.settings.isDisabled"
-                     ng-class="{'gt-cell-checkbox-readonly': column.settings.readonly}"></md-checkbox>
+                     ng-class="{'checkbox-indicator': column.settings.readonly}"></md-checkbox>
     </div>
 
     <div ng-if="column.cellType === 'multiselector'" class="gt-cell-content">
