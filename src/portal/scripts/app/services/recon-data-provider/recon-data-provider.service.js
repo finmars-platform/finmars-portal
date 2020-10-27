@@ -319,7 +319,7 @@
                             }
 
 
-                        } else {
+                        } else { // if group opened for first time
 
 
                             var parentGroup = entityViewerDataService.getData(event.parentGroupId);
