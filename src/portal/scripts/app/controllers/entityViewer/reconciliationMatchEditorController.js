@@ -1287,11 +1287,11 @@
 
 
             vm.complexTransactionList = parentFlatList.filter(function (item) {
-                return item.___is_activated && !item.is_canceled
+				return item.___is_activated && !item.is_canceled && item.___type === "object";
             });
 
             vm.bankLinesList = flatList.filter(function (item) {
-                return item.___is_activated;
+				return item.___is_activated && item.___type === "object";
             });
 
             vm.syncStatuses();
