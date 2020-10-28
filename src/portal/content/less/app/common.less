@@ -748,3 +748,21 @@ button.md-button[disabled] {
   }
 
 }
+
+.checkbox-indicator {
+  display: block;
+  margin: 0;
+  width: 20px;
+
+    .md-icon {
+      border-radius: 100%;
+    }
+
+
+  &.md-checked[disabled] {
+    .md-icon {
+      background-color: @orange;
+    }
+  }
+
+}
