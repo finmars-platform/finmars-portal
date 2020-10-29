@@ -281,8 +281,8 @@ app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$sta
 app.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
 app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
 app.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
-app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
-app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
+app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
+app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 app.controller('EntityViewerDeleteBulkDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', require('./app/controllers/entityViewer/entityViewerDeleteBulkDialogController')]);
 app.controller('EvAddEditValidationDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/evAddEditValidationDialogController')]);
@@ -316,7 +316,7 @@ app.controller('TransactionTypeAddInputDialogController', ['$scope', '$mdDialog'
 
 // Complex transaction form
 
-app.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
+app.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
 app.controller('ComplexTransactionEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionEditDialogController')]);
 app.controller('BookTransactionActionsTabController', ['$scope', require('./app/controllers/tabs/complex-transaction/bookTransactionActionsTabController')]);
 app.controller('BookTransactionTransactionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/complex-transaction/bookTransactionTransactionsTabController')]);
@@ -578,7 +578,7 @@ app.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityVi
 app.directive('evDateFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evDateFilterDirective')]);
 app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', ['$mdDialog', require('./app/directives/groupTable/gColumnsComponent')]);
-app.directive('groupActionsBlock', ['$mdDialog', '$state', require('./app/directives/groupTable/gActionsBlockComponent')]);
+app.directive('groupActionsBlock', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/gActionsBlockComponent')]);
 // app.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
 app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
 app.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);

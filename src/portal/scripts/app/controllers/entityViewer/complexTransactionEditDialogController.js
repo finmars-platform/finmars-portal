@@ -23,19 +23,14 @@
   var tooltipsService = require("../../services/tooltipsService");
   var colorPalettesService = require("../../services/colorPalettesService");
 
+  var metaHelper = require('../../helpers/meta.helper');
   var entityEditorHelper = require("../../helpers/entity-editor.helper");
   var transactionHelper = require("../../helpers/transaction.helper");
   var transactionTypeService = require("../../services/transactionTypeService");
   var toastNotificationService = require("../../../../../core/services/toastNotificationService");
 
   module.exports = function complexTransactionEditDialogController(
-    $scope,
-    $mdDialog,
-    $bigDrawer,
-    $state,
-    entityType,
-    entityId,
-    data
+    $scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data
   ) {
     var vm = this;
 
@@ -459,33 +454,46 @@
       return haveAccess;
     };
 
+    var closeComponent = function (response) {
+
+    	if (data.openedIn === 'big-drawer') {
+			$bigDrawer.hide(response);
+
+		} else { // opened in mdDialog
+			$mdDialog.hide(response);
+		}
+
+	};
+
     vm.cancel = function () {
-      var updateRowIcon = false;
 
-      if (
-        vm.updateTableOnClose.lockedStatusChanged ||
-        vm.updateTableOnClose.cancelStatusChanged
-      ) {
-        updateRowIcon = {
-          is_locked: vm.entity.is_locked,
-          is_canceled: vm.entity.is_canceled,
-        };
-      }
+    	var updateRowIcon = false;
 
-      //$mdDialog.hide({status: 'disagree', data: {updateRowIcon: updateRowIcon}});
-      $bigDrawer.hide({
-        status: "disagree",
-        data: { updateRowIcon: updateRowIcon },
-      });
+		if (vm.updateTableOnClose.lockedStatusChanged ||
+			vm.updateTableOnClose.cancelStatusChanged) {
+
+			updateRowIcon = {
+				is_locked: vm.entity.is_locked,
+				is_canceled: vm.entity.is_canceled,
+			};
+
+		}
+
+		var responseObj = {
+			status: "disagree",
+			data: {updateRowIcon: updateRowIcon}
+		};
+
+		metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj)
+
+		/* closeComponent({
+			status: "disagree",
+			data: { updateRowIcon: updateRowIcon },
+		}); */
+
     };
 
     vm.manageAttrs = function (ev) {
-      /*var entityType = {entityType: vm.entityType};
-            if (vm.fromEntityType) {
-                entityType = {entityType: vm.entityType, from: vm.fromEntityType};
-            }
-            $state.go('app.attributesManager', entityType);
-            $mdDialog.hide();*/
 
       $mdDialog.show({
         controller: "AttributesManagerDialogController as vm",
@@ -498,12 +506,14 @@
           },
         },
       });
+
     };
 
     vm.copy = function ($event) {
-      var entity = JSON.parse(JSON.stringify(vm.entity));
 
-      $mdDialog.show({
+    	var entity = JSON.parse(JSON.stringify(vm.entity));
+
+		$mdDialog.show({
         controller: "ComplexTransactionAddDialogController as vm",
         templateUrl:
           "views/entity-viewer/complex-transaction-add-dialog-view.html",
@@ -518,8 +528,9 @@
         },
       });
 
-      //$mdDialog.hide({status: 'disagree'});
-      $bigDrawer.hide({ status: "disagree" });
+		// closeComponent({status: 'disagree'});
+		metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
+
     };
 
     var postRebookComplexTransactionActions = function (
@@ -890,15 +901,6 @@
               instanceId: vm.transactionTypeId,
             };
 
-            /*vm.manageAttrs = function () {
-                        $state.go('app.attributesManager', {
-                            entityType: vm.entityType,
-                            from: vm.entityType,
-                            instanceId: vm.transactionTypeId
-                        });
-                        $mdDialog.hide();
-                    };*/
-
             vm.readyStatus.entity = true;
             vm.readyStatus.layout = true;
             vm.readyStatus.userFields = true;
@@ -1143,14 +1145,24 @@
             entity: vm.entity,
             entityType: vm.entityType,
           },
-        })
-        .then(function (res) {
-          console.log("here", res);
 
-          if (res.status === "agree") {
-            //$mdDialog.hide({res: 'agree', data: {action: 'delete'}});
-            $bigDrawer.hide({ res: "agree", data: { action: "delete" } });
-          }
+		}).then(function (res) {
+
+			if (res.status === "agree") {
+
+				/* closeComponent({
+					res: "agree",
+					data: {action: "delete"}
+				}); */
+				let responseObj = {
+					res: "agree",
+					data: {action: "delete"}
+				};
+
+				metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+			}
+
         });
     };
 
@@ -1350,7 +1362,10 @@
                                     }
 
                                     if(response.reaction === 'skip') {
-                                        $mdDialog.hide({res: 'agree', data: null});
+                                    	// closeComponent({res: 'agree', data: null});
+										let responseObj = {res: 'agree', data: null};
+										metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+
                                     }
 
                                     if(response.reaction === 'book_without_unique_code') {
@@ -1429,8 +1444,10 @@
                         vm.handleComplexTransactionErrors($event, data);
 
                     } else {
-                        //$mdDialog.hide({res: 'agree', data: data});
-                        $bigDrawer.hide({res: 'agree', data: data});
+                    	// closeComponent({res: 'agree', data: data});
+						let responseObj = {res: 'agree', data: data};
+						metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+
                     }
 
                 }).catch(function (reason) {
@@ -1484,10 +1501,10 @@
           result.calculate = true;
 
           new Promise(function (resolve, reject) {
-            return complexTransactionService
-              .initRebookPendingComplexTransaction(result.id)
-              .then(function (data) {
-                var originValues = JSON.parse(JSON.stringify(result.values));
+
+          	return complexTransactionService.initRebookPendingComplexTransaction(result.id).then(function (data) {
+
+          		var originValues = JSON.parse(JSON.stringify(result.values));
 
                 // entity.transactions = data.transactions;
                 result.values = data.values;
@@ -1497,42 +1514,44 @@
                 var defaultValuesKeys = Object.keys(result.values);
 
                 originValuesKeys.forEach(function (originVal) {
-                  defaultValuesKeys.forEach(function (defaultVal) {
+
+                	defaultValuesKeys.forEach(function (defaultVal) {
                     if (originVal === defaultVal) {
                       result.values[defaultVal] = originValues[originVal];
                     }
                   });
+
                 });
 
-                complexTransactionService
-                  .rebookPendingComplexTransaction(result.id, result)
-                  .then(function (data) {
-                    toastNotificationService.success(
+                complexTransactionService.rebookPendingComplexTransaction(result.id, result).then(function (data) {
+
+                	toastNotificationService.success(
                       "Transaction was successfully rebooked"
                     );
 
                     vm.processing = false;
 
                     resolve(data);
+
                   });
               });
-          })
-            .then(function (data) {
-              if (
-                data.hasOwnProperty("has_errors") &&
-                data.has_errors === true
-              ) {
-                vm.handleComplexTransactionErrors($event, data);
-              } else {
-                //$mdDialog.hide({res: 'agree'});
-                $bigDrawer.hide({ res: "agree" });
-              }
-            })
-            .catch(function (reason) {
-              vm.processing = false;
 
-              $scope.$apply();
+			}).then(function (data) {
+
+				if (data.hasOwnProperty("has_errors") &&
+					data.has_errors === true) {
+
+					vm.handleComplexTransactionErrors($event, data);
+
+				} else {
+					metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {res: "agree"});
+				}
+
+			}).catch(function (reason) {
+				vm.processing = false;
+				$scope.$apply();
             });
+
         } else {
           var warningDescription =
             "<p>Next fields should have positive number value to proceed:";

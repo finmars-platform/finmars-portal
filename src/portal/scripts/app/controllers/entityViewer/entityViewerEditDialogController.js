@@ -28,8 +28,8 @@
 
     var uiService = require('../../services/uiService');
 
+	var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
-    var metaHelper = require('../../helpers/meta.helper');
 
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
@@ -37,10 +37,11 @@
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
     var instrumentTypeService = require('../../services/instrumentTypeService');
-
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $state, entityType, entityId, data) {
+    module.exports = function entityViewerEditDialogController(
+    	$scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data
+	) {
 
         var vm = this;
 
@@ -492,7 +493,8 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
+            // $mdDialog.hide({status: 'disagree'});
         };
 
         vm.manageAttrs = function (ev) {
@@ -546,7 +548,8 @@
 
             });
 
-            $mdDialog.hide();
+            // $mdDialog.hide();
+			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {});
 
         };
 
@@ -831,7 +834,11 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
+
+                	// $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
+					let responseObj = {res: 'agree', data: {action: 'delete'}};
+					metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+
                 }
 
             })
@@ -1024,9 +1031,8 @@
 
             } else {
 
-                var deepCopyOfEntity = metaHelper.recursiveDeepCopy(vm.entity, true);
-
-                var result = entityEditorHelper.clearEntityBeforeSave(deepCopyOfEntity, vm.entityType);
+                // var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
 
                 if (dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
@@ -1046,7 +1052,9 @@
                         var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
                         toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully saved');
 
-                        $mdDialog.hide({res: 'agree', data: data});
+                        // $mdDialog.hide({res: 'agree', data: data});
+						let responseObj = {res: 'agree', data: data};
+						metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     }
 
@@ -1887,7 +1895,15 @@
                     {
                         id: 'inactive',
                         name: 'Inactive'
-                    }
+                    },
+					{
+						id: 'disabled',
+						name: 'Disabled'
+					},
+					{
+						id: 'deleted',
+						name: 'Deleted'
+					}
                 ];
 
             } else {
