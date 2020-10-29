@@ -96,6 +96,8 @@
 
         vm.currencies = []; // need for instrument pricing tab;
 
+        vm.activeTab = null;
+
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
         var tabsWithErrors = {};
@@ -1845,6 +1847,10 @@
             }
 
         };
+
+        vm.isEntityTabActive = function () {
+            return vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab);
+        }
 
         vm.init = function () {
             setTimeout(function () {
