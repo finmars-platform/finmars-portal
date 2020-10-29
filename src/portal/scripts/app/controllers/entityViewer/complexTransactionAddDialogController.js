@@ -24,13 +24,16 @@
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
 
+    var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var transactionHelper = require('../../helpers/transaction.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $state, entityType, entity, data) {
+    module.exports = function complexTransactionAddDialogController(
+    	$scope, $mdDialog, $bigDrawer, $state, entityType, entity, data
+	) {
 
         var vm = this;
         vm.readyStatus = {content: false, entity: true, permissions: true, transactionTypes: false, layout: false};
@@ -639,8 +642,21 @@
 
         };
 
+		/* var closeComponent = function (response) {
+
+			if (data.openedIn === 'big-drawer') {
+				$bigDrawer.hide(response);
+
+			} else { // opened in mdDialog
+				$mdDialog.hide(response);
+			}
+
+		}; */
+
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+            /* $mdDialog.hide({status: 'disagree'});
+			$bigDrawer.hide({status: 'disagree'}); */
+			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
         vm.editLayout = function (ev) {

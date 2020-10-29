@@ -28,6 +28,7 @@
 
     var uiService = require('../../services/uiService');
 
+	var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
@@ -35,7 +36,9 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $state, entityType, entity, data) {
+    module.exports = function entityViewerAddDialogController(
+    	$scope, $mdDialog, $bigDrawer, $state, entityType, entity, data
+	) {
 
         console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
 
@@ -657,7 +660,8 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+            // $mdDialog.hide({status: 'disagree'});
+			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
         vm.editLayout = function (ev) {
@@ -1014,7 +1018,9 @@
 
                     toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully created');
 
-                    $mdDialog.hide({res: 'agree', data: data});
+                    // $mdDialog.hide({res: 'agree', data: data});
+					let responseObj = {res: 'agree', data: data};
+					metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                 }).catch(function (data) {
 
