@@ -972,7 +972,7 @@
 
         };
 
-        vm.save = function ($event) {
+        vm.save = function ($event, isAutoExitAfterSave) {
 
             vm.updateEntityBeforeSave();
 
@@ -1040,21 +1040,24 @@
 
                 vm.processing = true;
 
-                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+                entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
 
                     vm.processing = false;
 
-                    if (data.status === 400) {
-                        vm.handleErrors(data);
+                    if (responseData.status === 400) {
+                        vm.handleErrors(responseData);
 
                     } else {
 
                         var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
                         toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully saved');
 
-                        // $mdDialog.hide({res: 'agree', data: data});
-						let responseObj = {res: 'agree', data: data};
-						metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+                        if (isAutoExitAfterSave) {
+                            // $mdDialog.hide({res: 'agree', responseData: responseData});
+                            let responseObj = {res: 'agree', data: responseData};
+                            metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+                        }
+
 
                     }
 
@@ -1857,7 +1860,7 @@
         };
 
         vm.isEntityTabActive = function () {
-            return vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab);
+            return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         }
 
         vm.init = function () {
