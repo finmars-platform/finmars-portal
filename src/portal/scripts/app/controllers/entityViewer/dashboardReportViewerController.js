@@ -411,37 +411,34 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
-                    setTimeout(function () {
+					   setTimeout(function () {
+						  vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+					  }, 50);
 
-                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-                        $scope.$apply();
+					  vm.entityViewerDataService.setDataLoadStatus(false);
 
-                    }, 0);
+					  if (!fillInModeEnabled) {
 
-                    vm.entityViewerDataService.setDataLoadStatus(false);
+					  	  vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.PROCESSING);
+					  	  vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    if (!fillInModeEnabled) {
-                        vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.PROCESSING);
-                        vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                    }
+					  }
 
                 });
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     vm.entityViewerDataService.setDataLoadStatus(true);
+					if (vm.componentData.name === "BALANCE_TYPES") {
+						console.log("rv matrix DATA_LOAD_END");
+					}
 
                     if (!fillInModeEnabled) {
                         vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
                         vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     }
 
-                    setTimeout(function () {
-
-                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
-                        $scope.$apply();
-
-                    }, 0);
+					vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
 
                 });
 
@@ -990,33 +987,7 @@
                 'transaction-report': ['begin_date', 'end_date']
             };
 
-            var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
-
-                /*var calculateDateExpression = function (dateProp, dateExpr) {
-
-                    var firstDateProm = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
-                        reportOptions[dateProp] = data.result
-                    });
-
-                    datepickerExpressionsToSolve.push(firstDateProm);
-
-                };
-
-                var datepickerExpressionsToSolve = [];
-
-                if (firstDateExpr) {
-
-                    var firstDateProp = reportDateProperties[vm.entityType][0];
-                    calculateDateExpression(firstDateExpr, firstDateProp);
-
-                }
-
-                if (secondDateExpr) {
-
-                    var secondDateProp = reportDateProperties[vm.entityType][1];
-                    calculateDateExpression(secondDateExpr, secondDateProp);
-
-                }*/
+            /* var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
 
                 var dateProp = reportDateProperties[vm.entityType][reportDateIndex];
 
@@ -1026,7 +997,7 @@
 
                 dateExprsProms.push(result);
 
-            };
+            }; */
 
             var reportDateIsFromDashboard = function (dashboardReportOptions, dateIndex) {
 
@@ -1172,6 +1143,8 @@
 							case 100:
 							case 'field':
 
+								// even if component is single selector, multiselector filter will work
+
 								// console.log('componentOutput.value', componentOutput.data.value)
 								linkedFilter.value_type = 'field'
 								linkedFilter.options.filter_type = 'multiselector'
@@ -1213,13 +1186,13 @@
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
                     vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-                    // $scope.$apply();
+                    // $scope.$apply(); // cause $digest error
 
                 }
 
             };
 
-            /*vm.applyDashboardChanges = function () {
+            /* vm.applyDashboardChanges = function () {
 
                 if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
@@ -1445,8 +1418,10 @@
                                 } else if (
                                 	['report_currency', 'pricing_policy'].includes(property) &&
 									Array.isArray((componentOutput.data.value))
-								)  {
-
+								) {
+									if (vm.componentData.name === "BALANCE_TYPES") {
+										console.log("rv matrix report_currency", property, componentOutput.data.value[0]);
+									}
                                     reportOptions[property] = componentOutput.data.value[0];
 
                                 } else {
@@ -1457,12 +1432,6 @@
 
                                 reportOptionsChanged = true;
 
-                                /*vm.entityViewerDataService.setReportOptions(reportOptions);
-                                vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
-
-                                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-                                vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);*/
-
                             }
 
                         }
@@ -1470,13 +1439,19 @@
                     })
 
                     console.log('updateReportSettingsUsingDashboardData', reportOptions);
-
+					if (vm.componentData.name === "BALANCE_TYPES") {
+						console.log("rv matrix vm.componentData", reportOptions, reportOptionsChanged);
+					}
                     if (reportOptionsChanged) {
+						if (vm.componentData.name === "BALANCE_TYPES") {
+							console.log("rv matrix reportOptionsChanged");
+						}
                         vm.entityViewerDataService.setReportOptions(reportOptions);
-                        vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
+						vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+						vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
 
                         vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-                        vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
                     }
 
                 }
@@ -1507,7 +1482,7 @@
             };
 
             // TODO DEPRECATED, delete soon as dashboard will be discussed
-            /*vm.oldEventExchanges = function () {
+            /* vm.oldEventExchanges = function () {
 
                 if (vm.componentData.settings.linked_components) {
 

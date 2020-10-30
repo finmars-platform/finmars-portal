@@ -299,12 +299,18 @@
 
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
 
-                        scope.readyStatus.disabled = true;
+                    	if (scope.vm.componentData.name === "BALANCE_TYPES") {
+							console.log("rv matrix COMPONENT_BLOCKAGE_ON");
+						}
+
+                    	scope.readyStatus.disabled = true;
 
                     });
 
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
-
+						if (scope.vm.componentData.name === "BALANCE_TYPES") {
+							console.log("rv matrix COMPONENT_BLOCKAGE_OFF");
+						}
                         scope.readyStatus.disabled = false;
 
                     });

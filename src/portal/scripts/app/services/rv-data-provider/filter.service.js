@@ -145,10 +145,11 @@
 
                             }
 
-                            /* if (valueType === 100) {
+                             /* TODO delete as deprecated
+                             if (valueType === 100) {
                                 valueFromTable = valueFromTable;
                                 filterArgument = filterArgument[0];
-                            } */
+                             } */
 
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
@@ -290,7 +291,7 @@
                 break;
 
             case 'multiselector':
-
+				console.log("");
                 if (filterBy.indexOf(valueToFilter) !== -1) {
                     return true;
                 }
