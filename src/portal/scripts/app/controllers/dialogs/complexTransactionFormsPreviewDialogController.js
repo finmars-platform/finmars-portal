@@ -45,8 +45,8 @@
 
         vm.attributesLayout = [];
 
-        let dataConstructorLayout = [];
-        let inputsWithCalculations;
+        var dataConstructorLayout = [];
+        var inputsWithCalculations;
 
         var mapAttributesToLayoutFields = function () {
 

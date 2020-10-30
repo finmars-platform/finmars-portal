@@ -49,7 +49,7 @@
 
     }
 
-    let getObjectNestedPropVal = (obj, pathToProp) => {
+    var getObjectNestedPropVal = function(obj, pathToProp) {
 
         var objPlace = obj;
 
