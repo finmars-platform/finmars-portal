@@ -137,7 +137,11 @@
                 console.error('Error in Browserify: \n', err.message);
                 this.emit('end');
             })
-            .pipe(plumber())
+            .pipe(plumber({
+                errorHandler: function (error) {
+                    console.log("error", error)
+                }
+            }))
             .pipe(source('bundled.js'))
             .pipe(buffer())
             .pipe(preprocess())
@@ -149,10 +153,7 @@
             // .pipe(uglify()) // if you need to debug minified build locally
             // .pipe(stripDebug()) // if you need to debug minified build locally
             .pipe(rename({basename: 'main', suffix: '.min'}))
-            .on('error', function (error) {
-                console.error('\nError on JS minification: \n', error.toString());
-                this.emit('end');
-            })
+            .pipe(plumber.stop())
             .pipe(gulp.dest('dist/' + appName + '/scripts/'))
             .pipe(livereload());
 
