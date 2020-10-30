@@ -264,6 +264,8 @@
                         templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
                     }
                 ];
+            default:
+                return [];
         }
     };
 

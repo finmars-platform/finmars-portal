@@ -661,14 +661,14 @@
         <div class="entity-tabs-menu" data-ng-class="{'active': vm.isEntityTabActive()}">
 
             <!--                        Victor 2020.10.29 md-menu manage Entity tabs and Permission tab contents -->
-            <md-menu md-position-mode="target-right target">
+            <md-menu md-position-mode="target-right bottom">
                 <md-button aria-label="open entity tabs"
                            class="md-icon-button"
                            ng-click="$mdOpenMenu($event)">
                     <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
                 </md-button>
 
-                <md-menu-content width="4">
+                <md-menu-content width="3">
 
                     <md-menu-item data-ng-repeat="tab in vm.entityTabs" ng-click="vm.activeTab = tab">
                         <md-button data-ng-class="{'active-tab-button': vm.activeTab === tab}"><span>{{tab.label}}</span></md-button>
