@@ -145,10 +145,10 @@
 
                             }
 
-                            if(valueType === 100) {
+                            /* if (valueType === 100) {
                                 valueFromTable = valueFromTable;
                                 filterArgument = filterArgument[0];
-                            }
+                            } */
 
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
@@ -259,9 +259,11 @@
                 break;
 
             case 'less_equal':
-                if (valueToFilter <= filterBy) {
+
+            	if (valueToFilter <= filterBy) {
                     return true;
                 }
+
                 break;
 
             /*case 'top_n':
@@ -277,12 +279,14 @@
                 break;*/
 
             case 'from_to':
-                var minValue = filterBy.min_value;
+
+            	var minValue = filterBy.min_value;
                 var maxValue = filterBy.max_value;
 
                 if (valueToFilter >= minValue && valueToFilter <= maxValue) {
                     return true;
                 }
+
                 break;
 
             case 'multiselector':
@@ -290,6 +294,7 @@
                 if (filterBy.indexOf(valueToFilter) !== -1) {
                     return true;
                 }
+
                 break;
 
             case 'date_tree':

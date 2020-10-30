@@ -186,6 +186,10 @@
 
         };
 
+		vm.clearSelect = function (item, propToDelete) {
+			delete item[propToDelete];
+		}
+
         vm.init = function () {
 
             console.log('dataService', dataService);

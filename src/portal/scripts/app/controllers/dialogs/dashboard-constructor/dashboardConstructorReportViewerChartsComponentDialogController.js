@@ -212,6 +212,10 @@
 
         };
 
+		vm.clearSelect = function (item, propToDelete) {
+			delete item[propToDelete];
+		}
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
