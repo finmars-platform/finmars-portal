@@ -5,6 +5,35 @@
 
     'use strict';
 
+    var clearFrontProperties = function (entity, entityType) {
+
+        switch (entityType) {
+
+            case 'instrument':
+
+                if (entity.accrual_calculation_schedules) {
+                    entity.accrual_calculation_schedules.forEach(function (schedule) {
+                        delete schedule.frontOptions;
+                    });
+                }
+
+                if (entity.event_schedules) { // TODO Victor: may be make a deepClearFrontOptions?
+                    entity.event_schedules.forEach(function (event) {
+                        delete event.frontOptions;
+                        if (event.actions) {
+                            event.actions.forEach(function (action) {
+                                delete action.frontOptions;
+                            })
+                        }
+                    })
+                }
+
+                break;
+
+        }
+
+    };
+
 
     var removeNullFields = function (item) {
 
@@ -46,6 +75,16 @@
         return attributes
 
     };
+
+    var clearEntityBeforeSave = function (entity, entityType) {
+
+        entity = removeNullFields(entity);
+
+        clearFrontProperties(entity, entityType);
+
+        return entity;
+
+    }
 
     var checkEntityAttrTypes = function (entity, entityAttrs) {
         var i;
@@ -326,8 +365,8 @@
 
     var validateFieldWithString = function (value, fieldAttr) {
 
-        if (fieldAttr.options && fieldAttr.options.onlyPositive === true) {
-            if (value === null || value === undefined) {
+        if (fieldAttr.options && fieldAttr.options.notNull === true) {
+            if (!value) {
 
                 return {
                     fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
@@ -641,13 +680,21 @@
 
             return 10;
 
-        } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
+        }
+        else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
                     attribute.value_type === 20) {
 
             return 20;
 
-        } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
-                    attribute.value_type === 40) {
+        }
+        else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 30) ||
+                attribute.value_type === 30) {
+
+            return 30;
+
+        }
+        else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
+                  attribute.value_type === 40) {
 
             return 40;
 
@@ -1339,6 +1386,7 @@
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
         removeNullFields: removeNullFields,
+        clearEntityBeforeSave: clearEntityBeforeSave,
         clearUnusedAttributeValues: clearUnusedAttributeValues,
         appendAttribute: appendAttribute,
         updateValue: updateValue,

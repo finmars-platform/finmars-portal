@@ -12,7 +12,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (options) {
+    /*var getList = function (options) {
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-type/', options),
             {
                 method: 'GET',
@@ -23,7 +23,7 @@
                     'Content-type': 'application/json'
                 }
             })
-    };
+    };*/
 
     var getListLight = function (options) {
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-type-light/', options),
@@ -257,7 +257,7 @@
     };
 
     module.exports = {
-        getList: getList,
+        // getList: getList,
         getListLight: getListLight,
         getListLightWithInputs: getListLightWithInputs,
         getByKey: getByKey,

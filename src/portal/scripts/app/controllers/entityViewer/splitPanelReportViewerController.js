@@ -14,6 +14,7 @@
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
 
+        var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var AttributeDataService = require('../../services/attributeDataService');
@@ -26,6 +27,8 @@
         module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
             var vm = this;
+
+            var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             console.log('parentEntityViewerDataService', parentEntityViewerDataService);
             console.log('parentEntityViewerEventService', parentEntityViewerEventService);
@@ -886,13 +889,13 @@
                     vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
-                    var reportOptions = vm.entityViewerDataService.getReportOptions();
+                    // var reportOptions = vm.entityViewerDataService.getReportOptions();
                     var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
                     // Check if there is need to solve report datepicker expression
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                        var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
+                        /*var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
                         var reportLastDatepickerExpression = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
 
                         if (reportFirstDatepickerExpression || reportLastDatepickerExpression) {
@@ -929,8 +932,6 @@
 
                                 $scope.$apply();
 
-                                //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
                             });
 
 
@@ -944,17 +945,17 @@
 
                             //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
-                        }
+                        }*/
+                        rvSharedLogicHelper.calculateReportDatesExprs().then(function () {
+                            rvSharedLogicHelper.onSetLayoutEnd();
+
+                        }).catch(function () {
+                            rvSharedLogicHelper.onSetLayoutEnd();
+
+                        });
                     // < Check if there is need to solve report datepicker expression >
                     } else {
-
-                        vm.readyStatus.layout = true;
-
-                        rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                        $scope.$apply();
-
-                        //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+                        rvSharedLogicHelper.onSetLayoutEnd();
                     }
 
                 };

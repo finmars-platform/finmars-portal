@@ -66,8 +66,6 @@
                     vm.layout = data.results[0];
                 }
 
-                console.log('vm.layout', vm.layout);
-
                 vm.dashboardDataService.setData(vm.layout);
                 vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
@@ -295,8 +293,6 @@
 
                 var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
-                // console.log('statusesObject', statusesObject);
-
                 var processed = false;
 
                 Object.keys(statusesObject).forEach(function (componentId) {
@@ -325,12 +321,11 @@
 
         };
 
-        var componentBuildingTimeTimeout;
+        var componentBuildingTimeTimeout = {};
         var onComponentBuildingForTooLong = function (compId) {
 
-            componentBuildingTimeTimeout = setTimeout(function () {
+            componentBuildingTimeTimeout[compId] = setTimeout(function () {
 
-                // var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
                 var statusesObject = metaHelper.recursiveDeepCopy(vm.dashboardDataService.getComponentStatusesAll());
 
                 if (statusesObject[compId] === dashboardComponentStatuses.PROCESSING || statusesObject[compId] === dashboardComponentStatuses.START) {
@@ -339,19 +334,39 @@
                     throw "id of defective dashboard component " + compId;
                 }
 
-                // }, 8000);
-                // }, 15000);
             }, 60000);
 
         };
 
+        var areAllDependenciesCompleted = function (compId, statusesObject, waitingComponents) {
+
+            var componentData = vm.dashboardDataService.getComponentById(compId);
+
+            if (!componentData || !componentData.settings || ! componentData.settings.linked_components || !componentData.settings.linked_components.report_settings) {
+                return true;
+            }
+
+            var reportSettings = componentData.settings.linked_components.report_settings;
+
+            var dependencies = Object.values(reportSettings).filter(function (id) { // prevent loop
+                var isComponentExist = vm.dashboardDataService.getComponentById(id);
+
+                return isComponentExist && !waitingComponents.includes(id);
+            });
+
+            return dependencies.every(function (id) {
+                return statusesObject[id] === dashboardComponentStatuses.ACTIVE || statusesObject[id] === dashboardComponentStatuses.ERROR;
+            });
+
+        };
+
+
         vm.initDashboardComponents = function () {
 
             var LIMIT = 2;
+            var waitingComponents = [];
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                clearTimeout(componentBuildingTimeTimeout);
 
                 var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
                 var nextComponentToStart = null;
@@ -365,15 +380,18 @@
 
                     key = keys[i];
 
+                    if (statusesObject[key] === dashboardComponentStatuses.ACTIVE || statusesObject[key] === dashboardComponentStatuses.ERROR) {
+                        if (componentBuildingTimeTimeout.hasOwnProperty(key)) {
+                            clearTimeout(componentBuildingTimeTimeout[key]);
+                            delete componentBuildingTimeTimeout[key];
+                        }
+                    }
+
                     if (statusesObject[key] === dashboardComponentStatuses.PROCESSING || statusesObject[key] === dashboardComponentStatuses.START) {
                         activeProcessingComponents = activeProcessingComponents + 1;
                     }
 
-
                 }
-
-                console.log('initDashboardComponents.activeProcessingComponents', activeProcessingComponents);
-                console.log('initDashboardComponents.statusesObject', statusesObject);
 
                 if (activeProcessingComponents < LIMIT) {
 
@@ -381,20 +399,34 @@
 
                         key = keys[i];
 
-                        console.log('initDashboardComponents.key', key);
-
                         if (statusesObject[key] === dashboardComponentStatuses.INIT) {
-                            vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
-                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                            onComponentBuildingForTooLong(key);
-                            break;
+                            if (areAllDependenciesCompleted(key, statusesObject, waitingComponents)) {
+
+                                waitingComponents = waitingComponents.filter(function (id) {
+                                    return id !== key;
+                                })
+
+                                vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
+                                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                                onComponentBuildingForTooLong(key);
+                                break;
+
+                            } else {
+
+                                if (!waitingComponents.includes(key)) {
+
+                                    waitingComponents.push(key);
+
+                                }
+
+                            }
+
                         }
 
                     }
                 }
-
-
             });
 
         };
