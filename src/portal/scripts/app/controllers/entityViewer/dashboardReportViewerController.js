@@ -472,8 +472,7 @@
 
                         if (!gotActiveObjectFromLinkedDashboardComp) {
 
-                            //var activeObject = vm.entityViewerDataService.getActiveObject();
-
+                            // var activeObject = vm.entityViewerDataService.getActiveObject();
                             var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
                             var compsKeys = Object.keys(componentsOutputs);
 
@@ -1108,7 +1107,6 @@
             vm.handleDashboardFilterLink = function (filter_link) {
 
                 var filters = vm.entityViewerDataService.getFilters();
-
                 var componentOutput = vm.dashboardDataService.getComponentOutput(filter_link.component_id);
 
                 console.log('filters', filters);
@@ -1116,74 +1114,78 @@
 
                 if (componentOutput && componentOutput.data) {
 
-                    var linkedFilter = filters.find(function (item) {
-                        return item.type === 'filter_link' && item.component_id === filter_link.component_id
-                    });
+                	var linkedFilterIndex;
+					var linkedFilter = filters.find(function (item, index) {
+
+						if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
+
+							linkedFilterIndex = index;
+							return item;
+
+						}
+
+					});
 
                     if (linkedFilter) {
 
-                        linkedFilter.options.filter_values = [componentOutput.data.value];
+                        linkedFilter.options.filter_values = [componentOutput.data.value]
+                        filters[linkedFilterIndex] = linkedFilter
 
-                        filters = filters.map(function (item) {
+                        /* filters = filters.map(function (item) {
 
-                            if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
-                                return linkedFilter
+                            if (item.type === 'filter_link' &&
+								item.component_id === filter_link.component_id) {
+                                return linkedFilter;
                             }
 
-                            return item
-                        })
+                            return item;
+
+                        }) */
 
                     } else {
 
-                        if (filter_link.value_type === 100) {
+						linkedFilter = {
+							type: 'filter_link',
+							component_id: filter_link.component_id,
+							key: filter_link.key,
+							name: filter_link.key,
+							value_type: filter_link.value_type,
+							options: {
+								enabled: true,
+								exclude_empty_cells: true,
+								filter_values: [componentOutput.data.value]
+							}
+						};
 
-                            console.log('componentOutput.value', componentOutput.data.value)
+						switch (filter_link.value_type) {
 
-                            var values;
+							case 10:
+							case 30:
+								linkedFilter.options.filter_type = 'contains'
+								break;
 
-                            if (Array.isArray(componentOutput.data.value)) {
-                                values = componentOutput.data.value
-                            } else {
-                                values = [componentOutput.data.value];
-                            }
+							case 20:
+							case 40:
+								linkedFilter.options.filter_type = 'equal'
+								break;
 
-                            console.log('values', values);
+							case 100:
+							case 'field':
 
-                            linkedFilter = {
-                                type: 'filter_link',
-                                component_id: filter_link.component_id,
-                                key: filter_link.key,
-                                name: filter_link.key,
-                                value_type: filter_link.value_type,
-                                options: {
-                                    enabled: true,
-                                    exclude_empty_cells: true,
-                                    filter_type: 'multiselector',
-                                    filter_values: values
-                                }
-                            };
+								// console.log('componentOutput.value', componentOutput.data.value)
+								linkedFilter.value_type = 'field'
+								linkedFilter.options.filter_type = 'multiselector'
 
-                        } else {
+								if (Array.isArray(componentOutput.data.value)) {
+									linkedFilter.options.filter_values = componentOutput.data.value
+								}
 
-                            linkedFilter = {
-                                type: 'filter_link',
-                                component_id: filter_link.component_id,
-                                key: filter_link.key,
-                                name: filter_link.key,
-                                value_type: filter_link.value_type,
-                                options: {
-                                    enabled: true,
-                                    exclude_empty_cells: true,
-                                    filter_type: 'contains',
-                                    filter_values: [componentOutput.data.value.toString()]
-                                }
-                            };
+								break;
+						}
 
-                        }
+                        filters.push(linkedFilter);
 
-                        filters.push(linkedFilter)
                     }
-
 
                     vm.entityViewerDataService.setFilters(filters);
 
@@ -1211,7 +1213,7 @@
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
                     vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-                    $scope.$apply();
+                    // $scope.$apply();
 
                 }
 
@@ -1340,6 +1342,9 @@
 
                  if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
 
+                    // Now only last changed active object stored in component output
+
+					// check which one of components (that this component is listening) changed
                     if (Array.isArray(vm.componentData.settings.linked_components.active_object)) {
 
                         var lastActiveCompChanged = false;
@@ -1350,17 +1355,12 @@
 
                             var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
-                            /*if (componentOutput && !componentOutput.recalculatedComponents) {
-                                componentOutput.recalculatedComponents = [];
-                            }
-
-                            if (componentOutput && componentOutput.changedLast &&
-                                componentOutput.recalculatedComponents.indexOf(vm.componentData.id) < 0) {*/
-
-                            if (componentOutput && componentOutput.changedLast) {
+                            // if (componentOutput && componentOutput.changedLast) {
+							if (componentOutput && componentOutput.changedLast) {
 
                                 var compOutputData = componentOutput.data;
 
+								// check if active objects holds new data
                                 if (lastActiveComponentId !== componentId) {
 
                                     lastActiveComponentId = componentId;
@@ -1387,11 +1387,7 @@
                                 } else {
                                     delete vm.linkedActiveObjects[lastActiveComponentId];
                                 }
-
-                                /*if (lastActiveCompChanged) {
-                                    componentOutput.recalculatedComponents.push(vm.componentData.id);
-                                }*/
-
+								// < check if active objects holds new data >
                                 break;
 
                             }
@@ -1407,6 +1403,10 @@
 
                         vm.handleDashboardActiveObject(componentId);
                     }
+
+					 /* var componentId = vm.componentData.settings.linked_components.active_object;
+
+					 vm.handleDashboardActiveObject(componentId); */
 
                  }
 
@@ -1432,15 +1432,20 @@
 
                                 if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
                                     !Array.isArray(componentOutput.data.value)) {
-                                    if (componentOutput.data.value) {
+
+                                	if (componentOutput.data.value) {
                                         reportOptions[property] = [componentOutput.data.value];
+
                                     } else {
 
                                         reportOptions[property] = [];
 
                                     }
 
-                                } else if (['report_currency', 'pricing_policy'].includes(property) && Array.isArray((componentOutput.data.value)))  {
+                                } else if (
+                                	['report_currency', 'pricing_policy'].includes(property) &&
+									Array.isArray((componentOutput.data.value))
+								)  {
 
                                     reportOptions[property] = componentOutput.data.value[0];
 
@@ -1487,12 +1492,13 @@
                     if (componentsOutputs[compKey] && typeof componentsOutputs[compKey] === 'object'
                         && componentsOutputs[compKey].deleteOnChange) {
 
-                        if (activeTabOnly) {
+                        /* if (activeTabOnly) {
 
 
                         } else {
                             vm.dashboardDataService.setComponentOutput(compKey, null);
-                        }
+                        } */
+						vm.dashboardDataService.setComponentOutput(compKey, null);
 
                     }
 
@@ -1628,16 +1634,6 @@
                 vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
                     // update report filters from dashboard component
 
-                    // add linked to filter from dashboard component
-                    if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
-
-                        vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
-                            vm.handleDashboardFilterLink(filter_link);
-                        });
-
-                    }
-                    // < add linked to filter from dashboard component >
-
                     /*if (vm.componentData.settings.auto_refresh) {
                         updateReportSettingsUsingDashboardData();
                     }*/
@@ -1647,9 +1643,23 @@
                 });
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
+
+                	// add linked to filter from dashboard component
+					if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
+
+						vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
+
+							vm.handleDashboardFilterLink(filter_link);
+
+						});
+
+					}
+					// < add linked to filter from dashboard component >
+
                     if (vm.componentData.settings.auto_refresh) {
                         updateReportSettingsUsingDashboardData();
                     }
+
                 });
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS, function () {
@@ -1828,6 +1838,8 @@
                         pie_size_percent: vm.componentData.settings.pie_size_percent
                     };
                 }
+
+
 
             };
 

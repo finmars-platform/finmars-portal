@@ -258,7 +258,14 @@
         });
 
         scope.$watch('items', function () {
-            items = JSON.parse(JSON.stringify(scope.items));
+
+        	if (Array.isArray(scope.items)) {
+				items = JSON.parse(JSON.stringify(scope.items));
+
+        	} else {
+				items = [];
+			}
+
         });
 
         var defaultInputText = function () {

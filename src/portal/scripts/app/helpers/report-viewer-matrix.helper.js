@@ -79,7 +79,8 @@
 
         });
 
-        return result
+        return result;
+
     }
 
     function getMatrix(itemList, rows, columns, rowsKey, columnsKey, valueKey, subtotal_formula_id) {
@@ -180,7 +181,10 @@
 
                         var flItem = column.data.flatListItems[i];
 
-                        if (flItem[valueKey] || flItem[valueKey] === 0) {
+                        if (
+                        	(flItem[valueKey] && !isNaN(flItem[valueKey])) ||
+							flItem[valueKey] === 0
+						) {
 
                             cellHasNumericVal = true;
                             break;
