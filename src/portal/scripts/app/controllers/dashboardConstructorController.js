@@ -1161,7 +1161,7 @@
                 editorController: 'DashboardConstructorReportViewerComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html'
             },
-            report_viewer_split_panel: {
+            report_viewer_split_panel: { // for legacy dashboard layouts
                 editorController: 'DashboardConstructorReportViewerComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html'
             },
@@ -1221,34 +1221,161 @@
                 }
             }).then(function (res) {
 
-                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
 
             })
 
         };
 
-        /*var openDashboardComponentEditor = function ($event, contrName, templateUrl, locals) {
+        var openComponentImportDialog = function (ev, dashboardsComponents) {
+
             $mdDialog.show({
-                controller: contrName,
-                templateUrl: templateUrl,
-                targetEvent: $event,
+                controller: "ItemsSelectorWithGroupsDialogController as vm",
+                templateUrl: "views/dialogs/selectors/items-selector-with-groups-dialog-view.html",
+                targetEvent: ev,
                 multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
                 locals: {
-                    item: JSON.parse(JSON.stringify(item)),
-                    dataService: vm.dashboardConstructorDataService,
-                    eventService: vm.dashboardConstructorEventService,
-                    attributeDataService: vm.attributeDataService,
-                    data: {}
+                    data: {
+                        groups: dashboardsComponents,
+                        title: "Select component types to import",
+                        options: {
+                            multiselector: true
+                        }
+                    }
                 }
-            }).then(function (value) {
 
-                vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+            }).then(function (res) {
 
-            })
-        };*/
+                if (res.status === 'agree' && res.data.selected.length) {
+
+                    var components = vm.dashboardConstructorDataService.getComponents();
+                    var coppiedComponents = [];
+
+                    /* res.data.selectedItems.forEach(function (selLayout) { // find corresponding dashboard layout
+
+                        var i, a;
+                        for (i = 0; i < dashboardLayouts.length; i++) {
+
+                            var dLayout = dashboardLayouts[i];
+
+                            if (dLayout.id === selLayout.id) {
+
+                                selLayout.content.forEach(function (selComp) { // find corresponding component type
+
+                                    for (a = 0; a < dLayout.data.components_types.length; a++) {
+
+                                        var compType = dLayout.data.components_types[a];
+
+                                        if (compType.id === selComp.id) {
+
+                                            var selCompCopy = JSON.parse(JSON.stringify(selComp));
+                                            delete selCompCopy.id;
+                                            selCompCopy.name = selCompCopy.name + ' (copied from ' + dLayout.name + ')';
+
+                                            components.push(selCompCopy);
+                                            coppiedComponents.push(selCompCopy);
+                                            break;
+
+                                        }
+
+                                    }
+
+                                });
+
+                                break;
+                            }
+
+                        }
+
+                    }); */
+
+                    res.data.selected.forEach(function (selItem) {
+
+                        var compIdPattern = new Date().getTime() + '_' + components.length;
+                        selItem.itemData.id = vm.dashboardConstructorDataService.___generateId(compIdPattern);
+
+                        components.push(selItem.itemData);
+                        coppiedComponents.push(selItem.itemData);
+
+                    });
+
+                    vm.dashboardConstructorDataService.setComponents(components);
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+
+                }
+
+            });
+
+        };
+
+        var formatLayoutsComponentsForSelector = function (dashboardLayouts) {
+
+            var dashboardsComponents = [];
+
+            dashboardLayouts.forEach(function (dLayout, dLayoutIndex) {
+
+                var group = {
+                    id: dLayout.id,
+                    name: dLayout.name,
+                    content: []
+                };
+
+                dLayout.data.components_types.forEach(function (compType) {
+
+                    var itemName = compType.name + ': ' + vm.getVerboseType(compType);
+                    var compCopy = JSON.parse(JSON.stringify(compType));
+
+                    delete compCopy.id;
+                    compCopy.settings.linked_components = {};
+                    compCopy.name = compCopy.name + ' (copied from dashboard: ' + dLayout.name + ')';
+
+                    var item = {
+                        id: compType.id,
+                        name: itemName,
+                        itemData: compCopy
+                    };
+
+                    group.content.push(item);
+
+                });
+
+                dashboardsComponents.push(group);
+
+            });
+
+            return dashboardsComponents;
+
+        };
+
+        vm.importComponent = function ($event) {
+
+            /*if (dashboardsComponents && dashboardsComponents.length) {
+                openComponentImportDialog($event, dashboardsComponents);
+
+            } else {
+
+                uiService.getDashboardLayoutList().then(function (data) {
+
+                    var dashboardLayouts = data.results;
+
+                    formatLayoutsComponentsForSelector(dashboardLayouts);
+                    console.log("components import dashboardsComponents", dashboardsComponents);
+                    openComponentImportDialog($event, dashboardsComponents);
+
+                });
+
+            }*/
+
+            uiService.getDashboardLayoutList().then(function (data) {
+
+                var dashboardLayouts = data.results;
+                var dashboardsComponents = formatLayoutsComponentsForSelector(dashboardLayouts);
+
+                openComponentImportDialog($event, dashboardsComponents, dashboardLayouts);
+
+            });
+
+        };
 
         vm.editComponentType = function ($event, item) {
 

@@ -10,10 +10,11 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
-                menuOptions: '<',
-                customStyles: '<',
+                menuOptions: '=',
+                customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
+                isDisabled: '=',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/customInputs/dropdown-select-view.html',
@@ -33,15 +34,17 @@
                 // scope.smallOptions probable properties
                     // tooltipText: custom tolltip text
                     // indicatorBtnIcon: sets icon for indicator button
+                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
                 if (scope.smallOptions) {
-                    if (scope.smallOptions.tooltipText) {
-                        scope.tooltipText = scope.smallOptions.tooltipText;
-                    }
 
-                    if (scope.smallOptions.indicatorBtnIcon) {
+                    scope.tooltipText = scope.smallOptions.tooltipText
+
+                    /* if (scope.smallOptions.indicatorBtnIcon) {
                         var indicatorBtnIcon = scope.smallOptions.indicatorBtnIcon;
-                    }
+                    } */
+
+                    scope.dialogParent = scope.smallOptions.dialogParent
                 }
 
                 var stylePreset;
@@ -49,17 +52,20 @@
                 var inputContainer = elem[0].querySelector('.dropdownSelectInputContainer');
                 var inputElem = elem[0].querySelector('.dropdownSelectInputElem');
 
-                var entityIndicatorIcons = {
+                /*var entityIndicatorIcons = {
                     'type1': {
                         type: 'class',
                         icon: 'fas fa-align-justify'
                     }
-                }
+                }*/
 
                 scope.getInputContainerClasses = function () {
                     var classes = '';
 
-                    if (scope.error) {
+                    if (scope.isDisabled) {
+                        classes += "custom-input-is-disabled";
+
+                    } else if (scope.error) {
                         classes = 'custom-input-error';
 
                     } else if (stylePreset) {
@@ -68,6 +74,10 @@
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
 
+                    }
+
+                    if (scope.noIndicatorBtn) {
+                        classes += " no-indicator-btn";
                     }
 
                     return classes;
@@ -151,11 +161,15 @@
 
                     Object.keys(scope.customStyles).forEach(function (className) {
 
-                        var elemClass = '.' + className;
-                        var elemToApplyStyles = elem[0].querySelector(elemClass);
+                        var elemClass = "." + className;
+                        var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-                        if (elemToApplyStyles) {
-                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles.length) {
+
+                            elemToApplyStyles.forEach(function (htmlNode) {
+                                htmlNode.style.cssText = scope.customStyles[className];
+                            })
+
                         }
 
                     });
@@ -164,10 +178,23 @@
 
                 scope.openSelectorDialog = function ($event) {
 
+                    var dialogParent = angular.element(document.body);
+
+                    if (scope.dialogParent) {
+
+                        var dialogParentElem = document.querySelector(scope.dialogParent);
+
+                        if (dialogParentElem) {
+                            dialogParent = dialogParentElem
+                        }
+
+                    }
+
                     $mdDialog.show({
                         controller: "ExpandableItemsSelectorDialogController as vm",
                         templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
                         targetEvent: $event,
+                        parent: dialogParent,
                         multiple: true,
                         locals: {
                             data: {
@@ -189,6 +216,29 @@
 
                 var initScopeWatchers = function () {
 
+                    scope.$watch('model', function () {
+
+                        if (scope.model && scope.menuOptions) {
+
+                            for (var i = 0; i < scope.menuOptions.length; i++) {
+
+                                if (scope.menuOptions[i].id === scope.model) {
+
+                                    scope.inputText = scope.menuOptions[i].name
+                                    scope.valueIsValid = true
+                                    break;
+
+                                }
+
+                            }
+
+                        } else {
+                            scope.inputText = ""
+                            scope.valueIsValid = false
+                        }
+
+                    });
+
                     if (scope.eventSignal) {
 
                         scope.$watch('eventSignal', function () {
@@ -198,16 +248,20 @@
                                 switch (scope.eventSignal.key) {
                                     case 'mark_not_valid_fields':
                                         if (scope.smallOptions && scope.smallOptions.notNull && !scope.item) {
-                                            scope.error = 'Field should not be null';
+                                            scope.error = 'Field should not be null'
                                         }
 
+                                        break;
+
+                                    case "error":
+                                        scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error))
                                         break;
 
                                     case 'set_style_preset1':
                                         stylePreset = 1;
 
                                         if (scope.item) {
-                                            scope.error = '';
+                                            scope.error = ''
                                         }
 
                                         break;
@@ -216,7 +270,7 @@
                                         stylePreset = 2;
 
                                         if (scope.item) {
-                                            scope.error = '';
+                                            scope.error = ''
                                         }
 
                                         break;
@@ -298,7 +352,7 @@
 
                     initEventListeners();
 
-                    scope.iconData = entityIndicatorIcons[indicatorBtnIcon];
+                    /*scope.iconData = entityIndicatorIcons[indicatorBtnIcon];*/
 
                     if (scope.customStyles) {
                         applyCustomStyles();

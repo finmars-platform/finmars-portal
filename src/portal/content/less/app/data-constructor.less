@@ -219,20 +219,10 @@ bind-field-control {
     }
   }
 
-  date-input {
-    .date-input-specific-btns {
-      width: 30px;
-      font-size: 11px;
-
-      &:hover {
-        background-color: #cecece;
-      }
-    }
-  }
-
   .custom-input-container {
     padding: 0 10px;
   }
+
 }
 
 textarea.bordered {
@@ -390,6 +380,16 @@ md-checkbox.checkbox-bind-field {
   box-sizing: border-box;
 
   .ec-decoration {
+    &.plain-text {
+      display: block;
+      position: relative;
+      width: 100%;
+      text-align: center;
+      margin: 30px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
     &.line {
       //position: absolute;
       width: 100%;

@@ -19,14 +19,15 @@
     var metaService = require('../../services/metaService');
     var EvScrollManager = require('../../services/ev-dom-manager/ev-scroll.manager');
 
-    module.exports = function () {
+    module.exports = function (evRvDomManagerService) {
         return {
             restrict: 'AE',
             scope: {
                 evDataService: '=',
                 evEventService: '=',
+                rootWrapElement: '=',
                 contentWrapElement: '=',
-                rootWrapElement: '='
+                workareaWrapElement: '='
             },
             template: '<div>' +
                 '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
@@ -38,22 +39,18 @@
                 '</div>',
             link: function (scope, elem) {
 
-                console.log('gTableBodyComponent.rootWrapElement', scope.rootWrapElement);
-
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
-                var rootWrapElem = scope.rootWrapElement;
-
-                var contentWrapElem = scope.contentWrapElement;
 
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
 
                 var elements = {
                     viewportElem: viewportElem,
                     contentElem: contentElem,
-                    contentWrapElem: contentWrapElem,
-                    rootWrapElem: rootWrapElem
+                    workareaWrapElem: scope.workareaWrapElement,
+                    contentWrapElem: scope.contentWrapElement,
+                    rootWrapElem: scope.rootWrapElement
                 };
 
                 var projection;
@@ -305,6 +302,19 @@
                     });
                 }
 
+                var calculateElemsWrapsSizes = function () {
+
+                    evRvDomManagerService.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
+                    // for vertical split panel contentWrapElem width calculated by gWidthAlignerComponent.js
+                    // horizontal split panel contentWrapElem take all available width
+                    if (isRootEntityViewer) {
+                        evRvDomManagerService.calculateContentWrapWidth(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
+                    }
+
+                    evRvDomManagerService.calculateWorkareaWrapWidth(elements.contentWrapElem, elements.workareaWrapElem, scope.evDataService);
+
+                }
+
                 scope.evEventService.addEventListener(evEvents.UPDATE_PROJECTION, function () {
 
                     var flatList = scope.evDataService.getFlatList();
@@ -341,6 +351,7 @@
                     if (isReport) {
                         contentElem.style.opacity = '1';
                     }
+
                     updateTableContent();
 
                     if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
@@ -353,27 +364,22 @@
 
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
-                    if (isReport) {
-                        rvDomManager.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
-                    } else {
-                        evDomManager.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
-                    }
+                    calculateElemsWrapsSizes();
 
                     updateTableContent();
 
                 });
 
-                scope.evEventService.addEventListener(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE, function () {
+                /* scope.evEventService.addEventListener(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE, function () {
 
-                    if (isReport) {
-                        rvDomManager.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
-                    } else {
-                        evDomManager.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
-                    }
+                    evRvDomManagerService.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
+                    evRvDomManagerService.calculateContentWrapWidth(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
 
-                });
+                }); */
 
                 scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
+
+                    calculateElemsWrapsSizes();
 
                     if (isReport) {
                         rvDomManager.calculateScroll(elements, scope.evDataService);
@@ -395,7 +401,39 @@
                     viewportElem.scrollTop = 0;
                 });
 
+                function onWindowResize () {
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                    if (isReport) {
+
+                        // rvDomManager.calculateScroll(elements, scope.evDataService);
+
+                        if (projection) {
+                            rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        }
+
+                    } else {
+
+                        // evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+                        evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
+
+                        if (projection) {
+                            evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        }
+
+                    }
+
+                }
+
                 var init = function () {
+
+                    var shellViewElem = document.querySelector('.shell-view');
+                    shellViewElem.style.overflow = 'hidden'; // scroll of this element interfere with tables sizes calculation
+
+                    window.addEventListener('resize', onWindowResize);
+
+                    calculateElemsWrapsSizes();
 
                     if (isReport) {
 
@@ -447,6 +485,8 @@
 
                     }
 
+                    shellViewElem.style.overflow = '';
+
                     toggleBookmarksBtn.addEventListener('click', function () {
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
@@ -457,11 +497,11 @@
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                        var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
+                        /* delete var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
 
-                        if (isRootEntityViewer && splitPanelIsActive) {
+                         if (isRootEntityViewer && splitPanelIsActive) {
                             scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
-                        }
+                        } */
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
@@ -481,25 +521,8 @@
                 //
                 // });
 
-                window.addEventListener('resize', function () {
-
-                    if (isReport) {
-                        rvDomManager.calculateScroll(elements, scope.evDataService);
-
-                        if (projection) {
-                            rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
-                        }
-
-                    } else {
-                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                        evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
-
-                        if (projection) {
-                            evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
-                        }
-
-                    }
-
+                scope.$on('$destroy', function () {
+                    window.removeEventListener('resize', onWindowResize);
                 })
 
             }

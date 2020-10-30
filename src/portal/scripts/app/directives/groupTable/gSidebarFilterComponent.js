@@ -369,10 +369,10 @@
                         var objectId = lastClickedRow.___id;
                         var parentGroupHashId = lastClickedRow.___parentId;
 
-                        var contextMenuPosition = 'top: ' + $event.pageY + 'px; right: 0;';
+                        //var contextMenuPosition = 'top: ' + $event.pageY + 'px; right: 0;';
+                        var contextMenuPosition = {positionX: $event.pageX, positionY: $event.pageY};
 
                         if (scope.isReport) {
-
                             rvDomManager.createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, scope.evDataService, scope.evEventService, contextMenuPosition);
 
                         } else {
@@ -971,7 +971,7 @@
                     } else {
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
-                            templateUrl: 'views/directives/groupTable/modal-view.html',
+                            templateUrl: 'views/directives/groupTable/g-modal-view.html',
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
@@ -1089,7 +1089,7 @@
                             scope.layoutName = listLayout.name;
                         });
 
-                    } else {
+                    } else if (scope.viewContext !== 'reconciliation_viewer') {
 
                         scope.evEventService.addEventListener(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED, function () {
                             checkIsLayoutDefault();
@@ -1119,10 +1119,6 @@
                     });
 
                     syncFilters();
-
-                    /*scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
-                    });*/
 
                     transactionTypeService.getListLight({
                         pageSize: 1000
@@ -1189,12 +1185,14 @@
 
                     initEventListeners();
 
-                    checkIsLayoutDefault();
+                    if (scope.viewContext !== 'reconciliation_viewer') {
+                        checkIsLayoutDefault();
+                    }
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
                     scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
+                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 
                 };
 

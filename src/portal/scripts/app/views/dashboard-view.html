@@ -4,39 +4,6 @@
 
         <div data-ng-if="vm.componentFillInModeData" class="dashboard-component-fillin-mode">
 
-            <!--<div data-ng-if="item.data.type == 'control'">
-                <dashboard-control
-                        tab-number="tab.tab_number"
-                        row-number="row.row_number"
-                        column-number="item.column_number"
-                        item="item"
-                        dashboard-data-service="vm.dashboardDataService"
-                        dashboard-event-service="vm.dashboardEventService"
-                ></dashboard-control>
-            </div>
-
-            <div data-ng-if="item.data.type == 'button_set'">
-                <dashboard-button-set
-                        tab-number="tab.tab_number"
-                        row-number="row.row_number"
-                        column-number="item.column_number"
-                        item="item"
-                        dashboard-data-service="vm.dashboardDataService"
-                        dashboard-event-service="vm.dashboardEventService"
-                ></dashboard-button-set>
-            </div>
-
-            <div data-ng-if="item.data.type == 'input_form'">
-                <dashboard-input-form
-                        tab-number="tab.tab_number"
-                        row-number="row.row_number"
-                        column-number="item.column_number"
-                        item="item"
-                        dashboard-data-service="vm.dashboardDataService"
-                        dashboard-event-service="vm.dashboardEventService"
-                ></dashboard-input-form>
-            </div>-->
-
             <div data-ng-if="vm.componentFillInModeData.item.data.type === 'report_viewer' ||
                              vm.componentFillInModeData.item.data.type == 'report_viewer_split_panel'"
                  class="height-100">
@@ -50,20 +17,6 @@
                         fill-in-mode-data="vm.componentFillInModeData"
                 ></dashboard-report-viewer>
             </div>
-
-            <!--<div data-ng-if="vm.componentFillInModeData.item.data.type == 'report_viewer_split_panel'"
-                 class="height-100">
-                <dashboard-report-viewer-split-panel
-                        class="height-100 display-block"
-                        tab-number="vm.componentFillInModeData.tab_number"
-                        row-number="vm.componentFillInModeData.row_number"
-                        column-number="vm.componentFillInModeData.column_number"
-                        item="vm.componentFillInModeData.item"
-                        dashboard-data-service="vm.dashboardDataService"
-                        dashboard-event-service="vm.dashboardEventService"
-                        fill-in-mode-data="vm.componentFillInModeData"
-                ></dashboard-report-viewer-split-panel>
-            </div>-->
 
             <div data-ng-if="vm.componentFillInModeData.item.data.type === 'report_viewer_bars_chart' ||
                              vm.componentFillInModeData.item.data.type === 'report_viewer_pie_chart'"
