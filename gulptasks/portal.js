@@ -75,11 +75,20 @@
 
     });
 
-    gulp.task(appName + '-HTML-to-JS', function () {
+    gulp.task(appName + '-HTML-to-JS', function () { // gulp tasks portal-HTML-to-JS
 
         // console.log('Executing task index-HTML-templateCache...');
 
         var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
+
+		var d = new Date();
+		var date = left_pad(d.getDate());
+		var month = left_pad(d.getMonth() + 1);
+		var year = left_pad(d.getFullYear());
+		var hours = left_pad(d.getHours());
+		var minutes = left_pad(d.getMinutes());
+
+        let build_date = hours + ':' + minutes + ', ' + date + '/' + month + '/' + year;
 
         return gulp.src(pathToHtml)
             .pipe(htmlmin({collapseWhitespace: true}))
@@ -91,9 +100,10 @@
                 moduleName: appName
             }))
             .pipe(concat('templates.min.js'))
+			.pipe(replace(/__BUILD_DATE__/g, build_date))
             .pipe(uglify())
-            .pipe(gulp.dest('src/' + appName + '/scripts/'));
-
+            .pipe(gulp.dest('src/' + appName + '/scripts/'))
+			.pipe(gulp.dest('dist/' + appName + '/scripts/'));
     });
 
     gulp.task('portal-forum-HTML-to-JS', function () {
@@ -113,25 +123,35 @@
         return num;
     }
 
-    gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
+    let consoleProd = function () {
+		console.log('Production build', PROJECT_ENV);
+	};
 
-        console.log('PROJECT_ENV: ' + PROJECT_ENV);
+    // gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
+	gulp.task(appName + '-js-min', function () { // gulp tasks portal-js-min
+
+		console.log('PROJECT_ENV: ' + PROJECT_ENV);
         console.log('API_HOST: ' + API_HOST);
-
         // console.log('API_HOST: ' + API_HOST);
 
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
-        var d = new Date();
+        /* var d = new Date();
         var date = left_pad(d.getDate());
         var month = left_pad(d.getMonth() + 1);
         var year = left_pad(d.getFullYear());
         var hours = left_pad(d.getHours());
         var minutes = left_pad(d.getMinutes());
 
-        var build_date = hours + ':' + minutes + ', ' + date + '/' + month + '/' + year;
+        let build_date = hours + ':' + minutes + ', ' + date + '/' + month + '/' + year; */
 
-        return browserify(pathToJS)
+        let bundles = browserify(pathToJS, {debug: false, cache: {}, packageCache: {}});
+
+        if (PROJECT_ENV === 'production') {
+			bundles = bundles.transform("babelify", {presets: ["@babel/preset-env"]});
+		}
+
+        return bundles
             .bundle()
             .on('error', function (err) {
                 console.error('Error in Browserify: \n', err.message);
@@ -142,12 +162,10 @@
             .pipe(buffer())
             .pipe(preprocess())
             .pipe(gulpif(PROJECT_ENV === 'local', replace(/__API_HOST__/g, API_HOST)))
-            .pipe(replace(/__BUILD_DATE__/g, build_date))
+            // .pipe(replace(/__BUILD_DATE__/g, build_date))
             .pipe(replace(/__PROJECT_ENV__/g, PROJECT_ENV))
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
             .pipe(gulpif(PROJECT_ENV === 'production', stripDebug()))
-            // .pipe(uglify()) // if you need to debug minified build locally
-            // .pipe(stripDebug()) // if you need to debug minified build locally
             .pipe(rename({basename: 'main', suffix: '.min'}))
             .on('error', function (error) {
                 console.error('\nError on JS minification: \n', error.toString());
@@ -156,11 +174,11 @@
             .pipe(gulp.dest('dist/' + appName + '/scripts/'))
             .pipe(livereload());
 
+    });
 
+    /* Does not needed after portal-js-min stopped calling portal-HTML-to-JS
 
-    }));
-
-    gulp.task(appName + '-only-js-min', function () {
+    gulp.task(appName + '-only-js-min', function () { // gulp task portal-only-js-min
         // gulp.task(appName + '-js-min', function () {
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
@@ -197,7 +215,7 @@
             .pipe(gulp.dest('dist/' + appName + '/scripts/'))
             .pipe(livereload());
 
-    });
+    }); */
 
     gulp.task(appName + '-js-min-All', gulp.series(appName + '-HTML-to-JS', appName + '-js-min'));
 
@@ -222,13 +240,13 @@
     gulp.task(appName + '-watch-All', function () {
         livereload.listen();
         gulp.watch('src/' + appName + '/**/*.less', gulp.series(appName + '-less-to-css-min'));
-        gulp.watch('src/' + appName + '/**/*.js', gulp.series(appName + '-only-js-min'));
+        gulp.watch('src/' + appName + '/**/*.js', gulp.series(appName + '-js-min'));
         gulp.watch('src/' + appName + '/**/*.html', gulp.series(appName + '-HTML-to-JS'));
         gulp.watch('src/index.html', gulp.series(appName + '-html-min'));
     });
     gulp.task('forum-watch-All', function () {
         gulp.watch('src/' + appName + '/**/*.less', gulp.series(appName + '-less-to-css-min'));
-        gulp.watch('src/forum/**/*.js', gulp.series(appName + '-only-js-min'));
+        gulp.watch('src/forum/**/*.js', gulp.series(appName + '-js-min'));
         gulp.watch('src/forum/**/*.html', gulp.series('portal-forum-HTML-to-JS', appName + '-js-min'));
     });
 
