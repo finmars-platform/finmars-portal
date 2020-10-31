@@ -684,7 +684,7 @@ app.directive('ngRightClick', ['$parse', function ($parse) {
     };
 }]);
 
-require('./templates.min.js');
+// require('./templates.min.js');
 
 String.prototype.capitalizeFirstLetter = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
