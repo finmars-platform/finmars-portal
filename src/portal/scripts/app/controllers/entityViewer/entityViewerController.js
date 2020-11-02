@@ -615,6 +615,76 @@
 
 										break;
 
+                                    case 'instrument' :
+                                        $bigDrawer.show({
+                                            controller: 'EntityViewerEditDialogController as vm',
+                                            templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+                                            locals: {
+                                                entityType: entitytype,
+                                                entityId: activeObject.id,
+                                                data: {
+                                                    openedIn: 'big-drawer'
+                                                }
+                                            }
+
+                                        }).then(function (res) {
+
+                                            vm.entityViewerDataService.setActiveObjectAction(null);
+                                            vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                                            if (res && res.res === 'agree') {
+
+                                                if (res.data.action === 'delete') {
+
+                                                    var objects = vm.entityViewerDataService.getObjects();
+
+                                                    objects.forEach(function (obj) {
+
+                                                        if (activeObject.id === obj.id) {
+
+                                                            var parent = vm.entityViewerDataService.getData(obj.___parentId);
+
+                                                            parent.results = parent.results.filter(function (resultItem) {
+                                                                return resultItem.id !== activeObject.id
+                                                            });
+
+                                                            vm.entityViewerDataService.setData(parent)
+
+                                                        }
+
+                                                    });
+
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                                } else {
+
+                                                    var objects = vm.entityViewerDataService.getObjects();
+
+                                                    objects.forEach(function (obj) {
+
+                                                        if (res.data.id === obj.id) {
+
+                                                            Object.keys(res.data).forEach(function (key) {
+
+                                                                obj[key] = res.data[key]
+
+                                                            });
+
+                                                            vm.entityViewerDataService.setObject(obj);
+
+                                                        }
+
+                                                    });
+
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                                }
+
+                                            }
+
+                                        });
+
+                                        break;
+
 									default:
 
 										/* $mdDialog.show({

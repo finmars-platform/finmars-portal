@@ -60,33 +60,57 @@
 
 }
 
-.entity-tabs-menu {
-  position: absolute;
-  min-height: 48px;
-  top: 0;
-  right: 0;
+.universal-editor {
+  .tabs-colored {
+    md-tab-item {
+      padding: 0;
 
-  button.md-icon-button {
-    margin-top: 5px;
-  }
+      span {
+        display: inline-block;
+        padding: 12px 24px;
+      }
+    }
 
-  &.active {
-    color: #f05a22;
-    border-bottom: 2px solid #f05a22;
-    box-sizing:border-box;
+    .md-tab.md-active {
+      color: #f05a22;
+      font-weight: bold;
+    }
 
-    ng-md-icon svg {
-      fill: #f05a22;
+    md-ink-bar {
+      color: #f05a22;
+      background-color: #f05a22;
     }
   }
 
+
+  .entity-tabs-menu {
+    position: absolute;
+    min-height: 48px;
+    top: 0;
+    right: 0;
+
+    button.md-icon-button {
+      margin-top: 5px;
+    }
+
+    &.active {
+      color: #f05a22;
+      border-bottom: 2px solid #f05a22;
+      box-sizing:border-box;
+
+      ng-md-icon svg {
+        fill: #f05a22;
+      }
+    }
+
+  }
 }
 
-md-menu-item button.active-tab-button {
+.universal-editor-menu-content .active-tab-button {
   border-left: 5px solid #f05a22;
 }
 
-.optional-entity-menu {
+.universal-editor-menu-content.optional-entity-menu {
 
   ng-md-icon svg {
     fill: #7d7d7d;
@@ -100,6 +124,5 @@ md-menu-item button.active-tab-button {
     }
   }
 
-
-
 }
+
