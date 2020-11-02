@@ -2862,3 +2862,49 @@ md-tabs [role="tabpanel"] {
 md-checkbox.md-indeterminate .md-icon:after {
   .checkboxUntouched(#ff4081, 12px, -46%, -55%);
 }
+
+.md-button.primary-button {
+  padding: 0 15px;
+
+  font-weight: 700;
+  color: #fff;
+  background-color: #f05a22;
+
+  border-radius: 3px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+
+  &:not([disabled]):hover {
+    opacity: 0.5;
+    background-color: #f05a22;
+  }
+}
+
+.md-button.outline-button {
+  min-width: auto;
+  max-height: 36px;
+  background-color: #ffffff;
+  color: #f05a22;
+  font-weight: 700;
+
+  border: 1px solid #7d7d7d;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: #FDECE5
+  }
+
+  ng-md-icon svg {
+    fill: #7d7d7d;
+  }
+}
+
+.md-button.link-button {
+  background-color: #ffffff;
+  color: #f05a22;
+  font-weight: 700;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: #FDECE5
+  }
+}
