@@ -128,15 +128,18 @@
                                         valueFromTable = new Date(valueFromTable).toDateString();
                                         filterArgument = new Date(filterArgument[0]).toDateString();
                                         break;
+
                                     case 'from_to':
                                         valueFromTable = new Date(valueFromTable);
                                         filterArgument.min_value = new Date(filterArgument.min_value);
                                         filterArgument.max_value = new Date(filterArgument.max_value);
                                         break;
+
                                     case 'date_tree':
                                         valueFromTable = new Date(valueFromTable);
                                         // filterArgument is array of strings
                                         break;
+
                                     default:
                                         valueFromTable = new Date(valueFromTable);
                                         filterArgument = new Date(filterArgument[0]);
@@ -291,8 +294,8 @@
                 break;
 
             case 'multiselector':
-				console.log("");
-                if (filterBy.indexOf(valueToFilter) !== -1) {
+
+                if (filterBy.includes(valueToFilter)) {
                     return true;
                 }
 
@@ -310,9 +313,14 @@
                 }
                 break;
 
+			default:
+
+				return false;
+
+				break;
+
         }
 
-        return false;
 
     };
 
@@ -330,14 +338,14 @@
         } else {
 
             if (item_value.toString().toLowerCase() !== value.toLowerCase()) {
-                match = false
+                match = false;
             }
 
         }
 
         // console.log('match', match);
 
-        return match
+        return match;
 
     };
 
@@ -370,7 +378,7 @@
 
                 }
 
-                return match
+                return match;
 
             });
 
