@@ -8,7 +8,7 @@
 
     module.exports = function (viewModel, $scope, $mdDialog) {
 
-        let onSetLayoutEnd = function () {
+        var onSetLayoutEnd = function () {
 
             viewModel.readyStatus.layout = true;
             rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
@@ -17,7 +17,7 @@
 
         };
 
-        let calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
+        var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
 
             var reportDateProperties = {
                 'balance-report': [null, 'report_date'],
@@ -35,7 +35,7 @@
 
         };
 
-        let calculateReportDatesExprs = function (options) {
+        var calculateReportDatesExprs = function (options) {
 
             if (!options) {
                 options = {}
