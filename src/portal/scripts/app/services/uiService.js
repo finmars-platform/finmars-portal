@@ -29,9 +29,6 @@
     };
 
     var getListLayout = function (entity, options) {
-
-        // console.trace();
-
         return uiRepository.getListLayout(entity, options);
     };
 
@@ -142,7 +139,11 @@
     };
 
     var updateDashboardLayout = function (id, data) {
-        return uiRepository.updateDashboardLayout(id, data)
+
+    	return uiRepository.updateDashboardLayout(id, data).then(function (updateLayoutData) {
+			data.modified = updateLayoutData.modified // prevents synchronization error
+		});
+
     };
 
     var deleteDashboardLayoutByKey = function (id) {

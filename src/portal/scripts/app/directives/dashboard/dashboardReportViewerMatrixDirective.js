@@ -10,7 +10,9 @@
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
     var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
 
-    module.exports = function ($mdDialog) {
+	var dashboardHelper = require('../../helpers/dashboard.helper');
+
+	module.exports = function ($mdDialog) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-matrix-view.html',
@@ -62,7 +64,7 @@
                     scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
                 }
 
-                var saveComponentSettings = function () {
+                /*var saveComponentSettings = function () {
 
                     var listLayout = scope.dashboardDataService.getListLayout();
 
@@ -102,7 +104,7 @@
 
                     }
 
-                };
+                };*/
 
 
                 scope.openComponentSettingsDialog = function ($event) {
@@ -145,7 +147,7 @@
                             }*/
 
                             if (res.action === 'save') {
-                                saveComponentSettings();
+								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData);
                             }
 
                             if (scope.fillInModeData) {
