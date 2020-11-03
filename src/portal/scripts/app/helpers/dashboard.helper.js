@@ -2,13 +2,18 @@
 
     'use strict';
 
-    var componentsForLinking = [
+	var uiService = require('../services/uiService');
+
+	var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
+    let componentsForLinking = [
         'report_viewer', 'report_viewer_split_panel', 'report_viewer_matrix',
         'report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_grand_total'
     ];
 
-    var getLinkingToFilters = function (layout) {
-        var linkingToFilters = [];
+    let getLinkingToFilters = function (layout) {
+
+    	var linkingToFilters = [];
 
         layout.data.filters.forEach(function (filter) {
 
@@ -54,9 +59,10 @@
         });
 
         return linkingToFilters;
+
     };
 
-    var getDataForLayoutSelectorWithFilters = function (layouts) {
+    let getDataForLayoutSelectorWithFilters = function (layouts) {
 
         var result = [];
 
@@ -78,14 +84,52 @@
 
     };
 
-    var getComponentsForLinking = function () {
+    let getComponentsForLinking = function () {
         return componentsForLinking;
     };
+
+    let saveComponentSettingsFromDashboard = function (dashboardDataService, componentData) {
+
+		var listLayout = dashboardDataService.getListLayout();
+
+		if (listLayout) {
+
+			var layoutData = listLayout.data;
+
+			for (var i = 0; i < layoutData.components_types.length; i++) {
+
+				if (layoutData.components_types[i].id === componentData.id) {
+
+					layoutData.components_types[i] = JSON.parse(JSON.stringify(componentData));
+					dashboardDataService.setListLayout(listLayout);
+
+					uiService.updateDashboardLayout(listLayout.id, listLayout).then(function (data) {
+
+						listLayout.modified = data.modified
+						dashboardDataService.setListLayout(listLayout);
+
+						toastNotificationService.success('Dashboard component settings saved.');
+
+					}).catch(function () {
+						dashboardDataService.setListLayout(listLayout);
+					});
+
+					break;
+
+				}
+
+			}
+
+		}
+
+	};
 
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
         getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
-        getComponentsForLinking: getComponentsForLinking
+        getComponentsForLinking: getComponentsForLinking,
+
+		saveComponentSettingsFromDashboard: saveComponentSettingsFromDashboard
     };
 
 }());
