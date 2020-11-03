@@ -1100,18 +1100,15 @@
                     if (linkedFilter) {
 
                         linkedFilter.options.filter_values = [componentOutput.data.value]
+
+						if ((linkedFilter.value_type === 100 || linkedFilter.value_type === 'field') &&
+							Array.isArray(componentOutput.data.value)) {
+
+							linkedFilter.options.filter_values = componentOutput.data.value
+
+						}
+
                         filters[linkedFilterIndex] = linkedFilter
-
-                        /* filters = filters.map(function (item) {
-
-                            if (item.type === 'filter_link' &&
-								item.component_id === filter_link.component_id) {
-                                return linkedFilter;
-                            }
-
-                            return item;
-
-                        }) */
 
                     } else {
 
@@ -1356,7 +1353,9 @@
                                 }
 
                                 if (compOutputData !== undefined && compOutputData !== null) {
-                                    vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
+
+                                	vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
+
                                 } else {
                                     delete vm.linkedActiveObjects[lastActiveComponentId];
                                 }
