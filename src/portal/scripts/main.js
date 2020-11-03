@@ -70,6 +70,8 @@ app.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$control
 
 app.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
 app.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
+app.service('evRvDomManagerService', ['$mdDialog', require('./app/services/evRvDomManagerService')]);
+
 // Dashboard
 
 app.component('dashboardEntityViewer', require('./app/components/dashboardEntityViewerComponent'));
@@ -192,7 +194,6 @@ app.controller('ClassifierExportDialogController', ['$scope', '$mdDialog', 'data
 app.controller('LayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/layoutExportDialogController')]);
 app.controller('FileReportsController', ['$scope', '$mdDialog', require('./app/controllers/pages/fileReportsController')]);
 app.controller('LoginDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/loginDialogController')]);
-app.controller('twoFactorLoginDialogController', ['$scope', '$mdDialog', 'username', require('./app/controllers/dialogs/twoFactorLoginDialogController')]);
 app.controller('HealthcheckController', ['$scope', require('./app/controllers/pages/healthcheckController')]);
 
 
@@ -471,6 +472,7 @@ app.controller('InstrumentDownloadController', ['$scope', '$mdDialog', require('
 app.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
 app.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
 app.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
+app.controller('SystemMessagesController', ['$scope', '$mdDialog', require('./app/controllers/pages/systemMessagesController')]);
 
 // Procedures
 
@@ -564,7 +566,7 @@ app.directive('useFromAboveButton', ['$mdDialog', require('./app/controls/use-fr
 // GROUP TABLE START
 
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
-app.directive('groupTableBody', [require('./app/directives/groupTable/gTableBodyComponent')]);
+app.directive('groupTableBody', ['evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
 app.directive('groupSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupDashboardFilter', ['$mdDialog', require('./app/directives/groupTable/gDashboardFilterComponent')]);
 app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
@@ -581,11 +583,11 @@ app.directive('groupActionsBlock', ['$mdDialog', '$state', require('./app/direct
 app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
 app.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
-app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
+app.directive('gHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 app.directive('groupWidthAligner', [require('./app/directives/groupTable/gWidthAlignerComponent')]);
 app.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', require('./app/directives/groupTable/groupEditorBinderComponent')]);
 app.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
-app.directive('groupVerticalSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gVerticalSplitPanelReportBinderComponent')]);
+app.directive('gVerticalSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gVerticalSplitPanelReportBinderComponent')]);
 app.directive('groupPermissionEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gPermissionEditorBinderComponent')]);
 app.directive('groupReconciliationMatchEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gReconciliationMatchEditorBinderComponent')]);
 app.directive('gCAreasDragAndDrop', ['$mdDialog', require('./app/directives/groupTable/gCAreasDragAndDropDirective')]);
@@ -676,13 +678,13 @@ app.directive('ngRightClick', ['$parse', function ($parse) {
         element.bind('contextmenu', function (event) {
             scope.$apply(function () {
                 event.preventDefault();
-                fn(scope, {$event: event});
+                fn(scope, { $event: event });
             });
         });
     };
 }]);
 
-require('./templates.min.js');
+// require('./templates.min.js');
 
 String.prototype.capitalizeFirstLetter = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);

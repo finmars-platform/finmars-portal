@@ -133,11 +133,19 @@
 
                                     var relationFieldData = item[keyProperty + '_object'];
 
-                                    if (relationFieldData.display_name) {
+                                    if (relationFieldData.name) {
+                                        valueFromTable = JSON.parse(JSON.stringify(relationFieldData.short_name));
+
+                                    } else if (keyProperty === 'price_download_scheme') {
+                                        valueFromTable = JSON.parse(JSON.stringify(relationFieldData.scheme_name));
+
+                                    }
+
+                                    /*if (relationFieldData.display_name) {
                                         valueFromTable = JSON.parse(JSON.stringify(relationFieldData.display_name));
                                     } else {
                                         valueFromTable = JSON.parse(JSON.stringify(relationFieldData.name));
-                                    }
+                                    }*/
 
                                 } else if (!valueFromTable) {
 

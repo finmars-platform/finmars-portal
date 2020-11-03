@@ -927,6 +927,23 @@
                 // var reportOptions = vm.entityViewerDataService.getReportOptions();
                 var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
+                var finishSetLayout = function () {
+
+                    rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                    var additions = vm.entityViewerDataService.getAdditions();
+                    var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+
+                    if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+                        vm.entityViewerDataService.setSplitPanelStatus(true);
+                    }
+
+                    vm.readyStatus.layout = true;
+
+                    $scope.$apply();
+
+                }
+
                 // Check if there is need to solve report datepicker expression
                 if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
