@@ -74,10 +74,9 @@
                             </div>
                         </div>
                     </md-toolbar>
+
                     <md-content flex class="app-md-content min-height">
-
                         <div data-ui-view class="shell-view min-height"></div>
-
                     </md-content>
 
                 </div>
@@ -143,6 +142,12 @@
                                                 <span data-ng-show="vm.unreadedNotificationsAmount"
                                                       data-ng-bind="vm.unreadedNotificationsAmount"
                                                       class="unreaded-notifications-number"></span>
+                                            </md-button>
+
+                                            <md-button style="margin-left: 0"
+                                                       data-ui-sref="app.system-messages"
+                                                       aria-label="System Messages">
+                                                <ng-md-icon icon="email"></ng-md-icon>
                                             </md-button>
 
                                             <div class="header-masteruser">
@@ -249,11 +254,11 @@
                                 </div>
                                 <!-- ----------------------------------------- -->
                             </md-toolbar>
+
                             <md-content flex class="app-md-content min-height space-for-sidenav">
-
                                 <div data-ui-view class="shell-view min-height"></div>
-
                             </md-content>
+
                         </div>
                     </div>
 

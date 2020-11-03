@@ -32,7 +32,7 @@
 
                     <div layout="row">
                         <div class="g-tr-btn-holder p-r-0" flex="50">
-                        <span ng-show="layoutChanged"
+                            <span ng-show="layoutChanged"
                               class="layout-change-indicator">
                             <ng-md-icon icon="track_changes" size="20">
                                 <md-tooltip class="tooltip_2"
@@ -41,7 +41,7 @@
                         </span>
 
                             <md-menu>
-                                <md-button class="md-raised md-ink-ripple"
+                                <md-button class="md-raised"
                                            ng-click="$mdOpenMenu($event)">
                                     Layouts
                                 </md-button>
@@ -233,7 +233,13 @@
 
                             <md-button data-ng-if="entityType === 'complex-transaction'"
                                        class="md-raised long-text-btn"
-                                       data-ng-click="openReconDialog($event)">Reconciliation
+                                       data-ng-click="toggleRecon($event)">
+                                <span data-ng-hide="verticalAdditions && verticalAdditions.type === 'reconciliation'">
+                                    Reconciliation
+                                </span>
+                                <span data-ng-hide="!verticalAdditions || verticalAdditions.type !== 'reconciliation'" style="font-size: 8px;">
+                                    Close reconciliation
+                                </span>
                             </md-button>
                         </div>
                     </div>
@@ -302,64 +308,80 @@
 
             </div>
 
-            <div data-ng-if="!isReport && entityType == 'reconciliation' ">
+            <div data-ng-if="!isReport && entityType === 'reconciliation'">
 
-                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
-                    <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
-                            ng-click="openViewConstructor($event)">Columns/Groups/Filters
-                    </button>
-                </div>
+                <div class="top-right-menu-btns">
 
-                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
-                    <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
-                            ng-class="{'disabled-btn':savingReconLayout }"
-                            ng-click="saveReconLayout($event)">
+                    <div layout="row">
+                        <div class="g-tr-btn-holder width-100">
+                            <md-button class="md-raised" type="button"
+                                       ng-click="openViewConstructor($event)">Columns/Groups/Filters
+                            </md-button>
+                        </div>
+                    </div>
 
-                        <span data-ng-if="!savingReconLayout">Save Layout</span>
-                        <span data-ng-if="savingReconLayout">Saving</span>
-                    </button>
-                </div>
+                    <div layout="row">
+                        <div class="g-tr-btn-holder">
+                            <md-button class="md-raised full-width" data-ng-click="openMatchEditor()">Open Match Editor</md-button>
+                        </div>
+                    </div>
 
-                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
-                    <md-button class="md-raised md-primary full-width" data-ng-click="matchReconciliationLines($event)">Match</md-button>
-                </div>
+                    <div layout="row">
+                        <div class="g-tr-btn-holder p-r-0" flex="50">
+                            <md-button class="md-raised md-primary" data-ng-click="matchReconciliationLines($event)">Match</md-button>
+                        </div>
 
-                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
-                    <md-button class="md-raised full-width" data-ng-click="openMatchEditor()">Open Match Editor</md-button>
-                </div>
+                        <div class="g-tr-btn-holder" flex="50">
+                            <md-button class="md-raised" type="button"
+                                    ng-class="{'disabled-btn':savingReconLayout }"
+                                    ng-click="saveReconLayout($event)">
 
-                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
-                    <md-menu class="full-width" layout="row">
-                        <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
-                                   ng-click="$mdOpenMenu($event)">
-                            Export
-                        </md-button>
-                        <md-menu-content width="4">
-                            <md-menu-item>
-                                <md-button ng-click="exportAsCSV()" class="g-settings-option-btn">
-                                    <span>Export to CSV</span>
+                                <span data-ng-if="!savingReconLayout">Save Layout</span>
+                                <span data-ng-if="savingReconLayout">Saving</span>
+                            </md-button>
+                        </div>
+                    </div>
+
+                    <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+
+                        <div class="g-tr-btn-holder p-r-0" flex="50">
+                            <md-menu>
+                                <md-button class="md-raised"
+                                           ng-click="$mdOpenMenu($event)">
+                                    Export
                                 </md-button>
-                            </md-menu-item>
 
-                            <md-menu-item>
-                                <md-button ng-click="copyReport()"
-                                           class="g-settings-option-btn">
-                                    <span>Copy all to buffer</span>
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="copySelectedToBuffer()"
-                                           class="g-settings-option-btn">
-                                    <!--<ng-md-icon icon="content_copy" size="24"></ng-md-icon>-->
-                                    <span>Copy selected to buffer</span>
-                                </md-button>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
-                </div>
+                                <md-menu-content width="4">
+                                    <md-menu-item>
+                                        <md-button ng-click="exportAsCSV()" class="g-settings-option-btn">
+                                            <span>Export to CSV</span>
+                                        </md-button>
+                                    </md-menu-item>
 
-                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
-                    <md-button class="md-raised full-width" data-ng-click="reconBookSelected($event)">Book Selected</md-button>
+                                    <md-menu-item>
+                                        <md-button ng-click="copyReport()"
+                                                   class="g-settings-option-btn">
+                                            <span>Copy all to buffer</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="copySelectedToBuffer()"
+                                                   class="g-settings-option-btn">
+                                            <!--<ng-md-icon icon="content_copy" size="24"></ng-md-icon>-->
+                                            <span>Copy selected to buffer</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </div>
+
+                        <div class="g-tr-btn-holder" flex="50">
+                            <md-button class="md-raised long-text-btn"
+                                       data-ng-click="reconBookSelected($event)">Book Selected</md-button>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -380,13 +402,13 @@
 
                     <div layout="row">
                         <div class="g-tr-btn-holder p-r-0" flex="50">
-                        <span ng-show="layoutChanged"
-                              class="layout-change-indicator">
-                            <ng-md-icon icon="track_changes" size="20">
-                                <md-tooltip class="tooltip_2"
-                                            md-direction="top">layout changed</md-tooltip>
-                            </ng-md-icon>
-                        </span>
+                            <span ng-show="layoutChanged"
+                                  class="layout-change-indicator">
+                                <ng-md-icon icon="track_changes" size="20">
+                                    <md-tooltip class="tooltip_2"
+                                                md-direction="top">layout changed</md-tooltip>
+                                </ng-md-icon>
+                            </span>
 
                             <md-menu>
                                 <md-button class="md-raised md-ink-ripple"

@@ -1297,7 +1297,7 @@
                                         vm.linkedActiveObjects[lastActiveComponentId] &&
                                         typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
 
-                                        if (!objectComparison.comparePropertiesOfObjects(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
+                                        if (!objectComparison.areObjectsTheSame(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
                                             lastActiveCompChanged = true;
                                         }
 
@@ -1373,7 +1373,7 @@
                                         vm.linkedActiveObjects[lastActiveComponentId] &&
                                         typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
 
-                                        if (!objectComparison.comparePropertiesOfObjects(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
+                                        if (!objectComparison.areObjectsTheSame(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
                                             lastActiveCompChanged = true;
                                         }
 

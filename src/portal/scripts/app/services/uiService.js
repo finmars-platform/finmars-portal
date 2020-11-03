@@ -322,8 +322,12 @@
         return uiRepository.createDashboardLayout(data);
     };
 
-    let updateDashboardLayout = function (id, data) {
-        return uiRepository.updateDashboardLayout(id, data)
+    var updateDashboardLayout = function (id, data) {
+
+    	return uiRepository.updateDashboardLayout(id, data).then(function (updateLayoutData) {
+			data.modified = updateLayoutData.modified // prevents synchronization error
+		});
+
     };
 
     let deleteDashboardLayoutByKey = function (id) {

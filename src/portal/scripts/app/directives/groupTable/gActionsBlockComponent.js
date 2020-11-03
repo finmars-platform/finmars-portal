@@ -240,7 +240,7 @@
                     } else {
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
-                            templateUrl: 'views/directives/groupTable/modal-view.html',
+                            templateUrl: 'views/directives/groupTable/g-modal-view.html',
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
@@ -502,7 +502,7 @@
                     scope.currentAdditions = scope.evDataService.getAdditions();
 
                     scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+                    // delete scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                 }
@@ -553,12 +553,13 @@
 
                     if (scope.currentAdditions.type === type) {
 
-                        clearAdditions();
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
                         interfaceLayout.splitPanel.height = 0;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
                         middlewareService.setNewSplitPanelLayoutName(false);
+
+                        clearAdditions();
 
                     } else {
 
@@ -575,19 +576,9 @@
                         if (entityType) { // in case of choosing entity viewer layout
 
                             getListLayoutByEntity(entityType).then(function (layoutsList) {
+
                                 var layouts = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(layoutsList);
-                                //var layouts = rvHelper data;
-                                /*$mdDialog.show({
-                                                                controller: 'SelectLayoutDialogController as vm',
-                                                                templateUrl: 'views/dialogs/select-layout-dialog-view.html',
-                                                                targetEvent: $event,
-                                                                locals: {
-                                                                    options: {
-                                                                        dialogTitle: 'Choose layout to open Split Panel with',
-                                                                        entityType: entityType,
-                                                                        noFolding: true
-                                                                    }
-                                                                }*/
+
                                 $mdDialog.show({
                                     controller: "ExpandableItemsSelectorDialogController as vm",
                                     templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
@@ -749,16 +740,52 @@
 
                 };
 
-                scope.openReconDialog = function ($event) {
+                scope.toggleRecon = function ($event) {
 
                     var additions = scope.evDataService.getVerticalAdditions();
 
                     if (additions.type === 'reconciliation') {
 
-                        scope.evDataService.setVerticalAdditions({});
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                warning: {
+                                    title: 'Warning',
+                                    description: "Reconciliation will be closed and it's tables settings will be reset.",
+                                    actionButtons: [
+                                        {
+                                            name: 'CANCEL',
+                                            response: {status: 'disagree'}
+                                        },
+                                        {
+                                            name: 'OK',
+                                            response: {status: 'agree'}
+                                        }
+                                    ]
+                                }
+                            }
 
-                        scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
-                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        }).then(function (res) {
+
+                            if (res.status === 'agree') {
+
+                                var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                                interfaceLayout.verticalSplitPanel.width = 0;
+
+                                scope.evDataService.setVerticalSplitPanelStatus(false);
+                                scope.evDataService.setVerticalAdditions({});
+
+                                scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
+                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            }
+
+                        });
 
                     } else {
 
@@ -784,6 +811,7 @@
                                 additions.isOpen = true;
                                 additions.type = 'reconciliation';
 
+                                scope.evDataService.setVerticalSplitPanelStatus(true);
                                 scope.evDataService.setVerticalAdditions(additions);
 
                                 scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
@@ -842,7 +870,7 @@
 
                             if (typeof data1 === 'object' && typeof data2 === 'object') {
 
-                                return objectComparisonHelper.comparePropertiesOfObjects(data1, data2);
+                                return objectComparisonHelper.areObjectsTheSame(data1, data2);
 
                             } else {
 
@@ -1154,8 +1182,6 @@
 
                         }
 
-                        //checkIsLayoutDefault();
-
                     })
                 };
 
@@ -1211,8 +1237,8 @@
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                    clearAdditions();
                     middlewareService.setNewSplitPanelLayoutName(false);
+                    clearAdditions();
 
                     if (scope.isReport) {
 
@@ -1827,12 +1853,8 @@
                     scope.evEventService.dispatchEvent(evEvents.RECON_TOGGLE_MATCH_EDITOR);
                 };
 
-                scope.reconBookSelected = function ($event) {
-
-                    console.log('reconBookSelected');
-
+                scope.reconBookSelected = function () {
                     scope.evEventService.dispatchEvent(evEvents.RECON_BOOK_SELECTED)
-
                 };
 
                 scope.saveReconLayout = function ($event) {
@@ -1892,9 +1914,7 @@
                 };
 
                 scope.openDashboardComponentConstructor = function () {
-
                     scope.evEventService.dispatchEvent(evEvents.OPEN_DASHBOARD_COMPONENT_EDITOR);
-
                 };
 
                 scope.init = function () {
@@ -1946,7 +1966,6 @@
 
                         scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
-
                         scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
 
                             scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
@@ -1954,8 +1973,6 @@
                         })
 
                     }
-
-                    //checkIsLayoutDefault();
 
                 };
 
