@@ -28,8 +28,8 @@
 
         vm.nameProperty = data.nameProperty;
         vm.strictOrder = data.strictOrder;
+        vm.optionsCheckboxes = data.optionsCheckboxes;
         vm.readyStatus = false;
-
         vm.selectedItems = [];
 
         var separateUnselectedItems = function (items, selectedItems) {
@@ -41,10 +41,21 @@
 
                 items.forEach(function (item, itemIndex) {
 
-                    if (item.id === selItem) {
+                	let selItemId = selItem;
+
+                	if (typeof selItem === 'object') {
+						selItemId = selItem.id;
+					}
+
+                    if (item.id === selItemId) {
+
+                    	if (typeof selItem === 'object') {
+							item = Object.assign(item, selItem);
+						}
 
                         vm.selectedItems.push(item);
                         items.splice(itemIndex, 1);
+
                     }
 
                 });
@@ -52,7 +63,7 @@
 
         };
 
-        /*if (getDataMethod) {
+        /* if (getDataMethod) {
 
             getDataMethod().then(function (resData) {
 
@@ -93,9 +104,22 @@
 
         vm.agree = function () {
 
-            vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
-               return selItem.id;
-            });
+			if (vm.optionsCheckboxes) {
+
+				vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
+					return {
+						id: selItem.id,
+						isChecked: selItem.isChecked || false
+					};
+				});
+
+			} else {
+
+				vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
+					return selItem.id;
+				});
+
+			}
 
             $mdDialog.hide({status: "agree", selectedItems: vm.selectedItemsId});
 

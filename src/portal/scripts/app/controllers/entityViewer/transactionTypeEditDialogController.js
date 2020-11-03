@@ -337,15 +337,31 @@
                     // vm.expressionEditorData = {groups: [vm.inputsGroup], functions: [vm.inputsFunctions]};
 
                     if (vm.entity.inputs) {
-                        vm.entity.inputs.forEach(function (input) {
 
-                            if (input.settings && input.settings.linked_inputs_names) {
-                                input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
-                            }
+                    	vm.entity.inputs.forEach(function (input) {
+
+							if (input.settings) {
+
+								if (input.settings.linked_inputs_names) {
+
+									input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+
+								} else {
+									input.settings.linked_inputs_names = []
+								}
+
+								if (!input.settings.recalc_on_change_linked_inputs) {
+
+									input.settings.recalc_on_change_linked_inputs = []
+
+								}
+
+							}
 
                             vm.resolveDefaultValue(input)
 
                         });
+
                     }
 
                     console.log('vm.relationItems', vm.relationItems)

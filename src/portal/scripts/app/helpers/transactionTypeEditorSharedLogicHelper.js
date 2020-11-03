@@ -520,7 +520,29 @@
             gtRow.columns.forEach(function (gtColumn) {
 
                 if (gtColumn.objPath) {
-                    metaHelper.setObjectNestedPropVal(input, gtColumn.objPath, gtColumn.settings.value);
+
+					if (gtColumn.key === 'linked_inputs_names' && gtColumn.settings.value) {
+
+						let linkedInputsNames = [];
+						let recalculateOnChange = [];
+						let recalculateOnChangePath = ['settings', 'recalc_on_change_linked_inputs'];
+
+						gtColumn.settings.value.forEach(function (multiselItem) {
+
+							linkedInputsNames.push(multiselItem.id);
+
+							if (multiselItem.isChecked) {
+								recalculateOnChange.push(multiselItem.id);
+							}
+
+						});
+
+						metaHelper.setObjectNestedPropVal(input, gtColumn.objPath, linkedInputsNames);
+						metaHelper.setObjectNestedPropVal(input, recalculateOnChangePath, recalculateOnChange);
+
+					} else {
+						metaHelper.setObjectNestedPropVal(input, gtColumn.objPath, gtColumn.settings.value);
+					}
 
                 } else if (gtColumn.objPaths) {
 
@@ -644,7 +666,8 @@
 
                 return {
                     id: input.name,
-                    name: input.name
+                    name: input.name,
+					checked: false
                 }
 
             });
@@ -775,7 +798,6 @@
 
             viewModel.inputsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
                 onInputsGridTableCellChange(argumentsObj.row.key);
-
             });
 
             viewModel.inputsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
@@ -937,7 +959,10 @@
                             value: [],
                             selectorOptions: null,
                             strictOrder: true,
-                            closeOnMouseOut: false
+                            closeOnMouseOut: false,
+							optionsCheckboxes: {
+								selectedOptions: true
+							}
                         },
                         styles: {
                             'grid-table-cell': {'width': '140px'}
@@ -1016,7 +1041,23 @@
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
                 // linked_inputs_names
-                rowObj.columns[8].settings.value = input.settings.linked_inputs_names
+                rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
+
+                	var linkedInput = {
+                		id: linkedInputName,
+						isChecked: false
+					};
+
+                	if (input.settings.recalc_on_change_linked_inputs.includes(linkedInputName)) {
+
+						linkedInput.isChecked = true;
+
+					}
+
+					return linkedInput;
+
+				});
+
                 rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
                 // rowObj.columns[8].settings.getDataMethod = getInputsForLinking;
 

@@ -7,21 +7,22 @@
   module.exports = function ($mdDialog) {
     return {
       restrict: "E",
-      scope: {
-        getDataMethod: "&?", // needed for downloading items on opening multiselector
-        items: "=",
-        model: "=",
-        title: "@",
-        dialogTitle: "@",
-        nothingSelectedText: "@",
-        selectedItemsIndication: "@",
-        nameProperty: "@",
-        strictOrder: "=",
-        onChangeCallback: "&?"
-      },
-      require: "?ngModel",
-      templateUrl: "views/directives/two-fields-multiselect-view.html",
-      link: function (scope, elem, attr, ngModel) {
+		scope: {
+			getDataMethod: "&?", // needed for downloading items on opening multiselector
+			items: "=",
+			model: "=",
+			title: "@",
+			dialogTitle: "@",
+			nothingSelectedText: "@",
+			selectedItemsIndication: "@",
+			nameProperty: "@",
+			strictOrder: "=",
+			optionsCheckboxes: "=",
+			onChangeCallback: "&?"
+		},
+		require: "?ngModel",
+		templateUrl: "views/directives/two-fields-multiselect-view.html",
+		link: function (scope, elem, attr, ngModel) {
 
         // Andrew's code here
         /*
@@ -245,95 +246,96 @@
         }); */
         // < Andrew's code here >
 
-        scope.inputText = '';
+			scope.inputText = '';
 
-        if (!scope.nameProperty) {
-          scope.nameProperty = 'name';
-        }
+			if (!scope.nameProperty) {
+			  scope.nameProperty = 'name';
+			}
 
-        var dialogTitle = scope.dialogTitle || scope.title;
-        var items = [];
+			var dialogTitle = scope.dialogTitle || scope.title;
+			var items = [];
 
-        scope.$watch('model', function () {
-            setInputText();
-        })
+			scope.$watch('model', function () {
+				setInputText();
+			})
 
-        var defaultInputText = function () {
+			var defaultInputText = function () {
 
-          var selElemNumber = 0;
-          if (scope.model && scope.model.length > 0) {
-            selElemNumber = scope.model.length;
-          }
+				var selElemNumber = 0;
+				if (scope.model && scope.model.length > 0) {
+					selElemNumber = scope.model.length;
+				}
 
-          if (selElemNumber === 0) {
+				if (selElemNumber === 0) {
 
-            scope.inputText = "";
+					scope.inputText = "";
 
-            if (scope.nothingSelectedText || typeof scope.nothingSelectedText === "string") {
-              scope.inputText = scope.nothingSelectedText;
+					if (scope.nothingSelectedText || typeof scope.nothingSelectedText === "string") {
+						scope.inputText = scope.nothingSelectedText;
 
-            } else {
-              scope.inputText = "0 items selected";
-            }
+					} else {
+						scope.inputText = "0 items selected";
+					}
 
-          } else {
-            scope.inputText = selElemNumber + " " + "items selected";
-          }
+					} else {
+						scope.inputText = selElemNumber + " " + "items selected";
+					}
 
-        };
+			};
 
-        var arrayLikeInputText = function () {
+			var arrayLikeInputText = function () {
 
-          var propName = scope.nameProperty || 'name';
+				var propName = scope.nameProperty || 'name';
 
-          if (scope.model && scope.model.length) {
+				if (scope.model && scope.model.length) {
 
-            if (scope.items && scope.items.length) {
+					if (scope.items && scope.items.length) {
 
-              scope.inputText = '[';
-              scope.tooltipText = 'Values selected:';
+						scope.inputText = '[';
+						scope.tooltipText = 'Values selected:';
+						var selItemsIds = scope.model;
 
-              scope.model.forEach(function (sItemId, index) {
+						if (typeof selItemsIds[0] === 'object') { // multiselector returns array of objects
 
-                for (var i = 0; i < scope.items.length; i++) {
+							selItemsIds = selItemsIds.map(function (sItem) {
+								return sItem.id;
+							});
+						}
 
-                  if (scope.items[i].id === sItemId) {
+						selItemsIds.forEach(function (sItemId, index) {
 
-                    if (index > 0) { // add comma between selected items
-                      scope.inputText = scope.inputText + ',';
-                      scope.tooltipText = scope.tooltipText + ',';
-                    }
+							for (var i = 0; i < scope.items.length; i++) {
 
-                    scope.inputText = scope.inputText + ' ' + scope.items[i][propName];
-                    scope.tooltipText = scope.tooltipText + ' ' + scope.items[i][propName];
+								if (scope.items[i].id === sItemId) {
 
-                    break;
+									if (index > 0) { // add comma between selected items
 
-                  }
+										scope.inputText = scope.inputText + ',';
+										scope.tooltipText = scope.tooltipText + ',';
 
-                }
+									}
 
-              });
+									scope.inputText = scope.inputText + ' ' + scope.items[i][propName];
+									scope.tooltipText = scope.tooltipText + ' ' + scope.items[i][propName];
 
-              scope.inputText = scope.inputText + ' ]';
+									break;
+								}
+							}
+						});
 
-            } else { // in case of error
-              scope.inputText = scope.model.length + ' items selected';
-            }
+						scope.inputText = scope.inputText + ' ]';
 
-            //scope.inputText = '[' + scope.model.join(', ') + ']';
+					} else { // in case of error
+						scope.inputText = scope.model.length + ' items selected';
+					}
 
-          } else if (scope.nothingSelectedText) {
+				} else if (scope.nothingSelectedText) {
+					scope.inputText = scope.nothingSelectedText;
 
-            scope.inputText = scope.nothingSelectedText;
-
-          } else {
-
-            scope.inputText = "[ ]";
-
-          }
-
-        };
+				} else {
+					scope.inputText = "[ ]";
+				}
+			};
 
         var setInputText = function () {
 
@@ -394,20 +396,21 @@
 
             items = data;
 
-            $mdDialog.show({
-              controller: "TwoFieldsMultiselectDialogController as vm",
-              templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
-              targetEvent: event,
-              multiple: true,
-              locals: {
-                data: {
-                  items: items,
-                  model: scope.model,
-                  title: dialogTitle,
-                  nameProperty: scope.nameProperty,
-                  strictOrder: scope.strictOrder
-                }
-              }
+			$mdDialog.show({
+				controller: "TwoFieldsMultiselectDialogController as vm",
+				templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
+				targetEvent: event,
+				multiple: true,
+				locals: {
+					data: {
+						items: items,
+						model: scope.model,
+						title: dialogTitle,
+						nameProperty: scope.nameProperty,
+						strictOrder: scope.strictOrder,
+						optionsCheckboxes: scope.optionsCheckboxes
+                	}
+				}
             }).then(function (res) {
 
               if (res.status === "agree") {
