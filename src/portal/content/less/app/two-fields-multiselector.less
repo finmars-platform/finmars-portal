@@ -25,6 +25,13 @@
   width: 50%;
 }
 
+.two-fields-field-container.two-fields-options-with-checkboxes {
+  .two-fields-option {
+    height: 25px;
+    padding-right: 28px;
+  }
+}
+
 .two-fields-area-h {
   font-size: 16px;
 }
@@ -94,8 +101,8 @@ input.two-fields-filter-input {
   border-radius: 0 0 4px 4px;
 }
 
-.two-fields-available-option,
-.two-fields-selected-option {
+.two-fields-option {
+  position: relative;
   cursor: pointer;
   margin: 0 0 10px 0;
   padding-right: 15px;
@@ -171,4 +178,13 @@ input.two-fields-filter-input {
   // display: inline-block !important;
   // transform: translate(10px, 10px) !important;
   // width: 130px !important;
+}
+
+
+
+.two-fields-options-checkbox {
+  position: absolute;
+  top: 3px;
+  right: 0;
+  margin: 0;
 }

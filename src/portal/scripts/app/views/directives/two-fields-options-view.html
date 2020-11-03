@@ -4,13 +4,16 @@
 
 	<div class="two-fields-field-container"
 		 layout="column"
+         ng-class="{'two-fields-options-with-checkboxes': unselOptionsCheckboxes}"
 		 style="width: 450px">
 		<p class="two-fields-area-h text-weight-bold">Available</p>
-		<input type="search"
+
+        <input type="search"
 			   placeholder="Search for a ..."
 			   data-ng-model="availableSearchTerm"
 			   class="two-fields-filter-input">
-		<div class="all-options-field two-fields-options">
+
+        <div class="all-options-field two-fields-options">
 
             <div ng-repeat="option in allOptions | orderBy: nameProperty | filter: {name: availableSearchTerm} as results track by option.id"
                  class="two-fields-available-option two-fields-option"
@@ -18,8 +21,15 @@
                  data-ng-click="option.isActive = !option.isActive"
                  ng-dblclick="switchOptionOnDoubleClick('select', option.id)"
                  data-option-id="{{option.id}}">
+
                 <p ng-bind="option['{{nameProperty}}']"
                    class="two-fields-option-text"></p>
+
+                <md-checkbox ng-if="unselOptionsCheckboxes"
+                             ng-model="sOption.isChecked"
+                             ng-click="$event.stopPropagation()"
+                             class="two-fields-options-checkbox"></md-checkbox>
+
             </div>
 		</div>
 	</div>
@@ -86,9 +96,11 @@
 
 	<div class="two-fields-field-container"
 		 layout="column"
-		 style="width: 450px">
+		 style="width: 450px"
+         ng-class="{'two-fields-options-with-checkboxes': selOptionsCheckboxes}">
 			<p class="two-fields-area-h text-weight-bold">Selected</p>
-			<input type="search"
+
+        <input type="search"
 				   placeholder="Search for a ..."
 				   ng-model="selOptionsFilter"
 				   class="two-fields-filter-input">
@@ -101,11 +113,19 @@
                      ng-dblclick="switchOptionOnDoubleClick('deselect', sOption.id)"
                      ng-init="$last && initDnDEnabled && selOptionsDragAndDrop.init()"
                      data-option-id="{{sOption.id}}">
+
                     <span ng-if="strictOrder"
                           class="material-icons"
                           ng-mousedown="turnOnDragging()">drag_indicator</span>
+
                     <p ng-bind="sOption['{{nameProperty}}']"
                        class="two-fields-option-text"></p>
+
+                    <md-checkbox ng-if="selOptionsCheckboxes"
+                                 ng-model="sOption.isChecked"
+                                 ng-click="$event.stopPropagation()"
+                                 class="two-fields-options-checkbox"></md-checkbox>
+
                 </div>
 			</div>
 	</div>

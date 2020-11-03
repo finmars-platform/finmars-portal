@@ -11,11 +11,13 @@
 
     <md-dialog-content>
 
-        <div data-ng-if="vm.readyStatus" style="padding:20px">
+        <div data-ng-if="vm.readyStatus"
+             style="padding:20px">
             <two-fields-options all-options="vm.items"
                                 selected-options="vm.selectedItems"
                                 name-property="{{vm.nameProperty}}"
-                                strict-order="vm.strictOrder"></two-fields-options>
+                                strict-order="vm.strictOrder"
+                                options-checkboxes="vm.optionsCheckboxes"></two-fields-options>
         </div>
 
         <div data-ng-if="!vm.readyStatus">

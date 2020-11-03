@@ -14,12 +14,12 @@
 				selectedOptions: "=",
 				nameProperty: "@",
 				classes: "=",
-                strictOrder: "=" // enable order change for selected items
+                strictOrder: "=", // enable order change for selected items
+				optionsCheckboxes: "=" // contains object with properties optionsCheckbox, selectedOptions
 			},
 			templateUrl: 'views/directives/two-fields-options-view.html',
 			link: function (scope, elem, attr) {
 
-				console.log("strict multiselector scope.strictOrder", scope.strictOrder);
                 scope.selOptionsFilter = ""
                 scope.initDnDEnabled = scope.strictOrder // if true scope.selOptionsDragAndDrop.init() will be called
                 scope.selOptionsOrderSettings = scope.nameProperty
@@ -27,6 +27,16 @@
                 if (scope.strictOrder) {
                     scope.selOptionsOrderSettings = null
                 }
+
+                scope.unselOptionsCheckboxes = false
+				scope.selOptionsCheckboxes = false
+
+                if (scope.optionsCheckboxes) {
+
+                	scope.unselOptionsCheckboxes = scope.optionsCheckboxes.unselectedOptions
+					scope.selOptionsCheckboxes = scope.optionsCheckboxes.selectedOptions
+
+				}
 
 				let dragIconGrabbed = false;
 
@@ -285,8 +295,6 @@
 
                     }); */
 
-                    console.log("strict multiselector after changeOrder1", scope.selectedOptions);
-
                 };
 
 				let turnOffDragging = function () {
@@ -416,7 +424,7 @@
 
                 scope.$on("$destroy", function () {
 
-                    if (scope.initDnDEnabled) {
+                    if (scope.selOptionsDragAndDrop.initialized) {
                         scope.selOptionsDragAndDrop.destroy();
                     }
 
