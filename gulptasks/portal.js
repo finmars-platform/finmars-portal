@@ -253,7 +253,7 @@
 
     gulp.task(appName + '-min-All', gulp.parallel(
         appName + '-html-min',
-        // appName + '-HTML-to-JS',
+        appName + '-HTML-to-JS',
         appName + '-less-to-css-min',
         appName + '-js-min',
         appName + '-json-min',
