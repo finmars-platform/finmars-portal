@@ -157,7 +157,11 @@
                 console.error('Error in Browserify: \n', err.message);
                 this.emit('end');
             })
-            .pipe(plumber())
+            .pipe(plumber({
+                errorHandler: function (error) {
+                    console.log("error", error)
+                }
+            }))
             .pipe(source('bundled.js'))
             .pipe(buffer())
             .pipe(preprocess())
@@ -167,10 +171,7 @@
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
             .pipe(gulpif(PROJECT_ENV === 'production', stripDebug()))
             .pipe(rename({basename: 'main', suffix: '.min'}))
-            .on('error', function (error) {
-                console.error('\nError on JS minification: \n', error.toString());
-                this.emit('end');
-            })
+            .pipe(plumber.stop())
             .pipe(gulp.dest('dist/' + appName + '/scripts/'))
             .pipe(livereload());
 
@@ -252,7 +253,7 @@
 
     gulp.task(appName + '-min-All', gulp.parallel(
         appName + '-html-min',
-        // appName + '-HTML-to-JS',
+        appName + '-HTML-to-JS',
         appName + '-less-to-css-min',
         appName + '-js-min',
         appName + '-json-min',

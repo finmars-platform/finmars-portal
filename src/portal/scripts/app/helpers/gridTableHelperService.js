@@ -5,7 +5,7 @@
 
     module.exports = function () {
 
-        /* let onGridTableCellChange = function (originalItems, gridTableDataService) {
+        /* var onGridTableCellChange = function (originalItems, gridTableDataService) {
 
             originalItems.forEach(function (oItem, oIndex) {
 
@@ -30,7 +30,7 @@
 
         }; */
 
-        let onGridTableCellChange = function (originalItems, gtDataService, rowOrder, colOrder) {
+        var onGridTableCellChange = function (originalItems, gtDataService, rowOrder, colOrder) {
 
             var column = gtDataService.getCell(rowOrder, colOrder);
             var oItem = originalItems[rowOrder];
@@ -48,7 +48,7 @@
 
         };
 
-        let getCellFromRowByKey = function (row, colKey) {
+        var getCellFromRowByKey = function (row, colKey) {
 
             for (var i = 0; i < row.columns.length; i++) {
 
