@@ -242,7 +242,8 @@
 
         vm.getLayouts = function () {
 
-            uiService.getListLayoutDefault({pageSize: 1000}).then(function (data) {
+            // uiService.getListLayoutDefault({pageSize: 1000}).then(function (data) {
+            uiService.getListLayout(null, {pageSize: 1000}).then(function (data) {
 
                 vm.layouts = data.results;
 

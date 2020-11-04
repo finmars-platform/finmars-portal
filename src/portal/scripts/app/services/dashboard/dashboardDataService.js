@@ -2,7 +2,7 @@
 
     module.exports = function () {
 
-        var layoutData = { // basically its layout that we store on backend
+        var layoutData = { // basically its dashboard layout that we store on backend
             name: '',
             data: {
                 components_types: []
@@ -16,7 +16,8 @@
         var tmpData = { // data that stored only in active session
             componentsStatuses: {},
             componentsRefreshRestriction: {},
-            componentsErrors: {}
+            componentsErrors: {},
+            actualRvLayouts: [] // id of layouts stored in cache that are actual
         };
 
         function setData(data) {
@@ -147,6 +148,18 @@
             return data.listLayout;
         }
 
+        function pushToActualRvLayoutsInCache (layoutId) {
+
+            if (!tmpData.actualRvLayouts.includes(layoutId)) {
+                tmpData.actualRvLayouts.push(layoutId);
+            }
+
+        }
+
+        function getActualRvLayoutsInCache () {
+            return tmpData.actualRvLayouts;
+        }
+
         return {
 
             setData: setData,
@@ -163,8 +176,8 @@
             setComponentError: setComponentError,
             getComponentError: getComponentError,
             setComponentRefreshRestriction: setComponentRefreshRestriction,
-            /*getComponentRefreshRestriction: getComponentRefreshRestriction,
-            setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction,*/
+            /* getComponentRefreshRestriction: getComponentRefreshRestriction,
+            setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction, */
             getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
             getComponents: getComponents,
             setComponents: setComponents,
@@ -173,6 +186,9 @@
 
             setActiveTab: setActiveTab,
             getActiveTab: getActiveTab,
+
+            pushToActualRvLayoutsInCache: pushToActualRvLayoutsInCache,
+            getActualRvLayoutsInCache: getActualRvLayoutsInCache,
 
             getComponentStatusesAll: getComponentStatusesAll
         }
