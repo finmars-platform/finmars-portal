@@ -186,18 +186,27 @@
 
     let updateListLayout = function (id, ui) {
 
-        return uiRepository.updateListLayout(id, ui).then(function (data) {
+    	return new Promise(function (resolve, reject) {
 
-            ui.modified = data.modified
+			uiRepository.updateListLayout(id, ui).then(function (data) {
 
-            if (ui.is_default) {
-                localStorageService.cacheDefaultLayout(ui);
+				ui.modified = data.modified
 
-            } else {
-                localStorageService.cacheLayout(ui);
-            }
+				if (ui.is_default) {
+					localStorageService.cacheDefaultLayout(ui);
 
-        });
+				} else {
+					localStorageService.cacheLayout(ui);
+				}
+
+				resolve(ui);
+
+			}).catch(function (error) {
+				reject(error);
+			});
+
+		});
+
     };
 
     let deleteListLayoutByKey = function (id) {

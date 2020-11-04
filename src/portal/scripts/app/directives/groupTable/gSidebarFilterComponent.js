@@ -9,6 +9,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
     var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
+	var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
@@ -845,23 +846,8 @@
 
                 };
 
-                scope.saveLayoutList = function ($event) {
-
-                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-
-                    if (listLayout.hasOwnProperty('id')) {
-                        uiService.updateListLayout(listLayout.id, listLayout).then(function () {
-                            scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-                        });
-                    }
-
-                    $mdDialog.show({
-                        controller: 'SaveLayoutDialogController as vm',
-                        templateUrl: 'views/save-layout-dialog-view.html',
-                        targetEvent: $event,
-                        clickOutsideToClose: false
-                    })
-
+                scope.saveLayoutList = function () {
+					evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
                 };
 
                 scope.openLayoutList = function ($event) {

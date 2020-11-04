@@ -2,6 +2,9 @@
 
     'use strict';
 
+	let uiService = require('../services/uiService');
+	var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
     let getLinkingToFilters = function (layout) {
 
         let linkingToFilters = [];
@@ -75,9 +78,34 @@
 
     };
 
+
+    let saveLayoutList = function (entityViewerDataService, isReport) {
+
+    	var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(isReport);
+
+		if (currentLayoutConfig.hasOwnProperty('id')) {
+
+			uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (updatedLayoutData) {
+
+				let listLayout = entityViewerDataService.getListLayout();
+				listLayout.modified = updatedLayoutData.modified
+
+				entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
+				entityViewerDataService.setListLayout(listLayout);
+
+				toastNotificationService.success("Success. Page was saved.");
+
+			});
+
+		}
+
+	};
+
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
-        getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters
+        getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
+
+		saveLayoutList: saveLayoutList
     }
 
 }());

@@ -1499,28 +1499,8 @@
                     }
                 };
 
-                scope.saveLayoutList = function ($event) {
-
-                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-
-                    if (listLayout.hasOwnProperty('id')) {
-
-                        uiService.updateListLayout(listLayout.id, listLayout).then(function () {
-
-                            scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-
-                            toastNotificationService.success("Success. Page was saved.");
-
-                        });
-
-                    }
-
-                    /*$mdDialog.show({
-                        controller: 'SaveLayoutDialogController as vm',
-                        templateUrl: 'views/save-layout-dialog-view.html',
-                        targetEvent: $event,
-                        clickOutsideToClose: false
-                    })*/
+                scope.saveLayoutList = function () {
+					evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
                 };
 
                 scope.saveAsLayoutList = function ($event) {
