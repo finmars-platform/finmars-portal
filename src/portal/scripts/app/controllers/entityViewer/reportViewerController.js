@@ -784,81 +784,13 @@
                 return window.location.href.indexOf('?layout=') !== -1
             };
 
-            // deprecated
-            vm.getLayoutByName = function (name) {
-
-                console.log('vm.getLayoutByName.name', name);
-
-                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
-
-                uiService.getListLayoutDefault({
-                    pageSize: 1000,
-                    filters: {
-                        content_type: contentType,
-                        name: name
-                    }
-                }).then(function (activeLayoutData) {
-
-                    console.log('vm.getLayoutByName.activeLayoutData1', activeLayoutData);
-
-                    var activeLayout = null;
-
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
-
-                        for (var i = 0; i < activeLayoutData.results.length; i++) {
-                            var item = activeLayoutData.results[i];
-
-                            if (item.name === name) {
-                                activeLayout = item;
-                                break;
-                            }
-                        }
-
-                    }
-
-                    if (activeLayout) {
-
-                        vm.setLayout(activeLayout);
-
-                    } else {
-
-                        $mdDialog.show({
-                            controller: 'InfoDialogController as vm',
-                            templateUrl: 'views/info-dialog-view.html',
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: false,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            locals: {
-                                info: {
-                                    title: 'Warning',
-                                    description: "Layout " + name + " is not found. Switching back to Default Layout."
-                                }
-                            }
-                        }).then(function (value) {
-
-                            vm.getDefaultLayout()
-
-                        })
-
-                    }
-
-                });
-
-            };
-
-            vm.getLayoutByUserCode = function (userCode) {
+            /* vm.getLayoutByUserCode = function (userCode) {
 
                 console.log('vm.getLayoutByUserCode.userCode', userCode);
 
-                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
-
-                uiService.getListLayoutDefault({
+                uiService.getListLayout(vm.entityType, {
                     pageSize: 1000,
                     filters: {
-                        content_type: contentType,
                         user_code: userCode
                     }
                 }).then(function (activeLayoutData) {
@@ -907,6 +839,7 @@
             vm.getDefaultLayout = function () {
 
                 uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
+
                     var defaultLayout = null;
                     if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
                         defaultLayout = defaultLayoutData.results[0];
@@ -916,7 +849,7 @@
 
                 });
 
-            };
+            }; */
 
             vm.getActiveObjectFromQueryParameters = function () {
 
@@ -968,7 +901,7 @@
 
             };
 
-            /*var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
+            /* var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
 
                 var reportDateProperties = {
                     'balance-report': [null, 'report_date'],
@@ -984,7 +917,7 @@
 
                 dateExprsProms.push(result);
 
-            };*/
+            }; */
 
             vm.setLayout = function (layout) {
 
@@ -1038,7 +971,6 @@
 
                     }).catch(function () {
                         rvSharedLogicHelper.onSetLayoutEnd();
-
                     });
 
                 } else {
@@ -1096,17 +1028,18 @@
 
                     });
 
-                    vm.getLayoutByUserCode(layoutUserCode);
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
-                    vm.getLayoutByUserCode(layoutUserCode);
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else {
-
-                    vm.getDefaultLayout();
-
+                    // vm.getDefaultLayout();
+                    evHelperService.getDefaultLayout(vm);
                 }
 
             };
