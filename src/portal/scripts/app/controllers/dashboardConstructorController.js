@@ -1058,7 +1058,7 @@
 
         };
 
-        vm.saveLayout = function ($event) {
+        vm.saveLayout = function () {
 
             var layout = JSON.parse(angular.toJson(vm.layout)); // removing angular properties
 
