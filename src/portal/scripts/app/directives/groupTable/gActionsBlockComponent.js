@@ -1408,13 +1408,17 @@
                                     var saveSPLayoutChanges = new Promise(function (spLayoutSaveRes, spLayoutSaveRej) {
 
                                         if (spChangedLayout.hasOwnProperty('id')) {
-                                            uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
+
+                                        	uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
                                                 spLayoutSaveRes(true);
                                             });
+
                                         } else {
-                                            uiService.createListLayout(scope.entityType, spChangedLayout).then(function () {
+
+                                        	uiService.createListLayout(scope.entityType, spChangedLayout).then(function () {
                                                 spLayoutSaveRes(true);
                                             });
+
                                         }
 
                                     });
@@ -1453,6 +1457,7 @@
                                                 layoutCurrentConfig.name = res.data.layoutName;
                                             }
 
+                                            /* When saving is_default: true layout on backend, others become is_default: false
                                             uiService.getDefaultListLayout(scope.entityType).then(function (data) {
 
                                                 layoutCurrentConfig.is_default = true;
@@ -1475,7 +1480,11 @@
                                                     });
                                                 }
 
-                                            });
+                                            }); */
+
+											uiService.createListLayout(scope.entityType, layoutCurrentConfig).then(function () {
+												saveLayoutRes(true);
+											});
 
                                         }
 
@@ -1520,6 +1529,7 @@
                             }
                         },
                         clickOutsideToClose: false
+
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
@@ -1532,7 +1542,7 @@
                                 uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
 
                                     listLayout.id = data.id;
-                                    scope.applyLayout(listLayout);
+                                    applyLayout(listLayout);
 
                                 }).catch(function (error) {
                                     toastNotificationService.error("Error occurred");
@@ -1544,7 +1554,7 @@
 
                                 if (scope.isRootEntityViewer) {
 
-                                    uiService.getDefaultListLayout(scope.entityType).then(function (openedLayoutData) {
+                                    /* uiService.getDefaultListLayout(scope.entityType).then(function (openedLayoutData) {
 
                                         var currentlyOpenLayout = openedLayoutData.results[0];
                                         currentlyOpenLayout.is_default = false;
@@ -1562,15 +1572,20 @@
 
                                     }).catch(function (error) {
                                         toastNotificationService.error("Error occurred");
-                                    });
+                                    }); */
 
-                                } else {
+									listLayout.is_default = true;
 
-                                    delete listLayout.id;
-                                    listLayout.is_default = false;
-                                    saveAsLayout();
+                                } else { // for split panel
+
+									listLayout.is_default = false;
+                                    /*delete listLayout.id;
+                                    saveAsLayout();*/
 
                                 }
+
+								delete listLayout.id;
+								saveAsLayout();
 
                             } else { // if layout was not based on another layout
 
@@ -1589,19 +1604,19 @@
                             listLayout.name = res.data.name;
                             listLayout.user_code = userCode;
 
-                            scope.getLayoutByUserCode(userCode)
-                                .then(function (changeableLayoutData) {
+                            scope.getLayoutByUserCode(userCode).then(function (changeableLayoutData) {
 
-                                    var changeableLayout = changeableLayoutData.results[0];
-                                    scope.overwriteLayout(changeableLayout, listLayout);
+								var changeableLayout = changeableLayoutData.results[0];
+								overwriteLayout(changeableLayout, listLayout).then(function (updatedLayoutData) {
 
-                                })
-                                .then(function () {
+									listLayout.is_default = true;
+									listLayout.modified = updatedLayoutData.modified;
+									applyLayout(listLayout);
 
-                                    listLayout.is_default = true;
-                                    scope.applyLayout(listLayout);
+								});
 
-                                });
+							});
+
                         }
 
                     });
@@ -1632,7 +1647,7 @@
 
                 };
 
-                scope.overwriteLayout = function (changeableLayout, listLayout) {
+                var overwriteLayout = function (changeableLayout, listLayout) {
 
                     var id = changeableLayout.id;
 
@@ -1644,7 +1659,7 @@
 
                 };
 
-                scope.applyLayout = function (layout) {
+                var applyLayout = function (layout) {
 
                     if (scope.isRootEntityViewer) {
 

@@ -1676,9 +1676,17 @@
                     currentLayoutConfig.data.additions = savedAddtions;
 
                     if (currentLayoutConfig.hasOwnProperty('id')) {
-                        uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function () {
+
+                    	uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (layoutData) {
+
+                    		var listLayout = vm.entityViewerDataService.getListLayout();
+
+                    		listLayout.modified = layoutData.modified
+							currentLayoutConfig.modified = layoutData.modified
                             vm.entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
+
                         });
+
                     }
 
                     $mdDialog.show({

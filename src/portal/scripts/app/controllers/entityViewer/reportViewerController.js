@@ -1063,7 +1063,7 @@
 
             vm.init();
 
-            var checkLayoutForChanges = function () {
+            var checkLayoutForChanges = function () { // called on attempt to change or reload page
 
                 return new Promise(function (resolve, reject) {
 
@@ -1143,29 +1143,33 @@
                                                     layoutCurrentConfig.name = res.data.layoutName;
                                                 }
 
-                                                uiService.getDefaultListLayout(vm.entityType).then(function (data) {
+												/* When saving is_default: true layout on backend, others become is_default: false
+												uiService.getDefaultListLayout(vm.entityType).then(function (data) {
 
-                                                    layoutCurrentConfig.is_default = true;
+													layoutCurrentConfig.is_default = true;
 
-                                                    if (data.count > 0 && data.results) {
-                                                        var activeLayout = data.results[0];
-                                                        activeLayout.is_default = false;
+													if (data.count > 0 && data.results) {
+														var activeLayout = data.results[0];
+														activeLayout.is_default = false;
 
-                                                        uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+														uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
 
-                                                            uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                                                saveLayoutRes(true);
-                                                            });
+															uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+																saveLayoutRes(true);
+															});
 
-                                                        });
+														});
 
-                                                    } else {
-                                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                                            saveLayoutRes(true);
-                                                        });
-                                                    }
+													} else {
+														uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+															saveLayoutRes(true);
+														});
+													}
 
-                                                });
+												});*/
+												uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+													saveLayoutRes(true);
+												});
 
                                             }
 
