@@ -791,7 +791,7 @@
         })
         .then(function (res) {
           if (res.status === "agree") {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
               vm.readyStatus.constructor = false;
 
               vm.attrs = data.results;
@@ -900,7 +900,7 @@
     vm.getItems = function () {
       return new Promise(function (resolve, reject) {
         attributeTypeService
-          .getList(vm.entityType)
+          .getList(vm.entityType, {pageSize: 1000})
           .then(function (data) {
             vm.attrs = data.results;
             var entityAttrs = metaService.getEntityAttrs(vm.entityType);
