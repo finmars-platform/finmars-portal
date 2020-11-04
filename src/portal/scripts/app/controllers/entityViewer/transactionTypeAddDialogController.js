@@ -281,14 +281,14 @@
 
         vm.getAttributeTypes = function () {
 
-            var ttypeAttrTypesProm = attributeTypeService.getList(vm.entityType).then(function (data) {
+            var ttypeAttrTypesProm = attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
 
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
 
             });
 
-            var complTransactionAttrTypesProm = attributeTypeService.getList('complex-transaction').then(function (data) {
+            var complTransactionAttrTypesProm = attributeTypeService.getList('complex-transaction', {pageSize: 1000}).then(function (data) {
                 complexTransactionsAttrs = data.results;
             });
 
