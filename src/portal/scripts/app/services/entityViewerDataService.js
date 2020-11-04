@@ -144,7 +144,7 @@
             viewSettings: {},
             lastViewSettings: {},
             ev_options: {},
-            activeLayoutConfiguration: {},
+            activeLayoutConfiguration: {}, // used to check layout for changes
             interfaceLayout: null,
             requestParameters: {},
             activeRequestParametersId: null,
