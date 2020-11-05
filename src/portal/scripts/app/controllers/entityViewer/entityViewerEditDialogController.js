@@ -29,6 +29,7 @@
     var uiService = require('../../services/uiService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
+    var metaHelper = require('../../helpers/meta.helper');
 
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
@@ -637,7 +638,7 @@
         };
 
         vm.getAttributeTypes = function () {
-            return attributeTypeService.getList(vm.entityType).then(function (data) {
+            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attributeTypes = data.results;
             });
         };
@@ -1021,7 +1022,9 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var deepCopyOfEntity = metaHelper.recursiveDeepCopy(vm.entity, true);
+
+                var result = entityEditorHelper.clearEntityBeforeSave(deepCopyOfEntity, vm.entityType);
 
                 if (dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);

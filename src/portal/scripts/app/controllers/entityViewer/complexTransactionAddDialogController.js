@@ -400,7 +400,8 @@
 
                             if (inputWithCalc.can_recalculate === true) {
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    // iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    iconObj: {type: 'angular-material', icon: 'refresh'},
                                     tooltip: 'Recalculate this field',
                                     caption: '',
                                     classes: '',
@@ -416,7 +417,8 @@
                                 var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
 
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                                    // iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                                    iconObj: {type: 'angular-material', icon: 'loop'},
                                     tooltip: 'Recalculate linked fields',
                                     caption: '',
                                     classes: '',
@@ -690,7 +692,7 @@
         };
 
         vm.getAttributeTypes = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;

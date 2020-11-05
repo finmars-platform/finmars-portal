@@ -186,11 +186,11 @@
                 "name": "YTM at cost",
                 "value_type": 20
             },
-            {
-                "key": "time_invested",
-                "name": "Time invested",
-                "value_type": 20
-            },
+            // {
+            //     "key": "time_invested",
+            //     "name": "Time invested",
+            //     "value_type": 20
+            // },
             //{
             //    "key": "net_cost_price",
             //    "name": "Net cost price",

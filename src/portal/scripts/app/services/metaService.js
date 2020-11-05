@@ -430,9 +430,6 @@
                 case 'app.settings.instrument-import':
                     name = 'SETTINGS > IMPORT FROM PROVIDERS > INSTRUMENT IMPORT';
                     break;
-                case 'app.settings.automated-uploads-history':
-                    name = 'SETTINGS > IMPORT FROM PROVIDERS > AUTOMATED PRICE SCHEDULE';
-                    break;
                 case 'app.settings.simple-entity-import':
                     name = 'SETTINGS > IMPORT FROM FILES > DATA IMPORT';
                     break;

@@ -33,9 +33,6 @@
 
         var separateUnselectedItems = function (items, selectedItems) {
 
-            console.log('separateUnselectedItems.items', items);
-            console.log('separateUnselectedItems.selectedItems', selectedItems);
-
             selectedItems.forEach(function (selItem) {
 
                 items.forEach(function (item, itemIndex) {
@@ -50,33 +47,6 @@
             })
 
         };
-
-        /*if (getDataMethod) {
-
-            getDataMethod().then(function (resData) {
-
-                vm.items = JSON.parse(JSON.stringify(resData.results));
-
-                if (vm.items && selectedItems) {
-                    separateUnselectedItems(vm.items, selectedItems);
-                }
-
-                vm.readyStatus = true;
-                $scope.$apply();
-
-            });
-
-        } else {
-
-            vm.items = data.items;
-
-            if (vm.items && selectedItems) {
-                separateUnselectedItems(vm.items, selectedItems);
-            }
-
-            vm.readyStatus = true;
-
-        }*/
 
         vm.items = JSON.parse(JSON.stringify(data.items));
 
