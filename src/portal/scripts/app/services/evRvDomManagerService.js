@@ -45,12 +45,12 @@
 
             var components = evDataService.getComponents();
             var contentWrapWidth = contentWrapElement.clientWidth;
-			console.log("reconciliation bugs contentWrapWidth", contentWrapWidth);
+
             if (components.sidebar) {
 
                 var interfaceLayout = evDataService.getInterfaceLayout();
                 workareaWrapElement.style.width = (contentWrapWidth - interfaceLayout.filterArea.width) + 'px'
-				console.log("reconciliation bugs contentWrapWidth width", workareaWrapElement.style.width);
+
             } else {
                 workareaWrapElement.style.width = contentWrapWidth + 'px'
             }
