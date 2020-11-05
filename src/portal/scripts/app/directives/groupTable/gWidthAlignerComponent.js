@@ -59,7 +59,7 @@
 
                             interfaceLayout.verticalSplitPanel.width = verticalSplitPanelWidth;
 
-                            scope.contentWrapElem.style.width = contentWrapWidth + 'px';
+                            scope.contentWrapElem.style.width = contentWrapWidth + 'px'; // makes resize animation smoother
                             vSplitPanelElem.style.width = verticalSplitPanelWidth + 'px';
 
                             //contentWrapElem.style.left = (rootWidth - contentWrapWidth) + 'px';
@@ -114,12 +114,13 @@
                     var vSplitPanelWidth = interfaceLayout.verticalSplitPanel.width;
 
                     if (!vSplitPanelWidth) {
-                        vSplitPanelWidth = Math.floor(contentWrapWidth / 2);
+                        vSplitPanelWidth = Math.ceil(contentWrapWidth / 2);
                     }
 
                     interfaceLayout.verticalSplitPanel.width = vSplitPanelWidth;
                     vSplitPanelElem.style.width = vSplitPanelWidth + 'px';
-                    scope.contentWrapElem.style.width = vSplitPanelWidth + 'px';
+					// '-1' needed to compensate for width calculation error when zooming inside browser
+                    scope.contentWrapElem.style.width = vSplitPanelWidth - 1 + 'px';
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
