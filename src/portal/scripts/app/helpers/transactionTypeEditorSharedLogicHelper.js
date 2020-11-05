@@ -1,20 +1,20 @@
 (function () {
 
-    let referenceTableService = require('../services/referenceTablesService');
+    var referenceTableService = require('../services/referenceTablesService');
 
-    let metaHelper = require('../helpers/meta.helper');
+    var metaHelper = require('../helpers/meta.helper');
 
     var uiService = require('../services/uiService');
-    let gridTableEvents = require('../services/gridTableEvents');
+    var gridTableEvents = require('../services/gridTableEvents');
 
-    let GridTableHelperService = require('../helpers/gridTableHelperService');
+    var GridTableHelperService = require('../helpers/gridTableHelperService');
 
     'use strict';
     module.exports = function (viewModel, $scope, $mdDialog) {
 
-        let gridTableHelperService = new GridTableHelperService();
+        var gridTableHelperService = new GridTableHelperService();
 
-        let valueTypes = [
+        var valueTypes = [
             {
                 "name": "Number",
                 "id": 20
@@ -37,11 +37,11 @@
             }
         ];
 
-        let getValueTypes = () => {
+        var getValueTypes = function() {
             return valueTypes;
         }
 
-        let contextProperties = {
+        var contextProperties = {
             'instruments.instrument': [
                 {
                     id: 'instrument',
@@ -100,11 +100,11 @@
             ]
         }
 
-        let getContextProperties = () => {
+        var getContextProperties = function () {
             return contextProperties;
         };
 
-        let updateInputFunctions = function () {
+        var updateInputFunctions = function () {
 
             viewModel.expressionData.groups[0] = {
                 "name": "<b>Inputs</b>",
@@ -132,7 +132,7 @@
 
         };
 
-        let resolveRelation = function (contentType) {
+        var resolveRelation = function (contentType) {
 
             var entityKey;
 
@@ -159,7 +159,7 @@
 
         };
 
-        let getReferenceTables = function () {
+        var getReferenceTables = function () {
 
             return referenceTableService.getList().then(function (data) {
 
@@ -171,7 +171,7 @@
 
         };
 
-        let getInputTemplates = function () {
+        var getInputTemplates = function () {
 
             viewModel.readyStatus.input_templates = false;
 
@@ -187,7 +187,7 @@
 
         };
 
-        let removeInputFromActions = function (deletedInputName) {
+        var removeInputFromActions = function (deletedInputName) {
 
             viewModel.inputsToDelete.push(deletedInputName);
 
@@ -229,7 +229,7 @@
         };
 
         // TRANSACTION VALIDATION
-        let checkFieldExprForDeletedInput = function (inputsToDelete, actionFieldValue, actionItemKey, actionNotes) {
+        var checkFieldExprForDeletedInput = function (inputsToDelete, actionFieldValue, actionItemKey, actionNotes) {
 
             for (var a = 0; a < inputsToDelete.length; a++) {
 
@@ -256,7 +256,7 @@
 
         };
 
-        let checkActionsForEmptyFields = (actions) => {
+        var checkActionsForEmptyFields = function (actions) {
 
             var result = [];
 
@@ -378,7 +378,7 @@
             return result;
         };
 
-        let validateUserFields = function (entity, inputsToDelete, result) {
+        var validateUserFields = function (entity, inputsToDelete, result) {
 
             var entityKeys = Object.keys(entity);
 
@@ -402,7 +402,7 @@
             });
         };
 
-        let checkEntityForEmptyFields = (entity) => {
+        var checkEntityForEmptyFields = function (entity) {
 
             var result = [];
 
@@ -460,7 +460,7 @@
 
 
         // INPUTS GRID TABLE
-        let onInputsGridTableRowAddition = function () {
+        var onInputsGridTableRowAddition = function () {
 
             var newRow = viewModel.inputsGridTableData.body[0];
 
@@ -511,7 +511,7 @@
 
         };
 
-        let onInputsGridTableCellChange = function (rowKey) {
+        var onInputsGridTableCellChange = function (rowKey) {
 
             // updating whole row because 'value_type' change causes other cells to change
             var gtRow = viewModel.inputsGridTableDataService.getRowByKey(rowKey);
@@ -541,16 +541,21 @@
 
         }
 
-        let onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
+        var relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
+            return viewModel.loadRelation(resolveRelation(contentType), true);
+        }
 
-            let changedCell = gtDataService.getCell(rowData.order, colData.order);
+        var onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
 
-            let contentTypeCell = viewModel.inputsGridTableDataService.getCellByKey(rowData.order, 'content_type');
+            var changedCell = gtDataService.getCell(rowData.order, colData.order);
 
-            let loadRelationRes = viewModel.loadRelation(resolveRelation(contentTypeCell.settings.value), true);
+            var contentTypeCell = viewModel.inputsGridTableDataService.getCellByKey(rowData.order, 'content_type');
 
-            if (loadRelationRes === 'item_exist') {
-                changedCell.settings.selectorOptions = viewModel.relationItems[resolveRelation(contentTypeCell.settings.value)]
+            // var loadRelationRes = viewModel.loadRelation(resolveRelation(contentTypeCell.settings.val ue), true);
+            var loadRelationRes = relationItemsResolver(contentTypeCell.settings.value);
+
+            if (loadRelationRes && loadRelationRes.status === 'item_exist') {
+                changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field]
 
             } else {
 
@@ -565,7 +570,7 @@
 
         };
 
-        let changeCellsBasedOnValueType = function (row) {
+        var changeCellsBasedOnValueType = function (row) {
 
             var valueType = gridTableHelperService.getCellFromRowByKey(row, 'value_type'),
                 contentType = gridTableHelperService.getCellFromRowByKey(row, 'content_type'),
@@ -613,7 +618,7 @@
                         onInit: onRelationDefaultValueSelInit
                     }
 
-                    defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)]
+                    defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)] // TODO Victor: this is bug. viewModel.newItem always undefined
 
                     break;
 
@@ -638,7 +643,7 @@
 
         };
 
-        let getInputsForLinking = function () {
+        var getInputsForLinking = function () {
 
             viewModel.inputsForMultiselector = viewModel.entity.inputs.map(function (input) {
 
@@ -651,12 +656,12 @@
 
         };
 
-        let updateLinkedInputsOptionsInsideGridTable = function () {
+        var updateLinkedInputsOptionsInsideGridTable = function () {
 
-            let linkedInputsNames = viewModel.inputsGridTableDataService.getCellByKey('templateRow', 'linked_inputs_names');
+            var linkedInputsNames = viewModel.inputsGridTableDataService.getCellByKey('templateRow', 'linked_inputs_names');
             linkedInputsNames.settings.selectorOptions = viewModel.inputsForMultiselector
 
-            for (let i = 0; i < viewModel.inputsGridTableData.body.length; i++) {
+            for (var i = 0; i < viewModel.inputsGridTableData.body.length; i++) {
 
                 linkedInputsNames = viewModel.inputsGridTableDataService.getCellByKey(i, 'linked_inputs_names');
 
@@ -666,7 +671,7 @@
 
         };
 
-        let deleteInputsRows = function (gtDataService, gtEventService) {
+        var deleteInputsRows = function (gtDataService, gtEventService) {
 
             var selectedRows = gtDataService.getSelectedRows();
 
@@ -727,7 +732,7 @@
 
         };
 
-        let addInputRow = function (gtDataService, gtEventService) {
+        var addInputRow = function (gtDataService, gtEventService) {
 
             $mdDialog.show({
                 controller: 'TransactionTypeAddInputDialogController as vm',
@@ -741,7 +746,12 @@
                         contentTypeOptions: {
                             relation: viewModel.selectorContentTypes,
                             selector: viewModel.referenceTables
-                        }
+                        },
+                        contextProperties: contextProperties,
+                        relationItems: viewModel.relationItems,
+                        inputsForMultiselector: viewModel.inputsForMultiselector,
+
+                        relationItemsResolver: relationItemsResolver,
                     }
                 }
 
@@ -753,12 +763,24 @@
                     newRow.key = res.data.name;
 
                     var name = gridTableHelperService.getCellFromRowByKey(newRow, 'name'),
+                        verboseName = gridTableHelperService.getCellFromRowByKey(newRow, 'verbose_name'),
+                        tooltip = gridTableHelperService.getCellFromRowByKey(newRow, 'tooltip'),
                         valueType = gridTableHelperService.getCellFromRowByKey(newRow, 'value_type'),
-                        contentType = gridTableHelperService.getCellFromRowByKey(newRow, 'content_type');
+                        contentType = gridTableHelperService.getCellFromRowByKey(newRow, 'content_type'),
+                        fillFromContext = gridTableHelperService.getCellFromRowByKey(newRow, 'is_fill_from_context'),
+                        defaultValue = gridTableHelperService.getCellFromRowByKey(newRow, 'default_value'),
+                        inputCalcExpression = gridTableHelperService.getCellFromRowByKey(newRow, 'input_calc_expr'),
+                        linkedInputs = gridTableHelperService.getCellFromRowByKey(newRow, 'linked_inputs_names');
 
-                    name.settings.value = res.data.name
-                    valueType.settings.value = res.data.valueType
-                    contentType.settings.value = res.data.contentType
+                    name.settings.value = res.data.name;
+                    verboseName.settings.value = res.data.verbose_name;
+                    tooltip.settings.value = res.data.tooltip;
+                    valueType.settings.value = res.data.valueType;
+                    contentType.settings.value = res.data.contentType;
+                    fillFromContext.settings.value = res.data.context_property;
+                    defaultValue.settings.value = res.data.value;
+                    inputCalcExpression.settings.value = res.data.value_expr;
+                    linkedInputs.settings.value = res.data.linked_inputs_names;
 
                     changeCellsBasedOnValueType(newRow);
                     viewModel.inputsGridTableData.body.unshift(newRow);
@@ -771,7 +793,7 @@
 
         };
 
-        let initGridTableEvents = function () {
+        var initGridTableEvents = function () {
 
             viewModel.inputsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
                 onInputsGridTableCellChange(argumentsObj.row.key);
@@ -957,7 +979,7 @@
             }
         }
 
-        let createDataForInputsTableGrid = function () {
+        var createDataForInputsTableGrid = function () {
 
             var rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
@@ -1015,7 +1037,10 @@
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
                 // linked_inputs_names
-                rowObj.columns[8].settings.value = input.settings.linked_inputs_names
+                if (input.settings && input.settings.linked_inputs_names) {
+                    rowObj.columns[8].settings.value = input.settings.linked_inputs_names
+                }
+
                 rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
                 // rowObj.columns[8].settings.getDataMethod = getInputsForLinking;
 
@@ -1028,7 +1053,7 @@
         }
         // < INPUTS GRID TABLE >
 
-        let initAfterMainDataLoaded = function () {
+        var initAfterMainDataLoaded = function () {
 
             getInputsForLinking();
 

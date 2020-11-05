@@ -164,9 +164,9 @@
                     var options = {
                         page: 1,
                         pageSize: 20,
-                    }
+                    };
 
-                    if (scope.inputText) {
+                	if (scope.inputText) {
 
                         var inputText = scope.inputText;
 
@@ -174,7 +174,7 @@
                             'short_name': inputText
                         }
 
-                    }
+                	}
 
                     entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
@@ -221,8 +221,7 @@
                     if (pressedKey === "Tab") {
                         closeDropdownMenu(true);
                     }
-
-                }
+                };
 
                 scope.openSmartSearch = function ($event) {
 
@@ -321,9 +320,12 @@
                     });
 
                     inputElem.addEventListener('focus', function () {
+
+						scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         getOptionsList();
+
                     });
 
                     inputElem.addEventListener('blur', function (event) {
@@ -428,7 +430,50 @@
                     }
 
                     initScopeWatchers();
+                };
 
+                // Victor 08.10.2020
+                scope.createEntity = function ($event) {
+                    $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
+
+                    $mdDialog
+                        .show({
+                            controller: "EntityViewerAddDialogController as vm",
+                            templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            multiple: true,
+                            locals: {
+                                entityType: scope.entityType,
+                                entity: {},
+                                data: {},
+                            },
+                        })
+                        .then(function (res) {
+                            if (res && res.res === "agree") {
+                                var item = res.data;
+                                scope.selectOption(item);
+                            }
+                        });
+                };
+
+                scope.downloadEntity = function ($event) {
+                  $event.stopPropagation();
+
+                    console.log('scope.downloadEntity');
+
+                    $mdDialog.show({
+                        controller: 'InstrumentDownloadDialogController as vm',
+                        templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {}
+                        }
+                    }).then(function (res) {
+                        var item = res.data;
+                        scope.selectOption(item);
+                    })
                 };
 
                 init();

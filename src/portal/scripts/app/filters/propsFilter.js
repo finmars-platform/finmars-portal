@@ -29,7 +29,7 @@
                     }
                 });
             } else {
-                // Let the output be the input untouched
+                // var the output be the input untouched
                 out = items;
             }
 

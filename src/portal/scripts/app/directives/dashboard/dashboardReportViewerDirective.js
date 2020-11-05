@@ -10,6 +10,8 @@
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
     var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
 
+    var dashboardHelper = require('../../helpers/dashboard.helper');
+
     module.exports = function ($mdDialog) {
         return {
             restriction: 'E',
@@ -65,48 +67,6 @@
                     scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
                 }
 
-                var saveComponentSettings = function () {
-
-                    var listLayout = scope.dashboardDataService.getListLayout();
-
-                    if (listLayout) {
-
-                        var layoutData = listLayout.data;
-
-                        for (var i = 0; i < layoutData.components_types.length; i++) {
-
-                            if (layoutData.components_types[i].id === componentData.id) {
-
-                                layoutData.components_types[i] = JSON.parse(JSON.stringify(componentData));
-                                scope.dashboardDataService.setListLayout(listLayout);
-
-                                uiService.updateDashboardLayout(listLayout.id, listLayout).then(function (data) {
-
-                                    $mdDialog.show({
-                                        controller: 'InfoDialogController as vm',
-                                        templateUrl: 'views/info-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        clickOutsideToClose: false,
-                                        locals: {
-                                            info: {
-                                                title: 'Success',
-                                                description: "Dashboard component settings saved."
-                                            }
-                                        }
-                                    });
-
-                                });
-
-                                break;
-
-                            }
-
-                        }
-
-                    }
-
-                };
-
                 scope.openComponentSettingsEditorDialog = function ($event) {
 
                     var dashboardComponents = scope.dashboardDataService.getComponents();
@@ -138,7 +98,7 @@
                             }*/
 
                             if (res.action === 'save') {
-                                saveComponentSettings();
+								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData);
                             }
 
                             if (scope.fillInModeData) {

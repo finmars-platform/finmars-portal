@@ -158,7 +158,6 @@
             var step = 10000; // TODO fix pagination problem in future
             var i;
 
-
             objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
 
                 var groupData = entityViewerDataService.getData(event.___id);
@@ -167,7 +166,7 @@
 
                 var obj;
 
-                if (!event.___id) {
+                if (!event.___id) { // if there are no groups
 
                     var rootGroupData = entityViewerDataService.getRootGroupData();
 
@@ -183,11 +182,11 @@
                         }
                     }
 
-                } else {
+                } else { // if there are groups
 
-                    if (groupData) {
+                    if (groupData) { // for closed groups
 
-                        obj = Object.assign({}, groupData);
+                        obj = Object.assign({}, groupData); // group
 
                         obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                         obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
@@ -202,7 +201,7 @@
                             }
                         }
 
-                    } else {
+                    } else { // if group opened for first time
 
                         var parentGroup = entityViewerDataService.getData(event.parentGroupId);
 
@@ -329,7 +328,8 @@
 
                             obj = Object.assign({}, data);
                             obj.___group_name = event.groupName ? event.groupName : '-';
-                            obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                            // obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                            obj.___group_identifier = event.groupId ? event.groupId : '-';
                             obj.___is_open = true;
                             // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 

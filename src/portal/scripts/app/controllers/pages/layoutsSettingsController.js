@@ -356,9 +356,11 @@
                     layout.user_code = res.data.user_code;
 
                     uiService.updateListLayout(layout.id, layout).then(function () {
-                        getLayoutsByEntity(layout.content_type).then(function () {
+
+                    	getLayoutsByEntity(layout.content_type).then(function () {
                             $scope.$apply();
                         });
+
                     });
 
                 }
@@ -368,7 +370,8 @@
         };
 
         vm.setAsDefault = function (layoutToMakeDefault) {
-            if (!layoutToMakeDefault.is_default) {
+
+        	if (!layoutToMakeDefault.is_default) {
 
                 var layoutsPropertyName = getLayoutDataByContentType(layoutToMakeDefault.content_type, 'propertyName');
 
@@ -376,7 +379,7 @@
 
                     if (layout.is_default) {
                         layout.is_default = false;
-                        uiService.updateListLayout(layout.id, layout);
+                        // uiService.updateListLayout(layout.id, layout);
                     }
 
                 });
@@ -385,6 +388,7 @@
 
                 return uiService.updateListLayout(layoutToMakeDefault.id, layoutToMakeDefault);
             }
+
         };
 
         vm.deleteLayout = function (ev, layout) {
