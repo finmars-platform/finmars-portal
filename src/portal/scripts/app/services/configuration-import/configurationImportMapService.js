@@ -1113,12 +1113,21 @@
 
         return new Promise(function (resolve, reject) {
 
-            uiService.getListLayoutDefault({
+            /* uiService.getListLayoutDefault({
                 filters: {
                     content_type: componentType.settings.content_type,
                     name: componentType.settings.layout_name
                 }
-            }).then(function (data) {
+            }) */
+            uiService.getListLayout(
+                null,
+                {
+                    filters: {
+                        content_type: componentType.settings.content_type,
+                        name: componentType.settings.layout_name
+                    }
+                }
+            ).then(function (data) {
 
                 console.log('mapDashboardComponentType data', data);
 

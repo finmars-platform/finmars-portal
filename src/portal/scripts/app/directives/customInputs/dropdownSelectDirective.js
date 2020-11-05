@@ -60,7 +60,8 @@
                 }*/
 
                 scope.getInputContainerClasses = function () {
-                    var classes = '';
+
+                	var classes = '';
 
                     if (scope.isDisabled) {
                         classes += "custom-input-is-disabled";
@@ -81,6 +82,7 @@
                     }
 
                     return classes;
+
                 };
 
                 scope.callFnForCustomBtn = function (actionData) {
@@ -310,8 +312,8 @@
 
                     inputElem.addEventListener('focus', function () {
 
-                        inputContainer.classList.add('custom-input-focused');
-
+						scope.inputText = "";
+						inputContainer.classList.add('custom-input-focused');
                         scope.dropdownMenuHidden = true;
 
                         window.addEventListener('click', closeDDMenuOnClick);
