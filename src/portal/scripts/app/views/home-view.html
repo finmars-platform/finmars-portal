@@ -40,6 +40,9 @@
                             <td>
                                 Status
                             </td>
+                            <td>
+                                Attachments
+                            </td>
                         </tr>
                     </thead>
 
@@ -52,6 +55,13 @@
                             <td> {{item.source}}</td>
                             <td> {{item.text}}</td>
                             <td> {{item.verbose_status}}</td>
+                            <td>
+
+                                <div data-ng-repeat="item in item.attachments">
+                                    <a href="{{item.file_report_url}}">{{item.file_report_object.name}}</a>
+                                </div>
+
+                            </td>
 
                         </tr>
 
