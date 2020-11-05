@@ -18,10 +18,10 @@
 
         <div class="g-additions-workarea" data-ng-if="verticalAdditions.type === 'reconciliation'">
             <g-vertical-split-panel-report-binder ev-data-service="evDataService"
-                                                      ev-event-service="evEventService"
-                                                      sp-exchange-service="spExchangeService"
-                                                      root-wrap-elem="rootWrapElem"
-                                                      class="display-block height-100">
+                                                  ev-event-service="evEventService"
+                                                  sp-exchange-service="spExchangeService"
+                                                  root-wrap-elem="rootWrapElem"
+                                                  class="display-block height-100">
             </g-vertical-split-panel-report-binder>
         </div>
 
@@ -130,64 +130,64 @@
 
     <div class="g-additions" data-ng-if="isRootEntityViewer && additions.isOpen">
 
-        <div data-ng-if="domElemsAreReady">
-            <div g-height-aligner
-                 ev-data-service="evDataService"
-                 ev-event-service="evEventService"
-                 root-wrap-elem="rootWrapElem"
-                 content-wrap-elem="contentWrapElem"></div>
-        </div>
+            <div data-ng-if="domElemsAreReady">
+                <div g-height-aligner
+                     ev-data-service="evDataService"
+                     ev-event-service="evEventService"
+                     root-wrap-elem="rootWrapElem"
+                     content-wrap-elem="contentWrapElem"></div>
+            </div>
 
-        <div class="g-height-slider"></div>
+            <div class="g-height-slider"></div>
 
-        <div class="g-additions-workarea" data-ng-if="additions.type === 'editor'">
+            <div class="g-additions-workarea" data-ng-if="additions.type === 'editor'">
 
-            <div class="height-100">
-                <group-editor-binder ev-data-service="evDataService"
-                                     ev-event-service="evEventService"></group-editor-binder>
+                <div class="height-100">
+                    <group-editor-binder ev-data-service="evDataService"
+                                         ev-event-service="evEventService"></group-editor-binder>
+                </div>
+
+            </div>
+
+            <div class="g-additions-workarea" data-ng-if="additions.type === 'permission-editor'">
+
+                <group-permission-editor-binder class="display-block height-100"
+                                                ev-data-service="evDataService"
+                                                ev-event-service="evEventService"
+                                                sp-exchange-service="spExchangeService"></group-permission-editor-binder>
+
+            </div>
+
+            <div class="g-additions-workarea"
+                 data-ng-if="additions.type === 'balance-report'">
+                <group-split-panel-report-binder ev-data-service="evDataService"
+                                                 ev-event-service="evEventService"
+                                                 sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
+            </div>
+
+            <div class="g-additions-workarea"
+                 data-ng-if="additions.type === 'pl-report'">
+                <group-split-panel-report-binder ev-data-service="evDataService"
+                                                 ev-event-service="evEventService"
+                                                 sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
+            </div>
+
+            <div class="g-additions-workarea"
+                 data-ng-if="additions.type === 'transaction-report'">
+                <group-split-panel-report-binder ev-data-service="evDataService"
+                                                 ev-event-service="evEventService"
+                                                 sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
+            </div>
+
+            <div class="g-additions-workarea" data-ng-if="additions.type === 'reconciliation_match_editor'">
+
+                <group-reconciliation-match-editor-binder class="display-block height-100" ev-data-service="evDataService"
+                                                          ev-event-service="evEventService"
+                                                          sp-exchange-service="spExchangeService"></group-reconciliation-match-editor-binder>
+
             </div>
 
         </div>
-
-        <div class="g-additions-workarea" data-ng-if="additions.type === 'permission-editor'">
-
-            <group-permission-editor-binder class="display-block height-100"
-                                            ev-data-service="evDataService"
-                                            ev-event-service="evEventService"
-                                            sp-exchange-service="spExchangeService"></group-permission-editor-binder>
-
-        </div>
-
-        <div class="g-additions-workarea"
-             data-ng-if="additions.type === 'balance-report'">
-            <group-split-panel-report-binder ev-data-service="evDataService"
-                                             ev-event-service="evEventService"
-                                             sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
-        </div>
-
-        <div class="g-additions-workarea"
-             data-ng-if="additions.type === 'pl-report'">
-            <group-split-panel-report-binder ev-data-service="evDataService"
-                                             ev-event-service="evEventService"
-                                             sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
-        </div>
-
-        <div class="g-additions-workarea"
-             data-ng-if="additions.type === 'transaction-report'">
-            <group-split-panel-report-binder ev-data-service="evDataService"
-                                             ev-event-service="evEventService"
-                                             sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
-        </div>
-
-        <div class="g-additions-workarea" data-ng-if="additions.type === 'reconciliation_match_editor'">
-
-            <group-reconciliation-match-editor-binder class="display-block height-100" ev-data-service="evDataService"
-                                                      ev-event-service="evEventService"
-                                                      sp-exchange-service="spExchangeService"></group-reconciliation-match-editor-binder>
-
-        </div>
-
-    </div>
 
     <!--<div ng-if="domElemsAreReady">
 
