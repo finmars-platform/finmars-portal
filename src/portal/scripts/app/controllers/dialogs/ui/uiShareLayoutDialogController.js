@@ -57,30 +57,56 @@
 
                 var promises = [];
 
-                promises.push(uiService.getListLayoutDefault(
+                /* promises.push(uiService.getListLayoutDefault(
                     {
+                        filters: {
+                            content_type: 'reports.balancereport'
+                        }
+                    }
+                )); */
+                promises.push(uiService.getListLayout(
+                    null,
+                    {
+                        pageSize: 1000,
                         filters: {
                             content_type: 'reports.balancereport'
                         }
                     }
                 ));
 
-                promises.push(uiService.getListLayoutDefault(
+                /* promises.push(uiService.getListLayoutDefault(
                     {
+                        filters: {
+                            content_type: 'reports.plreport'
+                        }
+                    }
+                )); */
+                promises.push(uiService.getListLayout(
+                    null,
+                    {
+                        pageSize: 1000,
                         filters: {
                             content_type: 'reports.plreport'
                         }
                     }
                 ));
 
-                promises.push(uiService.getListLayoutDefault(
+                /* promises.push(uiService.getListLayoutDefault(
                     {
                         filters: {
                             content_type: 'reports.transactionreport'
                         }
                     }
+                )); */
+                promises.push(uiService.getListLayout(
+                    null,
+                    {
+                        pageSize: 1000,
+                        filters: {
+                            content_type: 'reports.transactionreport'
+                        }
+                    }
                 ));
-
 
                 Promise.all(promises).then(function (data) {
 

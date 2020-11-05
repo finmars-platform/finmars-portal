@@ -16,6 +16,11 @@
                 key: 'layoutLineWithLabel',
                 name: 'Labeled Line',
                 "value_type": 'decoration'
+            },
+            {
+                key: 'layoutPlainText',
+                name: 'Plain Text',
+                "value_type": 'decoration'
             }
         ]
     };

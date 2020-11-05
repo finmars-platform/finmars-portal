@@ -368,7 +368,29 @@
 
     };
 
-    var render = function (evDataService, obj) {
+    var isCellModified = function (obj, column, columnIndex) {
+
+        var columnNumber = columnIndex + 1;
+
+        var result = false;
+
+        if (obj.___modified_cells) {
+
+            obj.___modified_cells.forEach(function (item) {
+
+                if (item.columnNumber === columnNumber) {
+                    result = true;
+                }
+
+            })
+
+        }
+
+        return result
+
+    };
+
+    var render = function (evDataService, obj, markedReportRows) {
 
         var classList = ['g-row'];
 
@@ -391,6 +413,10 @@
             rowSelection = '<div class="g-row-selection"></div>';
         }
 
+        if (markedReportRows.hasOwnProperty(obj.id)) {
+            classList.push('g-row-marked-' + markedReportRows[obj.id].color)
+        }
+
         var classes = classList.join(' ');
 
         var result = '<div class="' + classes + '" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
@@ -403,6 +429,7 @@
         var value_obj;
         var gCellTitle = '';
         var resultValue;
+        var cellModified = '';
 
         result = result + rowSelection;
 
@@ -415,6 +442,8 @@
             borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
             textAlign = getCellTextAlign(evDataService, column, columnNumber, groups);
             value_obj = getValue(evDataService, obj, column, columnNumber, groups);
+
+            cellModified = isCellModified(obj, column, columnIndex) ? 'g-cell-modified' : '';
 
             colorNegative = '';
             if (value_obj.numeric_result !== null && value_obj.numeric_result !== undefined) {
@@ -438,7 +467,7 @@
             }
 
             cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
+                '<div data-column="' + columnNumber + '" class="g-cell ' + cellModified + ' ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
                 resultValue +
                 '</div>' +

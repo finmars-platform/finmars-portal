@@ -85,6 +85,7 @@
         };*/
 
         var init = function () {
+            // Scripts for LINKING tab
             if (Array.isArray(linkedToCompsIds)) {
                 linkedToCompsIds.forEach(function (compId) {
 
@@ -111,6 +112,7 @@
                 }
 
             });
+            // < Scripts for LINKING tab >
         };
 
         init();

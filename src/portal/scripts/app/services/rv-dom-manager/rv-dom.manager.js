@@ -7,8 +7,12 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
+    var priceHistoryService = require('../../services/priceHistoryService'); // TODO this is temp service here
+
     var transactionTypeService = require('../../services/transactionTypeService');
     var uiService = require('../../services/uiService');
+
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     var RvScrollManager = require('./rv-scroll.manager');
 
@@ -312,7 +316,7 @@
 
             clearSubtotalActiveState(evDataService);
             clearObjectActiveState(evDataService);
-            console.log("select row activated_ids", activated_ids);
+
             list.forEach(function (object) {
 
                 if (activated_ids.indexOf(object.___id) !== -1) {
@@ -525,28 +529,251 @@
 
     };
 
+    var updateDataFromCellEdit = function (obj, column, evDataService, evEventService) {
+
+        var reportOptions = evDataService.getReportOptions();
+
+        if (column.key === 'instrument_principal_price') {
+
+            priceHistoryService.getList({
+                filters: {
+                    instrument: obj['instrument.id'],
+                    pricing_policy: reportOptions.pricing_policy,
+                    date_after: reportOptions.report_date
+                }
+            }).then(function (data) {
+
+                var item;
+
+                if (data.results.length) {
+
+                    item = data.results[0];
+
+                    item.principal_price = obj[column.key];
+
+                    priceHistoryService.update(item.id, item).then(function (data) {
+
+                        toastNotificationService.success("Price History updated");
+
+                    })
+
+                } else {
+
+                    item = {
+                        pricing_policy: reportOptions.pricing_policy,
+                        date_after: reportOptions.report_date,
+                        instrument: obj['instrument.id'],
+                        accrued_price: 0,
+                        principal_price: obj[column.key]
+                    };
+
+                    priceHistoryService.create(item).then(function (data) {
+
+                        toastNotificationService.success("Price History created");
+
+                    })
+
+
+                }
+
+
+            });
+
+
+        }
+
+        if (column.key === 'instrument_accrued_price') {
+
+            priceHistoryService.getList({
+                filters: {
+                    instrument: obj['instrument.id'],
+                    pricing_policy: reportOptions.pricing_policy,
+                    date_after: reportOptions.report_date
+                }
+            }).then(function (data) {
+
+                var item;
+
+                if (data.results.length) {
+
+                    item = data.results[0];
+
+                    item.accrued_price = obj[column.key];
+
+                    priceHistoryService.update(item.id, item).then(function (data) {
+
+                        toastNotificationService.success("Price History updated");
+
+                    })
+
+                } else {
+
+                    item = {
+                        pricing_policy: reportOptions.pricing_policy,
+                        date_after: reportOptions.report_date,
+                        instrument: obj['instrument.id'],
+                        accrued_price: obj[column.key],
+                        principal_price: 0
+                    };
+
+                    priceHistoryService.create(item).then(function (data) {
+
+                        toastNotificationService.success("Price History created");
+
+                    })
+
+
+                }
+
+
+            });
+
+
+        }
+
+
+    };
+
+    var handleCellEdit = function (cellElem, clickData, obj, column, columnNumber, evDataService, evEventService) {
+
+        console.log('column', column);
+
+        cellElem.classList.add('g-cell-input');
+        cellElem.innerHTML = '<input value="" autofocus>';
+
+        var input = cellElem.querySelector('input');
+
+        input.focus();
+
+        input.value = obj[column.key];
+
+        input.addEventListener('blur', function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (obj[column.key] !== input.value) {
+
+                if (!obj.___modified_cells) {
+                    obj.___modified_cells = []
+                }
+
+                obj.___modified_cells.push({
+                    oldValue: obj[column.key],
+                    newValue: input.value,
+                    columnNumber: columnNumber,
+                    column: column
+                });
+            }
+
+            obj[column.key] = input.value;
+            evDataService.setObject(obj);
+
+            updateDataFromCellEdit(obj, column, evDataService, evEventService);
+
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+        });
+
+        input.addEventListener("keyup", function (event) {
+
+            if (event.keyCode === 13) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (obj[column.key] !== input.value) {
+
+                    if (!obj.___modified_cells) {
+                        obj.___modified_cells = []
+                    }
+
+                    obj.___modified_cells.push({
+                        oldValue: obj[column.key],
+                        newValue: input.value,
+                        columnNumber: columnNumber,
+                        column: column
+                    });
+                }
+
+                obj[column.key] = input.value;
+                evDataService.setObject(obj);
+
+                updateDataFromCellEdit(obj, column, evDataService, evEventService);
+
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            }
+        });
+
+
+    };
+
     var initEventDelegation = function (elem, evDataService, evEventService) {
 
         elem.addEventListener('click', function (event) {
 
             var clickData = getClickData(event);
 
-            console.log('clickData', clickData);
+            if (event.detail === 2) { // double click handler
 
-            if (clickData.isFoldButtonPressed) {
+                var cellElem;
 
-                handleFoldButtonClick(clickData, evDataService, evEventService);
+                // TODO make recursive get parent of g-cell
+                if (event.target.classList.contains('g-cell')) {
+                    cellElem = event.target
+                } else if (event.target.parentElement.classList.contains('g-cell')) {
+                    cellElem = event.target.parentElement;
+                } else if (event.target.parentElement.parentElement.classList.contains('g-cell')) {
+                    cellElem = event.target.parentElement.parentElement;
+                }
 
-            } else {
+                if (cellElem) {
 
-                switch (clickData.___type) {
-                    case 'object':
-                        handleObjectClick(clickData, evDataService, evEventService);
-                        break;
+                    var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
+                    var columns = evDataService.getColumns();
+                    console.log('obj', obj);
 
-                    case 'subtotal':
-                        handleSubtotalClick(clickData, evDataService, evEventService);
-                        break;
+                    var columnNumber = parseInt(cellElem.dataset.column, 10);
+
+                    var column = columns[columnNumber - 1];
+
+                    console.log('clickData', clickData);
+
+                    if (['instrument_principal_price', 'instrument_accrued_price'].indexOf(column.key) !== -1) {
+
+                        handleCellEdit(cellElem, clickData, obj, column, columnNumber, evDataService, evEventService)
+
+                    }
+
+                }
+
+            } else if (event.detail === 1) {
+
+                if (clickData.isFoldButtonPressed) {
+
+                    handleFoldButtonClick(clickData, evDataService, evEventService);
+
+                } else {
+
+                    var selection = window.getSelection().toString();
+
+                    console.log('selection', selection);
+
+                    if (!selection.length) {
+
+                        switch (clickData.___type) {
+
+                            case 'object':
+                                handleObjectClick(clickData, evDataService, evEventService);
+                                break;
+
+                            case 'subtotal':
+                                handleSubtotalClick(clickData, evDataService, evEventService);
+                                break;
+                        }
+
+                    }
+
                 }
 
             }
@@ -628,6 +855,7 @@
         // console.log('calculateScroll.viewportWidth', viewportWidth);
 
         rvScrollManager.setViewportHeight(viewportHeight);
+
         if (viewportWidth) {
             rvScrollManager.setViewportWidth(viewportWidth);
         }
@@ -909,7 +1137,7 @@
             if (item.action === 'open_layout') {
 
                 result = result +
-                    '<div class="ev-dropdown-option' + (item.items ? ' ev-dropdown-menu-holder' : '') + '">'+
+                    '<div class="ev-dropdown-option' + (item.items ? ' ev-dropdown-menu-holder' : '') + '">' +
                     '<a href="' + getContextMenuActionLink(evDataService, item, obj) + '"' +
                     ' target="_blank"' +
                     ' data-ev-dropdown-action="' + item.action + '"' +
@@ -970,15 +1198,27 @@
 
     var generateContextMenu = function (evDataService, menu, ttypes, obj, objectId, parentGroupHashId) {
 
-        var result = '<div>';
+        var result = '<div class="ev-dropdown-container">';
 
         menu.root.items.forEach(function (item) {
             result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
         });
 
+        result = result + '<div class="ev-dropdown-option"' +
+            ' data-ev-dropdown-action="mark_row"' +
+            ' data-object-id="' + objectId + '"' +
+            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Red';
+
         result = result + '</div>';
 
-        //console.log("generateContextMenu.result", result);
+        result = result + '<div class="ev-dropdown-option"' +
+            ' data-ev-dropdown-action="mark_row_green"' +
+            ' data-object-id="' + objectId + '"' +
+            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Green';
+
+        result = result + '</div>';
+
+        result = result + '</div>';
 
         return result;
 
@@ -986,7 +1226,7 @@
 
     var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
 
-        function sendContextMenuActionToActiveObj (event) {
+        function sendContextMenuActionToActiveObj(event) {
 
             var objectId = event.target.dataset.objectId;
             var parentGroupHashId = event.target.dataset.parentGroupHashId;
@@ -998,31 +1238,72 @@
                 dropdownActionData.id = event.target.dataset.evDropdownActionDataId
             }
 
-            if (objectId && dropdownAction && parentGroupHashId) {
+            console.log('sendContextMenuActionToActiveObj.dropdownAction', dropdownAction);
 
-                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+            if (dropdownAction === 'mark_row_red' || dropdownAction === 'mark_row_green') {
 
-                if (!obj) {
-                    obj = {}
+                if (objectId && dropdownAction && parentGroupHashId) {
+
+                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                    var color;
+
+                    if (dropdownAction === 'mark_row_red') {
+                        color = 'red'
+                    }
+
+                    if (dropdownAction === 'mark_row_green') {
+                        color = 'green'
+                    }
+
+                    var markedReportRows = localStorage.getItem("marked_report_rows");
+
+                    if (markedReportRows) {
+                        markedReportRows = JSON.parse(markedReportRows);
+                    } else {
+                        markedReportRows = {};
+                    }
+
+                    markedReportRows[obj.id] = {
+                        color: color
+                    };
+
+                    localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
+
+                    console.log('markedReportRows', markedReportRows);
+
                 }
-
-                obj.event = event;
-
-                evDataService.setActiveObject(obj);
-                evDataService.setActiveObjectAction(dropdownAction);
-                evDataService.setActiveObjectActionData(dropdownActionData);
-
-                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
                 clearDropdowns();
 
             } else {
 
-                if (!event.target.classList.contains('ev-dropdown-option')) {
-                    clearDropdowns();
-                }
+                if (objectId && dropdownAction && parentGroupHashId) {
 
+                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                    if (!obj) {
+                        obj = {}
+                    }
+
+                    obj.event = event;
+
+                    evDataService.setActiveObject(obj);
+                    evDataService.setActiveObjectAction(dropdownAction);
+                    evDataService.setActiveObjectActionData(dropdownActionData);
+
+                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                    clearDropdowns();
+
+                }
             }
+
+            if (!event.target.classList.contains('ev-dropdown-option')) {
+                clearDropdowns();
+            }
+
+
 
         }
 
@@ -1034,6 +1315,8 @@
 
         clearDropdowns();
 
+        /*var dropdownWidth = 320;
+        var dropdownOptionHeight = 24;
         var popup = document.createElement('div');
 
         clearObjectActiveState(evDataService);
@@ -1048,10 +1331,16 @@
         popup.id = 'dropdown-' + objectId;
         popup.classList.add('ev-dropdown');
 
+        popup.style.cssText = menuPosition;
+        popup.style.position = 'absolute';*/
+
+        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, true);
+        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
         popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
 
-        popup.style.cssText = menuPosition;
-        popup.style.position = 'absolute';
+        /*popup.style.cssText = menuPosition;*/
+        evDataHelper.calculateMenuPosition(popup, menuPosition);
 
         document.body.appendChild(popup);
 
@@ -1103,7 +1392,6 @@
 
         var contextMenu = {};
         var ttypes = null;
-
 
 
         /*transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
@@ -1350,7 +1638,8 @@
                         ev.preventDefault();
                         ev.stopPropagation();
 
-                        var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                        //var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                        var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
                         createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
@@ -1425,7 +1714,7 @@
         createPopupMenu: createPopupMenu,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
         calculateTotalHeight: calculateTotalHeight,
-        calculateContentWrapHeight: calculateContentWrapHeight,
+        //calculateContentWrapHeight: calculateContentWrapHeight,
         calculateScroll: calculateScroll
     }
 

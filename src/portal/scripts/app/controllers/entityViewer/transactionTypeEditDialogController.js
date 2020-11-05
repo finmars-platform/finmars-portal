@@ -401,7 +401,7 @@
         };
 
         vm.getAttrs = function () {
-            return attributeTypeService.getList(vm.entityType).then(function (data) {
+            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attrs = data.results;
 
                 console.log('vm.attrs', vm.attrs);
@@ -924,7 +924,7 @@
 
             var entityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
 
-            if (objectComparisonHelper.comparePropertiesOfObjects(originalEntityInputs, entityInputs)) {
+            if (objectComparisonHelper.areObjectsTheSame(originalEntityInputs, entityInputs)) {
 
                 openEditLayoutDialog(ev);
 
@@ -1946,8 +1946,44 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     vm.entity.actions.splice($index, 1);
+
+                    vm.clearPhantoms()
+
                 }
             });
+        };
+
+        vm.clearPhantoms = function () {
+
+            console.log('vm.clearPhantoms');
+
+            var count = 0;
+
+            vm.entity.actions.forEach(function (action) {
+
+                Object.keys(action).forEach(function (actionKey) {
+
+                    if (action[actionKey]) {
+                        Object.keys(action[actionKey]).forEach(function (key) {
+
+                            if (key.indexOf("phantom") !== -1) {
+                                action[actionKey][key] = null
+                                count = count + 1
+                            }
+
+                        })
+                    }
+
+
+                })
+
+            });
+
+            if (count > 0) {
+
+                toastNotificationService.warning(count + " phantom inputs were reseted")
+            }
+
         };
 
         vm.addAction = function (actionType) {
@@ -2247,7 +2283,7 @@
 
             }
 
-            return 'item_exist';
+            return {status: 'item_exist', field: field};
         };
 
         vm.getNameByValueType = function (value) {
