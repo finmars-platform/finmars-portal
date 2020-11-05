@@ -758,7 +758,7 @@
 
                             uiService.updateListLayout(listLayout.id, listLayout).then(function () {
 
-                                scope.evDataService.setListLayout(listLayout);
+                            	scope.evDataService.setListLayout(listLayout);
                                 scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                 checkIsLayoutDefault();
@@ -824,10 +824,11 @@
 
                             var listLayout = scope.evDataService.getListLayout();
                             listLayout.name = res.name;
-                            scope.evDataService.setListLayout(listLayout);
 
-                            uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+                            uiService.updateListLayout(listLayout.id, listLayout).then(function (updatedLayoutData) {
 
+								listLayout.modified = updatedLayoutData.modified
+								scope.evDataService.setListLayout(listLayout);
                                 // Give signal to update layout name in the toolbar
                                 if (scope.isRootEntityViewer) {
                                     middlewareService.setNewEntityViewerLayoutName(listLayout.name);
