@@ -518,10 +518,8 @@ md-backdrop.md-select-backdrop {
 }
 
 .zh-loader {
-  border: 2px solid #fff;
-  /* Light grey */
-  border-top: 2px solid #3b283b;
-  /* Blue */
+  border: 2px solid #fff; /* Light grey */
+  border-top: 2px solid #3b283b; /* Blue */
   border-bottom: 2px solid #3b283b;
   border-radius: 50%;
   width: 10px;
@@ -2304,6 +2302,7 @@ md-menu-content.dropdown-buttons-menu {
 
 .forms-data-constructor-filter-input {
   width: 300px;
+  outline: none;
   border: none;
   border-bottom: 2px solid #666666;
   margin-bottom: 25px;
@@ -2811,102 +2810,11 @@ md-tabs [role="tabpanel"] {
   transition: none;
 }
 
-//
+#toast-container {
+  left: 50%;
+  margin-left: -150px;
+}
 
 md-checkbox.md-indeterminate .md-icon:after {
   .checkboxUntouched(#ff4081, 12px, -46%, -55%);
 }
-// Styles of Andrew
-/*.rel-container {
-  position: relative;
-  outline: none;
-  margin: 10px;
-
-  // border: 1px solid black;
-  input {
-    outline: none;
-    .inputStyle();
-    // border: 2px solid red;
-  }
-
-  label {
-    outline: none;
-    overflow: visible;
-    position: absolute;
-    z-index: 1000;
-    transform: translate(11px, 8px);
-    background: white;
-    display: inline;
-    font-size: 12px;
-    transform: translate(20px, 17px) !important;
-    width: auto !important;
-  }
-
-  .two-fields-multiselect-input-count-container {
-    outline: none;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translate(18px, -14%);
-    width: 90%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    // border: 1px solid gold;
-    // overflow-x: auto;
-    .m-l-8 {
-      margin-right: 15px;
-    }
-    .two-fields-multiselect-custom-btn {
-      transition: 0.2s ease-in-out;
-      fill: @grey;
-      margin-right: 15px;
-      &:hover {
-        opacity: 0.7;
-      }
-    }
-  }
-
-  .two-fields-multiselect-input-count {
-    outline: none;
-    height: 25px;
-    border-radius: 30px;
-    padding: 0 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(235, 235, 235, 1);
-    max-width: 119px;
-    margin-right: 15px;
-
-    .two-fields-multiselect-color {
-      outline: none;
-      fill: @grey;
-    }
-    &:focus {
-      outline: none;
-    }
-    &:hover {
-      background-color: rgba(216, 216, 216, 1);
-    }
-
-    span {
-      font-size: 14px;
-      font-weight: 400;
-    }
-  }
-}
-.two-fields-multiselect-input-delete {
-  // position: absolute;
-  // z-index: 1000;
-  display: none;
-}
-.two-fields-multiselect-input-tooltip {
-  fill: #777777;
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translate(0%, 30%);
-  cursor: pointer;
-  // color: red;
-}*/

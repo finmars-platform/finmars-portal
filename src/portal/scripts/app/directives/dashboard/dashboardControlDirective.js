@@ -8,6 +8,8 @@
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
+    var uiService = require('../../services/uiService');
+
 
     module.exports = function () {
         return {
@@ -169,31 +171,124 @@
 
                 };
 
+                var getItemDataStore = function (componentData) {
+
+                    var promisify = function (value) {
+                        return new Promise(function (resolve) {
+                            return resolve(value);
+                        });
+                    };
+
+                    if (scope.item.data.store && scope.item.data.store.value) { // Value already exist, default value don't need
+                        return promisify(scope.item.data.store);
+                    }
+
+                    if (!componentData.settings.defaultValue) {
+                        return promisify({});
+                    }
+
+                    var mode = componentData.settings.defaultValue.mode;
+
+                    if (mode === 1) { // Set default value
+                        var value = componentData.settings.defaultValue.setValue;
+                        var name = componentData.settings.defaultValue.setValueName;
+                        var label = componentData.settings.defaultValue.setValueLabel;
+
+                        return promisify({value: value, name: name, label: label});
+                    }
+
+                    if (mode === 0) { // Get default value from report
+
+                        var layoutId = componentData.settings.defaultValue.layout;
+
+                        return uiService.getListLayoutByKey(layoutId).then(function (layout) {
+
+                            var key = componentData.settings.defaultValue.reportOptionsKey;
+                            var value = layout.data.reportOptions[key];
+
+                            if (!value) {
+
+                                return {};
+
+                            }
+
+                            if (componentData.settings.multiple) {
+
+                                return Array.isArray(value) ? {value: value} : {value: [value]};
+
+                            }
+
+                            if (componentData.settings.value_type === 100) {
+
+                                value = Array.isArray(value) ? value[0] : value;
+
+                                var selectedRelation = scope.fields.find(function (field) {
+
+                                    return field.id === value;
+
+                                });
+
+                                if (selectedRelation) {
+
+                                    return {value: value, name: selectedRelation.name};
+
+                                }
+
+                                return {};
+
+                            }
+
+                            return Array.isArray(value) ? {value: value[0]} : {value: value};
+
+                        });
+                    }
+
+                    return promisify({});
+
+                };
+
+                scope.settingUpDefaultValue = function (componentData) {
+
+                    getItemDataStore(componentData).then(function (store) {
+                        if (!store.value) {
+                            return;
+                        }
+                        scope.item.data.store = store;
+                        scope.$apply();
+                        scope.valueChanged();
+                    });
+
+                };
+
                 scope.init = function () {
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
-
-                    console.log('scope.componentData', scope.componentData);
-
                     scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
-                    console.log('dashboard control scope.entityType', scope.entityType);
-                    if (!scope.item.data.store) {
-                        scope.item.data.store = {} // "store" - property for all dashboard data related properties
+
+                    if (scope.entityType) {
+
+                        scope.getData()
+                            .then(function() {
+
+                                scope.settingUpDefaultValue(scope.componentData);
+                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                            });
+
+                    } else {
+
+                        scope.settingUpDefaultValue(scope.componentData);
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
                     }
-
-                    console.log('scope.item', scope);
-
-                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
 
                     if (scope.componentData.custom_component_name) {
                         scope.customName = scope.componentData.custom_component_name;
                     }
 
-
-                    scope.initEventListeners()
-
+                    scope.initEventListeners();
 
                 };
 

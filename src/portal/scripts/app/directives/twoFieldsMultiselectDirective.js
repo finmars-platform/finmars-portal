@@ -36,7 +36,7 @@
 
         scope.deleteById = async function ({ id }, $index) {
 
-          let items = await getItems();
+          var items = await getItems();
           scope.model = await scope.itemsSelected
             .filter((el) => el.id !== id)
             .map((s) => s.id);
@@ -61,7 +61,7 @@
 
         var defaultInputText = async function () {
           var selElemNumber = 0;
-          let chipsName = "";
+          var chipsName = "";
           if (scope.model && scope.model.length > 0) {
             selElemNumber = scope.model.length;
           }
@@ -79,7 +79,7 @@
 
             const items = await getItems();
 
-            let idx = Math.min(...scope.model);
+            var idx = Math.min(...scope.model);
             scope.itemAxact = items
               .filter((el) => el.id == idx)
               .map((n) => n.name)
@@ -255,6 +255,14 @@
 
         scope.$watch('model', function () {
           setInputText();
+        });
+
+        scope.$watch('items', function () {
+            if (!scope.items) {
+                return;
+            }
+
+            items = JSON.parse(JSON.stringify(scope.items));
         });
 
         var defaultInputText = function () {

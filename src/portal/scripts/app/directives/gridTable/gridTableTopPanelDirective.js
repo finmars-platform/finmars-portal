@@ -26,7 +26,7 @@
                 var newRowsKeys = [];
                 var tableMethods = scope.gridTableData.tableMethods || {};
 
-                var assembleNewRow = () => {
+                var assembleNewRow = function () {
 
                     var newRow = metaHelper.recursiveDeepCopy(scope.gridTableData.templateRow, true);
                     var newRowKey = md5Helper.md5('newGridTableRow', newRowsKeys.length);

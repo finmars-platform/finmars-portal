@@ -9,6 +9,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
     var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
+	var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
@@ -244,7 +245,7 @@
 
                         new Promise(function (resolve, reject) {
 
-                            pricingPolicyService.getList(ppOptions).then(function (data) {
+                            pricingPolicyService.getListLight(ppOptions).then(function (data) {
 
                                 scope.pricingPolicies = scope.pricingPolicies.concat(data.results);
 
@@ -280,7 +281,7 @@
 
                         new Promise(function (resolve, reject) {
 
-                            currencyService.getList(currencyOptions).then(function (data) {
+                            currencyService.getListLight(currencyOptions).then(function (data) {
 
                                 scope.currencies = scope.currencies.concat(data.results);
 
@@ -369,10 +370,10 @@
                         var objectId = lastClickedRow.___id;
                         var parentGroupHashId = lastClickedRow.___parentId;
 
-                        var contextMenuPosition = 'top: ' + $event.pageY + 'px; right: 0;';
+                        //var contextMenuPosition = 'top: ' + $event.pageY + 'px; right: 0;';
+                        var contextMenuPosition = {positionX: $event.pageX, positionY: $event.pageY};
 
                         if (scope.isReport) {
-
                             rvDomManager.createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, scope.evDataService, scope.evEventService, contextMenuPosition);
 
                         } else {
@@ -757,7 +758,7 @@
 
                             uiService.updateListLayout(listLayout.id, listLayout).then(function () {
 
-                                scope.evDataService.setListLayout(listLayout);
+                            	scope.evDataService.setListLayout(listLayout);
                                 scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                 checkIsLayoutDefault();
@@ -823,10 +824,11 @@
 
                             var listLayout = scope.evDataService.getListLayout();
                             listLayout.name = res.name;
-                            scope.evDataService.setListLayout(listLayout);
 
-                            uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+                            uiService.updateListLayout(listLayout.id, listLayout).then(function (updatedLayoutData) {
 
+								listLayout.modified = updatedLayoutData.modified
+								scope.evDataService.setListLayout(listLayout);
                                 // Give signal to update layout name in the toolbar
                                 if (scope.isRootEntityViewer) {
                                     middlewareService.setNewEntityViewerLayoutName(listLayout.name);
@@ -845,23 +847,8 @@
 
                 };
 
-                scope.saveLayoutList = function ($event) {
-
-                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-
-                    if (listLayout.hasOwnProperty('id')) {
-                        uiService.updateListLayout(listLayout.id, listLayout).then(function () {
-                            scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-                        });
-                    }
-
-                    $mdDialog.show({
-                        controller: 'SaveLayoutDialogController as vm',
-                        templateUrl: 'views/save-layout-dialog-view.html',
-                        targetEvent: $event,
-                        clickOutsideToClose: false
-                    })
-
+                scope.saveLayoutList = function () {
+					evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
                 };
 
                 scope.openLayoutList = function ($event) {
@@ -971,7 +958,7 @@
                     } else {
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
-                            templateUrl: 'views/directives/groupTable/modal-view.html',
+                            templateUrl: 'views/directives/groupTable/g-modal-view.html',
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
@@ -1089,7 +1076,7 @@
                             scope.layoutName = listLayout.name;
                         });
 
-                    } else {
+                    } else if (scope.viewContext !== 'reconciliation_viewer') {
 
                         scope.evEventService.addEventListener(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED, function () {
                             checkIsLayoutDefault();
@@ -1119,10 +1106,6 @@
                     });
 
                     syncFilters();
-
-                    /*scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
-                    });*/
 
                     transactionTypeService.getListLight({
                         pageSize: 1000
@@ -1189,12 +1172,14 @@
 
                     initEventListeners();
 
-                    checkIsLayoutDefault();
+                    if (scope.viewContext !== 'reconciliation_viewer') {
+                        checkIsLayoutDefault();
+                    }
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
                     scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
+                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 
                 };
 

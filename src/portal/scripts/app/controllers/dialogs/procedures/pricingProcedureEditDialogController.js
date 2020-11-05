@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
+    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
 
     var portfolioService = require('../../../services/portfolioService');
     var instrumentTypeService = require('../../../services/instrumentTypeService');
@@ -14,15 +14,19 @@
     var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
     var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
 
+    var getAndOverwriteKeysPairs = {
+        'price_get_principal_prices': 'price_overwrite_principal_prices',
+        'price_get_accrued_prices': 'price_overwrite_accrued_prices',
+        'price_get_fx_rates': 'price_overwrite_fx_rates'
+    };
 
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
-        vm.item = {
-            instrument_pricing_condition_filters: [2,3],
-            currency_pricing_condition_filters: [2,3]
-        };
+        vm.itemId = data.item.id;
+
+        vm.readyStatus = {procedure: false};
 
         vm.portfolios = [];
         vm.pricingPolicies = [];
@@ -56,11 +60,15 @@
 
         };
 
+        vm.item = {};
+        vm.readyStatus = {content: false};
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function () {
+
 
             if (vm.item.price_date_from_expr) {
                 vm.item.price_date_from = null
@@ -98,10 +106,9 @@
                 vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.join(',');
             }
 
-            pricingProcedureService.create(vm.item).then(function (data) {
+            pricingProcedureService.update(vm.item.id, vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
-
             })
 
         };
@@ -219,7 +226,90 @@
 
         };
 
+        vm.getItem = function () {
+
+            pricingProcedureService.getByKey(vm.itemId).then(function (data) {
+
+                vm.item = data;
+
+                Object.keys(getAndOverwriteKeysPairs).forEach(vm.checkOverwriteValue);
+
+                if (vm.item.portfolio_filters) {
+
+                    vm.item.portfolio_filters = vm.item.portfolio_filters.split(',');
+
+                }
+
+                if (vm.item.pricing_policy_filters) {
+
+                    vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.split(',');
+
+                }
+
+                if (vm.item.instrument_type_filters) {
+
+                    vm.item.instrument_type_filters = vm.item.instrument_type_filters.split(',');
+
+                }
+
+                if (vm.item.instrument_pricing_scheme_filters) {
+
+                    vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.split(',');
+
+                }
+
+                if (vm.item.instrument_pricing_condition_filters) {
+
+                    vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.split(',');
+
+                }
+
+                if (vm.item.currency_pricing_scheme_filters) {
+
+                    vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.split(',');
+
+                }
+
+                if (vm.item.currency_pricing_condition_filters) {
+
+                    vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.split(',');
+
+                }
+
+                if (vm.item.price_date_from_expr) {
+
+                    vm.toggleStatus.price_date_from = 'expr';
+
+                }
+
+                if (vm.item.price_date_to_expr) {
+
+                    vm.toggleStatus.price_date_to = 'expr';
+
+                }
+
+                vm.readyStatus.procedure = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.checkOverwriteValue = function (getKey) {
+
+            if (!vm.item[getKey]) {
+
+                var overwriteKey = getAndOverwriteKeysPairs[getKey];
+
+                vm.item[overwriteKey] = false;
+            }
+
+        };
+
         vm.init = function () {
+
+            vm.getItem();
 
             vm.getInstrumentTypes();
             vm.getPricingPolicies();

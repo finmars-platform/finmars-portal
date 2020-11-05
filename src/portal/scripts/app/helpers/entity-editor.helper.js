@@ -365,8 +365,8 @@
 
     var validateFieldWithString = function (value, fieldAttr) {
 
-        if (fieldAttr.options && fieldAttr.options.onlyPositive === true) {
-            if (value === null || value === undefined) {
+        if (fieldAttr.options && fieldAttr.options.notNull === true) {
+            if (!value) {
 
                 return {
                     fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
@@ -680,13 +680,21 @@
 
             return 10;
 
-        } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
+        }
+        else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
                     attribute.value_type === 20) {
 
             return 20;
 
-        } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
-                    attribute.value_type === 40) {
+        }
+        else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 30) ||
+                attribute.value_type === 30) {
+
+            return 30;
+
+        }
+        else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
+                  attribute.value_type === 40) {
 
             return 40;
 
