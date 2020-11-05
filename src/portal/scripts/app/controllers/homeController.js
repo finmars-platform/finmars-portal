@@ -10,6 +10,8 @@
     var uiService = require('../services/uiService');
 
     var systemMessageService = require('../services/systemMessageService');
+    var baseUrlService = require('../services/baseUrlService');
+    var baseUrl = baseUrlService.resolve();
 
     module.exports = function ($scope, $state, $mdDialog) {
 
@@ -20,6 +22,12 @@
         vm.currentMasterUser = null;
         vm.eventsProcessing = false;
         vm.dashboardsListReady = false;
+
+        vm.getFileUrl = function(id) {
+
+            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+
+        };
 
         vm.getMasterUsersList = function () {
 
@@ -162,9 +170,17 @@
                         item.verbose_status = 'Abandoned'
                     }
 
+                    item.attachments = item.attachments.map(function (attachment) {
+
+                        attachment.file_report_url = vm.getFileUrl(attachment.file_report);
+
+                        return attachment
+
+                    });
+
                     return item;
 
-                })
+                });
 
                 // newest at the bottom
                 vm.systemMessages =  vm.systemMessages.reverse();
