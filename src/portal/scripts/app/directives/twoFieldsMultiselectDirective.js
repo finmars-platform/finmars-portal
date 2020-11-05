@@ -258,6 +258,10 @@
         });
 
         scope.$watch('items', function () {
+            if (!scope.items) {
+                return;
+            }
+
             items = JSON.parse(JSON.stringify(scope.items));
         });
 
