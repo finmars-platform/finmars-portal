@@ -401,7 +401,7 @@
         };
 
         vm.getAttrs = function () {
-            return attributeTypeService.getList(vm.entityType).then(function (data) {
+            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attrs = data.results;
 
                 console.log('vm.attrs', vm.attrs);
@@ -924,7 +924,7 @@
 
             var entityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
 
-            if (objectComparisonHelper.comparePropertiesOfObjects(originalEntityInputs, entityInputs)) {
+            if (objectComparisonHelper.areObjectsTheSame(originalEntityInputs, entityInputs)) {
 
                 openEditLayoutDialog(ev);
 
@@ -2283,7 +2283,7 @@
 
             }
 
-            return 'item_exist';
+            return {status: 'item_exist', field: field};
         };
 
         vm.getNameByValueType = function (value) {

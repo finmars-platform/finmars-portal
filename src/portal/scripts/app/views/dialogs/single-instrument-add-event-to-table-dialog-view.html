@@ -84,6 +84,19 @@
             </number-input>
 
         </div>
+
+        <div layout="row" class="m-t-8 width-50">
+
+            <number-input class="p-r-8"
+                          label="Notify in N days"
+                          model="vm.event.notify_in_n_days"
+                          small-options="{tooltipText: 'Notify in N days'}"
+                          style="width: 100%">
+            </number-input>
+
+        </div>
+
+
         <grid-table data-gt-data-service="vm.eventActionsGridTableDataService"
                     data-gt-event-service="vm.eventActionsGridTableEventService">
         </grid-table>

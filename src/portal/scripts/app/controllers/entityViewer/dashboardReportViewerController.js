@@ -6,6 +6,7 @@
 
         'use strict';
 
+        var localStorageService = require('../../../../../core/services/localStorageService');
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
         var objectComparison = require('../../helpers/objectsComparisonHelper');
@@ -1117,7 +1118,7 @@
                 if (componentOutput && componentOutput.data) {
 
                     var linkedFilter = filters.find(function (item) {
-                        return item.type === 'filter_link' && item.component_id === filter_link.component_id
+                        return item.type === 'filter_link' && item.component_id === filter_link.component_id;
                     });
 
                     if (linkedFilter) {
@@ -1127,10 +1128,10 @@
                         filters = filters.map(function (item) {
 
                             if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
-                                return linkedFilter
+                                return linkedFilter;
                             }
 
-                            return item
+                            return item;
                         })
 
                     } else {
@@ -1296,7 +1297,7 @@
                                         vm.linkedActiveObjects[lastActiveComponentId] &&
                                         typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
 
-                                        if (!objectComparison.comparePropertiesOfObjects(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
+                                        if (!objectComparison.areObjectsTheSame(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
                                             lastActiveCompChanged = true;
                                         }
 
@@ -1372,7 +1373,7 @@
                                         vm.linkedActiveObjects[lastActiveComponentId] &&
                                         typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
 
-                                        if (!objectComparison.comparePropertiesOfObjects(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
+                                        if (!objectComparison.areObjectsTheSame(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
                                             lastActiveCompChanged = true;
                                         }
 
@@ -1388,10 +1389,6 @@
                                     delete vm.linkedActiveObjects[lastActiveComponentId];
                                 }
 
-                                /*if (lastActiveCompChanged) {
-                                    componentOutput.recalculatedComponents.push(vm.componentData.id);
-                                }*/
-
                                 break;
 
                             }
@@ -1404,8 +1401,8 @@
                     } else {
 
                         var componentId = vm.componentData.settings.linked_components.active_object;
-
                         vm.handleDashboardActiveObject(componentId);
+
                     }
 
                  }
@@ -1585,7 +1582,6 @@
 
             }; */
 
-
             vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
 
                 // vm.oldEventExchanges()
@@ -1680,9 +1676,17 @@
                     currentLayoutConfig.data.additions = savedAddtions;
 
                     if (currentLayoutConfig.hasOwnProperty('id')) {
-                        uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function () {
+
+                    	uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (layoutData) {
+
+                    		var listLayout = vm.entityViewerDataService.getListLayout();
+
+                    		listLayout.modified = layoutData.modified
+							currentLayoutConfig.modified = layoutData.modified
                             vm.entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
+
                         });
+
                     }
 
                     $mdDialog.show({
@@ -1831,6 +1835,34 @@
 
             };
 
+            let getLayoutById = function (layoutId) {
+
+                return new Promise(function (resolve, reject) {
+
+                    let actualLayoutsIds = vm.dashboardDataService.getActualRvLayoutsInCache();
+
+                    if (actualLayoutsIds.includes(layoutId)) {
+
+                        let cachedLayout = localStorageService.getCachedLayout(layoutId);
+                        resolve(cachedLayout);
+
+                    } else {
+
+                        uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
+
+                            vm.dashboardDataService.pushToActualRvLayoutsInCache(layoutId);
+                            resolve(layoutData);
+
+                        }).catch(function (error) {
+                            reject(error);
+                        });
+
+                    }
+
+                });
+
+            };
+
             vm.getView = function () {
 
                 //middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
@@ -1853,18 +1885,19 @@
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 
-                /*if (vm.componentData.type === 'report_viewer_split_panel') {
+                /* if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
-                }*/
+                } */
                 vm.entityViewerDataService.setUseFromAbove(true);
 
                 var layoutId = vm.componentData.settings.layout;
 
                 var setLayoutPromise = new Promise(function (resolve, reject) {
 
-                    uiService.getListLayoutByKey(layoutId).then(function (data) {
+                    // uiService.getListLayoutByKey(layoutId).then(function (data) {
+                    getLayoutById(layoutId).then(function (data) {
 
-                        //vm.layout = data;
+                        // vm.layout = data;
 
                         vm.setLayout(data).then(function () {
 

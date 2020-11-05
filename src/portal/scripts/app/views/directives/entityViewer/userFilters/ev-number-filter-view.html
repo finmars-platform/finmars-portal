@@ -188,7 +188,7 @@
                             </md-menu>
                         </md-menu-item>
 
-                        <md-menu-item>
+                        <md-menu-item data-ng-if="entityType !== 'reconciliation'">
                             <md-checkbox ng-checked="!filter.options.is_frontend_filter"
                                          ng-click="toggleFrontendFilter()"
                                          class="md-primary g-filter-options-checkbox"
