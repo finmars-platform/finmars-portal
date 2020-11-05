@@ -120,7 +120,7 @@
                 return complexTransactionService.getList(options);
                 break;
             case 'transaction-type':
-                return transactionTypeService.getList(options);
+                return transactionTypeService.getListLight(options);
                 break;
             case 'transaction-type-group':
                 return transactionTypeGroupService.getList(options);

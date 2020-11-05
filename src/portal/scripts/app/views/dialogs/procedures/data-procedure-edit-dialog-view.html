@@ -52,12 +52,57 @@
 
                 <div class="m-t-16">
 
+                    <div><label for="">Scheme type</label></div>
+                    <md-select data-ng-model="vm.item.scheme_type" data-ng-change="vm.item.scheme_name = ''">
+                        <md-option value="transaction_import">
+                            Transaction Import
+                        </md-option>
+                        <md-option value="simple_import">
+                            Simple Import
+                        </md-option>
+                    </md-select>
+
+                </div>
+
+
+                <div class="m-t-16" data-ng-if="vm.item.scheme_type == 'transaction_import'">
+
                     <div><label for="">Scheme name</label></div>
                     <md-select data-ng-model="vm.item.scheme_name">
-                        <md-option data-ng-repeat="scheme in vm.schemes" ng-value="scheme.scheme_name">
+                        <md-option data-ng-repeat="scheme in vm.transactionImportSchemes" ng-value="scheme.scheme_name">
                             {{scheme.scheme_name}}
                         </md-option>
                     </md-select>
+
+                </div>
+
+                <div class="m-t-16" data-ng-if="vm.item.scheme_type == 'simple_import'">
+
+                    <div><label for="">Scheme name</label></div>
+                    <md-select data-ng-model="vm.item.scheme_name">
+                        <md-option data-ng-repeat="scheme in vm.simpleImportSchemes" ng-value="scheme.scheme_name">
+                            {{scheme.scheme_name}}
+                        </md-option>
+                    </md-select>
+
+                </div>
+
+                <div data-ng-if="vm.item.provider == 5">
+
+                    <md-input-container>
+                        <label>Sender pattern</label>
+                        <input type="text" data-ng-model="vm.item.data.sender">
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Subject pattern</label>
+                        <input type="text" data-ng-model="vm.item.data.subject">
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Filename pattern</label>
+                        <input type="text" data-ng-model="vm.item.data.filename">
+                    </md-input-container>
 
                 </div>
 
