@@ -174,13 +174,19 @@
 
         ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
-        return uiRepository.createListLayout(ui).then(function (data) {
+        return new Promise(function (resolve, reject) {
 
-            if (data.is_default) {
-                localStorageService.cacheDefaultLayout(data);
-            }
+        	uiRepository.createListLayout(ui).then(function (data) {
 
-        });
+				if (data.is_default) {
+					localStorageService.cacheDefaultLayout(data);
+				}
+
+			}).catch(function (error) {
+				reject(error);
+			});
+
+		});
 
     };
 
@@ -211,9 +217,18 @@
 
     let deleteListLayoutByKey = function (id) {
 
-        return uiRepository.deleteListLayoutByKey(id).then(function () {
-            localStorageService.deleteLayoutFromCache(id);
-        });
+    	return new Promise(function (resolve, reject) {
+
+    		uiRepository.deleteListLayoutByKey(id).then(function (data) {
+
+    			localStorageService.deleteLayoutFromCache(id);
+    			resolve(data);
+
+			}).catch(function (error) {
+				reject(error);
+			});
+
+		});
 
     };
 
@@ -240,8 +255,10 @@
                         localStorageService.cacheDefaultLayout(defaultLayout);
 
                     } else {
-                        defaultLayout = uiRepository.getListLayoutTemplate();
+
+                    	defaultLayout = uiRepository.getListLayoutTemplate();
                         defaultLayoutData = {results: defaultLayout};
+
                     }
 
                     resolve(defaultLayoutData);
@@ -333,8 +350,18 @@
 
     var updateDashboardLayout = function (id, data) {
 
-    	return uiRepository.updateDashboardLayout(id, data).then(function (updateLayoutData) {
-			data.modified = updateLayoutData.modified // prevents synchronization error
+    	return new Promise(function (resolve, reject) {
+
+    		uiRepository.updateDashboardLayout(id, data).then(function (updatedLayoutData) {
+
+    			data.modified = updatedLayoutData.modified // prevents synchronization error
+
+				resolve(updatedLayoutData);
+
+    		}).catch(function (error) {
+    			reject(error);
+			});
+
 		});
 
     };
