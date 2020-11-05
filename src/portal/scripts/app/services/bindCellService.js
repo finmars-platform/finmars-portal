@@ -137,7 +137,7 @@
                                     });
                                     break;
                                 case 'transaction_types':
-                                    return transactionTypeRepository.getList().then(function (data) {
+                                    return transactionTypeRepository.getListLight().then(function (data) {
                                         entities[entity] = data.results;
                                         resolve({key: entity, data: entities[entity]});
                                     });

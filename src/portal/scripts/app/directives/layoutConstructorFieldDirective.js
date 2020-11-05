@@ -590,6 +590,11 @@
                             scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
                             return true;
                         }
+
+                        if (scope.item.attribute['value_type'] === 'decoration' && scope.item.attribute.key === 'layoutPlainText') {
+                            scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
+                            return true;
+                        }
                     }
 
                     return false;

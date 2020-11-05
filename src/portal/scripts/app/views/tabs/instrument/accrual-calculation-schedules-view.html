@@ -71,7 +71,7 @@
             Accrued Interest Calculation Schedules
         </div>
 
-        <table class="bordered">
+        <!--<table class="bordered">
             <thead>
             <tr>
                 <th data-ng-click="vm.setSort('accrual_start_date')">Accrual start date<span class="sortorder"
@@ -165,7 +165,7 @@
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.notes"></td>
                 <td data-ng-if="!item.editStatus" class="table-misc-cell">
                     <md-menu>
-                        <!-- Trigger element is a md-button with an icon -->
+                        &lt;!&ndash; Trigger element is a md-button with an icon &ndash;&gt;
                         <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
                             <ng-md-icon icon="settings"></ng-md-icon>
                         </md-button>
@@ -209,11 +209,11 @@
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container style="margin-bottom: 23px" aria-label="select with filter">
-                        <!--<label for="">Accrual calculation model</label>-->
-                        <!--<md-select data-ng-model="item.accrual_calculation_model">
+                        &lt;!&ndash;<label for="">Accrual calculation model</label>&ndash;&gt;
+                        &lt;!&ndash;<md-select data-ng-model="item.accrual_calculation_model">
                             <md-option data-ng-repeat="model in vm.accrualModels" ng-value="model.id">{{model.name}}
                             </md-option>
-                        </md-select>-->
+                        </md-select>&ndash;&gt;
                         <label></label>
                         <md-select ng-model="item.accrual_calculation_model"
                                    md-container-class="common-select-container"
@@ -242,11 +242,11 @@
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container aria-label="select with filter">
-                        <!--<label for="">Periodicity</label>
+                        &lt;!&ndash;<label for="">Periodicity</label>
                         <md-select data-ng-model="item.periodicity">
                             <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
                             </md-option>
-                        </md-select>-->
+                        </md-select>&ndash;&gt;
 
                         <label>Periodicity</label>
                         <md-select ng-model="item.periodicity"
@@ -295,28 +295,28 @@
             <tr class="tab-input-row">
                 <td>
                     <md-input-container>
-                        <!--<label for="">Accrual start date</label>-->
+                        &lt;!&ndash;<label for="">Accrual start date</label>&ndash;&gt;
                         <zh-date-picker data-date-value="vm.newItem.accrual_start_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td>
                     <md-input-container>
-                        <!--<label for="">First payment date</label>-->
+                        &lt;!&ndash;<label for="">First payment date</label>&ndash;&gt;
                         <zh-date-picker data-date-value="vm.newItem.first_payment_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td>
                     <md-input-container>
-                        <!--<label for="">Accrual size</label>-->
+                        &lt;!&ndash;<label for="">Accrual size</label>&ndash;&gt;
                         <input type="text" data-ng-model="vm.newItem.accrual_size">
                     </md-input-container>
                 </td>
                 <td>
                     <md-input-container stiyle="margin-bottom: 24px;" aria-label="select with filter">
-                        <!--<md-select data-ng-model="vm.newItem.accrual_calculation_model">
+                        &lt;!&ndash;<md-select data-ng-model="vm.newItem.accrual_calculation_model">
                             <md-option data-ng-repeat="model in vm.accrualModels" ng-value="model.id">{{model.name}}
                             </md-option>
-                        </md-select>-->
+                        </md-select>&ndash;&gt;
 
                         <label></label>
                         <md-select ng-model="vm.newItem.accrual_calculation_model"
@@ -346,11 +346,11 @@
                 </td>
                 <td>
                     <md-input-container style="margin-bottom: 21px;" aria-label="select with filter">
-                        <!--<label for="">Periodicity</label>-->
-                        <!--<md-select data-ng-model="vm.newItem.periodicity">
+                        &lt;!&ndash;<label for="">Periodicity</label>&ndash;&gt;
+                        &lt;!&ndash;<md-select data-ng-model="vm.newItem.periodicity">
                             <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
                             </md-option>
-                        </md-select>-->
+                        </md-select>&ndash;&gt;
 
                         <label></label>
                         <md-select ng-model="vm.newItem.periodicity"
@@ -380,13 +380,13 @@
                 </td>
                 <td>
                     <md-input-container>
-                        <!--<label for="">Periodicity N</label>-->
+                        &lt;!&ndash;<label for="">Periodicity N</label>&ndash;&gt;
                         <input type="text" data-ng-model="vm.newItem.periodicity_n">
                     </md-input-container>
                 </td>
                 <td>
                     <md-input-container>
-                        <!--<label for="">Notes</label>-->
+                        &lt;!&ndash;<label for="">Notes</label>&ndash;&gt;
                         <input type="text" data-ng-model="vm.newItem.notes">
                     </md-input-container>
                 </td>
@@ -398,7 +398,10 @@
             </tr>
 
             </tbody>
-        </table>
+        </table>-->
+        <grid-table data-gt-data-service="vm.schedulesGridTableDataService"
+                    data-gt-event-service="vm.schedulesGridTableEventService"></grid-table>
+
     </div>
     <div data-ng-if="!vm.checkReadyStatus()">
         <div layout="row" layout-sm="column" layout-align="space-around">

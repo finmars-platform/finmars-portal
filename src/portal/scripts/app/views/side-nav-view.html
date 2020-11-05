@@ -411,17 +411,6 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
-                                <li data-ng-if="vm.accessTable.configuration_mapping_tables">
-                                    <md-button ui-sref-active="active"
-                                               class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.import.mapping-tables">
-                                        <span class="side-nav-title">
-                                            Mapping Tables
-                                        </span>
-                                        <span class="md-visually-hidden"
-                                              data-ng-if="isSelected()">current page</span>
-                                    </md-button>
-                                </li>
                             </ul>
                         </div>
                     </li>
@@ -639,6 +628,18 @@
                                                        class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.import.reference-tables">
                                                 <span class="side-nav-title">Reference Tables</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li data-ng-if="vm.accessTable.configuration_mapping_tables">
+                                            <md-button ui-sref-active="active"
+                                                       class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.import.mapping-tables">
+                                                <span class="side-nav-title">
+                                                    Mapping Tables
+                                                </span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
