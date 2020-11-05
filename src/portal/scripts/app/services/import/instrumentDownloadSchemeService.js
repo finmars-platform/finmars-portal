@@ -11,6 +11,10 @@
         return instrumentDownloadSchemeRepository.getList(providerId);
     };
 
+    var getListLight = function (providerId) {
+        return instrumentDownloadSchemeRepository.getListLight(providerId);
+    };
+
     var create = function (scheme) {
         return instrumentDownloadSchemeRepository.create(scheme);
     };
@@ -29,6 +33,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         create: create,
         getByKey: getByKey,
         update: update,

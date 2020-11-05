@@ -759,7 +759,7 @@
         };
 
         vm.getAttributeTypes = function () {
-            return attributeTypeService.getList(vm.entityType).then(function (data) {
+            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attributeTypes = data.results;
             });
         };
@@ -995,7 +995,8 @@
 
             } else {
 
-                var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
 
                 console.log('resultEntity', resultEntity);
 

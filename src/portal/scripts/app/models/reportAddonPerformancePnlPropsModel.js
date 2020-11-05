@@ -38,6 +38,11 @@
                 "value_type": 20
             },
             {
+                "key": "time_invested",
+                "name": "Time invested",
+                "value_type": 20
+            },
+            {
                 "key": "position_return",
                 "name": "Position return",
                 "value_type": 20

@@ -316,7 +316,7 @@
 
             clearSubtotalActiveState(evDataService);
             clearObjectActiveState(evDataService);
-            console.log("select row activated_ids", activated_ids);
+
             list.forEach(function (object) {
 
                 if (activated_ids.indexOf(object.___id) !== -1) {
@@ -855,6 +855,7 @@
         // console.log('calculateScroll.viewportWidth', viewportWidth);
 
         rvScrollManager.setViewportHeight(viewportHeight);
+
         if (viewportWidth) {
             rvScrollManager.setViewportWidth(viewportWidth);
         }
@@ -1197,14 +1198,14 @@
 
     var generateContextMenu = function (evDataService, menu, ttypes, obj, objectId, parentGroupHashId) {
 
-        var result = '<div>';
+        var result = '<div class="ev-dropdown-container">';
 
         menu.root.items.forEach(function (item) {
             result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
         });
 
         result = result + '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="mark_row_red"' +
+            ' data-ev-dropdown-action="mark_row"' +
             ' data-object-id="' + objectId + '"' +
             ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Red';
 
@@ -1314,6 +1315,8 @@
 
         clearDropdowns();
 
+        /*var dropdownWidth = 320;
+        var dropdownOptionHeight = 24;
         var popup = document.createElement('div');
 
         clearObjectActiveState(evDataService);
@@ -1328,10 +1331,16 @@
         popup.id = 'dropdown-' + objectId;
         popup.classList.add('ev-dropdown');
 
+        popup.style.cssText = menuPosition;
+        popup.style.position = 'absolute';*/
+
+        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, true);
+        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
         popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
 
-        popup.style.cssText = menuPosition;
-        popup.style.position = 'absolute';
+        /*popup.style.cssText = menuPosition;*/
+        evDataHelper.calculateMenuPosition(popup, menuPosition);
 
         document.body.appendChild(popup);
 
@@ -1629,7 +1638,8 @@
                         ev.preventDefault();
                         ev.stopPropagation();
 
-                        var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                        //var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                        var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
                         createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
@@ -1704,7 +1714,7 @@
         createPopupMenu: createPopupMenu,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
         calculateTotalHeight: calculateTotalHeight,
-        calculateContentWrapHeight: calculateContentWrapHeight,
+        //calculateContentWrapHeight: calculateContentWrapHeight,
         calculateScroll: calculateScroll
     }
 

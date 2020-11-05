@@ -25,8 +25,17 @@
             })
     };
 
-    var getBalanceReport = function (options) {
-        return xhrService.fetch(baseUrl + 'reports/balance-report/',
+    var getBalanceReport = function (options, isSql) {
+
+        var url;
+
+        if (isSql) {
+            url = 'reports/balance-report-sql/'
+        } else {
+            url = 'reports/balance-report/'
+        }
+
+        return xhrService.fetch(baseUrl + url,
             {
                 method: 'POST',
                 credentials: 'include',
@@ -39,8 +48,17 @@
             })
     };
 
-    var getPnlReport = function (options) {
-        return xhrService.fetch(baseUrl + 'reports/pl-report/',
+    var getPnlReport = function (options, isSql) {
+
+        var url;
+
+        if (isSql) {
+            url = 'reports/pl-report-sql/'
+        } else {
+            url = 'reports/pl-report/'
+        }
+
+        return xhrService.fetch(baseUrl + url,
             {
                 method: 'POST',
                 credentials: 'include',
@@ -53,8 +71,17 @@
             })
     };
 
-    var getTransactionReport = function (options) {
-        return xhrService.fetch(baseUrl + 'reports/transaction-report/',
+    var getTransactionReport = function (options, isSql) {
+
+        var url;
+
+        if (isSql) {
+            url = 'reports/transaction-report-sql/'
+        } else {
+            url = 'reports/transaction-report/'
+        }
+
+        return xhrService.fetch(baseUrl + url,
             {
                 method: 'POST',
                 credentials: 'include',
