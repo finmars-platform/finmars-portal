@@ -148,7 +148,13 @@
         let bundles = browserify(pathToJS, {debug: false, cache: {}, packageCache: {}});
 
         if (PROJECT_ENV === 'production') {
-			bundles = bundles.transform("babelify", {presets: ["@babel/preset-env"]});
+
+        	let presets = [
+        		["@babel/preset-env", {useBuiltIns: "entry"}]
+			];
+
+			bundles = bundles.transform("babelify", {presets: presets});
+
 		}
 
         return bundles

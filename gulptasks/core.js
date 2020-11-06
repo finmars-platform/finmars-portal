@@ -15,7 +15,7 @@
 
     var appName = 'core';
 
-    gulp.task(appName + '-copy-libs-js', function () {
+    /* gulp.task(appName + '-copy-libs-js', function () {
 
         var pathToJS = [
             'node_modules/angular/angular.js',
@@ -58,7 +58,7 @@
         return gulp.src(pathToJS)
             .pipe(gulp.dest('libs/js'));
 
-    });
+    }); */
 
     /*gulp.task(appName + '-copy-libs-css', function () {
 
@@ -107,6 +107,19 @@
         return gulp.src(pathToCSS)
             .pipe(gulp.dest('dist/' + appName + '/content/fonts/'));
     });
+
+    gulp.task(appName + '-polyfills-js-min', function () { // core-polyfills-js-min
+
+    	var pathToJS = [
+			'node_modules/@babel/polyfill/dist/polyfill.js'
+		];
+
+    	return gulp.src(pathToJS)
+			.pipe(concat('polyfills.js'))
+			.pipe(uglify())
+			.pipe(rename('polyfills.min.js'))
+			.pipe(gulp.dest('dist/' + appName + '/scripts/'));
+	});
 
     gulp.task(appName + '-angular-js-min', function () {
 
@@ -386,6 +399,7 @@
 
     gulp.task(appName + '-min-All',
         gulp.parallel(
+			appName + '-polyfills-js-min',
             appName + '-angular-js-min',
             appName + '-angular-css-min',
             appName + '-core-js-min',
