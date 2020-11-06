@@ -8,11 +8,16 @@
     var reconciliationBankFieldService = require('../../../services/reconciliation/reconciliationBankFieldService');
     var reconciliationNewBankFieldService = require('../../../services/reconciliation/reconciliationNewBankFieldService');
     var reconciliationComplexTransactionFieldService = require('../../../services/reconciliation/reconciliationComplexTransactionFieldService');
+
     var reconMatchHelper = require('../../../helpers/reconMatchHelper');
+    var objectComparisonHelper = require('../../../helpers/objectsComparisonHelper');
 
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
+
+        var originalField = JSON.parse(angular.toJson(data.field));
+        delete originalField.active;
 
         vm.item = data.item;
         vm.field = data.field;
@@ -29,7 +34,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                if (vm.field.status && vm.field.status === undefined) {
+                if (vm.field.hasOwnProperty('status') && vm.field.status === undefined) { // if we are turning existing field into new field (drag card into 'New' column)
 
                     var newField = Object.assign({}, vm.field);
 
@@ -39,10 +44,8 @@
 
                     reconciliationNewBankFieldService.create(newField).then(function (data) {
 
-                        reconciliationBankFieldService.deleteByKey(vm.field.id).then(function (value) {
-
+                        reconciliationBankFieldService.deleteByKey(vm.field.id).then(function (value) { // deleting field from existing field list
                             resolve(data)
-
                         })
 
                     })
@@ -53,37 +56,32 @@
 
                     if (vm.field.type === 'new') {
 
-                        reconciliationBankFieldService.create(vm.field).then(function (data) {
+                        if (vm.field.id) {
 
-                            resolve(data)
+                            reconciliationNewBankFieldService.update(vm.field.id, vm.field).then(function (data) {
+                                resolve(data)
+                            });
 
-                        })
+                        } else {
+
+                            reconciliationBankFieldService.create(vm.field).then(function (data) {
+                                resolve(data)
+                            });
+
+                        }
 
                     } else {
+
                         reconciliationBankFieldService.update(vm.field.id, vm.field).then(function (data) {
-
                             resolve(data)
-
                         })
+
                     }
 
                 }
 
             })
 
-        };
-
-        vm.agree = function () {
-
-            vm.updateField().then(function (fieldData) {
-
-                $mdDialog.hide({
-                    status: 'agree', data: {
-                        field: fieldData
-                    }
-                });
-
-            })
         };
 
         vm.getLinkedComplexTransactionField = function () {
@@ -101,11 +99,9 @@
 
         vm.dismiss = function () {
 
-
             vm.lockSelect = false;
             vm.linkedComplexTransactionField = null;
             vm.field.status = undefined;
-
 
         };
 
@@ -153,8 +149,31 @@
 
         };
 
-        vm.init = function () {
+        vm.agree = function () {
 
+            var fieldData = JSON.parse(angular.toJson(vm.field));
+            delete fieldData.active;
+
+            if (objectComparisonHelper.areObjectsTheSame(originalField, fieldData)) {
+                $mdDialog.hide({status: 'disagree'});
+
+            } else {
+
+                vm.updateField().then(function (fieldData) {
+
+                    $mdDialog.hide({
+                        status: 'agree', data: {
+                            field: fieldData
+                        }
+                    });
+
+                })
+
+            }
+
+        };
+
+        vm.init = function () {
 
             console.log("vm", vm);
 

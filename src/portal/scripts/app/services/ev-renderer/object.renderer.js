@@ -118,7 +118,13 @@
 
                     if (obj[column.key + '_object'].name) {
 
-                        return obj[column.key + '_object'].short_name;
+                        if (obj[column.key + '_object'].short_name) {
+
+                            return obj[column.key + '_object'].short_name;
+
+                        } else {
+                            return obj[column.key + '_object'].name;
+                        }
 
                     } else if (column.key === 'price_download_scheme') {
 

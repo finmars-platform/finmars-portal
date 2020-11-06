@@ -837,70 +837,7 @@
                 return window.location.href.indexOf('?layout=') !== -1
             };
 
-            // deprecated
-            vm.getLayoutByName = function (name) {
-
-                console.log('vm.getLayoutByName.name', name);
-
-                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
-
-                uiService.getListLayoutDefault({
-                    pageSize: 1000,
-                    filters: {
-                        content_type: contentType,
-                        name: name
-                    }
-                }).then(function (activeLayoutData) {
-
-                    var activeLayout = null;
-
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
-
-                        for (var i = 0; i < activeLayoutData.results.length; i++) {
-                            var item = activeLayoutData.results[i];
-
-                            if (item.name === name) {
-                                activeLayout = item;
-                                break;
-                            }
-                        }
-
-                    }
-
-                    if (activeLayout) {
-
-                        vm.setLayout(activeLayout);
-
-                    } else {
-
-                        $mdDialog.show({
-                            controller: 'InfoDialogController as vm',
-                            templateUrl: 'views/info-dialog-view.html',
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: false,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            locals: {
-                                info: {
-                                    title: 'Warning',
-                                    description: "Layout " + name + " is not found. Switching back to Default Layout."
-                                }
-                            }
-                        }).then(function (value) {
-
-                            vm.getDefaultLayout();
-
-                        })
-
-                    }
-
-                });
-
-            };
-
-            vm.getLayoutByUserCode = function (userCode) {
+            /* vm.getLayoutByUserCode = function (userCode) {
 
                 console.log('vm.getLayoutByUserCode.userCode', userCode);
 
@@ -916,7 +853,7 @@
 
                     var activeLayout = null;
 
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results[0]) {
                         activeLayout = activeLayoutData.results[0];
                     }
 
@@ -951,10 +888,10 @@
 
                 });
 
-            };
+            }; */
 
 
-            vm.getDefaultLayout = function () {
+            /* vm.getDefaultLayout = function () {
 
                 uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
 
@@ -967,7 +904,7 @@
 
                 });
 
-            };
+            }; */
 
             vm.getView = function () {
 
@@ -1016,15 +953,18 @@
 
                     });
 
-                    vm.getLayoutByUserCode(layoutUserCode);
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
-                    vm.getLayoutByUserCode(layoutUserCode);
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else {
-                    vm.getDefaultLayout();
+                    // vm.getDefaultLayout();
+                    evHelperService.getDefaultLayout(vm);
                 }
 
 
@@ -1068,7 +1008,7 @@
                 });
             };
 
-            var checkLayoutForChanges = function () {
+            var checkLayoutForChanges = function () { // called on attempt to change or reload page
 
                 return new Promise(function (resolve, reject) {
 
@@ -1116,13 +1056,17 @@
                                         var saveSPLayoutChanges = new Promise(function (spLayoutSaveRes, spLayoutSaveRej) {
 
                                             if (spChangedLayout.hasOwnProperty('id')) {
-                                                uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
+
+                                            	uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
                                                     spLayoutSaveRes(true);
                                                 });
+
                                             } else {
-                                                uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
+
+                                            	uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
                                                     spLayoutSaveRes(true);
                                                 });
+
                                             }
 
                                         });
@@ -1148,6 +1092,7 @@
                                                     layoutCurrentConfig.name = res.data.layoutName;
                                                 }
 
+                                                /* When saving is_default: true layout on backend, others become is_default: false
                                                 uiService.getDefaultListLayout(vm.entityType).then(function (data) {
 
                                                     layoutCurrentConfig.is_default = true;
@@ -1170,7 +1115,11 @@
                                                         });
                                                     }
 
-                                                });
+                                                }); */
+
+												uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+													saveLayoutRes(true);
+												});
 
                                             }
 

@@ -24,6 +24,19 @@
             })
     };
 
+    var getListLight = function (providerId) {
+        return xhrService.fetch(baseUrl + 'import/instrument-scheme-light/?provider=' + providerId,
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+
     var create = function (scheme) {
         return xhrService.fetch(baseUrl + 'import/instrument-scheme/',
             {
@@ -80,6 +93,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         create: create,
         getByKey: getByKey,
         update: update,

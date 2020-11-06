@@ -1,3 +1,7 @@
+// IMPORTANT: if you are changing popupMenu variables, also change them in 'ev-data.helper.js'
+@popupMenuWidth: 320px;
+@popupMenuOptionHeight: 24px;
+
 .entity-viewer-holder {
 
   .no-data-block {
@@ -256,19 +260,22 @@
 
 }
 
+/***** Popup menu *****/
 .ev-dropdown {
   display: block;
   background: #fff;
-  width: 320px;
+  width: @popupMenuWidth;
   border: 1px solid #DCDCDC;
   z-index: 3;
 }
 
 .ev-dropdown-option {
   display: block;
-  height: 24px;
+  height: @popupMenuOptionHeight;
   cursor: pointer;
+  border-right: 1px solid rgba(158,158,158,.2);
   border-bottom: 1px solid rgba(158, 158, 158, 0.2);
+  border-left: 1px solid rgba(158,158,158,.2);
   padding: 8px 0 0 24px;
   text-decoration: none;
   color: #000;
@@ -289,7 +296,6 @@
     text-decoration: none;
     color: #000;
   }
-
 }
 
 .ev-dropdown-submenu {
@@ -297,7 +303,7 @@
   width: 320px;
   background: #fff;
   position: absolute;
-  left: 320px;
+  left: @popupMenuWidth;
   margin-top: -26px;
   display: none;
   //overflow: auto;
@@ -312,11 +318,38 @@
   }
 }
 
+.ev-dropdown {
+
+  &:not(.ev-dropdown-opens-left) {
+    .ev-dropdown-option:hover {
+      border-right: none;
+    }
+  }
+
+  &.ev-dropdown-opens-left {
+    .ev-dropdown-option:hover {
+      border-left: none;
+    }
+
+    .ev-dropdown-submenu {
+      left: initial;
+      right: @popupMenuWidth;
+    }
+  }
+
+  &.ev-dropdown-opens-top {
+    .ev-dropdown-submenu {
+      bottom: 0;
+    }
+  }
+
+}
+/***** < Popup menu > *****/
 
 
 .g-content-wrap-right {
-  position: absolute;
-  left: 50%;
+  /*position: absolute;
+  left: 50%;*/
 }
 
 .control-error-message {
