@@ -95,6 +95,12 @@
         vm.attributeTypesByValueTypes = {}; // need for pricing tab
 
         vm.currencies = []; // need for instrument pricing tab;
+        vm.pricingConditions = [
+            {id: 1, name: "Don't Run Valuation"},
+            {id: 2, name: "Run Valuation: if non-zero position"},
+            {id: 3, name: "Run Valuation: always"},
+        ];
+        //vm.currenciesSorted = [];
 
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
@@ -152,7 +158,10 @@
 
             entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data) {
 
-                vm.currencies = data.results;
+                // Victor 19.10.2020
+                //vm.currencies = data.results;
+                vm.currencies = metaHelper.textWithDashSort(data.results);
+                console.log('vm.currencies', vm.currencies)
 
                 $scope.$apply();
 

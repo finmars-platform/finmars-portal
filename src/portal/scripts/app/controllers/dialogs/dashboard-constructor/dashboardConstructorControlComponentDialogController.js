@@ -7,6 +7,7 @@
 
     var uiService = require('../../../services/uiService');
     var entityResolverService = require('../../../services/entityResolverService');
+    var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
 
     var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
 
@@ -384,6 +385,11 @@
 
             return entityResolverService.getList(vm.currentContentType.relationType);
 
+        };
+
+        // Victor 2020.10.26 Issue #47
+        vm.exportToDashboards = function () {
+            dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
         };
 
         vm.cancel = function () {

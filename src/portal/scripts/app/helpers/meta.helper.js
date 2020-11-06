@@ -61,10 +61,94 @@
 
     }
 
+    let textWithDashSort = (arr, field)  => {
+        const keys = ['name', 'user_code', 'public_name']; // preferred fields for sort
+        const key = field || keys.find(key => arr.every(item => item.hasOwnProperty(key)));
+
+        if (!key) {
+            return arr;
+        }
+
+        return arr.sort(function (a, b) {
+
+            if (!a[key] || !b[key]) {
+                return 0;
+            }
+
+            const aStartsWithDash = a[key].startsWith('-');
+            const bStartsWithDash = b[key].startsWith('-');
+
+            // if (a.name.indexOf('-') !== 0 && b.name.indexOf('-') === 0) {
+            //     return 1;
+            // }
+
+            if (!aStartsWithDash && bStartsWithDash) {
+                return 1;
+            }
+
+            // if (a.name.indexOf('-') === 0 && b.name.indexOf('-') !== 0) {
+            //     return -1;
+            // }
+
+            if (aStartsWithDash && !bStartsWithDash) {
+                return -1;
+            }
+
+            // if (a.name.indexOf('-') === 0 && b.name.indexOf('-') === 0) { // if both words starts with '-', filter as usual
+            //
+            //     var aWithoutDash = a.name.slice(1);
+            //     var bWithoutDash = b.name.slice(1);
+            //
+            //     if (aWithoutDash > bWithoutDash) {
+            //         return 1;
+            //     }
+            //
+            //     if (aWithoutDash < bWithoutDash) {
+            //         return -1;
+            //     }
+            //
+            // }
+
+            if (aStartsWithDash && bStartsWithDash) {
+                const aWithoutDash = a.name.slice(1);
+                const bWithoutDash = b.name.slice(1);
+
+                if (aWithoutDash > bWithoutDash) {
+                    return 1
+                }
+                if (aWithoutDash < bWithoutDash) {
+                    return -1
+                }
+                return 0;
+            }
+
+            // if (a.name > b.name) {
+            //     return 1;
+            // }
+
+            if (a[key] > b[key]) {
+                return 1;
+            }
+
+            // if (a.name < b.name) {
+            //     return -1;
+            // }
+
+            if (a[key] < b[key]) {
+                return -1;
+            }
+
+            return 0;
+
+        });
+    }
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
-        getObjectNestedPropVal: getObjectNestedPropVal
+        getObjectNestedPropVal: getObjectNestedPropVal,
+        textWithDashSort: textWithDashSort
     }
 
 }());
+
