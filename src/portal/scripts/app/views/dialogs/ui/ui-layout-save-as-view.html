@@ -1,49 +1,61 @@
-<md-dialog class="save-as-layouts-dialog draggable-dialog"
-           aria-label="save as layout dialog"
-           drag-dialog
-           style="width: 50%" >
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
+<md-dialog
+  class="save-as-layouts-dialog draggable-dialog"
+  aria-label="save as layout dialog"
+  drag-dialog
+  style="width: 50%;"
+>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <is-draggable-sign></is-draggable-sign>
 
-            <h2>Layouts</h2>
-            <span flex></span>
-        </div>
-    </md-toolbar>
-    <md-dialog-content  >
+      <h2>Layouts</h2>
+      <span flex></span>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <div style="padding: 20px;" layout="column">
+      <div data-ng-if="vm.complexSaveAsLayoutDialog" style="margin-left: 10px;">
+        <p>Write new layout name.</p>
+      </div>
 
-        <div style="padding: 20px" layout="column">
+      <md-input-container style="width: 100%;">
+        <label for="">Layout Name</label>
+        <input
+          data-ng-keydown="vm.change($event)"
+          type="text"
+          data-ng-model="vm.layoutName"
+          class="layout-name-pan"
+        />
+      </md-input-container>
 
-            <div data-ng-if="vm.complexSaveAsLayoutDialog" style="margin-left: 10px">
-                <p>Write new layout name.</p>
-            </div>
-
-            <md-input-container style="width: 100%">
-                <label for="">Layout Name</label>
-                <input type="text" data-ng-model="vm.layoutName">
-            </md-input-container>
-
-            <md-input-container style="width: 100%">
-                <label for="">Layout User Code</label>
-                <input
-                        type="text"
-                        data-ng-model="vm.layoutUserCode"
-                        data-ng-keydown="vm.userCodeIsTouched = true"
-                        data-ng-keyup="vm.validateUserCode()">
-            </md-input-container>
-            <div class="color-danger m-l-16" data-ng-if="vm.userCodeIsTouched && vm.userCodeError">Only alphabet, numbers
-                and underscores allowed
-            </div>
-
-        </div>
-
-    </md-dialog-content>
-    <md-dialog-actions layout="row">
-        <md-button ng-click="vm.cancel()">
-            Cancel
-        </md-button>
-        <md-button ng-click="vm.agree($event)" style="margin-right:20px;" data-ng-disabled="!vm.userCodeIsTouched || vm.userCodeError">
-            Save
-        </md-button>
-    </md-dialog-actions>
+      <md-input-container style="width: 100%;">
+        <label for="">Layout User Code</label>
+        <input
+          data-ng-keydown="vm.change($event)"
+          type="text"
+          data-ng-model="vm.layoutUserCode"
+          data-ng-keyup="vm.validateUserCode()"
+        />
+        <!-- data-ng-keydown="vm.userCodeIsTouched = true" -->
+      </md-input-container>
+      <div
+        class="color-danger m-l-16"
+        data-ng-if="vm.userCodeIsTouched && vm.userCodeError"
+      >
+        Only alphabet, numbers and underscores allowed
+      </div>
+    </div>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <md-button ng-click="vm.cancel()">
+      Cancel
+    </md-button>
+    <md-button
+      ng-click="vm.agree($event)"
+      style="margin-right: 20px;"
+      data-ng-disabled="!vm.userCodeIsTouched || vm.userCodeError"
+    >
+      Save
+    </md-button>
+  </md-dialog-actions>
 </md-dialog>

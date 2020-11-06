@@ -46,6 +46,7 @@
 
                 var componentHeight = mainElem.clientHeight;
                 var componentWidth = mainElem.offsetWidth;
+                var sizeReductionRatio = scope.rvChartsSettings.pie_size_percent ? scope.rvChartsSettings.pie_size_percent / 100 : 1;
 
                 var chart_form = scope.rvChartsSettings.chart_form;
                 if (!chart_form) {
@@ -272,16 +273,17 @@
                 var drawChart = function () {
 
                     var posNumRadius;
+                    var svgSize;
                     var chartHeight = componentHeight - chartMargin.top - chartMargin.bottom;
                     var chartWidth = componentWidth - chartMargin.left - chartMargin.right;
 
                     if (chartHeight < chartWidth) {
-                        posNumRadius = chartHeight / 2;
+                        posNumRadius = chartHeight / 2 * sizeReductionRatio;
+                        svgSize = chartHeight;
                     } else {
-                        posNumRadius = chartWidth / 2;
+                        posNumRadius = chartWidth / 2 * sizeReductionRatio;
+                        svgSize = chartWidth;
                     }
-
-                    var svgSize = posNumRadius * 2;
 
                     /*getPosPartColor = d3.scaleOrdinal()
                         .domain(d3.map(scope.chartDataWithPosNums, function (d) {return d.name}))
@@ -318,7 +320,7 @@
                     // draw doughnut for positive numbers
                     var posChartWrapingG = svg.append('g')
                         .attr('class', 'pie-chart-positive-nums-circle')
-                        .attr('transform', 'translate(' + posNumRadius + ',' + posNumRadius + ')');
+                        .attr('transform', 'translate(' + (svgSize / 2) + ',' + (svgSize / 2) + ')');
 
                     posChartWrapingG.selectAll('g')
                         .data(pie(scope.chartDataWithPosNums))
@@ -384,7 +386,8 @@
 
                         var negChartWrapingG = svg.append('g')
                             .attr('class', 'pie-chart-negative-nums-circle')
-                            .attr('transform', 'translate(' + (negNumsRadius + negNumsSpaces) + ',' + (negNumsRadius + negNumsSpaces) + ')');
+                            // .attr('transform', 'translate(' + (negNumsRadius + negNumsSpaces) + ',' + (negNumsRadius + negNumsSpaces) + ')'); // TODO can delete after testing on negative numbers pie
+                            .attr('transform', 'translate(' + (svgSize / 2) + ',' + (svgSize / 2) + ')');
 
                         negChartWrapingG.selectAll('g')
                             .data(pie(scope.chartDataWithNegNums))

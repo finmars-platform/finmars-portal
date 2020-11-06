@@ -64,13 +64,12 @@
 
         };
 
-        var onActionsTableDeleteRows = function (deletedRowsKeys) {
-
+        var onActionsTableDeleteRows = function (data) {
 
             vm.event.actions = vm.event.actions.filter(function (action) {
 
                 var actionId = action.id || action.frontOptions.gtKey;
-                return deletedRowsKeys.indexOf(actionId) === -1;
+                return data.deletedRowsKeys.indexOf(actionId) === -1;
             });
 
             // Update rows in actions grid table
@@ -216,7 +215,7 @@
             // assemble body rows
             vm.event.actions.forEach(function (action, actionIndex) {
                 rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
-                rowObj.key = action.id;
+                rowObj.key = action.id || action.frontOptions.gtKey;
                 rowObj.order = actionIndex;
 
                 var transactionType = gridTableHelperService.getCellFromRowByKey(rowObj, 'transaction_type');

@@ -28,10 +28,10 @@
                 <div data-ng-repeat="item in vm.procedures track by $index" layout="column">
                     <div layout="row">
                         <div class="p-8 width-20">
-                            {{item.pricing_procedure_object.name}}
+                            {{item.procedure_object.name}}
                         </div>
                         <div class="p-8 width-40">
-                            {{item.pricing_procedure_object.notes_for_users}}
+                            {{item.procedure_object.notes_for_users}}
                         </div>
                         <div class="p-8 width-20" data-ng-bind="item.created | date: 'yyyy/MM/dd HH:mm:ss'"></div>
                         <div class="p-8 width-20">

@@ -38,7 +38,7 @@
 
         scope.deleteById = async function ({ id }, $index) {
 
-          let items = await getItems();
+          var items = await getItems();
           scope.model = await scope.itemsSelected
             .filter((el) => el.id !== id)
             .map((s) => s.id);
@@ -63,7 +63,7 @@
 
         var defaultInputText = async function () {
           var selElemNumber = 0;
-          let chipsName = "";
+          var chipsName = "";
           if (scope.model && scope.model.length > 0) {
             selElemNumber = scope.model.length;
           }
@@ -81,7 +81,7 @@
 
             const items = await getItems();
 
-            let idx = Math.min(...scope.model);
+            var idx = Math.min(...scope.model);
             scope.itemAxact = items
               .filter((el) => el.id == idx)
               .map((n) => n.name)
@@ -259,7 +259,13 @@
 				setInputText();
 			})
 
-			var defaultInputText = function () {
+        scope.$watch('items', function () {
+            if (scope.items) {
+				items = JSON.parse(JSON.stringify(scope.items));
+            }
+        });
+
+        var defaultInputText = function () {
 
 				var selElemNumber = 0;
 				if (scope.model && scope.model.length > 0) {
@@ -367,9 +373,8 @@
               } else if (scope.getDataMethod) {
 
                 scope.getDataMethod().then(function (resData) {
-
                   scope.items = resData.results;
-                  items = JSON.parse(JSON.stringify(scope.items));
+                  items = JSON.parse(JSON.stringify(resData.results));
                   resolve(items);
 
                 }).catch(function (error) {
@@ -388,7 +393,6 @@
         }
 
         $(elem).click(function (event) {
-
           event.preventDefault();
           event.stopPropagation();
 

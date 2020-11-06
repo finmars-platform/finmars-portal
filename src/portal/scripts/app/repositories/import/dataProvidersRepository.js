@@ -101,13 +101,100 @@
             })
     };
 
+    var getPersonalProvidersList = function () {
+
+        return xhrService.fetch(baseUrl + 'integrations/data-provider/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    };
+
+    var getCredentials = function () {
+
+        return xhrService.fetch(baseUrl + 'credentials/credentials/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    };
+
+    var createCredential = function (data) {
+
+        return xhrService.fetch(baseUrl + 'credentials/credentials/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                },
+                body: JSON.stringify(data)
+            })
+
+    };
+
+    var editCredential = function (credentialId, credential) {
+
+        return xhrService.fetch(baseUrl + 'credentials/credentials/' + credentialId + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                },
+                body: JSON.stringify(credential)
+            })
+
+    };
+
+    var deleteCredential = function (credentialId) {
+
+        return xhrService.fetch(baseUrl + 'credentials/credentials/' + credentialId + '/',
+            {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                }
+            }).then(function () {
+                return new Promise(function (resolve, reject) {
+                    resolve({status: 'deleted'});
+                });
+            })
+
+    };
+
+
+
     module.exports = {
         getList: getList,
         getConfigs: getConfigs,
         getConfig: getConfig,
         setConfig: setConfig,
         createConfig: createConfig,
-        bloombergTestCertificate: bloombergTestCertificate
+        bloombergTestCertificate: bloombergTestCertificate,
+
+        getPersonalProvidersList: getPersonalProvidersList,
+        getCredentials: getCredentials,
+        createCredential: createCredential,
+        editCredential: editCredential,
+        deleteCredential: deleteCredential
     }
 
 }());

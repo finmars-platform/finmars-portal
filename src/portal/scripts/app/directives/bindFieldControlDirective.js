@@ -56,12 +56,14 @@
           return true;
         };
 
-        scope.getName = function () {
-          if (scope.item.options && scope.item.options.fieldName) {
-            return scope.item.options.fieldName;
-          } else if (scope.item.hasOwnProperty("verbose_name")) {
-            return scope.item.verbose_name;
-          }
+                scope.getName = function () {
+                    if (scope.item.options && scope.item.options.fieldName) {
+                        return scope.item.options.fieldName;
+
+                    } else if (scope.item.hasOwnProperty('verbose_name')) {
+                        return scope.item.verbose_name;
+
+                    }
 
           return scope.item.name;
         };

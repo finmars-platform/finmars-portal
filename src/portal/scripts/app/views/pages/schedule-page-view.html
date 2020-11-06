@@ -38,8 +38,9 @@
                                 {{item.is_enabled}}
                             </td>
                             <td>
-                                <md-button class="md-raised" data-ng-click="vm.editPricingSchedule($event, item)">Edit</md-button>
-                                <md-button class="md-raised" data-ng-click="vm.editDeleteSchedule($event, item)">Delete</md-button>
+                                <md-button class="md-raised" data-ng-click="vm.runSchedule($event, item)">Run</md-button>
+                                <md-button class="md-raised" data-ng-click="vm.editSchedule($event, item)">Edit</md-button>
+                                <md-button class="md-raised" data-ng-click="vm.deleteSchedule($event, item)">Delete</md-button>
                             </td>
                         </tr>
                     </tbody>
@@ -48,7 +49,7 @@
             </div>
 
             <div class="m-t-16">
-                <md-button class="md-raised" data-ng-click="vm.addPricingSchedule($event)">Add New
+                <md-button class="md-raised" data-ng-click="vm.addSchedule($event)">Add New
                 </md-button>
             </div>
 

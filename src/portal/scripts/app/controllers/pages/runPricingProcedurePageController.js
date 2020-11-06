@@ -3,7 +3,7 @@
  */
 (function () {
 
-    var pricingProcedureService = require('../../services/pricing/pricingProcedureService');
+    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -54,7 +54,7 @@
 
             $mdDialog.show({
                 controller: 'PricingProcedureEditDialogController as vm',
-                templateUrl: 'views/dialogs/pricing/pricing-procedure-edit-dialog-view.html',
+                templateUrl: 'views/dialogs/procedures/pricing-procedure-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,

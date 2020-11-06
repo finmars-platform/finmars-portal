@@ -1,260 +1,272 @@
 (function () {
-  "use strict";
-
-  module.exports = function ($mdDialog) {
-    return {
-      restrict: "E",
-      scope: {
-        label: "@",
-        placeholderText: "@",
-        model: "=",
-        customButtons: '=',
-        customStyles: "=",
-        eventSignal: "=",
-        smallOptions: "=",
-        isDisabled: "=",
-        onChangeCallback: "&?",
-        onBlurCallback: "&?"
-      },
-      templateUrl: "views/directives/customInputs/text-input-view.html",
-      link: function (scope, elem, attr) {
+	"use strict";
 
-        var inputContainer = elem[0].querySelector(".textInputContainer");
+	module.exports = function ($mdDialog) {
+		return {
+			restrict: "E",
+			scope: {
+				label: "@",
+				placeholderText: "@",
+				model: "=",
+				customButtons: '=',
+				customStyles: "=",
+				eventSignal: "=",
+				smallOptions: "=",
+				isDisabled: "=",
+				onChangeCallback: "&?",
+				onBlurCallback: "&?"
+	  		},
+			templateUrl: "views/directives/customInputs/text-input-view.html",
+			link: function (scope, elem, attr) {
 
-        var inputElem = elem[0].querySelector(".textInputElem");
-        var fullTextElem = elem[0].querySelector(".customInputFullText");
-        var fullTextTextarea = fullTextElem.querySelector("textarea");
-        var stylePreset;
+				var inputContainer = elem[0].querySelector(".textInputContainer");
 
-        scope.isReadonly = false;
-        scope.fullTextEnabled = false;
+				var inputElem = elem[0].querySelector(".textInputElem");
+				var fullTextElem = elem[0].querySelector(".customInputFullText");
+				var fullTextTextarea = fullTextElem.querySelector("textarea");
+				var stylePreset;
 
-        // TIPS
-        // scope.smallOptions probable properties
-          // tooltipText: custom tolltip text
-          // notNull: turn on error mode if field is not filled
-          // noIndicatorBtn: whether to show button at the right part of input
-          // readonly: making input readonly
-          // dialogParent: 'string' - querySelector content for element to insert mdDialog into
+				scope.isReadonly = false;
+				scope.fullTextEnabled = false;
 
-        if (scope.smallOptions) {
+				// TIPS
+				// scope.smallOptions probable properties
+				  // tooltipText: custom tolltip text
+				  // notNull: turn on error mode if field is not filled
+				  // noIndicatorBtn: whether to show button at the right part of input
+				  // readonly: making input readonly
+				  // dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
-          scope.tooltipText = scope.smallOptions.tooltipText
-          scope.isReadonly = scope.smallOptions.readonly
-          scope.dialogParent = scope.smallOptions.dialogParent
+				if (scope.smallOptions) {
 
-          if (scope.smallOptions.noIndicatorBtn) {
-            scope.noIndicatorBtn = true
-          }
+				scope.tooltipText = scope.smallOptions.tooltipText
+				scope.isReadonly = scope.smallOptions.readonly
+				scope.dialogParent = scope.smallOptions.dialogParent
 
-        }
+				if (scope.smallOptions.noIndicatorBtn) {
+					scope.noIndicatorBtn = true
+				}
 
-        scope.getInputContainerClasses = function () {
-          var classes = "";
+			}
 
-          if (scope.isDisabled) {
-            classes += "custom-input-is-disabled";
+				scope.getInputContainerClasses = function () {
 
-          } else if (scope.error) {
-            classes = 'custom-input-error';
+		  var classes = "";
 
-          } else if (stylePreset) {
-            classes = 'custom-input-preset' + stylePreset;
+		  if (scope.isDisabled) {
+			classes += "custom-input-is-disabled";
 
-          } else if (scope.valueIsValid) {
-            classes = 'custom-input-is-valid';
+		  } else if (scope.error) {
+			classes = 'custom-input-error';
 
-          }
+		  } else if (stylePreset) {
+			classes = 'custom-input-preset' + stylePreset;
 
-          if (scope.noIndicatorBtn) {
-            classes += " no-indicator-btn";
-          }
+		  } else if (scope.valueIsValid) {
+			classes = 'custom-input-is-valid';
 
-          return classes;
-        };
-
-        scope.onInputChange = function () {
+		  }
 
-          scope.error = "";
-          stylePreset = "";
-          scope.valueIsValid = false;
+		  if (scope.noIndicatorBtn) {
+			classes += " no-indicator-btn";
+		  }
 
-          if (scope.model) {
-            scope.valueIsValid = true;
+		  return classes;
 
-          } else {
-            if (scope.smallOptions && scope.smallOptions.notNull) {
-              scope.error = "Field should not be null";
-            }
-          }
+		};
 
-          if (scope.onChangeCallback) {
-            setTimeout(function () {
-              scope.onChangeCallback();
-            }, 0);
-          }
-        };
+				scope.onInputChange = function () {
 
-        var applyCustomStyles = function () {
+		  scope.error = "";
+		  stylePreset = "";
+		  scope.valueIsValid = false;
 
-          Object.keys(scope.customStyles).forEach(function (className) {
+		  if (scope.model) {
+			scope.valueIsValid = true;
 
-            var elemClass = "." + className;
-            var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
+		  } else {
+			if (scope.smallOptions && scope.smallOptions.notNull) {
+			  scope.error = "Field should not be null";
+			}
+		  }
 
-            if (elemToApplyStyles.length) {
+		  if (scope.onChangeCallback) {
+			setTimeout(function () {
+			  scope.onChangeCallback();
+			}, 0);
+		  }
+		};
 
-              elemToApplyStyles.forEach(function (htmlNode) {
-                htmlNode.style.cssText = scope.customStyles[className];
-              })
+				var applyCustomStyles = function () {
 
-            }
+		  Object.keys(scope.customStyles).forEach(function (className) {
 
-          });
+			var elemClass = "." + className;
+			var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-        };
+			if (elemToApplyStyles.length) {
 
-        scope.callFnForCustomBtn = function (actionData) {
+			  elemToApplyStyles.forEach(function (htmlNode) {
+				htmlNode.style.cssText = scope.customStyles[className];
+			  })
 
-          if (actionData.parameters) {
-            actionData.callback(actionData.parameters);
-          } else {
-            actionData.callback();
-          }
+			}
 
-        };
+		  });
 
-        scope.openTextInDialog = function ($event) {
+		};
 
-          var dialogParent = angular.element(document.body);
+				scope.callFnForCustomBtn = function (actionData) {
 
-          if (scope.dialogParent) {
+		  if (actionData.parameters) {
+			actionData.callback(actionData.parameters);
+		  } else {
+			actionData.callback();
+		  }
 
-            var dialogParentElem = document.querySelector(scope.dialogParent);
+		};
 
-            if (dialogParentElem) {
-              dialogParent = dialogParentElem
-            }
+				scope.openTextInDialog = function ($event) {
 
-          }
+		  var dialogParent = angular.element(document.body);
 
-          $mdDialog.show({
-              controller: "TextEditorDialogController as vm",
-              templateUrl: "views/dialogs/text-editor-dialog-view.html",
-              parent: dialogParent,
-              targetEvent: $event,
-              multiple: true,
-              locals: {
-                data: {
-                  title: "Text",
-                  text: scope.model,
-                },
-              },
-            })
-            .then(function (res) {
-              if (res.status === "agree") {
-                stylePreset = "";
-                scope.model = res.text;
+		  if (scope.dialogParent) {
 
-                if (scope.onChangeCallback) {
-                  setTimeout(function () {
-                    scope.onChangeCallback();
-                  }, 0);
-                }
-              }
-            });
-        };
+			var dialogParentElem = document.querySelector(scope.dialogParent);
 
-        var initScopeWatchers = function () {
+			if (dialogParentElem) {
+			  dialogParent = dialogParentElem
+			}
 
-          scope.$watch("model", function () {
-            if (scope.error && scope.model) {
-              scope.error = "";
-            }
-          });
+		  }
 
-          if (scope.eventSignal) {
-            // this if prevents watcher below from running without need
+		  $mdDialog.show({
+			  controller: "TextEditorDialogController as vm",
+			  templateUrl: "views/dialogs/text-editor-dialog-view.html",
+			  parent: dialogParent,
+			  targetEvent: $event,
+			  multiple: true,
+			  locals: {
+				data: {
+				  title: "Text",
+				  text: scope.model,
+				},
+			  },
 
-            scope.$watch("eventSignal", function () {
+		  }).then(function (res) {
 
-              if (scope.eventSignal && scope.eventSignal.key) {
+			if (res.status === "agree") {
 
-                switch (scope.eventSignal.key) {
+			  stylePreset = "";
+				scope.model = res.text;
 
-                  case "mark_not_valid_fields":
-                    if (scope.smallOptions &&
-                        scope.smallOptions.notNull &&
-                        !scope.model) {
+				if (scope.onChangeCallback) {
+				  setTimeout(function () {
+					scope.onChangeCallback();
+				  }, 0);
+				}
+			  }
+			});
+		};
 
-                      scope.error = "Field should not be null";
+				var initScopeWatchers = function () {
 
-                    }
+		  scope.$watch("model", function () {
+			if (scope.error && scope.model) {
+			  scope.error = "";
+			}
+		  });
 
-                    break;
+		  if (scope.eventSignal) {
+			// this if prevents watcher below from running without need
 
-                  case "error":
-                    scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
-                    break;
+			scope.$watch("eventSignal", function () {
 
-                  case "set_style_preset1":
-                    stylePreset = 1;
-                    break;
+			  if (scope.eventSignal && scope.eventSignal.key) {
 
-                  case "set_style_preset2":
-                    stylePreset = 2;
-                    break;
-                }
+				switch (scope.eventSignal.key) {
 
-                scope.eventSignal = {};
-              }
-            });
-          }
-        };
+				  case "mark_not_valid_fields":
+					if (scope.smallOptions &&
+						scope.smallOptions.notNull &&
+						!scope.model) {
 
-        var initEventListeners = function () {
+					  scope.error = "Field should not be null";
 
-          elem[0].addEventListener("mouseover", function () {
-            inputContainer.classList.add("custom-input-hovered");
-          });
+					}
 
-          elem[0].addEventListener("mouseleave", function () {
-            inputContainer.classList.remove("custom-input-hovered");
-          });
+					break;
 
-          inputElem.addEventListener("focus", function () {
-            // inputContainer.classList.add('custom-input-focused');
-            inputContainer.classList.add("custom-input-full-text-focused");
-            fullTextTextarea.focus();
+				  case "error":
+					scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
+					break;
 
-          });
+				  case "set_style_preset1":
+					stylePreset = 1;
+					break;
 
-          fullTextTextarea.addEventListener("blur", function () {
+				  case "set_style_preset2":
+					stylePreset = 2;
+					break;
+				}
 
-            inputContainer.classList.remove("custom-input-full-text-focused");
+				scope.eventSignal = {};
+			  }
+			});
+		  }
+		};
 
-            if (scope.onBlurCallback) {
-              setTimeout(function () {
-                // without timeout changes will be discarded on fast blur
-                scope.onBlurCallback();
-              }, 250);
-            }
+				var initEventListeners = function () {
 
-          });
-        };
+					elem[0].addEventListener("mouseover", function () {
+						inputContainer.classList.add("custom-input-hovered");
+					});
 
-        var init = function () {
-          initScopeWatchers();
+					elem[0].addEventListener("mouseleave", function () {
+						inputContainer.classList.remove("custom-input-hovered");
+					});
 
-          initEventListeners();
+					inputElem.addEventListener("focus", function () {
 
-          if (scope.customStyles) {
-            applyCustomStyles();
-          }
-        };
+						inputContainer.classList.add("custom-input-full-text-focused");
+						fullTextTextarea.focus();
 
-        init();
-      },
-    };
-  };
+						fullTextElem.addEventListener("mouseleave", function () {
+
+							fullTextTextarea.blur();
+
+						}, {once: true});
+
+					});
+
+					fullTextTextarea.addEventListener("blur", function () {
+
+						inputContainer.classList.remove("custom-input-full-text-focused");
+
+						if (scope.onBlurCallback) {
+							setTimeout(function () {
+								// without timeout changes will be discarded on fast blur
+								scope.onBlurCallback();
+							}, 250);
+						}
+
+					});
+
+				};
+
+				var init = function () {
+
+					initScopeWatchers();
+
+					initEventListeners();
+
+					if (scope.customStyles) {
+						applyCustomStyles();
+					}
+				};
+
+				init();
+			},
+		};
+	};
 })();

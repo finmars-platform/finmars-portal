@@ -6,72 +6,107 @@
 
             <div layout="row">
 
-                <md-input-container class="md-block" style="width: 200px;">
-                    <label>Pricing Currency</label>
-                    <md-select md-on-close="vm.searchTermCurrency = ''"
-                               data-ng-model="vm.entity.pricing_currency"
-                               md-container-class="common-select-container">
-                        <md-select-header>
-                            <input data-ng-model="vm.searchTermCurrency"
-                                   type="search"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern select-input-filter"
-                                   ng-keydown="$event.stopPropagation()">
-                        </md-select-header>
-                        <div class="select-options-holder">
-                            <md-option
-                                    data-ng-repeat="item in vm.currencies | orderBy:'-'+item.name | filter:{name: vm.searchTermCurrency} as results track by item.id "
-                                    ng-value="item.id">
-                                {{item.name}}
-                            </md-option>
-                        </div>
-                    </md-select>
-                </md-input-container>
+<!--                <md-input-container class="md-block" style="width: 200px;">-->
+<!--                    <label>Pricing Currency</label>-->
+<!--                    <md-select md-on-close="vm.searchTermCurrency = ''"-->
+<!--                               data-ng-model="vm.entity.pricing_currency"-->
+<!--                               md-container-class="common-select-container">-->
+<!--                        <md-select-header>-->
+<!--                            <input data-ng-model="vm.searchTermCurrency"-->
+<!--                                   type="search"-->
+<!--                                   placeholder="Search for a ..."-->
+<!--                                   class="md-text md-select-search-pattern select-input-filter"-->
+<!--                                   ng-keydown="$event.stopPropagation()">-->
+<!--                        </md-select-header>-->
+<!--                        <div class="select-options-holder">-->
+<!--                            <md-option-->
+<!--                                    data-ng-repeat="item in vm.currencies | orderBy:'-'+item.name | filter:{name: vm.searchTermCurrency} as results track by item.id "-->
+<!--                                    ng-value="item.id">-->
+<!--                                {{item.name}}-->
+<!--                            </md-option>-->
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Pricing Multiplier</label>
-                    <input type="text" data-ng-model="vm.entity.price_multiplier">
-                </md-input-container>
+<!--                        </div>-->
+<!--                    </md-select>-->
+<!--                </md-input-container>-->
 
-                <md-input-container style="width: 200px;">
-                    <label for="">Default Price</label>
-                    <input type="text" data-ng-model="vm.entity.default_price">
-                </md-input-container>
+                <dropdown-select class="p-r-8" label="Pricing Currency"
+                                 model="vm.entity.pricing_currency"
+                                 placeholder-text="Pricing Currency"
+                                 menu-options="vm.currencies"
+                                 small-options="{tooltipText: 'Pricing Currency'}"
+                                 style="width: 50%">
+                </dropdown-select>
+
+<!--                <md-input-container style="width: 200px;">-->
+<!--                    <label for="">Pricing Multiplier</label>-->
+<!--                    <input type="text" data-ng-model="vm.entity.price_multiplier">-->
+<!--                </md-input-container>-->
+
+                <number-input class="p-r-8"
+                              label="Pricing Multiplier"
+                              model="vm.entity.price_multiplier"
+                              small-options="{tooltipText: 'Pricing Multiplier'}"
+                              style="width: 200px;">
+                </number-input>
+
+<!--                <md-input-container style="width: 200px;">-->
+<!--                    <label for="">Default Price!</label>-->
+<!--                    <input type="text" data-ng-model="vm.entity.default_price">-->
+<!--                </md-input-container>-->
+                <number-input label="Default Price"
+                              model="vm.entity.default_price"
+                              small-options="{tooltipText: 'Default Price'}"
+                              style="width: 200px;">
+                </number-input>
 
             </div>
 
             <div layout="row">
 
-                <md-input-container class="md-block" style="width: 550px;">
-                    <label>Pricing Condition</label>
-                    <md-select md-on-close="vm.searchTermPricingCondition = ''"
-                               data-ng-model="vm.entity.pricing_condition"
-                               md-container-class="common-select-container">
-                        <md-select-header>
-                            <input data-ng-model="vm.searchTermPricingCondition"
-                                   type="search"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern select-input-filter"
-                                   ng-keydown="$event.stopPropagation()">
-                        </md-select-header>
-                        <div class="select-options-holder">
-                            <md-option ng-value="1">
-                                Don't Run Valuation
-                            </md-option>
-                            <md-option ng-value="2">
-                                Run Valuation: if non-zero position
-                            </md-option>
-                            <md-option ng-value="3">
-                                Run Valuation: always
-                            </md-option>
-                        </div>
-                    </md-select>
-                </md-input-container>
+<!--                <md-input-container class="md-block" style="width: 550px;">-->
+<!--                    <label>Pricing Condition</label>-->
+<!--                    <md-select md-on-close="vm.searchTermPricingCondition = ''"-->
+<!--                               data-ng-model="vm.entity.pricing_condition"-->
+<!--                               md-container-class="common-select-container">-->
+<!--                        <md-select-header>-->
+<!--                            <input data-ng-model="vm.searchTermPricingCondition"-->
+<!--                                   type="search"-->
+<!--                                   placeholder="Search for a ..."-->
+<!--                                   class="md-text md-select-search-pattern select-input-filter"-->
+<!--                                   ng-keydown="$event.stopPropagation()">-->
+<!--                        </md-select-header>-->
+<!--                        <div class="select-options-holder">-->
+<!--                            <md-option ng-value="1">-->
+<!--                                Don't Run Valuation-->
+<!--                            </md-option>-->
+<!--                            <md-option ng-value="2">-->
+<!--                                Run Valuation: if non-zero position-->
+<!--                            </md-option>-->
+<!--                            <md-option ng-value="3">-->
+<!--                                Run Valuation: always-->
+<!--                            </md-option>-->
+<!--                        </div>-->
+<!--                    </md-select>-->
+<!--                </md-input-container>-->
 
-                <md-input-container style="width: 200px;">
-                    <label for="">ID for Price Downloading</label>
-                    <input type="text" data-ng-model="vm.entity.reference_for_pricing">
-                </md-input-container>
+                <dropdown-select class="p-r-8" label="Pricing Condition"
+                                 model="vm.entity.pricing_condition"
+                                 placeholder-text="Pricing Condition"
+                                 menu-options="vm.pricingConditions"
+                                 small-options="{tooltipText: 'Pricing Condition'}"
+                                 style="width: 550px;">
+                </dropdown-select>
+
+<!--                <md-input-container style="width: 200px;">-->
+<!--                    <label for="">ID for Price Downloading</label>-->
+<!--                    <input type="text" data-ng-model="vm.entity.reference_for_pricing">-->
+<!--                </md-input-container>-->
+
+                <text-input model="vm.entity.reference_for_pricing"
+                            label="ID for Price Downloading"
+                            placeholder-text="ID for Price Downloading"
+                            style="width: 200px;">
+                </text-input>
 
             </div>
 

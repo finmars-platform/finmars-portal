@@ -3,7 +3,7 @@
  */
 (function () {
 
-    var pricingParentProcedureRepository = require('../../repositories/pricing/pricingParentProcedureRepository');
+    var pricingParentProcedureRepository = require('../../repositories/procedures/pricingParentProcedureRepository');
 
     var getList = function (options) {
         return pricingParentProcedureRepository.getList(options);

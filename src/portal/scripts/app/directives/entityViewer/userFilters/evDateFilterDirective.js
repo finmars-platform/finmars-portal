@@ -23,8 +23,8 @@
                 // console.log("filter filterDateData", scope.filter);
 
                 scope.filters = scope.evDataService.getFilters();
+                scope.entityType = scope.evDataService.getEntityType();
 
-                scope.filterValue = undefined;
                 scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
 

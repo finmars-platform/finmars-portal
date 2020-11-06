@@ -21,13 +21,13 @@
             link: function (scope, elem, attrs) {
 
                 scope.filters = scope.evDataService.getFilters();
+                scope.entityType = scope.evDataService.getEntityType();
 
-                scope.filterValue = undefined;
                 scope.columnRowsContent = [];
                 scope.showSelectMenu = false;
 
                 var dataLoadEndId;
-                var toggleFilterAreaID;
+                // var toggleFilterAreaID;
 
                 var getDataForSelects = function () {
 

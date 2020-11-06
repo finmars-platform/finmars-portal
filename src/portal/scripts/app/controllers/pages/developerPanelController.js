@@ -85,16 +85,6 @@
 
         };
 
-        vm.automatedUploads = function ($event) {
-
-            $mdDialog.show({
-                controller: 'AutomatedUploadsHistoryDialogController as vm',
-                templateUrl: 'views/dialogs/automated-uploads-history-dialog-view.html',
-                targetEvent: $event
-            })
-
-        };
-
         vm.openMapping = function ($event, mapItem) {
 
             $mdDialog.show({

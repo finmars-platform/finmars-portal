@@ -5,10 +5,11 @@
 
     'use strict';
 
-    var pricingScheduleService = require('../../../services/schedules/pricingScheduleService');
-    var pricingProcedureService = require('../../../services/pricing/pricingProcedureService');
+    var scheduleService = require('../../../services/scheduleService');
+    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
+    var dataProcedureService = require('../../../services/procedures/dataProcedureService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function scheduleAddDialogController($scope, $mdDialog, data) {
 
         var vm = this;
 
@@ -21,6 +22,9 @@
             periodicity: 1
         };
         vm.cron.time = new Date();
+
+        vm.pricingProcedures = [];
+        vm.dataProcedures = [];
 
         vm.setDay = function (day) {
             if (!vm.cron.day) {
@@ -71,7 +75,7 @@
                 vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day + ' ' + vm.cron.month + ' *'
             }
 
-            pricingScheduleService.create(vm.schedule).then(function (data) {
+            scheduleService.create(vm.schedule).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: 'success'});
                 $scope.$apply();
@@ -107,14 +111,61 @@
 
         };
 
+        vm.getDataProcedures = function () {
+
+            dataProcedureService.getList().then(function (data) {
+
+                vm.dataProcedures = data.results;
+
+                vm.readyStatus.dataProcedures = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+
         vm.getServerTime = function() {
 
             return new Date().toISOString().split('T')[1].split('.')[0]
 
         };
 
+        vm.deleteProcedure = function($event, item, $index)  {
+
+            vm.schedule.procedures.splice($index, 1);
+
+            vm.orderProcedures();
+
+        };
+
+        vm.addProcedure = function ($event) {
+
+            if (!vm.schedule.procedures) {
+                vm.schedule.procedures = [];
+            }
+
+            vm.schedule.procedures.push({})
+
+            vm.orderProcedures();
+
+        };
+
+        vm.orderProcedures = function () {
+
+            vm.schedule.procedures = vm.schedule.procedures.map(function (item, index) {
+
+                item.order = index + 1;
+
+                return item
+            })
+
+        };
+
         vm.init = function () {
             vm.getPricingProcedures();
+            vm.getDataProcedures();
         };
 
         vm.init();
