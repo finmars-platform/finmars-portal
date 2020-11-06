@@ -51,6 +51,8 @@
                 error_handling: 'break'
             };
 
+            var horizontalSpIsActive;
+
 
             vm.bookSelected = function () {
 
@@ -251,7 +253,31 @@
 
                 });
 
+                parentEntityViewerEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+
+                    horizontalSpIsActive = parentEntityViewerDataService.isSplitPanelActive();
+
+                    var parentInterfaceLayout = parentEntityViewerDataService.getInterfaceLayout();
+                    var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+
+                    interfaceLayout.splitPanel = Object.assign({}, parentInterfaceLayout.splitPanel);
+
+                    vm.entityViewerDataService.setInterfaceLayout(interfaceLayout);
+
+                    vm.entityViewerDataService.setSplitPanelStatus(horizontalSpIsActive);
+
+                });
+
                 parentEntityViewerEventService.addEventListener(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT, function () {
+
+                    if (horizontalSpIsActive) {
+                        var parentInterfaceLayout = parentEntityViewerDataService.getInterfaceLayout();
+                        var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+
+                        interfaceLayout.splitPanel = Object.assign({}, parentInterfaceLayout.splitPanel);
+
+                        vm.entityViewerDataService.setInterfaceLayout(interfaceLayout);
+                    }
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
@@ -311,8 +337,8 @@
 
                             var reconciliationData = vm.entityViewerDataService.getReconciliationData();
 
-                            console.log('activeObject', activeObject);
-                            console.log('reconciliationData', reconciliationData);
+                            /* console.log('activeObject', activeObject);
+                            console.log('reconciliationData', reconciliationData); */
 
                             reconciliationData = reconciliationData.filter(function (item) {
 
@@ -392,7 +418,7 @@
 
             };
 
-            var getLayoutChanges = function () {
+            /* var getLayoutChanges = function () {
                 var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
 
                 if (activeLayoutConfig && activeLayoutConfig.data) {
@@ -407,7 +433,7 @@
                 return false
             };
 
-            splitPanelExchangeService.setSplitPanelLayoutChangesCheckFn(getLayoutChanges);
+            splitPanelExchangeService.setSplitPanelLayoutChangesCheckFn(getLayoutChanges); */
 
             vm.getView = function () {
 
@@ -449,6 +475,9 @@
 
                 vm.entityViewerDataService.setComponents(components);
 
+                horizontalSpIsActive = parentEntityViewerDataService.isSplitPanelActive();
+                vm.entityViewerDataService.setSplitPanelStatus(horizontalSpIsActive);
+
 
                 var reconciliationData = parentEntityViewerDataService.getReconciliationData();
                 var reconciliationImportConfig = parentEntityViewerDataService.getReconciliationImportConfig();
@@ -466,7 +495,6 @@
                 var config = vm.entityViewerDataService.getReconciliationImportConfig();
 
                 var scheme = config.scheme_object;
-
 
 
                 if (scheme.recon_layout) {

@@ -1,4 +1,7 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog" style="width: 500px;" drag-dialog>
+<md-dialog class="draggable-dialog"
+           aria-label="reconciliation match file data dialog"
+           style="width: 500px;"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -7,6 +10,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
+
     <md-dialog-content>
 
         <div class="p-24">
@@ -52,7 +56,7 @@
                     <md-input-container style="margin: 0">
 
                         <label for="">Notes</label>
-                        <input type="text" data-ng-model="vm.field.notes">
+                        <input type="text" data-ng-model="vm.field.notes" data-ng-change="vm.onFieldPropChange()">
 
                     </md-input-container>
 
@@ -132,6 +136,7 @@
         </div>
 
     </md-dialog-content>
+
     <md-dialog-actions layout="row">
         <div>
             <md-button ng-click="vm.clear($event)" ng-class="{'disabled-btn': !vm.linkedComplexTransactionField}">

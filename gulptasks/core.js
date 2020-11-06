@@ -60,10 +60,11 @@
 
     });
 
-    gulp.task(appName + '-copy-libs-css', function () {
+    /*gulp.task(appName + '-copy-libs-css', function () {
 
         var pathToJS = [
             'node_modules/angular-material/angular-material.css',
+
             'node_modules/mdPickers/dist/mdPickers.css',
             'node_modules/ui-select/dist/select.css',
             'node_modules/v-accordion/dist/v-accordion.css',
@@ -79,6 +80,32 @@
             .pipe(gulp.dest('libs/css'));
 
 
+    });*/
+    gulp.task(appName + '-copy-libs-css', function () {
+
+        var pathToJS = [
+            'src/core/content/css/*',
+        ];
+
+        return gulp.src(pathToJS)
+            .pipe(concat('libs.css'))
+            .pipe(minifyCSS())
+            .pipe(rename('libs.min.css'))
+            .pipe(gulp.dest('dist/' + appName + '/content/css/'));
+    });
+
+    gulp.task(appName + '-copy-libs-fonts', function () {
+
+        var pathToCSS = [
+            'node_modules/material-design-icons/iconfont/*.eot',
+            'node_modules/material-design-icons/iconfont/*.svg',
+            'node_modules/material-design-icons/iconfont/*.ttf',
+            'node_modules/material-design-icons/iconfont/*.woff',
+            'node_modules/material-design-icons/iconfont/*.woff2'
+        ];
+
+        return gulp.src(pathToCSS)
+            .pipe(gulp.dest('dist/' + appName + '/content/fonts/'));
     });
 
     gulp.task(appName + '-angular-js-min', function () {
@@ -250,7 +277,7 @@
 
     });
 
-    gulp.task(appName + '-fontawesome-css-min', function () {
+    /*gulp.task(appName + '-fontawesome-css-min', function () {
 
         var pathToCSS = [
             'node_modules/@fortawesome/fontawesome-free/css/all.css'
@@ -262,22 +289,32 @@
             .pipe(rename('fontawesome.min.css'))
             .pipe(gulp.dest('dist/' + appName + '/content/css/'));
 
-    });
+    });*/
 
-    gulp.task(appName + '-fontawesome-fonts-move', function () {
-
+    function fontawesomeCssMin() {
         var pathToCSS = [
-            'node_modules/@fortawesome/fontawesome-free/webfonts/*'
+            'node_modules/@fortawesome/fontawesome-free/css/all.css'
         ];
 
         return gulp.src(pathToCSS)
+            .pipe(concat('fontawesome.css'))
+            .pipe(minifyCSS())
+            .pipe(rename('fontawesome.min.css'))
+            .pipe(gulp.dest('dist/' + appName + '/content/css/'));
+    }
+
+    function fontawesomeFontsCopy () {
+        var pathToCSS = ['node_modules/@fortawesome/fontawesome-free/webfonts/*'];
+
+        return gulp.src(pathToCSS)
             .pipe(gulp.dest('dist/' + appName + '/content/webfonts/'));
-    });
+    }
+
+    gulp.task(appName + '-fontawesome-min', gulp.series(fontawesomeCssMin, fontawesomeFontsCopy));
 
     function deleteTempFolder () {
         return del(['src/temp']);
     }
-
 
     function minPluginsJs() {
 
@@ -345,27 +382,9 @@
             .pipe(gulp.dest('dist/' + appName + '/content/css/'));
     }
 
-    gulp.task(appName + '-plugins-css-min', gulp.series(minPluginsCss, mergePluginsMinCss, deleteTempFolder));
+    gulp.task(appName + '-plugins-css-min', gulp.series(minPluginsCss, mergePluginsMinCss));
 
     gulp.task(appName + '-min-All',
-        /*gulp.series(
-            gulp.parallel(
-                appName + '-angular-js-min',
-                appName + '-angular-css-min',
-                appName + '-core-js-min',
-                appName + '-plugins-js-min',
-                appName + '-min-Angular-UI-JS',
-                appName + '-moment-js-min',
-                appName + '-fetch-js-min',
-                appName + '-jquery-js-min',
-                appName + '-plugins-css-min',
-                appName + '-dragula-js-min',
-                appName + '-dragula-css-min',
-                appName + '-fontawesome-css-min',
-                appName + '-fontawesome-fonts-move'
-            ),
-            deleteTempFolder
-        )*/
         gulp.parallel(
             appName + '-angular-js-min',
             appName + '-angular-css-min',
@@ -376,10 +395,11 @@
             appName + '-fetch-js-min',
             appName + '-jquery-js-min',
             appName + '-plugins-css-min',
+            appName + '-copy-libs-css',
+            appName + '-copy-libs-fonts',
+            appName + '-fontawesome-min',
             appName + '-dragula-js-min',
-            appName + '-dragula-css-min',
-            appName + '-fontawesome-css-min',
-            appName + '-fontawesome-fonts-move'
+            appName + '-dragula-css-min'
         )
     );
 

@@ -12,6 +12,7 @@
     var metaService = require('../services/metaService');
     var tagService = require('../services/tagService');
     var metaContentTypesService = require('../services/metaContentTypesService');
+    var metaHelper = require('../helpers/meta.helper');
 
     module.exports = function () {
 
@@ -32,6 +33,12 @@
                 scope.readyStatus = {content: false, tags: false};
                 scope.type = 'id';
                 scope.fields = [];
+                scope.sortedFields = [];
+                scope.schemeSortedFields = []
+
+                scope.sorted = true
+
+
                 scope.ciEventObj = {
                     event: {}
                 };
@@ -83,8 +90,8 @@
                     return modelKeyEntity;
                 };
 
-                scope.resolveMultiple = function () {
-                    if (scope.$parent.entityType !== 'instrument-type') { // refactor this
+                /*scope.resolveMultiple = function () {
+                    if (scope.entityType !== 'instrument-type') { // refactor this
                         return true
                     }
 
@@ -93,7 +100,7 @@
                     }
 
                     return false;
-                };
+                };*/
 
                 scope.getFieldsGrouped = function () {
 
@@ -128,22 +135,22 @@
                 scope.resolveSort = function (field) {
                     if (field) {
                         if (field.hasOwnProperty('name')) {
-                            return field.name
+                            return '-' + field.name;
                         }
                         if (field.hasOwnProperty('user_code')) {
-                            return field.user_code
+                            return '-' + field.user_code;
                         }
                         if (field.hasOwnProperty('public_name')) {
-                            return field.public_name
+                            return '-' + field.public_name;
                         }
                     }
                 };
 
                 scope.checkComplexEntityType = function () {
                     if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
-                        return true
+                        return true;
                     }
-                    return false
+                    return false;
                 };
 
                 scope.inputBackgroundColor = function () {
@@ -230,6 +237,24 @@
                     return field.name;
                 };
 
+                scope.getListWithBindFields = function (items) {
+                    return items.map(function (item) {
+                        return {
+                            ...item,
+                            bindFieldsName: scope.bindListFields(item)
+                        }
+                    })
+                };
+
+                scope.getListWithSchemeName = function (items) {
+                    return items.map(function (item) {
+                        return {
+                            ...item,
+                            name: item.scheme_name
+                        }
+                    })
+                }
+
                 scope.bindMCField = function (model) {
                     if (scope.entity[scope.fieldKey] && scope.entity[scope.fieldKey].length > 0) {
                         return '[' + scope.entity[scope.fieldKey].length + '] selected';
@@ -284,8 +309,9 @@
                 };
 
                 scope.getData = function () {
-                    console.log('getData.key', scope.item.key);
+
                     if (!fieldsDataIsLoaded) {
+
                         var options = {};
 
                         if (scope.options.entityType) {
@@ -298,10 +324,13 @@
 
                         if (scope.entityType === 'complex-transaction') {
 
-                            fieldResolverService.getFieldsByContentType(scope.item.content_type, options).then(function (res) {
+                            return fieldResolverService.getFieldsByContentType(scope.item.content_type, options).then(function (res) {
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
+                                scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'scheme_name'));
+
                                 scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
 
@@ -313,10 +342,13 @@
 
                         } else {
 
-                            fieldResolverService.getFields(scope.item.key, options).then(function (res) {
+                            return fieldResolverService.getFields(scope.item.key, options).then(function (res) {
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
+                                scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'scheme_name'));
+
                                 scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
 
@@ -329,6 +361,16 @@
 
                     }
 
+                };
+
+                scope.getMultiselectorItems = function () {
+                    return scope.getData().then(function () {
+                        var data = {
+                            results: scope.getListWithBindFields(metaHelper.textWithDashSort(scope.fields))
+                        };
+
+                        return data;
+                    });
                 };
 
                 scope.$watch('item', function () {
@@ -351,8 +393,15 @@
 
                             if (Array.isArray(item_object)) {
                                 scope.fields = item_object;
+                                var items = scope.fields.slice(0);
+                                scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'scheme_name'));
+
                             } else {
                                 scope.fields.push(item_object);
+                                var items = scope.fields.slice(0);
+                                scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'scheme_name'));
                             }
 
                         }
@@ -374,10 +423,8 @@
                     if (scope.options.backgroundColor) {
 
                         scope.customStyles = {
-                            'custom-input-main-container': 'background-color: ' + scope.options.backgroundColor + ';',
-                            'custom-input-custom-btns-holder': 'background-color: ' + scope.options.backgroundColor + ';'
+                            'customInputBackgroundColor': 'background-color: ' + scope.options.backgroundColor + ';'
                         }
-
                     }
 
                     if (scope.item.frontOptions) {
@@ -453,6 +500,7 @@
                 };
 
                 scope.init = function () {
+                    scope.getData();
 
                     if (scope.evEditorEventService) {
                         initListeners();
