@@ -626,12 +626,13 @@
                             scope.ciEventObj.event = {key: 'set_style_preset2'};
 
                         }*/
-            if (
-              scope.item.frontOptions.recalculated ||
-              scope.item.frontOptions.autocalculated
-            ) {
-              scope.ciEventObj.event = { key: "set_style_preset1" };
+            if (scope.item.frontOptions.recalculated ||
+				scope.item.frontOptions.autocalculated) {
+
+            	scope.ciEventObj.event = { key: "set_style_preset1" };
+
             }
+
           }
         };
 
@@ -643,57 +644,51 @@
             }
           );
 
-          scope.evEditorEventService.addEventListener(
-            evEditorEvents.FIELDS_RECALCULATED,
-            function () {
-              if (scope.item &&
-                  scope.item.frontOptions &&
-                  (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
+			scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATED, function () {
 
-                setItemSpecificSettings();
+				if (scope.item &&
+					scope.item.frontOptions &&
+					(scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
-                /*if (scope.item.frontOptions.recalculated === 'input') {
-                                scope.ciEventObj.event = {key: 'set_style_preset1'};
+					setItemSpecificSettings();
 
-                            } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
-                                scope.ciEventObj.event = {key: 'set_style_preset2'};
+					/*if (scope.item.frontOptions.recalculated === 'input') {
+									scope.ciEventObj.event = {key: 'set_style_preset1'};
 
-                            }*/
+								} else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
+									scope.ciEventObj.event = {key: 'set_style_preset2'};
 
-                if (scope.item.frontOptions.recalculated ||
-                    scope.item.frontOptions.autocalculated) {
+								}*/
 
-                  scope.ciEventObj.event = { key: "set_style_preset1" };
+					if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
 
-                }
-              }
-            }
-          );
+					  scope.ciEventObj.event = {key: "set_style_preset1"};
 
-          scope.evEditorEventService.addEventListener(
-            evEditorEvents.FIELD_CHANGED,
-            function () {
-              var changedUserInputData;
+					}
+				}
 
-              if (scope.evEditorDataService) {
-                changedUserInputData = scope.evEditorDataService.getChangedUserInputData();
-              }
+			});
 
-              if (
-                changedUserInputData &&
-                changedUserInputData.frontOptions &&
-                changedUserInputData.frontOptions.linked_inputs_names
-              ) {
-                if (
-                  changedUserInputData.frontOptions.linked_inputs_names.indexOf(
-                    scope.fieldKey
-                  ) > -1
-                ) {
-                  scope.ciEventObj.event = { key: "set_style_preset2" };
-                }
-              }
-            }
-          );
+			/* scope.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
+
+				var changedUserInputData;
+
+				if (scope.evEditorDataService) {
+					changedUserInputData = scope.evEditorDataService.getChangedUserInputData();
+				}
+
+				if (changedUserInputData &&
+					changedUserInputData.frontOptions &&
+					changedUserInputData.frontOptions.linked_inputs_names) {
+
+					if (changedUserInputData.frontOptions.linked_inputs_names.includes(scope.fieldKey)) {
+						scope.ciEventObj.event = {key: "set_style_preset2"};
+					}
+
+				}
+
+			}); */
+
         };
         /*scope.$watch('eventSignal', function () {
                     if (scope.eventSignal) {
@@ -759,22 +754,22 @@
 
           checkForNotNull();
 
-          /*if (scope.fieldType && scope.fieldType.value === 20) {
+          /* if (scope.fieldType && scope.fieldType.value === 20) {
 
-                        scope.numericInputValue.numberVal = null;
-                        setTimeout(function () {
-                            numberInputContainerElem = elem[0].querySelector('.bfNumberInputContainer');
-                            numberInputElem = elem[0].querySelector('.bfNumberInput');
-                        }, 500);
+				scope.numericInputValue.numberVal = null;
+				setTimeout(function () {
+					numberInputContainerElem = elem[0].querySelector('.bfNumberInputContainer');
+					numberInputElem = elem[0].querySelector('.bfNumberInput');
+				}, 500);
 
-                        if (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0) {
+				if (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0) {
 
-                            var itemNumberValue = JSON.parse(JSON.stringify(scope.entity[scope.fieldKey]));
-                            scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
+					var itemNumberValue = JSON.parse(JSON.stringify(scope.entity[scope.fieldKey]));
+					scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
 
-                        }
+				}
 
-                    }*/
+			} */
         };
 
         scope.itemChange = function () {
