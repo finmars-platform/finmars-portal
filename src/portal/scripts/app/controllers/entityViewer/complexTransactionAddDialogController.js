@@ -25,7 +25,8 @@
     var colorPalettesService = require('../../services/colorPalettesService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
-    var transactionHelper = require('../../helpers/transaction.helper');
+	var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
+	var transactionHelper = require('../../helpers/transaction.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -33,6 +34,8 @@
     module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $state, entityType, entity, data) {
 
         var vm = this;
+		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
+
         vm.readyStatus = {content: false, entity: true, permissions: true, transactionTypes: false, layout: false};
         vm.entityType = entityType;
 
@@ -59,8 +62,8 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
-        var tabsWithErrors = {};
-        var errorFieldsList = [];
+		vm.tabsWithErrors = {};
+		vm.errorFieldsList = [];
         var notCopiedTransaction = true;
         var inputsWithCalculations;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
@@ -829,7 +832,7 @@
 
             if (errors.length) {
 
-                tabsWithErrors = {};
+				vm.tabsWithErrors = {};
 
                 errors.forEach(function (errorObj) {
 
@@ -843,15 +846,15 @@
                         var tabNameElem = document.querySelector(selectorString);
                         tabNameElem.classList.add('error-tab');
 
-                        if (!tabsWithErrors.hasOwnProperty(tabName)) {
-                            tabsWithErrors[tabName] = [errorObj.key];
+                        if (!vm.tabsWithErrors.hasOwnProperty(tabName)) {
+							vm.tabsWithErrors[tabName] = [errorObj.key];
 
-                        } else if (tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
-                            tabsWithErrors[tabName].push(errorObj.key);
+                        } else if (vm.tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+							vm.tabsWithErrors[tabName].push(errorObj.key);
 
                         }
 
-                        errorFieldsList.push(errorObj.key);
+                        vm.errorFieldsList.push(errorObj.key);
 
                     }
 
@@ -1361,9 +1364,9 @@
             console.log('changedInput', changedInput);
             console.log('resultInput', resultInput);
 
-        };*/
+        }; */
 
-        vm.onFieldChange = function (fieldKey) {
+        /* vm.onFieldChange = function (fieldKey) {
 
             if (fieldKey) {
 
@@ -1413,7 +1416,8 @@
                     vm.entity, vm.entityType, vm.tabs);
             }
 
-        };
+        }; */
+		vm.onFieldChange = sharedLogicHelper.onFieldChange;
 
 
         vm.init();

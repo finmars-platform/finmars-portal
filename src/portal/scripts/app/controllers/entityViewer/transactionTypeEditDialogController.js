@@ -33,11 +33,11 @@
     var GridTableEventService = require('../../services/gridTableEventService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
-    var TransactionTypeEditorSharedLogicHelper = require('../../helpers/transactionTypeEditorSharedLogicHelper');
+    var TransactionTypeEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/transactionTypeEditorSharedLogicHelper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     // var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $state, entityType, entityId)
+    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $state, entityType, entityId)
     {
 
         var vm = this;
@@ -350,10 +350,12 @@
 									input.settings.linked_inputs_names = []
 								}
 
-								if (!input.settings.recalc_on_change_linked_inputs) {
+								if (input.settings.recalc_on_change_linked_inputs) {
 
+									input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.split(',')
+
+								} else {
 									input.settings.recalc_on_change_linked_inputs = []
-
 								}
 
 							}
@@ -510,8 +512,16 @@
 
             updatedEntity.inputs.forEach(function (input) {
 
-                if (input.settings && input.settings.linked_inputs_names) {
-                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+                if (input.settings) {
+
+                	if (input.settings.linked_inputs_names) {
+						input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+					}
+
+                	if (input.settings.recalc_on_change_linked_inputs) {
+						input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.join(',')
+					}
+
                 }
 
             });

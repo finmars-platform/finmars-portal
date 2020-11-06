@@ -351,16 +351,15 @@
 }
 
 .custom-input-container.custom-input-preset1 {
-  .custom-input-label {
-  }
 
   .custom-input-borders .custom-input-content .flex-row input {
-    color: #f05a22;
+    color: @orange;
     font-weight: bold;
   }
 
-  .custom-input {
+  .custom-input, .custom-input-full-text {
     color: @orange;
+    font-weight: bold;
   }
 }
 
@@ -380,8 +379,9 @@
 }
 
 .custom-input-container.custom-input-is-valid {
-  .custom-input {
+  .custom-input, .custom-input-full-text {
     color: #015f01;
+    font-weight: bold;
   }
 
   .custom-input-indicator-btn {

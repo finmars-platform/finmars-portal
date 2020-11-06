@@ -417,13 +417,13 @@
                             (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
                             setItemSpecificSettings();
-                            /*if (scope.item.frontOptions.recalculated === 'input') {
+                            /* if (scope.item.frontOptions.recalculated === 'input') {
                                 scope.ciEventObj.event = {key: 'set_style_preset1'};
 
                             } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
                                 scope.ciEventObj.event = {key: 'set_style_preset2'};
 
-                            }*/
+                            } */
                             if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
                                 scope.ciEventObj.event = {key: 'set_style_preset1'};
                             }
@@ -432,7 +432,7 @@
 
                     });
 
-                    scope.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
+                    /* scope.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
 
                         var changedUserInputData;
 
@@ -449,7 +449,7 @@
 
                         }
 
-                    });
+                    }); */
                 };
 
                 scope.init = function () {

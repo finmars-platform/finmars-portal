@@ -1,13 +1,13 @@
 (function () {
 
-    let referenceTableService = require('../services/referenceTablesService');
+    let referenceTableService = require('../../../services/referenceTablesService');
 
-    let metaHelper = require('../helpers/meta.helper');
+    let metaHelper = require('../../meta.helper');
 
-    var uiService = require('../services/uiService');
-    let gridTableEvents = require('../services/gridTableEvents');
+    var uiService = require('../../../services/uiService');
+    let gridTableEvents = require('../../../services/gridTableEvents');
 
-    let GridTableHelperService = require('../helpers/gridTableHelperService');
+    let GridTableHelperService = require('../../gridTableHelperService');
 
     'use strict';
     module.exports = function (viewModel, $scope, $mdDialog) {
