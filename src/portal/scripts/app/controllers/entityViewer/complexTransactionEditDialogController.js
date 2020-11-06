@@ -530,7 +530,8 @@
             dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
             vm.userInputs = [];
-            vm.tabs.forEach(function (tab) {
+            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+            /*vm.tabs.forEach(function (tab) {
                 tab.layout.fields.forEach(function (field) {
                     if (field.attribute_class === 'userInput') {
                         vm.userInputs.push(field.attribute);
@@ -566,12 +567,15 @@
                 for (var i = 0; i < vm.transactionType.inputs.length; i++) {
 
                     if (vm.transactionType.inputs[i].name === userInput.name) {
+
                         userInput.tooltip = vm.transactionType.inputs[i].tooltip;
+                        userInput.verbose_name = vm.transactionType.inputs[i].verbose_name;
+
                     }
 
                 }
 
-            });
+            });*/
 
             inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
 
@@ -626,7 +630,6 @@
                 });
 
             }
-
 
             mapAttributesAndFixFieldsLayout();
 
@@ -693,7 +696,11 @@
             var inputs = paramsObj.inputs;
             var recalculationData = paramsObj.recalculationData;
 
-            rebookComplexTransaction(inputs, recalculationData);
+            transactionHelper.removeDeletedUserInputs(inputs, vm.transactionInputs);
+
+            if (inputs && inputs.length) {
+                rebookComplexTransaction(inputs, recalculationData);
+            }
 
         };
 
@@ -806,10 +813,20 @@
                             if (input.value_type === 100) {
                                 input.verbose_value_type = 'Relation';
 
-                                if (vm.complexTransactionData.values[key + '_object'].name) {
+                                /*if (vm.complexTransactionData.values[key + '_object'].name) {
                                     input.value = vm.complexTransactionData.values[key + '_object'].name
                                 } else {
                                     input.value = vm.complexTransactionData.values[key + '_object'].public_name
+                                }*/
+
+                                if (vm.complexTransactionData.values[key + '_object']) {
+
+                                    if (vm.complexTransactionData.values[key + '_object'].name) {
+                                        input.value = vm.complexTransactionData.values[key + '_object'].name
+                                    } else {
+                                        input.value = vm.complexTransactionData.values[key + '_object'].public_name
+                                    }
+
                                 }
 
                             }
@@ -1229,7 +1246,7 @@
                     }
                 })
 
-            } /*else {
+            } else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -1294,25 +1311,96 @@
                             resolve(data);
                         }).catch(function (data) {
 
-                            console.log('data', data);
+                            if (data.hasOwnProperty('message') && data.message.reason == 410) {
 
-                            vm.processing = false;
+                                vm.processing = false;
 
-                            $mdDialog.show({
-                                controller: 'ValidationDialogController as vm',
-                                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                targetEvent: $event,
-                                parent: angular.element(document.body),
-                                multiple: true,
-                                locals: {
-                                    validationData: {
-                                        errorData: data,
-                                        tableColumnsNames: ['Name of fields', 'Error Cause']
+                                $mdDialog.show({
+                                    controller: 'BookUniquenessWarningDialogController as vm',
+                                    templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+                                    targetEvent: $event,
+                                    parent: angular.element(document.body),
+                                    multiple: true,
+                                    locals: {
+                                        data: {
+                                            errorData: data
+                                        }
                                     }
-                                }
-                            });
+                                }).then(function (response) {
 
-                            reject(data);
+                                    if(response.reaction === 'cancel') {
+                                        // do nothing
+                                    }
+
+                                    if(response.reaction === 'skip') {
+                                        $mdDialog.hide({res: 'agree', data: null});
+                                    }
+
+                                    if(response.reaction === 'book_without_unique_code') {
+
+                                        // TODO refactor here
+                                        // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+
+                                        res.uniqueness_reaction = 2;
+
+                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                            vm.processing = false;
+
+                                            toastNotificationService.success('Transaction was successfully booked');
+
+                                            resolve(data);
+
+                                        })
+
+                                    }
+
+                                    if(response.reaction === 'overwrite') {
+
+                                        // TODO refactor here
+                                        //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+
+                                        res.uniqueness_reaction = 3;
+
+                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                            vm.processing = false;
+
+                                            toastNotificationService.success('Transaction was successfully booked');
+
+                                            resolve(data);
+
+                                        })
+
+                                    }
+
+
+                                })
+
+
+                            } else {
+
+                                console.log('data', data);
+
+                                vm.processing = false;
+
+                                $mdDialog.show({
+                                    controller: 'ValidationDialogController as vm',
+                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                    targetEvent: $event,
+                                    parent: angular.element(document.body),
+                                    multiple: true,
+                                    locals: {
+                                        validationData: {
+                                            errorData: data,
+                                            tableColumnsNames: ['Name of fields', 'Error Cause']
+                                        }
+                                    }
+                                });
+
+                                reject(data);
+
+                            }
 
                         });
                     });
@@ -1336,7 +1424,7 @@
 
                 })
 
-            }*/
+            }
 
         };
 

@@ -26,6 +26,7 @@
 
         vm.linkedToComps = [];
         vm.linkedByComps = [];
+
         var linkedToCompsIds = vm.item.settings.linked_components.active_object;
         var dashboardComponents = data.dashboardComponents;
 
@@ -119,7 +120,7 @@
         };
 
         var init = function () {
-
+            // Scripts for LINKING tab
             if (Array.isArray(linkedToCompsIds)) {
                 linkedToCompsIds.forEach(function (compId) {
 
@@ -146,6 +147,7 @@
                 }
 
             });
+            // < Scripts for LINKING tab >
         };
 
         init();

@@ -8,10 +8,17 @@
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
-
         vm.collapsingItems = {};
 
-        vm.items = data.items;
+        if (data.items) {
+
+            vm.items = JSON.parse(JSON.stringify(data.items));
+
+        } else {
+
+            vm.items = [];
+
+        }
 
         vm.isMultiselector = data.multiselector;
 

@@ -667,8 +667,6 @@
                     return "Pricing Policy";
                 case 'instruments.instrumenttype':
                     return "Instrument Types";
-                case 'integrations.pricingautomatedschedule':
-                    return 'Automated uploads schedule ';
                 case 'ui.editlayout':
                     return "Input Form";
                 case 'ui.listlayout':

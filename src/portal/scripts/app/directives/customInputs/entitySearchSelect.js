@@ -12,16 +12,16 @@
         return {
             restrict: 'E',
             scope: {
-                label: '<',
+                label: '=',
                 item: '=',
-                itemName: '<',
-                entityType: '<',
+                itemName: '=',
+                entityType: '=',
                 customButtons: '=',
-                customStyles: '<',
-                isDisabled: '<',
+                customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
-                callback: '&'
+                isDisabled: '=',
+                onChangeCallback: '&'
             },
             templateUrl: 'views/directives/customInputs/entity-search-select-view.html',
             link: function (scope, elem, attrs) {
@@ -39,11 +39,13 @@
                 // scope.smallOptions probable properties
                     // tooltipText: custom tolltip text
                     // notNull: turn on error mode if field is not filled
+                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
                 if (scope.smallOptions) {
-                    if (scope.smallOptions.tooltipText) {
-                        scope.tooltipText = scope.smallOptions.tooltipText;
-                    }
+
+                    scope.tooltipText = scope.smallOptions.tooltipText
+                    scope.dialogParent = scope.smallOptions.dialogParent
+
                 }
 
                 var stylePreset;
@@ -51,7 +53,7 @@
                 var inputContainer = elem[0].querySelector('.smartSearchInputContainer');
                 var inputElem = elem[0].querySelector('.smartSearchInputElem');
 
-                var entityIndicatorIcons = {
+                /*var entityIndicatorIcons = {
                     'account': {
                         type: 'class',
                         icon: 'fas fa-university'
@@ -89,12 +91,15 @@
                         icon: 'fas fa-tag'
                     }
 
-                }
+                }*/
 
                 scope.getInputContainerClasses = function () {
                     var classes = '';
 
-                    if (scope.error) {
+                    if (scope.isDisabled) {
+                        classes += "custom-input-is-disabled";
+
+                    } else if (scope.error) {
                         classes = 'custom-input-error';
 
                     } else if (stylePreset) {
@@ -103,6 +108,10 @@
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
 
+                    }
+
+                    if (scope.noIndicatorBtn) {
+                        classes += " no-indicator-btn";
                     }
 
                     return classes;
@@ -141,7 +150,7 @@
 
                         setTimeout(function () {
 
-                            scope.callback();
+                            scope.onChangeCallback();
                             scope.$apply();
 
                         }, 0);
@@ -155,9 +164,9 @@
                     var options = {
                         page: 1,
                         pageSize: 20,
-                    }
+                    };
 
-                    if (scope.inputText) {
+                	if (scope.inputText) {
 
                         var inputText = scope.inputText;
 
@@ -165,7 +174,7 @@
                             'short_name': inputText
                         }
 
-                    }
+                	}
 
                     entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
@@ -212,8 +221,7 @@
                     if (pressedKey === "Tab") {
                         closeDropdownMenu(true);
                     }
-
-                }
+                };
 
                 scope.openSmartSearch = function ($event) {
 
@@ -224,10 +232,22 @@
 
                     if (!scope.isDisabled) {
 
+                        var dialogParent = angular.element(document.body);
+
+                        if (scope.dialogParent) {
+
+                            var dialogParentElem = document.querySelector(scope.dialogParent);
+
+                            if (dialogParentElem) {
+                                dialogParent = dialogParentElem
+                            }
+
+                        }
+
                         $mdDialog.show({
                             controller: 'EntitySearchDialogController as vm',
                             templateUrl: 'views/dialogs/entity-search-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: dialogParent,
                             targetEvent: $event,
                             preserveScope: false,
                             autoWrap: true,
@@ -256,7 +276,7 @@
 
                                 setTimeout(function () {
 
-                                    scope.callback();
+                                    scope.onChangeCallback();
 
                                     scope.$apply();
 
@@ -270,63 +290,19 @@
 
                 };
 
-                /*$(elem).on('click', function (event) {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    if (!scope.isDisabled) {
-
-                        $mdDialog.show({
-                            controller: 'EntitySearchDialogController as vm',
-                            templateUrl: 'views/dialogs/entity-search-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: event,
-                            preserveScope: false,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            clickOutsideToClose: false,
-                            locals: {
-                                data: {
-                                    entityType: scope.entityType,
-                                    selectedItem: scope.item
-                                }
-                            }
-                        }).then(function (res) {
-
-                            if (res.status === 'agree') {
-
-                                scope.item = res.data.item.id;
-                                scope.inputText = res.data.item.name;
-
-                                console.log('res', res);
-
-                                setTimeout(function () {
-
-                                    scope.callback();
-
-                                    scope.$apply();
-
-                                }, 0)
-
-
-                            }
-                        });
-
-                    }
-
-                });*/
-
                 var applyCustomStyles = function () {
 
                     Object.keys(scope.customStyles).forEach(function (className) {
 
-                        var elemClass = '.' + className;
-                        var elemToApplyStyles = elem[0].querySelector(elemClass);
+                        var elemClass = "." + className;
+                        var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-                        if (elemToApplyStyles) {
-                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles.length) {
+
+                            elemToApplyStyles.forEach(function (htmlNode) {
+                                htmlNode.style.cssText = scope.customStyles[className];
+                            })
+
                         }
 
                     });
@@ -344,9 +320,12 @@
                     });
 
                     inputElem.addEventListener('focus', function () {
+
+						scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         getOptionsList();
+
                     });
 
                     inputElem.addEventListener('blur', function (event) {
@@ -417,32 +396,85 @@
 
                     });
 
-                }
+                    scope.$watch('entityType', function () {
+                        changeIconAndPlaceholder(scope.entityType);
+                    })
 
-                var init = function () {
+                };
 
-                    initEventListeners();
+                var changeIconAndPlaceholder = function (entityType) {
 
-                    scope.iconData = entityIndicatorIcons[scope.entityType];
+                    // scope.iconData = entityIndicatorIcons[scope.entityType];
 
                     var entitiesData = metaContentTypeService.getList();
 
                     for (var i = 0; i < entitiesData.length; i++) {
 
-                        if (entitiesData[i].entity === scope.entityType) {
+                        if (entitiesData[i].entity === entityType) {
                             scope.placeholderText = entitiesData[i].name;
                             break;
                         }
 
                     }
 
+                };
+
+                var init = function () {
+
+                    initEventListeners();
+
+                    changeIconAndPlaceholder(scope.entityType);
+
                     if (scope.customStyles) {
                         applyCustomStyles();
                     }
 
                     initScopeWatchers();
+                };
 
-                }
+                // Victor 08.10.2020
+                scope.createEntity = function ($event) {
+                    $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
+
+                    $mdDialog
+                        .show({
+                            controller: "EntityViewerAddDialogController as vm",
+                            templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            multiple: true,
+                            locals: {
+                                entityType: scope.entityType,
+                                entity: {},
+                                data: {},
+                            },
+                        })
+                        .then(function (res) {
+                            if (res && res.res === "agree") {
+                                var item = res.data;
+                                scope.selectOption(item);
+                            }
+                        });
+                };
+
+                scope.downloadEntity = function ($event) {
+                  $event.stopPropagation();
+
+                    console.log('scope.downloadEntity');
+
+                    $mdDialog.show({
+                        controller: 'InstrumentDownloadDialogController as vm',
+                        templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {}
+                        }
+                    }).then(function (res) {
+                        var item = res.data;
+                        scope.selectOption(item);
+                    })
+                };
 
                 init();
 

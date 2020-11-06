@@ -115,8 +115,8 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            })
-            .then(function (data) {
+
+            }).then(function (data) {
                 return new Promise(function (resolve, reject) {
                     resolve({status: 'deleted'});
                 });

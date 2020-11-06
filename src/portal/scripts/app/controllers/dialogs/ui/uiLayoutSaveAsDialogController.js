@@ -3,70 +3,70 @@
  */
 (function () {
 
-    'use strict';
+  'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
+  var logService = require('../../../../../../core/services/logService');
 
-    var uiService = require('../../../services/uiService');
+  var uiService = require('../../../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, options) {
+  module.exports = function ($scope, $mdDialog, options) {
 
-        logService.controller('UiLayoutSaveAsDialogController', 'initialized');
+    logService.controller('UiLayoutSaveAsDialogController', 'initialized');
 
-        var vm = this;
+    var vm = this;
 
-        vm.complexSaveAsLayoutDialog = false;
-        vm.userCodeIsTouched = false;
-        vm.userCodeError = false;
+    vm.complexSaveAsLayoutDialog = false;
+    vm.userCodeIsTouched = false;
+    vm.userCodeError = false;
 
-        var layoutsUserCodes = ["New Layout"];
+    var layoutsUserCodes = ["New Layout"];
 
-        if (options) {
+    if (options) {
 
-            if (options.complexSaveAsLayoutDialog) {
+      if (options.complexSaveAsLayoutDialog) {
 
-                vm.complexSaveAsLayoutDialog = true;
-                vm.entityType = options.complexSaveAsLayoutDialog.entityType;
+        vm.complexSaveAsLayoutDialog = true;
+        vm.entityType = options.complexSaveAsLayoutDialog.entityType;
 
-                uiService.getListLayout(vm.entityType).then(function (data) {
+        uiService.getListLayout(vm.entityType).then(function (data) {
 
-                    var layouts = data.results;
+          var layouts = data.results;
 
-                    layouts.map(function (layout) {
-                        layoutsUserCodes.push(layout.user_code);
-                    });
+          layouts.map(function (layout) {
+            layoutsUserCodes.push(layout.user_code);
+          });
 
-                });
+        });
 
-            }
+      }
 
-            if (options.layoutName) {
+      if (options.layoutName) {
 
-                vm.layoutName = options.layoutName;
+        vm.layoutName = options.layoutName;
 
-            }
+      }
 
-            if (options.layoutUserCode) {
-                vm.layoutUserCode = options.layoutUserCode;
-            }
+      if (options.layoutUserCode) {
+        vm.layoutUserCode = options.layoutUserCode;
+      }
 
-        }
+    }
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.cancel = function () {
+      $mdDialog.hide({ status: 'disagree' });
+    };
 
-        vm.agree = function ($event) {
+    vm.agree = function ($event) {
 
-            var layoutNameOccupied = false;
+      var layoutNameOccupied = false;
 
-            if (vm.complexSaveAsLayoutDialog) {
+      if (vm.complexSaveAsLayoutDialog) {
 
-                var i;
-                for (i = 0; i < layoutsUserCodes.length; i++) {
+        var i;
+        for (i = 0; i < layoutsUserCodes.length; i++) {
 
-                    if (layoutsUserCodes[i] === vm.layoutUserCode) {
-                        layoutNameOccupied = true;
+          if (layoutsUserCodes[i] === vm.layoutUserCode) {
+            layoutNameOccupied = true;
 
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
@@ -78,9 +78,25 @@
                             locals: {
                                 warning: {
                                     title: 'Warning',
-                                    description: 'There is already layout with such user code. Layouts should have unique user codes.'
+                                    description: 'Layout with such user code already exists. Do you want to overwrite?',
+                                    actionsButtons: [
+                                        {
+                                            name: "Cancel",
+                                            response: {}
+                                        },
+                                        {
+                                            name: "Overwrite",
+                                            response: {status: 'overwrite'}
+                                        }
+                                    ]
                                 }
                             }
+                        }).then(function (res) {
+
+                            if (res.status === 'overwrite') {
+                                $mdDialog.hide({status: 'overwrite', data: {name: vm.layoutName, user_code: vm.layoutUserCode}});
+                            }
+
                         });
 
                         break;
@@ -88,24 +104,32 @@
                 }
             }
 
-            if (!layoutNameOccupied) {
-                $mdDialog.hide({status: 'agree', data: {name: vm.layoutName, user_code: vm.layoutUserCode}});
-            }
+      if (!layoutNameOccupied) {
+        $mdDialog.hide({ status: 'agree', data: { name: vm.layoutName, user_code: vm.layoutUserCode } });
+      }
 
-        };
+    };
 
-        vm.validateUserCode = function () {
+		vm.change = function ($event) {
+			if (vm.layoutName.length != 0) {
+				vm.userCodeIsTouched = true;
+			}
+		};
 
-            var expression = /^\w+$/;
+		vm.validateUserCode = function () {
 
-            if (expression.test(vm.layoutUserCode)) {
-                vm.userCodeError = false;
-            } else {
-                vm.userCodeError = true;
-            }
+			var expression = /^\w+$/;
+			vm.userCodeIsTouched = true;
 
-        };
+			if (expression.test(vm.layoutUserCode)) {
 
-    }
+				vm.userCodeError = false;
 
-}());
+			} else {
+				vm.userCodeError = true;
+			}
+
+		};
+
+  };
+})();

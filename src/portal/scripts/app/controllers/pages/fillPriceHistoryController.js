@@ -35,22 +35,6 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.automatedUploads = function ($event) {
-            $mdDialog.show({
-                controller: 'AutomatedUploadsHistoryDialogController as vm',
-                templateUrl: 'views/dialogs/automated-uploads-history-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log('res', res.data);
-
-                }
-            });
-        };
-
         vm.uploadPrice = function ($event) {
             vm.readyStatus.processing = true;
 
