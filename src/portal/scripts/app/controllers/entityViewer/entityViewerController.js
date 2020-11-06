@@ -75,6 +75,46 @@
             //
             // });
 
+            var updateTableAfterEntitiesDeletion = function (deletedEntitiesIds) {
+
+                var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
+                var objects = vm.entityViewerDataService.getObjects();
+
+                objects.forEach(function (obj) {
+
+                    if (deletedEntitiesIds.includes(obj.id)) {
+
+                        var parent = vm.entityViewerDataService.getData(obj.___parentId)
+
+                        // if deleted entities shown, mark them
+                        if (evOptions.entity_filters && evOptions.entity_filters.includes('deleted')) {
+
+                            parent.results.forEach(function (resultItem) {
+
+                                if (deletedEntitiesIds.includes(resultItem.id)) {
+                                    resultItem.is_deleted = true
+                                }
+
+                            });
+
+                        } else { // if deleted entities hidden, remove them
+
+                            parent.results = parent.results.filter(function (resultItem) {
+                                return !deletedEntitiesIds.includes(resultItem.id);
+                            });
+
+                        }
+
+                        vm.entityViewerDataService.setData(parent);
+
+                    }
+
+                });
+
+                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+            };
+
             var initTransitionHooks = function () {
 
                 deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
@@ -262,25 +302,7 @@
 
                                     if (res.status === 'agree') {
 
-                                        var objects = vm.entityViewerDataService.getObjects();
-
-                                        objects.forEach(function (obj) {
-
-                                            if (res.data.ids.indexOf(obj.id) !== -1) {
-
-                                                var parent = vm.entityViewerDataService.getData(obj.___parentId)
-
-                                                parent.results = parent.results.filter(function (resultItem) {
-                                                    return res.data.ids.indexOf(resultItem.id) === -1
-                                                });
-
-                                                vm.entityViewerDataService.setData(parent)
-
-                                            }
-
-                                        });
-
-                                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                        updateTableAfterEntitiesDeletion(res.data.ids);
 
                                     }
                                 });
@@ -311,7 +333,7 @@
 
                                                 if (res.data.action === 'delete') {
 
-                                                    var objects = vm.entityViewerDataService.getObjects();
+                                                    /* var objects = vm.entityViewerDataService.getObjects();
 
                                                     objects.forEach(function (obj) {
 
@@ -329,7 +351,8 @@
 
                                                     });
 
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
+                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
                                                 } else {
 
@@ -462,7 +485,7 @@
 
                                                 if (res.data.action === 'delete') {
 
-                                                    var objects = vm.entityViewerDataService.getObjects();
+                                                    /* var objects = vm.entityViewerDataService.getObjects();
 
                                                     objects.forEach(function (obj) {
 
@@ -480,7 +503,8 @@
 
                                                     });
 
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
+                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
                                                 } else {
 
@@ -635,7 +659,7 @@
 
                                                 if (res.data.action === 'delete') {
 
-                                                    var objects = vm.entityViewerDataService.getObjects();
+                                                    /* var objects = vm.entityViewerDataService.getObjects();
 
                                                     objects.forEach(function (obj) {
 
@@ -653,7 +677,8 @@
 
                                                     });
 
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
+                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
                                                 } else {
 

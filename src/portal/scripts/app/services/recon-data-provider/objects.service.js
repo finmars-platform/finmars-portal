@@ -28,6 +28,7 @@
                 var groupTypes = entityViewerDataService.getGroups();
 
                 items = filterService.filterTableRows(items, regularFilters);
+
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
                 if (options.ordering) {
