@@ -19,6 +19,8 @@
         </div>
     </div>
 
+    <md-button  data-ng-if="missingPricesData.items.length" class="md-raised md-warn" data-ng-click="openMissingPricesDialog($event)">Warning ({{missingPricesData.items.length}})</md-button>
+
     <div data-ng-if="isReport" layout="column">
         <div data-ng-if="entityType === 'balance-report' || entityType === 'pl-report'">
             <md-card class="g-sidebar-report-card">

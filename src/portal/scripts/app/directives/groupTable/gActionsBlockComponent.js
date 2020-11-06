@@ -60,7 +60,7 @@
                 var dleEventIndex;
 
                 // TMP LOGIC FOR REPORT DEBUG STARTS
-                scope.isSqlReport = window.location.search.indexOf('sql=true') !== -1;
+                // scope.isSqlReport = window.location.search.indexOf('sql=true') !== -1;
 
                 scope.loadingDiff = false
 
@@ -1991,6 +1991,7 @@
                             scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
 
                         })
+
 
                     }
 

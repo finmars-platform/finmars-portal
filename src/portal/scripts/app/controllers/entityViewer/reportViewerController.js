@@ -21,6 +21,7 @@
         var AttributeDataService = require('../../services/attributeDataService');
 
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
+        var pricesCheckerService = require('../../services/reports/pricesCheckerService');
 
         var expressionService = require('../../services/expression.service');
         var middlewareService = require('../../services/middlewareService');
@@ -929,6 +930,7 @@
 
                 var finishSetLayout = function () {
 
+                    // REPORT REQUEST STARTS HERE
                     rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                     var additions = vm.entityViewerDataService.getAdditions();
@@ -966,6 +968,8 @@
                     }).catch(function () {
                         onSetLayoutEnd();
                     }); */
+
+
                     rvSharedLogicHelper.calculateReportDatesExprs().then(function () {
                         rvSharedLogicHelper.onSetLayoutEnd();
 
