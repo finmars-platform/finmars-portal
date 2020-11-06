@@ -76,6 +76,9 @@ module.exports = {
     // < Trigger Entity Viewer methods from Split Panel >
 
     // Event for dashboard
-    'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR'
+    'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR',
     // < Event for dashboard >
+
+    'MISSING_PRICES_LOAD_END': 'MISSING_PRICES_LOAD_END'
+
 };
