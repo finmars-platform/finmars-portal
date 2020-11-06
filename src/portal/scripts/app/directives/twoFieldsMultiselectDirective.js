@@ -258,6 +258,10 @@
         });
 
         scope.$watch('items', function () {
+            if (!scope.items) {
+                return;
+            }
+
             items = JSON.parse(JSON.stringify(scope.items));
         });
 
@@ -373,9 +377,8 @@
               } else if (scope.getDataMethod) {
 
                 scope.getDataMethod().then(function (resData) {
-
                   scope.items = resData.results;
-                  items = JSON.parse(JSON.stringify(scope.items));
+                  items = JSON.parse(JSON.stringify(resData.results));
                   resolve(items);
 
                 }).catch(function (error) {
@@ -394,7 +397,6 @@
         }
 
         $(elem).click(function (event) {
-
           event.preventDefault();
           event.stopPropagation();
 

@@ -736,6 +736,13 @@
                             entityViewerDataService: scope.evDataService,
                             entityViewerEventService: scope.evEventService
                         }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            scope.evEventService.dispatchEvent(evEvents.ENTITY_VIEWER_SETTINGS_CHANGED);
+                        }
+
                     });
 
                 };
@@ -1097,6 +1104,7 @@
                             });
 
                             var viewTypeChangedEI = scope.evEventService.addEventListener(evEvents.VIEW_TYPE_CHANGED, function () {
+
                                 var originalViewType = activeLayoutConfig.data.viewType;
                                 var originalViewSettings = activeLayoutConfig.data.viewSettings;
 
@@ -1121,6 +1129,20 @@
 
                             });
 
+                        } else {
+
+                            var evSettingsIndex = scope.evEventService.addEventListener(evEvents.ENTITY_VIEWER_SETTINGS_CHANGED, function () {
+
+                                var originalEvSettings = activeLayoutConfig.data.ev_options;
+                                var evSettings = scope.evDataService.getEntityViewerOptions();
+
+                                if (!isLayoutTheSame(originalEvSettings, evSettings)) {
+                                    scope.layoutChanged = true;
+                                    removeChangesTrackingEventListeners();
+                                }
+
+                            });
+
                         }
 
                         changesTrackingEvents.GROUPS_CHANGE = groupsChangeEventIndex;
@@ -1133,10 +1155,13 @@
                         changesTrackingEvents.TOGGLE_FILTER_AREA = tfaEventIndex;
                         changesTrackingEvents.REPORT_OPTIONS_CHANGE = roChangeEventIndex;
                         changesTrackingEvents.REPORT_TABLE_VIEW_CHANGED = rtvChangedEventIndex;
+                        // Report viewer specific tracking
                         changesTrackingEvents.REPORT_EXPORT_OPTIONS_CHANGED = reoChangeEventIndex;
                         changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
                         changesTrackingEvents.ENTITY_VIEWER_PAGINATION_CHANGED = evpcEventIndex;
                         changesTrackingEvents.VIEW_TYPE_CHANGED = viewTypeChangedEI;
+                        // Entity viewer specific tracking
+                        changesTrackingEvents.ENTITY_VIEWER_SETTINGS_CHANGED = evSettingsIndex;
                     }
 
                 };

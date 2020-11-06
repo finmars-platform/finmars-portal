@@ -364,7 +364,8 @@
 
                     vm.entityViewerDataService.setReconciliationData(vm.reconciliationData); // needed because on GroupChange we do evDataService.resetData
 
-                    reconDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                    // reconDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+					reconDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
                 });
 
