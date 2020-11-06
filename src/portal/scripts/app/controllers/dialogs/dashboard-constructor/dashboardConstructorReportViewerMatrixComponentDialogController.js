@@ -6,8 +6,9 @@
     'use strict';
 
     var uiService = require('../../../services/uiService');
-    var dashboardHelper = require('../../../helpers/dashboard.helper');
     var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
+
+    var dashboardHelper = require('../../../helpers/dashboard.helper');
 
     module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
 
@@ -152,7 +153,12 @@
 
         vm.clearSelect = function (item, propToDelete) {
             delete item[propToDelete];
-        }
+        };
+
+        // Victor 2020.10.26 Issue #47
+        vm.exportToDashboards = function () {
+            dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
+        };
 
         vm.getAttributes = function(){
 

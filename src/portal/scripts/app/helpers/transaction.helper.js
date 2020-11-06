@@ -111,9 +111,37 @@
     };
     // < updating user inputs from input form editor layout using user inputs inside transaction type >
 
+    var removeDeletedUserInputs = function (inputsList, actualUserInputs) {
+
+        inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
+
+            let inputDeleted = true;
+
+            for (let i = 0; i < actualUserInputs.length; i++) {
+
+                if (inputName === actualUserInputs[i].name) {
+
+                    inputDeleted = false;
+                    break;
+
+                }
+
+            }
+
+            if (inputDeleted) {
+                inputsList.splice(index, 1);
+            }
+
+        });
+
+        // return inputsList;
+
+    }
+
     module.exports = {
         isUserInputUsedInTTypeExpr: isUserInputUsedInTTypeExpr,
-        updateTransactionUserInputs: updateTransactionUserInputs
+        updateTransactionUserInputs: updateTransactionUserInputs,
+        removeDeletedUserInputs: removeDeletedUserInputs
     }
 
 }());
