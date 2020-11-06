@@ -65,6 +65,12 @@
 
         vm.agree = function () {
 
+            if (vm.item.data && vm.item.data.hasNoDelete) {
+                vm.item.data.nodelete = '';
+            } else {
+                delete vm.item.data.nodelete;
+            }
+
             dataProcedureService.update(vm.item.id, vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
@@ -74,6 +80,8 @@
 
 
         vm.getItem = function () {
+
+
 
             dataProcedureService.getByKey(vm.itemId).then(function (data) {
 

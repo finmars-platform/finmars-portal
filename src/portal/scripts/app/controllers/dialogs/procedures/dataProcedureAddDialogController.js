@@ -63,6 +63,12 @@
 
         vm.agree = function () {
 
+            if (vm.item.data && vm.item.data.hasNoDelete) {
+                vm.item.data.nodelete = '';
+            } else {
+                delete vm.item.data.nodelete;
+            }
+
             dataProcedureService.create(vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
