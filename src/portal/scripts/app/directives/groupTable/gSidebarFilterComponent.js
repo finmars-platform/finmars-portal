@@ -51,6 +51,10 @@
                 scope.viewContext = scope.evDataService.getViewContext();
                 scope.isLayoutDefault = false;
 
+                scope.missingPricesData = {
+                    items: []
+                }
+
                 scope.isReportFilterFromDashboard = scope.evDataService.dashboard.isReportDateFromDashboard();
 
                 scope.fields = {};
@@ -330,6 +334,20 @@
                     setTimeout(function () {
                         scope.$apply();
                     }, 200)
+                };
+
+                scope.openMissingPricesDialog = function($event) {
+
+                    $mdDialog.show({
+                        controller: 'ReportPriceCheckerDialogController as vm',
+                        templateUrl: 'views/dialogs/report-price-checker-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: scope.missingPricesData
+                        }
+                    })
+
                 };
 
                 scope.openPeriodsDialog = function ($event) {
@@ -1092,6 +1110,12 @@
                 };
 
                 var init = function () {
+
+                    scope.evEventService.addEventListener(evEvents.MISSING_PRICES_LOAD_END, function () {
+
+                        scope.missingPricesData = scope.evDataService.getMissingPrices()
+
+                    })
 
                     uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
