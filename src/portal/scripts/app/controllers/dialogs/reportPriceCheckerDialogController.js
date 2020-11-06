@@ -24,10 +24,11 @@
         vm.downloadPriceHistoryCSV = function(event) {
 
             var columns = [
-                {key:'date', name: "Date"},
                 {key:'pricing_policy_user_code', name: "Pricing Policy User Code"},
-                {key:'name', name: "Name"},
-                {key: 'user_code', name: "User Code"}
+                {key:'date', name: "Date"},
+                {key: 'user_code', name: "Instrument User Code"},
+                {key: 'principal_price', name: "Principal Price"},
+                {key: 'accrued_price', name: "Accrued Price"}
                 ];
 
             var blobPartOld = convertReportHelper.convertFlatListToCSV(vm.missingHistoryPrices, columns);
@@ -41,10 +42,10 @@
         vm.downloadFxRatesCSV = function($event) {
 
             var columns = [
-                {key:'date', name: "Date"},
                 {key:'pricing_policy_user_code', name: "Pricing Policy User Code"},
-                {key:'name', name: "Name"},
-                {key: 'user_code', name: "User Code"}
+                {key:'date', name: "Date"},
+                {key: 'user_code', name: "Currency User Code"},
+                {key: 'fx_rate', name: "FX Rate"}
                 ];
 
             var blobPartOld = convertReportHelper.convertFlatListToCSV(vm.missingFxRates, columns);
@@ -58,10 +59,10 @@
         vm.downloadHistoricalFxRatesCSV = function($event) {
 
             var columns = [
-                {key:'accounting_date', name: "Date"},
                 {key:'pricing_policy_user_code', name: "Pricing Policy User Code"},
-                {key:'transaction_currency_name', name: "Currency Name"},
-                {key: 'transaction_currency_user_code', name: "Currency User Code"}
+                {key:'transaction_currency_user_code', name: "Currency User Code"},
+                {key:'accounting_date', name: "Date"},
+                {key:'fx_rate', name: "FX Rate"}
                 ];
 
             var blobPartOld = convertReportHelper.convertFlatListToCSV(vm.missingHistoricalFxRates, columns);
