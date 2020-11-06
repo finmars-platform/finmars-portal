@@ -91,7 +91,7 @@
                 page: 1
             };
 
-            pricingPolicyService.getList(opitons).then(function (data) {
+            pricingPolicyService.getListLight(opitons).then(function (data) {
 
                 vm.pricingPolicies = data.results;
                 vm.readyStatus.pricingPolicy = true;
@@ -114,7 +114,7 @@
                 pageSize: 1000
             };
 
-            currencyService.getList(options).then(function (data) {
+            currencyService.getListLight(options).then(function (data) {
 
                 vm.currencies = data.results;
                 vm.readyStatus.currency = true;
@@ -143,7 +143,7 @@
         };
 
         vm.getPortfolios = function (options) {
-            return portfolioService.getList(options);
+            return portfolioService.getListLight(options);
         };
 
         /*vm.getAccounts = function () {
@@ -160,7 +160,7 @@
             });
         };*/
         vm.getAccounts = function (options) {
-            return accountService.getList(options);
+            return accountService.getListLight(options);
         };
 
         /*vm.getStrategies1 = function () {
@@ -178,7 +178,7 @@
         };*/
 
         vm.getStrategies1 = function (options) {
-            return strategyService.getList(1, options);
+            return strategyService.getListLight(1, options);
         };
 
         /*vm.getStrategies2 = function () {
@@ -196,7 +196,7 @@
         };*/
 
         vm.getStrategies2 = function (options) {
-            return strategyService.getList(2, options);
+            return strategyService.getListLight(2, options);
         };
 
         /*vm.getStrategies3 = function () {
@@ -214,7 +214,7 @@
         };*/
 
         vm.getStrategies3 = function (options) {
-            return strategyService.getList(3, options);
+            return strategyService.getListLight(3, options);
         };
 
         vm.getTransactionClasses = function () {

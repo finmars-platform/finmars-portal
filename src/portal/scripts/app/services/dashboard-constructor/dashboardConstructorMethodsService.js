@@ -2,6 +2,9 @@
 
     'use strict';
 
+    var uiService = require('../uiService');
+    var metaHelper = require('../../helpers/meta.helper');
+
     var getDataForComponentsSelector = function (viewModel, componentsForLinking, itemId) {
 
         var getComponentsTypesByContentType = function (contentType) {
@@ -57,8 +60,76 @@
 
     };
 
+    // Victor 2020.10.26
+    const createCopyOfComponent = (component, id, namePostfix) => {
+        const copy = metaHelper.recursiveDeepCopy(component, false);
+        copy.id = id;
+        copy.name = `${copy.name} ${namePostfix}`
+
+        if (copy.settings && copy.settings.linked_components) {
+            copy.settings.linked_components = {};
+        }
+
+        return copy;
+
+    };
+
+    // Victor 2020.10.26
+    const exportComponentToDashboards = async (viewModel, $mdDialog, dataService) => {
+
+        const dashboardLayouts = await uiService.getDashboardLayoutList()
+            .then((data) => data.results);
+
+        const compIdPattern = new Date().getTime() + '_' + dashboardLayouts.length;
+        const newId = dataService.___generateId(compIdPattern);
+
+        const {name: currentDashboardLayoutName} = dataService.getData();
+        const namePostfix = `(copied from dashboard: ${currentDashboardLayoutName})`;
+
+        const exportedComponent = createCopyOfComponent(viewModel.item, newId, namePostfix);
+
+        const {status, selected: targetDashboardLayouts} = await $mdDialog.show({
+            controller: "ExpandableItemsSelectorDialogController as vm",
+            templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
+            multiple: true,
+            locals: {
+                data: {
+                    dialogTitle: 'Select dashboards to export',
+                    items: dashboardLayouts,
+                    multiselector: true
+                }
+            }
+        });
+
+        if (status !== 'agree' || targetDashboardLayouts.length === 0) {
+            return;
+        }
+
+        targetDashboardLayouts.forEach(targetLayout => {
+            targetLayout.data.components_types.push(exportedComponent);
+        });
+
+        const updatedLayouts = await Promise.all(targetDashboardLayouts.map(layout => uiService.updateDashboardLayout(layout.id, layout)));
+
+        return $mdDialog.show({
+            controller: 'InfoDialogController as vm',
+            templateUrl: 'views/info-dialog-view.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false,
+            multiple: true,
+            locals: {
+                info: {
+                    title: 'Success',
+                    description: `Dashboard Layouts are Updated (${updatedLayouts.map(({name}) => name).join(', ')})`
+                }
+            }
+        });
+
+    }
+
     module.exports = {
-        getDataForComponentsSelector: getDataForComponentsSelector
+        getDataForComponentsSelector: getDataForComponentsSelector,
+        exportComponentToDashboards: exportComponentToDashboards
     }
 
 }());

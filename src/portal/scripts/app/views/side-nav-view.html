@@ -327,6 +327,15 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li>
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.run-data-procedure">
+                                        <span class="side-nav-title">Import From Bank</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -397,17 +406,6 @@
                                         <span class="side-nav-title">
                                             Prices/FX<br>
                                             (from provider)
-                                        </span>
-                                        <span class="md-visually-hidden"
-                                              data-ng-if="isSelected()">current page</span>
-                                    </md-button>
-                                </li>
-                                <li data-ng-if="vm.accessTable.configuration_mapping_tables">
-                                    <md-button ui-sref-active="active"
-                                               class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.import.mapping-tables">
-                                        <span class="side-nav-title">
-                                            Mapping Tables
                                         </span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -635,6 +633,18 @@
                                             </md-button>
                                         </li>
 
+                                        <li data-ng-if="vm.accessTable.configuration_mapping_tables">
+                                            <md-button ui-sref-active="active"
+                                                       class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.import.mapping-tables">
+                                                <span class="side-nav-title">
+                                                    Mapping Tables
+                                                </span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
                                         <li data-ng-if="vm.accessTable.configuration_template">
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.template-layout-manager">
@@ -676,14 +686,22 @@
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.pricing-procedure">
-                                                <span class="side-nav-title">Procedures</span>
+                                                <span class="side-nav-title">Pricing Procedures</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
                                         </li>
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.pricing-schedules">
+                                                       ui-sref="app.data-procedure">
+                                                <span class="side-nav-title">Data Procedures</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.schedules">
                                                 <span class="side-nav-title">Schedules</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -715,14 +733,6 @@
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.settings.instrument-import">
                                                 <span class="side-nav-title">Instrument Schemes</span>
-                                                <span class="md-visually-hidden"
-                                                      data-ng-if="isSelected()">current page</span>
-                                            </md-button>
-                                        </li>
-                                        <li data-ng-if="vm.accessTable.configuration_automated_price_downloads">
-                                            <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.automated-uploads-history">
-                                                <span class="side-nav-title">Automated Price Schedule</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>

@@ -9,7 +9,10 @@
 			   data-ng-model="availableSearchTerm"
 			   class="two-fields-filter-input">
 		<div class="all-options-field two-fields-options">
-			<p ng-repeat="option in allOptions | orderBy: nameProperty | filter: {name: availableSearchTerm} as results track by option.id"
+
+<!--			Victor 21.10.2020 I need remove sorting pipe because it break already sorted array-->
+			<!--			<p ng-repeat="option in allOptions | orderBy: nameProperty | filter: {[nameProperty]: availableSearchTerm} as results track by option.id"-->
+			<p ng-repeat="option in allOptions | filter: {[nameProperty]: availableSearchTerm} as results track by option.id"
 			   ng-bind="option['{{nameProperty}}']"
 			   class="two-fields-available-option"
 			   data-member-group-id="{{option.id}}"

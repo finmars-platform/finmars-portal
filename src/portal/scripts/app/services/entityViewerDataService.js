@@ -113,6 +113,8 @@
                 data: null
             },
             allRowsSelected: false,
+            activeGroupTypeSort: null,
+            activeColumnSort: null,
             rootEntityViewer: false,
             splitPanelIsActive: false,
             verticalSplitPanelIsActive: false,
@@ -142,7 +144,7 @@
             viewSettings: {},
             lastViewSettings: {},
             ev_options: {},
-            activeLayoutConfiguration: {},
+            activeLayoutConfiguration: {}, // used to check layout for changes
             interfaceLayout: null,
             requestParameters: {},
             activeRequestParametersId: null,

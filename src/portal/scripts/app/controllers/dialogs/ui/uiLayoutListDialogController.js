@@ -44,7 +44,8 @@
 
             return new Promise(function (resolve, reject) {
 
-                uiService.getListLayout(options.entityType).then(function (data) {
+                uiService.getListLayout(options.entityType, {pageSize: 1000}).then(function (data) {
+
                     vm.items = data.results;
                     layoutsList = data.results;
 
@@ -72,6 +73,7 @@
 
                     vm.readyStatus.items = true;
                     $scope.$apply();
+
                 });
 
             })
@@ -106,19 +108,25 @@
                     layoutData.user_code = res.data.user_code;
                     layout.user_code = res.data.user_code;
 
-                    uiService.updateListLayout(layoutData.id, layoutData).then(function () {
+                    uiService.updateListLayout(layoutData.id, layoutData).then(function (data) {
 
-                        var listLayout = entityViewerDataService.getListLayout();
-                        listLayout.name = layoutData.name;
-                        entityViewerDataService.setListLayout(listLayout);
+						var listLayout = entityViewerDataService.getListLayout();
 
-                        if (isRootEntityViewer) {
-                            middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
-                        } else {
-                            middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
-                        }
+                    	if (listLayout.id && listLayout.id === data.id) {
 
-                        entityViewerEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
+                    		listLayout.name = data.name;
+							listLayout.modified = data.name;
+							entityViewerDataService.setListLayout(listLayout);
+
+							if (isRootEntityViewer) {
+								middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
+							} else {
+								middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
+							}
+
+							entityViewerEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
+
+						}
 
                     });
 
@@ -159,6 +167,7 @@
         };
 
         vm.selectLayout = function (layout, $event) {
+
             $event.stopPropagation();
 
             if (!vm.selectedLayout || layout.id !== vm.selectedLayout.id) {
@@ -180,6 +189,15 @@
 
         };
 
+        vm.openLayout = function (layout, $event) {
+
+            $event.stopPropagation();
+
+            vm.selectedLayout = layout;
+
+            vm.agree();
+        };
+
         vm.setAsDefault = function ($event, item, index) {
 
             $event.stopPropagation();
@@ -191,38 +209,47 @@
                 if (!layoutData.is_default) {
 
                     for (var i = 0; i < vm.items.length; i++) {
-                        var layout = vm.items[i];
+
+                    	var layout = vm.items[i];
 
                         if (layout.is_default) {
 
                             layout.is_default = false;
                             layoutsList[i].is_default = false;
-
-                            uiService.updateListLayout(layoutsList[i].id, layoutsList[i]);
                             break;
                         }
+
                     }
 
                     layoutData.is_default = true;
                     item.is_default = true;
-                    uiService.updateListLayout(layoutData.id, layoutData);
 
-                    // needed to update is_default on front-end
-                    var listLayout = entityViewerDataService.getListLayout();
-                    var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
+                    uiService.updateListLayout(layoutData.id, layoutData).then(function (data) {
 
-                    if (listLayout.id === layoutData.id) {
-                        listLayout.is_default = true;
-                        activeLayoutConfig.is_default = true;
-                    } else {
-                        listLayout.is_default = false;
-                        activeLayoutConfig.is_default = false;
-                    }
+                    	// needed to update is_default on front-end
+						var listLayout = entityViewerDataService.getListLayout();
+						var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
 
-                    entityViewerDataService.setListLayout(listLayout);
-                    entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});
+						if (listLayout.id === layoutData.id) { // if active layout made default
 
-                    entityViewerEventService.dispatchEvent(evEvents.DEFAULT_LAYOUT_CHANGE);
+							listLayout.is_default = true
+							listLayout.modified = data.modified
+							activeLayoutConfig.is_default = true
+							activeLayoutConfig.is_default = true
+
+						} else {
+
+							listLayout.is_default = false
+							activeLayoutConfig.is_default = false
+
+						}
+
+						entityViewerDataService.setListLayout(listLayout);
+						entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});
+
+						entityViewerEventService.dispatchEvent(evEvents.DEFAULT_LAYOUT_CHANGE);
+
+					});
 
                 }
 

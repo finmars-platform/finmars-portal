@@ -347,7 +347,8 @@
             dataConstructorLayout = JSON.parse(JSON.stringify(transactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
             vm.userInputs = [];
-            vm.tabs.forEach(function (tab) {
+            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+            /*vm.tabs.forEach(function (tab) {
                 tab.layout.fields.forEach(function (field) {
                     if (field.attribute_class === 'userInput') {
                         vm.userInputs.push(field.attribute);
@@ -383,7 +384,7 @@
                     userInput.frontOptions.autocalculated = true;
                 }
 
-            });
+            });*/
 
             inputsWithCalculations = transactionData.transaction_type_object.inputs;
 
@@ -399,7 +400,8 @@
 
                             if (inputWithCalc.can_recalculate === true) {
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    // iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    iconObj: {type: 'angular-material', icon: 'refresh'},
                                     tooltip: 'Recalculate this field',
                                     caption: '',
                                     classes: '',
@@ -415,7 +417,8 @@
                                 var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
 
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                                    // iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                                    iconObj: {type: 'angular-material', icon: 'loop'},
                                     tooltip: 'Recalculate linked fields',
                                     caption: '',
                                     classes: '',
@@ -528,7 +531,11 @@
             var inputs = paramsObj.inputs;
             var recalculationData = paramsObj.recalculationData;
 
-            bookComplexTransaction(inputs, recalculationData);
+            transactionHelper.removeDeletedUserInputs(inputs, vm.transactionType.inputs);
+
+            if (inputs && inputs.length) {
+                bookComplexTransaction(inputs, recalculationData);
+            }
 
         };
 
@@ -689,7 +696,7 @@
         };
 
         vm.getAttributeTypes = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
@@ -921,24 +928,98 @@
 
                         }).catch(function (data) {
 
-                            vm.processing = false;
+                            console.log('here?', data);
 
-                            $mdDialog.show({
-                                controller: 'ValidationDialogController as vm',
-                                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                targetEvent: $event,
-                                parent: angular.element(document.body),
-                                multiple: true,
-                                locals: {
-                                    validationData: {
-                                        errorData: data,
-                                        tableColumnsNames: ['Name of fields', 'Error Cause'],
-                                        entityType: 'complex-transaction'
+                            if (data.hasOwnProperty('message') && data.message.reason == 410) {
+
+                                vm.processing = false;
+
+                                $mdDialog.show({
+                                    controller: 'BookUniquenessWarningDialogController as vm',
+                                    templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+                                    targetEvent: $event,
+                                    parent: angular.element(document.body),
+                                    multiple: true,
+                                    locals: {
+                                        data: {
+                                            errorData: data
+                                        }
                                     }
-                                }
-                            });
+                                }).then(function (response) {
 
-                            reject(data);
+                                    console.log('response', response);
+
+                                    if(response.reaction === 'cancel') {
+                                        // do nothing
+                                    }
+
+                                    if(response.reaction === 'skip') {
+                                        $mdDialog.hide({res: 'agree', data: null});
+                                    }
+
+                                    if(response.reaction === 'book_without_unique_code') {
+
+                                        // TODO refactor here
+                                        // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+
+                                        res.uniqueness_reaction = 2;
+
+                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                            vm.processing = false;
+
+                                            toastNotificationService.success('Transaction was successfully booked');
+
+                                            resolve(data);
+
+                                        })
+
+                                    }
+
+                                    if(response.reaction === 'overwrite') {
+
+                                        // TODO refactor here
+                                        //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+
+                                        res.uniqueness_reaction = 3;
+
+                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                            vm.processing = false;
+
+                                            toastNotificationService.success('Transaction was successfully booked');
+
+                                            resolve(data);
+
+                                        })
+
+                                    }
+
+                                })
+
+
+                            } else {
+
+                                vm.processing = false;
+
+                                $mdDialog.show({
+                                    controller: 'ValidationDialogController as vm',
+                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                    targetEvent: $event,
+                                    parent: angular.element(document.body),
+                                    multiple: true,
+                                    locals: {
+                                        validationData: {
+                                            errorData: data,
+                                            tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                            entityType: 'complex-transaction'
+                                        }
+                                    }
+                                });
+
+                                reject(data);
+
+                            }
 
                         });
 
@@ -1367,7 +1448,7 @@
 
                 if (inputsWithCalculations) {
 
-                    var i,a;
+                    var i, a;
                     for (i = 0; i < vm.userInputs.length; i++) {
 
                         if (vm.userInputs[i].key === fieldKey) {

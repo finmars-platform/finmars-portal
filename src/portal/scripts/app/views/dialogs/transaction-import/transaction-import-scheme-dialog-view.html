@@ -37,6 +37,36 @@
                                     Selector Values
                                 </md-button>
                             </div>
+
+                            <div layout="row">
+                                <md-input-container>
+                                    <label for="">Error handling</label>
+                                    <md-select data-ng-model="vm.scheme.error_handler">
+                                        <md-option value="continue">Continue</md-option>
+                                        <md-option value="break">Break on first error</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container>
+                                    <label>Separator</label>
+                                    <md-select data-ng-model="vm.scheme.delimiter">
+                                        <md-option value=",">Comma (,)</md-option>
+                                        <md-option value=";">Semicolon (;)</md-option>
+                                        <md-option value="\t">Tab</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container style="width: 245px;">
+                                    <label>Import Rules - if object is not found</label>
+                                    <md-select
+                                            data-ng-model="vm.scheme.missing_data_handler">
+                                        <md-option value="throw_error">Treat as Error</md-option>
+                                        <md-option value="set_defaults">Replace with Default Value</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                            </div>
+
                         </md-card-content>
                     </md-card>
                 </div>
@@ -179,6 +209,20 @@
 
                                     <md-tab label="Booking">
                                         <md-content class="md-padding">
+
+                                            <div class="m-b-16">
+
+                                                <md-input-container style="width: 260px;">
+                                                    <label >Transaction Unique Code Settings</label>
+                                                    <md-select data-ng-model="vm.scheme.book_uniqueness_settings">
+                                                        <md-option ng-value="1" >Skip</md-option>
+                                                        <md-option ng-value="2" >Book without Unique Code</md-option>
+                                                        <md-option ng-value="3" >Overwrite</md-option>
+                                                        <md-option ng-value="4" >Treat as error</md-option>
+                                                    </md-select>
+                                                </md-input-container>
+
+                                            </div>
 
                                             <div layout="column">
                                                 <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">

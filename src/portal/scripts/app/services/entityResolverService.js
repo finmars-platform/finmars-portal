@@ -76,7 +76,6 @@
                 return instrumentTypeService.getList(options);
                 break;
             case 'transaction-type':
-                // return transactionTypeService.getList(options);
                 return transactionTypeService.getListLight(options);
                 break;
             case 'periodicity':
@@ -136,6 +135,8 @@
             case 'transaction-class':
                 return transactionClassService.getList(options)
                 break;
+            // default:
+            //     throw new Error('entityResolverService: Unknown entityType ' + entityType);
         }
     };
 
@@ -617,6 +618,9 @@
                 break;
             case 'pricing-policy':
                 return pricingPolicyService.deleteByKey(id);
+                break;
+            case 'currency':
+                return currencyService.deleteByKey(id);
                 break;
             case 'currency-history':
                 return currencyHistoryService.deleteByKey(id);
