@@ -10,7 +10,9 @@
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
     var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
 
-    module.exports = function ($mdDialog) {
+	var dashboardHelper = require('../../helpers/dashboard.helper');
+
+	module.exports = function ($mdDialog) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-charts-view.html',
@@ -26,7 +28,8 @@
             link: function (scope, elem, attr) {
 
                 scope.readyStatus = {
-                    data: 'processing'
+                    data: 'processing',
+                    disabled: false
                 };
 
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
@@ -59,48 +62,6 @@
                     scope.vm.entityViewerDataService = scope.fillInModeData.entityViewerDataService;
                     scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
                 }
-
-                var saveComponentSettings = function () {
-
-                    var listLayout = scope.dashboardDataService.getListLayout();
-
-                    if (listLayout) {
-
-                        var layoutData = listLayout.data;
-
-                        for (var i = 0; i < layoutData.components_types.length; i++) {
-
-                            if (layoutData.components_types[i].id === componentData.id) {
-
-                                layoutData.components_types[i] = JSON.parse(JSON.stringify(componentData));
-                                scope.dashboardDataService.setListLayout(listLayout);
-
-                                uiService.updateDashboardLayout(listLayout.id, listLayout).then(function (data) {
-
-                                    $mdDialog.show({
-                                        controller: 'InfoDialogController as vm',
-                                        templateUrl: 'views/info-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        clickOutsideToClose: false,
-                                        locals: {
-                                            info: {
-                                                title: 'Success',
-                                                description: "Dashboard component settings saved."
-                                            }
-                                        }
-                                    });
-
-                                });
-
-                                break;
-
-                            }
-
-                        }
-
-                    }
-
-                };
 
                 scope.openComponentSettingsDialog = function ($event) {
 
@@ -142,7 +103,7 @@
                             }*/
 
                             if (res.action === 'save') {
-                                saveComponentSettings();
+								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData);
                             }
 
                             if (scope.fillInModeData) {
@@ -245,6 +206,19 @@
                         });
 
                     }
+
+
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
+
+                        scope.readyStatus.disabled = true;
+
+                    });
+
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
+
+                        scope.readyStatus.disabled = false;
+
+                    });
 
                 };
 

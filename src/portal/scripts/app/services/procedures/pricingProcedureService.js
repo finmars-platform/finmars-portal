@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingProcedureRepository = require('../../repositories/pricing/pricingProcedureRepository');
+    var pricingProcedureRepository = require('../../repositories/procedures/pricingProcedureRepository');
 
     var getList = function (options) {
         return pricingProcedureRepository.getList(options);

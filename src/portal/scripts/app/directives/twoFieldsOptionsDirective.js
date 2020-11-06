@@ -47,7 +47,7 @@
 						$(clickedOption).removeClass('active-option');
 					}
 					else {
-						$(clickedOption).addClass('active-option');	
+						$(clickedOption).addClass('active-option');
 					}
 
 				};

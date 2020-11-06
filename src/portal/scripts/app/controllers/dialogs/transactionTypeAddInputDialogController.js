@@ -9,12 +9,26 @@
         vm.name = ''
         vm.valueType = data.valueType
         vm.contentType = data.contentType
+        vm.fillFromContext = data.fillFromContext
+        vm.defaultValue = data.defaultValue
+        vm.relationItems = data.relationItems
 
         vm.valueTypeOptions = data.valueTypeOptions
         vm.contentTypeOptions = []
         vm.textEventSignal = {}
         vm.valueTypeSignal = {}
         vm.contentTypeSignal = {}
+        vm.contextProperties = []
+        vm.defaultValuesItems = []
+        vm.valueExpression = null
+        vm.linkedInputsNames = []
+
+        vm.inputsForMultiselector = data.inputsForMultiselector
+
+        vm.expressionData = {
+            groups: [],
+            functions: [null]
+        };
 
         vm.onValueTypeChange = function () {
 
@@ -29,7 +43,61 @@
                 vm.contentTypeOptions = data.contentTypeOptions.relation
             }
 
+            vm.onContentTypeChange();
+
         };
+
+        var relationItemsResolver = function (contentType) {
+            return data.relationItemsResolver(contentType)
+        }
+
+        vm.onContentTypeChange = function () {
+            vm.fillFromContext = null
+            vm.contextProperties = []
+            vm.defaultValuesItems = []
+
+            var contextProps = data.contextProperties[vm.contentType]
+            if (contextProps) {
+                vm.contextProperties = contextProps
+            }
+
+            if (!vm.contentType) {
+                return;
+            }
+
+            var loadRelationRes = relationItemsResolver(vm.contentType);
+
+            if (loadRelationRes && loadRelationRes.status === 'item_exist') {
+
+                vm.defaultValuesItems = vm.relationItems[loadRelationRes.field]
+
+            } else {
+
+                loadRelationRes.then(function (relItem) {
+
+                    vm.defaultValuesItems = relItem
+                    $scope.$apply();
+
+                });
+
+            }
+
+        };
+
+        vm.isFillFromContentDisabled = function () {
+
+            if (vm.contextProperties.length > 0) {
+                return false;
+            }
+
+            return true;
+
+        };
+
+        vm.unselectContextProperties = function () {
+            vm.fillFromContext = null
+        };
+
 
         vm.validateInputName = function () {
 
@@ -118,8 +186,15 @@
 
                 var responseData = {
                     name: vm.name,
+                    verbose_name: vm.verbose_name,
+                    tooltip: vm.tooltip,
                     valueType: vm.valueType,
-                    contentType: vm.contentType
+                    contentType: vm.contentType,
+                    context_property: vm.fillFromContext,
+                    value: vm.defaultValue,
+                    value_expr: vm.valueExpression,
+                    linked_inputs_names: vm.linkedInputsNames
+
                 };
 
                 $mdDialog.hide({status: 'agree', data: responseData});

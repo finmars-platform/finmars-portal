@@ -281,14 +281,14 @@
 
         vm.getAttributeTypes = function () {
 
-            var ttypeAttrTypesProm = attributeTypeService.getList(vm.entityType).then(function (data) {
+            var ttypeAttrTypesProm = attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
 
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
 
             });
 
-            var complTransactionAttrTypesProm = attributeTypeService.getList('complex-transaction').then(function (data) {
+            var complTransactionAttrTypesProm = attributeTypeService.getList('complex-transaction', {pageSize: 1000}).then(function (data) {
                 complexTransactionsAttrs = data.results;
             });
 
@@ -1691,8 +1691,43 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     vm.entity.actions.splice($index, 1);
+
+                    vm.clearPhantoms();
                 }
             });
+        };
+
+        vm.clearPhantoms = function(){
+
+            console.log('vm.clearPhantoms');
+
+            var count = 0;
+
+            vm.entity.actions.forEach(function (action) {
+
+                Object.keys(action).forEach(function(actionKey) {
+
+                    if (action[actionKey]) {
+                        Object.keys(action[actionKey]).forEach(function (key) {
+
+                            if (key.indexOf("phantom") !== -1) {
+                                action[actionKey][key] = null
+                                count = count + 1
+                            }
+
+                        })
+                    }
+
+
+                })
+
+            });
+
+            if (count > 0) {
+
+                toastNotificationService.warning(count + " phantom inputs were reseted")
+            }
+
         };
 
         vm.addAction = function (actionType) {
