@@ -1,8 +1,10 @@
 (function () {
 
     var rvDataProviderService = require('../services/rv-data-provider/rv-data-provider.service');
+    var pricesCheckerService = require('../services/reports/pricesCheckerService');
 
     var expressionService = require('../services/expression.service');
+    var evEvents = require('../services/entityViewerEvents');
 
     'use strict';
 
@@ -12,6 +14,17 @@
 
             viewModel.readyStatus.layout = true;
             rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+
+            var reportOptions = viewModel.entityViewerDataService.getReportOptions();
+
+            pricesCheckerService.check(reportOptions).then(function (data) {
+
+                viewModel.entityViewerDataService.setMissingPrices(data);
+
+                viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END)
+
+            });
+
 
             $scope.$apply();
 
