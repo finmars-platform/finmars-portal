@@ -7,7 +7,7 @@
 	module.exports = function (viewModel, $scope, $mdDialog) {
 
 		let onFieldChange = function (fieldKey) {
-			console.log("testing onFieldChange data", fieldKey);
+
 			if (fieldKey) {
 
 				/* Mark linked inputs that are recalculated on parent input change
@@ -76,7 +76,7 @@
 
 					if (calcInput) {
 
-						let linkedInputsNames = userInput.settings.recalc_on_change_linked_inputs.split(',');
+						let linkedInputsNames = calcInput.settings.recalc_on_change_linked_inputs.split(',');
 
 						viewModel.recalculate({
 								inputs: linkedInputsNames,

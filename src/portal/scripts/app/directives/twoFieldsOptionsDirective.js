@@ -43,10 +43,11 @@
 				scope.highlightOption = function (ev) {
 
 					var clickedOption = ev.currentTarget;
+
 					if ($(clickedOption).hasClass('active-option')) {
 						$(clickedOption).removeClass('active-option');
-					}
-					else {
+
+					} else {
 						$(clickedOption).addClass('active-option');
 					}
 

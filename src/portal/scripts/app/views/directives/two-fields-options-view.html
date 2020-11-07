@@ -22,13 +22,13 @@
                  ng-dblclick="switchOptionOnDoubleClick('select', option.id)"
                  data-option-id="{{option.id}}">
 
-                <p ng-bind="option['{{nameProperty}}']"
-                   class="two-fields-option-text"></p>
-
                 <md-checkbox ng-if="unselOptionsCheckboxes"
                              ng-model="sOption.isChecked"
                              ng-click="$event.stopPropagation()"
                              class="two-fields-options-checkbox"></md-checkbox>
+
+                <p ng-bind="option['{{nameProperty}}']"
+                   class="two-fields-option-text"></p>
 
             </div>
 		</div>
@@ -114,17 +114,19 @@
                      ng-init="$last && initDnDEnabled && selOptionsDragAndDrop.init()"
                      data-option-id="{{sOption.id}}">
 
-                    <span ng-if="strictOrder"
-                          class="material-icons"
-                          ng-mousedown="turnOnDragging()">drag_indicator</span>
+                    <div class="two-fields-option-left-part flex-row">
+                        <span ng-if="strictOrder"
+                              class="material-icons two-fields-option-dragger"
+                              ng-mousedown="turnOnDragging()">drag_indicator</span>
+
+                        <md-checkbox ng-if="selOptionsCheckboxes"
+                                     ng-model="sOption.isChecked"
+                                     ng-click="$event.stopPropagation()"
+                                     class="two-fields-options-checkbox"></md-checkbox>
+                    </div>
 
                     <p ng-bind="sOption['{{nameProperty}}']"
                        class="two-fields-option-text"></p>
-
-                    <md-checkbox ng-if="selOptionsCheckboxes"
-                                 ng-model="sOption.isChecked"
-                                 ng-click="$event.stopPropagation()"
-                                 class="two-fields-options-checkbox"></md-checkbox>
 
                 </div>
 			</div>
