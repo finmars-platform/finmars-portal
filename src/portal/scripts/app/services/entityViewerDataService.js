@@ -1294,6 +1294,14 @@
         }
         // END: Methods for dashboard
 
+        function setMissingPrices(prices) {
+            data.missingPrices = prices;
+        }
+
+        function getMissingPrices() {
+            return data.missingPrices;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1499,6 +1507,9 @@
 
             setDataLoadStatus: setDataLoadStatus,
             didDataLoadEnd: didDataLoadEnd,
+
+            setMissingPrices: setMissingPrices,
+            getMissingPrices: getMissingPrices,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,
